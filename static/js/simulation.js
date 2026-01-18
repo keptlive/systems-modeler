@@ -13,6 +13,16 @@ const Simulation = {
     /**
      * Initialize simulation module
      */
+    /**
+     * Get time settings based on steps count
+     */
+    getTimeSettings(steps) {
+        const dt = App.model.time_settings?.dt || 0.1;
+        const start = App.model.time_settings?.start || 0;
+        const end = start + (steps * dt);
+        return { start, end, dt };
+    },
+
     init() {
         this.chartContainer = document.getElementById('chart-container');
         this.resultsContent = document.getElementById('results-content');
@@ -22,6 +32,9 @@ const Simulation = {
      * Run simulation on current model
      */
     async run() {
+        // Get steps from input
+        const stepsInput = document.getElementById("sim-steps");
+        const steps = stepsInput ? parseInt(stepsInput.value) || 100 : 100;
         if (App.model.stocks.length === 0 && App.model.flows.length === 0) {
             alert('No model to simulate. Add some stocks and flows first.');
             return;
@@ -45,7 +58,7 @@ const Simulation = {
             const response = await fetch('/api/simulate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model: App.model })
+                body: JSON.stringify({ model: App.model, time_settings: this.getTimeSettings(steps) })
             });
 
             if (!response.ok) {
