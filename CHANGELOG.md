@@ -2,6 +2,12 @@
 
 ## 2026-01-18
 
+### Added
+- Steps control input next to Run button
+  - Allows setting number of simulation steps (10-10000)
+  - End time calculated as start + (steps * dt)
+  - Hidden on mobile (use Settings modal)
+
 ### Fixed
 - Charts not updating when running second model in same session
   - Fixed `Charts.setResults()` to clear variable options before loading new results
