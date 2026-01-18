@@ -1,0 +1,217 @@
+{
+  "id": "seird-seroprevalence-covid19-epi",
+  "name": "Modified SEIRD with Seroprevalence",
+  "description": "Computational pipeline dynamically parameterizing SEIRD model using daily COVID-19 cases, deaths, and population-level seroprevalence estimates for US outbreak dynamics. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 330000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exposed",
+      "name": "Exposed",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Infected",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-deceased",
+      "name": "Deceased",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-seroprevalent",
+      "name": "Seroprevalent",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-exposure",
+      "name": "Exposure",
+      "equation": "Beta_t * Susceptible * Infected / Total_Pop",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-symptom",
+      "name": "Symptom Onset",
+      "equation": "Exposed / Latent_Period",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "Infected * (1 - IFR) / Infectious_Period",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-death",
+      "name": "Death",
+      "equation": "Infected * IFR / Time_to_Death",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-deceased",
+      "position": {
+        "x": 475,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-seroconvert",
+      "name": "Seroconversion",
+      "equation": "Recovery + Death",
+      "from_stock": null,
+      "to_stock": "stock-seroprevalent",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta-t",
+      "name": "Beta t",
+      "equation": "Base_Beta * (1 - NPI_Effectiveness)",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-base-beta",
+      "name": "Base Beta",
+      "equation": "0.4",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-npi",
+      "name": "NPI Effectiveness",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-latent",
+      "name": "Latent Period",
+      "equation": "5.2",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-infect-period",
+      "name": "Infectious Period",
+      "equation": "7",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-ifr",
+      "name": "IFR",
+      "equation": "0.006",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-death-time",
+      "name": "Time to Death",
+      "equation": "14",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-total-pop",
+      "name": "Total Pop",
+      "equation": "330000000",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-sero-rate",
+      "name": "Seroprevalence Rate",
+      "equation": "Seroprevalent / Total_Pop",
+      "position": {
+        "x": 300,
+        "y": 500
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 730,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1007/s00366-023-01816-9",
+  "reference": "Dynamic parameterization of modified SEIRD model to forecast COVID-19 dynamics in US. Engineering with Computers (2023).",
+  "created_at": "2026-01-12T08:11:11.789037+00:00",
+  "updated_at": "2026-01-12T08:11:11.789037+00:00"
+}

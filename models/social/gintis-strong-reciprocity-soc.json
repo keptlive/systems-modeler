@@ -1,0 +1,185 @@
+{
+  "id": "gintis-strong-reciprocity-soc",
+  "name": "Gintis Strong Reciprocity Model",
+  "description": "Model of strong reciprocity in human cooperation showing costly punishment of defectors and reward of cooperators. Reference: Gintis, H. (2000). Strong Reciprocity and Human Sociality.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Cooperators",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Defectors",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Punishers",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Cooperation_Growth",
+      "equation": "Cooperators * (Cooperator_Fitness - Average_Fitness) / Average_Fitness",
+      "from_stock": null,
+      "to_stock": "Cooperators",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Defection_Growth",
+      "equation": "Defectors * (Defector_Fitness - Average_Fitness) / Average_Fitness",
+      "from_stock": null,
+      "to_stock": "Defectors",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Punisher_Growth",
+      "equation": "Punishers * (Punisher_Fitness - Average_Fitness) / Average_Fitness",
+      "from_stock": null,
+      "to_stock": "Punishers",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Conversion_to_Cooperation",
+      "equation": "Defectors * Punishment_Effect * 0.1",
+      "from_stock": "Defectors",
+      "to_stock": "Cooperators",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Total_Population",
+      "equation": "Cooperators + Defectors + Punishers",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Cooperation_Rate",
+      "equation": "(Cooperators + Punishers) / Total_Population",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Benefit",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Cost_Cooperation",
+      "equation": "3",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Cost_Punishment",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Punishment_Effect",
+      "equation": "4 * Punishers / Total_Population",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Cooperator_Fitness",
+      "equation": "Benefit * Cooperation_Rate - Cost_Cooperation",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Defector_Fitness",
+      "equation": "Benefit * Cooperation_Rate - Punishment_Effect",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Punisher_Fitness",
+      "equation": "Benefit * Cooperation_Rate - Cost_Cooperation - Cost_Punishment",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Average_Fitness",
+      "equation": "(Cooperators * Cooperator_Fitness + Defectors * Defector_Fitness + Punishers * Punisher_Fitness) / Total_Population",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1006/jtbi.2000.2049",
+  "reference": "Gintis, H. (2000). Strong Reciprocity and Human Sociality. Journal of Theoretical Biology, 206(2), 169-179.",
+  "created_at": "2026-01-15T19:53:28.367590+00:00",
+  "updated_at": "2026-01-15T19:53:28.367590+00:00"
+}

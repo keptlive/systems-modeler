@@ -1,0 +1,238 @@
+{
+  "id": "vaccine-hesitancy-outbreak-epi",
+  "name": "Vaccine Hesitancy and Outbreak Dynamics",
+  "description": "Model showing how vaccine hesitancy affects herd immunity thresholds and increases outbreak risk. Based on research on vaccine confidence. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "source": "https://doi.org/10.1016/S0140-6736(20)31558-0",
+  "reference": "Larson HJ, et al. Understanding vaccine hesitancy around vaccines and vaccination from a global perspective. Vaccine. 2014;32(19):2150-2159.",
+  "stocks": [
+    {
+      "id": "stock-suscept",
+      "name": "Susceptible",
+      "initial_value": 300000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-vacc",
+      "name": "Vaccinated",
+      "initial_value": 600000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Infected",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-hesitancy",
+      "name": "Hesitancy_Level",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 500
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infect",
+      "name": "Infection",
+      "equation": "beta * Susceptible * Infected / Total_Population",
+      "from_stock": "stock-suscept",
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recover",
+      "name": "Recovery",
+      "equation": "Infected / infectious_period",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-vaccinate",
+      "name": "Vaccination",
+      "equation": "Susceptible * vaccination_rate * (1 - Hesitancy_Level / 100)",
+      "from_stock": "stock-suscept",
+      "to_stock": "stock-vacc",
+      "position": {
+        "x": 100,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-wane",
+      "name": "Immunity_Waning",
+      "equation": "Vaccinated * waning_rate",
+      "from_stock": "stock-vacc",
+      "to_stock": "stock-suscept",
+      "position": {
+        "x": 50,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-hesitancy-grow",
+      "name": "Hesitancy_Growth",
+      "equation": "hesitancy_growth_rate * misinformation * (100 - Hesitancy_Level) / 100",
+      "from_stock": null,
+      "to_stock": "stock-hesitancy",
+      "position": {
+        "x": 50,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-hesitancy-decline",
+      "name": "Hesitancy_Decline",
+      "equation": "Hesitancy_Level * hesitancy_decline_rate * outbreak_fear",
+      "from_stock": "stock-hesitancy",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "beta",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-period",
+      "name": "infectious_period",
+      "equation": "14",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-vax",
+      "name": "vaccination_rate",
+      "equation": "0.001",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-wane",
+      "name": "waning_rate",
+      "equation": "0.002",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-hes-gr",
+      "name": "hesitancy_growth_rate",
+      "equation": "0.5",
+      "position": {
+        "x": 50,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-misinfo",
+      "name": "misinformation",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-hes-dec",
+      "name": "hesitancy_decline_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-fear",
+      "name": "outbreak_fear",
+      "equation": "Infected / 10000",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Population",
+      "equation": "Susceptible + Vaccinated + Infected + Recovered",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-coverage",
+      "name": "Vaccine_Coverage",
+      "equation": "Vaccinated / Total_Population",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-r0",
+      "name": "Effective_R0",
+      "equation": "beta * infectious_period * Susceptible / Total_Population",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.5,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

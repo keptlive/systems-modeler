@@ -1,0 +1,238 @@
+{
+  "id": "brand-equity-dynamics-man",
+  "name": "Brand Equity Building and Erosion",
+  "description": "Models brand awareness, perception, and equity dynamics. Based on Keller (1993) Conceptualizing Brand Equity, JM and Aaker (1991). Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "category": "management",
+  "stocks": [
+    {
+      "id": "stock-aware",
+      "name": "Brand_Awareness_Pct",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-percept",
+      "name": "Brand_Perception",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-equity",
+      "name": "Brand_Equity_Index",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-loyalty",
+      "name": "Brand_Loyalty",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-aware-up",
+      "name": "Awareness_Building",
+      "equation": "(100 - Brand_Awareness_Pct) * Advertising_Reach * Message_Frequency / 1000",
+      "from_stock": null,
+      "to_stock": "stock-aware",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-aware-down",
+      "name": "Awareness_Decay",
+      "equation": "Brand_Awareness_Pct * Awareness_Decay_Rate",
+      "from_stock": "stock-aware",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-percept-up",
+      "name": "Perception_Improvement",
+      "equation": "(Quality_Delivered - Brand_Perception) / Perception_Adjust_Time * Brand_Awareness_Pct/100",
+      "from_stock": null,
+      "to_stock": "stock-percept",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-percept-down",
+      "name": "Perception_Erosion",
+      "equation": "Brand_Perception * Perception_Decay + Negative_Events",
+      "from_stock": "stock-percept",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-equity-change",
+      "name": "Equity_Adjustment",
+      "equation": "(Perceived_Value - Brand_Equity_Index) / Equity_Adjust_Time",
+      "from_stock": null,
+      "to_stock": "stock-equity",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-loyalty-build",
+      "name": "Loyalty_Building",
+      "equation": "(Brand_Perception/100) * (Brand_Equity_Index/100) * Loyalty_Build_Rate * Brand_Awareness_Pct",
+      "from_stock": null,
+      "to_stock": "stock-loyalty",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-loyalty-decay",
+      "name": "Loyalty_Decay",
+      "equation": "Brand_Loyalty * Loyalty_Decay_Rate * (100 - Brand_Perception)/100",
+      "from_stock": "stock-loyalty",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-ad-reach",
+      "name": "Advertising_Reach",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-freq",
+      "name": "Message_Frequency",
+      "equation": "10",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-aware-decay",
+      "name": "Awareness_Decay_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-quality",
+      "name": "Quality_Delivered",
+      "equation": "70",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-percept-adj",
+      "name": "Perception_Adjust_Time",
+      "equation": "6",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-percept-decay",
+      "name": "Perception_Decay",
+      "equation": "0.01",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-negative",
+      "name": "Negative_Events",
+      "equation": "0",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-perceived",
+      "name": "Perceived_Value",
+      "equation": "Brand_Awareness_Pct * Brand_Perception / 100",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-equity-adj",
+      "name": "Equity_Adjust_Time",
+      "equation": "12",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-loyalty-build",
+      "name": "Loyalty_Build_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-loyalty-decay",
+      "name": "Loyalty_Decay_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1177/002224299305700101",
+  "reference": "Keller KL (1993) Conceptualizing, Measuring, and Managing Customer-Based Brand Equity. Journal of Marketing 57(1):1-22.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:35:24.695681+00:00",
+  "updated_at": "2026-01-12T06:35:24.695681+00:00"
+}

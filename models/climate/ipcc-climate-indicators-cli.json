@@ -1,0 +1,247 @@
+{
+  "id": "ipcc-climate-indicators-cli",
+  "name": "IPCC Climate Indicators Model",
+  "description": "System dynamics model tracking key climate indicators as reported in IPCC AR6. Includes greenhouse gas concentrations, radiative forcing, energy imbalance, and temperature anomaly. Reference: IPCC (2021). Climate Change 2021: The Physical Science Basis. Cambridge University Press. Source: https://www.ipcc.ch/",
+  "source": "https://doi.org/10.5194/essd-16-2625-2024",
+  "reference": "Forster et al. (2024). Indicators of Global Climate Change 2023: annual update of key indicators. Earth System Science Data, 16, 2625-2658.",
+  "stocks": [
+    {
+      "id": "stock-co2-atm",
+      "name": "Atmospheric CO2",
+      "initial_value": 420,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-ch4-atm",
+      "name": "Atmospheric Methane",
+      "initial_value": 1900,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-ocean-heat",
+      "name": "Ocean Heat Content",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-temp-anomaly",
+      "name": "Temperature Anomaly",
+      "initial_value": 1.2,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-ice-mass",
+      "name": "Ice Sheet Mass",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-co2-emission",
+      "name": "CO2 Emissions",
+      "equation": "Anthropogenic_CO2_Emissions",
+      "from_stock": null,
+      "to_stock": "stock-co2-atm",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-co2-uptake",
+      "name": "CO2 Natural Uptake",
+      "equation": "Atmospheric_CO2 * Natural_Sink_Rate",
+      "from_stock": "stock-co2-atm",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-ch4-emission",
+      "name": "CH4 Emissions",
+      "equation": "Anthropogenic_CH4_Emissions",
+      "from_stock": null,
+      "to_stock": "stock-ch4-atm",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-ch4-decay",
+      "name": "CH4 Decay",
+      "equation": "Atmospheric_Methane / CH4_Lifetime",
+      "from_stock": "stock-ch4-atm",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-warming",
+      "name": "Warming Rate",
+      "equation": "(Equilibrium_Temperature - Temperature_Anomaly) / Climate_Response_Time",
+      "from_stock": null,
+      "to_stock": "stock-temp-anomaly",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-ocean-uptake",
+      "name": "Ocean Heat Uptake",
+      "equation": "Earth_Energy_Imbalance * Ocean_Heat_Fraction",
+      "from_stock": null,
+      "to_stock": "stock-ocean-heat",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-ice-loss",
+      "name": "Ice Mass Loss",
+      "equation": "Ice_Sheet_Mass * Temperature_Anomaly * Ice_Sensitivity / 100",
+      "from_stock": "stock-ice-mass",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-co2-emit",
+      "name": "Anthropogenic CO2 Emissions",
+      "equation": "40",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-sink-rate",
+      "name": "Natural Sink Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-ch4-emit",
+      "name": "Anthropogenic CH4 Emissions",
+      "equation": "380",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-ch4-life",
+      "name": "CH4 Lifetime",
+      "equation": "9.1",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-forcing",
+      "name": "Total Radiative Forcing",
+      "equation": "5.1 * LN(Atmospheric_CO2 / 280) + 0.036 * (Atmospheric_Methane^0.5 - 700^0.5)",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-equilibrium",
+      "name": "Equilibrium Temperature",
+      "equation": "Total_Radiative_Forcing * Climate_Sensitivity",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-sensitivity",
+      "name": "Climate Sensitivity",
+      "equation": "0.8",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-response-time",
+      "name": "Climate Response Time",
+      "equation": "30",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-imbalance",
+      "name": "Earth Energy Imbalance",
+      "equation": "Total_Radiative_Forcing - (Temperature_Anomaly / Climate_Sensitivity)",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-ocean-frac",
+      "name": "Ocean Heat Fraction",
+      "equation": "0.9",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-ice-sens",
+      "name": "Ice Sensitivity",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T03:11:09.889316+00:00",
+  "updated_at": "2026-01-12T03:11:09.889316+00:00"
+}

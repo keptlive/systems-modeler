@@ -1,0 +1,33 @@
+{
+  "id": "deepfake-misinformation-spread-soc",
+  "name": "Deepfake Misinformation Spread Model",
+  "description": "Model of synthetic media (deepfake) spread and its impact on information trust. Captures the asymmetry between fast viral spread and slow debunking. Source: Vaccari & Chadwick (2020). Public Opinion Quarterly. DOI: 10.1093/poq/nfaa023",
+  "stocks": [
+    {"id": "stock-exposed", "name": "Population_Exposed", "initial_value": 1000, "equation": "", "position": {"x": 150, "y": 200}},
+    {"id": "stock-believing", "name": "Believing_Misinformation", "initial_value": 0, "equation": "", "position": {"x": 350, "y": 200}},
+    {"id": "stock-corrected", "name": "Corrected_Population", "initial_value": 0, "equation": "", "position": {"x": 550, "y": 200}},
+    {"id": "stock-trust", "name": "Institutional_Trust", "initial_value": 0.6, "equation": "", "position": {"x": 350, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-belief", "name": "Belief_Rate", "equation": "Population_Exposed * Belief_Probability * Virality_Factor", "from_stock": "stock-exposed", "to_stock": "stock-believing", "position": {"x": 250, "y": 200}},
+    {"id": "flow-correction", "name": "Correction_Rate", "equation": "Believing_Misinformation * Correction_Effectiveness * Fact_Check_Exposure", "from_stock": "stock-believing", "to_stock": "stock-corrected", "position": {"x": 450, "y": 200}},
+    {"id": "flow-trust-decay", "name": "Trust_Change", "equation": "-Trust_Erosion_Rate * (Believing_Misinformation / Total_Pop) + Trust_Recovery", "from_stock": null, "to_stock": "stock-trust", "position": {"x": 250, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-belief-prob", "name": "Belief_Probability", "equation": "0.3 * (1 - Institutional_Trust)", "position": {"x": 150, "y": 100}},
+    {"id": "var-virality", "name": "Virality_Factor", "equation": "1 + 0.5 * Deepfake_Quality", "position": {"x": 300, "y": 100}},
+    {"id": "var-quality", "name": "Deepfake_Quality", "equation": "0.7 + 0.03 * TIME", "position": {"x": 450, "y": 100}},
+    {"id": "var-correction-eff", "name": "Correction_Effectiveness", "equation": "0.3", "position": {"x": 450, "y": 300}},
+    {"id": "var-fact-check", "name": "Fact_Check_Exposure", "equation": "0.2", "position": {"x": 550, "y": 300}},
+    {"id": "var-erosion", "name": "Trust_Erosion_Rate", "equation": "0.1", "position": {"x": 200, "y": 400}},
+    {"id": "var-recovery", "name": "Trust_Recovery", "equation": "0.01 * (1 - Institutional_Trust)", "position": {"x": 400, "y": 400}},
+    {"id": "var-total", "name": "Total_Pop", "equation": "Population_Exposed + Believing_Misinformation + Corrected_Population", "position": {"x": 350, "y": 50}},
+    {"id": "var-misinfo-prevalence", "name": "Misinformation_Prevalence", "equation": "Believing_Misinformation / Total_Pop", "position": {"x": 550, "y": 50}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.5},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1093/poq/nfaa023",
+  "reference": "Vaccari, C. & Chadwick, A. (2020). Deepfakes and disinformation: Exploring the impact of synthetic political video on deception, uncertainty, and trust in news. Public Opinion Quarterly, 84(S1), 616-640."
+}

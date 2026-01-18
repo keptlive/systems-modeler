@@ -1,0 +1,110 @@
+{
+  "id": "burke-hsiang-miguel-climate-gdp-cli",
+  "name": "Burke-Hsiang-Miguel Climate-GDP Model",
+  "description": "Empirical relationship between temperature and economic productivity",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Temperature",
+      "initial_value": 15.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "GDP_Per_Capita",
+      "initial_value": 10000.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Optimal_Temp",
+      "equation": "13.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Temp_Coefficient",
+      "equation": "-0.0089",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Temp_Squared_Coef",
+      "equation": "-0.000512",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Growth_Impact",
+      "equation": "Temp_Coefficient*(Temperature-Optimal_Temp)+Temp_Squared_Coef*(Temperature-Optimal_Temp)*(Temperature-Optimal_Temp)",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Baseline_Growth",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Adjusted_Growth",
+      "equation": "Baseline_Growth+Growth_Impact",
+      "position": {
+        "x": 500,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Temperature",
+      "to_element": "Growth_Impact"
+    },
+    {
+      "id": "c2",
+      "from_element": "Optimal_Temp",
+      "to_element": "Growth_Impact"
+    },
+    {
+      "id": "c3",
+      "from_element": "Adjusted_Growth",
+      "to_element": "GDP_Per_Capita"
+    }
+  ],
+  "time_settings": {
+    "start": 2020.0,
+    "end": 2100.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:44:13.929379+00:00",
+  "updated_at": "2026-01-15T20:44:13.929379+00:00",
+  "source": "https://doi.org/10.1038/nature15725",
+  "reference": "Burke, M., Hsiang, S.M. & Miguel, E. (2015) Global non-linear effect of temperature on economic production. Nature 527:235-239"
+}

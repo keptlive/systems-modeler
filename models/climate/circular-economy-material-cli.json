@@ -1,0 +1,182 @@
+{
+  "id": "circular-economy-material-cli",
+  "name": "Circular Economy Material Flow",
+  "description": "Model of circular economy material flows. Source: Ellen MacArthur Foundation; Geissdoerfer et al. (2017).",
+  "stocks": [
+    {
+      "id": "stock-virgin",
+      "name": "Virgin_Materials",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-product",
+      "name": "Products_In_Use",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-waste",
+      "name": "Waste_Stream",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-recycled",
+      "name": "Recycled_Stock",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-extract",
+      "name": "Extraction",
+      "equation": "Extraction_Rate * (1 - Circularity)",
+      "from_stock": null,
+      "to_stock": "stock-virgin",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-produce",
+      "name": "Production",
+      "equation": "(Virgin_Materials + Recycled_Stock) * Production_Rate",
+      "from_stock": "stock-virgin",
+      "to_stock": "stock-product",
+      "position": {
+        "x": 175,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-discard",
+      "name": "Discard",
+      "equation": "Products_In_Use * Discard_Rate",
+      "from_stock": "stock-product",
+      "to_stock": "stock-waste",
+      "position": {
+        "x": 325,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-recycle",
+      "name": "Recycling",
+      "equation": "Waste_Stream * Recycling_Rate",
+      "from_stock": "stock-waste",
+      "to_stock": "stock-recycled",
+      "position": {
+        "x": 325,
+        "y": 225
+      }
+    },
+    {
+      "id": "flow-reuse",
+      "name": "Reuse",
+      "equation": "Recycled_Stock * Reuse_Rate",
+      "from_stock": "stock-recycled",
+      "to_stock": "stock-product",
+      "position": {
+        "x": 250,
+        "y": 225
+      }
+    },
+    {
+      "id": "flow-landfill",
+      "name": "Landfill",
+      "equation": "Waste_Stream * (1 - Recycling_Rate)",
+      "from_stock": "stock-waste",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-extract",
+      "name": "Extraction_Rate",
+      "equation": "50",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-circ",
+      "name": "Circularity",
+      "equation": "Recycled_Stock / (Virgin_Materials + Recycled_Stock + 1)",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-prodrate",
+      "name": "Production_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-discard",
+      "name": "Discard_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recyc",
+      "name": "Recycling_Rate",
+      "equation": "0.3 + 0.01 * TIME",
+      "position": {
+        "x": 400,
+        "y": 225
+      }
+    },
+    {
+      "id": "var-reuse",
+      "name": "Reuse_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 175,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:55:38.760813+00:00",
+  "updated_at": "2026-01-12T12:55:38.760813+00:00",
+  "source": "https://doi.org/10.1016/j.jclepro.2016.12.048",
+  "reference": "Geissdoerfer M, et al. The Circular Economy \u2013 A new sustainability paradigm? Journal of Cleaner Production. 2017;143:757-768."
+}

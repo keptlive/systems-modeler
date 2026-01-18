@@ -1,0 +1,132 @@
+{
+  "id": "meadows-thinking-systems-edu",
+  "name": "Meadows Bathtub Mental Model",
+  "description": "Donella Meadows' bathtub analogy for teaching stock-and-flow thinking. The most fundamental system dynamics teaching model, showing how inflows and outflows affect accumulations - basis for understanding all dynamic systems. Reference: Meadows, D. H., et al. (1972). The Limits to Growth. Universe Books. Source: https://www.clubofrome.org/publication/the-limits-to-growth/",
+  "stocks": [
+    {
+      "id": "stock-bathtub-water",
+      "name": "Water in Bathtub",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-faucet",
+      "name": "Faucet Flow In",
+      "equation": "Faucet_Setting",
+      "from_stock": null,
+      "to_stock": "stock-bathtub-water",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-drain",
+      "name": "Drain Flow Out",
+      "equation": "Drain_Open * Water_in_Bathtub / Drain_Time",
+      "from_stock": "stock-bathtub-water",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-faucet-setting",
+      "name": "Faucet Setting",
+      "equation": "10",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-drain-open",
+      "name": "Drain Open",
+      "equation": "1",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-drain-time",
+      "name": "Drain Time",
+      "equation": "10",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-net-flow",
+      "name": "Net Flow",
+      "equation": "Faucet_Flow_In - Drain_Flow_Out",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-equilibrium-level",
+      "name": "Equilibrium Level",
+      "equation": "IF Drain_Open > 0 THEN Faucet_Setting * Drain_Time ELSE 999999",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-time-to-equilibrium",
+      "name": "Time to 63% of Equilibrium",
+      "equation": "Drain_Time",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-rising-or-falling",
+      "name": "Water Level Trend",
+      "equation": "IF Net_Flow > 0 THEN 1 ELSE IF Net_Flow < 0 THEN -1 ELSE 0",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Faucet Setting",
+      "to_element": "Faucet Flow In"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Water in Bathtub",
+      "to_element": "Drain Flow Out"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Drain Open",
+      "to_element": "Drain Flow Out"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T01:30:00.000Z",
+  "updated_at": "2026-01-12T01:30:00.000Z",
+  "source": "https://www.chelseagreen.com/product/thinking-in-systems/",
+  "reference": "Meadows DH. Thinking in Systems: A Primer. Chelsea Green Publishing, 2008."
+}

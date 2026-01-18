@@ -1,0 +1,191 @@
+{
+  "id": "keynesian-cross-model-eco",
+  "name": "Keynesian Cross Model",
+  "description": "Basic income-expenditure equilibrium model with multiplier effects. Based on Keynes (1936) General Theory. Reference: Keynes, J. M. (1936). The General Theory of Employment, Interest and Money. London: Macmillan.",
+  "stocks": [
+    {
+      "id": "stock-income",
+      "name": "National_Income",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-invstock",
+      "name": "Inventory",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-wealth",
+      "name": "Household_Wealth",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-incomechg",
+      "name": "Income_Change",
+      "equation": "(Aggregate_Demand - National_Income) * Adjustment_Speed",
+      "from_stock": null,
+      "to_stock": "stock-income",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-invchg",
+      "name": "Inventory_Change",
+      "equation": "National_Income - Aggregate_Demand",
+      "from_stock": null,
+      "to_stock": "stock-invstock",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-saving",
+      "name": "Saving",
+      "equation": "National_Income * (1 - MPC) - Consumption_Intercept",
+      "from_stock": null,
+      "to_stock": "stock-wealth",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-dissaving",
+      "name": "Dissaving",
+      "equation": "Household_Wealth * Wealth_Decay",
+      "from_stock": "stock-wealth",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-aggdem",
+      "name": "Aggregate_Demand",
+      "equation": "Consumption + Investment + Government_Spending",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-consumption",
+      "name": "Consumption",
+      "equation": "Consumption_Intercept + MPC * National_Income",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-consint",
+      "name": "Consumption_Intercept",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-mpc",
+      "name": "MPC",
+      "equation": "0.8",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-investment",
+      "name": "Investment",
+      "equation": "150 - Interest_Rate * 10",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-govspend",
+      "name": "Government_Spending",
+      "equation": "200",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-intrate",
+      "name": "Interest_Rate",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-adjspeed",
+      "name": "Adjustment_Speed",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-wealthdecay",
+      "name": "Wealth_Decay",
+      "equation": "0.01",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-multiplier",
+      "name": "Multiplier",
+      "equation": "1 / (1 - MPC)",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "National_Income",
+      "to_element": "Consumption"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:49:51.600264+00:00",
+  "updated_at": "2026-01-12T02:49:51.600271+00:00",
+  "source": "https://www.jstor.org/stable/1882087",
+  "reference": "Keynes JM (1936). The General Theory of Employment, Interest and Money. Macmillan."
+}

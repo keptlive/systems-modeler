@@ -1,0 +1,136 @@
+{
+  "id": "kaldor-business-cycle-eco",
+  "name": "Kaldor Nonlinear Business Cycle Model",
+  "description": "Keynesian business cycle model with nonlinear investment function generating endogenous fluctuations. Reference: Keynes, J. M. (1936). The General Theory of Employment, Interest and Money. London: Macmillan.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Income",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Capital_Stock",
+      "initial_value": 300,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Income_Change",
+      "equation": "Alpha_K * (Investment - Savings)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Net_Investment",
+      "equation": "Investment - Depreciation_K",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Savings",
+      "equation": "S_Slope * Income",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Investment",
+      "equation": "I_Base + I_Sensitivity * Income - I_Capital_Effect * Capital_Stock",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "v3",
+      "name": "S_Slope",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "v4",
+      "name": "I_Base",
+      "equation": "20",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "v5",
+      "name": "I_Sensitivity",
+      "equation": "0.4",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "I_Capital_Effect",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Depreciation_K",
+      "equation": "0.1 * Capital_Stock",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Alpha_K",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:20:56.316152+00:00",
+  "updated_at": "2026-01-12T11:20:56.316152+00:00",
+  "source": "https://doi.org/10.2307/2228158",
+  "reference": "Kaldor N. A model of the trade cycle. The Economic Journal. 1940;50(197):78-92."
+}

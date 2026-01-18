@@ -1,0 +1,224 @@
+{
+  "id": "sterman-climate-communication-soc",
+  "name": "Sterman Climate Communication Model",
+  "description": "Model of public understanding of climate change and the 'wait and see' bias in climate policy. Explores how mental models affect climate action. Source: Sterman (2011), Climatic Change. DOI: 10.1007/s10584-010-9940-1",
+  "stocks": [
+    {
+      "id": "stock-aware",
+      "name": "Public_Awareness",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-concern",
+      "name": "Public_Concern",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-action",
+      "name": "Policy_Action",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-emissions",
+      "name": "Cumulative_Emissions",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-learn",
+      "name": "Learning",
+      "equation": "(1 - Public_Awareness) * Information_Flow * Media_Coverage",
+      "from_stock": null,
+      "to_stock": "stock-aware",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-forget",
+      "name": "Forgetting",
+      "equation": "Public_Awareness * Forgetting_Rate * (1 - Extreme_Events)",
+      "from_stock": "stock-aware",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-worry",
+      "name": "Concern_Growth",
+      "equation": "Public_Awareness * (1 - Public_Concern) * Concern_Rate",
+      "from_stock": null,
+      "to_stock": "stock-concern",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-complacency",
+      "name": "Complacency",
+      "equation": "Public_Concern * Complacency_Rate",
+      "from_stock": "stock-concern",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-policy",
+      "name": "Policy_Response",
+      "equation": "Public_Concern * Policy_Responsiveness * (1 - Policy_Action)",
+      "from_stock": null,
+      "to_stock": "stock-action",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-emit",
+      "name": "Emission_Rate",
+      "equation": "Baseline_Emissions * (1 - Policy_Action * Emission_Reduction_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-emissions",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-info",
+      "name": "Information_Flow",
+      "equation": "0.1",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-media",
+      "name": "Media_Coverage",
+      "equation": "0.5 + 0.5 * Extreme_Events",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-forget",
+      "name": "Forgetting_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-extreme",
+      "name": "Extreme_Events",
+      "equation": "MIN(1, Cumulative_Emissions / 1000)",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-concern-rate",
+      "name": "Concern_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-complacency",
+      "name": "Complacency_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-responsive",
+      "name": "Policy_Responsiveness",
+      "equation": "0.1",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-baseline",
+      "name": "Baseline_Emissions",
+      "equation": "10",
+      "position": {
+        "x": 150,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-reduction",
+      "name": "Emission_Reduction_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Public_Awareness",
+      "to_element": "Concern_Growth"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Public_Concern",
+      "to_element": "Policy_Response"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Policy_Action",
+      "to_element": "Emission_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T22:11:19.086469Z",
+  "updated_at": "2026-01-11T22:11:19.086477Z",
+  "source": "https://doi.org/10.1007/s10584-010-9940-1",
+  "reference": "Sterman, J.D. (2011). Communicating climate change risks in a skeptical world."
+}

@@ -1,0 +1,145 @@
+{
+  "id": "covid19-vaccine-efficacy-waning-epi",
+  "name": "COVID-19 Vaccine Efficacy Waning Model",
+  "description": "Models waning immunity after COVID-19 vaccination and need for boosters. Based on Andrews et al. (2022) vaccine effectiveness study. DOI: 10.1056/NEJMoa2119451",
+  "stocks": [
+    {
+      "id": "stock-fullvax",
+      "name": "Fully_Vaccinated",
+      "initial_value": 70,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-waning",
+      "name": "Waning_Protection",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-boosted",
+      "name": "Boosted",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Breakthrough_Infections",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-wane",
+      "name": "Protection_Waning",
+      "equation": "Fully_Vaccinated * Waning_Rate",
+      "from_stock": "stock-fullvax",
+      "to_stock": "stock-waning",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-boost",
+      "name": "Booster_Uptake",
+      "equation": "Waning_Protection * Booster_Rate",
+      "from_stock": "stock-waning",
+      "to_stock": "stock-boosted",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-breakthrough",
+      "name": "Breakthrough_Rate",
+      "equation": "Waning_Protection * Infection_Probability * (1 - Residual_Protection)",
+      "from_stock": "stock-waning",
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-waningrate",
+      "name": "Waning_Rate",
+      "equation": "1/180",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-boosterrate",
+      "name": "Booster_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-infprob",
+      "name": "Infection_Probability",
+      "equation": "0.01",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-residprot",
+      "name": "Residual_Protection",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-efficacy",
+      "name": "Vaccine_Efficacy",
+      "equation": "0.90 * EXP(-TIME/150)",
+      "position": {
+        "x": 150,
+        "y": 175
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Waning_Protection",
+      "to_element": "Breakthrough_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:45:00.574703+00:00",
+  "updated_at": "2026-01-12T02:45:00.574756+00:00",
+  "source": "https://doi.org/10.1056/NEJMoa2119451",
+  "reference": "Andrews N, et al. (2022). Duration of Protection against Mild and Severe Disease by Covid-19 Vaccines. NEJM."
+}

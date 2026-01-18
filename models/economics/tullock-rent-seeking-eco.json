@@ -1,0 +1,178 @@
+{
+  "id": "tullock-rent-seeking-eco",
+  "name": "Tullock Rent Seeking",
+  "description": "Agents compete for government-granted monopoly privilege by spending resources on lobbying. Socially wasteful expenditure equals or exceeds the rent value. Shows deadweight loss of regulation. Reference: Tullock, G. (1967). The Welfare Costs of Tariffs, Monopolies, and Theft. Western Economic Journal, 5(3), 224-232. Source: https://doi.org/10.1111/j.1465-7295.1967.tb01923.x",
+  "stocks": [
+    {
+      "id": "stock-lobbying-a",
+      "name": "Firm A Lobbying",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-lobbying-b",
+      "name": "Firm B Lobbying",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adjust-a",
+      "name": "A Lobbying Adjustment",
+      "equation": "Adjustment_Rate * (Best_Response_A - Firm_A_Lobbying)",
+      "from_stock": null,
+      "to_stock": "stock-lobbying-a",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-adjust-b",
+      "name": "B Lobbying Adjustment",
+      "equation": "Adjustment_Rate * (Best_Response_B - Firm_B_Lobbying)",
+      "from_stock": null,
+      "to_stock": "stock-lobbying-b",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-rent-value",
+      "name": "Rent Value",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-contest-function",
+      "name": "Contest Success Function",
+      "equation": "Firm_A_Lobbying / (Firm_A_Lobbying + Firm_B_Lobbying + 0.001)",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-prob-a",
+      "name": "Probability A Wins",
+      "equation": "Contest_Success_Function",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-prob-b",
+      "name": "Probability B Wins",
+      "equation": "1 - Probability_A_Wins",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-expected-a",
+      "name": "Expected Payoff A",
+      "equation": "Probability_A_Wins * Rent_Value - Firm_A_Lobbying",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-expected-b",
+      "name": "Expected Payoff B",
+      "equation": "Probability_B_Wins * Rent_Value - Firm_B_Lobbying",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-best-a",
+      "name": "Best Response A",
+      "equation": "SQRT(Rent_Value * Firm_B_Lobbying) - Firm_B_Lobbying",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-best-b",
+      "name": "Best Response B",
+      "equation": "SQRT(Rent_Value * Firm_A_Lobbying) - Firm_A_Lobbying",
+      "position": {
+        "x": 350,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-total-rent-seeking",
+      "name": "Total Rent Seeking",
+      "equation": "Firm_A_Lobbying + Firm_B_Lobbying",
+      "position": {
+        "x": 200,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-dissipation",
+      "name": "Rent Dissipation",
+      "equation": "Total_Rent_Seeking / Rent_Value",
+      "position": {
+        "x": 450,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-adjustment",
+      "name": "Adjustment Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 600,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Firm A Lobbying",
+      "to_element": "Contest Success Function"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Firm B Lobbying",
+      "to_element": "Contest Success Function"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Firm B Lobbying",
+      "to_element": "Best Response A"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:51:43.478145+00:00",
+  "updated_at": "2026-01-12T07:51:43.478149+00:00",
+  "source": "https://doi.org/10.2307/3003160",
+  "reference": "Tullock G. The Welfare Costs of Tariffs, Monopolies, and Theft. Western Economic Journal. 1967;5(3):224-232."
+}

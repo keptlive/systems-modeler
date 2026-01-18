@@ -1,0 +1,131 @@
+{
+  "id": "patient-safety-culture-hea",
+  "name": "Patient Safety Culture Model",
+  "description": "Model of patient safety culture dynamics. Source: Pronovost et al. (2006), BMJ; Reason Swiss Cheese Model.",
+  "stocks": [
+    {
+      "id": "stock-safety",
+      "name": "Safety_Culture_Level",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-errors",
+      "name": "Near_Misses",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-improve",
+      "name": "Culture_Improvement",
+      "equation": "Training_Investment * (100 - Safety_Culture_Level) / 100",
+      "from_stock": null,
+      "to_stock": "stock-safety",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-erode",
+      "name": "Culture_Erosion",
+      "equation": "Safety_Culture_Level * Erosion_Rate * Workload_Pressure",
+      "from_stock": "stock-safety",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-errors",
+      "name": "Error_Occurrence",
+      "equation": "Base_Error_Rate * (100 - Safety_Culture_Level) / 100",
+      "from_stock": null,
+      "to_stock": "stock-errors",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-catch",
+      "name": "Error_Catch",
+      "equation": "Near_Misses * Catch_Rate * Safety_Culture_Level / 100",
+      "from_stock": "stock-errors",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-train",
+      "name": "Training_Investment",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-erode",
+      "name": "Erosion_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-work",
+      "name": "Workload_Pressure",
+      "equation": "1.2",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-base",
+      "name": "Base_Error_Rate",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-catch",
+      "name": "Catch_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:55:38.760688+00:00",
+  "updated_at": "2026-01-12T12:55:38.760688+00:00",
+  "source": "https://doi.org/10.1136/bmj.320.7237.768",
+  "reference": "Reason J. Human error: models and management. BMJ. 2000;320(7237):768-770."
+}

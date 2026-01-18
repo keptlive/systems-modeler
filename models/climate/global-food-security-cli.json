@@ -1,0 +1,247 @@
+{
+  "id": "global-food-security-cli",
+  "name": "Global Food Security Model",
+  "description": "Models food production, consumption, and security under climate change. Based on FAO projections and Ray et al. (2013) yield gap analysis. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "stock-cropland",
+      "name": "Cropland_Area",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-crop-yield",
+      "name": "Average_Yield",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-food-production",
+      "name": "Annual_Food_Production",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-food-demand",
+      "name": "Food_Demand",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-food-insecure",
+      "name": "Food_Insecure_Population",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-land-expansion",
+      "name": "Cropland_Expansion",
+      "equation": "MAX(0, (Food_Demand - Annual_Food_Production) / Average_Yield * Land_Response_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-cropland",
+      "position": {
+        "x": 75,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-land-degradation",
+      "name": "Land_Degradation",
+      "equation": "Cropland_Area * Degradation_Rate",
+      "from_stock": "stock-cropland",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-yield-improvement",
+      "name": "Yield_Improvement",
+      "equation": "Technology_Investment * Yield_Response",
+      "from_stock": null,
+      "to_stock": "stock-crop-yield",
+      "position": {
+        "x": 275,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-climate-impact",
+      "name": "Climate_Yield_Impact",
+      "equation": "Average_Yield * Climate_Impact_Rate * Temperature_Anomaly",
+      "from_stock": "stock-crop-yield",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-production-calc",
+      "name": "Production_Update",
+      "equation": "(Cropland_Area * Average_Yield - Annual_Food_Production) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-food-production",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-demand-growth",
+      "name": "Demand_Growth",
+      "equation": "Food_Demand * (Population_Growth_Rate + Income_Effect)",
+      "from_stock": null,
+      "to_stock": "stock-food-demand",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-insecurity-change",
+      "name": "Insecurity_Change",
+      "equation": "(MAX(0, Food_Demand - Annual_Food_Production) * Insecurity_Factor - Food_Insecure_Population) / Response_Time",
+      "from_stock": null,
+      "to_stock": "stock-food-insecure",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-land-response-rate",
+      "name": "Land_Response_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-degradation-rate",
+      "name": "Degradation_Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-technology-investment",
+      "name": "Technology_Investment",
+      "equation": "0.02",
+      "position": {
+        "x": 340,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-yield-response",
+      "name": "Yield_Response",
+      "equation": "0.5",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-climate-impact-rate",
+      "name": "Climate_Impact_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-temperature-anomaly",
+      "name": "Temperature_Anomaly",
+      "equation": "1.2 + 0.02 * TIME",
+      "position": {
+        "x": 100,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-adjustment-time",
+      "name": "Adjustment_Time",
+      "equation": "1",
+      "position": {
+        "x": 220,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-population-growth-rate",
+      "name": "Population_Growth_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 340,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-income-effect",
+      "name": "Income_Effect",
+      "equation": "0.005",
+      "position": {
+        "x": 460,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-insecurity-factor",
+      "name": "Insecurity_Factor",
+      "equation": "0.1",
+      "position": {
+        "x": 580,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-response-time",
+      "name": "Response_Time",
+      "equation": "2",
+      "position": {
+        "x": 700,
+        "y": 380
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 80,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T01:12:15.901574+00:00",
+  "updated_at": "2026-01-12T01:12:15.901585+00:00",
+  "source": "https://doi.org/10.1371/journal.pone.0066428",
+  "reference": "Ray DK, Mueller ND, West PC, Foley JA. Yield Trends Are Insufficient to Double Global Crop Production by 2050. PLOS ONE. 2013;8(6):e66428."
+}

@@ -1,0 +1,263 @@
+{
+  "id": "wildfire-risk-response-cli",
+  "name": "Wildfire Risk and Response Model",
+  "description": "Models wildfire risk, spread dynamics, and response. Based on Abatzoglou & Williams (2016) analysis of climate and fire risk. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "stock-fuel-load",
+      "name": "Fuel_Load",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-active-fires",
+      "name": "Active_Fire_Area",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-burned-area",
+      "name": "Burned_Area",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-response-capacity",
+      "name": "Response_Capacity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-damage",
+      "name": "Total_Damage",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-fuel-accumulation",
+      "name": "Fuel_Accumulation",
+      "equation": "Vegetation_Growth_Rate * (Max_Fuel - Fuel_Load) / Max_Fuel",
+      "from_stock": null,
+      "to_stock": "stock-fuel-load",
+      "position": {
+        "x": 75,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-ignition",
+      "name": "Fire_Ignition",
+      "equation": "Ignition_Probability * Fuel_Load * Fire_Weather_Index",
+      "from_stock": "stock-fuel-load",
+      "to_stock": "stock-active-fires",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-spread",
+      "name": "Fire_Spread",
+      "equation": "Active_Fire_Area * Spread_Rate * Fire_Weather_Index * (Fuel_Load / Max_Fuel)",
+      "from_stock": "stock-fuel-load",
+      "to_stock": "stock-active-fires",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-containment",
+      "name": "Fire_Containment",
+      "equation": "Active_Fire_Area * Containment_Rate * Response_Capacity / Reference_Capacity",
+      "from_stock": "stock-active-fires",
+      "to_stock": "stock-burned-area",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-response-deployment",
+      "name": "Response_Deployment",
+      "equation": "IF(Active_Fire_Area > Alert_Threshold, Deployment_Rate, -Response_Capacity * Demobilization_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-response-capacity",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-damage-accumulation",
+      "name": "Damage_Accumulation",
+      "equation": "Active_Fire_Area * Damage_Per_Area * (1 + Proximity_Factor)",
+      "from_stock": null,
+      "to_stock": "stock-damage",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-vegetation-growth-rate",
+      "name": "Vegetation_Growth_Rate",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-max-fuel",
+      "name": "Max_Fuel",
+      "equation": "1000",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-ignition-probability",
+      "name": "Ignition_Probability",
+      "equation": "0.001",
+      "position": {
+        "x": 340,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fire-weather-index",
+      "name": "Fire_Weather_Index",
+      "equation": "1 + Temperature_Anomaly * Drought_Index",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-temperature-anomaly",
+      "name": "Temperature_Anomaly",
+      "equation": "1 + 0.02 * TIME",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-drought-index",
+      "name": "Drought_Index",
+      "equation": "0.5 + 0.5 * SIN(TIME * 0.3)",
+      "position": {
+        "x": 280,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-spread-rate",
+      "name": "Spread_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 440,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-containment-rate",
+      "name": "Containment_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 580,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-reference-capacity",
+      "name": "Reference_Capacity",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-alert-threshold",
+      "name": "Alert_Threshold",
+      "equation": "10",
+      "position": {
+        "x": 240,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-deployment-rate",
+      "name": "Deployment_Rate",
+      "equation": "20",
+      "position": {
+        "x": 380,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-demobilization-rate",
+      "name": "Demobilization_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 520,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-damage-per-area",
+      "name": "Damage_Per_Area",
+      "equation": "1000",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-proximity-factor",
+      "name": "Proximity_Factor",
+      "equation": "0.5",
+      "position": {
+        "x": 280,
+        "y": 480
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:19:34.570211+00:00",
+  "updated_at": "2026-01-12T01:19:34.570219+00:00",
+  "source": "https://doi.org/10.1073/pnas.1607171113",
+  "reference": "Abatzoglou JT, Williams AP. Impact of anthropogenic climate change on wildfire across western US forests. PNAS. 2016;113(42):11770-11775."
+}

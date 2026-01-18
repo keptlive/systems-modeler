@@ -1,0 +1,168 @@
+{
+  "id": "ai-job-displacement-model",
+  "name": "AI Job Displacement Model",
+  "description": "Model of workforce displacement due to AI automation with skill adaptation dynamics.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Traditional_Jobs",
+      "initial_value": 120000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "AI_Displaced",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Reskilled_Workers",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "New_AI_Jobs",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Displacement",
+      "equation": "Traditional_Jobs * Automation_Rate * AI_Capability",
+      "from_stock": "Traditional_Jobs",
+      "to_stock": "AI_Displaced",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Reskilling",
+      "equation": "AI_Displaced * Reskilling_Rate",
+      "from_stock": "AI_Displaced",
+      "to_stock": "Reskilled_Workers",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "New_Job_Creation",
+      "equation": "AI_Capability * Job_Creation_Rate",
+      "from_stock": null,
+      "to_stock": "New_AI_Jobs",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Absorption",
+      "equation": "MIN(Reskilled_Workers, New_AI_Jobs * Absorption_Rate)",
+      "from_stock": "Reskilled_Workers",
+      "to_stock": "New_AI_Jobs",
+      "position": {
+        "x": 550,
+        "y": 275
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Automation_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "AI_Capability",
+      "equation": "1 + 0.1 * time",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Reskilling_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Job_Creation_Rate",
+      "equation": "1000000",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Absorption_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Unemployment_Rate",
+      "equation": "AI_Displaced / (Traditional_Jobs + AI_Displaced + Reskilled_Workers + New_AI_Jobs)",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Net_Job_Change",
+      "equation": "New_AI_Jobs - Traditional_Jobs",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2050,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1126/science.aau0723",
+  "reference": "Autor, D. & Salomons, A. (2018). Is Automation Labor Share-Displacing? Brookings Papers on Economic Activity. DOI: 10.1126/science.aau0723",
+  "created_at": "2026-01-15T19:26:14.001716+00:00",
+  "updated_at": "2026-01-15T19:26:14.001716+00:00"
+}

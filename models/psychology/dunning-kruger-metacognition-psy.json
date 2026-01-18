@@ -1,0 +1,32 @@
+{
+  "id": "dunning-kruger-metacognition-psy",
+  "name": "Dunning-Kruger Effect Metacognition Model",
+  "description": "Model of the Dunning-Kruger effect where low performers overestimate and high performers underestimate their relative abilities. Metacognition develops with expertise. Source: Kruger & Dunning (1999). Journal of Personality and Social Psychology. DOI: 10.1037/0022-3514.77.6.1121",
+  "stocks": [
+    {"id": "stock-actual", "name": "Actual_Competence", "initial_value": 30, "equation": "", "position": {"x": 200, "y": 150}},
+    {"id": "stock-perceived", "name": "Perceived_Competence", "initial_value": 70, "equation": "", "position": {"x": 400, "y": 150}},
+    {"id": "stock-metacognition", "name": "Metacognitive_Ability", "initial_value": 20, "equation": "", "position": {"x": 300, "y": 300}}
+  ],
+  "flows": [
+    {"id": "flow-learning", "name": "Learning_Rate", "equation": "Learning_Speed * (100 - Actual_Competence) / 100 * Effort", "from_stock": null, "to_stock": "stock-actual", "position": {"x": 100, "y": 150}},
+    {"id": "flow-calibration", "name": "Calibration_Update", "equation": "(Calibrated_Estimate - Perceived_Competence) * Feedback_Sensitivity", "from_stock": null, "to_stock": "stock-perceived", "position": {"x": 500, "y": 150}},
+    {"id": "flow-metacog-develop", "name": "Metacognition_Development", "equation": "Learning_Rate * Metacognition_Learning_Factor", "from_stock": null, "to_stock": "stock-metacognition", "position": {"x": 200, "y": 300}}
+  ],
+  "variables": [
+    {"id": "var-learning-speed", "name": "Learning_Speed", "equation": "2", "position": {"x": 100, "y": 100}},
+    {"id": "var-effort", "name": "Effort", "equation": "1", "position": {"x": 150, "y": 200}},
+    {"id": "var-calibrated", "name": "Calibrated_Estimate", "equation": "Actual_Competence * Metacognitive_Ability / 100 + (100 - Metacognitive_Ability) * Overconfidence_Bias", "position": {"x": 350, "y": 200}},
+    {"id": "var-overconfidence", "name": "Overconfidence_Bias", "equation": "0.7", "position": {"x": 450, "y": 250}},
+    {"id": "var-feedback", "name": "Feedback_Sensitivity", "equation": "0.1", "position": {"x": 500, "y": 100}},
+    {"id": "var-metacog-factor", "name": "Metacognition_Learning_Factor", "equation": "0.5", "position": {"x": 100, "y": 350}},
+    {"id": "var-dk-effect", "name": "DK_Effect_Magnitude", "equation": "Perceived_Competence - Actual_Competence", "position": {"x": 300, "y": 350}},
+    {"id": "var-unskilled-unaware", "name": "Unskilled_Unaware", "equation": "IF(Actual_Competence < 50 AND DK_Effect_Magnitude > 20, 1, 0)", "position": {"x": 400, "y": 350}},
+    {"id": "var-imposter", "name": "Imposter_Syndrome", "equation": "IF(Actual_Competence > 70 AND DK_Effect_Magnitude < -10, 1, 0)", "position": {"x": 400, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.5},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1037/0022-3514.77.6.1121",
+  "reference": "Kruger, J. & Dunning, D. (1999). Unskilled and unaware of it: How difficulties in recognizing one's own incompetence lead to inflated self-assessments. Journal of Personality and Social Psychology, 77(6), 1121-1134."
+}

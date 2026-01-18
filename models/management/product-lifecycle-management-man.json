@@ -1,0 +1,222 @@
+{
+  "id": "product-lifecycle-management-man",
+  "name": "Product Lifecycle Management Model",
+  "description": "Model of product lifecycle stages (introduction, growth, maturity, decline) based on Vernon (1966) and Levitt (1965). Shows how sales, marketing, and investment strategies change across lifecycle. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-market-awareness",
+      "name": "Market Awareness",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-sales",
+      "name": "Cumulative Sales",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-profit",
+      "name": "Cumulative Profit",
+      "initial_value": -100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-product-quality",
+      "name": "Product Quality",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-awareness-growth",
+      "name": "Awareness Growth",
+      "equation": "Awareness_Rate * (1 - Market_Awareness) * (Marketing_Effect + Word_of_Mouth)",
+      "from_stock": null,
+      "to_stock": "stock-market-awareness",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-sales-rate",
+      "name": "Sales Rate",
+      "equation": "Potential_Market * Market_Awareness * Purchase_Rate * Quality_Effect",
+      "from_stock": null,
+      "to_stock": "stock-sales",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-profit-rate",
+      "name": "Profit Rate",
+      "equation": "Sales_Rate * (Price - Unit_Cost) - Marketing_Spending - RD_Spending",
+      "from_stock": null,
+      "to_stock": "stock-profit",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-quality-improvement",
+      "name": "Quality Improvement",
+      "equation": "RD_Spending * RD_Effectiveness * (1 - Product_Quality)",
+      "from_stock": null,
+      "to_stock": "stock-product-quality",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-potential-market",
+      "name": "Potential Market",
+      "equation": "10000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-awareness-rate",
+      "name": "Awareness Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-marketing-effect",
+      "name": "Marketing Effect",
+      "equation": "Marketing_Spending / 100",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-marketing-spending",
+      "name": "Marketing Spending",
+      "equation": "50 * IF Lifecycle_Stage < 3 THEN 1.5 ELSE 0.5",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-word-of-mouth",
+      "name": "Word of Mouth",
+      "equation": "0.3 * Cumulative_Sales / Potential_Market",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-purchase-rate",
+      "name": "Purchase Rate",
+      "equation": "0.1 - 0.02 * Lifecycle_Stage",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-quality-effect",
+      "name": "Quality Effect",
+      "equation": "0.5 + 0.5 * Product_Quality",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-price",
+      "name": "Price",
+      "equation": "100 - 10 * Lifecycle_Stage",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-unit-cost",
+      "name": "Unit Cost",
+      "equation": "50 - 5 * Product_Quality - Learning_Effect",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-learning-effect",
+      "name": "Learning Effect",
+      "equation": "10 * LOG(1 + Cumulative_Sales / 1000)",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-rd-spending",
+      "name": "R&D Spending",
+      "equation": "20 * IF Lifecycle_Stage < 2 THEN 2 ELSE 0.5",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-rd-effectiveness",
+      "name": "R&D Effectiveness",
+      "equation": "0.01",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-lifecycle-stage",
+      "name": "Lifecycle Stage",
+      "equation": "IF Market_Awareness < 0.2 THEN 1 ELSE IF Market_Awareness < 0.6 THEN 2 ELSE IF Market_Awareness < 0.9 THEN 3 ELSE 4",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T21:11:32.980726+00:00",
+  "updated_at": "2026-01-11T21:11:32.980726+00:00",
+  "source": "https://doi.org/10.1287/mnsc.35.3.321",
+  "reference": "Sterman JD. Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill, 2000."
+}

@@ -1,0 +1,89 @@
+{
+  "id": "prandtl-boundary-layer-phy",
+  "name": "Prandtl Boundary Layer Model",
+  "description": "Ludwig Prandtl's revolutionary boundary layer theory (1904) that bridged potential flow and viscous flow. Near solid boundaries, a thin layer exists where viscous effects dominate. This solved d'Alembert's paradox. Source: Prandtl, L. (1904). DOI: 10.1007/978-3-662-11836-8_43",
+  "stocks": [
+    {
+      "id": "stock-displacement",
+      "name": "Displacement_Thickness",
+      "initial_value": 0.001,
+      "equation": "",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "stock-momentum",
+      "name": "Momentum_Thickness",
+      "initial_value": 0.0005,
+      "equation": "",
+      "position": {"x": 400, "y": 200}
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-displacement-growth",
+      "name": "Displacement_Growth",
+      "equation": "0.664 * SQRT(Kinematic_Viscosity / (Freestream_Velocity * X_Position)) * Freestream_Velocity",
+      "from_stock": null,
+      "to_stock": "stock-displacement",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "flow-momentum-growth",
+      "name": "Momentum_Growth",
+      "equation": "Skin_Friction_Coefficient / 2",
+      "from_stock": null,
+      "to_stock": "stock-momentum",
+      "position": {"x": 300, "y": 200}
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-freestream",
+      "name": "Freestream_Velocity",
+      "equation": "10",
+      "position": {"x": 150, "y": 100}
+    },
+    {
+      "id": "var-viscosity",
+      "name": "Kinematic_Viscosity",
+      "equation": "0.000015",
+      "position": {"x": 300, "y": 100}
+    },
+    {
+      "id": "var-x",
+      "name": "X_Position",
+      "equation": "0.1 + TIME * 0.01",
+      "position": {"x": 450, "y": 100}
+    },
+    {
+      "id": "var-rex",
+      "name": "Reynolds_X",
+      "equation": "Freestream_Velocity * X_Position / Kinematic_Viscosity",
+      "position": {"x": 300, "y": 50}
+    },
+    {
+      "id": "var-boundary-thickness",
+      "name": "Boundary_Layer_Thickness",
+      "equation": "5 * X_Position / SQRT(Reynolds_X + 0.001)",
+      "position": {"x": 200, "y": 300}
+    },
+    {
+      "id": "var-cf",
+      "name": "Skin_Friction_Coefficient",
+      "equation": "0.664 / SQRT(Reynolds_X + 0.001)",
+      "position": {"x": 400, "y": 300}
+    },
+    {
+      "id": "var-wall-shear",
+      "name": "Wall_Shear_Stress",
+      "equation": "0.5 * 1.225 * Freestream_Velocity^2 * Skin_Friction_Coefficient",
+      "position": {"x": 300, "y": 350}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.1},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1007/978-3-662-11836-8_43",
+  "reference": "Prandtl, L. (1904). Über Flüssigkeitsbewegung bei sehr kleiner Reibung. Verhandlungen des III. Internationalen Mathematiker-Kongresses, Heidelberg."
+}

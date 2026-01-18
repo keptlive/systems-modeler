@@ -1,0 +1,131 @@
+{
+  "id": "ashby-variety-requisite-cla",
+  "name": "Ashby Requisite Variety Model",
+  "description": "W. Ross Ashby's Law of Requisite Variety: Only variety can absorb variety. Models how system regulators must have sufficient variety to control disturbances. Reference: Ashby, W.R. (1956). An Introduction to Cybernetics.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "System_Variety",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Regulator_Variety",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Uncontrolled_Variety",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Disturbance_Increase",
+      "equation": "Random_Disturbance",
+      "from_stock": null,
+      "to_stock": "System_Variety",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Regulation",
+      "equation": "MIN(Regulator_Variety, System_Variety) * Regulation_Efficiency",
+      "from_stock": "System_Variety",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Variety_Overflow",
+      "equation": "MAX(0, System_Variety - Regulator_Variety) * 0.1",
+      "from_stock": "System_Variety",
+      "to_stock": "Uncontrolled_Variety",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Regulator_Learning",
+      "equation": "Learning_Rate * Uncontrolled_Variety",
+      "from_stock": null,
+      "to_stock": "Regulator_Variety",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Random_Disturbance",
+      "equation": "2 + SIN(time / 5)",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Regulation_Efficiency",
+      "equation": "0.8",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Learning_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Variety_Ratio",
+      "equation": "Regulator_Variety / MAX(1, System_Variety)",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1007/978-1-4899-0718-9",
+  "reference": "Ashby, W.R. (1956). An Introduction to Cybernetics. Chapman & Hall.",
+  "created_at": "2026-01-15T19:52:37.285857+00:00",
+  "updated_at": "2026-01-15T19:52:37.285857+00:00"
+}

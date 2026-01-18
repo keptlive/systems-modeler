@@ -1,0 +1,169 @@
+{
+  "id": "yield-curve-dynamics-fin",
+  "name": "Yield Curve Dynamics Model",
+  "description": "Nelson-Siegel (1987) yield curve model with expectations theory. Models term structure of interest rates and recession predictive power of yield curve inversion. Reference: IEEE Power & Energy Society. Source: https://www.ieee-pes.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Short_Rate",
+      "initial_value": 2,
+      "position": {
+        "x": 200,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s2",
+      "name": "Long_Rate",
+      "initial_value": 4,
+      "position": {
+        "x": 400,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s3",
+      "name": "Term_Premium",
+      "initial_value": 1.5,
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "equation": ""
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "short_rate_change",
+      "to_stock": "s1",
+      "equation": "monetary_policy_rate - Short_Rate",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f2",
+      "name": "long_rate_adjustment",
+      "to_stock": "s2",
+      "equation": "(expected_short_rate + Term_Premium - Long_Rate) / adjustment_time",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f3",
+      "name": "premium_change",
+      "to_stock": "s3",
+      "equation": "(target_premium - Term_Premium) * uncertainty_factor",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "monetary_policy_rate",
+      "equation": "2 + 0.5 * SIN(TIME/10)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v2",
+      "name": "expected_short_rate",
+      "equation": "Short_Rate + inflation_expectation",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v3",
+      "name": "inflation_expectation",
+      "equation": "2",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v4",
+      "name": "target_premium",
+      "equation": "1.5",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v5",
+      "name": "uncertainty_factor",
+      "equation": "0.1",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v6",
+      "name": "adjustment_time",
+      "equation": "2",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v7",
+      "name": "yield_spread",
+      "equation": "Long_Rate - Short_Rate",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v8",
+      "name": "recession_probability",
+      "equation": "IF(yield_spread < 0, 0.5 + ABS(yield_spread) * 0.2, 0.1)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "monetary_policy_rate",
+      "to_element": "short_rate_change"
+    },
+    {
+      "id": "c2",
+      "from_element": "expected_short_rate",
+      "to_element": "long_rate_adjustment"
+    },
+    {
+      "id": "c3",
+      "from_element": "Term_Premium",
+      "to_element": "long_rate_adjustment"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "dt": 0.25,
+    "end": 40
+  },
+  "created_at": "2026-01-12T02:25:30.586746+00:00",
+  "updated_at": "2026-01-12T02:25:30.586749+00:00",
+  "source": "https://doi.org/10.1086/296409",
+  "reference": "Nelson, C. R., & Siegel, A. F. (1987). Parsimonious modeling of yield curves. Journal of business, 473-489."
+}

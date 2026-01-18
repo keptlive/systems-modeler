@@ -1,0 +1,215 @@
+{
+  "id": "carbon-tax-revenue-recycling-cli",
+  "name": "Carbon Tax with Revenue Recycling",
+  "description": "Model of carbon tax policy with different revenue recycling options. Captures the effects of tax-induced emission reductions and the economic impacts of returning revenue via dividends or investment. Based on climate policy economics. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Carbon_Emissions",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Carbon_Tax_Rate",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Tax_Revenue_Fund",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Clean_Technology",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Emission_Reduction",
+      "equation": "Carbon_Emissions * Reduction_Rate * (Carbon_Tax_Rate / Reference_Tax + Clean_Technology / 100)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Tax_Increase",
+      "equation": "Tax_Escalation_Rate",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Revenue_Collection",
+      "equation": "Carbon_Emissions * Carbon_Tax_Rate",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Revenue_Distribution",
+      "equation": "Tax_Revenue_Fund * (Dividend_Fraction + Investment_Fraction)",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Tech_Investment",
+      "equation": "Tax_Revenue_Fund * Investment_Fraction * Tech_Conversion_Rate",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 250,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Reference_Tax",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Reduction_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Tax_Escalation_Rate",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Dividend_Fraction",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Investment_Fraction",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Tech_Conversion_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Carbon_Price_Signal",
+      "equation": "Carbon_Tax_Rate",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Annual_Revenue",
+      "equation": "Carbon_Emissions * Carbon_Tax_Rate",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Per_Capita_Dividend",
+      "equation": "Tax_Revenue_Fund * Dividend_Fraction / Population",
+      "position": {
+        "x": 200,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Population",
+      "equation": "330000000",
+      "position": {
+        "x": 400,
+        "y": 180
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Emission_Reduction_Percent",
+      "equation": "(100 - Carbon_Emissions) / 100 * 100",
+      "position": {
+        "x": 550,
+        "y": 180
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2025,
+    "end": 2050,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1073/pnas.1609244114",
+  "reference": "Nordhaus WD (2017) Revisiting the social cost of carbon. PNAS. Also: Metcalf GE (2019) On the Economics of a Carbon Tax for the United States.",
+  "created_at": "2026-01-12T06:59:12.983559+00:00",
+  "updated_at": "2026-01-12T06:59:12.983559+00:00"
+}

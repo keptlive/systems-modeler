@@ -1,0 +1,32 @@
+{
+  "id": "fine-herd-immunity-threshold-epi",
+  "name": "Fine Herd Immunity Threshold Model",
+  "description": "Paul Fine's (1993) model for calculating herd immunity thresholds for vaccination programs. Shows that the critical vaccination coverage Vc = 1 - 1/R0 needed to achieve herd immunity and prevent epidemic spread. Essential for vaccine policy planning.",
+  "stocks": [
+    {"id": "stock-susceptible", "name": "Susceptible", "initial_value": 200000, "equation": "", "position": {"x": 200, "y": 150}},
+    {"id": "stock-vaccinated", "name": "Vaccinated", "initial_value": 700000, "equation": "", "position": {"x": 200, "y": 300}},
+    {"id": "stock-infected", "name": "Infected", "initial_value": 100, "equation": "", "position": {"x": 400, "y": 150}},
+    {"id": "stock-recovered", "name": "Recovered", "initial_value": 100000, "equation": "", "position": {"x": 600, "y": 150}}
+  ],
+  "flows": [
+    {"id": "flow-births-susceptible", "name": "Births Susceptible", "equation": "Birth_Rate * Population * (1 - Vaccination_Coverage)", "from_stock": null, "to_stock": "stock-susceptible", "position": {"x": 100, "y": 150}},
+    {"id": "flow-births-vaccinated", "name": "Births Vaccinated", "equation": "Birth_Rate * Population * Vaccination_Coverage * Vaccine_Efficacy", "from_stock": null, "to_stock": "stock-vaccinated", "position": {"x": 100, "y": 300}},
+    {"id": "flow-infection", "name": "Infection", "equation": "Beta * Susceptible * Infected / Population", "from_stock": "stock-susceptible", "to_stock": "stock-infected", "position": {"x": 300, "y": 150}},
+    {"id": "flow-recovery", "name": "Recovery", "equation": "Infected / Infectious_Period", "from_stock": "stock-infected", "to_stock": "stock-recovered", "position": {"x": 500, "y": 150}}
+  ],
+  "variables": [
+    {"id": "var-beta", "name": "Beta", "equation": "0.5", "position": {"x": 250, "y": 80}},
+    {"id": "var-infectious-period", "name": "Infectious Period", "equation": "14", "position": {"x": 400, "y": 80}},
+    {"id": "var-r0", "name": "R0", "equation": "15", "position": {"x": 550, "y": 80}},
+    {"id": "var-population", "name": "Population", "equation": "1000000", "position": {"x": 200, "y": 380}},
+    {"id": "var-vaccination-coverage", "name": "Vaccination Coverage", "equation": "0.7", "position": {"x": 350, "y": 380}},
+    {"id": "var-vaccine-efficacy", "name": "Vaccine Efficacy", "equation": "0.95", "position": {"x": 500, "y": 380}},
+    {"id": "var-herd-immunity-threshold", "name": "Herd Immunity Threshold", "equation": "1 - 1 / R0", "position": {"x": 350, "y": 450}},
+    {"id": "var-birth-rate", "name": "Birth Rate", "equation": "0.00004", "position": {"x": 550, "y": 450}},
+    {"id": "var-effective-r", "name": "Effective R", "equation": "R0 * Susceptible / Population", "position": {"x": 650, "y": 380}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 365, "dt": 1},
+  "source": "https://doi.org/10.1093/cid/16.4.544",
+  "reference": "Fine PEM. Herd Immunity: History, Theory, Practice. Epidemiologic Reviews. 1993;15(2):265-302."
+}

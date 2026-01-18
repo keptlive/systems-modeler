@@ -1,0 +1,159 @@
+{
+  "id": "refugee-displacement-soc",
+  "name": "Refugee Displacement and Integration Dynamics",
+  "description": "A model of forced displacement, capturing flows of refugees from conflict zones to host countries and the integration process. Based on UNHCR frameworks and academic literature on refugee movements. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "source": "https://doi.org/10.1080/13621024.2008.9720713",
+  "reference": "Ager A, Strang A. Understanding Integration: A Conceptual Framework. Journal of Refugee Studies. 2008;21(2):166-191.",
+  "stocks": [
+    {
+      "id": "stock-origin-pop",
+      "name": "Population in Origin Country",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-refugees",
+      "name": "Refugees in Transit",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-host-country",
+      "name": "Refugees in Host Country",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-integrated",
+      "name": "Integrated Population",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-displacement",
+      "name": "Displacement",
+      "equation": "Population_in_Origin_Country * Displacement_Rate * Conflict_Intensity",
+      "from_stock": "stock-origin-pop",
+      "to_stock": "stock-refugees",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-arrival",
+      "name": "Arrival in Host",
+      "equation": "Refugees_in_Transit / Transit_Time",
+      "from_stock": "stock-refugees",
+      "to_stock": "stock-host-country",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-integration",
+      "name": "Integration",
+      "equation": "Refugees_in_Host_Country * Integration_Rate * Host_Capacity_Factor",
+      "from_stock": "stock-host-country",
+      "to_stock": "stock-integrated",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-return",
+      "name": "Voluntary Return",
+      "equation": "Refugees_in_Host_Country * Return_Rate * (1 - Conflict_Intensity)",
+      "from_stock": "stock-host-country",
+      "to_stock": "stock-origin-pop",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-displacement-rate",
+      "name": "Displacement Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-conflict",
+      "name": "Conflict Intensity",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-transit-time",
+      "name": "Transit Time",
+      "equation": "2",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-integration-rate",
+      "name": "Integration Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-capacity",
+      "name": "Host Capacity Factor",
+      "equation": "MAX(0.1, 1 - Refugees_in_Host_Country / 500000)",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-return-rate",
+      "name": "Return Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T08:00:00.000000+00:00",
+  "updated_at": "2026-01-12T08:00:00.000000+00:00"
+}

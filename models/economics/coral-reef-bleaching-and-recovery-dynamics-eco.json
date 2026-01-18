@@ -1,0 +1,601 @@
+{
+  "id": "coral-reef-bleaching-and-recovery-dynamics-eco",
+  "name": "Coral Reef Bleaching and Recovery Dynamics",
+  "description": "A system dynamics model of coral reef ecosystem dynamics including thermal bleaching, recovery processes, ocean acidification impacts, and competition with algae. Captures tipping points and hysteresis in reef state transitions. Reference: NOAA Ocean Climate. Source: https://www.climate.gov/news-features/understanding-climate/climate-change-ocean-heat-content",
+  "stocks": [
+    {
+      "id": "stock-coral-cover",
+      "name": "Coral Cover",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-macroalgae-cover",
+      "name": "Macroalgae Cover",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-herbivore-fish-biomass",
+      "name": "Herbivore Fish Biomass",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-accumulated-thermal-stress",
+      "name": "Accumulated Thermal Stress",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ocean-ph",
+      "name": "Ocean pH",
+      "initial_value": 8.1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-coral-species-diversity",
+      "name": "Coral Species Diversity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-coral-growth",
+      "name": "Coral Growth",
+      "equation": "Coral_Cover * Intrinsic_Growth_Rate * (1 - Coral_Cover / Carrying_Capacity) * Growth_Modifier",
+      "from_stock": null,
+      "to_stock": "stock-coral-cover",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-coral-recruitment",
+      "name": "Coral Recruitment",
+      "equation": "Recruitment_Rate * Available_Substrate * Coral_Cover / 100 * Recruitment_Success",
+      "from_stock": null,
+      "to_stock": "stock-coral-cover",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-background-coral-mortality",
+      "name": "Background Coral Mortality",
+      "equation": "Coral_Cover * Background_Mortality_Rate * (1 + Predation_Pressure + Disease_Pressure)",
+      "from_stock": "stock-coral-cover",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-bleaching-mortality",
+      "name": "Bleaching Mortality",
+      "equation": "Coral_Cover * Bleaching_Mortality_Rate * Bleaching_Severity",
+      "from_stock": "stock-coral-cover",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-algae-growth",
+      "name": "Algae Growth",
+      "equation": "Algae_Cover * Algae_Growth_Rate * (1 - Total_Cover / 100) * Nutrient_Enhancement",
+      "from_stock": null,
+      "to_stock": "stock-macroalgae-cover",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-algae-grazing",
+      "name": "Algae Grazing",
+      "equation": "Algae_Cover * Grazing_Rate * Herbivore_Biomass / Reference_Herbivore_Biomass",
+      "from_stock": "stock-macroalgae-cover",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-coral-overgrowth-of-algae",
+      "name": "Coral Overgrowth of Algae",
+      "equation": "Algae_Cover * Coral_Cover / 100 * Overgrowth_Rate",
+      "from_stock": "stock-macroalgae-cover",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-herbivore-population-growth",
+      "name": "Herbivore Population Growth",
+      "equation": "Herbivore_Biomass * Herbivore_Growth_Rate * (Algae_Cover / 30) * (Coral_Cover / 50)",
+      "from_stock": null,
+      "to_stock": "stock-herbivore-fish-biomass",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-herbivore-natural-mortality",
+      "name": "Herbivore Natural Mortality",
+      "equation": "Herbivore_Biomass * Herbivore_Mortality_Rate",
+      "from_stock": "stock-herbivore-fish-biomass",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-fishing-catch",
+      "name": "Fishing Catch",
+      "equation": "Herbivore_Biomass * Fishing_Pressure",
+      "from_stock": "stock-herbivore-fish-biomass",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-thermal-stress-accumulation",
+      "name": "Thermal Stress Accumulation",
+      "equation": "MAX(0, Sea_Surface_Temperature - Bleaching_Threshold) * 4",
+      "from_stock": null,
+      "to_stock": "stock-accumulated-thermal-stress",
+      "position": {
+        "x": 450,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-thermal-stress-recovery",
+      "name": "Thermal Stress Recovery",
+      "equation": "Coral_Thermal_Stress * Stress_Decay_Rate",
+      "from_stock": "stock-accumulated-thermal-stress",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-ocean-acidification",
+      "name": "Ocean Acidification",
+      "equation": "Acidification_Rate",
+      "from_stock": "stock-ocean-ph",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-diversity-loss",
+      "name": "Diversity Loss",
+      "equation": "Coral_Diversity * Diversity_Loss_Rate * (1 - Coral_Cover / 40)",
+      "from_stock": "stock-coral-species-diversity",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-diversity-recovery",
+      "name": "Diversity Recovery",
+      "equation": "(100 - Coral_Diversity) * Diversity_Recovery_Rate * Coral_Cover / 40",
+      "from_stock": null,
+      "to_stock": "stock-coral-species-diversity",
+      "position": {
+        "x": 650,
+        "y": 800
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-sea-surface-temperature",
+      "name": "Sea Surface Temperature",
+      "equation": "Base_SST + Temperature_Trend * (Time - 2000) + Seasonal_Variation + ENSO_Effect",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-base-sst",
+      "name": "Base SST",
+      "equation": "27",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-temperature-trend",
+      "name": "Temperature Trend",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-seasonal-variation",
+      "name": "Seasonal Variation",
+      "equation": "1.5 * SIN(2 * 3.14159 * Time)",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-enso-effect",
+      "name": "ENSO Effect",
+      "equation": "0.5 * SIN(2 * 3.14159 * Time / 4)",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-bleaching-threshold",
+      "name": "Bleaching Threshold",
+      "equation": "29",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-bleaching-severity",
+      "name": "Bleaching Severity",
+      "equation": "MIN(1, Coral_Thermal_Stress / 8)",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-bleaching-mortality-rate",
+      "name": "Bleaching Mortality Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-intrinsic-coral-growth-rate",
+      "name": "Intrinsic Coral Growth Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-coral-carrying-capacity",
+      "name": "Coral Carrying Capacity",
+      "equation": "80",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-growth-modifier",
+      "name": "Growth Modifier",
+      "equation": "Calcification_Effect * (1 - Bleaching_Severity * 0.5)",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-calcification-effect",
+      "name": "Calcification Effect",
+      "equation": "MAX(0.3, 1 - 3 * (8.1 - Ocean_pH))",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-recruitment-rate",
+      "name": "Recruitment Rate",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-available-substrate",
+      "name": "Available Substrate",
+      "equation": "100 - Coral_Cover - Algae_Cover",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-recruitment-success",
+      "name": "Recruitment Success",
+      "equation": "MAX(0.1, 1 - Algae_Cover / 50)",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-background-mortality-rate",
+      "name": "Background Mortality Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-predation-pressure",
+      "name": "Predation Pressure",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-disease-pressure",
+      "name": "Disease Pressure",
+      "equation": "0.05 * (1 + 2 * Bleaching_Severity)",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-algae-growth-rate",
+      "name": "Algae Growth Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-nutrient-enhancement",
+      "name": "Nutrient Enhancement",
+      "equation": "1 + Nutrient_Loading",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-nutrient-loading",
+      "name": "Nutrient Loading",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-grazing-rate",
+      "name": "Grazing Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-reference-herbivore-biomass",
+      "name": "Reference Herbivore Biomass",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-overgrowth-rate",
+      "name": "Overgrowth Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-herbivore-growth-rate",
+      "name": "Herbivore Growth Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-herbivore-mortality-rate",
+      "name": "Herbivore Mortality Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-fishing-pressure",
+      "name": "Fishing Pressure",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-stress-decay-rate",
+      "name": "Stress Decay Rate",
+      "equation": "12",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-acidification-rate",
+      "name": "Acidification Rate",
+      "equation": "0.002",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-diversity-loss-rate",
+      "name": "Diversity Loss Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-diversity-recovery-rate",
+      "name": "Diversity Recovery Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-total-benthic-cover",
+      "name": "Total Benthic Cover",
+      "equation": "Coral_Cover + Algae_Cover",
+      "position": {
+        "x": 250,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-coral-to-algae-ratio",
+      "name": "Coral to Algae Ratio",
+      "equation": "Coral_Cover / MAX(1, Algae_Cover)",
+      "position": {
+        "x": 400,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-reef-health-index",
+      "name": "Reef Health Index",
+      "equation": "(Coral_Cover / 40 + Coral_Diversity / 100 + Herbivore_Biomass / 50) / 3 * 100",
+      "position": {
+        "x": 550,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-phase-shift-risk",
+      "name": "Phase Shift Risk",
+      "equation": "IF Coral_Cover < 20 AND Algae_Cover > 40 THEN 1 ELSE IF Coral_Cover < 30 AND Algae_Cover > 30 THEN 0.5 ELSE 0",
+      "position": {
+        "x": 700,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-recovery-potential",
+      "name": "Recovery Potential",
+      "equation": "Coral_Cover * Coral_Diversity / 100 * (1 - Bleaching_Severity) * Herbivore_Biomass / Reference_Herbivore_Biomass",
+      "position": {
+        "x": 100,
+        "y": 640
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Coral Cover",
+      "to_element": "Coral Growth"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Macroalgae Cover",
+      "to_element": "Recruitment Success"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Herbivore Fish Biomass",
+      "to_element": "Algae Grazing"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Accumulated Thermal Stress",
+      "to_element": "Bleaching Severity"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Ocean pH",
+      "to_element": "Calcification Effect"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Sea Surface Temperature",
+      "to_element": "Thermal Stress Accumulation"
+    }
+  ],
+  "time_settings": {
+    "start": 2000,
+    "end": 2100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.726193Z",
+  "updated_at": "2026-01-11T20:04:50.726193Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

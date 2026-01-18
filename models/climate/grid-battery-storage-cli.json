@@ -1,0 +1,173 @@
+{
+  "id": "grid-battery-storage-cli",
+  "name": "Grid-Scale Battery Storage Integration",
+  "description": "Models battery storage dynamics with renewable intermittency. Source: Denholm & Mai (2019), NREL. DOI: 10.1038/s41560-019-0438-z",
+  "stocks": [
+    {
+      "id": "stock-stored",
+      "name": "Energy_Stored",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-curtailed",
+      "name": "Curtailed_Energy",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-unmet",
+      "name": "Unmet_Demand",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-charge",
+      "name": "Charging",
+      "equation": "MIN(Excess_Generation * Charge_Efficiency, (Storage_Capacity - Energy_Stored) / DT)",
+      "from_stock": null,
+      "to_stock": "stock-stored",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-discharge",
+      "name": "Discharging",
+      "equation": "MIN(Energy_Stored / DT, Deficit * Discharge_Efficiency)",
+      "from_stock": "stock-stored",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-curtail",
+      "name": "Curtailment",
+      "equation": "MAX(0, Excess_Generation - Charging)",
+      "from_stock": null,
+      "to_stock": "stock-curtailed",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-unmetadd",
+      "name": "Unmet_Addition",
+      "equation": "MAX(0, Deficit - Discharging)",
+      "from_stock": null,
+      "to_stock": "stock-unmet",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-rengen",
+      "name": "Renewable_Generation",
+      "equation": "80 + 40 * SIN(TIME / 6) + 20 * SIN(TIME / 24)",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Grid_Demand",
+      "equation": "100 + 30 * SIN(TIME / 24 - 6)",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-excess",
+      "name": "Excess_Generation",
+      "equation": "MAX(0, Renewable_Generation - Grid_Demand)",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-deficit",
+      "name": "Deficit",
+      "equation": "MAX(0, Grid_Demand - Renewable_Generation)",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-storagecap",
+      "name": "Storage_Capacity",
+      "equation": "200",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-chargeeff",
+      "name": "Charge_Efficiency",
+      "equation": "0.9",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-dischargeeff",
+      "name": "Discharge_Efficiency",
+      "equation": "0.9",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-soc",
+      "name": "State_Of_Charge",
+      "equation": "Energy_Stored / Storage_Capacity",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Energy_Stored",
+      "to_element": "Discharging"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 168,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:09:47.460625+00:00",
+  "updated_at": "2026-01-12T02:09:47.460629+00:00",
+  "source": "https://doi.org/10.1038/s41560-019-0438-z",
+  "reference": "Denholm, P. & Mai, T. (2019). Timescales of energy storage needed for reducing renewable energy curtailment. NREL."
+}

@@ -1,0 +1,130 @@
+{
+  "id": "coase-theorem-bargaining-eco",
+  "name": "Coase Theorem Bargaining",
+  "description": "With low transaction costs and clear property rights, bargaining achieves efficient outcomes regardless of initial rights allocation. Challenges need for Pigovian taxation. Nobel Prize 1991. Reference: Coase, R. H. (1960). The Problem of Social Cost. Journal of Law and Economics, 3, 1-44. Source: https://doi.org/10.1086/466560",
+  "stocks": [
+    {
+      "id": "stock-pollution",
+      "name": "Pollution Level",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-bargaining",
+      "name": "Bargaining Adjustment",
+      "equation": "Bargaining_Speed * (Efficient_Level - Pollution_Level)",
+      "from_stock": null,
+      "to_stock": "stock-pollution",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-polluter-benefit",
+      "name": "Polluter Marginal Benefit",
+      "equation": "50 - 0.5 * Pollution_Level",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-victim-damage",
+      "name": "Victim Marginal Damage",
+      "equation": "0.3 * Pollution_Level",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-efficient-level",
+      "name": "Efficient Level",
+      "equation": "50 / 0.8",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-bargaining-speed",
+      "name": "Bargaining Speed",
+      "equation": "(1 - Transaction_Costs) * 0.2",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-transaction-costs",
+      "name": "Transaction Costs",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-property-rights",
+      "name": "Property Rights Holder",
+      "equation": "1",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-side-payment",
+      "name": "Side Payment",
+      "equation": "IF(Property_Rights_Holder = 1, ABS(Pollution_Level - Efficient_Level) * Polluter_Marginal_Benefit / 2, ABS(Pollution_Level - Efficient_Level) * Victim_Marginal_Damage / 2)",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-total-surplus",
+      "name": "Total Surplus",
+      "equation": "50 * Pollution_Level - 0.25 * Pollution_Level^2 - 0.15 * Pollution_Level^2",
+      "position": {
+        "x": 500,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Pollution Level",
+      "to_element": "Polluter Marginal Benefit"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Pollution Level",
+      "to_element": "Victim Marginal Damage"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Transaction Costs",
+      "to_element": "Bargaining Speed"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:51:43.478110+00:00",
+  "updated_at": "2026-01-12T07:51:43.478115+00:00",
+  "source": "https://doi.org/10.1086/466560",
+  "reference": "Coase RH. The Problem of Social Cost. Journal of Law and Economics. 1960;3:1-44. Nobel Prize 1991."
+}

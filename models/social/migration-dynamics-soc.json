@@ -1,0 +1,196 @@
+{
+  "id": "migration-dynamics-soc",
+  "name": "Migration Dynamics Model",
+  "description": "Model of migration flows between regions based on economic opportunities and network effects. Based on Harris-Todaro (1970) and gravity model of migration. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-origin-pop",
+      "name": "Origin Population",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-destination-pop",
+      "name": "Destination Population",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-migrants-stock",
+      "name": "Migrant Stock at Destination",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-emigration",
+      "name": "Emigration",
+      "equation": "Origin_Population * Emigration_Rate",
+      "from_stock": "stock-origin-pop",
+      "to_stock": "stock-migrants-stock",
+      "position": {
+        "x": 225,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-return-migration",
+      "name": "Return Migration",
+      "equation": "Migrant_Stock_at_Destination * Return_Rate",
+      "from_stock": "stock-migrants-stock",
+      "to_stock": "stock-origin-pop",
+      "position": {
+        "x": 225,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-integration",
+      "name": "Integration",
+      "equation": "Migrant_Stock_at_Destination * Integration_Rate",
+      "from_stock": "stock-migrants-stock",
+      "to_stock": "stock-destination-pop",
+      "position": {
+        "x": 375,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-origin-births",
+      "name": "Origin Natural Growth",
+      "equation": "Origin_Population * Natural_Growth_Origin",
+      "from_stock": null,
+      "to_stock": "stock-origin-pop",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-destination-births",
+      "name": "Destination Natural Growth",
+      "equation": "Destination_Population * Natural_Growth_Destination",
+      "from_stock": null,
+      "to_stock": "stock-destination-pop",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-wage-origin",
+      "name": "Wage at Origin",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-wage-destination",
+      "name": "Wage at Destination",
+      "equation": "3 - 0.0003 * Destination_Population",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-wage-ratio",
+      "name": "Wage Ratio",
+      "equation": "Wage_Destination / Wage_Origin",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-network-effect",
+      "name": "Network Effect",
+      "equation": "1 + 0.5 * Migrant_Stock_at_Destination / 100",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-emigration-rate",
+      "name": "Emigration Rate",
+      "equation": "Base_Migration_Rate * (Wage_Ratio - 1) * Network_Effect",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-base-migration-rate",
+      "name": "Base Migration Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-return-rate",
+      "name": "Return Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-integration-rate",
+      "name": "Integration Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 600,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-natural-growth-origin",
+      "name": "Natural Growth Origin",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-natural-growth-destination",
+      "name": "Natural Growth Destination",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T21:20:15.295974+00:00",
+  "updated_at": "2026-01-11T21:20:15.295974+00:00",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

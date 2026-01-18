@@ -1,0 +1,125 @@
+{
+  "id": "dorfman-steiner-advertising-mkt",
+  "name": "Dorfman-Steiner Advertising Model",
+  "description": "Optimal advertising intensity based on price elasticity and advertising elasticity",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Sales",
+      "initial_value": 1000.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Brand_Awareness",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Advertising_Stock",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Advertising_Spend",
+      "equation": "50.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Price",
+      "equation": "10.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Price_Elasticity",
+      "equation": "-2.0",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Ad_Elasticity",
+      "equation": "0.3",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Optimal_Ad_Ratio",
+      "equation": "-Ad_Elasticity/Price_Elasticity",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Sales_Response",
+      "equation": "Advertising_Stock*Ad_Elasticity",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Advertising_Spend",
+      "to_element": "Advertising_Stock"
+    },
+    {
+      "id": "c2",
+      "from_element": "Advertising_Stock",
+      "to_element": "Sales"
+    },
+    {
+      "id": "c3",
+      "from_element": "Ad_Elasticity",
+      "to_element": "Optimal_Ad_Ratio"
+    },
+    {
+      "id": "c4",
+      "from_element": "Price_Elasticity",
+      "to_element": "Optimal_Ad_Ratio"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 52.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:42:17.938413+00:00",
+  "updated_at": "2026-01-15T20:42:17.938413+00:00",
+  "source": "https://doi.org/10.2307/1809167",
+  "reference": "Dorfman, R. & Steiner, P.O. (1954) Optimal advertising and optimal quality. AER 44:826-836"
+}

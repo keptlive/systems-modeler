@@ -1,0 +1,253 @@
+{
+  "id": "spring-mass-damper-system-phy",
+  "name": "Spring-Mass-Damper System",
+  "description": "A fundamental mechanical system consisting of a mass attached to a spring and damper. Models vibration, shock absorption, and mechanical resonance. Demonstrates underdamped (oscillatory), critically damped (fastest return), and overdamped (slow return) behavior depending on parameters. Foundational for structural engineering and control systems. Reference: Strogatz, S. H. (2015). Nonlinear Dynamics and Chaos. Westview Press. Source: https://doi.org/10.1201/9780429492563",
+  "stocks": [
+    {
+      "id": "stock-position",
+      "name": "Position",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-velocity",
+      "name": "Velocity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-velocity-flow",
+      "name": "Velocity Flow",
+      "equation": "Velocity",
+      "from_stock": null,
+      "to_stock": "stock-position",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-acceleration-flow",
+      "name": "Acceleration Flow",
+      "equation": "Acceleration",
+      "from_stock": null,
+      "to_stock": "stock-velocity",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-mass",
+      "name": "Mass",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-spring-constant",
+      "name": "Spring Constant",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-damping-coefficient",
+      "name": "Damping Coefficient",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-spring-force",
+      "name": "Spring Force",
+      "equation": "-Spring_Constant * Position",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-damping-force",
+      "name": "Damping Force",
+      "equation": "-Damping_Coefficient * Velocity",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-external-force",
+      "name": "External Force",
+      "equation": "Force_Amplitude * SIN(Driving_Frequency * Time)",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-force-amplitude",
+      "name": "Force Amplitude",
+      "equation": "0",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-driving-frequency",
+      "name": "Driving Frequency",
+      "equation": "3",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-total-force",
+      "name": "Total Force",
+      "equation": "Spring_Force + Damping_Force + External_Force",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-acceleration",
+      "name": "Acceleration",
+      "equation": "Total_Force / Mass",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-natural-frequency",
+      "name": "Natural Frequency",
+      "equation": "SQRT(Spring_Constant / Mass)",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-damping-ratio",
+      "name": "Damping Ratio",
+      "equation": "Damping_Coefficient / (2 * SQRT(Spring_Constant * Mass))",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-damped-frequency",
+      "name": "Damped Frequency",
+      "equation": "Natural_Frequency * SQRT(1 - Damping_Ratio^2)",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-kinetic-energy",
+      "name": "Kinetic Energy",
+      "equation": "0.5 * Mass * Velocity^2",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-potential-energy",
+      "name": "Potential Energy",
+      "equation": "0.5 * Spring_Constant * Position^2",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-total-energy",
+      "name": "Total Energy",
+      "equation": "Kinetic_Energy + Potential_Energy",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Velocity",
+      "to_element": "Velocity Flow"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Acceleration",
+      "to_element": "Acceleration Flow"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Position",
+      "to_element": "Spring Force"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Velocity",
+      "to_element": "Damping Force"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Spring Force",
+      "to_element": "Total Force"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Damping Force",
+      "to_element": "Total Force"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "External Force",
+      "to_element": "Total Force"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Total Force",
+      "to_element": "Acceleration"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Mass",
+      "to_element": "Acceleration"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-11T20:04:50.841179Z",
+  "updated_at": "2026-01-11T20:04:50.841179Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg System Dynamics Test Models"
+}

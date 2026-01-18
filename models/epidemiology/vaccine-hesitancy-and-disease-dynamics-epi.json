@@ -1,0 +1,351 @@
+{
+  "id": "vaccine-hesitancy-and-disease-dynamics-epi",
+  "name": "Vaccine Hesitancy and Disease Dynamics",
+  "description": "Models the feedback between disease incidence and vaccination behavior. When disease is common, vaccination is high; when vaccination drives down disease, complacency leads to hesitancy, which allows resurgence. This creates cyclical patterns of outbreaks as collective memory of disease fades and anti-vaccine sentiment grows. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 9000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Infected",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-vaccinated",
+      "name": "Vaccinated",
+      "initial_value": 900,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-perceived-risk",
+      "name": "Perceived Risk",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-births",
+      "name": "Births",
+      "equation": "Birth_Rate * Total_Population",
+      "from_stock": null,
+      "to_stock": "stock-susceptible",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-infection",
+      "name": "Infection",
+      "equation": "Beta * Susceptible * Infected / Total_Population",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "Gamma * Infected",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-vaccination",
+      "name": "Vaccination",
+      "equation": "Susceptible * Vaccination_Rate",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-vaccinated",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-waning-immunity",
+      "name": "Waning Immunity",
+      "equation": "Recovered / Natural_Immunity_Duration",
+      "from_stock": "stock-recovered",
+      "to_stock": "stock-susceptible",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-vaccine-waning",
+      "name": "Vaccine Waning",
+      "equation": "Vaccinated / Vaccine_Immunity_Duration",
+      "from_stock": "stock-vaccinated",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-deaths-r",
+      "name": "Deaths R",
+      "equation": "Death_Rate * Recovered",
+      "from_stock": "stock-recovered",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-deaths-v",
+      "name": "Deaths V",
+      "equation": "Death_Rate * Vaccinated",
+      "from_stock": "stock-vaccinated",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-risk-update",
+      "name": "Risk Update",
+      "equation": "(Actual_Risk - Perceived_Risk) / Risk_Memory_Time",
+      "from_stock": null,
+      "to_stock": "stock-perceived-risk",
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "Susceptible + Infected + Recovered + Vaccinated",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "Gamma",
+      "equation": "0.2",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-birth-rate",
+      "name": "Birth Rate",
+      "equation": "0.0003",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-death-rate",
+      "name": "Death Rate",
+      "equation": "0.0003",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-actual-risk",
+      "name": "Actual Risk",
+      "equation": "Infected / Total_Population",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-risk-memory-time",
+      "name": "Risk Memory Time",
+      "equation": "52",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-vaccination-rate",
+      "name": "Vaccination Rate",
+      "equation": "Base_Vaccination_Rate * Risk_Response",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-base-vaccination-rate",
+      "name": "Base Vaccination Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-risk-response",
+      "name": "Risk Response",
+      "equation": "MIN(2, Perceived_Risk / Reference_Risk)",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-reference-risk",
+      "name": "Reference Risk",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-natural-immunity-duration",
+      "name": "Natural Immunity Duration",
+      "equation": "520",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-vaccine-immunity-duration",
+      "name": "Vaccine Immunity Duration",
+      "equation": "260",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-vaccination-coverage",
+      "name": "Vaccination Coverage",
+      "equation": "Vaccinated / Total_Population",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-herd-immunity-threshold",
+      "name": "Herd Immunity Threshold",
+      "equation": "1 - 1 / (Beta / Gamma)",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Susceptible",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Infected",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Beta",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Infected",
+      "to_element": "Recovery"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Susceptible",
+      "to_element": "Vaccination"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Vaccination Rate",
+      "to_element": "Vaccination"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Perceived Risk",
+      "to_element": "Risk Response"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Actual Risk",
+      "to_element": "Risk Update"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Perceived Risk",
+      "to_element": "Risk Update"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 1000,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.808602Z",
+  "updated_at": "2026-01-11T20:04:50.808602Z",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

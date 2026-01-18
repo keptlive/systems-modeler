@@ -1,0 +1,199 @@
+{
+  "id": "fisher-debt-deflation-fin",
+  "name": "Fisher Debt Deflation Spiral",
+  "description": "When debt is high, falling prices increase real debt burden, leading to more defaults, more deflation, and financial crisis. Explains Great Depression dynamics and motivated QE policies. Reference: APA Clinical Practice Guideline for Depression. Source: https://www.apa.org/depression-guideline",
+  "stocks": [
+    {
+      "id": "stock-debt",
+      "name": "Real Debt",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-price-level",
+      "name": "Price Level",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-output",
+      "name": "Output",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-debt-change",
+      "name": "Real Debt Change",
+      "equation": "New_Borrowing - Debt_Repayment - Deflation_Effect",
+      "from_stock": null,
+      "to_stock": "stock-debt",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-price-change",
+      "name": "Price Change",
+      "equation": "-Deflation_Rate * Price_Level",
+      "from_stock": null,
+      "to_stock": "stock-price-level",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-output-change",
+      "name": "Output Change",
+      "equation": "-Debt_Overhang_Effect * Output",
+      "from_stock": null,
+      "to_stock": "stock-output",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-debt-gdp",
+      "name": "Debt to GDP",
+      "equation": "Real_Debt / Output",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-deflation",
+      "name": "Deflation Rate",
+      "equation": "MAX(0, Deflation_Sensitivity * (Real_Debt / Output - Debt_Threshold))",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-deflation-effect",
+      "name": "Deflation Effect",
+      "equation": "-Deflation_Rate * Real_Debt",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-new-borrow",
+      "name": "New Borrowing",
+      "equation": "Credit_Growth_Rate * Real_Debt",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-repayment",
+      "name": "Debt Repayment",
+      "equation": "Repayment_Rate * Real_Debt",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-debt-overhang",
+      "name": "Debt Overhang Effect",
+      "equation": "Overhang_Sensitivity * MAX(0, Debt_to_GDP - Debt_Threshold)",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-credit-growth",
+      "name": "Credit Growth Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-repay-rate",
+      "name": "Repayment Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-defl-sens",
+      "name": "Deflation Sensitivity",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-overhang-sens",
+      "name": "Overhang Sensitivity",
+      "equation": "0.05",
+      "position": {
+        "x": 550,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-threshold",
+      "name": "Debt Threshold",
+      "equation": "0.8",
+      "position": {
+        "x": 350,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Real Debt",
+      "to_element": "Debt to GDP"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Output",
+      "to_element": "Debt to GDP"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Debt to GDP",
+      "to_element": "Deflation Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:45:54.016906+00:00",
+  "updated_at": "2026-01-12T07:45:54.016984+00:00",
+  "source": "https://doi.org/10.2307/1907327",
+  "reference": "Fisher I. The Debt-Deflation Theory of Great Depressions. Econometrica. 1933;1(4):337-357."
+}

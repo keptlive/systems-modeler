@@ -1,0 +1,183 @@
+{
+  "id": "cryptocurrency-market-dynamics-eco",
+  "name": "Cryptocurrency Market Dynamics",
+  "description": "Models crypto adoption, speculation, and volatility cycles. Source: Liu & Tsyvinski (2021), Review of Financial Studies. DOI: 10.1093/rfs/hhaa113",
+  "stocks": [
+    {
+      "id": "stock-adopters",
+      "name": "Adopters",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-price",
+      "name": "Crypto_Price",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-sentiment",
+      "name": "Market_Sentiment",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-holders",
+      "name": "Holder_Base",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adopt",
+      "name": "New_Adoption",
+      "equation": "Potential_Adopters * Adoption_Rate * (1 + Price_Momentum * 0.5)",
+      "from_stock": null,
+      "to_stock": "stock-adopters",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-price",
+      "name": "Price_Change",
+      "equation": "Crypto_Price * (Demand_Pressure * 0.1 - Supply_Pressure * 0.1)",
+      "from_stock": null,
+      "to_stock": "stock-price",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-sent",
+      "name": "Sentiment_Change",
+      "equation": "(Price_Momentum * 50 - (Market_Sentiment - 50) * 0.1)",
+      "from_stock": null,
+      "to_stock": "stock-sentiment",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-hold",
+      "name": "Net_Holders",
+      "equation": "Adopters * Hold_Rate - Holder_Base * Sell_Rate",
+      "from_stock": null,
+      "to_stock": "stock-holders",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-potential",
+      "name": "Potential_Adopters",
+      "equation": "100000000 - Adopters",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-adoptrate",
+      "name": "Adoption_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-momentum",
+      "name": "Price_Momentum",
+      "equation": "IF(Crypto_Price > 100, (Crypto_Price - 100) / 100, (Crypto_Price - 100) / 100)",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Demand_Pressure",
+      "equation": "Market_Sentiment / 50 * (Adopters / 1000000)",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-supply",
+      "name": "Supply_Pressure",
+      "equation": "(100 - Market_Sentiment) / 50",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-holdrate",
+      "name": "Hold_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-sellrate",
+      "name": "Sell_Rate",
+      "equation": "0.05 * (100 - Market_Sentiment) / 50",
+      "position": {
+        "x": 250,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-mcap",
+      "name": "Market_Cap",
+      "equation": "Crypto_Price * Holder_Base",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Market_Sentiment",
+      "to_element": "Price_Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:06:16.308121+00:00",
+  "updated_at": "2026-01-12T02:06:16.308124+00:00",
+  "source": "https://doi.org/10.1093/rfs/hhaa113",
+  "reference": "Liu, Y. & Tsyvinski, A. (2021). Risks and Returns of Cryptocurrency. Review of Financial Studies."
+}

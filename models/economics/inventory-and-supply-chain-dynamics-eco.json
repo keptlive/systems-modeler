@@ -1,0 +1,239 @@
+{
+  "id": "inventory-and-supply-chain-dynamics-eco",
+  "name": "Inventory and Supply Chain Dynamics",
+  "description": "Classic inventory management model demonstrating stock-adjustment policies, the bullwhip effect, and supply chain amplification. Based on Sterman's Business Dynamics. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-inventory",
+      "name": "Inventory",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-supply-line",
+      "name": "Supply Line",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-expected-demand",
+      "name": "Expected Demand",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-production-rate",
+      "name": "Production Rate",
+      "equation": "DELAY3(Production_Start_Rate, Manufacturing_Cycle_Time)",
+      "from_stock": "stock-supply-line",
+      "to_stock": "stock-inventory",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-production-start-rate",
+      "name": "Production Start Rate",
+      "equation": "MAX(0, Desired_Production_Start_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-supply-line",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-shipment-rate",
+      "name": "Shipment Rate",
+      "equation": "MIN(Desired_Shipment_Rate, Maximum_Shipment_Rate)",
+      "from_stock": "stock-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-change-in-expected-demand",
+      "name": "Change in Expected Demand",
+      "equation": "(Customer_Order_Rate - Expected_Demand) / Time_to_Average_Demand",
+      "from_stock": null,
+      "to_stock": "stock-expected-demand",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-customer-order-rate",
+      "name": "Customer Order Rate",
+      "equation": "100 + STEP(20, 10)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-desired-inventory",
+      "name": "Desired Inventory",
+      "equation": "Expected_Demand * Desired_Inventory_Coverage",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-desired-inventory-coverage",
+      "name": "Desired Inventory Coverage",
+      "equation": "4",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-inventory-adjustment",
+      "name": "Inventory Adjustment",
+      "equation": "(Desired_Inventory - Inventory) / Inventory_Adjustment_Time",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-inventory-adjustment-time",
+      "name": "Inventory Adjustment Time",
+      "equation": "4",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-desired-supply-line",
+      "name": "Desired Supply Line",
+      "equation": "Expected_Demand * Manufacturing_Cycle_Time",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-supply-line-adjustment",
+      "name": "Supply Line Adjustment",
+      "equation": "(Desired_Supply_Line - Supply_Line) / Supply_Line_Adjustment_Time",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-supply-line-adjustment-time",
+      "name": "Supply Line Adjustment Time",
+      "equation": "4",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-desired-production-start-rate",
+      "name": "Desired Production Start Rate",
+      "equation": "Expected_Demand + Inventory_Adjustment + Supply_Line_Adjustment",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-manufacturing-cycle-time",
+      "name": "Manufacturing Cycle Time",
+      "equation": "4",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-desired-shipment-rate",
+      "name": "Desired Shipment Rate",
+      "equation": "Customer_Order_Rate",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-maximum-shipment-rate",
+      "name": "Maximum Shipment Rate",
+      "equation": "Inventory / Minimum_Order_Processing_Time",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-minimum-order-processing-time",
+      "name": "Minimum Order Processing Time",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-time-to-average-demand",
+      "name": "Time to Average Demand",
+      "equation": "8",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-order-fulfillment-ratio",
+      "name": "Order Fulfillment Ratio",
+      "equation": "Shipment_Rate / Desired_Shipment_Rate",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-amplification-ratio",
+      "name": "Amplification Ratio",
+      "equation": "Production_Start_Rate / Customer_Order_Rate",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.755817Z",
+  "updated_at": "2026-01-11T20:04:50.755817Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

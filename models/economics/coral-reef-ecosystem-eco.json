@@ -1,0 +1,262 @@
+{
+  "id": "coral-reef-ecosystem-eco",
+  "name": "Coral Reef Ecosystem Model",
+  "description": "Model of coral reef dynamics showing coral-algae competition, grazing pressure, and bleaching events. Based on Mumby et al. (2007). Reference: Hughes, T. P., et al. (2017). Global warming and recurrent mass coral bleaching. Nature. Source: https://doi.org/10.1038/nature21707",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Coral Cover",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Macroalgae Cover",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Turf Algae Cover",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Herbivore Biomass",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Coral Growth",
+      "equation": "Coral_Cover * Growth_Rate * (1 - Total_Cover / 100) * (1 - Thermal_Stress)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Coral Mortality",
+      "equation": "Coral_Cover * (Natural_Mortality + Bleaching_Mortality)",
+      "from_stock": "s1",
+      "to_stock": "s3",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Algae Growth",
+      "equation": "Turf_Algae_Cover * Algae_Growth_Rate * (100 - Total_Cover) / 100",
+      "from_stock": "s3",
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Grazing",
+      "equation": "Macroalgae_Cover * Grazing_Rate * Herbivore_Biomass / 100",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Coral Overgrowth",
+      "equation": "Coral_Cover * Macroalgae_Cover * 0.01",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Herbivore Growth",
+      "equation": "Herbivore_Biomass * Fish_Growth_Rate * Food_Availability",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Fishing Mortality",
+      "equation": "Herbivore_Biomass * Fishing_Pressure",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Growth Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Total Cover",
+      "equation": "Coral_Cover + Macroalgae_Cover + Turf_Algae_Cover",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Thermal Stress",
+      "equation": "MAX(0, (Temperature - Bleaching_Threshold) / 5)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Temperature",
+      "equation": "27 + 0.02 * TIME",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Bleaching Threshold",
+      "equation": "29",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Natural Mortality",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Bleaching Mortality",
+      "equation": "Thermal_Stress * 0.3",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Algae Growth Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Grazing Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Fish Growth Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Food Availability",
+      "equation": "(Macroalgae_Cover + Turf_Algae_Cover) / 50",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Fishing Pressure",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Coral Cover",
+      "to_element": "Coral Growth"
+    },
+    {
+      "id": "c2",
+      "from_element": "Herbivore Biomass",
+      "to_element": "Grazing"
+    },
+    {
+      "id": "c3",
+      "from_element": "Temperature",
+      "to_element": "Thermal Stress"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:53:04.261453+00:00",
+  "updated_at": "2026-01-12T01:53:04.261456+00:00",
+  "source": "https://doi.org/10.1038/nature06252",
+  "reference": "Mumby PJ, Hastings A, Edwards HJ. Thresholds and the resilience of Caribbean coral reefs. Nature. 2007;450:98-101."
+}

@@ -1,0 +1,177 @@
+{
+  "id": "third-order-delay-edu",
+  "name": "Third Order Delay",
+  "description": "A higher-order delay structure using three cascaded first-order delays (pipeline delay). This creates more realistic delay behavior where output rises gradually, peaks, and approaches the input in an S-shaped pattern. Third-order delays better approximate real-world processes like shipping, processing pipelines, and biological processes where material must pass through multiple stages. Reference: Sterman, J. D. (2000). Business Dynamics: Third Order Material Delay. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-delay-buffer-1",
+      "name": "Delay Buffer 1",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-delay-buffer-2",
+      "name": "Delay Buffer 2",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-delay-buffer-3",
+      "name": "Delay Buffer 3",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-input",
+      "name": "Input",
+      "equation": "STEP(1, 1)",
+      "from_stock": null,
+      "to_stock": "stock-delay-buffer-1",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-throughput-1",
+      "name": "Throughput 1",
+      "equation": "Delay_Buffer_1 / Delay_Part_1",
+      "from_stock": "stock-delay-buffer-1",
+      "to_stock": "stock-delay-buffer-2",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-throughput-2",
+      "name": "Throughput 2",
+      "equation": "Delay_Buffer_2 / Delay_Part_2",
+      "from_stock": "stock-delay-buffer-2",
+      "to_stock": "stock-delay-buffer-3",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-output",
+      "name": "Output",
+      "equation": "Delay_Buffer_3 / Delay_Part_3",
+      "from_stock": "stock-delay-buffer-3",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-delay",
+      "name": "Delay",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-delay-part-1",
+      "name": "Delay Part 1",
+      "equation": "Delay / 3",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-delay-part-2",
+      "name": "Delay Part 2",
+      "equation": "Delay / 3",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-delay-part-3",
+      "name": "Delay Part 3",
+      "equation": "Delay / 3",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Delay",
+      "to_element": "Delay Part 1"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Delay",
+      "to_element": "Delay Part 2"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Delay",
+      "to_element": "Delay Part 3"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Delay Buffer 1",
+      "to_element": "Throughput 1"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Delay Part 1",
+      "to_element": "Throughput 1"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Delay Buffer 2",
+      "to_element": "Throughput 2"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Delay Part 2",
+      "to_element": "Throughput 2"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Delay Buffer 3",
+      "to_element": "Output"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Delay Part 3",
+      "to_element": "Output"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.015625
+  },
+  "created_at": "2026-01-11T20:04:50.787445Z",
+  "updated_at": "2026-01-11T20:04:50.787445Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "System Dynamics Educational Models - PySD Cookbook"
+}

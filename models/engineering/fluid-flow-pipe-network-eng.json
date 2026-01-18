@@ -1,0 +1,110 @@
+{
+  "id": "fluid-flow-pipe-network-eng",
+  "name": "Fluid Flow Pipe Network",
+  "description": "Pressure-driven flow through pipe systems",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Tank_Level",
+      "initial_value": 10.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Flow_Rate",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Inlet_Pressure",
+      "equation": "100.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Outlet_Pressure",
+      "equation": "0.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Pipe_Resistance",
+      "equation": "10.0",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Tank_Area",
+      "equation": "1.0",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Pressure_Head",
+      "equation": "Tank_Level*9.81*1000",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Driving_Pressure",
+      "equation": "Inlet_Pressure+Pressure_Head-Outlet_Pressure",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Tank_Level",
+      "to_element": "Pressure_Head"
+    },
+    {
+      "id": "c2",
+      "from_element": "Inlet_Pressure",
+      "to_element": "Driving_Pressure"
+    },
+    {
+      "id": "c3",
+      "from_element": "Pressure_Head",
+      "to_element": "Driving_Pressure"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 100.0,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T20:50:11.590259+00:00",
+  "updated_at": "2026-01-15T20:50:11.590259+00:00",
+  "source": "https://doi.org/10.1017/CBO9780511607295",
+  "reference": "White, F.M. (2011) Fluid Mechanics. McGraw-Hill"
+}

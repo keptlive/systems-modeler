@@ -1,0 +1,123 @@
+{
+  "id": "black-scholes-option-dynamics-eco",
+  "name": "Black-Scholes Option Price Dynamics",
+  "description": "Continuous-time model of option price evolution under geometric Brownian motion. Nobel Prize winning framework. Source: Black & Scholes (1973), JPE. DOI: 10.1086/260062",
+  "stocks": [
+    {
+      "id": "stock-price",
+      "name": "Asset_Price",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-option",
+      "name": "Option_Value",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-drift",
+      "name": "Price_Drift",
+      "equation": "Asset_Price * Drift_Rate",
+      "from_stock": null,
+      "to_stock": "stock-price",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-optchg",
+      "name": "Option_Change",
+      "equation": "Delta * Price_Drift + 0.5 * Gamma * (Volatility * Asset_Price)^2",
+      "from_stock": null,
+      "to_stock": "stock-option",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-drift",
+      "name": "Drift_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-vol",
+      "name": "Volatility",
+      "equation": "0.2",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-strike",
+      "name": "Strike_Price",
+      "equation": "100",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-ttm",
+      "name": "Time_To_Maturity",
+      "equation": "MAX(0.01, 1 - TIME / 365)",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-delta",
+      "name": "Delta",
+      "equation": "0.5 + 0.4 * (Asset_Price - Strike_Price) / Strike_Price",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "Gamma",
+      "equation": "1 / (Asset_Price * Volatility * SQRT(Time_To_Maturity))",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Asset_Price",
+      "to_element": "Option_Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:02:23.927313Z",
+  "updated_at": "2026-01-12T02:02:23.927317Z",
+  "source": "https://doi.org/10.1086/260062",
+  "reference": "Black, F. & Scholes, M. (1973). The Pricing of Options and Corporate Liabilities. Journal of Political Economy."
+}

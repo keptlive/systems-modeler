@@ -1,0 +1,434 @@
+{
+  "id": "pension-fund-sustainability-eco",
+  "name": "Pension Fund Sustainability Model",
+  "description": "A system dynamics model of pension fund sustainability. Models the dynamics of contributions, investment returns, benefit payments, and the demographic transition affecting long-term pension fund viability. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-fund-assets",
+      "name": "Fund Assets",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-active-workers",
+      "name": "Active Workers",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-early-career",
+      "name": "Early Career Workers",
+      "initial_value": 15000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-mid-career",
+      "name": "Mid Career Workers",
+      "initial_value": 20000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "stock-late-career",
+      "name": "Late Career Workers",
+      "initial_value": 15000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "stock-retirees",
+      "name": "Retirees",
+      "initial_value": 20000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    },
+    {
+      "id": "stock-accrued-benefits",
+      "name": "Accrued Benefits Liability",
+      "initial_value": 400000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-contributions",
+      "name": "Contributions",
+      "equation": "Total_Active_Workers * Average_Salary * Contribution_Rate",
+      "from_stock": null,
+      "to_stock": "stock-fund-assets",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-investment-returns",
+      "name": "Investment Returns",
+      "equation": "Fund_Assets * Return_Rate",
+      "from_stock": null,
+      "to_stock": "stock-fund-assets",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-benefit-payments",
+      "name": "Benefit Payments",
+      "equation": "Retirees * Average_Benefit",
+      "from_stock": "stock-fund-assets",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-admin-costs",
+      "name": "Administrative Costs",
+      "equation": "Fund_Assets * Admin_Cost_Rate",
+      "from_stock": "stock-fund-assets",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-new-entrants",
+      "name": "New Entrants",
+      "equation": "Hiring_Rate",
+      "from_stock": null,
+      "to_stock": "stock-early-career",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-to-mid-career",
+      "name": "To Mid Career",
+      "equation": "Early_Career_Workers / Early_Career_Duration",
+      "from_stock": "stock-early-career",
+      "to_stock": "stock-mid-career",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "flow-to-late-career",
+      "name": "To Late Career",
+      "equation": "Mid_Career_Workers / Mid_Career_Duration",
+      "from_stock": "stock-mid-career",
+      "to_stock": "stock-late-career",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-retirement",
+      "name": "Retirement",
+      "equation": "Late_Career_Workers / Late_Career_Duration",
+      "from_stock": "stock-late-career",
+      "to_stock": "stock-retirees",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-retiree-deaths",
+      "name": "Retiree Deaths",
+      "equation": "Retirees / Average_Retirement_Length",
+      "from_stock": "stock-retirees",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-benefit-accrual",
+      "name": "Benefit Accrual",
+      "equation": "Total_Active_Workers * Benefit_Accrual_Rate * Average_Salary",
+      "from_stock": null,
+      "to_stock": "stock-accrued-benefits",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-benefits-paid",
+      "name": "Benefits Paid Down",
+      "equation": "Benefit_Payments",
+      "from_stock": "stock-accrued-benefits",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-active",
+      "name": "Total Active Workers",
+      "equation": "Early_Career_Workers + Mid_Career_Workers + Late_Career_Workers",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-avg-salary",
+      "name": "Average Salary",
+      "equation": "50 * (1 + Wage_Growth) ^ TIME",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-wage-growth",
+      "name": "Wage Growth",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-contribution-rate",
+      "name": "Contribution Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-return-rate",
+      "name": "Return Rate",
+      "equation": "0.06",
+      "position": {
+        "x": 700,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-avg-benefit",
+      "name": "Average Benefit",
+      "equation": "Replacement_Rate * Average_Salary",
+      "position": {
+        "x": 100,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-replacement-rate",
+      "name": "Replacement Rate",
+      "equation": "0.6",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-admin-cost",
+      "name": "Admin Cost Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 400,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-hiring-rate",
+      "name": "Hiring Rate",
+      "equation": "1500 * (1 + Workforce_Growth) ^ TIME",
+      "position": {
+        "x": 550,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-workforce-growth",
+      "name": "Workforce Growth",
+      "equation": "-0.005",
+      "position": {
+        "x": 700,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-early-duration",
+      "name": "Early Career Duration",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-mid-duration",
+      "name": "Mid Career Duration",
+      "equation": "15",
+      "position": {
+        "x": 250,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-late-duration",
+      "name": "Late Career Duration",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-retirement-length",
+      "name": "Average Retirement Length",
+      "equation": "20",
+      "position": {
+        "x": 550,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-benefit-accrual-rate",
+      "name": "Benefit Accrual Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 700,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-funding-ratio",
+      "name": "Funding Ratio",
+      "equation": "Fund_Assets / Accrued_Benefits_Liability",
+      "position": {
+        "x": 100,
+        "y": 700
+      }
+    },
+    {
+      "id": "var-dependency-ratio",
+      "name": "Dependency Ratio",
+      "equation": "Retirees / Total_Active_Workers",
+      "position": {
+        "x": 250,
+        "y": 700
+      }
+    },
+    {
+      "id": "var-system-maturity",
+      "name": "System Maturity",
+      "equation": "Accrued_Benefits_Liability / (Total_Active_Workers * Average_Salary)",
+      "position": {
+        "x": 400,
+        "y": 700
+      }
+    },
+    {
+      "id": "var-annual-deficit",
+      "name": "Annual Deficit",
+      "equation": "Benefit_Payments + Administrative_Costs - Contributions - Investment_Returns",
+      "position": {
+        "x": 550,
+        "y": 700
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Total Active Workers",
+      "to_element": "Contributions"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Fund Assets",
+      "to_element": "Investment Returns"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Retirees",
+      "to_element": "Benefit Payments"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Average Benefit",
+      "to_element": "Benefit Payments"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Early Career Workers",
+      "to_element": "To Mid Career"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Mid Career Workers",
+      "to_element": "To Late Career"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Late Career Workers",
+      "to_element": "Retirement"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Retirees",
+      "to_element": "Retiree Deaths"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Fund Assets",
+      "to_element": "Funding Ratio"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Accrued Benefits Liability",
+      "to_element": "Funding Ratio"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

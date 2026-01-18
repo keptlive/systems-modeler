@@ -1,0 +1,214 @@
+{
+  "id": "inventory-workforce-interaction-eco",
+  "name": "Inventory-Workforce Interaction",
+  "description": "Inventory management with workforce adjustment showing coflows and delays. From Sterman's Business Dynamics (2000), Chapter 11. Demonstrates how production capacity adjustments lag behind inventory needs. Source: Sterman, J.D. (2000), Business Dynamics, McGraw-Hill. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-inventory",
+      "name": "Inventory",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-workforce",
+      "name": "Workforce",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-production",
+      "name": "Production",
+      "equation": "Workforce * Productivity",
+      "from_stock": null,
+      "to_stock": "stock-inventory",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-shipments",
+      "name": "Shipments",
+      "equation": "MIN(Inventory / MIN_Shipping_Time, Desired_Shipments)",
+      "from_stock": "stock-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-hiring",
+      "name": "Hiring",
+      "equation": "MAX(0, Workforce_Gap / Hiring_Time)",
+      "from_stock": null,
+      "to_stock": "stock-workforce",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-attrition",
+      "name": "Attrition",
+      "equation": "Workforce / Average_Tenure + MAX(0, -Workforce_Gap / Layoff_Time)",
+      "from_stock": "stock-workforce",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-productivity",
+      "name": "Productivity",
+      "equation": "10",
+      "position": {
+        "x": 150,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-desired-inventory",
+      "name": "Desired_Inventory",
+      "equation": "1000",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-inventory-gap",
+      "name": "Inventory_Gap",
+      "equation": "Desired_Inventory - Inventory",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-desired-production",
+      "name": "Desired_Production",
+      "equation": "Desired_Shipments + Inventory_Gap / Inventory_Adjustment_Time",
+      "position": {
+        "x": 200,
+        "y": 230
+      }
+    },
+    {
+      "id": "var-desired-workforce",
+      "name": "Desired_Workforce",
+      "equation": "Desired_Production / Productivity",
+      "position": {
+        "x": 200,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-workforce-gap",
+      "name": "Workforce_Gap",
+      "equation": "Desired_Workforce - Workforce",
+      "position": {
+        "x": 350,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-desired-shipments",
+      "name": "Desired_Shipments",
+      "equation": "100",
+      "position": {
+        "x": 500,
+        "y": 230
+      }
+    },
+    {
+      "id": "var-min-shipping-time",
+      "name": "MIN_Shipping_Time",
+      "equation": "1",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-hiring-time",
+      "name": "Hiring_Time",
+      "equation": "4",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-layoff-time",
+      "name": "Layoff_Time",
+      "equation": "2",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-avg-tenure",
+      "name": "Average_Tenure",
+      "equation": "50",
+      "position": {
+        "x": 500,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-inv-adj-time",
+      "name": "Inventory_Adjustment_Time",
+      "equation": "8",
+      "position": {
+        "x": 100,
+        "y": 230
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Workforce",
+      "to_element": "Production"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Productivity",
+      "to_element": "Production"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Inventory",
+      "to_element": "Shipments"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Workforce_Gap",
+      "to_element": "Hiring"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:47:58.493369Z",
+  "updated_at": "2026-01-11T20:47:58.493369Z",
+  "source": "https://doi.org/10.1287/mnsc.35.3.321",
+  "reference": "Sterman JD. Business Dynamics - Workforce Management Model"
+}

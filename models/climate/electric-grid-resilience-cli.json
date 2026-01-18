@@ -1,0 +1,188 @@
+{
+  "id": "electric-grid-resilience-cli",
+  "name": "Electric Grid Resilience Model",
+  "description": "Models power grid resilience under extreme weather events. Based on Panteli & Mancarella (2015) analysis of grid resilience. Reference: EIA Electric Power Annual. Source: https://www.eia.gov/electricity/annual/",
+  "stocks": [
+    {
+      "id": "stock-operational-capacity",
+      "name": "Operational_Capacity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-damaged-infrastructure",
+      "name": "Damaged_Infrastructure",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-reserve-capacity",
+      "name": "Reserve_Capacity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-unmet-demand",
+      "name": "Unmet_Demand",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-damage",
+      "name": "Infrastructure_Damage",
+      "equation": "Operational_Capacity * Damage_Rate * Weather_Severity",
+      "from_stock": "stock-operational-capacity",
+      "to_stock": "stock-damaged-infrastructure",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-repair",
+      "name": "Infrastructure_Repair",
+      "equation": "Damaged_Infrastructure * Repair_Rate * Crew_Availability",
+      "from_stock": "stock-damaged-infrastructure",
+      "to_stock": "stock-operational-capacity",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-reserve-deployment",
+      "name": "Reserve_Deployment",
+      "equation": "MIN(Reserve_Capacity, MAX(0, Demand - Operational_Capacity)) / Deployment_Time",
+      "from_stock": "stock-reserve-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-reserve-recharge",
+      "name": "Reserve_Recharge",
+      "equation": "IF(Operational_Capacity > Demand, Recharge_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-reserve-capacity",
+      "position": {
+        "x": 200,
+        "y": 360
+      }
+    },
+    {
+      "id": "flow-unmet-accumulation",
+      "name": "Unmet_Accumulation",
+      "equation": "MAX(0, Demand - Operational_Capacity - Reserve_Capacity / Deployment_Time)",
+      "from_stock": null,
+      "to_stock": "stock-unmet-demand",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-damage-rate",
+      "name": "Damage_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-weather-severity",
+      "name": "Weather_Severity",
+      "equation": "1 + 2 * IF(MOD(TIME, 50) < 5, 1, 0)",
+      "position": {
+        "x": 240,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-repair-rate",
+      "name": "Repair_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-crew-availability",
+      "name": "Crew_Availability",
+      "equation": "0.8",
+      "position": {
+        "x": 540,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Demand",
+      "equation": "800 * (1 + 0.2 * SIN(TIME * 0.5))",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-deployment-time",
+      "name": "Deployment_Time",
+      "equation": "0.5",
+      "position": {
+        "x": 280,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-recharge-rate",
+      "name": "Recharge_Rate",
+      "equation": "10",
+      "position": {
+        "x": 440,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-resilience-index",
+      "name": "Resilience_Index",
+      "equation": "(Operational_Capacity + Reserve_Capacity) / (Demand + 1)",
+      "position": {
+        "x": 600,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:19:34.565985+00:00",
+  "updated_at": "2026-01-12T01:19:34.565994+00:00",
+  "source": "https://doi.org/10.1109/TPWRS.2015.2392776",
+  "reference": "Panteli M, Mancarella P. The Grid: Stronger, Bigger, Smarter?: Presenting a Conceptual Framework of Power System Resilience. IEEE Power and Energy Magazine. 2015;13(3):58-66."
+}

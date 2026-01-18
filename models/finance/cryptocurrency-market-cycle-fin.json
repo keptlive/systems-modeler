@@ -1,0 +1,168 @@
+{
+  "id": "cryptocurrency-market-cycle-fin",
+  "name": "Cryptocurrency Market Cycle Model",
+  "description": "Model of cryptocurrency price dynamics showing speculation, adoption, and regulatory effects. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Market_Cap",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Retail_Investors",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Market_Sentiment",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Capital_Inflow",
+      "equation": "Investment_Rate * Market_Sentiment * FOMO_Effect",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Capital_Outflow",
+      "equation": "Market_Cap * Sell_Pressure * (1 - Market_Sentiment)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "f3",
+      "name": "New_Investors",
+      "equation": "Adoption_Rate * Media_Attention * Market_Sentiment",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Sentiment_Change",
+      "equation": "Price_Momentum - Mean_Reversion",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Investment_Rate",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "FOMO_Effect",
+      "equation": "1 + Price_Momentum",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Sell_Pressure",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Adoption_Rate",
+      "equation": "1",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Media_Attention",
+      "equation": "1 + 0.5 * Market_Sentiment",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Price_Momentum",
+      "equation": "0.1 * (Capital_Inflow - Capital_Outflow) / (Market_Cap + 1)",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Mean_Reversion",
+      "equation": "0.05 * (Market_Sentiment - 0.5)",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Volatility",
+      "equation": "ABS(Price_Momentum) * 10",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:34:23.558418+00:00",
+  "updated_at": "2026-01-12T11:34:23.558418+00:00",
+  "source": "https://doi.org/10.1016/j.jfineco.2019.07.001",
+  "reference": "Liu Y, Tsyvinski A. Risks and returns of cryptocurrency. The Review of Financial Studies. 2021;34(6):2689-2727."
+}

@@ -1,0 +1,120 @@
+{
+  "id": "kyle-market-microstructure-fin",
+  "name": "Kyle Market Microstructure Model",
+  "description": "Informed trading and price discovery model",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Price",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Informed_Profit",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Market_Depth",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "True_Value",
+      "equation": "110.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Noise_Trade_Var",
+      "equation": "1.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Info_Precision",
+      "equation": "1.0",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Lambda",
+      "equation": "0.5",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Order_Flow",
+      "equation": "0.1*(True_Value-Price)",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Price_Impact",
+      "equation": "Lambda*Order_Flow",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "True_Value",
+      "to_element": "Order_Flow"
+    },
+    {
+      "id": "c2",
+      "from_element": "Price",
+      "to_element": "Order_Flow"
+    },
+    {
+      "id": "c3",
+      "from_element": "Order_Flow",
+      "to_element": "Price_Impact"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 10.0,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T20:46:18.596610+00:00",
+  "updated_at": "2026-01-15T20:46:18.596610+00:00",
+  "source": "https://doi.org/10.2307/1913210",
+  "reference": "Kyle, A.S. (1985) Continuous auctions and insider trading. Econometrica 53:1315-1335"
+}

@@ -1,0 +1,199 @@
+{
+  "id": "vaccine-hesitancy-dynamics-hea",
+  "name": "Vaccine Hesitancy Dynamics Model",
+  "description": "Model of vaccine hesitancy dynamics including social influence, risk perception, and media effects. Source: Larson et al. (2014), Vaccine. DOI: 10.1016/j.vaccine.2014.06.039",
+  "stocks": [
+    {
+      "id": "stock-accepting",
+      "name": "Vaccine_Accepting",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-hesitant",
+      "name": "Vaccine_Hesitant",
+      "initial_value": 300000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-refusing",
+      "name": "Vaccine_Refusing",
+      "initial_value": 200000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-vaccinated",
+      "name": "Vaccinated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-doubt",
+      "name": "Becoming_Hesitant",
+      "equation": "Vaccine_Accepting * Doubt_Rate * (Adverse_Events + Misinformation_Exposure)",
+      "from_stock": "stock-accepting",
+      "to_stock": "stock-hesitant",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-refuse",
+      "name": "Becoming_Refusing",
+      "equation": "Vaccine_Hesitant * Refuse_Rate * Anti_Vaccine_Influence",
+      "from_stock": "stock-hesitant",
+      "to_stock": "stock-refusing",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-reassure",
+      "name": "Reassurance",
+      "equation": "Vaccine_Hesitant * Reassurance_Rate * Trust_In_Science",
+      "from_stock": "stock-hesitant",
+      "to_stock": "stock-accepting",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-vaccinate",
+      "name": "Vaccination",
+      "equation": "Vaccine_Accepting * Vaccination_Rate",
+      "from_stock": "stock-accepting",
+      "to_stock": "stock-vaccinated",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-reluctant-vax",
+      "name": "Reluctant_Vaccination",
+      "equation": "Vaccine_Hesitant * Vaccination_Rate * 0.3",
+      "from_stock": "stock-hesitant",
+      "to_stock": "stock-vaccinated",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-doubt",
+      "name": "Doubt_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-adverse",
+      "name": "Adverse_Events",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-misinfo",
+      "name": "Misinformation_Exposure",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-refuse",
+      "name": "Refuse_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-antivax",
+      "name": "Anti_Vaccine_Influence",
+      "equation": "Vaccine_Refusing / (Vaccine_Accepting + Vaccine_Hesitant + Vaccine_Refusing + 1)",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-reassure",
+      "name": "Reassurance_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-trust",
+      "name": "Trust_In_Science",
+      "equation": "0.7",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-vaxrate",
+      "name": "Vaccination_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Vaccine_Accepting",
+      "to_element": "Becoming_Hesitant"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Adverse_Events",
+      "to_element": "Becoming_Hesitant"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T22:11:19.083037Z",
+  "updated_at": "2026-01-11T22:11:19.083044Z",
+  "source": "https://doi.org/10.1016/j.vaccine.2014.06.039",
+  "reference": "Larson, H.J. et al. (2014). Understanding vaccine hesitancy around vaccines and vaccination from a global perspective."
+}

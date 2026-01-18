@@ -1,0 +1,450 @@
+{
+  "id": "urban-development-feedback-soc",
+  "name": "Persons_Per_Unit",
+  "description": "Model of urban development showing feedback between housing, jobs, infrastructure, and population. Demonstrates how cities grow, decline, and gentrify. Based on Forrester Urban Dynamics and Vensim urban.mdl. Reference: Forrester, J. W. (1961). Industrial Dynamics. MIT Press. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Housing_Stock",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Jobs",
+      "initial_value": 40000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Population",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Infrastructure",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Housing_Construction",
+      "equation": "Desired_Construction * Construction_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Housing_Demolition",
+      "equation": "Housing_Stock * Demolition_Rate",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Job_Creation",
+      "equation": "Jobs * Job_Growth_Rate * Attractiveness_for_Business",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Job_Loss",
+      "equation": "Jobs * Job_Decline_Rate",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "f5",
+      "name": "In_Migration",
+      "equation": "Migration_Normal * Attractiveness_for_Population",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Out_Migration",
+      "equation": "Population * Out_Migration_Rate / Attractiveness_for_Population",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Infrastructure_Investment",
+      "equation": "Tax_Revenue * Investment_Fraction",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "f8",
+      "name": "Infrastructure_Decay",
+      "equation": "Infrastructure * Decay_Rate",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Desired_Construction",
+      "equation": "MAX(0, (Population / Persons_Per_Unit - Housing_Stock))",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Construction_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Persons_Per_Unit",
+      "equation": "2.5",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Demolition_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Job_Growth_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Job_Decline_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Attractiveness_for_Business",
+      "equation": "Infrastructure / 100 * (1 - Population / Land_Capacity)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Land_Capacity",
+      "equation": "200000",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Migration_Normal",
+      "equation": "5000",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Attractiveness_for_Population",
+      "equation": "(Jobs / Population) * (Housing_Stock * Persons_Per_Unit / Population) * Infrastructure / 100",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Out_Migration_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Tax_Revenue",
+      "equation": "(Population + Jobs) * Tax_Rate_Per_Capita",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Tax_Rate_Per_Capita",
+      "equation": "100",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Investment_Fraction",
+      "equation": "0.0001",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "v15",
+      "name": "Decay_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Construction_Rate",
+      "to_element": "Housing_Construction"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Desired_Construction",
+      "to_element": "Housing_Construction"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Demolition_Rate",
+      "to_element": "Housing_Demolition"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Housing_Stock",
+      "to_element": "Housing_Demolition"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Job_Growth_Rate",
+      "to_element": "Job_Creation"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Jobs",
+      "to_element": "Job_Creation"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Attractiveness_for_Business",
+      "to_element": "Job_Creation"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Jobs",
+      "to_element": "Job_Loss"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Job_Decline_Rate",
+      "to_element": "Job_Loss"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Migration_Normal",
+      "to_element": "In_Migration"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Attractiveness_for_Population",
+      "to_element": "In_Migration"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Population",
+      "to_element": "In_Migration"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Out_Migration_Rate",
+      "to_element": "Out_Migration"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Attractiveness_for_Population",
+      "to_element": "Out_Migration"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Population",
+      "to_element": "Out_Migration"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Investment_Fraction",
+      "to_element": "Infrastructure_Investment"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Tax_Revenue",
+      "to_element": "Infrastructure_Investment"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Infrastructure",
+      "to_element": "Infrastructure_Decay"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Decay_Rate",
+      "to_element": "Infrastructure_Decay"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Housing_Stock",
+      "to_element": "Desired_Construction"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Population",
+      "to_element": "Desired_Construction"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Persons_Per_Unit",
+      "to_element": "Desired_Construction"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "Infrastructure",
+      "to_element": "Attractiveness_for_Business"
+    },
+    {
+      "id": "conn-24",
+      "from_element": "Land_Capacity",
+      "to_element": "Attractiveness_for_Business"
+    },
+    {
+      "id": "conn-25",
+      "from_element": "Population",
+      "to_element": "Attractiveness_for_Business"
+    },
+    {
+      "id": "conn-26",
+      "from_element": "Jobs",
+      "to_element": "Attractiveness_for_Population"
+    },
+    {
+      "id": "conn-27",
+      "from_element": "Infrastructure",
+      "to_element": "Attractiveness_for_Population"
+    },
+    {
+      "id": "conn-28",
+      "from_element": "Housing_Stock",
+      "to_element": "Attractiveness_for_Population"
+    },
+    {
+      "id": "conn-29",
+      "from_element": "Population",
+      "to_element": "Attractiveness_for_Population"
+    },
+    {
+      "id": "conn-30",
+      "from_element": "Persons_Per_Unit",
+      "to_element": "Attractiveness_for_Population"
+    },
+    {
+      "id": "conn-31",
+      "from_element": "Jobs",
+      "to_element": "Tax_Revenue"
+    },
+    {
+      "id": "conn-32",
+      "from_element": "Population",
+      "to_element": "Tax_Revenue"
+    },
+    {
+      "id": "conn-33",
+      "from_element": "Tax_Rate_Per_Capita",
+      "to_element": "Tax_Revenue"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:19:37.014711+00:00",
+  "updated_at": "2026-01-12T07:19:37.014711+00:00",
+  "source": "https://vensim.com/documentation/sample_models.html",
+  "reference": "Based on Forrester, J.W. (1969). Urban Dynamics. MIT Press. Vensim urban.mdl sample model."
+}

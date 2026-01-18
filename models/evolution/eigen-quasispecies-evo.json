@@ -1,0 +1,160 @@
+{
+  "id": "eigen-quasispecies-evo",
+  "name": "Eigen Quasispecies Model",
+  "description": "Evolutionary dynamics of self-replicating molecules with mutation. Shows error threshold - maximum mutation rate compatible with information maintenance. Foundation for understanding RNA virus evolution. Reference: Fisher, R. A. (1930). The Genetical Theory of Natural Selection. Oxford University Press. Source: https://doi.org/10.5962/bhl.title.27468",
+  "stocks": [
+    {
+      "id": "stock-master",
+      "name": "Master Sequence",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-mutant",
+      "name": "Mutant Cloud",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-master-rep",
+      "name": "Master Replication",
+      "equation": "Master_Fitness * Quality * Master_Sequence - Dilution * Master_Sequence",
+      "from_stock": null,
+      "to_stock": "stock-master",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mutant-rep",
+      "name": "Mutant Dynamics",
+      "equation": "Master_Fitness * (1 - Quality) * Master_Sequence + Mutant_Fitness * Mutant_Cloud - Dilution * Mutant_Cloud",
+      "from_stock": null,
+      "to_stock": "stock-mutant",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-master-fit",
+      "name": "Master Fitness",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mutant-fit",
+      "name": "Mutant Fitness",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-quality",
+      "name": "Quality",
+      "equation": "(1 - Mutation_Rate)^Genome_Length",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mutation",
+      "name": "Mutation Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-genome",
+      "name": "Genome Length",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total Population",
+      "equation": "Master_Sequence + Mutant_Cloud",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-dilution",
+      "name": "Dilution",
+      "equation": "(Master_Fitness * Master_Sequence + Mutant_Fitness * Mutant_Cloud) / Total_Population",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-threshold",
+      "name": "Error Threshold",
+      "equation": "1 - 1 / (Master_Fitness / Mutant_Fitness)",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-master-frac",
+      "name": "Master Fraction",
+      "equation": "Master_Sequence / Total_Population",
+      "position": {
+        "x": 450,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Master Sequence",
+      "to_element": "Master Replication"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Quality",
+      "to_element": "Master Replication"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Master Sequence",
+      "to_element": "Mutant Dynamics"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:39:15.417818+00:00",
+  "updated_at": "2026-01-12T07:39:15.417860+00:00",
+  "source": "https://doi.org/10.1007/BF00623322",
+  "reference": "Eigen M. Self-organization of matter and the evolution of biological macromolecules. Naturwissenschaften. 1971;58(10):465-523."
+}

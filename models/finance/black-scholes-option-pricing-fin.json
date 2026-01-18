@@ -1,0 +1,31 @@
+{
+  "id": "black-scholes-option-pricing-fin",
+  "name": "Black-Scholes Option Pricing Dynamics",
+  "description": "Fischer Black and Myron Scholes' (1973) revolutionary option pricing model showing how option values evolve with underlying stock price and time. Scholes and Merton received the 1997 Nobel Prize (Black died in 1995). Foundation of quantitative finance.",
+  "stocks": [
+    {"id": "stock-stock-price", "name": "Stock Price", "initial_value": 100, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-option-value", "name": "Option Value", "initial_value": 10, "equation": "", "position": {"x": 450, "y": 200}},
+    {"id": "stock-time-to-expiry", "name": "Time to Expiry", "initial_value": 1, "equation": "", "position": {"x": 325, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-price-change", "name": "Price Change", "equation": "Stock_Price * (Drift + Volatility * Random_Shock)", "from_stock": null, "to_stock": "stock-stock-price", "position": {"x": 100, "y": 200}},
+    {"id": "flow-option-change", "name": "Option Change", "equation": "Delta * Price_Change + Theta + 0.5 * Gamma * Price_Change ^ 2", "from_stock": null, "to_stock": "stock-option-value", "position": {"x": 350, "y": 200}},
+    {"id": "flow-time-decay", "name": "Time Decay", "equation": "-DT", "from_stock": null, "to_stock": "stock-time-to-expiry", "position": {"x": 225, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-strike-price", "name": "Strike Price", "equation": "100", "position": {"x": 150, "y": 100}},
+    {"id": "var-risk-free-rate", "name": "Risk Free Rate", "equation": "0.05", "position": {"x": 300, "y": 100}},
+    {"id": "var-volatility", "name": "Volatility", "equation": "0.2", "position": {"x": 450, "y": 100}},
+    {"id": "var-drift", "name": "Drift", "equation": "Risk_Free_Rate", "position": {"x": 600, "y": 100}},
+    {"id": "var-d1", "name": "d1", "equation": "(LN(Stock_Price / Strike_Price) + (Risk_Free_Rate + Volatility ^ 2 / 2) * Time_to_Expiry) / (Volatility * SQRT(Time_to_Expiry))", "position": {"x": 150, "y": 280}},
+    {"id": "var-d2", "name": "d2", "equation": "d1 - Volatility * SQRT(Time_to_Expiry)", "position": {"x": 350, "y": 280}},
+    {"id": "var-delta", "name": "Delta", "equation": "0.5 * (1 + d1 / SQRT(1 + d1 ^ 2 / 2))", "position": {"x": 550, "y": 280}},
+    {"id": "var-gamma", "name": "Gamma", "equation": "EXP(-d1 ^ 2 / 2) / (Stock_Price * Volatility * SQRT(2 * 3.14159 * Time_to_Expiry))", "position": {"x": 150, "y": 420}},
+    {"id": "var-theta", "name": "Theta", "equation": "-(Stock_Price * Volatility * EXP(-d1 ^ 2 / 2)) / (2 * SQRT(2 * 3.14159 * Time_to_Expiry))", "position": {"x": 400, "y": 420}},
+    {"id": "var-random-shock", "name": "Random Shock", "equation": "0", "position": {"x": 600, "y": 420}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 1, "dt": 0.01},
+  "source": "https://doi.org/10.1086/260062",
+  "reference": "Black F, Scholes M. The Pricing of Options and Corporate Liabilities. Journal of Political Economy. 1973;81(3):637-654."
+}

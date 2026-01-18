@@ -1,0 +1,255 @@
+{
+  "id": "container-port-operations-eco",
+  "name": "Container Port Operations Model",
+  "description": "Model of container port logistics showing vessel arrivals, berth allocation, and container handling. Based on port operations research and Notteboom & Rodrigue (2008) port system dynamics. Reference: Council of Supply Chain Management Professionals. Source: https://cscmp.org/",
+  "stocks": [
+    {
+      "id": "stock-vessels-waiting",
+      "name": "Vessels Waiting",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-vessels-at-berth",
+      "name": "Vessels at Berth",
+      "initial_value": 3,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-yard-inventory",
+      "name": "Container Yard Inventory",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-truck-queue",
+      "name": "Truck Queue",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-vessel-arrivals",
+      "name": "Vessel Arrivals",
+      "equation": "Arrival_Rate",
+      "from_stock": null,
+      "to_stock": "stock-vessels-waiting",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-berth-allocation",
+      "name": "Berth Allocation",
+      "equation": "MIN(Vessels_Waiting, Available_Berths) / Berth_Allocation_Time",
+      "from_stock": "stock-vessels-waiting",
+      "to_stock": "stock-vessels-at-berth",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-vessel-departure",
+      "name": "Vessel Departure",
+      "equation": "Vessels_at_Berth / Average_Berth_Time",
+      "from_stock": "stock-vessels-at-berth",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-container-discharge",
+      "name": "Container Discharge",
+      "equation": "Vessels_at_Berth * Cranes_per_Vessel * Crane_Productivity",
+      "from_stock": null,
+      "to_stock": "stock-yard-inventory",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-container-pickup",
+      "name": "Container Pickup",
+      "equation": "MIN(Container_Yard_Inventory, Truck_Processing_Rate)",
+      "from_stock": "stock-yard-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-truck-arrivals",
+      "name": "Truck Arrivals",
+      "equation": "Truck_Arrival_Rate",
+      "from_stock": null,
+      "to_stock": "stock-truck-queue",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-truck-processing",
+      "name": "Truck Processing",
+      "equation": "MIN(Truck_Queue, Gate_Capacity)",
+      "from_stock": "stock-truck-queue",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-arrival-rate",
+      "name": "Vessel Arrival Rate",
+      "equation": "0.5 + 0.2 * SIN(2 * 3.14159 * Time / 7)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-berths",
+      "name": "Total Berths",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-available-berths",
+      "name": "Available Berths",
+      "equation": "MAX(0, Total_Berths - Vessels_at_Berth)",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-berth-allocation-time",
+      "name": "Berth Allocation Time",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-average-berth-time",
+      "name": "Average Berth Time",
+      "equation": "2",
+      "position": {
+        "x": 650,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cranes-per-vessel",
+      "name": "Cranes per Vessel",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-crane-productivity",
+      "name": "Crane Productivity (TEU/day)",
+      "equation": "200",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-truck-arrival-rate",
+      "name": "Truck Arrival Rate",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-gate-capacity",
+      "name": "Gate Capacity",
+      "equation": "60",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-truck-processing-rate",
+      "name": "Truck Processing Rate",
+      "equation": "MIN(Truck_Queue * 0.8, Gate_Capacity)",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-yard-utilization",
+      "name": "Yard Utilization",
+      "equation": "Container_Yard_Inventory / Yard_Capacity",
+      "position": {
+        "x": 100,
+        "y": 470
+      }
+    },
+    {
+      "id": "var-yard-capacity",
+      "name": "Yard Capacity",
+      "equation": "10000",
+      "position": {
+        "x": 250,
+        "y": 470
+      }
+    },
+    {
+      "id": "var-vessel-wait-time",
+      "name": "Average Vessel Wait Time",
+      "equation": "Vessels_Waiting / (Arrival_Rate + 0.001)",
+      "position": {
+        "x": 450,
+        "y": 470
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-11T21:16:29.727712+00:00",
+  "updated_at": "2026-01-11T21:16:29.727712+00:00",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

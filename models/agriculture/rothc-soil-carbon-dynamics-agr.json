@@ -1,0 +1,189 @@
+{
+  "id": "rothc-soil-carbon-dynamics-agr",
+  "name": "RothC Soil Carbon Model",
+  "description": "Simplified RothC model for soil organic carbon turnover. Source: Coleman & Jenkinson (1996), European J Soil Science.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Active_Organic",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Slow_Organic",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Passive_Organic",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Active_Input",
+      "equation": "Carbon_Input * 0.3 - k_active * Active_Organic * Rate_Modifier",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Slow_Turnover",
+      "equation": "k_active * Active_Organic * Rate_Modifier * 0.6 - k_slow * Slow_Organic * Rate_Modifier",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Passive_Stabilization",
+      "equation": "k_slow * Slow_Organic * Rate_Modifier * 0.3 - k_passive * Passive_Organic * Rate_Modifier",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Carbon_Input",
+      "equation": "2",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "k_active",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "k_slow",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "k_passive",
+      "equation": "0.0001",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Temperature",
+      "equation": "15",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Moisture",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Clay_Content",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Temp_Factor",
+      "equation": "EXP(0.09 * (Temperature - 10))",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Moisture_Factor",
+      "equation": "MIN(1, Moisture / 0.6)",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Rate_Modifier",
+      "equation": "Temp_Factor * Moisture_Factor * (1 - 0.5 * Clay_Content)",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Total_SOC",
+      "equation": "Active_Organic + Slow_Organic + Passive_Organic",
+      "position": {
+        "x": 300,
+        "y": 480
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Temperature",
+      "to_element": "Temp_Factor"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:47:15.681814+00:00",
+  "updated_at": "2026-01-15T14:47:15.681819+00:00",
+  "source": "https://doi.org/10.1111/j.1365-2389.1996.tb00011.x",
+  "reference": "Coleman, K. & Jenkinson, D.S. (1996). RothC-26.3 - A Model for the turnover of carbon in soil. European J Soil Science 47:425-431."
+}

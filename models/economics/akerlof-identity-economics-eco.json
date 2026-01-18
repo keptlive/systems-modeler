@@ -1,0 +1,169 @@
+{
+  "id": "akerlof-identity-economics-eco",
+  "name": "Akerlof-Kranton Identity Economics",
+  "description": "Utility depends on social identity and conformity to group norms. People gain from acting according to their social category. Explains discrimination, education gaps, organizational behavior. Reference: Akerlof, G. A. (1970). The market for lemons. Quarterly Journal of Economics, 84(3), 488-500. DOI: https://doi.org/10.2307/1879431",
+  "stocks": [
+    {
+      "id": "stock-identity-salience",
+      "name": "Identity Salience",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-norm-conformity",
+      "name": "Norm Conformity",
+      "initial_value": 0.7,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-salience-change",
+      "name": "Salience Change",
+      "equation": "Salience_Adjustment * (Social_Pressure - Identity_Salience)",
+      "from_stock": null,
+      "to_stock": "stock-identity-salience",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-conformity-change",
+      "name": "Conformity Change",
+      "equation": "Conformity_Adjustment * (Optimal_Conformity - Norm_Conformity)",
+      "from_stock": null,
+      "to_stock": "stock-norm-conformity",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-material-utility",
+      "name": "Material Utility",
+      "equation": "10 - Effort_Cost * Effort_Level",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-identity-utility",
+      "name": "Identity Utility",
+      "equation": "Identity_Salience * (Norm_Conformity - 0.5) * 5",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-utility",
+      "name": "Total Utility",
+      "equation": "Material_Utility + Identity_Utility",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-effort-level",
+      "name": "Effort Level",
+      "equation": "0.5 + 0.3 * Identity_Salience * Norm_Conformity",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-effort-cost",
+      "name": "Effort Cost",
+      "equation": "1",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-social-pressure",
+      "name": "Social Pressure",
+      "equation": "0.6 + 0.2 * Group_Cohesion",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-optimal-conformity",
+      "name": "Optimal Conformity",
+      "equation": "MIN(1, 0.5 + Identity_Salience * 0.5)",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-group-cohesion",
+      "name": "Group Cohesion",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-salience-adjust",
+      "name": "Salience Adjustment",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-conform-adjust",
+      "name": "Conformity Adjustment",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Identity Salience",
+      "to_element": "Identity Utility"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Norm Conformity",
+      "to_element": "Identity Utility"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Identity Salience",
+      "to_element": "Effort Level"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:51:43.478272+00:00",
+  "updated_at": "2026-01-12T07:51:43.478284+00:00",
+  "source": "https://doi.org/10.1257/aer.100.2.i",
+  "reference": "Akerlof GA, Kranton RE. Identity Economics: How Our Identities Shape Our Work, Wages, and Well-Being. Princeton University Press. 2010."
+}

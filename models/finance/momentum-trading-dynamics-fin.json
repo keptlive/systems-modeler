@@ -1,0 +1,168 @@
+{
+  "id": "momentum-trading-dynamics-fin",
+  "name": "Momentum Trading and Price Dynamics",
+  "description": "Models how momentum traders amplify price trends and create bubbles. Based on De Long et al. (1990) Positive feedback investment, Journal of Finance. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "category": "finance",
+  "stocks": [
+    {
+      "id": "stock-price",
+      "name": "Stock_Price",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-momentum",
+      "name": "Price_Momentum",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-demand",
+      "name": "Momentum_Demand",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-price-change",
+      "name": "Price_Change",
+      "equation": "Stock_Price * (Fundamental_Return + Momentum_Effect * Momentum_Demand)",
+      "from_stock": null,
+      "to_stock": "stock-price",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mom-build",
+      "name": "Momentum_Buildup",
+      "equation": "(Stock_Price - Lagged_Price) / Momentum_Horizon",
+      "from_stock": null,
+      "to_stock": "stock-momentum",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-mom-decay",
+      "name": "Momentum_Decay",
+      "equation": "Price_Momentum * Decay_Rate",
+      "from_stock": "stock-momentum",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-demand-adj",
+      "name": "Demand_Adjustment",
+      "equation": "(Target_Demand - Momentum_Demand) / Reaction_Time",
+      "from_stock": null,
+      "to_stock": "stock-demand",
+      "position": {
+        "x": 300,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-fund",
+      "name": "Fundamental_Return",
+      "equation": "0.001",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-mom-eff",
+      "name": "Momentum_Effect",
+      "equation": "0.01",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-lagged",
+      "name": "Lagged_Price",
+      "equation": "DELAY(Stock_Price, 5, 100)",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-horizon",
+      "name": "Momentum_Horizon",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-decay",
+      "name": "Decay_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-target",
+      "name": "Target_Demand",
+      "equation": "Price_Momentum * Sensitivity",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-sens",
+      "name": "Sensitivity",
+      "equation": "5",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-react",
+      "name": "Reaction_Time",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1111/j.1540-6261.1990.tb03695.x",
+  "reference": "De Long JB, Shleifer A, Summers LH, Waldmann RJ (1990) Positive Feedback Investment Strategies and Destabilizing Rational Speculation. Journal of Finance 45(2):379-395.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:27:18.295470+00:00",
+  "updated_at": "2026-01-12T06:27:18.295470+00:00"
+}

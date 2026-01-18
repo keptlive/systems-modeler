@@ -1,0 +1,481 @@
+{
+  "id": "seasonal-influenza-transmission-model-with-vaccination-epi",
+  "name": "Seasonal Influenza Transmission Model with Vaccination",
+  "description": "A comprehensive model of seasonal influenza dynamics incorporating vaccination, waning immunity, and seasonal forcing. Models the annual flu cycle with intervention strategies including vaccine coverage and timing. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-vaccinated",
+      "name": "Vaccinated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exposed",
+      "name": "Exposed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infectious",
+      "name": "Infectious",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-cumulative-infections",
+      "name": "Cumulative Infections",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-cumulative-vaccinations",
+      "name": "Cumulative Vaccinations",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-new-infections-susceptible",
+      "name": "New Infections (Susceptible)",
+      "equation": "Susceptible * Force_of_Infection",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-breakthrough-infections",
+      "name": "Breakthrough Infections",
+      "equation": "Vaccinated * Force_of_Infection * (1 - Vaccine_Efficacy)",
+      "from_stock": "stock-vaccinated",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-vaccination",
+      "name": "Vaccination",
+      "equation": "Susceptible * Vaccination_Rate * Vaccination_Campaign_Active",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-cumulative-vaccinations",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-becoming-infectious",
+      "name": "Becoming Infectious",
+      "equation": "Exposed / Latent_Period",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-infectious",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "Infectious / Infectious_Period",
+      "from_stock": "stock-infectious",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-immunity-loss",
+      "name": "Immunity Loss",
+      "equation": "Recovered / Natural_Immunity_Duration",
+      "from_stock": "stock-recovered",
+      "to_stock": "stock-susceptible",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-vaccine-waning",
+      "name": "Vaccine Waning",
+      "equation": "Vaccinated / Vaccine_Immunity_Duration",
+      "from_stock": "stock-vaccinated",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-total-new-infections",
+      "name": "Total New Infections",
+      "equation": "Infection + Breakthrough_Infection",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-infections",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-births-into-susceptible",
+      "name": "Births into Susceptible",
+      "equation": "Total_Population * Birth_Rate / 365",
+      "from_stock": null,
+      "to_stock": "stock-susceptible",
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "1000000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-immune-fraction",
+      "name": "Initial Immune Fraction",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-exposed",
+      "name": "Initial Exposed",
+      "equation": "100",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-infectious",
+      "name": "Initial Infectious",
+      "equation": "10",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-basic-reproduction-number-r0",
+      "name": "Basic Reproduction Number (R0)",
+      "equation": "1.3",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-contact-rate",
+      "name": "Contact Rate",
+      "equation": "Basic_Reproduction_Number / Infectious_Period",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-force-of-infection",
+      "name": "Force of Infection",
+      "equation": "Contact_Rate * Infectious / Total_Population * Seasonal_Forcing",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-seasonal-forcing",
+      "name": "Seasonal Forcing",
+      "equation": "1 + Seasonality_Amplitude * COS(2 * 3.14159 * (Time - Peak_Day) / 365)",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-seasonality-amplitude",
+      "name": "Seasonality Amplitude",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-peak-transmission-day",
+      "name": "Peak Transmission Day",
+      "equation": "0",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-latent-period",
+      "name": "Latent Period",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-infectious-period",
+      "name": "Infectious Period",
+      "equation": "4",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-natural-immunity-duration",
+      "name": "Natural Immunity Duration",
+      "equation": "365",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-vaccine-immunity-duration",
+      "name": "Vaccine Immunity Duration",
+      "equation": "180",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-vaccine-efficacy",
+      "name": "Vaccine Efficacy",
+      "equation": "0.5",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-vaccination-rate",
+      "name": "Vaccination Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-vaccination-campaign-active",
+      "name": "Vaccination Campaign Active",
+      "equation": "IF Time >= Campaign_Start_Day AND Time <= Campaign_End_Day AND Cumulative_Vaccinations < Target_Vaccinations THEN 1 ELSE 0",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-campaign-start-day",
+      "name": "Campaign Start Day",
+      "equation": "270",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-campaign-end-day",
+      "name": "Campaign End Day",
+      "equation": "330",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-target-vaccinations",
+      "name": "Target Vaccinations",
+      "equation": "Total_Population * Target_Coverage",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-target-coverage",
+      "name": "Target Coverage",
+      "equation": "0.45",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-birth-rate",
+      "name": "Birth Rate",
+      "equation": "0.012",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-effective-reproduction-number-rt",
+      "name": "Effective Reproduction Number (Rt)",
+      "equation": "Basic_Reproduction_Number * Susceptible / Total_Population * Seasonal_Forcing",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-attack-rate",
+      "name": "Attack Rate",
+      "equation": "Cumulative_Infections / Total_Population",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-vaccination-coverage",
+      "name": "Vaccination Coverage",
+      "equation": "Cumulative_Vaccinations / Total_Population",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Susceptible",
+      "to_element": "New Infections (Susceptible)"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Force of Infection",
+      "to_element": "New Infections (Susceptible)"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Vaccinated",
+      "to_element": "Breakthrough Infections"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Force of Infection",
+      "to_element": "Breakthrough Infections"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Vaccine Efficacy",
+      "to_element": "Breakthrough Infections"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Exposed",
+      "to_element": "Becoming Infectious"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Latent Period",
+      "to_element": "Becoming Infectious"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Infectious",
+      "to_element": "Recovery"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Infectious Period",
+      "to_element": "Recovery"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Recovered",
+      "to_element": "Immunity Loss"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Natural Immunity Duration",
+      "to_element": "Immunity Loss"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Vaccinated",
+      "to_element": "Vaccine Waning"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Vaccine Immunity Duration",
+      "to_element": "Vaccine Waning"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.798599Z",
+  "updated_at": "2026-01-11T20:04:50.798599Z",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

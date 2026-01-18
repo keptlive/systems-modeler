@@ -1,0 +1,168 @@
+{
+  "id": "lyneis-corporate-growth-eco",
+  "name": "Lyneis Corporate Growth Model",
+  "description": "Corporate growth model demonstrating how internal resource constraints, delivery delays, and customer service quality interact to create growth ceilings. Based on James Lyneis's work on corporate planning and strategic management in system dynamics.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Customer_Base",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "Production_Capacity",
+      "initial_value": 500,
+      "equation": "",
+      "position": {"x": 400, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Backlog",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 300, "y": 350}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "New_Customers",
+      "equation": "Potential_Market * Acquisition_Rate * Service_Quality_Effect",
+      "from_stock": null,
+      "to_stock": "Customer_Base",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Lost_Customers",
+      "equation": "Customer_Base * Churn_Rate * Delivery_Delay_Effect",
+      "from_stock": "Customer_Base",
+      "to_stock": null,
+      "position": {"x": 300, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Capacity_Expansion",
+      "equation": "MAX(0, (Desired_Capacity - Production_Capacity) / Expansion_Time)",
+      "from_stock": null,
+      "to_stock": "Production_Capacity",
+      "position": {"x": 500, "y": 150}
+    },
+    {
+      "id": "f4",
+      "name": "Capacity_Depreciation",
+      "equation": "Production_Capacity / Capacity_Life",
+      "from_stock": "Production_Capacity",
+      "to_stock": null,
+      "position": {"x": 500, "y": 250}
+    },
+    {
+      "id": "f5",
+      "name": "Orders_Received",
+      "equation": "Customer_Base * Order_Rate",
+      "from_stock": null,
+      "to_stock": "Backlog",
+      "position": {"x": 200, "y": 350}
+    },
+    {
+      "id": "f6",
+      "name": "Orders_Fulfilled",
+      "equation": "MIN(Backlog / Minimum_Delivery_Time, Production_Capacity)",
+      "from_stock": "Backlog",
+      "to_stock": null,
+      "position": {"x": 400, "y": 350}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Potential_Market",
+      "equation": "10000 - Customer_Base",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "v2",
+      "name": "Acquisition_Rate",
+      "equation": "0.05",
+      "position": {"x": 200, "y": 100}
+    },
+    {
+      "id": "v3",
+      "name": "Churn_Rate",
+      "equation": "0.02",
+      "position": {"x": 300, "y": 100}
+    },
+    {
+      "id": "v4",
+      "name": "Service_Quality_Effect",
+      "equation": "1 - Delivery_Delay / Normal_Delivery_Time",
+      "position": {"x": 400, "y": 100}
+    },
+    {
+      "id": "v5",
+      "name": "Delivery_Delay_Effect",
+      "equation": "Delivery_Delay / Normal_Delivery_Time",
+      "position": {"x": 500, "y": 100}
+    },
+    {
+      "id": "v6",
+      "name": "Delivery_Delay",
+      "equation": "Backlog / MAX(1, Orders_Fulfilled)",
+      "position": {"x": 300, "y": 450}
+    },
+    {
+      "id": "v7",
+      "name": "Normal_Delivery_Time",
+      "equation": "2",
+      "position": {"x": 400, "y": 450}
+    },
+    {
+      "id": "v8",
+      "name": "Desired_Capacity",
+      "equation": "Backlog / Target_Delivery_Time",
+      "position": {"x": 500, "y": 450}
+    },
+    {
+      "id": "v9",
+      "name": "Expansion_Time",
+      "equation": "8",
+      "position": {"x": 600, "y": 100}
+    },
+    {
+      "id": "v10",
+      "name": "Capacity_Life",
+      "equation": "20",
+      "position": {"x": 600, "y": 200}
+    },
+    {
+      "id": "v11",
+      "name": "Order_Rate",
+      "equation": "0.5",
+      "position": {"x": 100, "y": 450}
+    },
+    {
+      "id": "v12",
+      "name": "Minimum_Delivery_Time",
+      "equation": "1",
+      "position": {"x": 200, "y": 450}
+    },
+    {
+      "id": "v13",
+      "name": "Target_Delivery_Time",
+      "equation": "2",
+      "position": {"x": 600, "y": 450}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "source": "https://mitsloan.mit.edu/faculty/directory/james-m-lyneis",
+  "reference": "Lyneis JM. Corporate Planning and Policy Design: A System Dynamics Approach. MIT Press; 1980. Also: Lyneis JM, Cooper KG, Els SA. Strategic management of complex projects. System Dynamics Review. 2001;17(3):237-260. DOI: 10.1002/sdr.213",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

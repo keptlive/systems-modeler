@@ -1,0 +1,195 @@
+{
+  "id": "perez-techno-economic-paradigm-tec",
+  "name": "Perez Techno-Economic Paradigm Model",
+  "description": "Carlota Perez's model of technological revolutions and financial capital dynamics. Reference: Perez, C. (2002). Technological Revolutions and Financial Capital.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Technological_Potential",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Installation",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Deployment",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Financial_Bubble",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Tech_Development",
+      "equation": "RD_Investment * Innovation_Rate",
+      "from_stock": null,
+      "to_stock": "Technological_Potential",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Installation_Phase",
+      "equation": "Technological_Potential * Installation_Rate * Financial_Capital",
+      "from_stock": "Technological_Potential",
+      "to_stock": "Installation",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Deployment_Phase",
+      "equation": "IF time > Turning_Point THEN Installation * Deployment_Rate ELSE 0",
+      "from_stock": "Installation",
+      "to_stock": "Deployment",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Bubble_Formation",
+      "equation": "IF time < Turning_Point THEN Installation * Speculation_Rate ELSE -Financial_Bubble * Crash_Rate",
+      "from_stock": null,
+      "to_stock": "Financial_Bubble",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "RD_Investment",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Innovation_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Installation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Deployment_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Financial_Capital",
+      "equation": "1 + Financial_Bubble / 100",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Speculation_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Turning_Point",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Crash_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Paradigm_Maturity",
+      "equation": "Deployment / (Technological_Potential + Installation + Deployment)",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Surge_Phase",
+      "equation": "IF time < Turning_Point THEN 1 ELSE 0",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.4337/9781781005323",
+  "reference": "Perez, C. (2002). Technological Revolutions and Financial Capital: The Dynamics of Bubbles and Golden Ages. Edward Elgar.",
+  "created_at": "2026-01-15T19:58:06.712549+00:00",
+  "updated_at": "2026-01-15T19:58:06.712549+00:00"
+}

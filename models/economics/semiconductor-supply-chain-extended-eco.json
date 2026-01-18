@@ -1,0 +1,279 @@
+{
+  "id": "semiconductor-supply-chain-extended-eco",
+  "name": "Semiconductor Supply Chain Extended Model",
+  "description": "Models the global semiconductor supply chain with multi-tier suppliers and capacity constraints. Based on 2021 chip shortage analysis. Reference: Based on System Dynamics supply chain models (Sterman, 2000). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-raw-materials",
+      "name": "Raw_Materials_Inventory",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-wafer-fab",
+      "name": "Wafer_Fab_WIP",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-packaging",
+      "name": "Packaging_WIP",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-finished-goods",
+      "name": "Finished_Goods",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-fab-capacity",
+      "name": "Fab_Capacity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-demand-backlog",
+      "name": "Demand_Backlog",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-material-supply",
+      "name": "Material_Supply",
+      "equation": "Material_Order_Rate",
+      "from_stock": null,
+      "to_stock": "stock-raw-materials",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-wafer-start",
+      "name": "Wafer_Start_Rate",
+      "equation": "MIN(Raw_Materials_Inventory / Material_Per_Wafer, Fab_Capacity) * Fab_Utilization",
+      "from_stock": "stock-raw-materials",
+      "to_stock": "stock-wafer-fab",
+      "position": {
+        "x": 175,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-wafer-complete",
+      "name": "Wafer_Completion",
+      "equation": "Wafer_Fab_WIP / Fab_Cycle_Time * Yield_Rate",
+      "from_stock": "stock-wafer-fab",
+      "to_stock": "stock-packaging",
+      "position": {
+        "x": 325,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-package-complete",
+      "name": "Package_Completion",
+      "equation": "Packaging_WIP / Package_Cycle_Time",
+      "from_stock": "stock-packaging",
+      "to_stock": "stock-finished-goods",
+      "position": {
+        "x": 475,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-shipments",
+      "name": "Shipments",
+      "equation": "MIN(Finished_Goods / DT, Customer_Demand + Demand_Backlog / Backlog_Recovery_Time)",
+      "from_stock": "stock-finished-goods",
+      "to_stock": null,
+      "position": {
+        "x": 625,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-capacity-expansion",
+      "name": "Capacity_Expansion",
+      "equation": "Capacity_Investment / Cost_Per_Capacity",
+      "from_stock": null,
+      "to_stock": "stock-fab-capacity",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-capacity-depreciation",
+      "name": "Capacity_Depreciation",
+      "equation": "Fab_Capacity / Fab_Lifetime",
+      "from_stock": "stock-fab-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-backlog-buildup",
+      "name": "Backlog_Buildup",
+      "equation": "MAX(0, Customer_Demand - Shipments)",
+      "from_stock": null,
+      "to_stock": "stock-demand-backlog",
+      "position": {
+        "x": 475,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-backlog-fulfillment",
+      "name": "Backlog_Fulfillment",
+      "equation": "MIN(Demand_Backlog, MAX(0, Shipments - Customer_Demand))",
+      "from_stock": "stock-demand-backlog",
+      "to_stock": null,
+      "position": {
+        "x": 625,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-material-order-rate",
+      "name": "Material_Order_Rate",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-material-per-wafer",
+      "name": "Material_Per_Wafer",
+      "equation": "1",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fab-utilization",
+      "name": "Fab_Utilization",
+      "equation": "0.95",
+      "position": {
+        "x": 340,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fab-cycle-time",
+      "name": "Fab_Cycle_Time",
+      "equation": "12",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-yield-rate",
+      "name": "Yield_Rate",
+      "equation": "0.85",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-package-cycle-time",
+      "name": "Package_Cycle_Time",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-customer-demand",
+      "name": "Customer_Demand",
+      "equation": "80 * (1 + 0.3 * SIN(TIME * 0.5))",
+      "position": {
+        "x": 220,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-backlog-recovery-time",
+      "name": "Backlog_Recovery_Time",
+      "equation": "4",
+      "position": {
+        "x": 380,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-capacity-investment",
+      "name": "Capacity_Investment",
+      "equation": "5",
+      "position": {
+        "x": 500,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-cost-per-capacity",
+      "name": "Cost_Per_Capacity",
+      "equation": "10",
+      "position": {
+        "x": 620,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-fab-lifetime",
+      "name": "Fab_Lifetime",
+      "equation": "15",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 104,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T01:15:55.418008+00:00",
+  "updated_at": "2026-01-12T01:15:55.418018+00:00",
+  "source": "https://doi.org/10.1016/j.ijpe.2021.108385",
+  "reference": "Brakman S, et al. The Covid-19 Pandemic and Supply Chains in Semiconductors. International Journal of Production Economics. 2022;243:108385."
+}

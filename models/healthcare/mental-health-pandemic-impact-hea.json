@@ -1,0 +1,155 @@
+{
+  "id": "mental-health-pandemic-impact-hea",
+  "name": "Mental Health Pandemic Impact Model",
+  "description": "Model of mental health impacts during pandemic conditions. Shows how isolation, economic stress, and uncertainty affect mental health prevalence, treatment capacity, and recovery. Based on COVID-19 mental health research.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Healthy_Population",
+      "initial_value": 90000000,
+      "equation": "",
+      "position": {"x": 150, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "At_Risk_Population",
+      "initial_value": 8000000,
+      "equation": "",
+      "position": {"x": 350, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Mental_Health_Cases",
+      "initial_value": 2000000,
+      "equation": "",
+      "position": {"x": 550, "y": 200}
+    },
+    {
+      "id": "s4",
+      "name": "Treatment_Capacity",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {"x": 350, "y": 380}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Becoming_At_Risk",
+      "equation": "Healthy_Population * Risk_Rate * Pandemic_Stress_Factor",
+      "from_stock": "Healthy_Population",
+      "to_stock": "At_Risk_Population",
+      "position": {"x": 250, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Developing_Condition",
+      "equation": "At_Risk_Population * Onset_Rate * Social_Isolation_Effect",
+      "from_stock": "At_Risk_Population",
+      "to_stock": "Mental_Health_Cases",
+      "position": {"x": 450, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Recovery",
+      "equation": "MIN(Treatment_Capacity, Mental_Health_Cases) * Recovery_Rate",
+      "from_stock": "Mental_Health_Cases",
+      "to_stock": "At_Risk_Population",
+      "position": {"x": 450, "y": 280}
+    },
+    {
+      "id": "f4",
+      "name": "Full_Recovery",
+      "equation": "At_Risk_Population * Full_Recovery_Rate * Support_Effect",
+      "from_stock": "At_Risk_Population",
+      "to_stock": "Healthy_Population",
+      "position": {"x": 250, "y": 280}
+    },
+    {
+      "id": "f5",
+      "name": "Capacity_Expansion",
+      "equation": "MAX(0, (Target_Capacity - Treatment_Capacity) / Expansion_Time)",
+      "from_stock": null,
+      "to_stock": "Treatment_Capacity",
+      "position": {"x": 250, "y": 380}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Risk_Rate",
+      "equation": "0.01",
+      "position": {"x": 100, "y": 80}
+    },
+    {
+      "id": "v2",
+      "name": "Pandemic_Stress_Factor",
+      "equation": "2.5",
+      "position": {"x": 250, "y": 80}
+    },
+    {
+      "id": "v3",
+      "name": "Onset_Rate",
+      "equation": "0.1",
+      "position": {"x": 400, "y": 80}
+    },
+    {
+      "id": "v4",
+      "name": "Social_Isolation_Effect",
+      "equation": "1.5",
+      "position": {"x": 550, "y": 80}
+    },
+    {
+      "id": "v5",
+      "name": "Recovery_Rate",
+      "equation": "0.2",
+      "position": {"x": 550, "y": 280}
+    },
+    {
+      "id": "v6",
+      "name": "Full_Recovery_Rate",
+      "equation": "0.05",
+      "position": {"x": 150, "y": 350}
+    },
+    {
+      "id": "v7",
+      "name": "Support_Effect",
+      "equation": "1",
+      "position": {"x": 100, "y": 400}
+    },
+    {
+      "id": "v8",
+      "name": "Target_Capacity",
+      "equation": "Mental_Health_Cases * 0.3",
+      "position": {"x": 250, "y": 450}
+    },
+    {
+      "id": "v9",
+      "name": "Expansion_Time",
+      "equation": "24",
+      "position": {"x": 400, "y": 450}
+    },
+    {
+      "id": "v10",
+      "name": "Treatment_Gap",
+      "equation": "MAX(0, Mental_Health_Cases - Treatment_Capacity)",
+      "position": {"x": 550, "y": 450}
+    },
+    {
+      "id": "v11",
+      "name": "Prevalence_Rate",
+      "equation": "Mental_Health_Cases / (Healthy_Population + At_Risk_Population + Mental_Health_Cases)",
+      "position": {"x": 650, "y": 350}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 104,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1016/S2215-0366(21)00084-5",
+  "reference": "Santomauro DF, et al. (2021). Global prevalence and burden of depressive and anxiety disorders in 204 countries and territories in 2020 due to the COVID-19 pandemic. The Lancet, 398(10312), 1700-1712. DOI: 10.1016/S0140-6736(21)02143-7",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

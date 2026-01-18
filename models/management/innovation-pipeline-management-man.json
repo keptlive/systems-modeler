@@ -1,0 +1,309 @@
+{
+  "id": "innovation-pipeline-management-man",
+  "name": "Innovation Pipeline and R&D Portfolio Management",
+  "description": "Models the innovation funnel from ideation to commercialization. Based on Cooper (2008) Perspective: The Stage-Gate Idea-to-Launch Process. Reference: OECD Oslo Manual (2018). Guidelines for Collecting Innovation Data. Source: https://www.oecd.org/",
+  "category": "management",
+  "stocks": [
+    {
+      "id": "stock-ideas",
+      "name": "Raw_Ideas",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-concept",
+      "name": "Concept_Stage",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-develop",
+      "name": "Development_Stage",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-launch",
+      "name": "Launch_Ready",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-market",
+      "name": "In_Market_Products",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-budget",
+      "name": "R_and_D_Budget",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-ideate",
+      "name": "Ideation",
+      "equation": "Ideation_Rate * Innovation_Culture",
+      "from_stock": null,
+      "to_stock": "stock-ideas",
+      "position": {
+        "x": 0,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-screen",
+      "name": "Idea_Screening",
+      "equation": "Raw_Ideas * Screening_Rate * Screen_Pass_Rate",
+      "from_stock": "stock-ideas",
+      "to_stock": "stock-concept",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-reject1",
+      "name": "Ideas_Rejected",
+      "equation": "Raw_Ideas * Screening_Rate * (1 - Screen_Pass_Rate)",
+      "from_stock": "stock-ideas",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 280
+      }
+    },
+    {
+      "id": "flow-develop",
+      "name": "To_Development",
+      "equation": "Concept_Stage * Dev_Gate_Rate * Concept_Pass_Rate",
+      "from_stock": "stock-concept",
+      "to_stock": "stock-develop",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-reject2",
+      "name": "Concepts_Killed",
+      "equation": "Concept_Stage * Dev_Gate_Rate * (1 - Concept_Pass_Rate)",
+      "from_stock": "stock-concept",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 280
+      }
+    },
+    {
+      "id": "flow-complete-dev",
+      "name": "Development_Complete",
+      "equation": "Development_Stage / Development_Time * Development_Success",
+      "from_stock": "stock-develop",
+      "to_stock": "stock-launch",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-launch",
+      "name": "Product_Launch",
+      "equation": "Launch_Ready * Launch_Rate",
+      "from_stock": "stock-launch",
+      "to_stock": "stock-market",
+      "position": {
+        "x": 625,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-retire",
+      "name": "Product_Retirement",
+      "equation": "In_Market_Products / Product_Lifecycle",
+      "from_stock": "stock-market",
+      "to_stock": null,
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-budget-in",
+      "name": "Budget_Allocation",
+      "equation": "Annual_R_and_D_Investment",
+      "from_stock": null,
+      "to_stock": "stock-budget",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-budget-out",
+      "name": "R_and_D_Spending",
+      "equation": "Concept_Stage * Concept_Cost + Development_Stage * Dev_Cost",
+      "from_stock": "stock-budget",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-ideate-rate",
+      "name": "Ideation_Rate",
+      "equation": "10",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-culture",
+      "name": "Innovation_Culture",
+      "equation": "1.2",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-screen-rate",
+      "name": "Screening_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-screen-pass",
+      "name": "Screen_Pass_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-dev-gate",
+      "name": "Dev_Gate_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-concept-pass",
+      "name": "Concept_Pass_Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-dev-time",
+      "name": "Development_Time",
+      "equation": "18",
+      "position": {
+        "x": 650,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-dev-success",
+      "name": "Development_Success",
+      "equation": "0.6",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-launch-rate",
+      "name": "Launch_Rate",
+      "equation": "0.25",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-lifecycle",
+      "name": "Product_Lifecycle",
+      "equation": "36",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-annual",
+      "name": "Annual_R_and_D_Investment",
+      "equation": "50",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-concept-cost",
+      "name": "Concept_Cost",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-dev-cost",
+      "name": "Dev_Cost",
+      "equation": "5",
+      "position": {
+        "x": 650,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1111/j.1540-5885.2008.00289.x",
+  "reference": "Cooper RG (2008) Perspective: The Stage-Gate Idea-to-Launch Process - Update, What's New and NexGen Systems. Journal of Product Innovation Management 25(3):213-232.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:35:24.695681+00:00",
+  "updated_at": "2026-01-12T06:35:24.695681+00:00"
+}

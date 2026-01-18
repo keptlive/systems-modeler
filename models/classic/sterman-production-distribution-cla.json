@@ -1,0 +1,243 @@
+{
+  "id": "sterman-production-distribution-cla",
+  "name": "Sterman Production-Distribution System",
+  "description": "Classic production-distribution-inventory model showing bullwhip effect. From Sterman (2000) Business Dynamics, Chapter 17-18. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "category": "classic",
+  "stocks": [
+    {
+      "id": "stock-factory-inv",
+      "name": "Factory_Inventory",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-wip",
+      "name": "Work_In_Process",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-dist-inv",
+      "name": "Distributor_Inventory",
+      "initial_value": 150,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-retail-inv",
+      "name": "Retailer_Inventory",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-start-prod",
+      "name": "Production_Start",
+      "equation": "Desired_Production",
+      "from_stock": null,
+      "to_stock": "stock-wip",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-complete",
+      "name": "Production_Completion",
+      "equation": "Work_In_Process / Production_Delay",
+      "from_stock": "stock-wip",
+      "to_stock": "stock-factory-inv",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-factory-ship",
+      "name": "Factory_Shipments",
+      "equation": "MIN(Factory_Inventory, Distributor_Orders)",
+      "from_stock": "stock-factory-inv",
+      "to_stock": "stock-dist-inv",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-dist-ship",
+      "name": "Distributor_Shipments",
+      "equation": "MIN(Distributor_Inventory, Retailer_Orders)",
+      "from_stock": "stock-dist-inv",
+      "to_stock": "stock-retail-inv",
+      "position": {
+        "x": 525,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-sales",
+      "name": "Retail_Sales",
+      "equation": "MIN(Retailer_Inventory, Customer_Demand)",
+      "from_stock": "stock-retail-inv",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-desired-prod",
+      "name": "Desired_Production",
+      "equation": "Expected_Orders + (Desired_Factory_Inventory - Factory_Inventory) / Inventory_Adjustment_Time",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-expected",
+      "name": "Expected_Orders",
+      "equation": "SMOOTH(Distributor_Orders, Forecast_Smoothing)",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-desired-fact",
+      "name": "Desired_Factory_Inventory",
+      "equation": "Expected_Orders * Inventory_Coverage",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-prod-delay",
+      "name": "Production_Delay",
+      "equation": "2",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-dist-orders",
+      "name": "Distributor_Orders",
+      "equation": "Expected_Retail_Orders + (Desired_Dist_Inventory - Distributor_Inventory) / Inventory_Adjustment_Time",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-retail-orders",
+      "name": "Retailer_Orders",
+      "equation": "Expected_Demand + (Desired_Retail_Inventory - Retailer_Inventory) / Inventory_Adjustment_Time",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Customer_Demand",
+      "equation": "100 + STEP(20, 10)",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-coverage",
+      "name": "Inventory_Coverage",
+      "equation": "3",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-adj-time",
+      "name": "Inventory_Adjustment_Time",
+      "equation": "4",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-smooth",
+      "name": "Forecast_Smoothing",
+      "equation": "4",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-exp-retail",
+      "name": "Expected_Retail_Orders",
+      "equation": "SMOOTH(Retailer_Orders, Forecast_Smoothing)",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-exp-demand",
+      "name": "Expected_Demand",
+      "equation": "SMOOTH(Customer_Demand, Forecast_Smoothing)",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-desired-dist",
+      "name": "Desired_Dist_Inventory",
+      "equation": "Expected_Retail_Orders * Inventory_Coverage",
+      "position": {
+        "x": 600,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-desired-retail",
+      "name": "Desired_Retail_Inventory",
+      "equation": "Expected_Demand * Inventory_Coverage",
+      "position": {
+        "x": 600,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "source": "https://mitpress.mit.edu/9780071179898/business-dynamics/",
+  "reference": "Sterman JD (2000) Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill, Chapters 17-18.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:31:20.124030+00:00",
+  "updated_at": "2026-01-12T06:31:20.124030+00:00"
+}

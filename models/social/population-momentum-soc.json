@@ -1,0 +1,189 @@
+{
+  "id": "population-momentum-soc",
+  "name": "Population Momentum Model",
+  "description": "Model showing how population continues to grow even after fertility drops to replacement level due to age structure. Based on Keyfitz (1971) population momentum theory. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-children",
+      "name": "Children (0-14)",
+      "initial_value": 300,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-reproductive",
+      "name": "Reproductive Age (15-49)",
+      "initial_value": 350,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-post-reproductive",
+      "name": "Post-Reproductive (50+)",
+      "initial_value": 150,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-births",
+      "name": "Births",
+      "equation": "Reproductive_Age * Fertility_Rate / 35",
+      "from_stock": null,
+      "to_stock": "stock-children",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-maturation",
+      "name": "Maturation",
+      "equation": "Children / Childhood_Duration",
+      "from_stock": "stock-children",
+      "to_stock": "stock-reproductive",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-aging",
+      "name": "Aging",
+      "equation": "Reproductive_Age / Reproductive_Duration",
+      "from_stock": "stock-reproductive",
+      "to_stock": "stock-post-reproductive",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-deaths-children",
+      "name": "Child Deaths",
+      "equation": "Children * Child_Mortality",
+      "from_stock": "stock-children",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-deaths-reproductive",
+      "name": "Reproductive Deaths",
+      "equation": "Reproductive_Age * Adult_Mortality",
+      "from_stock": "stock-reproductive",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-deaths-elderly",
+      "name": "Elderly Deaths",
+      "equation": "Post_Reproductive / Elderly_Life_Expectancy",
+      "from_stock": "stock-post-reproductive",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-fertility-rate",
+      "name": "Total Fertility Rate",
+      "equation": "IF Time < 50 THEN 4 ELSE 2.1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-childhood-duration",
+      "name": "Childhood Duration",
+      "equation": "15",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-reproductive-duration",
+      "name": "Reproductive Duration",
+      "equation": "35",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-elderly-life-expectancy",
+      "name": "Elderly Life Expectancy",
+      "equation": "25",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-child-mortality",
+      "name": "Child Mortality Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-adult-mortality",
+      "name": "Adult Mortality Rate",
+      "equation": "0.003",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "Children + Reproductive_Age + Post_Reproductive",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-dependency-ratio",
+      "name": "Dependency Ratio",
+      "equation": "(Children + Post_Reproductive) / Reproductive_Age",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 150,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T21:20:15.295958+00:00",
+  "updated_at": "2026-01-11T21:20:15.295958+00:00",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

@@ -1,0 +1,125 @@
+{
+  "id": "page-integrated-assessment-cli",
+  "name": "PAGE Integrated Assessment Model",
+  "description": "Policy Analysis of the Greenhouse Effect - used in Stern Review",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "CO2_Stock",
+      "initial_value": 800.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Temperature",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Economic_Impact",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Emissions_BAU",
+      "equation": "40.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Abatement_Fraction",
+      "equation": "0.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Net_Emissions",
+      "equation": "Emissions_BAU*(1-Abatement_Fraction)",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Damage_Function",
+      "equation": "0.01*Temperature*Temperature",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Tipping_Point_Prob",
+      "equation": "0.001*Temperature*Temperature*Temperature",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Discontinuity_Risk",
+      "equation": "Tipping_Point_Prob*5.0",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Net_Emissions",
+      "to_element": "CO2_Stock"
+    },
+    {
+      "id": "c2",
+      "from_element": "CO2_Stock",
+      "to_element": "Temperature"
+    },
+    {
+      "id": "c3",
+      "from_element": "Temperature",
+      "to_element": "Damage_Function"
+    },
+    {
+      "id": "c4",
+      "from_element": "Temperature",
+      "to_element": "Tipping_Point_Prob"
+    }
+  ],
+  "time_settings": {
+    "start": 2020.0,
+    "end": 2200.0,
+    "dt": 5.0
+  },
+  "created_at": "2026-01-15T20:44:13.927116+00:00",
+  "updated_at": "2026-01-15T20:44:13.927116+00:00",
+  "source": "https://doi.org/10.1007/s10584-006-6638-z",
+  "reference": "Hope, C. (2006) The marginal impact of CO2 from PAGE2002. Integrated Assessment 6:19-56"
+}

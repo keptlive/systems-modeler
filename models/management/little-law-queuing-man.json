@@ -1,0 +1,31 @@
+{
+  "id": "little-law-queuing-man",
+  "name": "Little's Law Queuing Model",
+  "description": "John Little's (1961) fundamental law of queuing theory: L = λW (average customers in system = arrival rate × average time in system). Applies universally to any stable queuing system regardless of distribution. Foundation of operations research.",
+  "stocks": [
+    {"id": "stock-queue-length", "name": "Queue Length", "initial_value": 10, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-in-service", "name": "In Service", "initial_value": 5, "equation": "", "position": {"x": 400, "y": 200}},
+    {"id": "stock-cumulative-wait", "name": "Cumulative Wait", "initial_value": 0, "equation": "", "position": {"x": 300, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-arrivals", "name": "Arrivals", "equation": "Arrival_Rate", "from_stock": null, "to_stock": "stock-queue-length", "position": {"x": 100, "y": 200}},
+    {"id": "flow-start-service", "name": "Start Service", "equation": "MIN(Queue_Length, Service_Capacity - In_Service) / Time_To_Start", "from_stock": "stock-queue-length", "to_stock": "stock-in-service", "position": {"x": 300, "y": 200}},
+    {"id": "flow-departures", "name": "Departures", "equation": "In_Service / Service_Time", "from_stock": "stock-in-service", "to_stock": null, "position": {"x": 500, "y": 200}},
+    {"id": "flow-wait-accumulation", "name": "Wait Accumulation", "equation": "Queue_Length", "from_stock": null, "to_stock": "stock-cumulative-wait", "position": {"x": 200, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-arrival-rate", "name": "Arrival Rate", "equation": "10", "position": {"x": 100, "y": 100}},
+    {"id": "var-service-capacity", "name": "Service Capacity", "equation": "15", "position": {"x": 300, "y": 100}},
+    {"id": "var-service-time", "name": "Service Time", "equation": "1", "position": {"x": 450, "y": 100}},
+    {"id": "var-time-to-start", "name": "Time To Start", "equation": "0.1", "position": {"x": 600, "y": 100}},
+    {"id": "var-utilization", "name": "Utilization", "equation": "In_Service / Service_Capacity", "position": {"x": 550, "y": 200}},
+    {"id": "var-total-in-system", "name": "Total In System", "equation": "Queue_Length + In_Service", "position": {"x": 350, "y": 280}},
+    {"id": "var-average-wait", "name": "Average Wait", "equation": "Queue_Length / Arrival_Rate", "position": {"x": 150, "y": 420}},
+    {"id": "var-average-time-in-system", "name": "Average Time In System", "equation": "Total_In_System / Arrival_Rate", "position": {"x": 400, "y": 420}},
+    {"id": "var-littles-law-check", "name": "Littles Law Check", "equation": "Total_In_System - Arrival_Rate * Average_Time_In_System", "position": {"x": 550, "y": 420}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 50, "dt": 0.1},
+  "source": "https://doi.org/10.1287/opre.9.3.383",
+  "reference": "Little JDC. A Proof for the Queuing Formula: L = λW. Operations Research. 1961;9(3):383-387."
+}

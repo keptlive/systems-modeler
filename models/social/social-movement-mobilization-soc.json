@@ -1,0 +1,206 @@
+{
+  "id": "social-movement-mobilization-soc",
+  "name": "Social Movement Mobilization",
+  "description": "Social movement mobilization model showing how grievances, resources, and political opportunity affect movement growth. Source: Based on McAdam et al. (1996), Comparative Perspectives on Social Movements, Cambridge University Press.",
+  "stocks": [
+    {
+      "id": "stock-latent",
+      "name": "Latent_Supporters",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-active",
+      "name": "Active_Members",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-resources",
+      "name": "Movement_Resources",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-mobilization",
+      "name": "Mobilization",
+      "equation": "Latent_Supporters * Mobilization_Rate * Political_Opportunity",
+      "from_stock": "stock-latent",
+      "to_stock": "stock-active",
+      "position": {
+        "x": 225,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-demobilization",
+      "name": "Demobilization",
+      "equation": "Active_Members * Demobilization_Rate",
+      "from_stock": "stock-active",
+      "to_stock": "stock-latent",
+      "position": {
+        "x": 225,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-resource-gain",
+      "name": "Resource_Gain",
+      "equation": "Active_Members * Contribution_Per_Member + External_Funding",
+      "from_stock": null,
+      "to_stock": "stock-resources",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-resource-spend",
+      "name": "Resource_Spending",
+      "equation": "Movement_Resources * Spending_Rate",
+      "from_stock": "stock-resources",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-grievance",
+      "name": "Grievance_Level",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mobilization-rate",
+      "name": "Mobilization_Rate",
+      "equation": "Base_Mobilization * Grievance_Level * Resource_Effect",
+      "position": {
+        "x": 200,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-base-mobilization",
+      "name": "Base_Mobilization",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-resource-effect",
+      "name": "Resource_Effect",
+      "equation": "Movement_Resources / (Movement_Resources + 5000)",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-political-opportunity",
+      "name": "Political_Opportunity",
+      "equation": "1.0",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-demobilization-rate",
+      "name": "Demobilization_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 225,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-contribution",
+      "name": "Contribution_Per_Member",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-external-funding",
+      "name": "External_Funding",
+      "equation": "1000",
+      "position": {
+        "x": 150,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-spending-rate",
+      "name": "Spending_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 450,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-movement-size",
+      "name": "Movement_Size",
+      "equation": "Active_Members / (Latent_Supporters + Active_Members)",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Latent_Supporters",
+      "to_element": "Mobilization"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Mobilization_Rate",
+      "to_element": "Mobilization"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Active_Members",
+      "to_element": "Demobilization"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Movement_Resources",
+      "to_element": "Resource_Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:57:03.374025+00:00",
+  "updated_at": "2026-01-11T20:57:03.374025+00:00",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

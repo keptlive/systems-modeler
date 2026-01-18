@@ -1,0 +1,205 @@
+{
+  "id": "kaldor-business-cycle-model-eco",
+  "name": "Kaldor Business Cycle Model",
+  "description": "A nonlinear business cycle model where investment depends on both output level and capital stock. The model generates endogenous cycles through the interaction of investment and savings, capturing boom-bust dynamics in the economy. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-output",
+      "name": "Output",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-capital-stock",
+      "name": "Capital Stock",
+      "initial_value": 300,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-output-change",
+      "name": "Output Change",
+      "equation": "Alpha * (Investment - Savings)",
+      "from_stock": null,
+      "to_stock": "stock-output",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-investment",
+      "name": "Investment",
+      "equation": "Investment_Function",
+      "from_stock": null,
+      "to_stock": "stock-capital-stock",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-depreciation",
+      "name": "Depreciation",
+      "equation": "Delta * Capital",
+      "from_stock": "stock-capital-stock",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-savings",
+      "name": "Savings",
+      "equation": "s * Output",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-investment-function",
+      "name": "Investment Function",
+      "equation": "I0 + I1 * Output - I2 * Capital + I3 * Output^2 / (1 + Output^2 / K^2)",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-alpha",
+      "name": "Alpha",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-s",
+      "name": "s",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-delta",
+      "name": "Delta",
+      "equation": "0.05",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-i0",
+      "name": "I0",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-i1",
+      "name": "I1",
+      "equation": "0.15",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-i2",
+      "name": "I2",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-i3",
+      "name": "I3",
+      "equation": "10",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-k",
+      "name": "K",
+      "equation": "100",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Investment",
+      "to_element": "Output Change"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Savings",
+      "to_element": "Output Change"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Alpha",
+      "to_element": "Output Change"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Output",
+      "to_element": "Savings"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Output",
+      "to_element": "Investment Function"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Capital Stock",
+      "to_element": "Investment Function"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Capital Stock",
+      "to_element": "Depreciation"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Delta",
+      "to_element": "Depreciation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-11T20:04:50.756810Z",
+  "updated_at": "2026-01-11T20:04:50.756810Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

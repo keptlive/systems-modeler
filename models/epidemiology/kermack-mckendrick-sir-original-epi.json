@@ -1,0 +1,129 @@
+{
+  "id": "kermack-mckendrick-sir-original-epi",
+  "name": "Kermack-McKendrick Original SIR",
+  "description": "The original 1927 epidemic model that launched mathematical epidemiology",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Susceptible",
+      "initial_value": 999.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Infected",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Removed",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "beta",
+      "equation": "0.4",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "gamma",
+      "equation": "0.1",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "N",
+      "equation": "1000.0",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Force_of_Infection",
+      "equation": "beta*Infected/N",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "New_Infections",
+      "equation": "Force_of_Infection*Susceptible",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Recoveries",
+      "equation": "gamma*Infected",
+      "position": {
+        "x": 750,
+        "y": 50
+      }
+    },
+    {
+      "id": "v7",
+      "name": "R0",
+      "equation": "beta/gamma",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Susceptible",
+      "to_element": "New_Infections"
+    },
+    {
+      "id": "c2",
+      "from_element": "Infected",
+      "to_element": "Force_of_Infection"
+    },
+    {
+      "id": "c3",
+      "from_element": "Infected",
+      "to_element": "Recoveries"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 160.0,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T20:45:21.048999+00:00",
+  "updated_at": "2026-01-15T20:45:21.048999+00:00",
+  "source": "https://doi.org/10.1098/rspa.1927.0118",
+  "reference": "Kermack, W.O. & McKendrick, A.G. (1927) A contribution to the mathematical theory of epidemics. Proc. R. Soc. A 115:700-721"
+}

@@ -1,0 +1,196 @@
+{
+  "id": "modigliani-miller-capital-fin",
+  "name": "Modigliani-Miller Capital Structure",
+  "description": "In perfect markets, firm value is independent of capital structure. Debt vs equity choice is irrelevant. With taxes, debt creates tax shield. Nobel Prize 1985 (Modigliani), 1990 (Miller). Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "stock-firm-value",
+      "name": "Firm Value",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-debt-level",
+      "name": "Debt Level",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-value-change",
+      "name": "Value Change",
+      "equation": "EBIT * (1 - Tax_Rate) + Tax_Shield - Bankruptcy_Cost",
+      "from_stock": null,
+      "to_stock": "stock-firm-value",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-debt-change",
+      "name": "Debt Change",
+      "equation": "Debt_Issuance - Debt_Repayment",
+      "from_stock": null,
+      "to_stock": "stock-debt-level",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-ebit",
+      "name": "EBIT",
+      "equation": "150",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-tax",
+      "name": "Tax Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-unlevered",
+      "name": "Unlevered Value",
+      "equation": "EBIT * (1 - Tax_Rate) / Cost_of_Equity_Unlevered",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-tax-shield",
+      "name": "Tax Shield",
+      "equation": "Tax_Rate * Interest_Rate * Debt_Level",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-interest",
+      "name": "Interest Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-cost-equity-u",
+      "name": "Cost of Equity Unlevered",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-leverage",
+      "name": "Leverage Ratio",
+      "equation": "Debt_Level / Firm_Value",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-cost-equity-l",
+      "name": "Cost of Equity Levered",
+      "equation": "Cost_of_Equity_Unlevered + (Cost_of_Equity_Unlevered - Interest_Rate) * Leverage_Ratio * (1 - Tax_Rate)",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-wacc",
+      "name": "WACC",
+      "equation": "(1 - Leverage_Ratio) * Cost_of_Equity_Levered + Leverage_Ratio * Interest_Rate * (1 - Tax_Rate)",
+      "position": {
+        "x": 500,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-bankruptcy",
+      "name": "Bankruptcy Cost",
+      "equation": "Bankruptcy_Probability * Firm_Value * 0.1",
+      "position": {
+        "x": 200,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-bank-prob",
+      "name": "Bankruptcy Probability",
+      "equation": "0.01 * (Leverage_Ratio / 0.5)^3",
+      "position": {
+        "x": 450,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-debt-issue",
+      "name": "Debt Issuance",
+      "equation": "0",
+      "position": {
+        "x": 600,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-debt-repay",
+      "name": "Debt Repayment",
+      "equation": "0.05 * Debt_Level",
+      "position": {
+        "x": 700,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Debt Level",
+      "to_element": "Tax Shield"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Debt Level",
+      "to_element": "Leverage Ratio"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Leverage Ratio",
+      "to_element": "Cost of Equity Levered"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:45:54.017075+00:00",
+  "updated_at": "2026-01-12T07:45:54.017081+00:00",
+  "source": "https://doi.org/10.2307/1809766",
+  "reference": "Modigliani F, Miller MH. The Cost of Capital, Corporation Finance and the Theory of Investment. American Economic Review. 1958;48(3):261-297. Nobel Prize 1985, 1990."
+}

@@ -1,0 +1,262 @@
+{
+  "id": "mental-health-service-demand-hea",
+  "name": "Mental Health Service Demand Model",
+  "description": "Models mental health treatment seeking and service capacity. Based on Wang et al. (2007). DOI: 10.1016/S0140-6736(07)61414-7",
+  "stocks": [
+    {
+      "id": "stock-untreated",
+      "name": "Untreated_Population",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-seeking",
+      "name": "Treatment_Seeking",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-treated",
+      "name": "In_Treatment",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 150,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-capacity",
+      "name": "Service_Capacity",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-onset",
+      "name": "Illness_Onset",
+      "equation": "General_Population * Incidence_Rate + Recovered * Relapse_Rate",
+      "from_stock": null,
+      "to_stock": "stock-untreated",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-seektreat",
+      "name": "Start_Seeking",
+      "equation": "Untreated_Population * Help_Seeking_Rate * (1 + Awareness_Effect)",
+      "from_stock": "stock-untreated",
+      "to_stock": "stock-seeking",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-gettreat",
+      "name": "Begin_Treatment",
+      "equation": "MIN(Treatment_Seeking * Access_Rate, Service_Capacity - In_Treatment)",
+      "from_stock": "stock-seeking",
+      "to_stock": "stock-treated",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-dropout",
+      "name": "Treatment_Dropout",
+      "equation": "In_Treatment * Dropout_Rate",
+      "from_stock": "stock-treated",
+      "to_stock": "stock-untreated",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-recover",
+      "name": "Recovery",
+      "equation": "In_Treatment * Recovery_Rate",
+      "from_stock": "stock-treated",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 550,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-capexp",
+      "name": "Capacity_Expansion",
+      "equation": "Investment_Rate * Budget_Allocation",
+      "from_stock": null,
+      "to_stock": "stock-capacity",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-capdep",
+      "name": "Capacity_Depreciation",
+      "equation": "Service_Capacity * Depreciation_Rate",
+      "from_stock": "stock-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-genpop",
+      "name": "General_Population",
+      "equation": "5000",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-incrate",
+      "name": "Incidence_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-relapserate",
+      "name": "Relapse_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-helpseek",
+      "name": "Help_Seeking_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-awareness",
+      "name": "Awareness_Effect",
+      "equation": "0.3 * TIME / 100",
+      "position": {
+        "x": 150,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-accessrate",
+      "name": "Access_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-droprate",
+      "name": "Dropout_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-recovrate",
+      "name": "Recovery_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 600,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-investrate",
+      "name": "Investment_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-budget",
+      "name": "Budget_Allocation",
+      "equation": "50",
+      "position": {
+        "x": 250,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-deprate",
+      "name": "Depreciation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-treatgap",
+      "name": "Treatment_Gap",
+      "equation": "Untreated_Population / (Untreated_Population + Treatment_Seeking + In_Treatment)",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Service_Capacity",
+      "to_element": "Begin_Treatment"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T02:55:29.074201+00:00",
+  "updated_at": "2026-01-12T02:55:29.074207+00:00",
+  "source": "https://doi.org/10.1016/S0140-6736(07)61414-7",
+  "reference": "Wang PS, et al. (2007). Use of mental health services for anxiety, mood, and substance disorders. Lancet."
+}

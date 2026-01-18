@@ -1,0 +1,87 @@
+{
+  "id": "beer-lambert-light-attenuation-phy",
+  "name": "Beer-Lambert Light Attenuation",
+  "description": "Models light absorption through a medium following Beer-Lambert law, fundamental to spectroscopy and photobiology",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Light_Intensity",
+      "initial_value": 1000.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Absorbed_Energy",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Absorption_Coefficient",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Path_Length",
+      "equation": "1.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Attenuation_Rate",
+      "equation": "Absorption_Coefficient*Light_Intensity",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Transmittance",
+      "equation": "Light_Intensity/1000",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Light_Intensity",
+      "to_element": "Attenuation_Rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "Absorption_Coefficient",
+      "to_element": "Attenuation_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 10.0,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T20:40:14.092585+00:00",
+  "updated_at": "2026-01-15T20:40:14.092735+00:00",
+  "source": "https://doi.org/10.1021/ed084p1138",
+  "reference": "Beer-Lambert Law original derivation; Swinehart, D.F. (1962) J. Chem. Ed."
+}

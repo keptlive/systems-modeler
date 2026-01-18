@@ -1,0 +1,158 @@
+{
+  "id": "retirement-savings-adequacy-fin",
+  "name": "Retirement Savings Adequacy",
+  "description": "Model of retirement savings dynamics. Source: OECD Pensions at a Glance; Modigliani Life-Cycle.",
+  "stocks": [
+    {
+      "id": "stock-savings",
+      "name": "Retirement_Savings",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-target",
+      "name": "Savings_Target",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-contrib",
+      "name": "Contributions",
+      "equation": "Income * Savings_Rate * Employer_Match",
+      "from_stock": null,
+      "to_stock": "stock-savings",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-returns",
+      "name": "Investment_Returns",
+      "equation": "Retirement_Savings * Return_Rate",
+      "from_stock": null,
+      "to_stock": "stock-savings",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-withdraw",
+      "name": "Early_Withdrawal",
+      "equation": "Retirement_Savings * Leakage_Rate",
+      "from_stock": "stock-savings",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-target-adj",
+      "name": "Target_Adjustment",
+      "equation": "(Ideal_Target - Savings_Target) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-target",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-income",
+      "name": "Income",
+      "equation": "60 * (1 + 0.03 * TIME)",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-saverate",
+      "name": "Savings_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-match",
+      "name": "Employer_Match",
+      "equation": "1.5",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-return",
+      "name": "Return_Rate",
+      "equation": "0.07",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-leak",
+      "name": "Leakage_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-ideal",
+      "name": "Ideal_Target",
+      "equation": "Income * 10",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-adj",
+      "name": "Adjustment_Time",
+      "equation": "5",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-adequacy",
+      "name": "Adequacy_Ratio",
+      "equation": "Retirement_Savings / MAX(1, Savings_Target)",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 40,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:55:38.761070+00:00",
+  "updated_at": "2026-01-12T12:55:38.761070+00:00",
+  "source": "https://systemdynamics.org/resources/",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

@@ -1,0 +1,166 @@
+{
+  "id": "gravity-model-trade-eco",
+  "name": "Gravity Model of International Trade",
+  "description": "Trade flows between countries are proportional to economic size and inversely related to distance. Most robust empirical regularity in international economics. Extended with trade barriers. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-trade-ab",
+      "name": "Bilateral Trade",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-trade-change",
+      "name": "Trade Adjustment",
+      "equation": "Adjustment_Speed * (Equilibrium_Trade - Bilateral_Trade)",
+      "from_stock": null,
+      "to_stock": "stock-trade-ab",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-equilibrium",
+      "name": "Equilibrium Trade",
+      "equation": "Gravity_Constant * (GDP_A * GDP_B) / (Distance^Distance_Elasticity * Trade_Costs)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gdp-a",
+      "name": "GDP A",
+      "equation": "1000",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gdp-b",
+      "name": "GDP B",
+      "equation": "500",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-distance",
+      "name": "Distance",
+      "equation": "1000",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-distance-elast",
+      "name": "Distance Elasticity",
+      "equation": "1.0",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gravity",
+      "name": "Gravity Constant",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-trade-costs",
+      "name": "Trade Costs",
+      "equation": "(1 + Tariff_Rate) * (1 + Transport_Cost) * (1 - Common_Language * 0.2)",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-tariff",
+      "name": "Tariff Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-transport",
+      "name": "Transport Cost",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-common-lang",
+      "name": "Common Language",
+      "equation": "0",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-adjust",
+      "name": "Adjustment Speed",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-trade-share",
+      "name": "Trade Share of GDP",
+      "equation": "Bilateral_Trade / (GDP_A + GDP_B)",
+      "position": {
+        "x": 300,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "GDP A",
+      "to_element": "Equilibrium Trade"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "GDP B",
+      "to_element": "Equilibrium Trade"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Distance",
+      "to_element": "Equilibrium Trade"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:43:15.875929+00:00",
+  "updated_at": "2026-01-12T07:43:15.875932+00:00",
+  "source": "https://doi.org/10.2307/1907301",
+  "reference": "Tinbergen J. Shaping the World Economy: Suggestions for an International Economic Policy. Twentieth Century Fund. 1962."
+}

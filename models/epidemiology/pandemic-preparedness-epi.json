@@ -1,0 +1,248 @@
+{
+  "id": "pandemic-preparedness-epi",
+  "name": "Pandemic Preparedness Model",
+  "description": "Model of pandemic preparedness investments and their decay over time between outbreaks. Shows the cycle of crisis response and complacency. Based on Osterholm & Olshaker (2017) and post-COVID analyses. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "stock-preparedness",
+      "name": "Preparedness Level",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-stockpile",
+      "name": "Medical Stockpile",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-surge-capacity",
+      "name": "Healthcare Surge Capacity",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-public-attention",
+      "name": "Public Attention",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-preparedness-investment",
+      "name": "Preparedness Investment",
+      "equation": "Investment_Rate * Attention_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-preparedness",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-preparedness-decay",
+      "name": "Preparedness Decay",
+      "equation": "Preparedness_Level * Decay_Rate * (1 - Public_Attention / 100)",
+      "from_stock": "stock-preparedness",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-stockpile-purchase",
+      "name": "Stockpile Purchase",
+      "equation": "Stockpile_Budget * Attention_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-stockpile",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-stockpile-expiry",
+      "name": "Stockpile Expiry",
+      "equation": "Medical_Stockpile / Shelf_Life",
+      "from_stock": "stock-stockpile",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-capacity-building",
+      "name": "Capacity Building",
+      "equation": "Capacity_Investment * Attention_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-surge-capacity",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-capacity-erosion",
+      "name": "Capacity Erosion",
+      "equation": "Healthcare_Surge_Capacity * Capacity_Erosion_Rate",
+      "from_stock": "stock-surge-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-attention-spike",
+      "name": "Attention Spike",
+      "equation": "IF Outbreak_Occurring THEN Crisis_Attention_Boost ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-public-attention",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-attention-decay",
+      "name": "Attention Decay",
+      "equation": "Public_Attention * Attention_Decay_Rate",
+      "from_stock": "stock-public-attention",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-outbreak-occurring",
+      "name": "Outbreak Occurring",
+      "equation": "IF MOD(Time, 20) < 2 THEN 1 ELSE 0",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-crisis-attention-boost",
+      "name": "Crisis Attention Boost",
+      "equation": "50",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-attention-decay-rate",
+      "name": "Attention Decay Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-attention-multiplier",
+      "name": "Attention Multiplier",
+      "equation": "1 + Public_Attention / 50",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-investment-rate",
+      "name": "Investment Rate",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-decay-rate",
+      "name": "Preparedness Decay Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-stockpile-budget",
+      "name": "Stockpile Budget",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-shelf-life",
+      "name": "Shelf Life",
+      "equation": "5",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-capacity-investment",
+      "name": "Capacity Investment",
+      "equation": "2",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-capacity-erosion-rate",
+      "name": "Capacity Erosion Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 470
+      }
+    },
+    {
+      "id": "var-overall-preparedness",
+      "name": "Overall Preparedness Index",
+      "equation": "(Preparedness_Level + Medical_Stockpile + Healthcare_Surge_Capacity) / 3",
+      "position": {
+        "x": 350,
+        "y": 470
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:16:29.727520+00:00",
+  "updated_at": "2026-01-11T21:16:29.727520+00:00",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

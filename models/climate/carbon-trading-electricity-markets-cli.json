@@ -1,0 +1,204 @@
+{
+  "id": "carbon-trading-electricity-markets-cli",
+  "name": "Carbon Trading and Electricity Markets",
+  "description": "System dynamics model of dynamic interactions between carbon trading, green certificate trading, and electricity markets. Examines policy coordination for emissions reduction. Reference: IPCC (2021). Climate Change 2021: The Physical Science Basis. Source: https://www.ipcc.ch/report/ar6/wg1/",
+  "stocks": [
+    {
+      "id": "stock-carbon-emissions",
+      "name": "Carbon Emissions",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-carbon-permits",
+      "name": "Carbon Permits",
+      "initial_value": 12000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-green-certificates",
+      "name": "Green Certificates",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-renewable-capacity",
+      "name": "Renewable Capacity",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-emission-gen",
+      "name": "Emission Generation",
+      "equation": "Electricity_Demand * Fossil_Share * Emission_Intensity",
+      "from_stock": null,
+      "to_stock": "stock-carbon-emissions",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-permit-use",
+      "name": "Permit Usage",
+      "equation": "Carbon_Emissions",
+      "from_stock": "stock-carbon-permits",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-cert-gen",
+      "name": "Certificate Generation",
+      "equation": "Renewable_Generation * Certificate_Rate",
+      "from_stock": null,
+      "to_stock": "stock-green-certificates",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-capacity-growth",
+      "name": "Capacity Growth",
+      "equation": "Investment_in_Renewables / Capital_Cost",
+      "from_stock": null,
+      "to_stock": "stock-renewable-capacity",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-elec-demand",
+      "name": "Electricity Demand",
+      "equation": "50000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-fossil-share",
+      "name": "Fossil Share",
+      "equation": "1 - Renewable_Capacity / Total_Capacity",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-emission-int",
+      "name": "Emission Intensity",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-carbon-price",
+      "name": "Carbon Price",
+      "equation": "MAX(10, 50 * (Carbon_Emissions / Carbon_Permits))",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-renewable-gen",
+      "name": "Renewable Generation",
+      "equation": "Renewable_Capacity * Capacity_Factor",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-capacity-factor",
+      "name": "Capacity Factor",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-cert-rate",
+      "name": "Certificate Rate",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-investment",
+      "name": "Investment in Renewables",
+      "equation": "Carbon_Price * 100 + Certificate_Price * 50",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-capital-cost",
+      "name": "Capital Cost",
+      "equation": "1500",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-total-cap",
+      "name": "Total Capacity",
+      "equation": "60000",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-cert-price",
+      "name": "Certificate Price",
+      "equation": "20",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1371/journal.pone.0304478",
+  "reference": "Zhang et al. Dynamic interactions of carbon trading, green certificate trading, and electricity markets. PLoS ONE (2024).",
+  "created_at": "2026-01-12T08:08:22.081275Z",
+  "updated_at": "2026-01-12T08:08:22.081275Z"
+}

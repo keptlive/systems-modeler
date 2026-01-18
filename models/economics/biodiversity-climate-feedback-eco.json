@@ -1,0 +1,154 @@
+{
+  "id": "biodiversity-climate-feedback-eco",
+  "name": "Biodiversity-Climate Feedback Model",
+  "description": "Model showing bidirectional feedbacks between biodiversity loss and climate change. Demonstrates how ecosystem degradation reduces carbon sequestration while climate impacts accelerate species loss. Based on IPBES-IPCC joint report.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Biodiversity_Index",
+      "initial_value": 80,
+      "equation": "",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "Ecosystem_Carbon_Stock",
+      "initial_value": 2000,
+      "equation": "",
+      "position": {"x": 450, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Climate_Stress",
+      "initial_value": 1.2,
+      "equation": "",
+      "position": {"x": 325, "y": 380}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Biodiversity_Loss",
+      "equation": "Biodiversity_Index * Loss_Rate * Climate_Impact * Habitat_Loss_Factor",
+      "from_stock": "Biodiversity_Index",
+      "to_stock": null,
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Ecosystem_Recovery",
+      "equation": "(100 - Biodiversity_Index) * Recovery_Rate * Conservation_Effort",
+      "from_stock": null,
+      "to_stock": "Biodiversity_Index",
+      "position": {"x": 300, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Carbon_Sequestration",
+      "equation": "Sequestration_Rate * Biodiversity_Index / 80 * Ecosystem_Health",
+      "from_stock": null,
+      "to_stock": "Ecosystem_Carbon_Stock",
+      "position": {"x": 350, "y": 200}
+    },
+    {
+      "id": "f4",
+      "name": "Carbon_Release",
+      "equation": "Ecosystem_Carbon_Stock * Release_Rate * Climate_Stress * Degradation_Effect",
+      "from_stock": "Ecosystem_Carbon_Stock",
+      "to_stock": null,
+      "position": {"x": 550, "y": 200}
+    },
+    {
+      "id": "f5",
+      "name": "Climate_Change",
+      "equation": "(Emissions - Carbon_Sequestration + Carbon_Release) * Warming_Factor / 1000",
+      "from_stock": null,
+      "to_stock": "Climate_Stress",
+      "position": {"x": 225, "y": 380}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Loss_Rate",
+      "equation": "0.01",
+      "position": {"x": 100, "y": 80}
+    },
+    {
+      "id": "v2",
+      "name": "Climate_Impact",
+      "equation": "1 + (Climate_Stress - 1) * 0.5",
+      "position": {"x": 200, "y": 80}
+    },
+    {
+      "id": "v3",
+      "name": "Habitat_Loss_Factor",
+      "equation": "1.2",
+      "position": {"x": 300, "y": 80}
+    },
+    {
+      "id": "v4",
+      "name": "Recovery_Rate",
+      "equation": "0.005",
+      "position": {"x": 400, "y": 80}
+    },
+    {
+      "id": "v5",
+      "name": "Conservation_Effort",
+      "equation": "1",
+      "position": {"x": 500, "y": 80}
+    },
+    {
+      "id": "v6",
+      "name": "Sequestration_Rate",
+      "equation": "50",
+      "position": {"x": 350, "y": 130}
+    },
+    {
+      "id": "v7",
+      "name": "Ecosystem_Health",
+      "equation": "Biodiversity_Index / 80",
+      "position": {"x": 450, "y": 130}
+    },
+    {
+      "id": "v8",
+      "name": "Release_Rate",
+      "equation": "0.01",
+      "position": {"x": 550, "y": 130}
+    },
+    {
+      "id": "v9",
+      "name": "Degradation_Effect",
+      "equation": "1 + (80 - Biodiversity_Index) / 80",
+      "position": {"x": 650, "y": 200}
+    },
+    {
+      "id": "v10",
+      "name": "Emissions",
+      "equation": "40",
+      "position": {"x": 100, "y": 450}
+    },
+    {
+      "id": "v11",
+      "name": "Warming_Factor",
+      "equation": "0.02",
+      "position": {"x": 225, "y": 450}
+    },
+    {
+      "id": "v12",
+      "name": "Tipping_Risk",
+      "equation": "MAX(0, (Climate_Stress - 2) * 50 + (80 - Biodiversity_Index))",
+      "position": {"x": 450, "y": 450}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.5281/zenodo.4659158",
+  "reference": "IPBES-IPCC (2021). Scientific outcome of the IPBES-IPCC co-sponsored workshop on biodiversity and climate change. DOI: 10.5281/zenodo.4659158. Also: Pörtner HO, et al. (2021). Scientific outcome of the IPBES-IPCC co-sponsored workshop report on biodiversity and climate change. IPBES secretariat.",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

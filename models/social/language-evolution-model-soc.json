@@ -1,0 +1,189 @@
+{
+  "id": "language-evolution-model-soc",
+  "name": "Language Evolution Model",
+  "description": "Models language change through variation and selection. Based on Labov (2001) and Croft (2000). DOI: 10.1017/CBO9780511612022",
+  "stocks": [
+    {
+      "id": "stock-standard",
+      "name": "Standard_Form_Users",
+      "initial_value": 700,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-variant",
+      "name": "Variant_Form_Users",
+      "initial_value": 300,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-prestige",
+      "name": "Variant_Prestige",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adopt",
+      "name": "Variant_Adoption",
+      "equation": "Standard_Form_Users * Adoption_Probability",
+      "from_stock": "stock-standard",
+      "to_stock": "stock-variant",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-revert",
+      "name": "Standard_Reversion",
+      "equation": "Variant_Form_Users * Reversion_Rate * Standard_Pressure",
+      "from_stock": "stock-variant",
+      "to_stock": "stock-standard",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-prestigegain",
+      "name": "Prestige_Gain",
+      "equation": "(Variant_Form_Users / 1000 * 100 - Variant_Prestige) * Prestige_Adjustment * IF(Variant_Form_Users > 500, 1, 0.5)",
+      "from_stock": null,
+      "to_stock": "stock-prestige",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-adoptprob",
+      "name": "Adoption_Probability",
+      "equation": "Base_Adoption * (1 + Social_Network_Effect + Prestige_Effect)",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-baseadopt",
+      "name": "Base_Adoption",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-socneteff",
+      "name": "Social_Network_Effect",
+      "equation": "Variant_Form_Users / 1000",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-presteff",
+      "name": "Prestige_Effect",
+      "equation": "Variant_Prestige / 100",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-revrate",
+      "name": "Reversion_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-stdpress",
+      "name": "Standard_Pressure",
+      "equation": "1 + Education_Effect + Media_Effect",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-edueff",
+      "name": "Education_Effect",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-mediaeff",
+      "name": "Media_Effect",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-prestadj",
+      "name": "Prestige_Adjustment",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-variantshare",
+      "name": "Variant_Share",
+      "equation": "Variant_Form_Users / (Standard_Form_Users + Variant_Form_Users)",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-changerate",
+      "name": "Language_Change_Rate",
+      "equation": "ABS(Variant_Adoption - Standard_Reversion) / (Standard_Form_Users + Variant_Form_Users)",
+      "position": {
+        "x": 300,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Variant_Form_Users",
+      "to_element": "Social_Network_Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:55:29.074518+00:00",
+  "updated_at": "2026-01-12T02:55:29.074528+00:00",
+  "source": "https://doi.org/10.1017/CBO9780511612022",
+  "reference": "Croft W (2000). Explaining Language Change. Longman. Also: Labov W (2001). Principles of Linguistic Change."
+}

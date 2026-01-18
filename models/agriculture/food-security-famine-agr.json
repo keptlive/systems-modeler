@@ -1,0 +1,226 @@
+{
+  "id": "food-security-famine-agr",
+  "name": "Food Security and Famine Dynamics",
+  "description": "Model of food security dynamics and famine risk. Captures food production, storage, distribution, and the cascade from food insecurity to famine. Based on food security research and humanitarian response frameworks. Reference: FAO Food Security Statistics. Source: https://www.fao.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Food_Stocks",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Population_Secure",
+      "initial_value": 900,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Population_Insecure",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Population_Crisis",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Food_Production",
+      "equation": "Agricultural_Capacity * Climate_Effect * Conflict_Effect",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Food_Consumption",
+      "equation": "Population_Secure * Per_Capita_Consumption + Population_Insecure * Per_Capita_Consumption * 0.7",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Insecurity_Onset",
+      "equation": "Population_Secure * Insecurity_Rate * (1 - Food_Adequacy)",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Recovery",
+      "equation": "Population_Insecure * Recovery_Rate * Food_Adequacy * Aid_Effect",
+      "from_stock": "s3",
+      "to_stock": "s2",
+      "position": {
+        "x": 450,
+        "y": 270
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Crisis_Escalation",
+      "equation": "Population_Insecure * Crisis_Rate * (1 - Food_Adequacy)^2",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Crisis_Resolution",
+      "equation": "Population_Crisis * Emergency_Response_Rate",
+      "from_stock": "s4",
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 420
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Agricultural_Capacity",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Climate_Effect",
+      "equation": "0.9",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Conflict_Effect",
+      "equation": "0.8",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Per_Capita_Consumption",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Food_Adequacy",
+      "equation": "MIN(1, Food_Stocks / (Population_Secure + Population_Insecure + Population_Crisis) / Per_Capita_Consumption / 30)",
+      "position": {
+        "x": 200,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Insecurity_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Recovery_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 180
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Crisis_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 180
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Aid_Effect",
+      "equation": "1.5",
+      "position": {
+        "x": 400,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Emergency_Response_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 180
+      }
+    },
+    {
+      "id": "v11",
+      "name": "IPC_Phase",
+      "equation": "IF Population_Crisis / 1000 > 0.05 THEN 5 ELSE IF Population_Insecure / 1000 > 0.15 THEN 3 ELSE 2",
+      "position": {
+        "x": 300,
+        "y": 230
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1007/s12571-015-0439-4",
+  "reference": "FAO IPC Framework. Headey D, Fan S (2008) Anatomy of a crisis: the causes and consequences of surging food prices. Agricultural Economics.",
+  "created_at": "2026-01-12T07:01:58.706342+00:00",
+  "updated_at": "2026-01-12T07:01:58.706342+00:00"
+}

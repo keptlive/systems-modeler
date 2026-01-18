@@ -1,0 +1,149 @@
+{
+  "id": "cultural-evolution-dynamics-soc",
+  "name": "Cultural Evolution Model",
+  "description": "Boyd & Richerson (1985) cultural transmission model. Tracks how cultural traits spread through social learning, conformity bias, and prestige bias. Reference: Fisher, R. A. (1930). The Genetical Theory of Natural Selection. Oxford University Press. Source: https://doi.org/10.5962/bhl.title.27468",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Trait_A_Frequency",
+      "initial_value": 0.3,
+      "position": {
+        "x": 200,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s2",
+      "name": "Prestige_A",
+      "initial_value": 0.5,
+      "position": {
+        "x": 400,
+        "y": 200
+      },
+      "equation": ""
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "trait_change",
+      "to_stock": "s1",
+      "equation": "learning_rate * (effective_transmission - Trait_A_Frequency)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f2",
+      "name": "prestige_change",
+      "to_stock": "s2",
+      "equation": "prestige_update_rate * (success_rate - Prestige_A)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "learning_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v2",
+      "name": "conformity_bias",
+      "equation": "2",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v3",
+      "name": "prestige_bias",
+      "equation": "0.3",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v4",
+      "name": "conformity_effect",
+      "equation": "Trait_A_Frequency ^ conformity_bias / (Trait_A_Frequency ^ conformity_bias + (1 - Trait_A_Frequency) ^ conformity_bias)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v5",
+      "name": "prestige_effect",
+      "equation": "Trait_A_Frequency * (1 + prestige_bias * Prestige_A)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v6",
+      "name": "effective_transmission",
+      "equation": "(conformity_effect + prestige_effect) / 2",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v7",
+      "name": "success_rate",
+      "equation": "0.4 + 0.2 * Trait_A_Frequency",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v8",
+      "name": "prestige_update_rate",
+      "equation": "0.05",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Trait_A_Frequency",
+      "to_element": "conformity_effect"
+    },
+    {
+      "id": "c2",
+      "from_element": "Prestige_A",
+      "to_element": "prestige_effect"
+    },
+    {
+      "id": "c3",
+      "from_element": "effective_transmission",
+      "to_element": "trait_change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "dt": 1,
+    "end": 100
+  },
+  "created_at": "2026-01-12T02:25:30.586805+00:00",
+  "updated_at": "2026-01-12T02:25:30.586808+00:00",
+  "source": "https://www.press.uchicago.edu/ucp/books/book/chicago/C/bo5970597.html",
+  "reference": "Boyd, R., & Richerson, P. J. (1985). Culture and the evolutionary process. University of Chicago press."
+}

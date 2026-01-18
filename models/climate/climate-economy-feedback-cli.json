@@ -1,0 +1,425 @@
+{
+  "id": "climate-economy-feedback-cli",
+  "name": "Climate-Economy Feedback Model",
+  "description": "A system dynamics model of climate-economy interactions based on extensions to Nordhaus DICE model. Models the feedback between economic production, CO2 emissions, temperature change, and climate damages affecting economic output. Reference: Nordhaus, W. D. (2008). A question of balance. Yale University Press. DOI: https://doi.org/10.1093/reep/ren023",
+  "stocks": [
+    {
+      "id": "stock-capital",
+      "name": "Capital Stock",
+      "initial_value": 223,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-atmospheric-co2",
+      "name": "Atmospheric CO2",
+      "initial_value": 851,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-upper-ocean-co2",
+      "name": "Upper Ocean CO2",
+      "initial_value": 460,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-deep-ocean-co2",
+      "name": "Deep Ocean CO2",
+      "initial_value": 1740,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "stock-atmospheric-temp",
+      "name": "Atmospheric Temperature",
+      "initial_value": 0.85,
+      "equation": "",
+      "position": {
+        "x": 650,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-ocean-temp",
+      "name": "Ocean Temperature",
+      "initial_value": 0.0068,
+      "equation": "",
+      "position": {
+        "x": 650,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-investment",
+      "name": "Investment",
+      "equation": "Savings_Rate * Output",
+      "from_stock": null,
+      "to_stock": "stock-capital",
+      "position": {
+        "x": 75,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-depreciation",
+      "name": "Depreciation",
+      "equation": "Capital_Stock * Depreciation_Rate",
+      "from_stock": "stock-capital",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-emissions",
+      "name": "CO2 Emissions",
+      "equation": "Emission_Intensity * Output * (1 - Abatement_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-atmospheric-co2",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-atm-to-ocean",
+      "name": "Atmosphere to Ocean",
+      "equation": "Carbon_Transfer_Rate_1 * (Atmospheric_CO2 - Upper_Ocean_CO2 * Atmosphere_Ocean_Ratio)",
+      "from_stock": "stock-atmospheric-co2",
+      "to_stock": "stock-upper-ocean-co2",
+      "position": {
+        "x": 400,
+        "y": 225
+      }
+    },
+    {
+      "id": "flow-ocean-to-deep",
+      "name": "Ocean to Deep",
+      "equation": "Carbon_Transfer_Rate_2 * (Upper_Ocean_CO2 - Deep_Ocean_CO2 * Ocean_Deep_Ratio)",
+      "from_stock": "stock-upper-ocean-co2",
+      "to_stock": "stock-deep-ocean-co2",
+      "position": {
+        "x": 400,
+        "y": 375
+      }
+    },
+    {
+      "id": "flow-forcing-warming",
+      "name": "Atmospheric Warming",
+      "equation": "(Radiative_Forcing - Heat_Loss_Coefficient * Atmospheric_Temperature - Heat_Exchange * (Atmospheric_Temperature - Ocean_Temperature)) / Climate_Sensitivity",
+      "from_stock": null,
+      "to_stock": "stock-atmospheric-temp",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-ocean-warming",
+      "name": "Ocean Warming",
+      "equation": "Heat_Exchange * (Atmospheric_Temperature - Ocean_Temperature) / Ocean_Heat_Capacity",
+      "from_stock": null,
+      "to_stock": "stock-ocean-temp",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-output",
+      "name": "Output",
+      "equation": "TFP * (Capital_Stock ^ Capital_Share) * (Labor ^ (1 - Capital_Share)) * Damage_Multiplier",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-tfp",
+      "name": "TFP",
+      "equation": "5.115 * (1 + TFP_Growth) ^ (TIME / 5)",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-tfp-growth",
+      "name": "TFP Growth",
+      "equation": "0.005",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-labor",
+      "name": "Labor",
+      "equation": "7.4 * (1 + Population_Growth) ^ (TIME / 5)",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-population-growth",
+      "name": "Population Growth",
+      "equation": "0.01",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-capital-share",
+      "name": "Capital Share",
+      "equation": "0.3",
+      "position": {
+        "x": 600,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-savings-rate",
+      "name": "Savings Rate",
+      "equation": "0.26",
+      "position": {
+        "x": 700,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-depreciation-rate",
+      "name": "Depreciation Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-emission-intensity",
+      "name": "Emission Intensity",
+      "equation": "0.35 * (0.99 ^ TIME)",
+      "position": {
+        "x": 200,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-abatement-rate",
+      "name": "Abatement Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 300,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-radiative-forcing",
+      "name": "Radiative Forcing",
+      "equation": "Forcing_Coefficient * LN(Atmospheric_CO2 / Preindustrial_CO2) / LN(2) + External_Forcing",
+      "position": {
+        "x": 400,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-forcing-coeff",
+      "name": "Forcing Coefficient",
+      "equation": "3.6813",
+      "position": {
+        "x": 500,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-preindustrial-co2",
+      "name": "Preindustrial CO2",
+      "equation": "588",
+      "position": {
+        "x": 600,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-external-forcing",
+      "name": "External Forcing",
+      "equation": "0.5",
+      "position": {
+        "x": 700,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-damage-multiplier",
+      "name": "Damage Multiplier",
+      "equation": "1 / (1 + Damage_Coefficient * Atmospheric_Temperature ^ 2)",
+      "position": {
+        "x": 100,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-damage-coeff",
+      "name": "Damage Coefficient",
+      "equation": "0.00236",
+      "position": {
+        "x": 200,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-carbon-transfer-1",
+      "name": "Carbon Transfer Rate 1",
+      "equation": "0.12",
+      "position": {
+        "x": 300,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-carbon-transfer-2",
+      "name": "Carbon Transfer Rate 2",
+      "equation": "0.007",
+      "position": {
+        "x": 400,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-atm-ocean-ratio",
+      "name": "Atmosphere Ocean Ratio",
+      "equation": "0.88",
+      "position": {
+        "x": 500,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-ocean-deep-ratio",
+      "name": "Ocean Deep Ratio",
+      "equation": "0.25",
+      "position": {
+        "x": 600,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-climate-sensitivity",
+      "name": "Climate Sensitivity",
+      "equation": "1.0",
+      "position": {
+        "x": 700,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-heat-loss",
+      "name": "Heat Loss Coefficient",
+      "equation": "1.41",
+      "position": {
+        "x": 100,
+        "y": 700
+      }
+    },
+    {
+      "id": "var-heat-exchange",
+      "name": "Heat Exchange",
+      "equation": "0.44",
+      "position": {
+        "x": 200,
+        "y": 700
+      }
+    },
+    {
+      "id": "var-ocean-heat-capacity",
+      "name": "Ocean Heat Capacity",
+      "equation": "3.0",
+      "position": {
+        "x": 300,
+        "y": 700
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Capital Stock",
+      "to_element": "Output"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Labor",
+      "to_element": "Output"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Damage Multiplier",
+      "to_element": "Output"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Output",
+      "to_element": "Investment"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Output",
+      "to_element": "CO2 Emissions"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Atmospheric CO2",
+      "to_element": "Radiative Forcing"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Radiative Forcing",
+      "to_element": "Atmospheric Warming"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Atmospheric Temperature",
+      "to_element": "Damage Multiplier"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Atmospheric Temperature",
+      "to_element": "Ocean Warming"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Ocean Temperature",
+      "to_element": "Ocean Warming"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://doi.org/10.1038/nature14240",
+  "reference": "IPCC Climate Models and Reports"
+}

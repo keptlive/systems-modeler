@@ -1,0 +1,34 @@
+{
+  "id": "circadian-melatonin-sleep-hea",
+  "name": "Circadian Rhythm and Melatonin Model",
+  "description": "Model of the circadian clock, melatonin secretion, and sleep-wake regulation. Light exposure entrains the suprachiasmatic nucleus, which controls melatonin release. Source: Dijk & Lockley (2002). Journal of Biological Rhythms. DOI: 10.1177/074873002129002519",
+  "stocks": [
+    {"id": "stock-melatonin", "name": "Melatonin_Level", "initial_value": 5, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-sleepiness", "name": "Sleep_Pressure", "initial_value": 0.3, "equation": "", "position": {"x": 400, "y": 200}},
+    {"id": "stock-phase", "name": "Circadian_Phase", "initial_value": 0, "equation": "", "position": {"x": 300, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-secretion", "name": "Melatonin_Secretion", "equation": "Secretion_Rate * Night_Signal * (1 - Light_Suppression)", "from_stock": null, "to_stock": "stock-melatonin", "position": {"x": 100, "y": 200}},
+    {"id": "flow-clearance", "name": "Melatonin_Clearance", "equation": "Melatonin_Level / Half_Life", "from_stock": "stock-melatonin", "to_stock": null, "position": {"x": 300, "y": 200}},
+    {"id": "flow-sleep-build", "name": "Sleep_Pressure_Change", "equation": "IF(Awake = 1, Accumulation_Rate, -Dissipation_Rate * Sleep_Pressure)", "from_stock": null, "to_stock": "stock-sleepiness", "position": {"x": 500, "y": 200}},
+    {"id": "flow-phase", "name": "Phase_Advance", "equation": "1 + Phase_Response_Curve * Light_Exposure", "from_stock": null, "to_stock": "stock-phase", "position": {"x": 200, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-secretion", "name": "Secretion_Rate", "equation": "10", "position": {"x": 100, "y": 100}},
+    {"id": "var-night", "name": "Night_Signal", "equation": "IF(SIN(6.28 * Circadian_Phase / 24) < -0.5, 1, 0)", "position": {"x": 200, "y": 100}},
+    {"id": "var-light-supp", "name": "Light_Suppression", "equation": "MIN(0.9, Light_Exposure / 500)", "position": {"x": 100, "y": 300}},
+    {"id": "var-light", "name": "Light_Exposure", "equation": "IF(SIN(6.28 * TIME / 24) > 0, 300, 10)", "position": {"x": 350, "y": 100}},
+    {"id": "var-halflife", "name": "Half_Life", "equation": "0.5", "position": {"x": 250, "y": 300}},
+    {"id": "var-awake", "name": "Awake", "equation": "IF(Sleep_Pressure < 0.7 OR (Melatonin_Level < 20 AND Sleep_Pressure < 0.9), 1, 0)", "position": {"x": 450, "y": 100}},
+    {"id": "var-accum", "name": "Accumulation_Rate", "equation": "0.04", "position": {"x": 450, "y": 300}},
+    {"id": "var-dissip", "name": "Dissipation_Rate", "equation": "0.1", "position": {"x": 550, "y": 300}},
+    {"id": "var-prc", "name": "Phase_Response_Curve", "equation": "0.001 * SIN(6.28 * Circadian_Phase / 24)", "position": {"x": 350, "y": 400}},
+    {"id": "var-alertness", "name": "Alertness", "equation": "(1 - Sleep_Pressure) * (1 - Melatonin_Level / 100)", "position": {"x": 500, "y": 350}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 72, "dt": 0.25},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1177/074873002129002519",
+  "reference": "Dijk, D.J. & Lockley, S.W. (2002). Integration of human sleep-wake regulation and circadian rhythmicity. Journal of Applied Physiology, 92(2), 852-862."
+}

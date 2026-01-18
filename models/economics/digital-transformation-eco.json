@@ -1,0 +1,267 @@
+{
+  "id": "digital-transformation-eco",
+  "name": "Digital Transformation Dynamics Model",
+  "description": "System dynamics model of organizational digital transformation. Captures technology adoption, capability building, resistance management, and value creation. Reference: Andersson, D. I., & Hughes, D. (2014). Microbiological effects of sublethal antibiotic concentrations. Nature Reviews Microbiology. Source: https://doi.org/10.1038/nrmicro3270",
+  "source": "https://doi.org/10.1016/j.jbusres.2019.09.022",
+  "reference": "Vial G. (2019). Understanding digital transformation: A review and a research agenda. Journal of Strategic Information Systems, 28, 118-144.",
+  "stocks": [
+    {
+      "id": "stock-digital-maturity",
+      "name": "Digital Maturity",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-digital-capability",
+      "name": "Digital Capability",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-resistance",
+      "name": "Organizational Resistance",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-value-created",
+      "name": "Digital Value Created",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-legacy-systems",
+      "name": "Legacy System Debt",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-maturity-growth",
+      "name": "Maturity Growth",
+      "equation": "Digital_Capability * Investment_Rate * (1 - Organizational_Resistance / 100) * (100 - Digital_Maturity) / 100 / Maturity_Growth_Time",
+      "from_stock": null,
+      "to_stock": "stock-digital-maturity",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-capability-build",
+      "name": "Capability Building",
+      "equation": "Training_Investment * (100 - Digital_Capability) / 100 / Capability_Build_Time",
+      "from_stock": null,
+      "to_stock": "stock-digital-capability",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-capability-decay",
+      "name": "Capability Decay",
+      "equation": "Digital_Capability * Skill_Obsolescence_Rate",
+      "from_stock": "stock-digital-capability",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-resistance-increase",
+      "name": "Resistance Increase",
+      "equation": "Change_Intensity * (100 - Organizational_Resistance) / 100",
+      "from_stock": null,
+      "to_stock": "stock-resistance",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-resistance-decrease",
+      "name": "Resistance Decrease",
+      "equation": "Organizational_Resistance * Change_Management_Effect * Success_Visibility / 100",
+      "from_stock": "stock-resistance",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-value-creation",
+      "name": "Value Creation",
+      "equation": "Digital_Maturity * Business_Model_Innovation * Customer_Experience_Impact / 100",
+      "from_stock": null,
+      "to_stock": "stock-value-created",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-legacy-retirement",
+      "name": "Legacy Retirement",
+      "equation": "Legacy_System_Debt * Modernization_Rate * Digital_Maturity / 100",
+      "from_stock": "stock-legacy-systems",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-legacy-accumulation",
+      "name": "Legacy Accumulation",
+      "equation": "Technical_Debt_Rate * (1 - Digital_Maturity / 100)",
+      "from_stock": null,
+      "to_stock": "stock-legacy-systems",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-investment",
+      "name": "Investment Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-maturity-time",
+      "name": "Maturity Growth Time",
+      "equation": "12",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-training",
+      "name": "Training Investment",
+      "equation": "5",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cap-time",
+      "name": "Capability Build Time",
+      "equation": "6",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-obsolescence",
+      "name": "Skill Obsolescence Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-change-int",
+      "name": "Change Intensity",
+      "equation": "Digital_Maturity * 0.05",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-change-mgmt",
+      "name": "Change Management Effect",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-success-vis",
+      "name": "Success Visibility",
+      "equation": "Digital_Value_Created / 100 + 1",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-bm-innovation",
+      "name": "Business Model Innovation",
+      "equation": "1 + Digital_Capability / 100",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-cx-impact",
+      "name": "Customer Experience Impact",
+      "equation": "1 - Legacy_System_Debt / 200",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-modern-rate",
+      "name": "Modernization Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 50,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-tech-debt",
+      "name": "Technical Debt Rate",
+      "equation": "2",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T03:15:51.643222+00:00",
+  "updated_at": "2026-01-12T03:15:51.643222+00:00"
+}

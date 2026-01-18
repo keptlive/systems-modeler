@@ -1,0 +1,171 @@
+{
+  "id": "influenza-antigenic-drift-model-epi",
+  "name": "Influenza Antigenic Drift Model",
+  "description": "Multi-strain influenza model capturing antigenic drift evolution. Models how seasonal flu strains evolve and compete for susceptible hosts. Reference: Fisher, R. A. (1930). The Genetical Theory of Natural Selection. Oxford University Press. Source: https://doi.org/10.5962/bhl.title.27468",
+  "stocks": [
+    {
+      "id": "stock-s",
+      "name": "S",
+      "initial_value": 90000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-i-old",
+      "name": "I_old",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-i-new",
+      "name": "I_new",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-r-old",
+      "name": "R_old",
+      "initial_value": 9890,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-r-new",
+      "name": "R_new",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection-old-naive",
+      "name": "infection_old_naive",
+      "equation": "0",
+      "from_stock": "stock-s",
+      "to_stock": "stock-i-old",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-infection-new-naive",
+      "name": "infection_new_naive",
+      "equation": "0",
+      "from_stock": "stock-s",
+      "to_stock": "stock-i-new",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-infection-new-oldimmune",
+      "name": "infection_new_oldimmune",
+      "equation": "0",
+      "from_stock": "stock-r-old",
+      "to_stock": "stock-i-new",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery-old",
+      "name": "recovery_old",
+      "equation": "0",
+      "from_stock": "stock-i-old",
+      "to_stock": "stock-r-old",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-recovery-new",
+      "name": "recovery_new",
+      "equation": "0",
+      "from_stock": "stock-i-new",
+      "to_stock": "stock-r-new",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta-old",
+      "name": "beta_old",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-beta-new",
+      "name": "beta_new",
+      "equation": "0.35",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "gamma",
+      "equation": "0.2",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cross-immunity",
+      "name": "cross_immunity",
+      "equation": "0.6",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mutation-rate",
+      "name": "mutation_rate",
+      "equation": "0.001",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 180,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T20:04:50.797438Z",
+  "updated_at": "2026-01-11T20:04:50.797438Z",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

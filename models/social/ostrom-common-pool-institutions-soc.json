@@ -1,0 +1,35 @@
+{
+  "id": "ostrom-common-pool-institutions-soc",
+  "name": "Ostrom Common-Pool Resource Institutions Model",
+  "description": "Elinor Ostrom's Nobel Prize-winning work on how communities can self-govern common-pool resources through institutional design. Counters the inevitable tragedy of the commons. Source: Ostrom (1990). Governing the Commons. DOI: 10.1017/CBO9780511807763",
+  "stocks": [
+    {"id": "stock-resource", "name": "Common_Pool_Resource", "initial_value": 800, "equation": "", "position": {"x": 300, "y": 150}},
+    {"id": "stock-trust", "name": "Community_Trust", "initial_value": 0.5, "equation": "", "position": {"x": 150, "y": 300}},
+    {"id": "stock-rules", "name": "Rule_Compliance", "initial_value": 0.6, "equation": "", "position": {"x": 450, "y": 300}}
+  ],
+  "flows": [
+    {"id": "flow-regen", "name": "Regeneration", "equation": "Intrinsic_Growth * Common_Pool_Resource * (1 - Common_Pool_Resource / Max_Capacity)", "from_stock": null, "to_stock": "stock-resource", "position": {"x": 200, "y": 150}},
+    {"id": "flow-extraction", "name": "Extraction", "equation": "Sustainable_Yield * (1 + Overuse_Pressure * (1 - Rule_Compliance))", "from_stock": "stock-resource", "to_stock": null, "position": {"x": 400, "y": 150}},
+    {"id": "flow-trust-build", "name": "Trust_Dynamics", "equation": "(Cooperation_Signal - Community_Trust) / Trust_Adjustment_Time", "from_stock": null, "to_stock": "stock-trust", "position": {"x": 100, "y": 300}},
+    {"id": "flow-rules", "name": "Compliance_Dynamics", "equation": "(Target_Compliance - Rule_Compliance) / Compliance_Adjustment", "from_stock": null, "to_stock": "stock-rules", "position": {"x": 500, "y": 300}}
+  ],
+  "variables": [
+    {"id": "var-growth", "name": "Intrinsic_Growth", "equation": "0.15", "position": {"x": 200, "y": 50}},
+    {"id": "var-max", "name": "Max_Capacity", "equation": "1000", "position": {"x": 300, "y": 50}},
+    {"id": "var-sustainable", "name": "Sustainable_Yield", "equation": "Intrinsic_Growth * Max_Capacity / 4", "position": {"x": 400, "y": 50}},
+    {"id": "var-overuse", "name": "Overuse_Pressure", "equation": "0.5", "position": {"x": 450, "y": 200}},
+    {"id": "var-coop-signal", "name": "Cooperation_Signal", "equation": "Rule_Compliance * Monitoring_Effectiveness", "position": {"x": 100, "y": 350}},
+    {"id": "var-monitoring", "name": "Monitoring_Effectiveness", "equation": "0.8", "position": {"x": 200, "y": 350}},
+    {"id": "var-trust-adj", "name": "Trust_Adjustment_Time", "equation": "10", "position": {"x": 100, "y": 250}},
+    {"id": "var-target-comp", "name": "Target_Compliance", "equation": "Community_Trust * (1 + Sanctioning_Strength)", "position": {"x": 350, "y": 350}},
+    {"id": "var-sanctioning", "name": "Sanctioning_Strength", "equation": "0.3", "position": {"x": 450, "y": 350}},
+    {"id": "var-comp-adj", "name": "Compliance_Adjustment", "equation": "5", "position": {"x": 500, "y": 250}},
+    {"id": "var-resource-health", "name": "Resource_Health", "equation": "Common_Pool_Resource / Max_Capacity", "position": {"x": 300, "y": 250}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.5},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1017/CBO9780511807763",
+  "reference": "Ostrom, E. (1990). Governing the Commons: The Evolution of Institutions for Collective Action. Cambridge University Press."
+}

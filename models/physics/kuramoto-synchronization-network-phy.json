@@ -1,0 +1,96 @@
+{
+  "id": "kuramoto-synchronization-network-phy",
+  "name": "Kuramoto Synchronization Model",
+  "description": "Mean-field model of coupled oscillator synchronization, fundamental to neuroscience and power grids. Source: Kuramoto (1975).",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Order_Parameter",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Mean_Phase",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Sync_Growth",
+      "equation": "IF(K_coupling > Critical_K, K_coupling * Order_Parameter * (1 - Order_Parameter) * 0.1, -0.05 * Order_Parameter)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Phase_Evolution",
+      "equation": "Natural_Frequency",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "K_coupling",
+      "equation": "2.0",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Critical_K",
+      "equation": "1.59",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Natural_Frequency",
+      "equation": "1.0",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "K_coupling",
+      "to_element": "Sync_Growth"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T14:36:21.172594+00:00",
+  "updated_at": "2026-01-15T14:36:21.172600+00:00",
+  "source": "https://doi.org/10.1007/BFb0013365",
+  "reference": "Kuramoto, Y. (1975). Self-entrainment of a population of coupled non-linear oscillators. Springer."
+}

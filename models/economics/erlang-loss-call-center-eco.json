@@ -1,0 +1,116 @@
+{
+  "id": "erlang-loss-call-center-eco",
+  "name": "Erlang Loss Model for Call Centers",
+  "description": "Classic teletraffic model for call center capacity planning. Models blocking probability with finite servers. Source: Erlang (1917) and Cooper (1981). DOI: 10.1007/978-1-4612-5886-6",
+  "stocks": [
+    {
+      "id": "stock-busy",
+      "name": "Busy_Lines",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-blocked",
+      "name": "Blocked_Calls",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-seize",
+      "name": "Call_Arrival",
+      "equation": "IF(Busy_Lines < Total_Lines, Arrival_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-busy",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-release",
+      "name": "Call_Completion",
+      "equation": "Busy_Lines / Avg_Call_Duration",
+      "from_stock": "stock-busy",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-block",
+      "name": "Blocked_Rate",
+      "equation": "IF(Busy_Lines >= Total_Lines, Arrival_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-blocked",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-arr",
+      "name": "Arrival_Rate",
+      "equation": "20",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-dur",
+      "name": "Avg_Call_Duration",
+      "equation": "5",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-lines",
+      "name": "Total_Lines",
+      "equation": "100",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-traffic",
+      "name": "Traffic_Intensity",
+      "equation": "Arrival_Rate * Avg_Call_Duration",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Busy_Lines",
+      "to_element": "Call_Completion"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T02:02:23.926996Z",
+  "updated_at": "2026-01-12T02:02:23.927006Z",
+  "source": "https://doi.org/10.1007/978-1-4612-5886-6",
+  "reference": "Cooper, R.B. (1981). Introduction to Queueing Theory. North-Holland."
+}

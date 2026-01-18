@@ -1,0 +1,431 @@
+{
+  "id": "beer-game-extended-man",
+  "name": "Beer Game Extended Model",
+  "description": "An extended version of the classic Beer Distribution Game based on Sterman (1989). Models the bullwhip effect in supply chains with four echelons: retailer, wholesaler, distributor, and factory. DOI: 10.1287/mnsc.35.3.321",
+  "stocks": [
+    {
+      "id": "stock-retailer-inventory",
+      "name": "Retailer Inventory",
+      "initial_value": 12,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-retailer-backlog",
+      "name": "Retailer Backlog",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-wholesaler-inventory",
+      "name": "Wholesaler Inventory",
+      "initial_value": 12,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-wholesaler-backlog",
+      "name": "Wholesaler Backlog",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-distributor-inventory",
+      "name": "Distributor Inventory",
+      "initial_value": 12,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-distributor-backlog",
+      "name": "Distributor Backlog",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-factory-inventory",
+      "name": "Factory Inventory",
+      "initial_value": 12,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-factory-wip",
+      "name": "Factory WIP",
+      "initial_value": 16,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-customer-orders",
+      "name": "Customer Sales",
+      "equation": "MIN(Retailer_Inventory + Retailer_Receipts, Customer_Demand + Retailer_Backlog)",
+      "from_stock": "stock-retailer-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-retailer-receipts",
+      "name": "Retailer Receipts",
+      "equation": "DELAY(Wholesaler_Shipments, Shipping_Delay)",
+      "from_stock": null,
+      "to_stock": "stock-retailer-inventory",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-wholesaler-shipments",
+      "name": "Wholesaler Shipments",
+      "equation": "MIN(Wholesaler_Inventory, Retailer_Orders + Wholesaler_Backlog)",
+      "from_stock": "stock-wholesaler-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-wholesaler-receipts",
+      "name": "Wholesaler Receipts",
+      "equation": "DELAY(Distributor_Shipments, Shipping_Delay)",
+      "from_stock": null,
+      "to_stock": "stock-wholesaler-inventory",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-distributor-shipments",
+      "name": "Distributor Shipments",
+      "equation": "MIN(Distributor_Inventory, Wholesaler_Orders + Distributor_Backlog)",
+      "from_stock": "stock-distributor-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-distributor-receipts",
+      "name": "Distributor Receipts",
+      "equation": "DELAY(Factory_Shipments, Shipping_Delay)",
+      "from_stock": null,
+      "to_stock": "stock-distributor-inventory",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-factory-shipments",
+      "name": "Factory Shipments",
+      "equation": "MIN(Factory_Inventory, Distributor_Orders + Factory_Backlog)",
+      "from_stock": "stock-factory-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-production-start",
+      "name": "Production Start",
+      "equation": "Factory_Orders",
+      "from_stock": null,
+      "to_stock": "stock-factory-wip",
+      "position": {
+        "x": 750,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-production-complete",
+      "name": "Production Complete",
+      "equation": "DELAY(Production_Start, Production_Delay)",
+      "from_stock": "stock-factory-wip",
+      "to_stock": "stock-factory-inventory",
+      "position": {
+        "x": 700,
+        "y": 225
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-customer-demand",
+      "name": "Customer Demand",
+      "equation": "4 + 4 * STEP(1, 5)",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-retailer-orders",
+      "name": "Retailer Orders",
+      "equation": "MAX(0, Expected_Demand_R + (Desired_Inventory_R - Retailer_Inventory) / Adjustment_Time + Retailer_Backlog / Backlog_Time)",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-wholesaler-orders",
+      "name": "Wholesaler Orders",
+      "equation": "MAX(0, Expected_Demand_W + (Desired_Inventory_W - Wholesaler_Inventory) / Adjustment_Time + Wholesaler_Backlog / Backlog_Time)",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-distributor-orders",
+      "name": "Distributor Orders",
+      "equation": "MAX(0, Expected_Demand_D + (Desired_Inventory_D - Distributor_Inventory) / Adjustment_Time + Distributor_Backlog / Backlog_Time)",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-factory-orders",
+      "name": "Factory Orders",
+      "equation": "MAX(0, Expected_Demand_F + (Desired_Inventory_F - Factory_Inventory) / Adjustment_Time)",
+      "position": {
+        "x": 750,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-expected-demand-r",
+      "name": "Expected Demand R",
+      "equation": "SMOOTH(Customer_Demand, Forecast_Smoothing)",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-expected-demand-w",
+      "name": "Expected Demand W",
+      "equation": "SMOOTH(Retailer_Orders, Forecast_Smoothing)",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-expected-demand-d",
+      "name": "Expected Demand D",
+      "equation": "SMOOTH(Wholesaler_Orders, Forecast_Smoothing)",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-expected-demand-f",
+      "name": "Expected Demand F",
+      "equation": "SMOOTH(Distributor_Orders, Forecast_Smoothing)",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-desired-inventory-r",
+      "name": "Desired Inventory R",
+      "equation": "Expected_Demand_R * Inventory_Coverage",
+      "position": {
+        "x": 100,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-desired-inventory-w",
+      "name": "Desired Inventory W",
+      "equation": "Expected_Demand_W * Inventory_Coverage",
+      "position": {
+        "x": 300,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-desired-inventory-d",
+      "name": "Desired Inventory D",
+      "equation": "Expected_Demand_D * Inventory_Coverage",
+      "position": {
+        "x": 500,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-desired-inventory-f",
+      "name": "Desired Inventory F",
+      "equation": "Expected_Demand_F * Inventory_Coverage",
+      "position": {
+        "x": 700,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-inventory-coverage",
+      "name": "Inventory Coverage",
+      "equation": "3",
+      "position": {
+        "x": 200,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-adjustment-time",
+      "name": "Adjustment Time",
+      "equation": "2",
+      "position": {
+        "x": 350,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-backlog-time",
+      "name": "Backlog Time",
+      "equation": "1",
+      "position": {
+        "x": 500,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-shipping-delay",
+      "name": "Shipping Delay",
+      "equation": "2",
+      "position": {
+        "x": 650,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-production-delay",
+      "name": "Production Delay",
+      "equation": "3",
+      "position": {
+        "x": 800,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-forecast-smoothing",
+      "name": "Forecast Smoothing",
+      "equation": "4",
+      "position": {
+        "x": 200,
+        "y": 700
+      }
+    },
+    {
+      "id": "var-factory-backlog",
+      "name": "Factory Backlog",
+      "equation": "0",
+      "position": {
+        "x": 700,
+        "y": 700
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Customer Demand",
+      "to_element": "Customer Sales"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Retailer Inventory",
+      "to_element": "Customer Sales"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Retailer Inventory",
+      "to_element": "Retailer Orders"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Wholesaler Inventory",
+      "to_element": "Wholesaler Shipments"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Retailer Orders",
+      "to_element": "Wholesaler Shipments"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Wholesaler Inventory",
+      "to_element": "Wholesaler Orders"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Distributor Inventory",
+      "to_element": "Distributor Shipments"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Distributor Inventory",
+      "to_element": "Distributor Orders"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Factory Inventory",
+      "to_element": "Factory Shipments"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Factory Orders",
+      "to_element": "Production Start"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://doi.org/10.2307/2631725",
+  "reference": "Sterman JD. Modeling Managerial Behavior: Misperceptions of Feedback in a Dynamic Decision Making Experiment. Management Science. 1989;35(3):321-339."
+}

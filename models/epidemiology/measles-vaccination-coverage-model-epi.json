@@ -1,0 +1,217 @@
+{
+  "id": "measles-vaccination-coverage-model-epi",
+  "name": "Measles Vaccination Coverage Model",
+  "description": "Model for measles transmission dynamics with vaccination program. Explores herd immunity thresholds and vaccination coverage impacts. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-vaccinated",
+      "name": "Vaccinated",
+      "initial_value": 9000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exposed",
+      "name": "Exposed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infectious",
+      "name": "Infectious",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 495,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-vaccination",
+      "name": "vaccination",
+      "equation": "0",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-vaccinated",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-susceptible-exposure",
+      "name": "susceptible_exposure",
+      "equation": "beta * Susceptible * Infectious / N",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-vaccinated-exposure",
+      "name": "vaccinated_exposure",
+      "equation": "(1 - vaccine_efficacy) * beta * Vaccinated * Infectious / N",
+      "from_stock": "stock-vaccinated",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-onset",
+      "name": "onset",
+      "equation": "sigma * Exposed",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-infectious",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "recovery",
+      "equation": "gamma * Infectious",
+      "from_stock": "stock-infectious",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-r0",
+      "name": "R0",
+      "equation": "15",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-sigma",
+      "name": "sigma",
+      "equation": "0.125",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "gamma",
+      "equation": "0.125",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-vaccine-efficacy",
+      "name": "vaccine_efficacy",
+      "equation": "0.97",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-vaccination-rate",
+      "name": "vaccination_rate",
+      "equation": "0.01",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Susceptible",
+      "to_element": "susceptible_exposure"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Infectious",
+      "to_element": "susceptible_exposure"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Vaccinated",
+      "to_element": "vaccinated_exposure"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Infectious",
+      "to_element": "vaccinated_exposure"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "vaccine_efficacy",
+      "to_element": "vaccinated_exposure"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Exposed",
+      "to_element": "onset"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "sigma",
+      "to_element": "onset"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Infectious",
+      "to_element": "recovery"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "gamma",
+      "to_element": "recovery"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T20:04:50.800859Z",
+  "updated_at": "2026-01-11T20:04:50.800859Z",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

@@ -1,0 +1,236 @@
+{
+  "id": "urban-traffic-congestion-dynamics-tra",
+  "name": "Urban Traffic Congestion Dynamics Model",
+  "description": "Model of traffic flow, congestion buildup, and induced demand. Based on fundamental diagram of traffic flow. Reference: Highway Capacity Manual. Transportation Research Board. Source: https://www.trb.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Vehicles on Road",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Queue Length",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Travel Demand",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Departure Rate",
+      "equation": "MIN(Travel_Demand * Departure_Fraction, Road_Capacity * (1 - Congestion_Level))",
+      "from_stock": "s3",
+      "to_stock": "s1",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Arrival Rate",
+      "equation": "Vehicles_on_Road * Travel_Speed / Trip_Length",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Queue Buildup",
+      "equation": "MAX(0, Departure_Rate - Road_Capacity) * Congestion_Level",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Queue Discharge",
+      "equation": "Queue_Length * Queue_Discharge_Rate * (1 - Congestion_Level)",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "New Demand",
+      "equation": "Base_Demand_Growth * (1 + Induced_Demand_Factor * Road_Capacity / 10000)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Demand Satisfied",
+      "equation": "Arrival_Rate",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Road Capacity",
+      "equation": "8000",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Trip Length",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Congestion Level",
+      "equation": "MIN(1, Vehicles_on_Road / Road_Capacity)",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Free Flow Speed",
+      "equation": "60",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Travel Speed",
+      "equation": "Free_Flow_Speed * (1 - Congestion_Level^2)",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Travel Time",
+      "equation": "Trip_Length / Travel_Speed",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Queue Discharge Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Departure Fraction",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Base Demand Growth",
+      "equation": "100",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Induced Demand Factor",
+      "equation": "0.5",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Level of Service",
+      "equation": "Travel_Speed / Free_Flow_Speed",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Delay per Trip",
+      "equation": "Travel_Time - Trip_Length / Free_Flow_Speed",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Vehicles on Road",
+      "to_element": "Congestion Level"
+    },
+    {
+      "id": "c2",
+      "from_element": "Congestion Level",
+      "to_element": "Travel Speed"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 24,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T14:24:00.392673",
+  "updated_at": "2026-01-15T14:24:00.392682",
+  "source": "https://doi.org/10.1257/aer.101.6.2616",
+  "reference": "Duranton G, Turner MA. The Fundamental Law of Road Congestion: Evidence from US Cities. American Economic Review. 2011;101(6):2616-2652."
+}

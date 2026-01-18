@@ -1,0 +1,267 @@
+{
+  "id": "aging-population-healthcare-hea",
+  "name": "Aging Population Healthcare Model",
+  "description": "Models healthcare demand from aging demographics. Based on UN population projections and WHO aging research. Reference: Based on project dynamics models (Lyneis & Ford, 2007). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-young",
+      "name": "Working_Age_Population",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-elderly",
+      "name": "Elderly_Population",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-care-capacity",
+      "name": "Healthcare_Capacity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-care-demand",
+      "name": "Healthcare_Demand",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-unmet-need",
+      "name": "Unmet_Healthcare_Need",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-births",
+      "name": "Births",
+      "equation": "Working_Age_Population * Birth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-young",
+      "position": {
+        "x": 75,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-aging",
+      "name": "Aging_Transition",
+      "equation": "Working_Age_Population * Aging_Rate",
+      "from_stock": "stock-young",
+      "to_stock": "stock-elderly",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-young-deaths",
+      "name": "Working_Age_Deaths",
+      "equation": "Working_Age_Population * Young_Mortality",
+      "from_stock": "stock-young",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-elderly-deaths",
+      "name": "Elderly_Deaths",
+      "equation": "Elderly_Population * Elderly_Mortality",
+      "from_stock": "stock-elderly",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-capacity-growth",
+      "name": "Capacity_Growth",
+      "equation": "Healthcare_Investment * Capacity_Efficiency",
+      "from_stock": null,
+      "to_stock": "stock-care-capacity",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-capacity-decay",
+      "name": "Capacity_Decay",
+      "equation": "Healthcare_Capacity * Depreciation_Rate",
+      "from_stock": "stock-care-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 370
+      }
+    },
+    {
+      "id": "flow-demand-change",
+      "name": "Demand_Update",
+      "equation": "(Working_Age_Population * Young_Care_Need + Elderly_Population * Elderly_Care_Need - Healthcare_Demand) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-care-demand",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-unmet-change",
+      "name": "Unmet_Need_Change",
+      "equation": "MAX(0, Healthcare_Demand - Healthcare_Capacity) - Unmet_Healthcare_Need * Recovery_Rate",
+      "from_stock": null,
+      "to_stock": "stock-unmet-need",
+      "position": {
+        "x": 350,
+        "y": 380
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-birth-rate",
+      "name": "Birth_Rate",
+      "equation": "0.012",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-aging-rate",
+      "name": "Aging_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-young-mortality",
+      "name": "Young_Mortality",
+      "equation": "0.002",
+      "position": {
+        "x": 340,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-elderly-mortality",
+      "name": "Elderly_Mortality",
+      "equation": "0.05",
+      "position": {
+        "x": 480,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-healthcare-investment",
+      "name": "Healthcare_Investment",
+      "equation": "100 * (1 + 0.03 * TIME)",
+      "position": {
+        "x": 100,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-capacity-efficiency",
+      "name": "Capacity_Efficiency",
+      "equation": "0.1",
+      "position": {
+        "x": 280,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-depreciation-rate",
+      "name": "Depreciation_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 440,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-young-care-need",
+      "name": "Young_Care_Need",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 540
+      }
+    },
+    {
+      "id": "var-elderly-care-need",
+      "name": "Elderly_Care_Need",
+      "equation": "0.5",
+      "position": {
+        "x": 260,
+        "y": 540
+      }
+    },
+    {
+      "id": "var-adjustment-time",
+      "name": "Adjustment_Time",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 540
+      }
+    },
+    {
+      "id": "var-recovery-rate",
+      "name": "Recovery_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 540,
+        "y": 540
+      }
+    },
+    {
+      "id": "var-dependency-ratio",
+      "name": "Dependency_Ratio",
+      "equation": "Elderly_Population / (Working_Age_Population + 1)",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:22:14.815396+00:00",
+  "updated_at": "2026-01-12T01:22:14.815410+00:00",
+  "source": "https://population.un.org/wpp/",
+  "reference": "United Nations. World Population Prospects 2022. Department of Economic and Social Affairs. 2022."
+}

@@ -1,0 +1,167 @@
+{
+  "id": "climate-migration-dynamics-cli",
+  "name": "Climate Migration Dynamics Model",
+  "description": "Model of climate-induced migration showing how sea level rise, drought, and extreme events drive population displacement. Based on Rigaud et al. (2018) Groundswell report. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Vulnerable Population",
+      "initial_value": 200000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Climate Migrants",
+      "initial_value": 5000000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Relocated Population",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Displacement Rate",
+      "equation": "Vulnerable_Population * Climate_Stress_Index / Displacement_Time",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Settlement Rate",
+      "equation": "Climate_Migrants * Settlement_Probability / Settlement_Time",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Return Migration",
+      "equation": "Relocated_Population * Return_Rate",
+      "from_stock": "s3",
+      "to_stock": "s1",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Sea Level Rise Rate",
+      "equation": "0.003",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Drought Severity",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Extreme Event Frequency",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Climate Stress Index",
+      "equation": "Sea_Level_Rise_Rate * 10 + Drought_Severity * 0.05 + Extreme_Event_Frequency * 0.1",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Displacement Time",
+      "equation": "5",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Settlement Probability",
+      "equation": "0.3",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Settlement Time",
+      "equation": "2",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Return Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Vulnerable Population",
+      "to_element": "Displacement Rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "Climate Migrants",
+      "to_element": "Settlement Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:45:26.877317+00:00",
+  "updated_at": "2026-01-12T01:45:26.877322+00:00",
+  "source": "https://openknowledge.worldbank.org/handle/10986/29461",
+  "reference": "Rigaud KK, de Sherbinin A, Jones B, et al. Groundswell: Preparing for Internal Climate Migration. World Bank, 2018."
+}

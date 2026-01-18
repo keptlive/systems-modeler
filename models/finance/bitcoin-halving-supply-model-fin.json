@@ -1,0 +1,32 @@
+{
+  "id": "bitcoin-halving-supply-model-fin",
+  "name": "Bitcoin Halving and Supply Dynamics Model",
+  "description": "Model of Bitcoin's deflationary supply schedule with halving events every ~4 years. The stock-to-flow model (S2F) relates scarcity to market value. Source: PlanB (2019) S2F model. DOI: 10.1016/j.frl.2022.102817",
+  "stocks": [
+    {"id": "stock-supply", "name": "Total_Bitcoin_Supply", "initial_value": 19500000, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-reward", "name": "Block_Reward", "initial_value": 6.25, "equation": "", "position": {"x": 400, "y": 200}},
+    {"id": "stock-price", "name": "Market_Price", "initial_value": 50000, "equation": "", "position": {"x": 300, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-mining", "name": "Mining_Rate", "equation": "Block_Reward * Blocks_Per_Year", "from_stock": null, "to_stock": "stock-supply", "position": {"x": 100, "y": 200}},
+    {"id": "flow-halving", "name": "Halving_Effect", "equation": "IF(Halving_Event = 1, -Block_Reward / 2, 0)", "from_stock": "stock-reward", "to_stock": null, "position": {"x": 500, "y": 200}},
+    {"id": "flow-price", "name": "Price_Adjustment", "equation": "(Model_Price - Market_Price) / Price_Adjustment_Time", "from_stock": null, "to_stock": "stock-price", "position": {"x": 200, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-blocks", "name": "Blocks_Per_Year", "equation": "52560", "position": {"x": 100, "y": 100}},
+    {"id": "var-annual-supply", "name": "Annual_New_Supply", "equation": "Block_Reward * Blocks_Per_Year", "position": {"x": 250, "y": 100}},
+    {"id": "var-s2f", "name": "Stock_To_Flow", "equation": "Total_Bitcoin_Supply / (Annual_New_Supply + 0.1)", "position": {"x": 400, "y": 100}},
+    {"id": "var-max-supply", "name": "Max_Supply", "equation": "21000000", "position": {"x": 100, "y": 300}},
+    {"id": "var-scarcity", "name": "Scarcity_Index", "equation": "Total_Bitcoin_Supply / Max_Supply", "position": {"x": 200, "y": 300}},
+    {"id": "var-halving", "name": "Halving_Event", "equation": "IF(MOD(TIME, 4) < 0.1, 1, 0)", "position": {"x": 450, "y": 300}},
+    {"id": "var-model-price", "name": "Model_Price", "equation": "0.4 * Stock_To_Flow^3", "position": {"x": 350, "y": 400}},
+    {"id": "var-adj-time", "name": "Price_Adjustment_Time", "equation": "2", "position": {"x": 150, "y": 400}},
+    {"id": "var-remaining", "name": "Remaining_To_Mine", "equation": "Max_Supply - Total_Bitcoin_Supply", "position": {"x": 450, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 20, "dt": 0.25},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1016/j.frl.2022.102817",
+  "reference": "Sai, Y. et al. (2022). Stock-to-flow model for Bitcoin: A replication study. Finance Research Letters, 48, 102817."
+}

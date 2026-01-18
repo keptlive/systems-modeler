@@ -1,0 +1,183 @@
+{
+  "id": "raworth-doughnut-economics-cli",
+  "name": "Raworth Doughnut Economics Model",
+  "description": "Kate Raworth's doughnut model balancing social foundations with ecological ceilings. Reference: Raworth, K. (2017). Doughnut Economics.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Social_Foundation",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Ecological_Ceiling",
+      "initial_value": 70,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Economy_Size",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Social_Investment",
+      "equation": "Economy_Size * Social_Investment_Rate - Social_Foundation * Depreciation",
+      "from_stock": null,
+      "to_stock": "Social_Foundation",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Ecological_Pressure",
+      "equation": "-Economy_Size * Environmental_Impact + Ecological_Ceiling * Regeneration_Rate",
+      "from_stock": null,
+      "to_stock": "Ecological_Ceiling",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Economic_Growth",
+      "equation": "Economy_Size * Growth_Rate * Sustainability_Factor",
+      "from_stock": null,
+      "to_stock": "Economy_Size",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Social_Investment_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Depreciation",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Environmental_Impact",
+      "equation": "0.03",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Regeneration_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Growth_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Social_Threshold",
+      "equation": "60",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Ecological_Threshold",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "In_Safe_Space",
+      "equation": "IF Social_Foundation > Social_Threshold AND Ecological_Ceiling > Ecological_Threshold THEN 1 ELSE 0",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Sustainability_Factor",
+      "equation": "Ecological_Ceiling / 100",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Shortfall",
+      "equation": "MAX(0, Social_Threshold - Social_Foundation)",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Overshoot",
+      "equation": "MAX(0, Ecological_Threshold - Ecological_Ceiling)",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1016/S2542-5196(17)30028-1",
+  "reference": "Raworth, K. (2017). A Doughnut for the Anthropocene: humanity's compass in the 21st century. Lancet Planetary Health, 1(2), e48-e49.",
+  "created_at": "2026-01-15T19:56:18.833721+00:00",
+  "updated_at": "2026-01-15T19:56:18.833721+00:00"
+}

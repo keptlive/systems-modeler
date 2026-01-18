@@ -1,0 +1,192 @@
+{
+  "id": "insect-decline-ecosystem-eco",
+  "name": "Insect Decline and Ecosystem Impact Model",
+  "description": "Model of global insect decline showing drivers, ecosystem cascades, and food web impacts. Based on Hallmann et al. (2017) and Wagner (2020). Reference: FAO Food Security Statistics. Source: https://www.fao.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Insect Biomass",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Pollination Services",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Insectivore Populations",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Insect Decline",
+      "equation": "Insect_Biomass * (Pesticide_Effect + Habitat_Loss_Effect + Climate_Effect + Light_Pollution_Effect)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Insect Recovery",
+      "equation": "Insect_Biomass * Recovery_Rate * (1 - Insect_Biomass / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Pollination Decline",
+      "equation": "Pollination_Services * (100 - Insect_Biomass) / 200",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Insectivore Decline",
+      "equation": "Insectivore_Populations * (100 - Insect_Biomass) / 300",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Pesticide Effect",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Habitat Loss Effect",
+      "equation": "0.015",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Climate Effect",
+      "equation": "0.005",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Light Pollution Effect",
+      "equation": "0.005",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Recovery Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Carrying Capacity",
+      "equation": "100",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Crop Yield Impact",
+      "equation": "(100 - Pollination_Services) * 0.35",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Ecosystem Collapse Risk",
+      "equation": "IF(Insect_Biomass < 30, (30 - Insect_Biomass) / 30, 0)",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Bird Population Index",
+      "equation": "Insectivore_Populations",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Insect Biomass",
+      "to_element": "Insect Decline"
+    },
+    {
+      "id": "c2",
+      "from_element": "Insect Biomass",
+      "to_element": "Pollination Decline"
+    },
+    {
+      "id": "c3",
+      "from_element": "Insect Biomass",
+      "to_element": "Insectivore Decline"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:55:42.037710+00:00",
+  "updated_at": "2026-01-12T01:55:42.037717+00:00",
+  "source": "https://doi.org/10.1371/journal.pone.0185809",
+  "reference": "Hallmann CA, et al. More than 75 percent decline over 27 years in total flying insect biomass in protected areas. PLoS ONE. 2017;12(10):e0185809."
+}

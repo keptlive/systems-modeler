@@ -1,0 +1,177 @@
+{
+  "id": "customer-word-of-mouth-eco",
+  "name": "Customer Base with Word of Mouth",
+  "description": "Customer acquisition model with positive word-of-mouth feedback. Based on diffusion models in Sterman's Business Dynamics (2000), Chapter 9. Shows S-curve growth driven by social contagion. Source: Sterman, J.D. (2000), Business Dynamics, McGraw-Hill. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-potential",
+      "name": "Potential_Customers",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-customers",
+      "name": "Active_Customers",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-former",
+      "name": "Former_Customers",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-acquisition",
+      "name": "New_Customers",
+      "equation": "Potential_Customers * (Advertising_Rate + Word_of_Mouth_Rate)",
+      "from_stock": "stock-potential",
+      "to_stock": "stock-customers",
+      "position": {
+        "x": 275,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-churn",
+      "name": "Customer_Churn",
+      "equation": "Active_Customers * Churn_Rate",
+      "from_stock": "stock-customers",
+      "to_stock": "stock-former",
+      "position": {
+        "x": 525,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-reactivation",
+      "name": "Reactivation",
+      "equation": "Former_Customers * Reactivation_Rate",
+      "from_stock": "stock-former",
+      "to_stock": "stock-potential",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-advertising-rate",
+      "name": "Advertising_Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 150,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-contact-rate",
+      "name": "Contact_Rate",
+      "equation": "10",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-adoption-probability",
+      "name": "Adoption_Probability",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-market",
+      "name": "Total_Market",
+      "equation": "Potential_Customers + Active_Customers + Former_Customers",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-wom-rate",
+      "name": "Word_of_Mouth_Rate",
+      "equation": "Contact_Rate * Adoption_Probability * Active_Customers / Total_Market",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-churn-rate",
+      "name": "Churn_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-reactivation-rate",
+      "name": "Reactivation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-market-share",
+      "name": "Market_Share",
+      "equation": "Active_Customers / Total_Market",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Potential_Customers",
+      "to_element": "New_Customers"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Active_Customers",
+      "to_element": "Word_of_Mouth_Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Active_Customers",
+      "to_element": "Customer_Churn"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Former_Customers",
+      "to_element": "Reactivation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:52:52.274646+00:00",
+  "updated_at": "2026-01-11T20:52:52.274646+00:00",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

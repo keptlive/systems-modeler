@@ -1,0 +1,285 @@
+{
+  "id": "teacher-retention-edu",
+  "name": "Teacher Retention and Workforce Dynamics",
+  "description": "A model of teacher workforce dynamics, capturing recruitment, development, burnout, and retention patterns. Based on research on teacher labor markets and turnover. Reference: Darling-Hammond, L. (2017). Teacher education around the world. European Journal of Teacher Education. Source: https://doi.org/10.1080/02619768.2017.1315399",
+  "source": "https://doi.org/10.3102/00346543076001173",
+  "reference": "Ingersoll RM, Smith TM. The wrong solution to the teacher shortage. Educational Leadership. 2003;60(8):30-33. See also Carver-Thomas D, Darling-Hammond L. Teacher Turnover. Learning Policy Institute. 2017.",
+  "stocks": [
+    {
+      "id": "stock-pre-service",
+      "name": "Pre-Service Teachers",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-novice",
+      "name": "Novice Teachers",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-experienced",
+      "name": "Experienced Teachers",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-veteran",
+      "name": "Veteran Teachers",
+      "initial_value": 300000,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-burnout",
+      "name": "Burnout Accumulation",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-enrollment",
+      "name": "Program Enrollment",
+      "equation": "Teacher_Program_Capacity * Enrollment_Rate * Career_Attractiveness",
+      "from_stock": null,
+      "to_stock": "stock-pre-service",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-certification",
+      "name": "Certification",
+      "equation": "Pre_Service_Teachers / Program_Duration * Completion_Rate",
+      "from_stock": "stock-pre-service",
+      "to_stock": "stock-novice",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-gain-experience",
+      "name": "Experience Gain",
+      "equation": "Novice_Teachers / Novice_Period",
+      "from_stock": "stock-novice",
+      "to_stock": "stock-experienced",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-become-veteran",
+      "name": "Become Veteran",
+      "equation": "Experienced_Teachers / Experience_Period",
+      "from_stock": "stock-experienced",
+      "to_stock": "stock-veteran",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-novice-attrition",
+      "name": "Novice Attrition",
+      "equation": "Novice_Teachers * Novice_Attrition_Rate * Burnout_Effect",
+      "from_stock": "stock-novice",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-experienced-attrition",
+      "name": "Experienced Attrition",
+      "equation": "Experienced_Teachers * Experienced_Attrition_Rate * Burnout_Effect",
+      "from_stock": "stock-experienced",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-retirement",
+      "name": "Retirement",
+      "equation": "Veteran_Teachers / Years_to_Retirement",
+      "from_stock": "stock-veteran",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-burnout-accumulation",
+      "name": "Burnout Growth",
+      "equation": "Workload_Pressure * (1 - Support_Factor) - Burnout_Recovery",
+      "from_stock": null,
+      "to_stock": "stock-burnout",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-capacity",
+      "name": "Teacher Program Capacity",
+      "equation": "30000",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-enrollment-rate",
+      "name": "Enrollment Rate",
+      "equation": "0.8",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-attractiveness",
+      "name": "Career Attractiveness",
+      "equation": "0.7",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-program-duration",
+      "name": "Program Duration",
+      "equation": "4",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-completion-rate",
+      "name": "Completion Rate",
+      "equation": "0.7",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-novice-period",
+      "name": "Novice Period",
+      "equation": "5",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-experience-period",
+      "name": "Experience Period",
+      "equation": "15",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-novice-attrition",
+      "name": "Novice Attrition Rate",
+      "equation": "0.08",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-exp-attrition",
+      "name": "Experienced Attrition Rate",
+      "equation": "0.04",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-retirement-years",
+      "name": "Years to Retirement",
+      "equation": "10",
+      "position": {
+        "x": 650,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-workload",
+      "name": "Workload Pressure",
+      "equation": "5",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-support",
+      "name": "Support Factor",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-burnout-recovery",
+      "name": "Burnout Recovery",
+      "equation": "Burnout_Accumulation * 0.1",
+      "position": {
+        "x": 500,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-burnout-effect",
+      "name": "Burnout Effect",
+      "equation": "1 + Burnout_Accumulation / 50",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T08:00:00.000000+00:00",
+  "updated_at": "2026-01-12T08:00:00.000000+00:00"
+}

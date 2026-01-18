@@ -1,0 +1,90 @@
+{
+  "id": "bank-balance-with-compound-interest-eco",
+  "name": "Bank Balance with Compound Interest",
+  "description": "A simple model of bank account growth through deposits and compound interest. Demonstrates the fundamental positive feedback loop of exponential growth where interest earned increases the balance, which in turn earns more interest. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-balance",
+      "name": "Balance",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-income",
+      "name": "Income",
+      "equation": "Deposits + Interest",
+      "from_stock": null,
+      "to_stock": "stock-balance",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-deposits",
+      "name": "Deposits",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-interest",
+      "name": "Interest",
+      "equation": "Balance * Interest_Rate",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-interest-rate",
+      "name": "Interest Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Deposits",
+      "to_element": "Income"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Interest",
+      "to_element": "Income"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Balance",
+      "to_element": "Interest"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Interest Rate",
+      "to_element": "Interest"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.746485Z",
+  "updated_at": "2026-01-11T20:04:50.746485Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

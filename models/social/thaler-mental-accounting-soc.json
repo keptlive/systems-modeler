@@ -1,0 +1,151 @@
+{
+  "id": "thaler-mental-accounting-soc",
+  "name": "Thaler Mental Accounting Model",
+  "description": "Nobel Prize-winning model of how people categorize and evaluate economic outcomes in separate mental accounts. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Housing_Account",
+      "initial_value": 2000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Food_Account",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Entertainment_Account",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Total_Wealth",
+      "initial_value": 2700,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Housing_Spending",
+      "equation": "MIN(Housing_Account, Housing_Budget)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Food_Spending",
+      "equation": "MIN(Food_Account, Food_Budget)",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Entertainment_Spending",
+      "equation": "MIN(Entertainment_Account, Entertainment_Budget)",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Income_Allocation",
+      "equation": "Monthly_Income",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Monthly_Income",
+      "equation": "3000",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Housing_Budget",
+      "equation": "0.67 * Monthly_Income",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Food_Budget",
+      "equation": "0.17 * Monthly_Income",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Entertainment_Budget",
+      "equation": "0.07 * Monthly_Income",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Fungibility_Violation",
+      "equation": "ABS((Housing_Account - Housing_Budget) + (Food_Account - Food_Budget))",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 12,
+    "dt": 1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:26:32.201895+00:00",
+  "updated_at": "2026-01-12T11:26:32.201895+00:00",
+  "source": "https://doi.org/10.1287/mksc.4.3.199",
+  "reference": "Thaler RH. Mental accounting and consumer choice. Marketing Science. 1985;4(3):199-214. Nobel Prize 2017."
+}

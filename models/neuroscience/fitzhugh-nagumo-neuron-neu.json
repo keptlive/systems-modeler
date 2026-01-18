@@ -1,0 +1,120 @@
+{
+  "id": "fitzhugh-nagumo-neuron-neu",
+  "name": "FitzHugh-Nagumo Neuron Model",
+  "description": "Simplified two-variable model of neuronal excitability capturing action potential generation",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Membrane_Potential",
+      "initial_value": -0.6,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Recovery_Variable",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "a",
+      "equation": "0.7",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "b",
+      "equation": "0.8",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "tau",
+      "equation": "12.5",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "I_ext",
+      "equation": "0.5",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "dV_dt",
+      "equation": "Membrane_Potential-Membrane_Potential*Membrane_Potential*Membrane_Potential/3-Recovery_Variable+I_ext",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "dW_dt",
+      "equation": "(Membrane_Potential+a-b*Recovery_Variable)/tau",
+      "position": {
+        "x": 360,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Membrane_Potential",
+      "to_element": "dV_dt"
+    },
+    {
+      "id": "c2",
+      "from_element": "Recovery_Variable",
+      "to_element": "dV_dt"
+    },
+    {
+      "id": "c3",
+      "from_element": "I_ext",
+      "to_element": "dV_dt"
+    },
+    {
+      "id": "c4",
+      "from_element": "Membrane_Potential",
+      "to_element": "dW_dt"
+    },
+    {
+      "id": "c5",
+      "from_element": "Recovery_Variable",
+      "to_element": "dW_dt"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 200.0,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-15T20:40:14.099746+00:00",
+  "updated_at": "2026-01-15T20:40:14.099754+00:00",
+  "source": "https://doi.org/10.1016/S0006-3495(61)86902-6",
+  "reference": "FitzHugh, R. (1961) Impulses and physiological states in theoretical models of nerve membrane. Biophys. J. 1:445-466"
+}

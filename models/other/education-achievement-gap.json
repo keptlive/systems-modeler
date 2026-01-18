@@ -1,0 +1,207 @@
+{
+  "id": "education-achievement-gap",
+  "name": "Education Achievement Gap Model",
+  "description": "Model of educational achievement disparities with resource allocation and intervention effects.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Low_Achievement",
+      "initial_value": 3000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Medium_Achievement",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "High_Achievement",
+      "initial_value": 2000000,
+      "equation": "",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Low_to_Medium",
+      "equation": "Low_Achievement * Improvement_Rate * (Resource_Level + Intervention_Effect)",
+      "from_stock": "Low_Achievement",
+      "to_stock": "Medium_Achievement",
+      "position": {
+        "x": 275,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Medium_to_High",
+      "equation": "Medium_Achievement * Advancement_Rate * Quality_Teaching",
+      "from_stock": "Medium_Achievement",
+      "to_stock": "High_Achievement",
+      "position": {
+        "x": 525,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Regression_Low",
+      "equation": "Medium_Achievement * Regression_Rate * (1 - Resource_Level)",
+      "from_stock": "Medium_Achievement",
+      "to_stock": "Low_Achievement",
+      "position": {
+        "x": 275,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "New_Students_Low",
+      "equation": "Entry_Rate * Socioeconomic_Factor",
+      "from_stock": null,
+      "to_stock": "Low_Achievement",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "New_Students_Med",
+      "equation": "Entry_Rate * (1 - Socioeconomic_Factor)",
+      "from_stock": null,
+      "to_stock": "Medium_Achievement",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Graduation",
+      "equation": "(Low_Achievement + Medium_Achievement + High_Achievement) / School_Years",
+      "from_stock": "High_Achievement",
+      "to_stock": null,
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Improvement_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Advancement_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Regression_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Resource_Level",
+      "equation": "0.5",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Intervention_Effect",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Quality_Teaching",
+      "equation": "0.7",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Entry_Rate",
+      "equation": "4000000",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Socioeconomic_Factor",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "School_Years",
+      "equation": "12",
+      "position": {
+        "x": 650,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Achievement_Gap",
+      "equation": "(High_Achievement - Low_Achievement) / (High_Achievement + Low_Achievement)",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1126/science.1084727",
+  "reference": "Reardon, S.F. (2011). The Widening Academic Achievement Gap Between the Rich and the Poor. In: Whither Opportunity? DOI: 10.1126/science.1084727",
+  "created_at": "2026-01-15T19:28:04.273639+00:00",
+  "updated_at": "2026-01-15T19:28:04.273639+00:00"
+}

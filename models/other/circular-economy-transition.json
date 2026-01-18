@@ -1,0 +1,197 @@
+{
+  "id": "circular-economy-transition",
+  "name": "Circular Economy Transition Model",
+  "description": "Model of transition from linear to circular economic systems.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Virgin_Materials",
+      "initial_value": 100000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Products_In_Use",
+      "initial_value": 500000000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Waste",
+      "initial_value": 200000000,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Recycled_Materials",
+      "initial_value": 50000000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Extraction",
+      "equation": "Resource_Base * Extraction_Rate",
+      "from_stock": null,
+      "to_stock": "Virgin_Materials",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Production",
+      "equation": "(Virgin_Materials + Recycled_Materials) * Production_Rate",
+      "from_stock": "Virgin_Materials",
+      "to_stock": "Products_In_Use",
+      "position": {
+        "x": 225,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Disposal",
+      "equation": "Products_In_Use * Disposal_Rate * (1 - Circularity)",
+      "from_stock": "Products_In_Use",
+      "to_stock": "Waste",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Recycling",
+      "equation": "Waste * Recycling_Rate * Infrastructure",
+      "from_stock": "Waste",
+      "to_stock": "Recycled_Materials",
+      "position": {
+        "x": 475,
+        "y": 275
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Reuse",
+      "equation": "Products_In_Use * Reuse_Rate",
+      "from_stock": "Products_In_Use",
+      "to_stock": "Recycled_Materials",
+      "position": {
+        "x": 350,
+        "y": 275
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Resource_Base",
+      "equation": "10000000000",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Extraction_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Production_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 225,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Disposal_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 475,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Circularity",
+      "equation": "0.2",
+      "position": {
+        "x": 475,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Recycling_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Infrastructure",
+      "equation": "0.6",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Reuse_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Material_Efficiency",
+      "equation": "Recycled_Materials / (Virgin_Materials + Recycled_Materials)",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2060,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1038/s41893-019-0424-5",
+  "reference": "Geissdoerfer, M., et al. (2020). Circular economy strategies for Europe. Nature Sustainability, 3, 25-32. DOI: 10.1038/s41893-019-0424-5",
+  "created_at": "2026-01-15T19:34:06.223149+00:00",
+  "updated_at": "2026-01-15T19:34:06.223149+00:00"
+}

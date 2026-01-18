@@ -1,0 +1,31 @@
+{
+  "id": "crick-watson-dna-replication-bio",
+  "name": "DNA Replication Fork Dynamics",
+  "description": "Model of DNA replication fork progression based on the Watson-Crick double helix structure. Shows leading and lagging strand synthesis dynamics, Okazaki fragment processing, and replication timing. Watson and Crick received the 1962 Nobel Prize.",
+  "stocks": [
+    {"id": "stock-unreplicated-dna", "name": "Unreplicated DNA", "initial_value": 3000000000, "equation": "", "position": {"x": 150, "y": 200}},
+    {"id": "stock-replicated-dna", "name": "Replicated DNA", "initial_value": 0, "equation": "", "position": {"x": 450, "y": 200}},
+    {"id": "stock-okazaki-fragments", "name": "Okazaki Fragments", "initial_value": 0, "equation": "", "position": {"x": 300, "y": 350}},
+    {"id": "stock-active-forks", "name": "Active Forks", "initial_value": 1000, "equation": "", "position": {"x": 600, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-leading-strand", "name": "Leading Strand Synthesis", "equation": "Fork_Speed * Active_Forks", "from_stock": "stock-unreplicated-dna", "to_stock": "stock-replicated-dna", "position": {"x": 300, "y": 200}},
+    {"id": "flow-lagging-strand", "name": "Lagging Strand Start", "equation": "Fork_Speed * Active_Forks", "from_stock": "stock-unreplicated-dna", "to_stock": "stock-okazaki-fragments", "position": {"x": 200, "y": 275}},
+    {"id": "flow-fragment-ligation", "name": "Fragment Ligation", "equation": "Okazaki_Fragments * Ligation_Rate", "from_stock": "stock-okazaki-fragments", "to_stock": "stock-replicated-dna", "position": {"x": 375, "y": 275}},
+    {"id": "flow-fork-firing", "name": "Fork Firing", "equation": "IF Unreplicated_DNA > 0 THEN Origin_Firing_Rate * (1 - Active_Forks / Max_Forks) ELSE 0", "from_stock": null, "to_stock": "stock-active-forks", "position": {"x": 500, "y": 200}},
+    {"id": "flow-fork-termination", "name": "Fork Termination", "equation": "IF Unreplicated_DNA < Unreplicated_DNA * 0.01 THEN Active_Forks * 0.5 ELSE 0", "from_stock": "stock-active-forks", "to_stock": null, "position": {"x": 700, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-fork-speed", "name": "Fork Speed", "equation": "1000", "position": {"x": 200, "y": 100}},
+    {"id": "var-ligation-rate", "name": "Ligation Rate", "equation": "0.5", "position": {"x": 400, "y": 100}},
+    {"id": "var-origin-firing-rate", "name": "Origin Firing Rate", "equation": "100", "position": {"x": 550, "y": 100}},
+    {"id": "var-max-forks", "name": "Max Forks", "equation": "5000", "position": {"x": 700, "y": 100}},
+    {"id": "var-replication-progress", "name": "Replication Progress", "equation": "Replicated_DNA / (Replicated_DNA + Unreplicated_DNA)", "position": {"x": 350, "y": 420}},
+    {"id": "var-total-rate", "name": "Total Rate", "equation": "Fork_Speed * Active_Forks * 2", "position": {"x": 550, "y": 420}},
+    {"id": "var-s-phase-duration", "name": "S Phase Duration", "equation": "3000000000 / Total_Rate", "position": {"x": 350, "y": 490}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 480, "dt": 1},
+  "source": "https://doi.org/10.1038/171737a0",
+  "reference": "Watson JD, Crick FHC. Molecular Structure of Nucleic Acids: A Structure for Deoxyribose Nucleic Acid. Nature. 1953;171:737-738."
+}

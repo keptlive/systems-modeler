@@ -1,0 +1,186 @@
+{
+  "id": "climate-tipping-cascade-model-cli",
+  "name": "Climate Tipping Points Cascade Model",
+  "description": "Models cascading effects between climate tipping elements. Source: Lenton et al. (2019), Nature. DOI: 10.1038/s41586-019-1659-6",
+  "stocks": [
+    {
+      "id": "stock-amoc",
+      "name": "AMOC_Stability",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-gis",
+      "name": "Greenland_Ice",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-amazon",
+      "name": "Amazon_Forest",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-permafrost",
+      "name": "Permafrost",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-coral",
+      "name": "Coral_Reefs",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-amoc",
+      "name": "AMOC_Weakening",
+      "equation": "AMOC_Stability * (Warming_Rate + Greenland_Melt_Effect) * 0.01",
+      "from_stock": "stock-amoc",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-gis",
+      "name": "Greenland_Melt",
+      "equation": "Greenland_Ice * Warming_Rate * 0.02",
+      "from_stock": "stock-gis",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-amazon",
+      "name": "Amazon_Dieback",
+      "equation": "Amazon_Forest * (Warming_Rate * 0.015 + Drought_Stress * 0.01)",
+      "from_stock": "stock-amazon",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-perm",
+      "name": "Permafrost_Thaw",
+      "equation": "Permafrost * Warming_Rate * 0.025",
+      "from_stock": "stock-permafrost",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-coral",
+      "name": "Coral_Bleaching",
+      "equation": "Coral_Reefs * (Warming_Rate * 0.05 + Ocean_Acidification * 0.02)",
+      "from_stock": "stock-coral",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-warming",
+      "name": "Warming_Rate",
+      "equation": "1.5 + 0.02 * TIME",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-gismelt",
+      "name": "Greenland_Melt_Effect",
+      "equation": "(100 - Greenland_Ice) * 0.01",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-drought",
+      "name": "Drought_Stress",
+      "equation": "(100 - AMOC_Stability) * 0.02",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-acid",
+      "name": "Ocean_Acidification",
+      "equation": "0.5 + 0.01 * TIME",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-feedback",
+      "name": "Carbon_Feedback",
+      "equation": "(100 - Permafrost) * 0.1 + (100 - Amazon_Forest) * 0.05",
+      "position": {
+        "x": 300,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-cascade",
+      "name": "Cascade_Risk",
+      "equation": "IF(AMOC_Stability < 50, 1, 0) + IF(Greenland_Ice < 50, 1, 0) + IF(Amazon_Forest < 50, 1, 0)",
+      "position": {
+        "x": 150,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Greenland_Ice",
+      "to_element": "AMOC_Weakening"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:06:16.307973+00:00",
+  "updated_at": "2026-01-12T02:06:16.307976+00:00",
+  "source": "https://doi.org/10.1038/s41586-019-1659-6",
+  "reference": "Lenton, T.M. et al. (2019). Climate tipping points - too risky to bet against. Nature."
+}

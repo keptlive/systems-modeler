@@ -1,0 +1,140 @@
+{
+  "id": "schelling-segregation-soc",
+  "name": "Schelling Segregation Model",
+  "description": "Thomas Schelling's 1971 model showing how mild individual preferences for similar neighbors can lead to complete segregation. Nobel Prize 2005. Reference: Schelling, T. C. (1971). Dynamic models of segregation. Journal of Mathematical Sociology, 1(2), 143-186. DOI: https://doi.org/10.1080/0022250X.1971.9989794",
+  "stocks": [
+    {
+      "id": "stock-seg-index",
+      "name": "Segregation_Index",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-moves",
+      "name": "Cumulative_Moves",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-segregate",
+      "name": "Segregation_Change",
+      "equation": "segregation_pressure * (1 - Segregation_Index)",
+      "from_stock": null,
+      "to_stock": "stock-seg-index",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-move",
+      "name": "Move_Rate",
+      "equation": "unhappy_fraction * move_probability",
+      "from_stock": null,
+      "to_stock": "stock-moves",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-threshold",
+      "name": "similarity_threshold",
+      "equation": "0.3",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-actual-sim",
+      "name": "actual_similarity",
+      "equation": "0.2 + 0.6 * Segregation_Index",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-unhappy",
+      "name": "unhappy_fraction",
+      "equation": "MAX(0, (similarity_threshold - actual_similarity) / similarity_threshold)",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-pressure",
+      "name": "segregation_pressure",
+      "equation": "unhappy_fraction * 0.1",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-move-prob",
+      "name": "move_probability",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-stable",
+      "name": "Is_Stable",
+      "equation": "IF(unhappy_fraction < 0.01, 1, 0)",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-diversity",
+      "name": "Neighborhood_Diversity",
+      "equation": "1 - Segregation_Index",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Segregation_Index",
+      "to_element": "actual_similarity"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "actual_similarity",
+      "to_element": "unhappy_fraction"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "unhappy_fraction",
+      "to_element": "segregation_pressure"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1080/0022250X.1971.9989794",
+  "reference": "Schelling TC. Dynamic Models of Segregation. Journal of Mathematical Sociology. 1971;1(2):143-186. Nobel Prize 2005."
+}

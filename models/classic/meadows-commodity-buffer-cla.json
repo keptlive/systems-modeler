@@ -1,0 +1,34 @@
+{
+  "id": "meadows-commodity-buffer-cla",
+  "name": "Meadows Commodity Buffer Stock Model",
+  "description": "Donella Meadows' commodity buffer stock model showing how price stabilization schemes work. Demonstrates the limits of buffer stocks in stabilizing prices and the potential for scheme collapse when buffers are exhausted.",
+  "stocks": [
+    {"id": "stock-market-inventory", "name": "Market Inventory", "initial_value": 100, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-buffer-stock", "name": "Buffer Stock", "initial_value": 50, "equation": "", "position": {"x": 450, "y": 200}},
+    {"id": "stock-price", "name": "Price", "initial_value": 10, "equation": "", "position": {"x": 350, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-production", "name": "Production", "equation": "Normal_Production * (1 + Production_Elasticity * (Price - Reference_Price) / Reference_Price)", "from_stock": null, "to_stock": "stock-market-inventory", "position": {"x": 100, "y": 200}},
+    {"id": "flow-consumption", "name": "Consumption", "equation": "Normal_Consumption * (1 - Demand_Elasticity * (Price - Reference_Price) / Reference_Price)", "from_stock": "stock-market-inventory", "to_stock": null, "position": {"x": 300, "y": 200}},
+    {"id": "flow-buffer-buying", "name": "Buffer Buying", "equation": "IF Price < Floor_Price AND Buffer_Stock < Max_Buffer THEN Intervention_Rate ELSE 0", "from_stock": "stock-market-inventory", "to_stock": "stock-buffer-stock", "position": {"x": 325, "y": 200}},
+    {"id": "flow-buffer-selling", "name": "Buffer Selling", "equation": "IF Price > Ceiling_Price AND Buffer_Stock > 0 THEN Intervention_Rate ELSE 0", "from_stock": "stock-buffer-stock", "to_stock": "stock-market-inventory", "position": {"x": 325, "y": 250}},
+    {"id": "flow-price-change", "name": "Price Change", "equation": "(Desired_Inventory - Market_Inventory) * Price_Sensitivity / Market_Inventory", "from_stock": null, "to_stock": "stock-price", "position": {"x": 250, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-normal-production", "name": "Normal Production", "equation": "100", "position": {"x": 100, "y": 100}},
+    {"id": "var-normal-consumption", "name": "Normal Consumption", "equation": "100", "position": {"x": 250, "y": 100}},
+    {"id": "var-production-elasticity", "name": "Production Elasticity", "equation": "0.3", "position": {"x": 400, "y": 100}},
+    {"id": "var-demand-elasticity", "name": "Demand Elasticity", "equation": "0.2", "position": {"x": 550, "y": 100}},
+    {"id": "var-reference-price", "name": "Reference Price", "equation": "10", "position": {"x": 100, "y": 300}},
+    {"id": "var-floor-price", "name": "Floor Price", "equation": "8", "position": {"x": 250, "y": 300}},
+    {"id": "var-ceiling-price", "name": "Ceiling Price", "equation": "12", "position": {"x": 400, "y": 300}},
+    {"id": "var-max-buffer", "name": "Max Buffer", "equation": "100", "position": {"x": 550, "y": 300}},
+    {"id": "var-intervention-rate", "name": "Intervention Rate", "equation": "20", "position": {"x": 150, "y": 430}},
+    {"id": "var-desired-inventory", "name": "Desired Inventory", "equation": "100", "position": {"x": 350, "y": 430}},
+    {"id": "var-price-sensitivity", "name": "Price Sensitivity", "equation": "0.5", "position": {"x": 550, "y": 430}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.25},
+  "source": "https://donellameadows.org/archives/",
+  "reference": "Meadows D. Thinking in Systems: A Primer. Chelsea Green Publishing. 2008."
+}

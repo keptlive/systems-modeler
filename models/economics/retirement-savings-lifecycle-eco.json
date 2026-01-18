@@ -1,0 +1,182 @@
+{
+  "id": "retirement-savings-lifecycle-eco",
+  "name": "Retirement Savings Life Cycle Model",
+  "description": "Model of retirement savings accumulation showing income growth, savings rates, investment returns, and post-retirement drawdown. Based on life-cycle hypothesis (Modigliani & Brumberg, 1954). Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Retirement Savings",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Age",
+      "initial_value": 25,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Savings Contribution",
+      "equation": "IF(Age < Retirement_Age, Income * Savings_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Investment Returns",
+      "equation": "Retirement_Savings * Annual_Return",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Retirement Withdrawals",
+      "equation": "IF(Age >= Retirement_Age, Retirement_Savings / Remaining_Years, 0)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Aging",
+      "equation": "1",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Starting Income",
+      "equation": "50000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Income Growth Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Income",
+      "equation": "Starting_Income * (1 + Income_Growth_Rate) ** (Age - 25)",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Savings Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Annual Return",
+      "equation": "0.07",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Retirement Age",
+      "equation": "65",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Life Expectancy",
+      "equation": "85",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Remaining Years",
+      "equation": "MAX(1, Life_Expectancy - Age)",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Replacement Ratio",
+      "equation": "Retirement_Withdrawals / Income",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Retirement Savings",
+      "to_element": "Investment Returns"
+    },
+    {
+      "id": "c2",
+      "from_element": "Age",
+      "to_element": "Income"
+    },
+    {
+      "id": "c3",
+      "from_element": "Retirement Savings",
+      "to_element": "Retirement Withdrawals"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:41:05.120423Z",
+  "updated_at": "2026-01-12T01:41:05.120427Z",
+  "source": "https://doi.org/10.2307/2296058",
+  "reference": "Modigliani F, Brumberg R. Utility analysis and the consumption function: An interpretation of cross-section data. In: Kurihara KK, ed. Post-Keynesian Economics. Rutgers University Press, 1954."
+}

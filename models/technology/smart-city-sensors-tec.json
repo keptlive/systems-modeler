@@ -1,0 +1,181 @@
+{
+  "id": "smart-city-sensors-tec",
+  "name": "Smart City Sensor Network",
+  "description": "Model of smart city IoT deployment. Source: Chen et al. (2018).",
+  "stocks": [
+    {
+      "id": "stock-sensors",
+      "name": "Deployed_Sensors",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-data",
+      "name": "Data_Generated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-insight",
+      "name": "Actionable_Insights",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-deploy",
+      "name": "Sensor_Deployment",
+      "equation": "Deployment_Budget / Sensor_Cost",
+      "from_stock": null,
+      "to_stock": "stock-sensors",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-retire",
+      "name": "Sensor_Retirement",
+      "equation": "Deployed_Sensors / Sensor_Life",
+      "from_stock": "stock-sensors",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-generate",
+      "name": "Data_Generation",
+      "equation": "Deployed_Sensors * Data_Per_Sensor",
+      "from_stock": null,
+      "to_stock": "stock-data",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-process",
+      "name": "Data_Processing",
+      "equation": "Data_Generated * Processing_Rate",
+      "from_stock": "stock-data",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-insight",
+      "name": "Insight_Generation",
+      "equation": "Data_Generated * Analytics_Efficiency",
+      "from_stock": null,
+      "to_stock": "stock-insight",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-action",
+      "name": "Insight_Usage",
+      "equation": "Actionable_Insights * Usage_Rate",
+      "from_stock": "stock-insight",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-budget",
+      "name": "Deployment_Budget",
+      "equation": "50 + 5 * TIME",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cost",
+      "name": "Sensor_Cost",
+      "equation": "1",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-life",
+      "name": "Sensor_Life",
+      "equation": "10",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-data",
+      "name": "Data_Per_Sensor",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-process",
+      "name": "Processing_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-analytics",
+      "name": "Analytics_Efficiency",
+      "equation": "0.1 + 0.005 * TIME",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-usage",
+      "name": "Usage_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:55:38.761005+00:00",
+  "updated_at": "2026-01-12T12:55:38.761005+00:00",
+  "source": "https://systemdynamics.org/resources/",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

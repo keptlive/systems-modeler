@@ -1,0 +1,189 @@
+{
+  "id": "cowan-working-memory-capacity-cog",
+  "name": "Cowan Working Memory Capacity Model",
+  "description": "Attention-based working memory limits. Source: Cowan (2001), Behavioral and Brain Sciences.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Items_In_Focus",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Activated_Memory",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Long_Term_Memory",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Attention_Capture",
+      "equation": "Capture_Rate * (Capacity - Items_In_Focus) - Focus_Decay",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Activation_Change",
+      "equation": "Overflow + Retrieval - Activation_Decay",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Encoding",
+      "equation": "Consolidation_Rate * Items_In_Focus",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Capacity",
+      "equation": "4",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Capture_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Decay_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Presentation_Rate",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Focus_Decay",
+      "equation": "Decay_Rate * Items_In_Focus",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Overflow",
+      "equation": "MAX(0, Items_In_Focus - Capacity) * 0.5",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Activation_Decay",
+      "equation": "0.05 * Activated_Memory",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Retrieval",
+      "equation": "0.01 * Attention_Cue",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Attention_Cue",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 480
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Consolidation_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Effective_Capacity",
+      "equation": "MIN(Items_In_Focus, Capacity)",
+      "position": {
+        "x": 300,
+        "y": 540
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Items_In_Focus",
+      "to_element": "Overflow"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-15T14:54:39.083604+00:00",
+  "updated_at": "2026-01-15T14:54:39.083608+00:00",
+  "source": "https://doi.org/10.1017/S0140525X01003922",
+  "reference": "Cowan, N. (2001). The magical number 4 in short-term memory. Behavioral and Brain Sciences 24:87-185."
+}

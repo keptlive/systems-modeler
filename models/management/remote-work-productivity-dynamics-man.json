@@ -1,0 +1,186 @@
+{
+  "id": "remote-work-productivity-dynamics-man",
+  "name": "Remote Work Productivity Model",
+  "description": "Model of remote work effects on productivity, collaboration, and work-life balance. Reference: Bloom, N., et al. (2015). Does working from home work? QJE. Source: https://doi.org/10.1093/qje/qju032",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Remote_Workers_Pct",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Productivity_Level",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Employee_Wellbeing",
+      "initial_value": 0.7,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Remote_Adoption",
+      "equation": "Adoption_Rate * (1 - Remote_Workers_Pct) * Tech_Readiness",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Return_to_Office",
+      "equation": "Return_Rate * Remote_Workers_Pct * Management_Preference",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Productivity_Change",
+      "equation": "(Remote_Productivity_Effect - Productivity_Level) / Productivity_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Wellbeing_Change",
+      "equation": "(Target_Wellbeing - Employee_Wellbeing) / Wellbeing_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Adoption_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Tech_Readiness",
+      "equation": "0.8",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Return_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Management_Preference",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Remote_Productivity_Effect",
+      "equation": "1 + 0.1 * Remote_Workers_Pct - 0.2 * Remote_Workers_Pct ^ 2",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Productivity_Adjustment_Time",
+      "equation": "4",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Target_Wellbeing",
+      "equation": "0.6 + 0.3 * Remote_Workers_Pct - 0.1 * (1 - Remote_Workers_Pct) * Commute_Stress",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Commute_Stress",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Wellbeing_Adjustment_Time",
+      "equation": "8",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Collaboration_Quality",
+      "equation": "1 - 0.3 * Remote_Workers_Pct",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 36,
+    "dt": 1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:29:23.539569+00:00",
+  "updated_at": "2026-01-12T11:29:23.539569+00:00",
+  "source": "https://doi.org/10.3386/w27612",
+  "reference": "Barrero JM, Bloom N, Davis SJ. Why working from home will stick. NBER Working Paper 28731. 2021."
+}

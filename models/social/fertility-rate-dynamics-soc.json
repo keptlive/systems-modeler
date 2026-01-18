@@ -1,0 +1,153 @@
+{
+  "id": "fertility-rate-dynamics-soc",
+  "name": "Fertility Rate Dynamics Model",
+  "description": "Models Total Fertility Rate decline with socioeconomic factors. Source: Bongaarts (2001), Population and Development Review. DOI: 10.1111/j.1728-4457.2001.00260.x",
+  "stocks": [
+    {
+      "id": "stock-tfr",
+      "name": "Total_Fertility_Rate",
+      "initial_value": 5.0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-contraception",
+      "name": "Contraception_Prevalence",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-education",
+      "name": "Female_Education",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-tfrdecline",
+      "name": "TFR_Decline",
+      "equation": "Total_Fertility_Rate * TFR_Decline_Rate",
+      "from_stock": "stock-tfr",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-contragrow",
+      "name": "Contraception_Growth",
+      "equation": "(Max_Contraception - Contraception_Prevalence) * Contraception_Adoption",
+      "from_stock": null,
+      "to_stock": "stock-contraception",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-edugrow",
+      "name": "Education_Growth",
+      "equation": "(Max_Education - Female_Education) * Education_Rate",
+      "from_stock": null,
+      "to_stock": "stock-education",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-declinerate",
+      "name": "TFR_Decline_Rate",
+      "equation": "(Contraception_Prevalence / 100) * 0.03 + (Female_Education / 100) * 0.02 + Income_Effect * 0.01",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-maxcontra",
+      "name": "Max_Contraception",
+      "equation": "80",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-contraaopt",
+      "name": "Contraception_Adoption",
+      "equation": "0.03",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-maxedu",
+      "name": "Max_Education",
+      "equation": "100",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-edurate",
+      "name": "Education_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-income",
+      "name": "Income_Effect",
+      "equation": "1 + 0.02 * TIME",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-replacement",
+      "name": "Below_Replacement",
+      "equation": "IF(Total_Fertility_Rate < 2.1, 1, 0)",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Contraception_Prevalence",
+      "to_element": "TFR_Decline_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:09:47.460672+00:00",
+  "updated_at": "2026-01-12T02:09:47.460675+00:00",
+  "source": "https://doi.org/10.1111/j.1728-4457.2001.00260.x",
+  "reference": "Bongaarts, J. (2001). Fertility and Reproductive Preferences. Population and Development Review."
+}

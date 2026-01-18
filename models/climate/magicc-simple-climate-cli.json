@@ -1,0 +1,111 @@
+{
+  "id": "magicc-simple-climate-cli",
+  "name": "MAGICC Simple Climate Model",
+  "description": "Reduced complexity climate model used in IPCC assessments",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Temperature_Anomaly",
+      "initial_value": 1.1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Ocean_Heat_Content",
+      "initial_value": 300.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "CO2_Concentration",
+      "initial_value": 415.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Climate_Sensitivity",
+      "equation": "3.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Ocean_Diffusivity",
+      "equation": "1.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "CO2_Forcing",
+      "equation": "5.35*3.7*(CO2_Concentration-280)/280",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Equilibrium_Temp",
+      "equation": "Climate_Sensitivity*CO2_Forcing/3.7",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Warming_Rate",
+      "equation": "(Equilibrium_Temp-Temperature_Anomaly)/30",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "CO2_Concentration",
+      "to_element": "CO2_Forcing"
+    },
+    {
+      "id": "c2",
+      "from_element": "CO2_Forcing",
+      "to_element": "Equilibrium_Temp"
+    },
+    {
+      "id": "c3",
+      "from_element": "Equilibrium_Temp",
+      "to_element": "Temperature_Anomaly"
+    }
+  ],
+  "time_settings": {
+    "start": 2020.0,
+    "end": 2100.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:44:13.925437+00:00",
+  "updated_at": "2026-01-15T20:44:13.925437+00:00",
+  "source": "https://doi.org/10.5194/gmd-4-405-2011",
+  "reference": "Meinshausen, M. et al. (2011) Emulating coupled atmosphere-ocean and carbon cycle models. GMD 4:405-434"
+}

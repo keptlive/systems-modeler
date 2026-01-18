@@ -1,0 +1,211 @@
+{
+  "id": "aquifer-depletion-agriculture-cli",
+  "name": "Aquifer Depletion and Irrigation",
+  "description": "Models groundwater depletion for agricultural irrigation. Source: Famiglietti (2014), Nature Climate Change. DOI: 10.1038/nclimate2425",
+  "stocks": [
+    {
+      "id": "stock-aquifer",
+      "name": "Aquifer_Level",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-irrigated",
+      "name": "Irrigated_Area",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-cost",
+      "name": "Pumping_Cost",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-recharge",
+      "name": "Natural_Recharge",
+      "equation": "Recharge_Rate * Precipitation_Factor",
+      "from_stock": null,
+      "to_stock": "stock-aquifer",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-pump",
+      "name": "Pumping",
+      "equation": "Irrigated_Area * Water_Use_Per_Hectare * Irrigation_Efficiency",
+      "from_stock": "stock-aquifer",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-expand",
+      "name": "Area_Expansion",
+      "equation": "IF(Aquifer_Level > Min_Viable_Level, Expansion_Rate * Economic_Incentive, 0)",
+      "from_stock": null,
+      "to_stock": "stock-irrigated",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-abandon",
+      "name": "Area_Abandonment",
+      "equation": "IF(Pumping_Cost > Economic_Threshold, Irrigated_Area * Abandonment_Rate, 0)",
+      "from_stock": "stock-irrigated",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-costchg",
+      "name": "Cost_Change",
+      "equation": "(Base_Cost * (Initial_Level / Aquifer_Level) - Pumping_Cost) * 0.1",
+      "from_stock": null,
+      "to_stock": "stock-cost",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-recharge",
+      "name": "Recharge_Rate",
+      "equation": "20",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-precip",
+      "name": "Precipitation_Factor",
+      "equation": "0.8 + 0.2 * SIN(TIME / 10)",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-wateruse",
+      "name": "Water_Use_Per_Hectare",
+      "equation": "5",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-irreff",
+      "name": "Irrigation_Efficiency",
+      "equation": "0.7",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-minlevel",
+      "name": "Min_Viable_Level",
+      "equation": "200",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-expand",
+      "name": "Expansion_Rate",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-econ",
+      "name": "Economic_Incentive",
+      "equation": "1.5",
+      "position": {
+        "x": 200,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-thresh",
+      "name": "Economic_Threshold",
+      "equation": "50",
+      "position": {
+        "x": 350,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-abandon",
+      "name": "Abandonment_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-basecost",
+      "name": "Base_Cost",
+      "equation": "10",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-initial",
+      "name": "Initial_Level",
+      "equation": "1000",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Aquifer_Level",
+      "to_element": "Cost_Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:17:16.214064+00:00",
+  "updated_at": "2026-01-12T02:17:16.214067+00:00",
+  "source": "https://doi.org/10.1038/nclimate2425",
+  "reference": "Famiglietti, J.S. (2014). The global groundwater crisis. Nature Climate Change."
+}

@@ -1,0 +1,254 @@
+{
+  "id": "ihme-covid-projections-epi",
+  "name": "IHME COVID-19 Projections Model",
+  "description": "Institute for Health Metrics and Evaluation COVID-19 projection model used for US planning. Reference: IHME COVID-19 Forecasting Team (2020). Forecasting COVID-19 impact.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Active_Infections",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Hospital_Beds_Needed",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "ICU_Beds_Needed",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Ventilators_Needed",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Cumulative_Deaths",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "New_Infections",
+      "equation": "Active_Infections * Growth_Rate * (1 - Mobility_Reduction)",
+      "from_stock": null,
+      "to_stock": "Active_Infections",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Recoveries",
+      "equation": "Active_Infections / Infection_Duration",
+      "from_stock": "Active_Infections",
+      "to_stock": null,
+      "position": {
+        "x": 220,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Hospital_Demand_Change",
+      "equation": "Active_Infections * Hospital_Rate / Average_Stay - Hospital_Beds_Needed * 0.1",
+      "from_stock": null,
+      "to_stock": "Hospital_Beds_Needed",
+      "position": {
+        "x": 340,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "ICU_Demand_Change",
+      "equation": "Hospital_Beds_Needed * ICU_Fraction / ICU_Stay - ICU_Beds_Needed * 0.1",
+      "from_stock": null,
+      "to_stock": "ICU_Beds_Needed",
+      "position": {
+        "x": 460,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Ventilator_Demand_Change",
+      "equation": "ICU_Beds_Needed * Vent_Fraction - Ventilators_Needed * 0.15",
+      "from_stock": null,
+      "to_stock": "Ventilators_Needed",
+      "position": {
+        "x": 580,
+        "y": 300
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Daily_Deaths",
+      "equation": "Hospital_Beds_Needed * Death_Rate / Average_Stay",
+      "from_stock": null,
+      "to_stock": "Cumulative_Deaths",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Growth_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Infection_Duration",
+      "equation": "14",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Hospital_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "ICU_Fraction",
+      "equation": "0.30",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Vent_Fraction",
+      "equation": "0.70",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Average_Stay",
+      "equation": "12",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "ICU_Stay",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Death_Rate",
+      "equation": "0.10",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Mobility_Reduction",
+      "equation": "IF time > 30 THEN 0.5 ELSE 0",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Hospital_Capacity",
+      "equation": "500",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "v11",
+      "name": "ICU_Capacity",
+      "equation": "100",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Hospital_Utilization",
+      "equation": "Hospital_Beds_Needed / Hospital_Capacity",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "v13",
+      "name": "ICU_Utilization",
+      "equation": "ICU_Beds_Needed / ICU_Capacity",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 180,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1038/s41591-020-0883-7",
+  "reference": "IHME COVID-19 Forecasting Team (2020). Forecasting COVID-19 impact on hospital bed-days, ICU-days, ventilator-days and deaths. Nature Medicine, 26, 1212-1218.",
+  "created_at": "2026-01-15T19:57:16.864548+00:00",
+  "updated_at": "2026-01-15T19:57:16.864548+00:00"
+}

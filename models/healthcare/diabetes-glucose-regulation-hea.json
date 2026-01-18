@@ -1,0 +1,187 @@
+{
+  "id": "diabetes-glucose-regulation-hea",
+  "name": "Diabetes Blood Glucose Regulation Model",
+  "description": "Model of glucose-insulin dynamics in diabetes based on the minimal model of Bergman et al. (1979). Shows how insulin resistance and beta-cell dysfunction affect glucose homeostasis. Reference: Andersson, D. I., & Hughes, D. (2014). Microbiological effects of sublethal antibiotic concentrations. Nature Reviews Microbiology. Source: https://doi.org/10.1038/nrmicro3270",
+  "stocks": [
+    {
+      "id": "stock-glucose",
+      "name": "Blood Glucose",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-insulin",
+      "name": "Plasma Insulin",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-remote-insulin",
+      "name": "Remote Insulin Effect",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-glucose-input",
+      "name": "Glucose Input",
+      "equation": "Meal_Glucose_Input",
+      "from_stock": null,
+      "to_stock": "stock-glucose",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-glucose-uptake",
+      "name": "Glucose Uptake",
+      "equation": "(Glucose_Effectiveness + Remote_Insulin_Effect) * (Blood_Glucose - Basal_Glucose)",
+      "from_stock": "stock-glucose",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-insulin-secretion",
+      "name": "Insulin Secretion",
+      "equation": "Beta_Cell_Response * MAX(0, Blood_Glucose - Glucose_Threshold)",
+      "from_stock": null,
+      "to_stock": "stock-insulin",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-insulin-clearance",
+      "name": "Insulin Clearance",
+      "equation": "Insulin_Clearance_Rate * Plasma_Insulin",
+      "from_stock": "stock-insulin",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-remote-insulin-dynamics",
+      "name": "Remote Insulin Dynamics",
+      "equation": "Insulin_Sensitivity * (Plasma_Insulin - Basal_Insulin) - Remote_Insulin_Decay * Remote_Insulin_Effect",
+      "from_stock": null,
+      "to_stock": "stock-remote-insulin",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-glucose-effectiveness",
+      "name": "Glucose Effectiveness",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-insulin-sensitivity",
+      "name": "Insulin Sensitivity",
+      "equation": "0.0001",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-beta-cell-response",
+      "name": "Beta Cell Response",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-insulin-clearance-rate",
+      "name": "Insulin Clearance Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-remote-insulin-decay",
+      "name": "Remote Insulin Decay",
+      "equation": "0.02",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-basal-glucose",
+      "name": "Basal Glucose",
+      "equation": "90",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-basal-insulin",
+      "name": "Basal Insulin",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-glucose-threshold",
+      "name": "Glucose Threshold",
+      "equation": "80",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-meal-glucose-input",
+      "name": "Meal Glucose Input",
+      "equation": "IF MOD(Time, 6) < 1 THEN 50 ELSE 0",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 24,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T21:11:32.978690+00:00",
+  "updated_at": "2026-01-11T21:11:32.978690+00:00",
+  "source": "https://doi.org/10.1172/JCI112886",
+  "reference": "Bergman RN, Ider YZ, Bowden CR, Cobelli C. Quantitative estimation of insulin sensitivity. Am J Physiol. 1979;236(6):E667-E677."
+}

@@ -1,0 +1,272 @@
+{
+  "id": "dengue-vector-borne-disease-model-epi",
+  "name": "Dengue Vector-Borne Disease Model",
+  "description": "Ross-Macdonald type model for dengue fever transmission between humans and Aedes mosquito vectors. Includes both human and mosquito population dynamics. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-sh",
+      "name": "Sh",
+      "initial_value": 9990,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ih",
+      "name": "Ih",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-rh",
+      "name": "Rh",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-sv",
+      "name": "Sv",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-iv",
+      "name": "Iv",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-human-infection",
+      "name": "human_infection",
+      "equation": "b * beta_h * Sh * Iv / Nh",
+      "from_stock": "stock-sh",
+      "to_stock": "stock-ih",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-human-recovery",
+      "name": "human_recovery",
+      "equation": "gamma_h * Ih",
+      "from_stock": "stock-ih",
+      "to_stock": "stock-rh",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-vector-birth",
+      "name": "vector_birth",
+      "equation": "Lambda_v",
+      "from_stock": null,
+      "to_stock": "stock-sv",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-vector-infection",
+      "name": "vector_infection",
+      "equation": "b * beta_v * Sv * Ih / Nh",
+      "from_stock": "stock-sv",
+      "to_stock": "stock-iv",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-susceptible-vector-death",
+      "name": "susceptible_vector_death",
+      "equation": "mu_v * Sv",
+      "from_stock": "stock-sv",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-infected-vector-death",
+      "name": "infected_vector_death",
+      "equation": "mu_v * Iv",
+      "from_stock": "stock-iv",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-b",
+      "name": "b",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-beta-h",
+      "name": "beta_h",
+      "equation": "0.4",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-beta-v",
+      "name": "beta_v",
+      "equation": "0.4",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma-h",
+      "name": "gamma_h",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mu-v",
+      "name": "mu_v",
+      "equation": "0.05",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-lambda-v",
+      "name": "Lambda_v",
+      "equation": "2500",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Sh",
+      "to_element": "human_infection"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Iv",
+      "to_element": "human_infection"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "b",
+      "to_element": "human_infection"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "beta_h",
+      "to_element": "human_infection"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Ih",
+      "to_element": "human_recovery"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "gamma_h",
+      "to_element": "human_recovery"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "b",
+      "to_element": "vector_birth"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Lambda_v",
+      "to_element": "vector_birth"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Ih",
+      "to_element": "vector_infection"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Sv",
+      "to_element": "vector_infection"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "b",
+      "to_element": "vector_infection"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "beta_v",
+      "to_element": "vector_infection"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Sv",
+      "to_element": "susceptible_vector_death"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "mu_v",
+      "to_element": "susceptible_vector_death"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Iv",
+      "to_element": "infected_vector_death"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "mu_v",
+      "to_element": "infected_vector_death"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T20:04:50.795021Z",
+  "updated_at": "2026-01-11T20:04:50.795021Z",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

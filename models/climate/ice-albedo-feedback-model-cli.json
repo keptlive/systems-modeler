@@ -1,0 +1,270 @@
+{
+  "id": "ice-albedo-feedback-model-cli",
+  "name": "Ice-Albedo Feedback Model",
+  "description": "Models the positive feedback between ice coverage and planetary temperature. Ice reflects sunlight (high albedo), keeping the planet cool. As temperatures rise, ice melts, exposing darker ocean/land which absorbs more heat, causing more warming and more melting. This is one of the strongest amplifying feedbacks in the climate system. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "stock-global-temperature",
+      "name": "Global Temperature",
+      "initial_value": 15,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ice-cover",
+      "name": "Ice Cover",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-warming",
+      "name": "Warming",
+      "equation": "Absorbed_Radiation / Heat_Capacity",
+      "from_stock": null,
+      "to_stock": "stock-global-temperature",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-cooling",
+      "name": "Cooling",
+      "equation": "Outgoing_Radiation / Heat_Capacity",
+      "from_stock": "stock-global-temperature",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ice-formation",
+      "name": "Ice Formation",
+      "equation": "IF Global_Temperature < Ice_Formation_Threshold THEN Ice_Formation_Rate * (1 - Ice_Cover) ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-ice-cover",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ice-melting",
+      "name": "Ice Melting",
+      "equation": "IF Global_Temperature > Ice_Melt_Threshold THEN Melt_Rate * Ice_Cover * (Global_Temperature - Ice_Melt_Threshold) ELSE 0",
+      "from_stock": "stock-ice-cover",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-solar-constant",
+      "name": "Solar Constant",
+      "equation": "1361",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-planetary-albedo",
+      "name": "Planetary Albedo",
+      "equation": "Ice_Cover * Ice_Albedo + (1 - Ice_Cover) * Surface_Albedo",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-ice-albedo",
+      "name": "Ice Albedo",
+      "equation": "0.8",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-surface-albedo",
+      "name": "Surface Albedo",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-absorbed-radiation",
+      "name": "Absorbed Radiation",
+      "equation": "Solar_Constant * (1 - Planetary_Albedo) / 4 + Greenhouse_Forcing",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-greenhouse-forcing",
+      "name": "Greenhouse Forcing",
+      "equation": "3.7 * LN(CO2_Concentration / 280) / LN(2)",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-co2-concentration",
+      "name": "CO2 Concentration",
+      "equation": "420 + 2 * Time",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-outgoing-radiation",
+      "name": "Outgoing Radiation",
+      "equation": "Emissivity * Stefan_Boltzmann * (Global_Temperature + 273)^4 / 1e6",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-stefan-boltzmann",
+      "name": "Stefan Boltzmann",
+      "equation": "5.67e-8",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-emissivity",
+      "name": "Emissivity",
+      "equation": "0.6",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-heat-capacity",
+      "name": "Heat Capacity",
+      "equation": "15",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-ice-formation-threshold",
+      "name": "Ice Formation Threshold",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-ice-melt-threshold",
+      "name": "Ice Melt Threshold",
+      "equation": "15",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-ice-formation-rate",
+      "name": "Ice Formation Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-melt-rate",
+      "name": "Melt Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-feedback-strength",
+      "name": "Feedback Strength",
+      "equation": "(Ice_Albedo - Surface_Albedo) * Ice_Cover",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Ice Cover",
+      "to_element": "Planetary Albedo"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Planetary Albedo",
+      "to_element": "Absorbed Radiation"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Absorbed Radiation",
+      "to_element": "Warming"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Global Temperature",
+      "to_element": "Outgoing Radiation"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Outgoing Radiation",
+      "to_element": "Cooling"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Global Temperature",
+      "to_element": "Ice Melting"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Ice Cover",
+      "to_element": "Ice Melting"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Global Temperature",
+      "to_element": "Ice Formation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.711996Z",
+  "updated_at": "2026-01-11T20:04:50.711996Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

@@ -1,0 +1,198 @@
+{
+  "id": "tuberculosis-mdr-seir-epi",
+  "name": "Tuberculosis with MDR-TB Model",
+  "description": "An SEIR model for tuberculosis including the development and spread of multi-drug resistant TB (MDR-TB). Based on WHO TB modeling frameworks and drug resistance dynamics. Reference: Andersson, D. I., & Hughes, D. (2014). Microbiological effects of sublethal antibiotic concentrations. Nature Reviews Microbiology. Source: https://doi.org/10.1038/nrmicro3270",
+  "source": "https://doi.org/10.1016/S0140-6736(17)32478-1",
+  "reference": "Glaziou P, et al. Global Tuberculosis Report 2017. WHO. doi: 10.1016/S0140-6736(17)32478-1.",
+  "stocks": [
+    {
+      "id": "stock-s",
+      "name": "Susceptible",
+      "initial_value": 990000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-l",
+      "name": "Latent TB",
+      "initial_value": 9000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-i",
+      "name": "Active TB",
+      "initial_value": 900,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-mdr",
+      "name": "MDR-TB",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-r",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "Infection",
+      "equation": "beta * Susceptible * (Active_TB + MDR_TB * Relative_MDR_Infectivity) / Total_Pop",
+      "from_stock": "stock-s",
+      "to_stock": "stock-l",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-activation",
+      "name": "Activation",
+      "equation": "Latent_TB * Activation_Rate",
+      "from_stock": "stock-l",
+      "to_stock": "stock-i",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mdr-development",
+      "name": "MDR Development",
+      "equation": "Active_TB * Treatment_Rate * Treatment_Failure_Rate",
+      "from_stock": "stock-i",
+      "to_stock": "stock-mdr",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-tb-recovery",
+      "name": "TB Recovery",
+      "equation": "Active_TB * Treatment_Rate * (1 - Treatment_Failure_Rate)",
+      "from_stock": "stock-i",
+      "to_stock": "stock-r",
+      "position": {
+        "x": 475,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-mdr-recovery",
+      "name": "MDR Recovery",
+      "equation": "MDR_TB * MDR_Treatment_Rate * MDR_Success_Rate",
+      "from_stock": "stock-mdr",
+      "to_stock": "stock-r",
+      "position": {
+        "x": 625,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-pop",
+      "name": "Total Pop",
+      "equation": "Susceptible + Latent_TB + Active_TB + MDR_TB + Recovered",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-beta",
+      "name": "beta",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-activation",
+      "name": "Activation Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-treatment",
+      "name": "Treatment Rate",
+      "equation": "0.7",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-failure",
+      "name": "Treatment Failure Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-mdr-treatment",
+      "name": "MDR Treatment Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-mdr-success",
+      "name": "MDR Success Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-mdr-infectivity",
+      "name": "Relative MDR Infectivity",
+      "equation": "0.8",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T21:34:33.050546+00:00",
+  "updated_at": "2026-01-11T21:34:33.050546+00:00"
+}

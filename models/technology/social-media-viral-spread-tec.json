@@ -1,0 +1,169 @@
+{
+  "id": "social-media-viral-spread-tec",
+  "name": "Social Media Content Virality",
+  "description": "Models how content goes viral on social media platforms. Based on Bakshy et al. (2012) The Role of Social Networks in Information Diffusion, WWW Conference. Reference: Crank, J. (1979). The Mathematics of Diffusion. Oxford University Press. Source: https://global.oup.com/",
+  "category": "technology",
+  "stocks": [
+    {
+      "id": "stock-unaware",
+      "name": "Unaware_Users_M",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exposed",
+      "name": "Exposed_Users_M",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-engaged",
+      "name": "Engaged_Users_M",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fatigued",
+      "name": "Fatigued_Users_M",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-expose",
+      "name": "Exposure",
+      "equation": "Unaware_Users_M * Exposure_Rate * Engaged_Users_M/Total_Users",
+      "from_stock": "stock-unaware",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-engage",
+      "name": "Engagement",
+      "equation": "Exposed_Users_M * Engagement_Rate * Content_Quality",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-engaged",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fatigue",
+      "name": "Content_Fatigue",
+      "equation": "Engaged_Users_M * Fatigue_Rate",
+      "from_stock": "stock-engaged",
+      "to_stock": "stock-fatigued",
+      "position": {
+        "x": 550,
+        "y": 270
+      }
+    },
+    {
+      "id": "flow-ignore",
+      "name": "Ignore",
+      "equation": "Exposed_Users_M * (1 - Engagement_Rate * Content_Quality) * Ignore_Rate",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-fatigued",
+      "position": {
+        "x": 400,
+        "y": 270
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-exp-rate",
+      "name": "Exposure_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Users",
+      "equation": "Unaware_Users_M + Exposed_Users_M + Engaged_Users_M + Fatigued_Users_M",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-eng-rate",
+      "name": "Engagement_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-quality",
+      "name": "Content_Quality",
+      "equation": "0.8",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-fatigue",
+      "name": "Fatigue_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-ignore",
+      "name": "Ignore_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-viral",
+      "name": "Viral_Coefficient",
+      "equation": "Exposure_Rate * Engagement_Rate * Content_Quality",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.1
+  },
+  "source": "https://doi.org/10.1145/2187836.2187907",
+  "reference": "Bakshy E, Rosenn I, Marlow C, Adamic L (2012) The Role of Social Networks in Information Diffusion. WWW 2012.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:29:57.474786+00:00",
+  "updated_at": "2026-01-12T06:29:57.474786+00:00"
+}

@@ -1,0 +1,188 @@
+{
+  "id": "shapley-value-coalition-eco",
+  "name": "Shapley Value Coalition",
+  "description": "Lloyd Shapley's 1953 solution concept for fairly distributing coalition surplus based on marginal contributions. Nobel Prize 2012. Reference: Shapley, L. S. (1953). A Value for n-Person Games. Contributions to the Theory of Games, 2, 307-317. Source: https://doi.org/10.1515/9781400881970-018",
+  "stocks": [
+    {
+      "id": "stock-p1",
+      "name": "Player1_Payoff",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-p2",
+      "name": "Player2_Payoff",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-p3",
+      "name": "Player3_Payoff",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-pay1",
+      "name": "Payment1",
+      "equation": "(Shapley_Value1 - Player1_Payoff) * 0.2",
+      "from_stock": null,
+      "to_stock": "stock-p1",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-pay2",
+      "name": "Payment2",
+      "equation": "(Shapley_Value2 - Player2_Payoff) * 0.2",
+      "from_stock": null,
+      "to_stock": "stock-p2",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-pay3",
+      "name": "Payment3",
+      "equation": "(Shapley_Value3 - Player3_Payoff) * 0.2",
+      "from_stock": null,
+      "to_stock": "stock-p3",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-v1",
+      "name": "v_1",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-v2",
+      "name": "v_2",
+      "equation": "20",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-v3",
+      "name": "v_3",
+      "equation": "15",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-v12",
+      "name": "v_12",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-v13",
+      "name": "v_13",
+      "equation": "45",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-v23",
+      "name": "v_23",
+      "equation": "55",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-v123",
+      "name": "v_123",
+      "equation": "100",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-shap1",
+      "name": "Shapley_Value1",
+      "equation": "(2*v_1 + (v_12-v_2) + (v_13-v_3) + 2*(v_123-v_23))/6",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-shap2",
+      "name": "Shapley_Value2",
+      "equation": "(2*v_2 + (v_12-v_1) + (v_23-v_3) + 2*(v_123-v_13))/6",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-shap3",
+      "name": "Shapley_Value3",
+      "equation": "(2*v_3 + (v_13-v_1) + (v_23-v_2) + 2*(v_123-v_12))/6",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Shapley_Value1",
+      "to_element": "Payment1"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Shapley_Value2",
+      "to_element": "Payment2"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Shapley_Value3",
+      "to_element": "Payment3"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1515/9781400881970-018",
+  "reference": "Shapley LS. A Value for n-Person Games. In: Kuhn HW, Tucker AW, eds. Contributions to the Theory of Games II. Princeton University Press; 1953:307-317. Nobel Prize 2012."
+}

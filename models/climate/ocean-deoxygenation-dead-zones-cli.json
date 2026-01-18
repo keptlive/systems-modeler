@@ -1,0 +1,33 @@
+{
+  "id": "ocean-deoxygenation-dead-zones-cli",
+  "name": "Ocean Deoxygenation and Dead Zones Model",
+  "description": "Model of expanding ocean oxygen minimum zones (dead zones) due to warming and nutrient pollution. Warmer water holds less oxygen and stratification increases. Source: Breitburg et al. (2018). Science. DOI: 10.1126/science.aam7240",
+  "stocks": [
+    {"id": "stock-oxygen", "name": "Ocean_Oxygen_Content", "initial_value": 227, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-dead-zone", "name": "Dead_Zone_Area", "initial_value": 245, "equation": "", "position": {"x": 400, "y": 200}},
+    {"id": "stock-stratification", "name": "Stratification_Index", "initial_value": 1.0, "equation": "", "position": {"x": 300, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-oxygen-loss", "name": "Oxygen_Loss_Rate", "equation": "Temperature_Effect + Stratification_Effect + Nutrient_Effect", "from_stock": "stock-oxygen", "to_stock": null, "position": {"x": 100, "y": 200}},
+    {"id": "flow-dead-zone-growth", "name": "Dead_Zone_Expansion", "equation": "IF(Ocean_Oxygen_Content < Critical_Oxygen, Expansion_Rate * (Critical_Oxygen - Ocean_Oxygen_Content), -Recovery_Rate * Dead_Zone_Area)", "from_stock": null, "to_stock": "stock-dead-zone", "position": {"x": 500, "y": 200}},
+    {"id": "flow-stratification", "name": "Stratification_Change", "equation": "Warming_Rate * 0.05", "from_stock": null, "to_stock": "stock-stratification", "position": {"x": 200, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-sst", "name": "Sea_Surface_Temperature", "equation": "15 + 0.02 * TIME", "position": {"x": 100, "y": 100}},
+    {"id": "var-temp-effect", "name": "Temperature_Effect", "equation": "0.5 * (Sea_Surface_Temperature - 15)", "position": {"x": 200, "y": 100}},
+    {"id": "var-strat-effect", "name": "Stratification_Effect", "equation": "0.3 * (Stratification_Index - 1)", "position": {"x": 350, "y": 100}},
+    {"id": "var-nutrient", "name": "Nutrient_Loading", "equation": "10", "position": {"x": 500, "y": 100}},
+    {"id": "var-nutrient-effect", "name": "Nutrient_Effect", "equation": "Nutrient_Loading * 0.02", "position": {"x": 100, "y": 300}},
+    {"id": "var-critical", "name": "Critical_Oxygen", "equation": "200", "position": {"x": 350, "y": 300}},
+    {"id": "var-expansion", "name": "Expansion_Rate", "equation": "5", "position": {"x": 450, "y": 300}},
+    {"id": "var-recovery", "name": "Recovery_Rate", "equation": "0.01", "position": {"x": 550, "y": 300}},
+    {"id": "var-warming", "name": "Warming_Rate", "equation": "0.02", "position": {"x": 100, "y": 400}},
+    {"id": "var-hypoxic-area", "name": "Hypoxic_Ocean_Fraction", "equation": "Dead_Zone_Area / 36100", "position": {"x": 400, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 1},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1126/science.aam7240",
+  "reference": "Breitburg, D. et al. (2018). Declining oxygen in the global ocean and coastal waters. Science, 359(6371), eaam7240."
+}

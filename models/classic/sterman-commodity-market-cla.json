@@ -1,0 +1,218 @@
+{
+  "id": "sterman-commodity-market-cla",
+  "name": "Sterman Commodity Market Cycles",
+  "description": "Models endogenous cycles in commodity markets from capacity investment delays. From Sterman (2000) Business Dynamics, Chapter 20. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "category": "classic",
+  "stocks": [
+    {
+      "id": "stock-inventory",
+      "name": "Inventory",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-capacity",
+      "name": "Production_Capacity",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-construct",
+      "name": "Under_Construction",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-price",
+      "name": "Price",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-produce",
+      "name": "Production",
+      "equation": "Production_Capacity * Utilization",
+      "from_stock": null,
+      "to_stock": "stock-inventory",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ship",
+      "name": "Shipments",
+      "equation": "Demand",
+      "from_stock": "stock-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-complete",
+      "name": "Capacity_Completion",
+      "equation": "Under_Construction / Construction_Time",
+      "from_stock": "stock-construct",
+      "to_stock": "stock-capacity",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-depreciate",
+      "name": "Depreciation",
+      "equation": "Production_Capacity / Capacity_Life",
+      "from_stock": "stock-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-invest",
+      "name": "Investment",
+      "equation": "MAX(0, Desired_Capacity - Production_Capacity - Under_Construction) / Investment_Time",
+      "from_stock": null,
+      "to_stock": "stock-construct",
+      "position": {
+        "x": 650,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-price-adj",
+      "name": "Price_Adjustment",
+      "equation": "(Indicated_Price - Price) / Price_Adjust_Time",
+      "from_stock": null,
+      "to_stock": "stock-price",
+      "position": {
+        "x": 300,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-util",
+      "name": "Utilization",
+      "equation": "MIN(1, Demand / Production_Capacity)",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Demand",
+      "equation": "50 * (200 / Price)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-const-time",
+      "name": "Construction_Time",
+      "equation": "3",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-life",
+      "name": "Capacity_Life",
+      "equation": "20",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-desired",
+      "name": "Desired_Capacity",
+      "equation": "Demand * 1.2",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-inv-time",
+      "name": "Investment_Time",
+      "equation": "2",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-indicated",
+      "name": "Indicated_Price",
+      "equation": "100 * (Desired_Inventory / (Inventory + 0.01))^0.5",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-desired-inv",
+      "name": "Desired_Inventory",
+      "equation": "Demand * Inventory_Coverage",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-coverage",
+      "name": "Inventory_Coverage",
+      "equation": "2",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-adj-time",
+      "name": "Price_Adjust_Time",
+      "equation": "1",
+      "position": {
+        "x": 650,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "source": "https://mitpress.mit.edu/9780071179898/business-dynamics/",
+  "reference": "Sterman JD (2000) Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill, Chapter 20.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:31:20.124030+00:00",
+  "updated_at": "2026-01-12T06:31:20.124030+00:00"
+}

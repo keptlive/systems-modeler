@@ -1,0 +1,177 @@
+{
+  "id": "christensen-disruptive-innovation-tec",
+  "name": "Christensen Disruptive Innovation Model",
+  "description": "Clayton Christensen's model of how disruptive technologies overtake incumbents. Reference: Christensen, C.M. (1997). The Innovator's Dilemma.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Incumbent_Performance",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Disruptor_Performance",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Market_Demand",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Disruptor_Market_Share",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Incumbent_Innovation",
+      "equation": "Incumbent_Performance * Sustaining_Rate",
+      "from_stock": null,
+      "to_stock": "Incumbent_Performance",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Disruptor_Innovation",
+      "equation": "Disruptor_Performance * Disruption_Rate",
+      "from_stock": null,
+      "to_stock": "Disruptor_Performance",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Demand_Growth",
+      "equation": "Market_Demand * Demand_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "Market_Demand",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Market_Shift",
+      "equation": "IF Disruptor_Performance > Market_Demand THEN (1 - Disruptor_Market_Share) * Adoption_Rate ELSE 0",
+      "from_stock": null,
+      "to_stock": "Disruptor_Market_Share",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Sustaining_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Disruption_Rate",
+      "equation": "0.08",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Demand_Growth_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Adoption_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Performance_Gap",
+      "equation": "Incumbent_Performance - Market_Demand",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Overshoot",
+      "equation": "MAX(0, Performance_Gap)",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Disruption_Point",
+      "equation": "IF Disruptor_Performance >= Market_Demand THEN 1 ELSE 0",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Incumbent_Share",
+      "equation": "1 - Disruptor_Market_Share",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1142/p389",
+  "reference": "Christensen, C.M. (1997). The Innovator's Dilemma: When New Technologies Cause Great Firms to Fail. Harvard Business School Press.",
+  "created_at": "2026-01-15T19:58:06.712549+00:00",
+  "updated_at": "2026-01-15T19:58:06.712549+00:00"
+}

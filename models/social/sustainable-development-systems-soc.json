@@ -1,0 +1,480 @@
+{
+  "id": "sustainable-development-systems-soc",
+  "name": "Trust_Building",
+  "description": "Dynamic model of nature-society systems for sustainable development. Integrates environmental, economic, and social subsystems with feedback loops. Based on PNAS 2023 perspective on modeling dynamic systems. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Natural_Capital",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Physical_Capital",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Human_Capital",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Social_Capital",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Wellbeing_Index",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Natural_Regeneration",
+      "equation": "Natural_Capital * Regeneration_Rate * (1 - Natural_Capital / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Resource_Extraction",
+      "equation": "Extraction_Rate * Natural_Capital * Economic_Activity_Pressure",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Investment",
+      "equation": "Savings_Rate * GDP",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Depreciation",
+      "equation": "Physical_Capital * Depreciation_Rate",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Education",
+      "equation": "Education_Investment * Education_Effectiveness",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Human_Capital_Decay",
+      "equation": "Human_Capital * Decay_Rate",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Trust_Building",
+      "equation": "Social_Investment * Trust_Factor",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "f8",
+      "name": "Trust_Erosion",
+      "equation": "Social_Capital * Erosion_Rate * Inequality",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 800,
+        "y": 200
+      }
+    },
+    {
+      "id": "f9",
+      "name": "Wellbeing_Change",
+      "equation": "(Composite_Wellbeing - Wellbeing_Index) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Regeneration_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Carrying_Capacity",
+      "equation": "150",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Extraction_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Economic_Activity_Pressure",
+      "equation": "1 + 0.5 * Physical_Capital / 50",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "v5",
+      "name": "GDP",
+      "equation": "Natural_Capital^0.3 * Physical_Capital^0.4 * Human_Capital^0.3",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Savings_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Depreciation_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Education_Investment",
+      "equation": "GDP * 0.05",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Education_Effectiveness",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Decay_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 650,
+        "y": 100
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Social_Investment",
+      "equation": "GDP * 0.03",
+      "position": {
+        "x": 750,
+        "y": 100
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Trust_Factor",
+      "equation": "0.2",
+      "position": {
+        "x": 750,
+        "y": 300
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Erosion_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 850,
+        "y": 100
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Inequality",
+      "equation": "0.5",
+      "position": {
+        "x": 850,
+        "y": 300
+      }
+    },
+    {
+      "id": "v15",
+      "name": "Composite_Wellbeing",
+      "equation": "(Natural_Capital / 100 + Human_Capital / 60 + Social_Capital / 40) / 3",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "v16",
+      "name": "Adjustment_Time",
+      "equation": "10",
+      "position": {
+        "x": 550,
+        "y": 500
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Regeneration_Rate",
+      "to_element": "Natural_Regeneration"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Natural_Capital",
+      "to_element": "Natural_Regeneration"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Carrying_Capacity",
+      "to_element": "Natural_Regeneration"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Economic_Activity_Pressure",
+      "to_element": "Resource_Extraction"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Natural_Capital",
+      "to_element": "Resource_Extraction"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Extraction_Rate",
+      "to_element": "Resource_Extraction"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "GDP",
+      "to_element": "Investment"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Savings_Rate",
+      "to_element": "Investment"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Depreciation_Rate",
+      "to_element": "Depreciation"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Physical_Capital",
+      "to_element": "Depreciation"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Investment",
+      "to_element": "Education"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Education_Effectiveness",
+      "to_element": "Education"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Education_Investment",
+      "to_element": "Education"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Decay_Rate",
+      "to_element": "Human_Capital_Decay"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Human_Capital",
+      "to_element": "Human_Capital_Decay"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Social_Investment",
+      "to_element": "Trust_Building"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Investment",
+      "to_element": "Trust_Building"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Trust_Factor",
+      "to_element": "Trust_Building"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Inequality",
+      "to_element": "Trust_Erosion"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Erosion_Rate",
+      "to_element": "Trust_Erosion"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Social_Capital",
+      "to_element": "Trust_Erosion"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Adjustment_Time",
+      "to_element": "Wellbeing_Change"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "Wellbeing_Index",
+      "to_element": "Wellbeing_Change"
+    },
+    {
+      "id": "conn-24",
+      "from_element": "Composite_Wellbeing",
+      "to_element": "Wellbeing_Change"
+    },
+    {
+      "id": "conn-25",
+      "from_element": "Physical_Capital",
+      "to_element": "Economic_Activity_Pressure"
+    },
+    {
+      "id": "conn-26",
+      "from_element": "Natural_Capital",
+      "to_element": "GDP"
+    },
+    {
+      "id": "conn-27",
+      "from_element": "Human_Capital",
+      "to_element": "GDP"
+    },
+    {
+      "id": "conn-28",
+      "from_element": "Physical_Capital",
+      "to_element": "GDP"
+    },
+    {
+      "id": "conn-29",
+      "from_element": "GDP",
+      "to_element": "Education_Investment"
+    },
+    {
+      "id": "conn-30",
+      "from_element": "GDP",
+      "to_element": "Social_Investment"
+    },
+    {
+      "id": "conn-31",
+      "from_element": "Natural_Capital",
+      "to_element": "Composite_Wellbeing"
+    },
+    {
+      "id": "conn-32",
+      "from_element": "Human_Capital",
+      "to_element": "Composite_Wellbeing"
+    },
+    {
+      "id": "conn-33",
+      "from_element": "Social_Capital",
+      "to_element": "Composite_Wellbeing"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:15:44.246409+00:00",
+  "updated_at": "2026-01-12T07:15:44.246409+00:00",
+  "source": "https://doi.org/10.1073/pnas.2216656120",
+  "reference": "PNAS (2023). Progress in modeling dynamic systems for sustainable development."
+}

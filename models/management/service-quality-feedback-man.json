@@ -1,0 +1,226 @@
+{
+  "id": "service-quality-feedback-man",
+  "name": "Service Quality Feedback Model",
+  "description": "Model of service quality dynamics showing how capacity, demand, and quality interact. Based on Oliva & Sterman (2001). Shows how service quality can erode under growth pressure. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-service-capacity",
+      "name": "Service Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-backlog",
+      "name": "Service Backlog",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-reputation",
+      "name": "Reputation",
+      "initial_value": 0.8,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-employees",
+      "name": "Employees",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-capacity-change",
+      "name": "Capacity Change",
+      "equation": "(Target_Capacity - Service_Capacity) / Capacity_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-service-capacity",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-demand-arrival",
+      "name": "Demand Arrival",
+      "equation": "Base_Demand * Reputation",
+      "from_stock": null,
+      "to_stock": "stock-backlog",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-service-completion",
+      "name": "Service Completion",
+      "equation": "MIN(Service_Capacity * Productivity, Service_Backlog)",
+      "from_stock": "stock-backlog",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-reputation-change",
+      "name": "Reputation Change",
+      "equation": "(Perceived_Quality - Reputation) / Reputation_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-reputation",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-hiring",
+      "name": "Hiring",
+      "equation": "MAX(0, (Desired_Employees - Employees) / Hiring_Time)",
+      "from_stock": null,
+      "to_stock": "stock-employees",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-turnover",
+      "name": "Turnover",
+      "equation": "Employees * Turnover_Rate",
+      "from_stock": "stock-employees",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-base-demand",
+      "name": "Base Demand",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-productivity",
+      "name": "Productivity",
+      "equation": "1 - Work_Pressure * 0.3",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-work-pressure",
+      "name": "Work Pressure",
+      "equation": "Service_Backlog / (Service_Capacity + 1)",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-perceived-quality",
+      "name": "Perceived Quality",
+      "equation": "MAX(0, 1 - 0.5 * Work_Pressure)",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-target-capacity",
+      "name": "Target Capacity",
+      "equation": "Employees * Capacity_per_Employee",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-capacity-per-employee",
+      "name": "Capacity per Employee",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-desired-employees",
+      "name": "Desired Employees",
+      "equation": "Service_Backlog / (Productivity * Capacity_per_Employee)",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-capacity-adjustment-time",
+      "name": "Capacity Adjustment Time",
+      "equation": "4",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-reputation-adjustment-time",
+      "name": "Reputation Adjustment Time",
+      "equation": "12",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-hiring-time",
+      "name": "Hiring Time",
+      "equation": "8",
+      "position": {
+        "x": 700,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-turnover-rate",
+      "name": "Turnover Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:11:32.980696+00:00",
+  "updated_at": "2026-01-11T21:11:32.980696+00:00",
+  "source": "https://doi.org/10.1287/mnsc.35.3.321",
+  "reference": "Sterman JD. Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill, 2000."
+}

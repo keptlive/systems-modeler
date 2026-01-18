@@ -1,0 +1,190 @@
+{
+  "id": "baby-names-popularity-dynamics-soc",
+  "name": "Baby Names Popularity Dynamics",
+  "description": "Models the dynamics of baby name popularity, including awareness spreading, perception of freshness, and the lifecycle of names from novel to overused. Based on analysis of historical baby naming data. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-perception-of-name-freshness",
+      "name": "Perception of Name Freshness",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-name-prevalence",
+      "name": "Name Prevalence",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-people-aware-of-name",
+      "name": "People Aware of Name",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-people-unaware-of-name",
+      "name": "People Unaware of Name",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adjusting-perceptions",
+      "name": "Adjusting Perceptions",
+      "equation": "(Expected_Prevalence - Name_Prevalence) / Adjustment_Rate",
+      "from_stock": null,
+      "to_stock": "stock-perception-of-name-freshness",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-christenings",
+      "name": "Christenings",
+      "equation": "People_Aware_of_Name * Base_Christening_Rate * Perception_of_Name_Freshness",
+      "from_stock": null,
+      "to_stock": "stock-name-prevalence",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-deaths",
+      "name": "Deaths",
+      "equation": "Name_Prevalence / Life_Expectancy",
+      "from_stock": "stock-name-prevalence",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-becoming-aware",
+      "name": "Becoming Aware",
+      "equation": "People_Unaware_of_Name * Name_Prevalence * Awareness_Rate",
+      "from_stock": "stock-people-unaware-of-name",
+      "to_stock": "stock-people-aware-of-name",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-all-births",
+      "name": "All Births",
+      "equation": "Birth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-people-unaware-of-name",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-all-deaths",
+      "name": "All Deaths",
+      "equation": "Death_Rate",
+      "from_stock": "stock-people-aware-of-name",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-expected-prevalence",
+      "name": "Expected Prevalence",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-adjustment-rate",
+      "name": "Adjustment Rate",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-life-expectancy",
+      "name": "Life Expectancy",
+      "equation": "75",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-base-christening-rate",
+      "name": "Base Christening Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-awareness-rate",
+      "name": "Awareness Rate",
+      "equation": "0.00001",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-birth-rate",
+      "name": "Birth Rate",
+      "equation": "10000",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-death-rate",
+      "name": "Death Rate",
+      "equation": "10000",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 1880,
+    "end": 2013,
+    "dt": 0.0625
+  },
+  "created_at": "2026-01-11T20:04:50.856225Z",
+  "updated_at": "2026-01-11T20:04:50.856225Z",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

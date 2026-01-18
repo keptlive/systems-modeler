@@ -1,0 +1,186 @@
+{
+  "id": "edtech-platform-growth-edu",
+  "name": "EdTech Platform Growth Model",
+  "description": "Model of educational technology platform adoption showing network effects and learning outcomes. Reference: Katz, M. L., & Shapiro, C. (1985). Network externalities, competition, and compatibility. AER. Source: https://doi.org/10.2307/1814809",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Active_Students",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Course_Library",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Platform_Quality",
+      "initial_value": 0.6,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Student_Acquisition",
+      "equation": "Marketing_Effect * Word_of_Mouth * Conversion_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Student_Churn",
+      "equation": "Active_Students * Churn_Rate * (1 - Engagement)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Course_Creation",
+      "equation": "Creator_Incentive * Platform_Scale",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Quality_Improvement",
+      "equation": "Investment_in_Quality - Quality_Decay",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Marketing_Effect",
+      "equation": "1000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Word_of_Mouth",
+      "equation": "1 + 0.001 * Active_Students",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Conversion_Rate",
+      "equation": "0.1 * Platform_Quality",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Churn_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Engagement",
+      "equation": "Platform_Quality * Course_Variety",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Course_Variety",
+      "equation": "MIN(1, Course_Library / 500)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Creator_Incentive",
+      "equation": "5 * Active_Students / 10000",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Platform_Scale",
+      "equation": "Active_Students / 10000",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Investment_in_Quality",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Quality_Decay",
+      "equation": "0.01",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:34:23.558462+00:00",
+  "updated_at": "2026-01-12T11:34:23.558462+00:00",
+  "source": "https://doi.org/10.1016/j.chb.2019.03.016",
+  "reference": "Reich J, Ruip\u00e9rez-Valiente JA. The MOOC pivot. Science. 2019;363(6423):130-131."
+}

@@ -1,0 +1,218 @@
+{
+  "id": "sterman-workforce-hiring-adjustment-man",
+  "name": "Sterman Workforce Hiring and Adjustment Model",
+  "description": "Classic workforce adjustment model showing delays in hiring and experience accumulation. From Business Dynamics Chapter 11. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Workforce",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Average Experience",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Vacancies",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Hiring",
+      "equation": "Vacancies / Hiring_Delay",
+      "from_stock": "s3",
+      "to_stock": "s1",
+      "position": {
+        "x": 150,
+        "y": 225
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Attrition",
+      "equation": "Workforce / Average_Tenure",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Experience Gain",
+      "equation": "(Maximum_Experience - Average_Experience) / Experience_Accumulation_Time",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Experience Loss from Turnover",
+      "equation": "Average_Experience * Attrition / Workforce",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Vacancy Creation",
+      "equation": "Desired_Hiring",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Vacancy Filling",
+      "equation": "Hiring",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Desired Workforce",
+      "equation": "120",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Workforce Gap",
+      "equation": "Desired_Workforce - Workforce",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Desired Hiring",
+      "equation": "MAX(0, Workforce_Gap / Workforce_Adjustment_Time + Attrition)",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Workforce Adjustment Time",
+      "equation": "8",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Hiring Delay",
+      "equation": "4",
+      "position": {
+        "x": 150,
+        "y": 275
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Average Tenure",
+      "equation": "50",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Maximum Experience",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Experience Accumulation Time",
+      "equation": "20",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Effective Workforce",
+      "equation": "Workforce * Average_Experience / Maximum_Experience",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Productivity",
+      "equation": "Effective_Workforce / Workforce",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Workforce",
+      "to_element": "Workforce Gap"
+    },
+    {
+      "id": "c2",
+      "from_element": "Vacancies",
+      "to_element": "Hiring"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:24:00.396303",
+  "updated_at": "2026-01-15T14:24:00.396311",
+  "source": "https://mitpress.mit.edu/books/business-dynamics",
+  "reference": "Sterman JD. Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. 2000. Chapter 11."
+}

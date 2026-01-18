@@ -1,0 +1,217 @@
+{
+  "id": "senge-shifting-burden-edu",
+  "name": "Senge Shifting the Burden Archetype",
+  "description": "Peter Senge's 'Shifting the Burden' system archetype from The Fifth Discipline. Shows how symptomatic solutions can undermine fundamental solutions, creating dependency. Common pattern in organizational, social, and personal problems. Reference: Senge, P. M. (1990). The Fifth Discipline. Doubleday/Currency. Source: https://mitsloan.mit.edu/",
+  "stocks": [
+    {
+      "id": "stock-problem-symptom",
+      "name": "Problem Symptom",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-symptomatic-solution",
+      "name": "Symptomatic Solution Capacity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-fundamental-solution",
+      "name": "Fundamental Solution Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-symptom-increase",
+      "name": "Symptom Increase",
+      "equation": "Base_Problem_Growth - Symptomatic_Relief - Fundamental_Relief",
+      "from_stock": null,
+      "to_stock": "stock-problem-symptom",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-symptomatic-application",
+      "name": "Symptomatic Application",
+      "equation": "Problem_Symptom * Symptomatic_Response_Rate",
+      "from_stock": null,
+      "to_stock": "stock-symptomatic-solution",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-symptomatic-decay",
+      "name": "Symptomatic Decay",
+      "equation": "Symptomatic_Solution_Capacity / Symptomatic_Duration",
+      "from_stock": "stock-symptomatic-solution",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-fundamental-investment",
+      "name": "Fundamental Investment",
+      "equation": "Problem_Symptom * Fundamental_Response_Rate * (1 - Addiction_Effect)",
+      "from_stock": null,
+      "to_stock": "stock-fundamental-solution",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-fundamental-erosion",
+      "name": "Fundamental Erosion",
+      "equation": "Fundamental_Solution_Capacity * Side_Effect_Rate * Symptomatic_Solution_Capacity / 100",
+      "from_stock": "stock-fundamental-solution",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-base-problem-growth",
+      "name": "Base Problem Growth",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-symptomatic-relief",
+      "name": "Symptomatic Relief",
+      "equation": "Symptomatic_Solution_Capacity * Symptomatic_Effectiveness",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-fundamental-relief",
+      "name": "Fundamental Relief",
+      "equation": "Fundamental_Solution_Capacity * Fundamental_Effectiveness",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-symptomatic-response-rate",
+      "name": "Symptomatic Response Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-fundamental-response-rate",
+      "name": "Fundamental Response Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-symptomatic-effectiveness",
+      "name": "Symptomatic Effectiveness",
+      "equation": "0.5",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-fundamental-effectiveness",
+      "name": "Fundamental Effectiveness",
+      "equation": "0.1",
+      "position": {
+        "x": 650,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-symptomatic-duration",
+      "name": "Symptomatic Duration",
+      "equation": "2",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-side-effect-rate",
+      "name": "Side Effect Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 650,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-addiction-effect",
+      "name": "Addiction Effect",
+      "equation": "Symptomatic_Solution_Capacity / (Symptomatic_Solution_Capacity + 50)",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Problem Symptom",
+      "to_element": "Symptomatic Application"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Problem Symptom",
+      "to_element": "Fundamental Investment"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Symptomatic Solution Capacity",
+      "to_element": "Symptomatic Relief"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Fundamental Solution Capacity",
+      "to_element": "Fundamental Relief"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T01:30:00.000Z",
+  "updated_at": "2026-01-12T01:30:00.000Z",
+  "source": "https://www.penguinrandomhouse.com/books/163984/the-fifth-discipline-by-peter-m-senge/",
+  "reference": "Senge PM. The Fifth Discipline: The Art and Practice of the Learning Organization. Doubleday, 1990."
+}

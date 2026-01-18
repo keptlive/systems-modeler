@@ -1,0 +1,190 @@
+{
+  "id": "policy-implementation-gap-pol",
+  "name": "Policy Implementation Gap Dynamics",
+  "description": "Model of the gap between policy intentions and actual outcomes, showing how bureaucratic delays, capacity constraints, and resistance affect policy implementation. Based on Pressman and Wildavsky's implementation research. Reference: Andersson, D. I., & Hughes, D. (2014). Microbiological effects of sublethal antibiotic concentrations. Nature Reviews Microbiology. Source: https://doi.org/10.1038/nrmicro3270",
+  "source": "https://doi.org/10.1111/j.1541-0072.2000.tb00068.x",
+  "reference": "Pressman JL, Wildavsky A. Implementation: How Great Expectations in Washington Are Dashed in Oakland. UC Press. 1973.",
+  "stocks": [
+    {
+      "id": "stock-intent",
+      "name": "Policy_Intent",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-adopted",
+      "name": "Adopted_Measures",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-implemented",
+      "name": "Implemented_Measures",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-capacity",
+      "name": "Implementation_Capacity",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 325,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adopt",
+      "name": "Policy_Adoption",
+      "equation": "Policy_Intent * adoption_rate * political_support",
+      "from_stock": "stock-intent",
+      "to_stock": "stock-adopted",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-implement",
+      "name": "Implementation",
+      "equation": "Adopted_Measures * implementation_rate * Implementation_Capacity / 100",
+      "from_stock": "stock-adopted",
+      "to_stock": "stock-implemented",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-decay",
+      "name": "Policy_Decay",
+      "equation": "Implemented_Measures * decay_rate * (1 - enforcement)",
+      "from_stock": "stock-implemented",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-cap-build",
+      "name": "Capacity_Building",
+      "equation": "capacity_investment * (100 - Implementation_Capacity) / 100",
+      "from_stock": null,
+      "to_stock": "stock-capacity",
+      "position": {
+        "x": 225,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-cap-drain",
+      "name": "Capacity_Drain",
+      "equation": "Implementation_Capacity * turnover_rate",
+      "from_stock": "stock-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 425,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-adopt",
+      "name": "adoption_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-support",
+      "name": "political_support",
+      "equation": "0.7",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-impl",
+      "name": "implementation_rate",
+      "equation": "0.05",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-decay",
+      "name": "decay_rate",
+      "equation": "0.02",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-enforce",
+      "name": "enforcement",
+      "equation": "0.6",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-invest",
+      "name": "capacity_investment",
+      "equation": "5",
+      "position": {
+        "x": 225,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-turnover",
+      "name": "turnover_rate",
+      "equation": "0.05",
+      "position": {
+        "x": 425,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-gap",
+      "name": "Implementation_Gap",
+      "equation": "Policy_Intent - Implemented_Measures",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

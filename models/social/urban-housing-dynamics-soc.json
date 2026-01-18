@@ -1,0 +1,362 @@
+{
+  "id": "urban-housing-dynamics-soc",
+  "name": "Urban Housing Dynamics Model",
+  "description": "A system dynamics model of urban housing markets based on Forrester's Urban Dynamics (1969). Models the interactions between housing stock, population migration, land availability, and housing prices that drive urban development patterns. Reference: Forrester, J. W. (1961). Industrial Dynamics. MIT Press. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-housing-stock",
+      "name": "Housing Stock",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-population",
+      "name": "Urban Population",
+      "initial_value": 250000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-available-land",
+      "name": "Available Land",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-deteriorated-housing",
+      "name": "Deteriorated Housing",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-construction",
+      "name": "Construction Rate",
+      "equation": "Housing_Construction_Desired * Land_Availability_Multiplier * Investment_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-housing-stock",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-deterioration",
+      "name": "Deterioration Rate",
+      "equation": "Housing_Stock / Average_Housing_Life",
+      "from_stock": "stock-housing-stock",
+      "to_stock": "stock-deteriorated-housing",
+      "position": {
+        "x": 425,
+        "y": 225
+      }
+    },
+    {
+      "id": "flow-demolition",
+      "name": "Demolition Rate",
+      "equation": "Deteriorated_Housing / Demolition_Time",
+      "from_stock": "stock-deteriorated-housing",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-land-consumption",
+      "name": "Land Consumption",
+      "equation": "Construction_Rate * Land_Per_Unit",
+      "from_stock": "stock-available-land",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-land-reclamation",
+      "name": "Land Reclamation",
+      "equation": "Demolition_Rate * Land_Per_Unit * 0.8",
+      "from_stock": null,
+      "to_stock": "stock-available-land",
+      "position": {
+        "x": 700,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-in-migration",
+      "name": "In Migration",
+      "equation": "Base_Migration * Attractiveness_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-population",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-out-migration",
+      "name": "Out Migration",
+      "equation": "Urban_Population * (1 - Housing_Availability) * Out_Migration_Sensitivity",
+      "from_stock": "stock-population",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-renovation",
+      "name": "Renovation Rate",
+      "equation": "Deteriorated_Housing * Renovation_Fraction",
+      "from_stock": "stock-deteriorated-housing",
+      "to_stock": "stock-housing-stock",
+      "position": {
+        "x": 425,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-housing-per-person",
+      "name": "Housing Per Person",
+      "equation": "Housing_Stock / Urban_Population",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-housing-availability",
+      "name": "Housing Availability",
+      "equation": "MIN(1, Housing_Per_Person / Desired_Housing_Per_Person)",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-desired-housing",
+      "name": "Desired Housing Per Person",
+      "equation": "0.4",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-housing-price",
+      "name": "Housing Price Index",
+      "equation": "1 + (1 - Housing_Availability) * Price_Sensitivity",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-price-sensitivity",
+      "name": "Price Sensitivity",
+      "equation": "2",
+      "position": {
+        "x": 700,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-construction-desired",
+      "name": "Housing Construction Desired",
+      "equation": "(Urban_Population * Desired_Housing_Per_Person - Housing_Stock) / Construction_Time",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-construction-time",
+      "name": "Construction Time",
+      "equation": "3",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-land-multiplier",
+      "name": "Land Availability Multiplier",
+      "equation": "Available_Land / Initial_Land",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-initial-land",
+      "name": "Initial Land",
+      "equation": "5000",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-land-per-unit",
+      "name": "Land Per Unit",
+      "equation": "0.01",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-investment-multiplier",
+      "name": "Investment Multiplier",
+      "equation": "Housing_Price_Index * 0.5",
+      "position": {
+        "x": 100,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-average-life",
+      "name": "Average Housing Life",
+      "equation": "50",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-demolition-time",
+      "name": "Demolition Time",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-base-migration",
+      "name": "Base Migration",
+      "equation": "5000",
+      "position": {
+        "x": 550,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-attractiveness",
+      "name": "Attractiveness Multiplier",
+      "equation": "Housing_Availability * Job_Availability",
+      "position": {
+        "x": 700,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-job-availability",
+      "name": "Job Availability",
+      "equation": "0.9",
+      "position": {
+        "x": 100,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-out-migration-sensitivity",
+      "name": "Out Migration Sensitivity",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-renovation-fraction",
+      "name": "Renovation Fraction",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 600
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Housing Stock",
+      "to_element": "Housing Per Person"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Urban Population",
+      "to_element": "Housing Per Person"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Housing Per Person",
+      "to_element": "Housing Availability"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Housing Availability",
+      "to_element": "Housing Price Index"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Housing Stock",
+      "to_element": "Deterioration Rate"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Deteriorated Housing",
+      "to_element": "Demolition Rate"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Available Land",
+      "to_element": "Land Availability Multiplier"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Land Availability Multiplier",
+      "to_element": "Construction Rate"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Attractiveness Multiplier",
+      "to_element": "In Migration"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Housing Availability",
+      "to_element": "Out Migration"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

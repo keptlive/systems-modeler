@@ -1,0 +1,307 @@
+{
+  "id": "ferguson-imperial-covid-epi",
+  "name": "Ferguson Imperial College COVID-19 Model",
+  "description": "Neil Ferguson's Imperial College model that informed UK and US lockdown policies. Reference: Ferguson, N.M. et al. (2020). Impact of non-pharmaceutical interventions.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Susceptible",
+      "initial_value": 66000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Exposed",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Symptomatic",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Hospitalized",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Critical",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "s6",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 900,
+        "y": 200
+      }
+    },
+    {
+      "id": "s7",
+      "name": "Deaths",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 1050,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Infection",
+      "equation": "Beta * Susceptible * Symptomatic / Population * (1 - NPI_Effectiveness)",
+      "from_stock": "Susceptible",
+      "to_stock": "Exposed",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Symptom_Onset",
+      "equation": "Exposed / Incubation_Period",
+      "from_stock": "Exposed",
+      "to_stock": "Symptomatic",
+      "position": {
+        "x": 220,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Hospitalization",
+      "equation": "Symptomatic * Hospital_Rate / Symptom_Duration",
+      "from_stock": "Symptomatic",
+      "to_stock": "Hospitalized",
+      "position": {
+        "x": 340,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "ICU_Admission",
+      "equation": "Hospitalized * ICU_Rate / Hospital_Stay",
+      "from_stock": "Hospitalized",
+      "to_stock": "Critical",
+      "position": {
+        "x": 460,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Recovery_Home",
+      "equation": "Symptomatic * (1 - Hospital_Rate) / Symptom_Duration",
+      "from_stock": "Symptomatic",
+      "to_stock": "Recovered",
+      "position": {
+        "x": 580,
+        "y": 300
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Recovery_Hospital",
+      "equation": "Hospitalized * (1 - ICU_Rate) * (1 - Hospital_Death_Rate) / Hospital_Stay",
+      "from_stock": "Hospitalized",
+      "to_stock": "Recovered",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Recovery_ICU",
+      "equation": "Critical * (1 - ICU_Death_Rate) / ICU_Stay",
+      "from_stock": "Critical",
+      "to_stock": "Recovered",
+      "position": {
+        "x": 820,
+        "y": 300
+      }
+    },
+    {
+      "id": "f8",
+      "name": "Death_Hospital",
+      "equation": "Hospitalized * Hospital_Death_Rate / Hospital_Stay",
+      "from_stock": "Hospitalized",
+      "to_stock": "Deaths",
+      "position": {
+        "x": 940,
+        "y": 300
+      }
+    },
+    {
+      "id": "f9",
+      "name": "Death_ICU",
+      "equation": "Critical * ICU_Death_Rate / ICU_Stay",
+      "from_stock": "Critical",
+      "to_stock": "Deaths",
+      "position": {
+        "x": 1060,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Population",
+      "equation": "66000000",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "R0",
+      "equation": "2.4",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Incubation_Period",
+      "equation": "5.1",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Symptom_Duration",
+      "equation": "7",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Beta",
+      "equation": "R0 / Symptom_Duration",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Hospital_Rate",
+      "equation": "0.044",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "ICU_Rate",
+      "equation": "0.30",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Hospital_Stay",
+      "equation": "8",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "ICU_Stay",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Hospital_Death_Rate",
+      "equation": "0.14",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "v11",
+      "name": "ICU_Death_Rate",
+      "equation": "0.50",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "v12",
+      "name": "NPI_Effectiveness",
+      "equation": "IF time > 60 THEN 0.75 ELSE 0",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Rt",
+      "equation": "R0 * Susceptible / Population * (1 - NPI_Effectiveness)",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.25561/77482",
+  "reference": "Ferguson, N.M. et al. (2020). Report 9: Impact of non-pharmaceutical interventions to reduce COVID-19 mortality and healthcare demand. Imperial College London.",
+  "created_at": "2026-01-15T19:57:16.864548+00:00",
+  "updated_at": "2026-01-15T19:57:16.864548+00:00"
+}

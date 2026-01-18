@@ -1,0 +1,386 @@
+{
+  "id": "product-lifecycle-marketing-eco",
+  "name": "Product Lifecycle with Marketing Model",
+  "description": "A system dynamics model of product lifecycle management with marketing feedback. Based on Bass diffusion model extensions, this model captures the dynamics of product adoption through advertising and word-of-mouth, with pricing and competitive effects. Reference: Bass, F. M. (1969). A new product growth for model consumer durables. Management Science, 15(5), 215-227. DOI: https://doi.org/10.1287/mnsc.15.5.215",
+  "stocks": [
+    {
+      "id": "stock-potential-adopters",
+      "name": "Potential Adopters",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-adopters",
+      "name": "Adopters",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-former-adopters",
+      "name": "Former Adopters",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 650,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-brand-awareness",
+      "name": "Brand Awareness",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {
+        "x": 275,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-cumulative-revenue",
+      "name": "Cumulative Revenue",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adoption",
+      "name": "Adoption Rate",
+      "equation": "Potential_Adopters * (Advertising_Effect + Word_of_Mouth_Effect) * Price_Sensitivity_Mult",
+      "from_stock": "stock-potential-adopters",
+      "to_stock": "stock-adopters",
+      "position": {
+        "x": 275,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-abandonment",
+      "name": "Abandonment Rate",
+      "equation": "Adopters * (Base_Abandonment + Competition_Effect)",
+      "from_stock": "stock-adopters",
+      "to_stock": "stock-former-adopters",
+      "position": {
+        "x": 525,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-readoption",
+      "name": "Readoption Rate",
+      "equation": "Former_Adopters * Reengagement_Rate * Brand_Awareness",
+      "from_stock": "stock-former-adopters",
+      "to_stock": "stock-adopters",
+      "position": {
+        "x": 525,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-awareness-building",
+      "name": "Awareness Building",
+      "equation": "(1 - Brand_Awareness) * (Advertising_Spend / Awareness_Cost) * Advertising_Effectiveness",
+      "from_stock": null,
+      "to_stock": "stock-brand-awareness",
+      "position": {
+        "x": 175,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-awareness-decay",
+      "name": "Awareness Decay",
+      "equation": "Brand_Awareness * Awareness_Decay_Rate",
+      "from_stock": "stock-brand-awareness",
+      "to_stock": null,
+      "position": {
+        "x": 375,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-revenue-generation",
+      "name": "Revenue Generation",
+      "equation": "Adoption_Rate * Product_Price",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-revenue",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-market-size",
+      "name": "Total Market Size",
+      "equation": "Potential_Adopters + Adopters + Former_Adopters",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-market-penetration",
+      "name": "Market Penetration",
+      "equation": "Adopters / Total_Market_Size",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-advertising-effect",
+      "name": "Advertising Effect",
+      "equation": "Advertising_Coefficient * Brand_Awareness",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-advertising-coeff",
+      "name": "Advertising Coefficient",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-wom-effect",
+      "name": "Word of Mouth Effect",
+      "equation": "WOM_Coefficient * (Adopters / Total_Market_Size)",
+      "position": {
+        "x": 700,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-wom-coeff",
+      "name": "WOM Coefficient",
+      "equation": "0.4",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-product-price",
+      "name": "Product Price",
+      "equation": "Base_Price * Price_Decay_Factor",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-base-price",
+      "name": "Base Price",
+      "equation": "100",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-price-decay",
+      "name": "Price Decay Factor",
+      "equation": "MAX(0.5, 1 - 0.02 * TIME)",
+      "position": {
+        "x": 550,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-price-sensitivity",
+      "name": "Price Sensitivity Mult",
+      "equation": "1 - Price_Elasticity * (Product_Price / Base_Price - 1)",
+      "position": {
+        "x": 700,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-price-elasticity",
+      "name": "Price Elasticity",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-advertising-spend",
+      "name": "Advertising Spend",
+      "equation": "Marketing_Budget * Advertising_Share",
+      "position": {
+        "x": 250,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-marketing-budget",
+      "name": "Marketing Budget",
+      "equation": "Revenue_Generation * Marketing_Reinvestment_Rate",
+      "position": {
+        "x": 400,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-marketing-reinvestment",
+      "name": "Marketing Reinvestment Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 550,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-advertising-share",
+      "name": "Advertising Share",
+      "equation": "0.6",
+      "position": {
+        "x": 700,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-awareness-cost",
+      "name": "Awareness Cost",
+      "equation": "1000000",
+      "position": {
+        "x": 100,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-advertising-effectiveness",
+      "name": "Advertising Effectiveness",
+      "equation": "0.8",
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-awareness-decay-rate",
+      "name": "Awareness Decay Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-base-abandonment",
+      "name": "Base Abandonment",
+      "equation": "0.05",
+      "position": {
+        "x": 550,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-competition-effect",
+      "name": "Competition Effect",
+      "equation": "Competition_Intensity * (1 - Brand_Awareness)",
+      "position": {
+        "x": 700,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-competition-intensity",
+      "name": "Competition Intensity",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 750
+      }
+    },
+    {
+      "id": "var-reengagement-rate",
+      "name": "Reengagement Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 750
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Potential Adopters",
+      "to_element": "Adoption Rate"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Brand Awareness",
+      "to_element": "Advertising Effect"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Advertising Effect",
+      "to_element": "Adoption Rate"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Word of Mouth Effect",
+      "to_element": "Adoption Rate"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Adopters",
+      "to_element": "Word of Mouth Effect"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Price Sensitivity Mult",
+      "to_element": "Adoption Rate"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Adopters",
+      "to_element": "Abandonment Rate"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Former Adopters",
+      "to_element": "Readoption Rate"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Advertising Spend",
+      "to_element": "Awareness Building"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Adoption Rate",
+      "to_element": "Revenue Generation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

@@ -1,0 +1,33 @@
+{
+  "id": "navier-stokes-pipe-flow-phy",
+  "name": "Simplified Pipe Flow Dynamics",
+  "description": "Simplified model of viscous pipe flow based on Navier-Stokes equations. Shows pressure-driven flow development, boundary layer growth, and transition between laminar and turbulent regimes based on Reynolds number.",
+  "stocks": [
+    {"id": "stock-flow-rate", "name": "Flow Rate", "initial_value": 0, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-boundary-layer", "name": "Boundary Layer", "initial_value": 0, "equation": "", "position": {"x": 450, "y": 200}},
+    {"id": "stock-pressure-head", "name": "Pressure Head", "initial_value": 100, "equation": "", "position": {"x": 325, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-acceleration", "name": "Acceleration", "equation": "(Driving_Force - Friction_Force) / Fluid_Mass", "from_stock": null, "to_stock": "stock-flow-rate", "position": {"x": 100, "y": 200}},
+    {"id": "flow-bl-growth", "name": "BL Growth", "equation": "IF Boundary_Layer < Pipe_Radius THEN BL_Growth_Rate ELSE 0", "from_stock": null, "to_stock": "stock-boundary-layer", "position": {"x": 350, "y": 200}},
+    {"id": "flow-pressure-loss", "name": "Pressure Loss", "equation": "Friction_Factor * (Pipe_Length / Pipe_Diameter) * (Velocity ^ 2 / (2 * 9.81))", "from_stock": "stock-pressure-head", "to_stock": null, "position": {"x": 225, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-pipe-diameter", "name": "Pipe Diameter", "equation": "0.1", "position": {"x": 150, "y": 100}},
+    {"id": "var-pipe-radius", "name": "Pipe Radius", "equation": "Pipe_Diameter / 2", "position": {"x": 300, "y": 100}},
+    {"id": "var-pipe-length", "name": "Pipe Length", "equation": "10", "position": {"x": 450, "y": 100}},
+    {"id": "var-velocity", "name": "Velocity", "equation": "Flow_Rate / (3.14159 * Pipe_Radius ^ 2)", "position": {"x": 600, "y": 100}},
+    {"id": "var-kinematic-viscosity", "name": "Kinematic Viscosity", "equation": "0.000001", "position": {"x": 150, "y": 280}},
+    {"id": "var-reynolds-number", "name": "Reynolds Number", "equation": "Velocity * Pipe_Diameter / Kinematic_Viscosity", "position": {"x": 350, "y": 280}},
+    {"id": "var-friction-factor", "name": "Friction Factor", "equation": "IF Reynolds_Number < 2300 THEN 64 / MAX(1, Reynolds_Number) ELSE 0.316 / (Reynolds_Number ^ 0.25)", "position": {"x": 550, "y": 280}},
+    {"id": "var-driving-force", "name": "Driving Force", "equation": "Pressure_Head * 9.81 * 1000 * 3.14159 * Pipe_Radius ^ 2", "position": {"x": 150, "y": 420}},
+    {"id": "var-friction-force", "name": "Friction Force", "equation": "Friction_Factor * 0.5 * 1000 * Velocity ^ 2 * 3.14159 * Pipe_Diameter * Pipe_Length / 4", "position": {"x": 400, "y": 420}},
+    {"id": "var-fluid-mass", "name": "Fluid Mass", "equation": "1000 * 3.14159 * Pipe_Radius ^ 2 * Pipe_Length", "position": {"x": 600, "y": 420}},
+    {"id": "var-bl-growth-rate", "name": "BL Growth Rate", "equation": "SQRT(Kinematic_Viscosity / MAX(0.01, Time + 0.01))", "position": {"x": 300, "y": 490}},
+    {"id": "var-flow-regime", "name": "Flow Regime", "equation": "IF Reynolds_Number < 2300 THEN 1 ELSE 2", "position": {"x": 550, "y": 490}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 10, "dt": 0.01},
+  "source": "https://doi.org/10.1017/CBO9780511840531",
+  "reference": "Batchelor GK. An Introduction to Fluid Dynamics. Cambridge University Press. 1967."
+}

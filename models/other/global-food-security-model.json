@@ -1,0 +1,216 @@
+{
+  "id": "global-food-security-model",
+  "name": "Global Food Security Model",
+  "description": "Model of global food production, demand, and food security with climate impacts.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Agricultural_Land",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Food_Stock",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Population",
+      "initial_value": 8000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Land_Expansion",
+      "equation": "MAX(0, Desired_Land - Agricultural_Land) / Land_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "Agricultural_Land",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Land_Degradation",
+      "equation": "Agricultural_Land * Degradation_Rate",
+      "from_stock": "Agricultural_Land",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Food_Production",
+      "equation": "Agricultural_Land * Yield * Climate_Impact",
+      "from_stock": null,
+      "to_stock": "Food_Stock",
+      "position": {
+        "x": 275,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Food_Consumption",
+      "equation": "Population * Per_Capita_Demand",
+      "from_stock": "Food_Stock",
+      "to_stock": null,
+      "position": {
+        "x": 525,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Food_Waste",
+      "equation": "Food_Stock * Waste_Rate",
+      "from_stock": "Food_Stock",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Population_Growth",
+      "equation": "Population * Pop_Growth_Rate * Food_Availability_Effect",
+      "from_stock": null,
+      "to_stock": "Population",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Yield",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Climate_Impact",
+      "equation": "1 - 0.1 * Temperature_Rise",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Temperature_Rise",
+      "equation": "1.5",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Per_Capita_Demand",
+      "equation": "0.15",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Waste_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Pop_Growth_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Degradation_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Land_Adjustment_Time",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Desired_Land",
+      "equation": "Food_Consumption / (Yield * Climate_Impact)",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Food_Security_Index",
+      "equation": "Food_Stock / (Population * Per_Capita_Demand)",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Food_Availability_Effect",
+      "equation": "MIN(1, Food_Security_Index)",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1038/s43016-021-00322-9",
+  "reference": "Clark, M.A., et al. (2020). Global food system emissions could preclude achieving climate targets. Science, 370(6517), 705-708. DOI: 10.1038/s43016-021-00322-9",
+  "created_at": "2026-01-15T19:26:14.001716+00:00",
+  "updated_at": "2026-01-15T19:26:14.001716+00:00"
+}

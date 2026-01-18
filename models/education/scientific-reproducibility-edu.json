@@ -1,0 +1,140 @@
+{
+  "id": "scientific-reproducibility-edu",
+  "name": "Scientific Reproducibility Crisis",
+  "description": "Model of research reproducibility. Source: Ioannidis (2005), PLoS Med; Open Science Collaboration (2015).",
+  "stocks": [
+    {
+      "id": "stock-publish",
+      "name": "Published_Studies",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-repro",
+      "name": "Reproducible_Findings",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-new",
+      "name": "New_Publications",
+      "equation": "Publication_Rate",
+      "from_stock": null,
+      "to_stock": "stock-publish",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-retract",
+      "name": "Retractions",
+      "equation": "Published_Studies * Retraction_Rate",
+      "from_stock": "stock-publish",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-verify",
+      "name": "Verification",
+      "equation": "Published_Studies * Verification_Rate * Base_Reproducibility",
+      "from_stock": null,
+      "to_stock": "stock-repro",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-fail",
+      "name": "Failed_Replication",
+      "equation": "Reproducible_Findings * Replication_Failure_Rate",
+      "from_stock": "stock-repro",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-pubrate",
+      "name": "Publication_Rate",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-retract",
+      "name": "Retraction_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-verify",
+      "name": "Verification_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-baserepr",
+      "name": "Base_Reproducibility",
+      "equation": "0.5 + 0.005 * TIME",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-failrate",
+      "name": "Replication_Failure_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-ratio",
+      "name": "Reproducibility_Ratio",
+      "equation": "Reproducible_Findings / MAX(1, Published_Studies)",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:55:38.761122+00:00",
+  "updated_at": "2026-01-12T12:55:38.761122+00:00",
+  "source": "https://systemdynamics.org/resources/",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

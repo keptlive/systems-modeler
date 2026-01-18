@@ -1,0 +1,170 @@
+{
+  "id": "ocean-biological-carbon-pump-model-cli",
+  "name": "Ocean Biological Carbon Pump Model",
+  "description": "Model of the ocean biological carbon pump including phytoplankton productivity, export production, and deep ocean carbon storage. Reference: IPCC (2021). Climate Change 2021: The Physical Science Basis. Source: https://www.ipcc.ch/report/ar6/wg1/",
+  "stocks": [
+    {
+      "id": "stock-dic-surface",
+      "name": "DIC_Surface",
+      "initial_value": 2000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-dic-deep",
+      "name": "DIC_Deep",
+      "initial_value": 2300,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-poc",
+      "name": "POC",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-phytoplankton",
+      "name": "Phytoplankton",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-primary-production",
+      "name": "primary_production",
+      "equation": "0",
+      "from_stock": "stock-dic-surface",
+      "to_stock": "stock-phytoplankton",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-grazing",
+      "name": "grazing",
+      "equation": "0",
+      "from_stock": "stock-phytoplankton",
+      "to_stock": "stock-poc",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-export-flux",
+      "name": "export_flux",
+      "equation": "0",
+      "from_stock": "stock-poc",
+      "to_stock": "stock-dic-deep",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-respiration",
+      "name": "respiration",
+      "equation": "0",
+      "from_stock": "stock-poc",
+      "to_stock": "stock-dic-surface",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-upwelling",
+      "name": "upwelling",
+      "equation": "0",
+      "from_stock": "stock-dic-deep",
+      "to_stock": "stock-dic-surface",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-max-growth",
+      "name": "max_growth",
+      "equation": "2.0",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-light-half-sat",
+      "name": "light_half_sat",
+      "equation": "50",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-nutrient-half-sat",
+      "name": "nutrient_half_sat",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-sinking-rate",
+      "name": "sinking_rate",
+      "equation": "100",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-remineralization-rate",
+      "name": "remineralization_rate",
+      "equation": "0.05",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-export-efficiency",
+      "name": "export_efficiency",
+      "equation": "0.15",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.715166Z",
+  "updated_at": "2026-01-11T20:04:50.715166Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

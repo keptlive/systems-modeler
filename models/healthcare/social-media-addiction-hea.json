@@ -1,0 +1,213 @@
+{
+  "id": "social-media-addiction-hea",
+  "name": "Social Media Addiction Dynamics",
+  "description": "Model of social media usage patterns and addiction development. Captures engagement, dopamine response, and well-being impacts. Based on behavioral addiction research and digital well-being studies. Reference: Koob, G. F., & Volkow, N. D. (2016). Neurobiology of addiction. Lancet Psychiatry. Source: https://doi.org/10.1016/S2215-0366(16)00104-8",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Daily_Usage_Hours",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Tolerance_Level",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Well_Being",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "FOMO_Anxiety",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Usage_Change",
+      "equation": "(Desired_Usage - Daily_Usage_Hours) / Usage_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Tolerance_Development",
+      "equation": "(Daily_Usage_Hours / 2 - Tolerance_Level) / Tolerance_Time",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Well_Being_Change",
+      "equation": "(Baseline_Well_Being - Negative_Impact - Well_Being) / Well_Being_Time",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Anxiety_Change",
+      "equation": "(FOMO_Driver + Withdrawal_Effect - FOMO_Anxiety) / Anxiety_Time",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 250,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Platform_Engagement_Design",
+      "equation": "1.5",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Usage_Adjustment_Time",
+      "equation": "7",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Tolerance_Time",
+      "equation": "30",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Well_Being_Time",
+      "equation": "14",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Baseline_Well_Being",
+      "equation": "85",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Satisfaction_Per_Hour",
+      "equation": "10 / Tolerance_Level",
+      "position": {
+        "x": 300,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Desired_Usage",
+      "equation": "(FOMO_Anxiety / 20 + 1) * Tolerance_Level * Platform_Engagement_Design",
+      "position": {
+        "x": 500,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Negative_Impact",
+      "equation": "IF Daily_Usage_Hours > 4 THEN (Daily_Usage_Hours - 4) * 5 ELSE 0",
+      "position": {
+        "x": 150,
+        "y": 180
+      }
+    },
+    {
+      "id": "v9",
+      "name": "FOMO_Driver",
+      "equation": "Daily_Usage_Hours * 5 * Platform_Engagement_Design",
+      "position": {
+        "x": 400,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Withdrawal_Effect",
+      "equation": "IF Daily_Usage_Hours < Tolerance_Level THEN (Tolerance_Level - Daily_Usage_Hours) * 10 ELSE 0",
+      "position": {
+        "x": 550,
+        "y": 180
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Anxiety_Time",
+      "equation": "3",
+      "position": {
+        "x": 200,
+        "y": 230
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Addiction_Index",
+      "equation": "Daily_Usage_Hours * Tolerance_Level / 10",
+      "position": {
+        "x": 450,
+        "y": 230
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1016/j.chb.2017.02.001",
+  "reference": "Twenge JM et al. (2018) Increases in Depressive Symptoms, Suicide-Related Outcomes, and Suicide Rates Among U.S. Adolescents. Clinical Psychological Science.",
+  "created_at": "2026-01-12T07:04:13.444157+00:00",
+  "updated_at": "2026-01-12T07:04:13.444157+00:00"
+}

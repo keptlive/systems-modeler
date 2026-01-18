@@ -1,0 +1,167 @@
+{
+  "id": "weitzman-climate-catastrophe-cli",
+  "name": "Weitzman Climate Catastrophe Model",
+  "description": "Martin Weitzman's fat-tail climate risk model showing why extreme outcomes dominate expected damages. Reference: Weitzman, M.L. (2009). On Modeling and Interpreting the Economics of Catastrophic Climate Change.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "CO2_Concentration",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Temperature_Anomaly",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Damage_Accumulation",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Emissions",
+      "equation": "Annual_Emissions",
+      "from_stock": null,
+      "to_stock": "CO2_Concentration",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Natural_Decay",
+      "equation": "CO2_Concentration * 0.002",
+      "from_stock": "CO2_Concentration",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Warming",
+      "equation": "Climate_Sensitivity * LOG(CO2_Concentration / 280) / LOG(2) - Temperature_Anomaly * 0.05",
+      "from_stock": null,
+      "to_stock": "Temperature_Anomaly",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Damage_Flow",
+      "equation": "Catastrophic_Damage",
+      "from_stock": null,
+      "to_stock": "Damage_Accumulation",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Annual_Emissions",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Climate_Sensitivity",
+      "equation": "3.0",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Base_Damage",
+      "equation": "0.01 * Temperature_Anomaly^2",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Fat_Tail_Parameter",
+      "equation": "4",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Catastrophic_Threshold",
+      "equation": "4",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Catastrophe_Probability",
+      "equation": "IF Temperature_Anomaly > Catastrophic_Threshold THEN 1 / (1 + EXP(-(Temperature_Anomaly - Catastrophic_Threshold))) ELSE 0",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Catastrophic_Damage",
+      "equation": "Base_Damage + Catastrophe_Probability * Fat_Tail_Parameter * Temperature_Anomaly",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Expected_Damage_Percent_GDP",
+      "equation": "Catastrophic_Damage * 100",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1162/rest.91.1.1",
+  "reference": "Weitzman, M.L. (2009). On Modeling and Interpreting the Economics of Catastrophic Climate Change. Review of Economics and Statistics, 91(1), 1-19.",
+  "created_at": "2026-01-15T19:56:18.833721+00:00",
+  "updated_at": "2026-01-15T19:56:18.833721+00:00"
+}

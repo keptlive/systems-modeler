@@ -1,0 +1,223 @@
+{
+  "id": "dmp-search-matching-eco",
+  "name": "DMP Search and Matching Model",
+  "description": "Labor market frictions create unemployment even in equilibrium. Workers search for jobs, firms post vacancies, matching creates surplus divided by bargaining. Nobel Prize 2010. Reference: BLS Employment Situation. Source: https://www.bls.gov/",
+  "stocks": [
+    {
+      "id": "stock-unemployment",
+      "name": "Unemployment",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-vacancies",
+      "name": "Vacancies",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-separations",
+      "name": "Separations",
+      "equation": "Separation_Rate * (1 - Unemployment)",
+      "from_stock": null,
+      "to_stock": "stock-unemployment",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-hires",
+      "name": "Hires",
+      "equation": "Match_Rate",
+      "from_stock": "stock-unemployment",
+      "to_stock": null,
+      "position": {
+        "x": 80,
+        "y": 280
+      }
+    },
+    {
+      "id": "flow-vacancy-creation",
+      "name": "Vacancy Creation",
+      "equation": "IF(Expected_Profit > 0, Entry_Rate * Expected_Profit, 0)",
+      "from_stock": null,
+      "to_stock": "stock-vacancies",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-vacancy-filling",
+      "name": "Vacancy Filling",
+      "equation": "Match_Rate",
+      "from_stock": "stock-vacancies",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-separation",
+      "name": "Separation Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-matching",
+      "name": "Matching Efficiency",
+      "equation": "0.7",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-match-rate",
+      "name": "Match Rate",
+      "equation": "Matching_Efficiency * Unemployment^0.5 * Vacancies^0.5",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-tightness",
+      "name": "Labor Market Tightness",
+      "equation": "Vacancies / Unemployment",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-job-finding",
+      "name": "Job Finding Rate",
+      "equation": "Match_Rate / Unemployment",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-vacancy-filling",
+      "name": "Vacancy Filling Rate",
+      "equation": "Match_Rate / Vacancies",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-productivity",
+      "name": "Productivity",
+      "equation": "1",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-wage",
+      "name": "Bargained Wage",
+      "equation": "Bargaining_Power * Productivity + (1 - Bargaining_Power) * Unemployment_Benefit",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-bargaining",
+      "name": "Bargaining Power",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-benefit",
+      "name": "Unemployment Benefit",
+      "equation": "0.4",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-profit",
+      "name": "Expected Profit",
+      "equation": "(Productivity - Bargained_Wage) / (Separation_Rate + Interest_Rate)",
+      "position": {
+        "x": 450,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-interest",
+      "name": "Interest Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 600,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-entry",
+      "name": "Entry Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Unemployment",
+      "to_element": "Match Rate"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Vacancies",
+      "to_element": "Match Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Match Rate",
+      "to_element": "Job Finding Rate"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Expected Profit",
+      "to_element": "Vacancy Creation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:39:15.413520+00:00",
+  "updated_at": "2026-01-12T07:39:15.413529+00:00",
+  "source": "https://doi.org/10.2307/2937895",
+  "reference": "Mortensen DT, Pissarides CA. Job Creation and Job Destruction in the Theory of Unemployment. Review of Economic Studies. 1994;61(3):397-415. Nobel Prize 2010."
+}

@@ -1,0 +1,84 @@
+{
+  "id": "gompertz-tumor-growth-hea",
+  "name": "Gompertz Tumor Growth Model",
+  "description": "Classic tumor growth model with Gompertz dynamics showing decelerated growth. Source: Laird (1964), British J Cancer.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Tumor_Volume",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Tumor_Growth",
+      "equation": "alpha * Tumor_Volume * LN(K / Tumor_Volume)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "alpha",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "K",
+      "equation": "1000",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Doubling_Time",
+      "equation": "LN(2) / alpha",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Growth_Fraction",
+      "equation": "alpha * LN(K / Tumor_Volume)",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Tumor_Volume",
+      "to_element": "Tumor_Growth"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-15T14:39:40.986589+00:00",
+  "updated_at": "2026-01-15T14:39:40.986593+00:00",
+  "source": "https://doi.org/10.1038/bjc.1964.55",
+  "reference": "Laird, A.K. (1964). Dynamics of tumour growth. British J Cancer 18:490-502."
+}

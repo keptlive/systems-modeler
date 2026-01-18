@@ -1,0 +1,910 @@
+{
+  "id": "sales-agent-market-building-dynamics",
+  "name": "Sales Agent Market Building Dynamics",
+  "description": "Model from Sales_Agent_Market_Building_Dynamics.mdl",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Total_Cumulative_Sales",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Tenure",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Total_Cumulative_Income",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Months_of_Buffer",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Tier_2_Clients",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "s6",
+      "name": "Tier_2_Leads",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "s7",
+      "name": "Tier_1_Leads",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 500
+      }
+    },
+    {
+      "id": "s8",
+      "name": "Tier_1_Clients",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 500
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Accumulating_Sales",
+      "equation": "Tier_1_Sales + Tier_2_Sales",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Accumulating_Tenure",
+      "equation": "Still_Employed",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Tier_2_Referrals",
+      "equation": "Referrals_from_Tier_2_Clients * (1-Down_Referral_Fraction)",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Effort_Remaining_after_Servicing_Existing_Clients",
+      "equation": "MAX(Sales_Effort_Available - (Effort_Devoted_to_Tier_1_Clients + Effort_Devoted_to_Tier_2_Clients\\ ), 0)",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Down_Referral_Fraction",
+      "equation": "0.2",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Effort_Devoted_to_Tier_2_Leads",
+      "equation": "MIN(Effort_Remaining_after_Servicing_Existing_Clients, Effort_Required_to_Make_a_Sale\\ * Tier_2_Leads / Minimum_Time_to_Make_a_Sale )",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Tier_2_Lead_Aquisition",
+      "equation": "Qualification_Rate * (Tier_2_Referrals + Tier_2_Referrals_from_Tier_1)",
+      "position": {
+        "x": 230,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Tier_1_Referrals_from_Tier_2",
+      "equation": "Referrals_from_Tier_2_Clients * Down_Referral_Fraction",
+      "position": {
+        "x": 360,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Effort_Remaining_after_Servicing_Tier_2_Leads",
+      "equation": "MAX(Effort_Remaining_after_Servicing_Existing_Clients - Effort_Devoted_to_Tier_2_Leads\\ , 0)",
+      "position": {
+        "x": 490,
+        "y": 130
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Income",
+      "equation": "Tier_1_Income + Tier_2_Income + IF THEN ELSE(Time < Startup_Subsidy_Length, Startup_Subsidy\\ , 0 )",
+      "position": {
+        "x": 620,
+        "y": 130
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Qualification_Rate",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 210
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Tier_1_Lead_Aquisition",
+      "equation": "Qualification_Rate * (Tier_1_Referrals + Tier_1_Referrals_from_Tier_2)",
+      "position": {
+        "x": 230,
+        "y": 210
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Success_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 360,
+        "y": 210
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Tier_1_Sales",
+      "equation": "Success_Rate*MIN(Effort_Devoted_to_Tier_1_Leads / Effort_Required_to_Make_a_Sale, Tier_1_Leads\\ /Minimum_Time_to_Make_a_Sale)",
+      "position": {
+        "x": 490,
+        "y": 210
+      }
+    },
+    {
+      "id": "v15",
+      "name": "Tier_2_Sales",
+      "equation": "Success_Rate*MIN(Effort_Devoted_to_Tier_2_Leads / Effort_Required_to_Make_a_Sale, Tier_2_Leads\\ /Minimum_Time_to_Make_a_Sale)",
+      "position": {
+        "x": 620,
+        "y": 210
+      }
+    },
+    {
+      "id": "v16",
+      "name": "Still_Employed",
+      "equation": "IF THEN ELSE(Months_of_Buffer < 0 , 0 , 1 )",
+      "position": {
+        "x": 100,
+        "y": 290
+      }
+    },
+    {
+      "id": "v17",
+      "name": "Effort_Devoted_to_Tier_1_Clients",
+      "equation": "Tier_1_Clients * Time_per_Client_Meeting * Frequency_of_Meetings",
+      "position": {
+        "x": 230,
+        "y": 290
+      }
+    },
+    {
+      "id": "v18",
+      "name": "Tier_1_Income",
+      "equation": "Tier_1_Sales * Months_of_Expenses_per_Tier_1_Sale",
+      "position": {
+        "x": 360,
+        "y": 290
+      }
+    },
+    {
+      "id": "v19",
+      "name": "Effort_Devoted_to_Tier_2_Clients",
+      "equation": "Tier_2_Clients * Time_per_Client_Meeting * Frequency_of_Meetings",
+      "position": {
+        "x": 490,
+        "y": 290
+      }
+    },
+    {
+      "id": "v20",
+      "name": "Fraction_of_Effort_for_Sales",
+      "equation": "0.25",
+      "position": {
+        "x": 620,
+        "y": 290
+      }
+    },
+    {
+      "id": "v21",
+      "name": "Expenses",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 370
+      }
+    },
+    {
+      "id": "v22",
+      "name": "Sales_Effort_Available",
+      "equation": "Fraction_of_Effort_for_Sales * Total_Effort_Available * Still_Employed",
+      "position": {
+        "x": 230,
+        "y": 370
+      }
+    },
+    {
+      "id": "v23",
+      "name": "Initial_Buffer",
+      "equation": "6.0",
+      "position": {
+        "x": 360,
+        "y": 370
+      }
+    },
+    {
+      "id": "v24",
+      "name": "Startup_Subsidy_Length",
+      "equation": "3.0",
+      "position": {
+        "x": 490,
+        "y": 370
+      }
+    },
+    {
+      "id": "v25",
+      "name": "Total_Effort_Available",
+      "equation": "200.0",
+      "position": {
+        "x": 620,
+        "y": 370
+      }
+    },
+    {
+      "id": "v26",
+      "name": "Months_of_Expenses_per_Tier_1_Sale",
+      "equation": "12/300",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "v27",
+      "name": "Months_of_Expenses_per_Tier_2_Sale",
+      "equation": "12/30",
+      "position": {
+        "x": 230,
+        "y": 450
+      }
+    },
+    {
+      "id": "v28",
+      "name": "Tier_2_Income",
+      "equation": "Months_of_Expenses_per_Tier_2_Sale * Tier_2_Sales",
+      "position": {
+        "x": 360,
+        "y": 450
+      }
+    },
+    {
+      "id": "v29",
+      "name": "Startup_Subsidy",
+      "equation": "0.75",
+      "position": {
+        "x": 490,
+        "y": 450
+      }
+    },
+    {
+      "id": "v30",
+      "name": "Time_per_Client_Meeting",
+      "equation": "1.0",
+      "position": {
+        "x": 620,
+        "y": 450
+      }
+    },
+    {
+      "id": "v31",
+      "name": "Client_Lifetime",
+      "equation": "120.0",
+      "position": {
+        "x": 100,
+        "y": 530
+      }
+    },
+    {
+      "id": "v32",
+      "name": "Effort_Devoted_to_Tier_1_Leads",
+      "equation": "Effort_Remaining_after_Servicing_Tier_2_Leads",
+      "position": {
+        "x": 230,
+        "y": 530
+      }
+    },
+    {
+      "id": "v33",
+      "name": "Frequency_of_Meetings",
+      "equation": "1/12",
+      "position": {
+        "x": 360,
+        "y": 530
+      }
+    },
+    {
+      "id": "v34",
+      "name": "Lead_Shelf_Life",
+      "equation": "3.0",
+      "position": {
+        "x": 490,
+        "y": 530
+      }
+    },
+    {
+      "id": "v35",
+      "name": "Referrals_from_Tier_1_Clients",
+      "equation": "Tier_1_Clients * Frequency_of_Meetings * Referrals_per_meeting",
+      "position": {
+        "x": 620,
+        "y": 530
+      }
+    },
+    {
+      "id": "v36",
+      "name": "Referrals_from_Tier_2_Clients",
+      "equation": "Tier_2_Clients * Referrals_per_meeting * Frequency_of_Meetings",
+      "position": {
+        "x": 100,
+        "y": 610
+      }
+    },
+    {
+      "id": "v37",
+      "name": "Referrals_per_meeting",
+      "equation": "2.0",
+      "position": {
+        "x": 230,
+        "y": 610
+      }
+    },
+    {
+      "id": "v38",
+      "name": "Tier_1_Client_Turnover",
+      "equation": "Tier_1_Clients/Client_Lifetime",
+      "position": {
+        "x": 360,
+        "y": 610
+      }
+    },
+    {
+      "id": "v39",
+      "name": "Up_Referral_Fraction",
+      "equation": "0.15",
+      "position": {
+        "x": 490,
+        "y": 610
+      }
+    },
+    {
+      "id": "v40",
+      "name": "Tier_1_Leads_Going_Stale",
+      "equation": "Tier_1_Leads/Lead_Shelf_Life",
+      "position": {
+        "x": 620,
+        "y": 610
+      }
+    },
+    {
+      "id": "v41",
+      "name": "Tier_1_Referrals",
+      "equation": "Referrals_from_Tier_1_Clients * (1-Up_Referral_Fraction)",
+      "position": {
+        "x": 100,
+        "y": 690
+      }
+    },
+    {
+      "id": "v42",
+      "name": "Tier_2_Client_Turnover",
+      "equation": "Tier_2_Clients/Client_Lifetime",
+      "position": {
+        "x": 230,
+        "y": 690
+      }
+    },
+    {
+      "id": "v43",
+      "name": "Tier_2_Leads_Going_Stale",
+      "equation": "Tier_2_Leads/Lead_Shelf_Life",
+      "position": {
+        "x": 360,
+        "y": 690
+      }
+    },
+    {
+      "id": "v44",
+      "name": "Tier_2_Referrals_from_Tier_1",
+      "equation": "Referrals_from_Tier_1_Clients * Up_Referral_Fraction",
+      "position": {
+        "x": 490,
+        "y": 690
+      }
+    },
+    {
+      "id": "v45",
+      "name": "Effort_Required_to_Make_a_Sale",
+      "equation": "4.0",
+      "position": {
+        "x": 620,
+        "y": 690
+      }
+    },
+    {
+      "id": "v46",
+      "name": "Minimum_Time_to_Make_a_Sale",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 770
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Tier_2_Sales",
+      "to_element": "Accumulating_Sales"
+    },
+    {
+      "id": "c2",
+      "from_element": "Tier_1_Sales",
+      "to_element": "Accumulating_Sales"
+    },
+    {
+      "id": "c3",
+      "from_element": "Still_Employed",
+      "to_element": "Accumulating_Tenure"
+    },
+    {
+      "id": "c4",
+      "from_element": "Down_Referral_Fraction",
+      "to_element": "Tier_2_Referrals"
+    },
+    {
+      "id": "c5",
+      "from_element": "Referrals_from_Tier_2_Clients",
+      "to_element": "Tier_2_Referrals"
+    },
+    {
+      "id": "c6",
+      "from_element": "Tier_2_Clients",
+      "to_element": "Tier_2_Referrals"
+    },
+    {
+      "id": "c7",
+      "from_element": "Tier_1_Clients",
+      "to_element": "Effort_Remaining_after_Servicing_Existing_Clients"
+    },
+    {
+      "id": "c8",
+      "from_element": "Sales_Effort_Available",
+      "to_element": "Effort_Remaining_after_Servicing_Existing_Clients"
+    },
+    {
+      "id": "c9",
+      "from_element": "Effort_Devoted_to_Tier_1_Clients",
+      "to_element": "Effort_Remaining_after_Servicing_Existing_Clients"
+    },
+    {
+      "id": "c10",
+      "from_element": "Effort_Devoted_to_Tier_2_Clients",
+      "to_element": "Effort_Remaining_after_Servicing_Existing_Clients"
+    },
+    {
+      "id": "c11",
+      "from_element": "Tier_2_Clients",
+      "to_element": "Effort_Remaining_after_Servicing_Existing_Clients"
+    },
+    {
+      "id": "c12",
+      "from_element": "Effort_Required_to_Make_a_Sale",
+      "to_element": "Effort_Devoted_to_Tier_2_Leads"
+    },
+    {
+      "id": "c13",
+      "from_element": "Effort_Remaining_after_Servicing_Existing_Clients",
+      "to_element": "Effort_Devoted_to_Tier_2_Leads"
+    },
+    {
+      "id": "c14",
+      "from_element": "Tier_2_Leads",
+      "to_element": "Effort_Devoted_to_Tier_2_Leads"
+    },
+    {
+      "id": "c15",
+      "from_element": "Minimum_Time_to_Make_a_Sale",
+      "to_element": "Effort_Devoted_to_Tier_2_Leads"
+    },
+    {
+      "id": "c16",
+      "from_element": "Tier_2_Referrals_from_Tier_1",
+      "to_element": "Tier_2_Lead_Aquisition"
+    },
+    {
+      "id": "c17",
+      "from_element": "Qualification_Rate",
+      "to_element": "Tier_2_Lead_Aquisition"
+    },
+    {
+      "id": "c18",
+      "from_element": "Tier_2_Referrals",
+      "to_element": "Tier_2_Lead_Aquisition"
+    },
+    {
+      "id": "c19",
+      "from_element": "Down_Referral_Fraction",
+      "to_element": "Tier_1_Referrals_from_Tier_2"
+    },
+    {
+      "id": "c20",
+      "from_element": "Referrals_from_Tier_2_Clients",
+      "to_element": "Tier_1_Referrals_from_Tier_2"
+    },
+    {
+      "id": "c21",
+      "from_element": "Tier_2_Clients",
+      "to_element": "Tier_1_Referrals_from_Tier_2"
+    },
+    {
+      "id": "c22",
+      "from_element": "Effort_Remaining_after_Servicing_Existing_Clients",
+      "to_element": "Effort_Remaining_after_Servicing_Tier_2_Leads"
+    },
+    {
+      "id": "c23",
+      "from_element": "Tier_2_Leads",
+      "to_element": "Effort_Remaining_after_Servicing_Tier_2_Leads"
+    },
+    {
+      "id": "c24",
+      "from_element": "Effort_Devoted_to_Tier_2_Leads",
+      "to_element": "Effort_Remaining_after_Servicing_Tier_2_Leads"
+    },
+    {
+      "id": "c25",
+      "from_element": "Tier_2_Income",
+      "to_element": "Income"
+    },
+    {
+      "id": "c26",
+      "from_element": "Tier_1_Income",
+      "to_element": "Income"
+    },
+    {
+      "id": "c27",
+      "from_element": "Startup_Subsidy_Length",
+      "to_element": "Income"
+    },
+    {
+      "id": "c28",
+      "from_element": "Startup_Subsidy",
+      "to_element": "Income"
+    },
+    {
+      "id": "c29",
+      "from_element": "Tier_1_Referrals_from_Tier_2",
+      "to_element": "Tier_1_Lead_Aquisition"
+    },
+    {
+      "id": "c30",
+      "from_element": "Tier_1_Referrals",
+      "to_element": "Tier_1_Lead_Aquisition"
+    },
+    {
+      "id": "c31",
+      "from_element": "Qualification_Rate",
+      "to_element": "Tier_1_Lead_Aquisition"
+    },
+    {
+      "id": "c32",
+      "from_element": "Success_Rate",
+      "to_element": "Tier_1_Sales"
+    },
+    {
+      "id": "c33",
+      "from_element": "Effort_Devoted_to_Tier_1_Leads",
+      "to_element": "Tier_1_Sales"
+    },
+    {
+      "id": "c34",
+      "from_element": "Effort_Required_to_Make_a_Sale",
+      "to_element": "Tier_1_Sales"
+    },
+    {
+      "id": "c35",
+      "from_element": "Tier_1_Leads",
+      "to_element": "Tier_1_Sales"
+    },
+    {
+      "id": "c36",
+      "from_element": "Minimum_Time_to_Make_a_Sale",
+      "to_element": "Tier_1_Sales"
+    },
+    {
+      "id": "c37",
+      "from_element": "Success_Rate",
+      "to_element": "Tier_2_Sales"
+    },
+    {
+      "id": "c38",
+      "from_element": "Effort_Required_to_Make_a_Sale",
+      "to_element": "Tier_2_Sales"
+    },
+    {
+      "id": "c39",
+      "from_element": "Tier_2_Leads",
+      "to_element": "Tier_2_Sales"
+    },
+    {
+      "id": "c40",
+      "from_element": "Effort_Devoted_to_Tier_2_Leads",
+      "to_element": "Tier_2_Sales"
+    },
+    {
+      "id": "c41",
+      "from_element": "Minimum_Time_to_Make_a_Sale",
+      "to_element": "Tier_2_Sales"
+    },
+    {
+      "id": "c42",
+      "from_element": "Months_of_Buffer",
+      "to_element": "Still_Employed"
+    },
+    {
+      "id": "c43",
+      "from_element": "Frequency_of_Meetings",
+      "to_element": "Effort_Devoted_to_Tier_1_Clients"
+    },
+    {
+      "id": "c44",
+      "from_element": "Tier_1_Clients",
+      "to_element": "Effort_Devoted_to_Tier_1_Clients"
+    },
+    {
+      "id": "c45",
+      "from_element": "Time_per_Client_Meeting",
+      "to_element": "Effort_Devoted_to_Tier_1_Clients"
+    },
+    {
+      "id": "c46",
+      "from_element": "Expenses",
+      "to_element": "Tier_1_Income"
+    },
+    {
+      "id": "c47",
+      "from_element": "Tier_1_Sales",
+      "to_element": "Tier_1_Income"
+    },
+    {
+      "id": "c48",
+      "from_element": "Months_of_Expenses_per_Tier_1_Sale",
+      "to_element": "Tier_1_Income"
+    },
+    {
+      "id": "c49",
+      "from_element": "Frequency_of_Meetings",
+      "to_element": "Effort_Devoted_to_Tier_2_Clients"
+    },
+    {
+      "id": "c50",
+      "from_element": "Time_per_Client_Meeting",
+      "to_element": "Effort_Devoted_to_Tier_2_Clients"
+    },
+    {
+      "id": "c51",
+      "from_element": "Tier_2_Clients",
+      "to_element": "Effort_Devoted_to_Tier_2_Clients"
+    },
+    {
+      "id": "c52",
+      "from_element": "Fraction_of_Effort_for_Sales",
+      "to_element": "Sales_Effort_Available"
+    },
+    {
+      "id": "c53",
+      "from_element": "Still_Employed",
+      "to_element": "Sales_Effort_Available"
+    },
+    {
+      "id": "c54",
+      "from_element": "Total_Effort_Available",
+      "to_element": "Sales_Effort_Available"
+    },
+    {
+      "id": "c55",
+      "from_element": "Tier_2_Sales",
+      "to_element": "Tier_2_Income"
+    },
+    {
+      "id": "c56",
+      "from_element": "Expenses",
+      "to_element": "Tier_2_Income"
+    },
+    {
+      "id": "c57",
+      "from_element": "Months_of_Expenses_per_Tier_2_Sale",
+      "to_element": "Tier_2_Income"
+    },
+    {
+      "id": "c58",
+      "from_element": "Effort_Remaining_after_Servicing_Tier_2_Leads",
+      "to_element": "Effort_Devoted_to_Tier_1_Leads"
+    },
+    {
+      "id": "c59",
+      "from_element": "Tier_2_Leads",
+      "to_element": "Effort_Devoted_to_Tier_1_Leads"
+    },
+    {
+      "id": "c60",
+      "from_element": "Frequency_of_Meetings",
+      "to_element": "Referrals_from_Tier_1_Clients"
+    },
+    {
+      "id": "c61",
+      "from_element": "Tier_1_Clients",
+      "to_element": "Referrals_from_Tier_1_Clients"
+    },
+    {
+      "id": "c62",
+      "from_element": "Referrals_per_meeting",
+      "to_element": "Referrals_from_Tier_1_Clients"
+    },
+    {
+      "id": "c63",
+      "from_element": "Frequency_of_Meetings",
+      "to_element": "Referrals_from_Tier_2_Clients"
+    },
+    {
+      "id": "c64",
+      "from_element": "Referrals_per_meeting",
+      "to_element": "Referrals_from_Tier_2_Clients"
+    },
+    {
+      "id": "c65",
+      "from_element": "Tier_2_Clients",
+      "to_element": "Referrals_from_Tier_2_Clients"
+    },
+    {
+      "id": "c66",
+      "from_element": "Tier_1_Clients",
+      "to_element": "Tier_1_Client_Turnover"
+    },
+    {
+      "id": "c67",
+      "from_element": "Client_Lifetime",
+      "to_element": "Tier_1_Client_Turnover"
+    },
+    {
+      "id": "c68",
+      "from_element": "Lead_Shelf_Life",
+      "to_element": "Tier_1_Leads_Going_Stale"
+    },
+    {
+      "id": "c69",
+      "from_element": "Tier_1_Leads",
+      "to_element": "Tier_1_Leads_Going_Stale"
+    },
+    {
+      "id": "c70",
+      "from_element": "Up_Referral_Fraction",
+      "to_element": "Tier_1_Referrals"
+    },
+    {
+      "id": "c71",
+      "from_element": "Tier_1_Clients",
+      "to_element": "Tier_1_Referrals"
+    },
+    {
+      "id": "c72",
+      "from_element": "Referrals_from_Tier_1_Clients",
+      "to_element": "Tier_1_Referrals"
+    },
+    {
+      "id": "c73",
+      "from_element": "Client_Lifetime",
+      "to_element": "Tier_2_Client_Turnover"
+    },
+    {
+      "id": "c74",
+      "from_element": "Tier_2_Clients",
+      "to_element": "Tier_2_Client_Turnover"
+    },
+    {
+      "id": "c75",
+      "from_element": "Lead_Shelf_Life",
+      "to_element": "Tier_2_Leads_Going_Stale"
+    },
+    {
+      "id": "c76",
+      "from_element": "Tier_2_Leads",
+      "to_element": "Tier_2_Leads_Going_Stale"
+    },
+    {
+      "id": "c77",
+      "from_element": "Up_Referral_Fraction",
+      "to_element": "Tier_2_Referrals_from_Tier_1"
+    },
+    {
+      "id": "c78",
+      "from_element": "Tier_1_Clients",
+      "to_element": "Tier_2_Referrals_from_Tier_1"
+    },
+    {
+      "id": "c79",
+      "from_element": "Referrals_from_Tier_1_Clients",
+      "to_element": "Tier_2_Referrals_from_Tier_1"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 200.0,
+    "dt": 0.0625
+  },
+  "created_at": "2026-01-15T19:13:16.425805+00:00",
+  "updated_at": "2026-01-15T19:13:16.425805+00:00",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "PySD Cookbook - Educational System Dynamics Models"
+}

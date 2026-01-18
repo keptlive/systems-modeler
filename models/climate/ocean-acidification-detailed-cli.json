@@ -1,0 +1,214 @@
+{
+  "id": "ocean-acidification-detailed-cli",
+  "name": "Detailed Ocean Acidification Model",
+  "description": "Model of ocean carbonate chemistry showing how CO2 absorption changes pH and affects marine calcifiers. Based on Zeebe & Wolf-Gladrow (2001) carbonate chemistry and Orr et al. (2005) projections. Reference: Based on project dynamics models (Lyneis & Ford, 2007). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-dic",
+      "name": "Dissolved Inorganic Carbon",
+      "initial_value": 2100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-alkalinity",
+      "name": "Total Alkalinity",
+      "initial_value": 2300,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-calcifier-pop",
+      "name": "Calcifier Population",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-co2-absorption",
+      "name": "CO2 Absorption",
+      "equation": "Gas_Transfer_Velocity * (Atmospheric_pCO2 - Surface_pCO2) / 1000",
+      "from_stock": null,
+      "to_stock": "stock-dic",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-calcification",
+      "name": "Calcification",
+      "equation": "Calcification_Rate * Calcifier_Population * Omega_Aragonite",
+      "from_stock": "stock-dic",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-alkalinity-change",
+      "name": "Alkalinity Change",
+      "equation": "- 2 * Calcification + Weathering_Input",
+      "from_stock": null,
+      "to_stock": "stock-alkalinity",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-calcifier-growth",
+      "name": "Calcifier Growth",
+      "equation": "Calcifier_Population * Growth_Rate * (1 - Calcifier_Population / Carrying_Capacity) * Stress_Factor",
+      "from_stock": null,
+      "to_stock": "stock-calcifier-pop",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-calcifier-death",
+      "name": "Calcifier Death",
+      "equation": "Calcifier_Population * (Mortality_Rate + Acidification_Mortality)",
+      "from_stock": "stock-calcifier-pop",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-atmospheric-pco2",
+      "name": "Atmospheric pCO2",
+      "equation": "400 + 2 * Time",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-surface-pco2",
+      "name": "Surface pCO2",
+      "equation": "Dissolved_Inorganic_Carbon * 0.19",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gas-transfer-velocity",
+      "name": "Gas Transfer Velocity",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-ph",
+      "name": "pH",
+      "equation": "8.1 - 0.001 * (Dissolved_Inorganic_Carbon - 2100)",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-omega-aragonite",
+      "name": "Omega Aragonite",
+      "equation": "MAX(0, 3 - 0.003 * (Dissolved_Inorganic_Carbon - 2100))",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-calcification-rate",
+      "name": "Calcification Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-weathering-input",
+      "name": "Weathering Input",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-growth-rate",
+      "name": "Calcifier Growth Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-carrying-capacity",
+      "name": "Carrying Capacity",
+      "equation": "200",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-mortality-rate",
+      "name": "Mortality Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-stress-factor",
+      "name": "Stress Factor",
+      "equation": "IF Omega_Aragonite > 1 THEN 1 ELSE Omega_Aragonite",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-acidification-mortality",
+      "name": "Acidification Mortality",
+      "equation": "IF pH < 7.8 THEN 0.1 * (7.8 - pH) ELSE 0",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T21:11:32.978754+00:00",
+  "updated_at": "2026-01-11T21:11:32.978754+00:00",
+  "source": "https://doi.org/10.1016/j.gca.2005.04.003",
+  "reference": "Zeebe RE, Wolf-Gladrow D. CO2 in Seawater: Equilibrium, Kinetics, Isotopes. Elsevier, 2001."
+}

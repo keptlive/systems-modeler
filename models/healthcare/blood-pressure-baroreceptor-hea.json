@@ -1,0 +1,274 @@
+{
+  "id": "blood-pressure-baroreceptor-hea",
+  "name": "Pressure_Response_Time",
+  "description": "Model of arterial blood pressure regulation via baroreceptor reflex. Shows how sympathetic and parasympathetic nervous system activity maintains blood pressure homeostasis. Based on Guyton physiology. Reference: Guyton, A. C. (1991). Blood pressure control. Hypertension. Source: https://doi.org/10.1161/01.HYP.17.5.603",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Arterial_Pressure",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Heart_Rate",
+      "initial_value": 70,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Peripheral_Resistance",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Pressure_Change",
+      "equation": "(Cardiac_Output * Peripheral_Resistance - Arterial_Pressure) / Pressure_Response_Time",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Heart_Rate_Change",
+      "equation": "(Target_Heart_Rate - Heart_Rate) / Heart_Rate_Response_Time",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Resistance_Change",
+      "equation": "(Target_Resistance - Peripheral_Resistance) / Resistance_Response_Time",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Stroke_Volume",
+      "equation": "70",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Cardiac_Output",
+      "equation": "Heart_Rate * Stroke_Volume / 1000",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Baroreceptor_Firing",
+      "equation": "1 / (1 + EXP(-(Arterial_Pressure - 100) / 10))",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Sympathetic_Activity",
+      "equation": "1 - Baroreceptor_Firing",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Parasympathetic_Activity",
+      "equation": "Baroreceptor_Firing",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Target_Heart_Rate",
+      "equation": "70 + 40 * Sympathetic_Activity - 20 * Parasympathetic_Activity",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Target_Resistance",
+      "equation": "1.0 + 0.5 * Sympathetic_Activity",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Pressure_Response_Time",
+      "equation": "2",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Heart_Rate_Response_Time",
+      "equation": "3",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Resistance_Response_Time",
+      "equation": "5",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Set_Point",
+      "equation": "100",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Cardiac_Output",
+      "to_element": "Pressure_Change"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Peripheral_Resistance",
+      "to_element": "Pressure_Change"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Arterial_Pressure",
+      "to_element": "Pressure_Change"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Pressure_Response_Time",
+      "to_element": "Pressure_Change"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Heart_Rate",
+      "to_element": "Heart_Rate_Change"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Target_Heart_Rate",
+      "to_element": "Heart_Rate_Change"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Heart_Rate_Response_Time",
+      "to_element": "Heart_Rate_Change"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Peripheral_Resistance",
+      "to_element": "Resistance_Change"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Resistance_Response_Time",
+      "to_element": "Resistance_Change"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Target_Resistance",
+      "to_element": "Resistance_Change"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Stroke_Volume",
+      "to_element": "Cardiac_Output"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Heart_Rate",
+      "to_element": "Cardiac_Output"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Arterial_Pressure",
+      "to_element": "Baroreceptor_Firing"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Baroreceptor_Firing",
+      "to_element": "Sympathetic_Activity"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Baroreceptor_Firing",
+      "to_element": "Parasympathetic_Activity"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Parasympathetic_Activity",
+      "to_element": "Target_Heart_Rate"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Sympathetic_Activity",
+      "to_element": "Target_Heart_Rate"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Sympathetic_Activity",
+      "to_element": "Target_Resistance"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T07:23:15.854565+00:00",
+  "updated_at": "2026-01-12T07:23:15.854565+00:00",
+  "source": "https://doi.org/10.1152/physrev.00035.2019",
+  "reference": "Guyton & Hall (2020). Textbook of Medical Physiology, 14th Ed. Baroreceptor control of blood pressure."
+}

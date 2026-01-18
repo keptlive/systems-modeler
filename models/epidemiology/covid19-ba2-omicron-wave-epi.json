@@ -1,0 +1,32 @@
+{
+  "id": "covid19-ba2-omicron-wave-epi",
+  "name": "COVID-19 BA.2 Omicron Wave Model",
+  "description": "SEIR model calibrated for the BA.2 Omicron subvariant wave (early 2022), featuring increased transmissibility and immune escape compared to original Omicron. Source: Lyngse et al. (2022). Nature Communications. DOI: 10.1038/s41467-022-28507-1",
+  "stocks": [
+    {"id": "stock-s", "name": "Susceptible", "initial_value": 800000, "equation": "", "position": {"x": 100, "y": 200}},
+    {"id": "stock-e", "name": "Exposed", "initial_value": 1000, "equation": "", "position": {"x": 250, "y": 200}},
+    {"id": "stock-i", "name": "Infected", "initial_value": 500, "equation": "", "position": {"x": 400, "y": 200}},
+    {"id": "stock-r", "name": "Recovered", "initial_value": 198500, "equation": "", "position": {"x": 550, "y": 200}},
+    {"id": "stock-v", "name": "Vaccinated", "initial_value": 0, "equation": "", "position": {"x": 400, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-exposure", "name": "Exposure_Rate", "equation": "Beta * Susceptible * Infected / Total_Population", "from_stock": "stock-s", "to_stock": "stock-e", "position": {"x": 175, "y": 200}},
+    {"id": "flow-infection", "name": "Infection_Rate", "equation": "Exposed / Latent_Period", "from_stock": "stock-e", "to_stock": "stock-i", "position": {"x": 325, "y": 200}},
+    {"id": "flow-recovery", "name": "Recovery_Rate", "equation": "Infected / Infectious_Period", "from_stock": "stock-i", "to_stock": "stock-r", "position": {"x": 475, "y": 200}},
+    {"id": "flow-vaccination", "name": "Vaccination_Rate", "equation": "Susceptible * Daily_Vaccination_Rate", "from_stock": "stock-s", "to_stock": "stock-v", "position": {"x": 250, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-beta", "name": "Beta", "equation": "0.65", "position": {"x": 175, "y": 100}},
+    {"id": "var-latent", "name": "Latent_Period", "equation": "2.5", "position": {"x": 325, "y": 100}},
+    {"id": "var-infectious", "name": "Infectious_Period", "equation": "5", "position": {"x": 475, "y": 100}},
+    {"id": "var-total", "name": "Total_Population", "equation": "Susceptible + Exposed + Infected + Recovered + Vaccinated", "position": {"x": 300, "y": 50}},
+    {"id": "var-r0", "name": "R0_BA2", "equation": "Beta * Infectious_Period", "position": {"x": 450, "y": 50}},
+    {"id": "var-vax-rate", "name": "Daily_Vaccination_Rate", "equation": "0.001", "position": {"x": 100, "y": 350}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 180, "dt": 0.25},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1038/s41467-022-28507-1",
+  "reference": "Lyngse, F.P. et al. (2022). Household transmission of SARS-CoV-2 Omicron variant of concern subvariants BA.1 and BA.2 in Denmark. Nature Communications, 13, 5760."
+}

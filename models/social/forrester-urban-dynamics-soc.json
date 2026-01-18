@@ -1,0 +1,252 @@
+{
+  "id": "forrester-urban-dynamics-soc",
+  "name": "Forrester Urban Dynamics",
+  "description": "A simplified version of Jay Forrester's Urban Dynamics model (1969). This pioneering SD model examines the life cycle of urban areas through the interaction of industry, housing, and population. Reference: Forrester, J. W. (1961). Industrial Dynamics. MIT Press. Source: https://systemdynamics.org/",
+  "source": "https://doi.org/10.1177/002188637000600107",
+  "reference": "Forrester JW. Urban Dynamics. MIT Press, 1969.",
+  "stocks": [
+    {
+      "id": "stock-pop",
+      "name": "Population",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-housing",
+      "name": "Housing",
+      "initial_value": 30000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-industry",
+      "name": "Industry",
+      "initial_value": 20000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-migration",
+      "name": "Net Migration",
+      "equation": "Population * Migration_Rate * (Attractiveness - 1)",
+      "from_stock": null,
+      "to_stock": "stock-pop",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-births",
+      "name": "Net Births",
+      "equation": "Population * Birth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-pop",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-construction",
+      "name": "Construction",
+      "equation": "Housing * Construction_Rate * Housing_Demand",
+      "from_stock": null,
+      "to_stock": "stock-housing",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-demolition",
+      "name": "Demolition",
+      "equation": "Housing / Housing_Lifetime",
+      "from_stock": "stock-housing",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-new-industry",
+      "name": "New Industry",
+      "equation": "Industry * Industry_Growth * Business_Climate",
+      "from_stock": null,
+      "to_stock": "stock-industry",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-industry-decline",
+      "name": "Industry Decline",
+      "equation": "Industry / Industry_Lifetime",
+      "from_stock": "stock-industry",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-attractiveness",
+      "name": "Attractiveness",
+      "equation": "Jobs_per_Capita * Housing_Availability",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-jobs-per-capita",
+      "name": "Jobs per Capita",
+      "equation": "Industry * Jobs_per_Industry / Population",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-housing-availability",
+      "name": "Housing Availability",
+      "equation": "Housing * People_per_Housing / Population",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-housing-demand",
+      "name": "Housing Demand",
+      "equation": "MAX(0, 1 + (Population / (Housing * People_per_Housing) - 1) * 0.5)",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-business-climate",
+      "name": "Business Climate",
+      "equation": "1 - Land_Fraction * 0.5",
+      "position": {
+        "x": 650,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-land-fraction",
+      "name": "Land Fraction",
+      "equation": "(Housing + Industry) / Total_Land",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-migration-rate",
+      "name": "Migration Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-birth-rate",
+      "name": "Birth Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-construction-rate",
+      "name": "Construction Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-housing-lifetime",
+      "name": "Housing Lifetime",
+      "equation": "50",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-industry-growth",
+      "name": "Industry Growth",
+      "equation": "0.04",
+      "position": {
+        "x": 600,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-industry-lifetime",
+      "name": "Industry Lifetime",
+      "equation": "30",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-jobs-per-ind",
+      "name": "Jobs per Industry",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-people-per-housing",
+      "name": "People per Housing",
+      "equation": "3",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-total-land",
+      "name": "Total Land",
+      "equation": "100000",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T21:34:33.046691+00:00",
+  "updated_at": "2026-01-11T21:34:33.046691+00:00"
+}

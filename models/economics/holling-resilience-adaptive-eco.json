@@ -1,0 +1,31 @@
+{
+  "id": "holling-resilience-adaptive-eco",
+  "name": "Holling Adaptive Cycle Resilience Model",
+  "description": "C.S. Holling's (1973, 2001) adaptive cycle model showing how ecosystems cycle through exploitation (r), conservation (K), release (Ω), and reorganization (α) phases. Foundation of resilience thinking and panarchy theory in social-ecological systems.",
+  "stocks": [
+    {"id": "stock-potential", "name": "Potential", "initial_value": 10, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-connectedness", "name": "Connectedness", "initial_value": 0.3, "equation": "", "position": {"x": 400, "y": 200}},
+    {"id": "stock-resilience", "name": "Resilience", "initial_value": 0.8, "equation": "", "position": {"x": 600, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-potential-change", "name": "Potential Change", "equation": "IF Phase = 1 THEN Growth_Rate * Potential * (1 - Potential / K) ELSE IF Phase = 3 THEN -Release_Rate * Potential ELSE Reorganization_Rate * (K - Potential)", "from_stock": null, "to_stock": "stock-potential", "position": {"x": 100, "y": 200}},
+    {"id": "flow-connectedness-change", "name": "Connectedness Change", "equation": "IF Phase = 2 THEN Connection_Rate * (1 - Connectedness) ELSE IF Phase = 3 THEN -Disconnection_Rate * Connectedness ELSE 0", "from_stock": null, "to_stock": "stock-connectedness", "position": {"x": 300, "y": 200}},
+    {"id": "flow-resilience-change", "name": "Resilience Change", "equation": "IF Phase = 4 THEN Recovery_Rate * (1 - Resilience) ELSE IF Phase = 2 THEN -Rigidity_Rate * Resilience ELSE 0", "from_stock": null, "to_stock": "stock-resilience", "position": {"x": 500, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-k", "name": "K", "equation": "100", "position": {"x": 150, "y": 100}},
+    {"id": "var-growth-rate", "name": "Growth Rate", "equation": "0.2", "position": {"x": 300, "y": 100}},
+    {"id": "var-release-rate", "name": "Release Rate", "equation": "0.5", "position": {"x": 450, "y": 100}},
+    {"id": "var-reorganization-rate", "name": "Reorganization Rate", "equation": "0.1", "position": {"x": 600, "y": 100}},
+    {"id": "var-connection-rate", "name": "Connection Rate", "equation": "0.05", "position": {"x": 150, "y": 300}},
+    {"id": "var-disconnection-rate", "name": "Disconnection Rate", "equation": "0.8", "position": {"x": 300, "y": 300}},
+    {"id": "var-recovery-rate", "name": "Recovery Rate", "equation": "0.3", "position": {"x": 450, "y": 300}},
+    {"id": "var-rigidity-rate", "name": "Rigidity Rate", "equation": "0.02", "position": {"x": 600, "y": 300}},
+    {"id": "var-phase", "name": "Phase", "equation": "IF Resilience < 0.2 THEN 3 ELSE IF Connectedness > 0.7 THEN 2 ELSE IF Potential < 20 THEN 4 ELSE 1", "position": {"x": 300, "y": 400}},
+    {"id": "var-collapse-probability", "name": "Collapse Probability", "equation": "Connectedness * (1 - Resilience)", "position": {"x": 500, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 200, "dt": 0.5},
+  "source": "https://doi.org/10.1146/annurev.es.04.110173.000245",
+  "reference": "Holling CS. Resilience and Stability of Ecological Systems. Annual Review of Ecology and Systematics. 1973;4:1-23."
+}

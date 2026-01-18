@@ -1,0 +1,184 @@
+{
+  "id": "misinformation-spread-soc",
+  "name": "Misinformation Spread Model",
+  "description": "Model of misinformation dynamics on social media showing creation, spread, fact-checking, and belief persistence. Based on Vosoughi et al. (2018). Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Uninformed Population",
+      "initial_value": 900000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Misinformed",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Correctly Informed",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Corrected",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Misinformation Exposure",
+      "equation": "Uninformed_Population * Misinformation_Contact_Rate * Misinformed / Total_Population",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Truth Exposure",
+      "equation": "Uninformed_Population * Truth_Contact_Rate * Correctly_Informed / Total_Population",
+      "from_stock": "s1",
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Fact Check Correction",
+      "equation": "Misinformed * Correction_Rate",
+      "from_stock": "s2",
+      "to_stock": "s4",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Belief Reversion",
+      "equation": "Corrected * Reversion_Rate",
+      "from_stock": "s4",
+      "to_stock": "s2",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Total Population",
+      "equation": "1000000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Misinformation Contact Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Truth Contact Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Correction Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Reversion Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Misinformation Prevalence",
+      "equation": "Misinformed / Total_Population",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Effective Reproduction",
+      "equation": "Misinformation_Contact_Rate * Uninformed_Population / Total_Population",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Misinformed",
+      "to_element": "Misinformation Exposure"
+    },
+    {
+      "id": "c2",
+      "from_element": "Correctly Informed",
+      "to_element": "Truth Exposure"
+    },
+    {
+      "id": "c3",
+      "from_element": "Corrected",
+      "to_element": "Belief Reversion"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:45:26.877628+00:00",
+  "updated_at": "2026-01-12T01:45:26.877632+00:00",
+  "source": "https://doi.org/10.1126/science.aap9559",
+  "reference": "Vosoughi S, Roy D, Aral S. The spread of true and false news online. Science. 2018;359(6380):1146-1151."
+}

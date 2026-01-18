@@ -1,0 +1,429 @@
+{
+  "id": "lac-operon-gene-regulation-phy",
+  "name": "Protein_Decay_Rate",
+  "description": "Model of E. coli lac operon gene regulation. Shows how lactose and glucose control beta-galactosidase expression through repressor and CAP regulation. Nobel Prize 1965 research (Jacob, Lwoff, Monod). Reference: Cobelli, C., et al. (2009). Diabetes: Models, Signals, and Control. IEEE Reviews in Biomedical Engineering. Source: https://doi.org/10.1109/RBME.2009.2036073",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Lac_mRNA",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Beta_Galactosidase",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Internal_Lactose",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Allolactose",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Transcription",
+      "equation": "Basal_Transcription + Induced_Transcription",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "mRNA_Degradation",
+      "equation": "Lac_mRNA * mRNA_Decay_Rate",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Translation",
+      "equation": "Lac_mRNA * Translation_Rate",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Protein_Degradation",
+      "equation": "Beta_Galactosidase * Protein_Decay_Rate",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Lactose_Uptake",
+      "equation": "External_Lactose * Permease_Activity",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Lactose_Metabolism",
+      "equation": "Internal_Lactose * Beta_Galactosidase * Metabolism_Rate",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Allolactose_Formation",
+      "equation": "Internal_Lactose * Beta_Galactosidase * Conversion_Rate",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "f8",
+      "name": "Allolactose_Decay",
+      "equation": "Allolactose * Allolactose_Decay_Rate",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "External_Lactose",
+      "equation": "1.0 * STEP(10)",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Glucose_Level",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Repressor_Free",
+      "equation": "1 / (1 + Allolactose / K_lac)",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v4",
+      "name": "K_lac",
+      "equation": "0.5",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "v5",
+      "name": "CAP_Activation",
+      "equation": "1 / (1 + Glucose_Level / K_glucose)",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "K_glucose",
+      "equation": "0.2",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Basal_Transcription",
+      "equation": "0.01",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Max_Transcription",
+      "equation": "1.0",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Induced_Transcription",
+      "equation": "Max_Transcription * (1 - Repressor_Free) * CAP_Activation",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "v10",
+      "name": "mRNA_Decay_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Translation_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Protein_Decay_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Permease_Activity",
+      "equation": "Beta_Galactosidase * 0.1",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Metabolism_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 700,
+        "y": 350
+      }
+    },
+    {
+      "id": "v15",
+      "name": "Conversion_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "v16",
+      "name": "Allolactose_Decay_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Basal_Transcription",
+      "to_element": "Transcription"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Induced_Transcription",
+      "to_element": "Transcription"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "mRNA_Decay_Rate",
+      "to_element": "mRNA_Degradation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Lac_mRNA",
+      "to_element": "mRNA_Degradation"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Lac_mRNA",
+      "to_element": "Translation"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Translation_Rate",
+      "to_element": "Translation"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Beta_Galactosidase",
+      "to_element": "Protein_Degradation"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Protein_Decay_Rate",
+      "to_element": "Protein_Degradation"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Permease_Activity",
+      "to_element": "Lactose_Uptake"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "External_Lactose",
+      "to_element": "Lactose_Uptake"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Internal_Lactose",
+      "to_element": "Lactose_Metabolism"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Metabolism_Rate",
+      "to_element": "Lactose_Metabolism"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Beta_Galactosidase",
+      "to_element": "Lactose_Metabolism"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Internal_Lactose",
+      "to_element": "Allolactose_Formation"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Beta_Galactosidase",
+      "to_element": "Allolactose_Formation"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Conversion_Rate",
+      "to_element": "Allolactose_Formation"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Allolactose_Decay_Rate",
+      "to_element": "Allolactose_Decay"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Allolactose",
+      "to_element": "Allolactose_Decay"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "K_lac",
+      "to_element": "Repressor_Free"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Allolactose",
+      "to_element": "Repressor_Free"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "K_glucose",
+      "to_element": "CAP_Activation"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Glucose_Level",
+      "to_element": "CAP_Activation"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "Transcription",
+      "to_element": "Induced_Transcription"
+    },
+    {
+      "id": "conn-24",
+      "from_element": "Repressor_Free",
+      "to_element": "Induced_Transcription"
+    },
+    {
+      "id": "conn-25",
+      "from_element": "CAP_Activation",
+      "to_element": "Induced_Transcription"
+    },
+    {
+      "id": "conn-26",
+      "from_element": "Max_Transcription",
+      "to_element": "Induced_Transcription"
+    },
+    {
+      "id": "conn-27",
+      "from_element": "Beta_Galactosidase",
+      "to_element": "Permease_Activity"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T07:23:15.854912+00:00",
+  "updated_at": "2026-01-12T07:23:15.854912+00:00",
+  "source": "https://doi.org/10.1016/0022-5193(61)90072-7",
+  "reference": "Jacob & Monod (1961). Genetic regulatory mechanisms. Nobel Prize 1965. Monod equation: PNAS."
+}

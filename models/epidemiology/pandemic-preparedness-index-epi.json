@@ -1,0 +1,269 @@
+{
+  "id": "pandemic-preparedness-index-epi",
+  "name": "Pandemic Preparedness Index Model",
+  "description": "Models pandemic preparedness capacity across healthcare, surveillance, and response dimensions. Based on Global Health Security Index methodology. Reference: Cachon, G., & Terwiesch, C. (2012). Matching Supply with Demand. McGraw-Hill. Source: https://www.mheducation.com/",
+  "stocks": [
+    {
+      "id": "stock-surveillance-capacity",
+      "name": "Surveillance_Capacity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-healthcare-capacity",
+      "name": "Healthcare_Capacity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-response-capacity",
+      "name": "Response_Capacity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-stockpile-level",
+      "name": "Medical_Stockpile",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-preparedness-index",
+      "name": "Preparedness_Index",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-surveillance-investment",
+      "name": "Surveillance_Investment",
+      "equation": "Budget * Surveillance_Priority / Investment_Cost",
+      "from_stock": null,
+      "to_stock": "stock-surveillance-capacity",
+      "position": {
+        "x": 75,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-surveillance-decay",
+      "name": "Surveillance_Decay",
+      "equation": "Surveillance_Capacity * Decay_Rate",
+      "from_stock": "stock-surveillance-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-healthcare-investment",
+      "name": "Healthcare_Investment",
+      "equation": "Budget * Healthcare_Priority / Investment_Cost",
+      "from_stock": null,
+      "to_stock": "stock-healthcare-capacity",
+      "position": {
+        "x": 275,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-healthcare-decay",
+      "name": "Healthcare_Decay",
+      "equation": "Healthcare_Capacity * Decay_Rate",
+      "from_stock": "stock-healthcare-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-response-investment",
+      "name": "Response_Investment",
+      "equation": "Budget * Response_Priority / Investment_Cost",
+      "from_stock": null,
+      "to_stock": "stock-response-capacity",
+      "position": {
+        "x": 475,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-response-decay",
+      "name": "Response_Decay",
+      "equation": "Response_Capacity * Decay_Rate",
+      "from_stock": "stock-response-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-stockpile-replenishment",
+      "name": "Stockpile_Replenishment",
+      "equation": "Stockpile_Budget / Unit_Cost",
+      "from_stock": null,
+      "to_stock": "stock-stockpile-level",
+      "position": {
+        "x": 175,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-stockpile-expiry",
+      "name": "Stockpile_Expiry",
+      "equation": "Medical_Stockpile / Shelf_Life",
+      "from_stock": "stock-stockpile-level",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 370
+      }
+    },
+    {
+      "id": "flow-index-update",
+      "name": "Index_Update",
+      "equation": "(Composite_Score - Preparedness_Index) / Update_Lag",
+      "from_stock": null,
+      "to_stock": "stock-preparedness-index",
+      "position": {
+        "x": 375,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-budget",
+      "name": "Budget",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-surveillance-priority",
+      "name": "Surveillance_Priority",
+      "equation": "0.3",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-healthcare-priority",
+      "name": "Healthcare_Priority",
+      "equation": "0.4",
+      "position": {
+        "x": 340,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-response-priority",
+      "name": "Response_Priority",
+      "equation": "0.3",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-investment-cost",
+      "name": "Investment_Cost",
+      "equation": "10",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-decay-rate",
+      "name": "Decay_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-stockpile-budget",
+      "name": "Stockpile_Budget",
+      "equation": "20",
+      "position": {
+        "x": 220,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-unit-cost",
+      "name": "Unit_Cost",
+      "equation": "1",
+      "position": {
+        "x": 340,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-shelf-life",
+      "name": "Shelf_Life",
+      "equation": "5",
+      "position": {
+        "x": 460,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-update-lag",
+      "name": "Update_Lag",
+      "equation": "1",
+      "position": {
+        "x": 580,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-composite-score",
+      "name": "Composite_Score",
+      "equation": "(Surveillance_Capacity * 0.3 + Healthcare_Capacity * 0.4 + Response_Capacity * 0.2 + Medical_Stockpile * 0.1) / 100",
+      "position": {
+        "x": 350,
+        "y": 440
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:15:55.420818+00:00",
+  "updated_at": "2026-01-12T01:15:55.420827+00:00",
+  "source": "https://www.ghsindex.org/",
+  "reference": "Nuclear Threat Initiative, Johns Hopkins Center for Health Security. 2021 Global Health Security Index. 2021."
+}

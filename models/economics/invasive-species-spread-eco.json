@@ -1,0 +1,205 @@
+{
+  "id": "invasive-species-spread-eco",
+  "name": "Invasive Species Spread Model",
+  "description": "A model of invasive species population dynamics and geographic spread. Shows the interaction between establishment, spread, and management efforts. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "source": "https://doi.org/10.1890/0012-9658(2002)083[3141:PSSFST]2.0.CO;2",
+  "reference": "Shigesada N, Kawasaki K. Biological Invasions: Theory and Practice. Oxford University Press, 1997.",
+  "stocks": [
+    {
+      "id": "stock-pop",
+      "name": "Invasive Population",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-area",
+      "name": "Invaded Area",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-native",
+      "name": "Native Species",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-growth",
+      "name": "Population Growth",
+      "equation": "Invasive_Population * Growth_Rate * (1 - Invasive_Population / Carrying_Capacity) * Resource_Availability",
+      "from_stock": null,
+      "to_stock": "stock-pop",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-control",
+      "name": "Control Removal",
+      "equation": "Invasive_Population * Control_Effort * Control_Effectiveness",
+      "from_stock": "stock-pop",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-spread",
+      "name": "Spread",
+      "equation": "Invaded_Area * Spread_Rate * (Available_Habitat / Total_Habitat)",
+      "from_stock": null,
+      "to_stock": "stock-area",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-native-decline",
+      "name": "Native Decline",
+      "equation": "Native_Species * Competition_Effect * Invaded_Area / Total_Habitat",
+      "from_stock": "stock-native",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-native-recovery",
+      "name": "Native Recovery",
+      "equation": "Native_Species * Recovery_Rate * (1 - Invaded_Area / Total_Habitat)",
+      "from_stock": null,
+      "to_stock": "stock-native",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-available",
+      "name": "Available Habitat",
+      "equation": "Total_Habitat - Invaded_Area",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-resource",
+      "name": "Resource Availability",
+      "equation": "1 - 0.5 * Invaded_Area / Total_Habitat",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-carrying",
+      "name": "Carrying Capacity",
+      "equation": "Invaded_Area * Density_per_Area",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-growth",
+      "name": "Growth Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-spread-rate",
+      "name": "Spread Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-total-hab",
+      "name": "Total Habitat",
+      "equation": "1000",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-control",
+      "name": "Control Effort",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-control-eff",
+      "name": "Control Effectiveness",
+      "equation": "0.5",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-competition",
+      "name": "Competition Effect",
+      "equation": "0.2",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-recovery",
+      "name": "Recovery Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-density",
+      "name": "Density per Area",
+      "equation": "50",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:51:23.903831+00:00",
+  "updated_at": "2026-01-11T21:51:23.903831+00:00"
+}

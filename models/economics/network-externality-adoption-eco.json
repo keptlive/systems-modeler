@@ -1,0 +1,130 @@
+{
+  "id": "network-externality-adoption-eco",
+  "name": "Network Externality Adoption Model",
+  "description": "Models technology adoption with positive network effects. Source: Katz & Shapiro (1985), AER. DOI: 10.1257/aer.95.3.424",
+  "stocks": [
+    {
+      "id": "stock-adopters",
+      "name": "Adopters",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-potential",
+      "name": "Potential_Adopters",
+      "initial_value": 990,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adopt",
+      "name": "Adoption_Rate",
+      "equation": "Potential_Adopters * Adoption_Probability",
+      "from_stock": "stock-potential",
+      "to_stock": "stock-adopters",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-adoptprob",
+      "name": "Adoption_Probability",
+      "equation": "Base_Adoption * (1 + Network_Effect * Installed_Base / Critical_Mass)",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-baseadopt",
+      "name": "Base_Adoption",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-neteff",
+      "name": "Network_Effect",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-installed",
+      "name": "Installed_Base",
+      "equation": "Adopters / 1000",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-critical",
+      "name": "Critical_Mass",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-utility",
+      "name": "Network_Utility",
+      "equation": "Intrinsic_Value + Network_Effect * Adopters",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-intrinsic",
+      "name": "Intrinsic_Value",
+      "equation": "10",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-penetration",
+      "name": "Market_Penetration",
+      "equation": "Adopters / 1000 * 100",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Adopters",
+      "to_element": "Installed_Base"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:23:02.238340+00:00",
+  "updated_at": "2026-01-12T02:23:02.238343+00:00",
+  "source": "https://doi.org/10.1257/aer.95.3.424",
+  "reference": "Katz, M.L. & Shapiro, C. (1985). Network Externalities, Competition, and Compatibility. AER."
+}

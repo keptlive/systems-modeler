@@ -1,0 +1,90 @@
+{
+  "id": "worldmodel",
+  "name": "Worldmodel",
+  "description": "Model from WorldModel.mdl",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Population",
+      "initial_value": 3000000000.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Growth_Fraction",
+      "equation": "IF THEN ELSE(Change Flag=1 :AND: Time>Change_Time, 0.0125 * Growth_Fraction_Multiplier\\ ,0.0125)",
+      "from_stock": null,
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Change_Time",
+      "equation": "1970.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Growth_Fraction_Multiplier",
+      "equation": "0.75",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Number_Added",
+      "equation": "Population*Growth_Fraction",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Growth_Fraction_Multiplier",
+      "to_element": "Growth_Fraction"
+    },
+    {
+      "id": "c2",
+      "from_element": "Change_Time",
+      "to_element": "Growth_Fraction"
+    },
+    {
+      "id": "c3",
+      "from_element": "Growth_Fraction",
+      "to_element": "Number_Added"
+    },
+    {
+      "id": "c4",
+      "from_element": "Population",
+      "to_element": "Number_Added"
+    }
+  ],
+  "time_settings": {
+    "start": 1960.0,
+    "end": 2010.0,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-15T19:13:16.566077+00:00",
+  "updated_at": "2026-01-15T19:13:16.566077+00:00",
+  "source": "https://github.com/JimDuggan/SDMR",
+  "reference": "System Dynamics Modeling with R (Duggan, 2016)"
+}

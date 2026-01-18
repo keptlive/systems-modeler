@@ -1,0 +1,154 @@
+{
+  "id": "water-distribution-network-hydraulics-inf",
+  "name": "Water Distribution Network Model",
+  "description": "Model of municipal water supply with storage and demand patterns. Source: Walski et al. (2003), Advanced Water Distribution Modeling.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Reservoir_Level",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Tank_Level",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Production",
+      "equation": "IF(Reservoir_Level < 50, Pump_Capacity, IF(Reservoir_Level > 90, 0, Average_Demand))",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Distribution",
+      "equation": "System_Demand",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Tank_Fill",
+      "equation": "IF(Tank_Level < 40, Excess_Production, IF(Tank_Level > 80, 0, Excess_Production * 0.5))",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Tank_Drain",
+      "equation": "IF(System_Demand > Pump_Capacity * 0.8, Peak_Demand_Deficit, 0)",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Average_Demand",
+      "equation": "100",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Pump_Capacity",
+      "equation": "150",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Peak_Factor",
+      "equation": "1 + 0.5 * SIN((TIME - 6) * 3.14159 / 12)",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "System_Demand",
+      "equation": "Average_Demand * Peak_Factor",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Excess_Production",
+      "equation": "MAX(0, Pump_Capacity - System_Demand)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Peak_Demand_Deficit",
+      "equation": "MAX(0, System_Demand - Pump_Capacity)",
+      "position": {
+        "x": 300,
+        "y": 380
+      }
+    },
+    {
+      "id": "v7",
+      "name": "System_Pressure",
+      "equation": "40 + 20 * (Reservoir_Level + Tank_Level) / 130",
+      "position": {
+        "x": 500,
+        "y": 380
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Peak_Factor",
+      "to_element": "System_Demand"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 48,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-15T14:49:43.657739+00:00",
+  "updated_at": "2026-01-15T14:49:43.657743+00:00",
+  "source": "https://www.awwa.org/Store/Product-Details/productId/51196",
+  "reference": "Walski, T.M. et al. (2003). Advanced Water Distribution Modeling and Management. Haestad Press."
+}

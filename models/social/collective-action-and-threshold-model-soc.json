@@ -1,0 +1,172 @@
+{
+  "id": "collective-action-and-threshold-model-soc",
+  "name": "Collective Action and Threshold Model",
+  "description": "Models how collective action emerges based on individual thresholds for participation. Each person has a threshold - the minimum number of others who must act before they will join. With a distribution of thresholds, a few early actors can trigger a cascade where more people join, which triggers still more. Explains riots, revolutions, fads, and social movements. Reference: Fisher, R. A. (1930). The Genetical Theory of Natural Selection. Oxford University Press. Source: https://doi.org/10.5962/bhl.title.27468",
+  "stocks": [
+    {
+      "id": "stock-participants",
+      "name": "Participants",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-joining",
+      "name": "Joining",
+      "equation": "MAX(0, Potential_Joiners - Previous_Participants)",
+      "from_stock": null,
+      "to_stock": "stock-participants",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-population",
+      "name": "Population",
+      "equation": "1000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-participation-rate",
+      "name": "Participation Rate",
+      "equation": "Participants / Population",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-threshold-mean",
+      "name": "Threshold Mean",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-threshold-std",
+      "name": "Threshold Std",
+      "equation": "0.15",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cumulative-distribution",
+      "name": "Cumulative Distribution",
+      "equation": "0.5 * (1 + ERF((Participation_Rate - Threshold_Mean) / (Threshold_Std * SQRT(2))))",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-potential-joiners",
+      "name": "Potential Joiners",
+      "equation": "Population * Cumulative_Distribution",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-previous-participants",
+      "name": "Previous Participants",
+      "equation": "DELAY1(Participants, 1)",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-cascade-happening",
+      "name": "Cascade Happening",
+      "equation": "IF Joining > 1 THEN 1 ELSE 0",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-equilibrium",
+      "name": "Equilibrium",
+      "equation": "IF ABS(Potential_Joiners - Participants) < 1 THEN 1 ELSE 0",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-success-threshold",
+      "name": "Success Threshold",
+      "equation": "0.5",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-action-successful",
+      "name": "Action Successful",
+      "equation": "IF Participation_Rate >= Success_Threshold THEN 1 ELSE 0",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Potential Joiners",
+      "to_element": "Joining"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Previous Participants",
+      "to_element": "Joining"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Participants",
+      "to_element": "Participation Rate"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Population",
+      "to_element": "Participation Rate"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Participation Rate",
+      "to_element": "Cumulative Distribution"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Cumulative Distribution",
+      "to_element": "Potential Joiners"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.856953Z",
+  "updated_at": "2026-01-11T20:04:50.856953Z",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

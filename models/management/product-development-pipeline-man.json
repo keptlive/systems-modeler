@@ -1,0 +1,238 @@
+{
+  "id": "product-development-pipeline-man",
+  "name": "Product Development Pipeline",
+  "description": "R&D and product development pipeline model showing projects moving through stages from concept to market. Models resource constraints and stage-gate decisions. Source: Based on Cooper's Stage-Gate model. Reference: Based on project dynamics models (Lyneis & Ford, 2007). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-concept",
+      "name": "Concepts",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-development",
+      "name": "In_Development",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 280,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-testing",
+      "name": "In_Testing",
+      "initial_value": 3,
+      "equation": "",
+      "position": {
+        "x": 460,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-market",
+      "name": "Products_In_Market",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 640,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-idea-gen",
+      "name": "Idea_Generation",
+      "equation": "Idea_Generation_Rate",
+      "from_stock": null,
+      "to_stock": "stock-concept",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-concept-approval",
+      "name": "Concept_Approval",
+      "equation": "MIN(Concepts / Concept_Review_Time, Development_Capacity - In_Development) * Gate1_Pass_Rate",
+      "from_stock": "stock-concept",
+      "to_stock": "stock-development",
+      "position": {
+        "x": 190,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-development-complete",
+      "name": "Development_Complete",
+      "equation": "In_Development / Development_Time * Gate2_Pass_Rate",
+      "from_stock": "stock-development",
+      "to_stock": "stock-testing",
+      "position": {
+        "x": 370,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-launch",
+      "name": "Product_Launch",
+      "equation": "In_Testing / Testing_Time * Gate3_Pass_Rate",
+      "from_stock": "stock-testing",
+      "to_stock": "stock-market",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-retirement",
+      "name": "Product_Retirement",
+      "equation": "Products_In_Market / Product_Lifecycle",
+      "from_stock": "stock-market",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-concept-reject",
+      "name": "Concept_Rejection",
+      "equation": "Concepts / Concept_Review_Time * (1 - Gate1_Pass_Rate)",
+      "from_stock": "stock-concept",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-idea-rate",
+      "name": "Idea_Generation_Rate",
+      "equation": "5",
+      "position": {
+        "x": 50,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-concept-time",
+      "name": "Concept_Review_Time",
+      "equation": "2",
+      "position": {
+        "x": 150,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gate1-pass",
+      "name": "Gate1_Pass_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-dev-capacity",
+      "name": "Development_Capacity",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-dev-time",
+      "name": "Development_Time",
+      "equation": "12",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-gate2-pass",
+      "name": "Gate2_Pass_Rate",
+      "equation": "0.7",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-testing-time",
+      "name": "Testing_Time",
+      "equation": "6",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-gate3-pass",
+      "name": "Gate3_Pass_Rate",
+      "equation": "0.8",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-product-lifecycle",
+      "name": "Product_Lifecycle",
+      "equation": "60",
+      "position": {
+        "x": 650,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-pipeline",
+      "name": "Total_Pipeline",
+      "equation": "Concepts + In_Development + In_Testing",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Concepts",
+      "to_element": "Concept_Approval"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "In_Development",
+      "to_element": "Development_Complete"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "In_Testing",
+      "to_element": "Product_Launch"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Products_In_Market",
+      "to_element": "Product_Retirement"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T20:57:03.373906+00:00",
+  "updated_at": "2026-01-11T20:57:03.373906+00:00",
+  "source": "https://doi.org/10.1287/mnsc.35.3.321",
+  "reference": "Sterman JD. Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill, 2000."
+}

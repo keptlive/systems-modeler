@@ -1,0 +1,161 @@
+{
+  "id": "digital-platform-monopoly-eco",
+  "name": "Digital Platform Monopoly Dynamics Model",
+  "description": "Model of digital platform market dynamics showing network effects, winner-take-all dynamics, and regulatory challenges. Shows how data advantages, switching costs, and ecosystem lock-in create market concentration. Based on industrial organization economics.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Dominant_Platform_Users",
+      "initial_value": 100000000,
+      "equation": "",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "Competitor_Users",
+      "initial_value": 50000000,
+      "equation": "",
+      "position": {"x": 450, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Data_Advantage",
+      "initial_value": 60,
+      "equation": "",
+      "position": {"x": 200, "y": 380}
+    },
+    {
+      "id": "s4",
+      "name": "Regulatory_Pressure",
+      "initial_value": 20,
+      "equation": "",
+      "position": {"x": 450, "y": 380}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "User_Acquisition",
+      "equation": "Potential_Users * Acquisition_Rate * Network_Effect * (1 - Regulatory_Constraint)",
+      "from_stock": null,
+      "to_stock": "Dominant_Platform_Users",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "User_Switching",
+      "equation": "Competitor_Users * Switch_Rate * Network_Effect / Switching_Cost_Effect",
+      "from_stock": "Competitor_Users",
+      "to_stock": "Dominant_Platform_Users",
+      "position": {"x": 325, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Competitor_Exit",
+      "equation": "Competitor_Users * Exit_Rate * Market_Dominance",
+      "from_stock": "Competitor_Users",
+      "to_stock": null,
+      "position": {"x": 550, "y": 200}
+    },
+    {
+      "id": "f4",
+      "name": "Data_Accumulation",
+      "equation": "Dominant_Platform_Users * Data_Rate / 1000000",
+      "from_stock": null,
+      "to_stock": "Data_Advantage",
+      "position": {"x": 100, "y": 380}
+    },
+    {
+      "id": "f5",
+      "name": "Regulatory_Increase",
+      "equation": "(Market_Dominance * Public_Concern - Lobby_Effect) / Regulatory_Lag",
+      "from_stock": null,
+      "to_stock": "Regulatory_Pressure",
+      "position": {"x": 550, "y": 380}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Potential_Users",
+      "equation": "500000000 - Dominant_Platform_Users - Competitor_Users",
+      "position": {"x": 100, "y": 80}
+    },
+    {
+      "id": "v2",
+      "name": "Acquisition_Rate",
+      "equation": "0.02",
+      "position": {"x": 200, "y": 80}
+    },
+    {
+      "id": "v3",
+      "name": "Network_Effect",
+      "equation": "1 + LN(Dominant_Platform_Users / 50000000)",
+      "position": {"x": 325, "y": 80}
+    },
+    {
+      "id": "v4",
+      "name": "Switch_Rate",
+      "equation": "0.01",
+      "position": {"x": 450, "y": 80}
+    },
+    {
+      "id": "v5",
+      "name": "Switching_Cost_Effect",
+      "equation": "1 + Data_Advantage / 30",
+      "position": {"x": 575, "y": 80}
+    },
+    {
+      "id": "v6",
+      "name": "Exit_Rate",
+      "equation": "0.005",
+      "position": {"x": 100, "y": 300}
+    },
+    {
+      "id": "v7",
+      "name": "Market_Dominance",
+      "equation": "Dominant_Platform_Users / (Dominant_Platform_Users + Competitor_Users)",
+      "position": {"x": 325, "y": 300}
+    },
+    {
+      "id": "v8",
+      "name": "Data_Rate",
+      "equation": "0.1",
+      "position": {"x": 100, "y": 450}
+    },
+    {
+      "id": "v9",
+      "name": "Public_Concern",
+      "equation": "50 * Market_Dominance",
+      "position": {"x": 350, "y": 450}
+    },
+    {
+      "id": "v10",
+      "name": "Lobby_Effect",
+      "equation": "20",
+      "position": {"x": 450, "y": 450}
+    },
+    {
+      "id": "v11",
+      "name": "Regulatory_Lag",
+      "equation": "10",
+      "position": {"x": 550, "y": 450}
+    },
+    {
+      "id": "v12",
+      "name": "Regulatory_Constraint",
+      "equation": "MIN(0.5, Regulatory_Pressure / 100)",
+      "position": {"x": 200, "y": 450}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1257/aer.20180338",
+  "reference": "Farrell J, Klemperer P. (2007). Coordination and Lock-In: Competition with Switching Costs and Network Effects. Handbook of Industrial Organization, 3, 1967-2072. Also: Parker G, Van Alstyne M, Choudary SP. (2016). Platform Revolution. WW Norton.",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

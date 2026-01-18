@@ -1,0 +1,310 @@
+{
+  "id": "hospital-antimicrobial-resistance-spread-epi",
+  "name": "Hospital Antimicrobial Resistance Spread Model",
+  "description": "Model of antibiotic-resistant bacteria spread in hospital settings with stewardship interventions. Based on Laxminarayan et al. Lancet ID. Reference: Andersson, D. I., & Hughes, D. (2014). Microbiological effects of sublethal antibiotic concentrations. Nature Reviews Microbiology. Source: https://doi.org/10.1038/nrmicro3270",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Uncolonized Patients",
+      "initial_value": 900,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Colonized Susceptible",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Colonized Resistant",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Infected Susceptible",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Infected Resistant",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "s6",
+      "name": "Antibiotic Pressure",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Susceptible Colonization",
+      "equation": "Uncolonized_Patients * Transmission_Rate * Colonized_Susceptible / Total_Patients * (1 - Hygiene_Compliance)",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Resistant Colonization",
+      "equation": "Uncolonized_Patients * Transmission_Rate * Colonized_Resistant / Total_Patients * (1 - Hygiene_Compliance)",
+      "from_stock": "s1",
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Susceptible to Resistant",
+      "equation": "Colonized_Susceptible * Resistance_Conversion_Rate * Antibiotic_Pressure",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Susceptible Infection",
+      "equation": "Colonized_Susceptible * Infection_Rate",
+      "from_stock": "s2",
+      "to_stock": "s4",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Resistant Infection",
+      "equation": "Colonized_Resistant * Infection_Rate",
+      "from_stock": "s3",
+      "to_stock": "s5",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Susceptible Treatment",
+      "equation": "Infected_Susceptible * Treatment_Success_Susceptible",
+      "from_stock": "s4",
+      "to_stock": "s1",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Resistant Treatment",
+      "equation": "Infected_Resistant * Treatment_Success_Resistant",
+      "from_stock": "s5",
+      "to_stock": "s1",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "f8",
+      "name": "Admission",
+      "equation": "Admission_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "f9",
+      "name": "Discharge Uncolonized",
+      "equation": "Uncolonized_Patients * Discharge_Rate",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "f10",
+      "name": "Antibiotic Pressure Change",
+      "equation": "(Prescribing_Rate - Stewardship_Effect) * 0.1 - Antibiotic_Pressure * 0.05",
+      "from_stock": null,
+      "to_stock": "s6",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Transmission Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Hygiene Compliance",
+      "equation": "0.6",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Resistance Conversion Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Infection Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Treatment Success Susceptible",
+      "equation": "0.9 / 7",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Treatment Success Resistant",
+      "equation": "0.5 / 14",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Admission Rate",
+      "equation": "50",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Discharge Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Prescribing Rate",
+      "equation": "0.6",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Stewardship Effect",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Total Patients",
+      "equation": "Uncolonized_Patients + Colonized_Susceptible + Colonized_Resistant + Infected_Susceptible + Infected_Resistant",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Resistance Prevalence",
+      "equation": "(Colonized_Resistant + Infected_Resistant) / Total_Patients",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Antibiotic Pressure",
+      "to_element": "Susceptible to Resistant"
+    },
+    {
+      "id": "c2",
+      "from_element": "Colonized Resistant",
+      "to_element": "Resistant Colonization"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:20:13.049856",
+  "updated_at": "2026-01-15T14:20:13.049862",
+  "source": "https://doi.org/10.1016/S1473-3099(13)70318-9",
+  "reference": "Laxminarayan R, et al. Antibiotic resistance - the need for global solutions. Lancet Infectious Diseases. 2013;13(12):1057-1098."
+}

@@ -1,0 +1,168 @@
+{
+  "id": "forrester-urban-housing-cla",
+  "name": "Forrester Urban Dynamics Housing Sector",
+  "description": "Housing construction and aging sector from Urban Dynamics. From Forrester (1969) Urban Dynamics. Reference: Forrester, J. W. (1961). Industrial Dynamics. MIT Press. Source: https://systemdynamics.org/",
+  "category": "classic",
+  "stocks": [
+    {
+      "id": "stock-new",
+      "name": "New_Housing",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-mature",
+      "name": "Mature_Housing",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-declining",
+      "name": "Declining_Housing",
+      "initial_value": 150,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-construct",
+      "name": "Housing_Construction",
+      "equation": "Construction_Rate * Land_Fraction_Available * Housing_Demand_Ratio",
+      "from_stock": null,
+      "to_stock": "stock-new",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mature",
+      "name": "New_to_Mature",
+      "equation": "New_Housing / New_Housing_Duration",
+      "from_stock": "stock-new",
+      "to_stock": "stock-mature",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-decline",
+      "name": "Mature_to_Declining",
+      "equation": "Mature_Housing / Mature_Housing_Duration",
+      "from_stock": "stock-mature",
+      "to_stock": "stock-declining",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-demolish",
+      "name": "Demolition",
+      "equation": "Declining_Housing / Declining_Housing_Duration",
+      "from_stock": "stock-declining",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-const-rate",
+      "name": "Construction_Rate",
+      "equation": "20",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-land",
+      "name": "Land_Fraction_Available",
+      "equation": "MAX(0, 1 - Total_Housing / Land_Capacity)",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Housing",
+      "equation": "New_Housing + Mature_Housing + Declining_Housing",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-land-cap",
+      "name": "Land_Capacity",
+      "equation": "600",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Housing_Demand_Ratio",
+      "equation": "1.2",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-new-dur",
+      "name": "New_Housing_Duration",
+      "equation": "20",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-mat-dur",
+      "name": "Mature_Housing_Duration",
+      "equation": "30",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-dec-dur",
+      "name": "Declining_Housing_Duration",
+      "equation": "20",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1
+  },
+  "source": "https://mitpress.mit.edu/9780262560450/urban-dynamics/",
+  "reference": "Forrester JW (1969) Urban Dynamics. MIT Press.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:31:20.124030+00:00",
+  "updated_at": "2026-01-12T06:31:20.124030+00:00"
+}

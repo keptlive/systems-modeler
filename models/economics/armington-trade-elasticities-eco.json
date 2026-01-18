@@ -1,0 +1,110 @@
+{
+  "id": "armington-trade-elasticities-eco",
+  "name": "Armington Trade Elasticities Model",
+  "description": "Product differentiation by country of origin in trade",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Domestic_Demand",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Import_Demand",
+      "initial_value": 50.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Armington_Elasticity",
+      "equation": "2.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Domestic_Price",
+      "equation": "1.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Import_Price",
+      "equation": "1.1",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Relative_Price",
+      "equation": "Import_Price/Domestic_Price",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Import_Share",
+      "equation": "1/(1+Relative_Price*Relative_Price)",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Total_Demand",
+      "equation": "Domestic_Demand+Import_Demand",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Import_Price",
+      "to_element": "Relative_Price"
+    },
+    {
+      "id": "c2",
+      "from_element": "Domestic_Price",
+      "to_element": "Relative_Price"
+    },
+    {
+      "id": "c3",
+      "from_element": "Relative_Price",
+      "to_element": "Import_Share"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 50.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:49:05.313528+00:00",
+  "updated_at": "2026-01-15T20:49:05.313528+00:00",
+  "source": "https://doi.org/10.2307/3439631",
+  "reference": "Armington, P.S. (1969) A theory of demand for products distinguished by place of production. IMF Staff Papers 16:159-178"
+}

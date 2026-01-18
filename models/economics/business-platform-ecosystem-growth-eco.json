@@ -1,0 +1,227 @@
+{
+  "id": "business-platform-ecosystem-growth-eco",
+  "name": "Platform Ecosystem Growth Dynamics",
+  "description": "Two-sided platform model capturing network effects between users and developers/providers, winner-take-all dynamics. Based on seminal work by Rochet & Tirole. DOI: 10.1162/154247603322493212",
+  "category": "economics",
+  "stocks": [
+    {
+      "id": "stock-users",
+      "name": "Platform_Users",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-developers",
+      "name": "Developers",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-apps",
+      "name": "Available_Apps",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-revenue",
+      "name": "Platform_Revenue",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-user-growth",
+      "name": "User_Adoption",
+      "equation": "Potential_Users * User_Adoption_Rate * App_Attractiveness",
+      "from_stock": null,
+      "to_stock": "stock-users",
+      "position": {
+        "x": 75,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-user-churn",
+      "name": "User_Churn",
+      "equation": "Platform_Users * Base_Churn_Rate",
+      "from_stock": "stock-users",
+      "to_stock": null,
+      "position": {
+        "x": 225,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-dev-join",
+      "name": "Developer_Joining",
+      "equation": "Potential_Devs * Dev_Adoption_Rate * User_Attractiveness",
+      "from_stock": null,
+      "to_stock": "stock-developers",
+      "position": {
+        "x": 275,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-dev-leave",
+      "name": "Developer_Leaving",
+      "equation": "Developers * Dev_Churn_Rate",
+      "from_stock": "stock-developers",
+      "to_stock": null,
+      "position": {
+        "x": 425,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-app-creation",
+      "name": "App_Creation",
+      "equation": "Developers * Apps_Per_Dev_Year",
+      "from_stock": null,
+      "to_stock": "stock-apps",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-revenue-gen",
+      "name": "Revenue_Generation",
+      "equation": "Platform_Users * ARPU + Developers * Platform_Fee",
+      "from_stock": null,
+      "to_stock": "stock-revenue",
+      "position": {
+        "x": 350,
+        "y": 275
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-pot-users",
+      "name": "Potential_Users",
+      "equation": "1e8",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-pot-devs",
+      "name": "Potential_Devs",
+      "equation": "1e6",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-user-adopt",
+      "name": "User_Adoption_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-dev-adopt",
+      "name": "Dev_Adoption_Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-base-churn",
+      "name": "Base_Churn_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-dev-churn",
+      "name": "Dev_Churn_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-apps-per",
+      "name": "Apps_Per_Dev_Year",
+      "equation": "2",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-app-attract",
+      "name": "App_Attractiveness",
+      "equation": "LOG(1 + Available_Apps / 100)",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-user-attract",
+      "name": "User_Attractiveness",
+      "equation": "LOG(1 + Platform_Users / 10000)",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-arpu",
+      "name": "ARPU",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-platform-fee",
+      "name": "Platform_Fee",
+      "equation": "100",
+      "position": {
+        "x": 500,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1162/154247603322493212",
+  "reference": "Rochet JC & Tirole J (2003) Platform Competition in Two-Sided Markets. JEEA.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:07:51.752565Z",
+  "updated_at": "2026-01-12T06:07:51.752565Z"
+}

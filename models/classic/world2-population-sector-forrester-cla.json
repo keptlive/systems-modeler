@@ -1,0 +1,132 @@
+{
+  "id": "world2-population-sector-forrester-cla",
+  "name": "World2 Population Sector (Forrester)",
+  "description": "Simplified population sector from Forrester's World2 model showing birth and death rate dynamics. Forrester 1971. Reference: Forrester, J. W. (1961). Industrial Dynamics. MIT Press. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Population",
+      "initial_value": 1650,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Births",
+      "equation": "Population * Birth_Rate_Normal * Birth_Rate_Multiplier",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Deaths",
+      "equation": "Population * Death_Rate_Normal * Death_Rate_Multiplier",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Birth Rate Normal",
+      "equation": "0.04",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Death Rate Normal",
+      "equation": "0.028",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Crowding Ratio",
+      "equation": "Population / 3600",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Birth Rate Multiplier",
+      "equation": "1 - 0.5 * Crowding_Ratio",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Death Rate Multiplier",
+      "equation": "1 + 0.3 * Crowding_Ratio",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Net Growth Rate",
+      "equation": "(Births - Deaths) / Population",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Doubling Time",
+      "equation": "0.7 / (Net_Growth_Rate + 0.001)",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Population",
+      "to_element": "Births"
+    },
+    {
+      "id": "c2",
+      "from_element": "Population",
+      "to_element": "Deaths"
+    },
+    {
+      "id": "c3",
+      "from_element": "Crowding Ratio",
+      "to_element": "Birth Rate Multiplier"
+    }
+  ],
+  "time_settings": {
+    "start": 1900,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:24:00.395659",
+  "updated_at": "2026-01-15T14:24:00.395668",
+  "source": "https://mitpress.mit.edu/books/world-dynamics",
+  "reference": "Forrester JW. World Dynamics. Wright-Allen Press. 1971."
+}

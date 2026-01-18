@@ -1,0 +1,141 @@
+{
+  "id": "penny-distribution-model-eco",
+  "name": "Penny Distribution Model",
+  "description": "A model of coin circulation dynamics showing how pennies from a specific production year enter circulation and are gradually lost. Demonstrates stock-flow dynamics with production pulses, entry delays, and loss rates. Originally used to study the age distribution of coins in circulation. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-post-production",
+      "name": "Post Production",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-in-circulation",
+      "name": "In Circulation",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-production",
+      "name": "Production",
+      "equation": "PULSE(Production_Year, 1) * Production_Volume",
+      "from_stock": null,
+      "to_stock": "stock-post-production",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-entering-circulation",
+      "name": "Entering Circulation",
+      "equation": "Post_Production * Entry_Rate",
+      "from_stock": "stock-post-production",
+      "to_stock": "stock-in-circulation",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-loss",
+      "name": "Loss",
+      "equation": "In_Circulation * Loss_Rate",
+      "from_stock": "stock-in-circulation",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-production-year",
+      "name": "Production Year",
+      "equation": "1935",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-production-volume",
+      "name": "Production Volume",
+      "equation": "10000",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-entry-rate",
+      "name": "Entry Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-loss-rate",
+      "name": "Loss Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Production Year",
+      "to_element": "Production"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Production Volume",
+      "to_element": "Production"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Post Production",
+      "to_element": "Entering Circulation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Entry Rate",
+      "to_element": "Entering Circulation"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "In Circulation",
+      "to_element": "Loss"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Loss Rate",
+      "to_element": "Loss"
+    }
+  ],
+  "time_settings": {
+    "start": 1930,
+    "end": 2014,
+    "dt": 0.03125
+  },
+  "created_at": "2026-01-11T20:04:50.765267Z",
+  "updated_at": "2026-01-11T20:04:50.765267Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

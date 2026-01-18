@@ -1,0 +1,212 @@
+{
+  "id": "wound-healing-phases-hea",
+  "name": "Wound Healing Phases Model",
+  "description": "Models the overlapping phases of wound healing: inflammation, proliferation, and remodeling. Based on Gurtner et al. (2008) Wound repair, Nature. Reference: Medzhitov, R. (2008). Origin and physiological roles of inflammation. Nature. Source: https://doi.org/10.1038/nature07201",
+  "category": "health",
+  "stocks": [
+    {
+      "id": "stock-wound",
+      "name": "Wound_Area_cm2",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-inflam",
+      "name": "Inflammation_Level",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-prolif",
+      "name": "Proliferation_Activity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-remodel",
+      "name": "Remodeling_Progress",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-strength",
+      "name": "Tissue_Strength_Pct",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-close",
+      "name": "Wound_Closure",
+      "equation": "Wound_Area_cm2 * Closure_Rate * Proliferation_Activity/100",
+      "from_stock": "stock-wound",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-inflam-up",
+      "name": "Inflammation_Start",
+      "equation": "IF(TIME < 3, Wound_Area_cm2 * 10, 0)",
+      "from_stock": null,
+      "to_stock": "stock-inflam",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-inflam-down",
+      "name": "Inflammation_Resolution",
+      "equation": "Inflammation_Level * Resolution_Rate",
+      "from_stock": "stock-inflam",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-prolif-up",
+      "name": "Proliferation_Start",
+      "equation": "IF(Inflammation_Level > 30, (100 - Proliferation_Activity) * Prolif_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-prolif",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-prolif-down",
+      "name": "Proliferation_End",
+      "equation": "IF(Wound_Area_cm2 < 2, Proliferation_Activity * Prolif_End_Rate, 0)",
+      "from_stock": "stock-prolif",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-remodel-start",
+      "name": "Remodeling_Start",
+      "equation": "IF(Proliferation_Activity > 50, (100 - Remodeling_Progress) * Remodel_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-remodel",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-strength-build",
+      "name": "Strength_Building",
+      "equation": "Remodeling_Progress * Strength_Rate * (100 - Tissue_Strength_Pct)/100",
+      "from_stock": null,
+      "to_stock": "stock-strength",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-closure",
+      "name": "Closure_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-resolution",
+      "name": "Resolution_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-prolif-rate",
+      "name": "Prolif_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-prolif-end",
+      "name": "Prolif_End_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-remodel-rate",
+      "name": "Remodel_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-strength-rate",
+      "name": "Strength_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-healing-time",
+      "name": "Est_Healing_Days",
+      "equation": "14 + Wound_Area_cm2 * 2",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 90,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1038/nature07039",
+  "reference": "Gurtner GC et al. (2008) Wound repair and regeneration. Nature 453:314-321.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:36:48.752546+00:00",
+  "updated_at": "2026-01-12T06:36:48.752546+00:00"
+}

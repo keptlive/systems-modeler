@@ -1,0 +1,162 @@
+{
+  "id": "attention-economy-dynamics-soc",
+  "name": "Attention Economy Dynamics",
+  "description": "Models scarce attention allocation across content sources. Source: Simon (1971) and Goldhaber (1997). DOI: 10.1007/s12525-020-00389-x",
+  "stocks": [
+    {
+      "id": "stock-attention",
+      "name": "Available_Attention",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-content",
+      "name": "Content_Volume",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-quality",
+      "name": "Avg_Content_Quality",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-attentiondrain",
+      "name": "Attention_Drain",
+      "equation": "Available_Attention * (Content_Competition - Attention_Regeneration)",
+      "from_stock": "stock-attention",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-contentgrow",
+      "name": "Content_Growth",
+      "equation": "Content_Volume * Content_Creation_Rate",
+      "from_stock": null,
+      "to_stock": "stock-content",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-qualitychg",
+      "name": "Quality_Change",
+      "equation": "(Attention_Per_Content * Quality_Sensitivity - Avg_Content_Quality) * Quality_Adjustment",
+      "from_stock": null,
+      "to_stock": "stock-quality",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-competition",
+      "name": "Content_Competition",
+      "equation": "Content_Volume / 1000 * 0.1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-regen",
+      "name": "Attention_Regeneration",
+      "equation": "0.05",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-creation",
+      "name": "Content_Creation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-attpercon",
+      "name": "Attention_Per_Content",
+      "equation": "Available_Attention / Content_Volume * 1000",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-qualsens",
+      "name": "Quality_Sensitivity",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-qualadj",
+      "name": "Quality_Adjustment",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-engagement",
+      "name": "Engagement_Rate",
+      "equation": "Avg_Content_Quality / 100 * Available_Attention / 100",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-overload",
+      "name": "Information_Overload",
+      "equation": "Content_Volume / Available_Attention",
+      "position": {
+        "x": 350,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Content_Volume",
+      "to_element": "Content_Competition"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:23:02.238386+00:00",
+  "updated_at": "2026-01-12T02:23:02.238389+00:00",
+  "source": "https://doi.org/10.1007/s12525-020-00389-x",
+  "reference": "Simon, H.A. (1971). Designing Organizations for an Information-Rich World."
+}

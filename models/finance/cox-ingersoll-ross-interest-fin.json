@@ -1,0 +1,91 @@
+{
+  "id": "cox-ingersoll-ross-interest-fin",
+  "name": "Cox-Ingersoll-Ross Interest Rate",
+  "description": "Mean-reverting interest rate model ensuring non-negativity",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Interest_Rate",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "kappa",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "theta",
+      "equation": "0.05",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "sigma",
+      "equation": "0.1",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Mean_Reversion",
+      "equation": "kappa*(theta-Interest_Rate)",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Volatility_Term",
+      "equation": "sigma*Interest_Rate",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Interest_Rate",
+      "to_element": "Mean_Reversion"
+    },
+    {
+      "id": "c2",
+      "from_element": "theta",
+      "to_element": "Mean_Reversion"
+    },
+    {
+      "id": "c3",
+      "from_element": "Interest_Rate",
+      "to_element": "Volatility_Term"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 10.0,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-15T20:46:18.595676+00:00",
+  "updated_at": "2026-01-15T20:46:18.595676+00:00",
+  "source": "https://doi.org/10.2307/1911242",
+  "reference": "Cox, J.C., Ingersoll, J.E. & Ross, S.A. (1985) A theory of the term structure of interest rates. Econometrica 53:385-407"
+}

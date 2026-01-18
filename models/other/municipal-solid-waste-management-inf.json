@@ -1,0 +1,182 @@
+{
+  "id": "municipal-solid-waste-management-inf",
+  "name": "Municipal Solid Waste Management Model",
+  "description": "Model of waste generation, collection, and disposal pathways. Source: EPA (2020), Waste Management.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Generated_Waste",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Landfill_Capacity",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Recycled_Material",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Waste_Generation",
+      "equation": "Population * Per_Capita_Waste / 365",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Landfill_Disposal",
+      "equation": "Generated_Waste * (1 - Recycling_Rate - Composting_Rate)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Capacity_Used",
+      "equation": "-Landfill_Disposal",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Recycling",
+      "equation": "Generated_Waste * Recycling_Rate",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Population",
+      "equation": "100000",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Per_Capita_Waste",
+      "equation": "2",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Recycling_Rate",
+      "equation": "0.25",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Composting_Rate",
+      "equation": "0.10",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Landfill_Years_Remaining",
+      "equation": "Landfill_Capacity / (Generated_Waste * (1 - Recycling_Rate - Composting_Rate) * 365 + 0.1)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Collection_Cost",
+      "equation": "Generated_Waste * 50",
+      "position": {
+        "x": 200,
+        "y": 380
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Disposal_Cost",
+      "equation": "Generated_Waste * (1 - Recycling_Rate - Composting_Rate) * 80",
+      "position": {
+        "x": 400,
+        "y": 380
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Recycling_Revenue",
+      "equation": "Recycled_Material * 0.1",
+      "position": {
+        "x": 550,
+        "y": 380
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Diversion_Rate",
+      "equation": "(Recycling_Rate + Composting_Rate) * 100",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Population",
+      "to_element": "Waste_Generation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:49:43.657874+00:00",
+  "updated_at": "2026-01-15T14:49:43.657877+00:00",
+  "source": "https://www.epa.gov/facts-and-figures-about-materials-waste-and-recycling",
+  "reference": "EPA (2020). Facts and Figures about Materials, Waste and Recycling. US Environmental Protection Agency."
+}

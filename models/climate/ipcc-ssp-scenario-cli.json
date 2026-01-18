@@ -1,0 +1,135 @@
+{
+  "id": "ipcc-ssp-scenario-cli",
+  "name": "IPCC SSP Scenario Framework Model",
+  "description": "Shared Socioeconomic Pathways (SSP) framework model showing how different development trajectories affect emissions, population, and GDP. Based on IPCC AR6 scenario architecture combining socioeconomic development with climate forcing pathways.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Global_Population",
+      "initial_value": 8000,
+      "equation": "",
+      "position": {"x": 150, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "Global_GDP",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 350, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Energy_Demand",
+      "initial_value": 600,
+      "equation": "",
+      "position": {"x": 550, "y": 200}
+    },
+    {
+      "id": "s4",
+      "name": "Carbon_Intensity",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {"x": 350, "y": 350}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Population_Growth",
+      "equation": "Global_Population * Pop_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "Global_Population",
+      "position": {"x": 50, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "GDP_Growth",
+      "equation": "Global_GDP * GDP_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "Global_GDP",
+      "position": {"x": 250, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Energy_Change",
+      "equation": "(Target_Energy - Energy_Demand) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "Energy_Demand",
+      "position": {"x": 450, "y": 200}
+    },
+    {
+      "id": "f4",
+      "name": "Decarbonization",
+      "equation": "Carbon_Intensity * Decarbonization_Rate",
+      "from_stock": "Carbon_Intensity",
+      "to_stock": null,
+      "position": {"x": 450, "y": 350}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Pop_Growth_Rate",
+      "equation": "0.008",
+      "position": {"x": 50, "y": 100}
+    },
+    {
+      "id": "v2",
+      "name": "GDP_Growth_Rate",
+      "equation": "0.025",
+      "position": {"x": 200, "y": 100}
+    },
+    {
+      "id": "v3",
+      "name": "Target_Energy",
+      "equation": "Global_GDP * Energy_Intensity",
+      "position": {"x": 400, "y": 100}
+    },
+    {
+      "id": "v4",
+      "name": "Energy_Intensity",
+      "equation": "6",
+      "position": {"x": 550, "y": 100}
+    },
+    {
+      "id": "v5",
+      "name": "Adjustment_Time",
+      "equation": "10",
+      "position": {"x": 650, "y": 200}
+    },
+    {
+      "id": "v6",
+      "name": "Decarbonization_Rate",
+      "equation": "0.02",
+      "position": {"x": 550, "y": 350}
+    },
+    {
+      "id": "v7",
+      "name": "Annual_Emissions",
+      "equation": "Energy_Demand * Carbon_Intensity",
+      "position": {"x": 150, "y": 350}
+    },
+    {
+      "id": "v8",
+      "name": "Per_Capita_GDP",
+      "equation": "Global_GDP * 1000 / Global_Population",
+      "position": {"x": 150, "y": 450}
+    },
+    {
+      "id": "v9",
+      "name": "Emissions_Intensity",
+      "equation": "Annual_Emissions / Global_GDP",
+      "position": {"x": 350, "y": 450}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1016/j.gloenvcha.2016.05.009",
+  "reference": "Riahi K, et al. (2017). The Shared Socioeconomic Pathways and their energy, land use, and greenhouse gas emissions implications. Global Environmental Change, 42, 153-168. DOI: 10.1016/j.gloenvcha.2016.05.009. O'Neill BC, et al. (2017). The roads ahead: Narratives for shared socioeconomic pathways.",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

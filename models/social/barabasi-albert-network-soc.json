@@ -1,0 +1,159 @@
+{
+  "id": "barabasi-albert-network-soc",
+  "name": "Barab\u00e1si-Albert Preferential Attachment Model",
+  "description": "The 1999 model explaining scale-free network formation through preferential attachment (rich-get-richer). Shows how highly connected hubs emerge in social networks, the web, and biological networks through growth and preferential linking. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-total-nodes",
+      "name": "Total Nodes",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-total-links",
+      "name": "Total Links",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-hub-degree",
+      "name": "Hub Node Degree",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-node-addition",
+      "name": "Node Addition Rate",
+      "equation": "Node_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-total-nodes",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-link-addition",
+      "name": "Link Addition Rate",
+      "equation": "Node_Growth_Rate * Links_Per_New_Node",
+      "from_stock": null,
+      "to_stock": "stock-total-links",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-hub-growth",
+      "name": "Hub Degree Growth",
+      "equation": "Node_Growth_Rate * Links_Per_New_Node * (Hub_Node_Degree / (2 * Total_Links))",
+      "from_stock": null,
+      "to_stock": "stock-hub-degree",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-node-growth-rate",
+      "name": "Node Growth Rate",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-links-per-node",
+      "name": "Links Per New Node",
+      "equation": "2",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-average-degree",
+      "name": "Average Degree",
+      "equation": "2 * Total_Links / Total_Nodes",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-hub-fraction",
+      "name": "Hub Degree Fraction",
+      "equation": "Hub_Node_Degree / Total_Nodes",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-power-law-exponent",
+      "name": "Power Law Exponent",
+      "equation": "3",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-clustering-coefficient",
+      "name": "Clustering Coefficient",
+      "equation": "(Links_Per_New_Node - 1) / (8 * LN(Total_Nodes))",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Total Links",
+      "to_element": "Hub Degree Growth"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Hub Node Degree",
+      "to_element": "Hub Degree Growth"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Total Nodes",
+      "to_element": "Average Degree"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Total Links",
+      "to_element": "Average Degree"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:30:00.000Z",
+  "updated_at": "2026-01-12T01:30:00.000Z",
+  "source": "https://doi.org/10.1126/science.286.5439.509",
+  "reference": "Barab\u00e1si AL, Albert R. Emergence of Scaling in Random Networks. Science. 1999;286(5439):509-512."
+}

@@ -1,0 +1,142 @@
+{
+  "id": "freight-logistics-efficiency-tra",
+  "name": "Freight Logistics and Supply Chain Efficiency",
+  "description": "Model of freight transportation efficiency showing interactions between infrastructure investment, fleet utilization, and logistics optimization. Relevant for sustainable freight policy. Reference: Based on System Dynamics supply chain models (Sterman, 2000). Source: https://systemdynamics.org/",
+  "source": "https://doi.org/10.1016/j.tre.2018.02.004",
+  "reference": "Crainic TG, Laporte G. Planning models for freight transportation. European Journal of Operational Research. 1997;97(3):409-438.",
+  "stocks": [
+    {
+      "id": "stock-fleet",
+      "name": "Fleet_Capacity",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-demand",
+      "name": "Freight_Demand",
+      "initial_value": 800,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-efficiency",
+      "name": "System_Efficiency",
+      "initial_value": 70,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-growth",
+      "name": "Fleet_Growth",
+      "equation": "investment_rate * Utilization_Gap",
+      "from_stock": null,
+      "to_stock": "stock-fleet",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-retire",
+      "name": "Fleet_Retirement",
+      "equation": "Fleet_Capacity * retirement_rate",
+      "from_stock": "stock-fleet",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-demand-growth",
+      "name": "Demand_Growth",
+      "equation": "Freight_Demand * demand_growth_rate",
+      "from_stock": null,
+      "to_stock": "stock-demand",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-eff-improve",
+      "name": "Efficiency_Improvement",
+      "equation": "tech_improvement_rate * (100 - System_Efficiency)",
+      "from_stock": null,
+      "to_stock": "stock-efficiency",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-invest",
+      "name": "investment_rate",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-retire",
+      "name": "retirement_rate",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-demand-gr",
+      "name": "demand_growth_rate",
+      "equation": "0.03",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-tech",
+      "name": "tech_improvement_rate",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-util",
+      "name": "Utilization_Gap",
+      "equation": "max(0, Freight_Demand - Fleet_Capacity * System_Efficiency / 100)",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

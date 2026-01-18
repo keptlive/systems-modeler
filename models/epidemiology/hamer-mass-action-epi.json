@@ -1,0 +1,28 @@
+{
+  "id": "hamer-mass-action-epi",
+  "name": "Hamer Mass Action Epidemic Model",
+  "description": "William Hamer's (1906) pioneering mass action model for measles epidemics in London. First mathematical formulation of the mass action principle: new infections proportional to the product of susceptibles and infectives. Foundation of mathematical epidemiology.",
+  "stocks": [
+    {"id": "stock-susceptible", "name": "Susceptible", "initial_value": 100000, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-infected", "name": "Infected", "initial_value": 100, "equation": "", "position": {"x": 400, "y": 200}},
+    {"id": "stock-recovered", "name": "Recovered", "initial_value": 0, "equation": "", "position": {"x": 600, "y": 200}},
+    {"id": "stock-cumulative-cases", "name": "Cumulative Cases", "initial_value": 100, "equation": "", "position": {"x": 400, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-births", "name": "Births", "equation": "Birth_Rate * Total_Population", "from_stock": null, "to_stock": "stock-susceptible", "position": {"x": 100, "y": 200}},
+    {"id": "flow-infection", "name": "Infection", "equation": "Beta * Susceptible * Infected / Total_Population", "from_stock": "stock-susceptible", "to_stock": "stock-infected", "position": {"x": 300, "y": 200}},
+    {"id": "flow-recovery", "name": "Recovery", "equation": "Infected / Infectious_Period", "from_stock": "stock-infected", "to_stock": "stock-recovered", "position": {"x": 500, "y": 200}},
+    {"id": "flow-case-count", "name": "Case Count", "equation": "Beta * Susceptible * Infected / Total_Population", "from_stock": null, "to_stock": "stock-cumulative-cases", "position": {"x": 300, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-beta", "name": "Beta", "equation": "0.5", "position": {"x": 250, "y": 100}},
+    {"id": "var-infectious-period", "name": "Infectious Period", "equation": "14", "position": {"x": 400, "y": 100}},
+    {"id": "var-total-population", "name": "Total Population", "equation": "Susceptible + Infected + Recovered", "position": {"x": 550, "y": 100}},
+    {"id": "var-birth-rate", "name": "Birth Rate", "equation": "0.0001", "position": {"x": 200, "y": 300}},
+    {"id": "var-basic-reproduction-number", "name": "Basic Reproduction Number", "equation": "Beta * Infectious_Period", "position": {"x": 500, "y": 300}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 365, "dt": 1},
+  "source": "https://doi.org/10.1016/S0140-6736(01)80187-2",
+  "reference": "Hamer WH. Epidemic disease in England - the evidence of variability and of persistency of type. The Lancet. 1906;167(4306):733-739."
+}

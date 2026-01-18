@@ -1,0 +1,197 @@
+{
+  "id": "ohno-toyota-production-man",
+  "name": "Ohno Toyota Production System Model",
+  "description": "Taiichi Ohno's lean manufacturing model with just-in-time and kanban. Reference: Ohno, T. (1988). Toyota Production System.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Kanban_Cards",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Inventory",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Production_WIP",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Quality_Defects",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Production_Start",
+      "equation": "MIN(Kanban_Cards, Production_Capacity) * Pull_Signal",
+      "from_stock": "Kanban_Cards",
+      "to_stock": "Production_WIP",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Production_Complete",
+      "equation": "Production_WIP / Lead_Time",
+      "from_stock": "Production_WIP",
+      "to_stock": "Inventory",
+      "position": {
+        "x": 220,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Kanban_Return",
+      "equation": "Production_Complete",
+      "from_stock": null,
+      "to_stock": "Kanban_Cards",
+      "position": {
+        "x": 340,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Customer_Demand",
+      "equation": "Demand_Rate",
+      "from_stock": "Inventory",
+      "to_stock": null,
+      "position": {
+        "x": 460,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Defect_Detection",
+      "equation": "Production_Complete * Defect_Rate",
+      "from_stock": null,
+      "to_stock": "Quality_Defects",
+      "position": {
+        "x": 580,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Production_Capacity",
+      "equation": "15",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Demand_Rate",
+      "equation": "10 + 2 * SIN(time / 10)",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Pull_Signal",
+      "equation": "IF Inventory < Safety_Stock THEN 1 ELSE 0.5",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Safety_Stock",
+      "equation": "30",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Lead_Time",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Defect_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Takt_Time",
+      "equation": "1 / MAX(0.1, Demand_Rate)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Flow_Efficiency",
+      "equation": "Production_Complete / MAX(1, Production_Capacity)",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Inventory_Turns",
+      "equation": "Demand_Rate * 252 / MAX(1, Inventory)",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.4324/9781315136509",
+  "reference": "Ohno, T. (1988). Toyota Production System: Beyond Large-Scale Production. Productivity Press.",
+  "created_at": "2026-01-15T20:02:03.779703+00:00",
+  "updated_at": "2026-01-15T20:02:03.779703+00:00"
+}

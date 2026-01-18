@@ -1,0 +1,201 @@
+{
+  "id": "minsky-financial-instability-detailed-eco",
+  "name": "Minsky Financial Instability Hypothesis Model",
+  "description": "Detailed model of Hyman Minsky's Financial Instability Hypothesis showing the endogenous development of financial fragility. Source: Minsky (1992), The Financial Instability Hypothesis. Reference: Minsky, H. P. (1992). The financial instability hypothesis. Levy Economics Institute Working Paper No. 74. DOI: https://doi.org/10.1080/05775132.1992.11471543",
+  "stocks": [
+    {
+      "id": "stock-hedge",
+      "name": "Hedge_Borrowers",
+      "initial_value": 70,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-spec",
+      "name": "Speculative_Borrowers",
+      "initial_value": 25,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ponzi",
+      "name": "Ponzi_Borrowers",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-debt",
+      "name": "Total_Debt",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "stock-asset",
+      "name": "Asset_Prices",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-hs",
+      "name": "Hedge_To_Spec",
+      "equation": "Hedge_Borrowers * Euphoria * 0.05",
+      "from_stock": "stock-hedge",
+      "to_stock": "stock-spec",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-sp",
+      "name": "Spec_To_Ponzi",
+      "equation": "Speculative_Borrowers * Euphoria * 0.1",
+      "from_stock": "stock-spec",
+      "to_stock": "stock-ponzi",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-crash",
+      "name": "Ponzi_Collapse",
+      "equation": "Ponzi_Borrowers * Crisis_Trigger * 0.5",
+      "from_stock": "stock-ponzi",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-delever",
+      "name": "Deleveraging",
+      "equation": "Crisis_Trigger * (Speculative_Borrowers + Ponzi_Borrowers) * 0.2",
+      "from_stock": "stock-spec",
+      "to_stock": "stock-hedge",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-borrow",
+      "name": "Borrowing",
+      "equation": "(Speculative_Borrowers + 2 * Ponzi_Borrowers) * Credit_Growth",
+      "from_stock": null,
+      "to_stock": "stock-debt",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-deflate",
+      "name": "Debt_Deflation",
+      "equation": "Total_Debt * Crisis_Trigger * 0.1",
+      "from_stock": "stock-debt",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "flow-inflate",
+      "name": "Asset_Inflation",
+      "equation": "Asset_Prices * Euphoria * 0.05",
+      "from_stock": null,
+      "to_stock": "stock-asset",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-assetcrash",
+      "name": "Asset_Crash",
+      "equation": "Asset_Prices * Crisis_Trigger * 0.2",
+      "from_stock": "stock-asset",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 450
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-euphoria",
+      "name": "Euphoria",
+      "equation": "MAX(0, (Asset_Prices / 100 - 1) + (1 - Hedge_Borrowers / 100))",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-credit",
+      "name": "Credit_Growth",
+      "equation": "0.1 * (1 + Euphoria)",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-crisis",
+      "name": "Crisis_Trigger",
+      "equation": "IF(Ponzi_Borrowers > 20 OR Total_Debt / Asset_Prices > 1.5, 1, 0)",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-fragility",
+      "name": "Financial_Fragility",
+      "equation": "(Speculative_Borrowers + 2 * Ponzi_Borrowers) / 100",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Euphoria",
+      "to_element": "Hedge_To_Spec"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T22:15:10.906200+00:00",
+  "updated_at": "2026-01-11T22:15:10.906200+00:00",
+  "source": "https://digitalcommons.bard.edu/hm_archive/509/",
+  "reference": "Minsky, H.P. (1992). The Financial Instability Hypothesis. Working Paper No. 74."
+}

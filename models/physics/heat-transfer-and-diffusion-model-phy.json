@@ -1,0 +1,643 @@
+{
+  "id": "heat-transfer-and-diffusion-model-phy",
+  "name": "Heat Transfer and Diffusion Model",
+  "description": "A system dynamics model of heat transfer between multiple thermal masses, demonstrating conduction, convection, and radiation. Models a simplified building thermal system with walls, interior air, and external environment. Reference: Crank, J. (1979). The Mathematics of Diffusion. Oxford University Press. Source: https://global.oup.com/",
+  "stocks": [
+    {
+      "id": "stock-interior-air-temperature",
+      "name": "Interior Air Temperature",
+      "initial_value": 293,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-wall-temperature",
+      "name": "Wall Temperature",
+      "initial_value": 290,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-floorthermal-mass-temperature",
+      "name": "Floor/Thermal Mass Temperature",
+      "initial_value": 291,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-total-energy-consumption",
+      "name": "Total Energy Consumption",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-interior-heating-rate",
+      "name": "Interior Heating Rate",
+      "equation": "(Q_Convection_Wall_Interior + Q_Convection_Floor_Interior + Q_Solar_Gain + Q_Internal_Gains + Q_HVAC_Heating) / Interior_Heat_Capacity",
+      "from_stock": null,
+      "to_stock": "stock-interior-air-temperature",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-interior-cooling-rate",
+      "name": "Interior Cooling Rate",
+      "equation": "(Q_Infiltration + Q_HVAC_Cooling) / Interior_Heat_Capacity",
+      "from_stock": "stock-interior-air-temperature",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-wall-heating-rate",
+      "name": "Wall Heating Rate",
+      "equation": "(Q_Solar_Wall + Q_Convection_Exterior_Wall) / Wall_Heat_Capacity",
+      "from_stock": null,
+      "to_stock": "stock-wall-temperature",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-wall-cooling-rate",
+      "name": "Wall Cooling Rate",
+      "equation": "(Q_Convection_Wall_Interior + Q_Radiation_Wall_Sky) / Wall_Heat_Capacity",
+      "from_stock": "stock-wall-temperature",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-floor-heating-rate",
+      "name": "Floor Heating Rate",
+      "equation": "Q_Solar_Floor / Floor_Heat_Capacity",
+      "from_stock": null,
+      "to_stock": "stock-floorthermal-mass-temperature",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-floor-cooling-rate",
+      "name": "Floor Cooling Rate",
+      "equation": "Q_Convection_Floor_Interior / Floor_Heat_Capacity",
+      "from_stock": "stock-floorthermal-mass-temperature",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-hvac-power-consumption",
+      "name": "HVAC Power Consumption",
+      "equation": "ABS(Q_HVAC_Heating + Q_HVAC_Cooling) / HVAC_COP",
+      "from_stock": null,
+      "to_stock": "stock-total-energy-consumption",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-exterior-temperature",
+      "name": "Exterior Temperature",
+      "equation": "283 + 5 * SIN(2 * 3.14159 * Time / 86400 - 3.14159 / 2)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-sky-temperature",
+      "name": "Sky Temperature",
+      "equation": "Exterior_Temperature - 20",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-solar-irradiance",
+      "name": "Solar Irradiance",
+      "equation": "MAX(0, 800 * SIN(3.14159 * Time / 43200))",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-temperature-setpoint",
+      "name": "Temperature Setpoint",
+      "equation": "294",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-thermostat-deadband",
+      "name": "Thermostat Deadband",
+      "equation": "1",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-interior-heat-capacity",
+      "name": "Interior Heat Capacity",
+      "equation": "Interior_Volume * Air_Density * Air_Specific_Heat",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-interior-volume",
+      "name": "Interior Volume",
+      "equation": "200",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-air-density",
+      "name": "Air Density",
+      "equation": "1.2",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-air-specific-heat",
+      "name": "Air Specific Heat",
+      "equation": "1005",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-wall-heat-capacity",
+      "name": "Wall Heat Capacity",
+      "equation": "Wall_Area * Wall_Thickness * Wall_Density * Wall_Specific_Heat",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-wall-area",
+      "name": "Wall Area",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-wall-thickness",
+      "name": "Wall Thickness",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-wall-density",
+      "name": "Wall Density",
+      "equation": "1800",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-wall-specific-heat",
+      "name": "Wall Specific Heat",
+      "equation": "900",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-floor-heat-capacity",
+      "name": "Floor Heat Capacity",
+      "equation": "Floor_Area * Floor_Thickness * Floor_Density * Floor_Specific_Heat",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-floor-area",
+      "name": "Floor Area",
+      "equation": "80",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-floor-thickness",
+      "name": "Floor Thickness",
+      "equation": "0.15",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-floor-density",
+      "name": "Floor Density",
+      "equation": "2400",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-floor-specific-heat",
+      "name": "Floor Specific Heat",
+      "equation": "880",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-wall-thermal-conductivity",
+      "name": "Wall Thermal Conductivity",
+      "equation": "0.5",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-wall-r-value",
+      "name": "Wall R-Value",
+      "equation": "Wall_Thickness / Wall_Thermal_Conductivity",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-wall-u-value",
+      "name": "Wall U-Value",
+      "equation": "1 / (Wall_R_Value + 1/Interior_Convection_Coefficient + 1/Exterior_Convection_Coefficient)",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-interior-convection-coefficient",
+      "name": "Interior Convection Coefficient",
+      "equation": "3",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-exterior-convection-coefficient",
+      "name": "Exterior Convection Coefficient",
+      "equation": "20",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-convection-wall-to-interior",
+      "name": "Convection Wall to Interior",
+      "equation": "Interior_Convection_Coefficient * Wall_Area * (Wall_Temperature - Interior_Temperature)",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-convection-exterior-to-wall",
+      "name": "Convection Exterior to Wall",
+      "equation": "Exterior_Convection_Coefficient * Wall_Area * (Exterior_Temperature - Wall_Temperature)",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-convection-floor-to-interior",
+      "name": "Convection Floor to Interior",
+      "equation": "Interior_Convection_Coefficient * Floor_Area * (Floor_Temperature - Interior_Temperature)",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-infiltration-heat-loss",
+      "name": "Infiltration Heat Loss",
+      "equation": "Air_Changes_Per_Hour * Interior_Volume * Air_Density * Air_Specific_Heat * (Interior_Temperature - Exterior_Temperature) / 3600",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-air-changes-per-hour",
+      "name": "Air Changes Per Hour",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-solar-gain-on-wall",
+      "name": "Solar Gain on Wall",
+      "equation": "Solar_Irradiance * Wall_Absorptivity * Wall_Area * Wall_Solar_Fraction",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-wall-absorptivity",
+      "name": "Wall Absorptivity",
+      "equation": "0.6",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-wall-solar-fraction",
+      "name": "Wall Solar Fraction",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-solar-gain-through-windows",
+      "name": "Solar Gain through Windows",
+      "equation": "Solar_Irradiance * Window_Area * Window_SHGC",
+      "position": {
+        "x": 400,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-window-area",
+      "name": "Window Area",
+      "equation": "15",
+      "position": {
+        "x": 550,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-window-solar-heat-gain-coefficient",
+      "name": "Window Solar Heat Gain Coefficient",
+      "equation": "0.4",
+      "position": {
+        "x": 700,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-solar-gain-to-floor",
+      "name": "Solar Gain to Floor",
+      "equation": "Q_Solar_Gain * 0.4",
+      "position": {
+        "x": 100,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-internal-heat-gains",
+      "name": "Internal Heat Gains",
+      "equation": "Internal_Gains_Schedule * Max_Internal_Gains",
+      "position": {
+        "x": 250,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-maximum-internal-gains",
+      "name": "Maximum Internal Gains",
+      "equation": "500",
+      "position": {
+        "x": 400,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-internal-gains-schedule",
+      "name": "Internal Gains Schedule",
+      "equation": "IF Time / 3600 MOD 24 > 8 AND Time / 3600 MOD 24 < 18 THEN 1 ELSE 0.2",
+      "position": {
+        "x": 550,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-radiation-wall-to-sky",
+      "name": "Radiation Wall to Sky",
+      "equation": "Wall_Emissivity * Stefan_Boltzmann * Wall_Area * Wall_Solar_Fraction * (Wall_Temperature^4 - Sky_Temperature^4)",
+      "position": {
+        "x": 700,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-wall-emissivity",
+      "name": "Wall Emissivity",
+      "equation": "0.9",
+      "position": {
+        "x": 100,
+        "y": 720
+      }
+    },
+    {
+      "id": "var-stefan-boltzmann-constant",
+      "name": "Stefan-Boltzmann Constant",
+      "equation": "5.67e-8",
+      "position": {
+        "x": 250,
+        "y": 720
+      }
+    },
+    {
+      "id": "var-hvac-heating",
+      "name": "HVAC Heating",
+      "equation": "IF Interior_Temperature < Setpoint_Temperature - Thermostat_Deadband THEN HVAC_Capacity ELSE 0",
+      "position": {
+        "x": 400,
+        "y": 720
+      }
+    },
+    {
+      "id": "var-hvac-cooling",
+      "name": "HVAC Cooling",
+      "equation": "IF Interior_Temperature > Setpoint_Temperature + Thermostat_Deadband THEN HVAC_Capacity ELSE 0",
+      "position": {
+        "x": 550,
+        "y": 720
+      }
+    },
+    {
+      "id": "var-hvac-capacity",
+      "name": "HVAC Capacity",
+      "equation": "5000",
+      "position": {
+        "x": 700,
+        "y": 720
+      }
+    },
+    {
+      "id": "var-hvac-coefficient-of-performance",
+      "name": "HVAC Coefficient of Performance",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 800
+      }
+    },
+    {
+      "id": "var-total-heat-loss",
+      "name": "Total Heat Loss",
+      "equation": "Q_Convection_Wall_Interior + Q_Infiltration",
+      "position": {
+        "x": 250,
+        "y": 800
+      }
+    },
+    {
+      "id": "var-total-heat-gain",
+      "name": "Total Heat Gain",
+      "equation": "Q_Solar_Gain + Q_Internal_Gains",
+      "position": {
+        "x": 400,
+        "y": 800
+      }
+    },
+    {
+      "id": "var-net-heat-flow",
+      "name": "Net Heat Flow",
+      "equation": "Total_Heat_Gain - Total_Heat_Loss + Q_HVAC_Heating - Q_HVAC_Cooling",
+      "position": {
+        "x": 550,
+        "y": 800
+      }
+    },
+    {
+      "id": "var-interior-temperature-celsius",
+      "name": "Interior Temperature (Celsius)",
+      "equation": "Interior_Temperature - 273.15",
+      "position": {
+        "x": 700,
+        "y": 800
+      }
+    },
+    {
+      "id": "var-exterior-temperature-celsius",
+      "name": "Exterior Temperature (Celsius)",
+      "equation": "Exterior_Temperature - 273.15",
+      "position": {
+        "x": 100,
+        "y": 880
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Interior Air Temperature",
+      "to_element": "Convection Wall to Interior"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Wall Temperature",
+      "to_element": "Convection Wall to Interior"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Exterior Temperature",
+      "to_element": "Convection Exterior to Wall"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Wall Temperature",
+      "to_element": "Convection Exterior to Wall"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Solar Irradiance",
+      "to_element": "Solar Gain on Wall"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Interior Air Temperature",
+      "to_element": "HVAC Heating"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Interior Air Temperature",
+      "to_element": "HVAC Cooling"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Temperature Setpoint",
+      "to_element": "HVAC Heating"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Temperature Setpoint",
+      "to_element": "HVAC Cooling"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 86400,
+    "dt": 60
+  },
+  "created_at": "2026-01-11T20:04:50.830576Z",
+  "updated_at": "2026-01-11T20:04:50.830576Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg System Dynamics Test Models"
+}

@@ -1,0 +1,120 @@
+{
+  "id": "stern-dietz-climate-damage-cli",
+  "name": "Stern-Dietz Climate Damage Function",
+  "description": "Climate damage model from the Stern Review with non-linear damages",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Temperature_Rise",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "GDP_Baseline",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Damage_GDP_Share",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "a1",
+      "equation": "0.00284",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "a2",
+      "equation": "0.00000507",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Market_Damage",
+      "equation": "a1*Temperature_Rise",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Nonmarket_Damage",
+      "equation": "a2*Temperature_Rise*Temperature_Rise*Temperature_Rise*Temperature_Rise*Temperature_Rise*Temperature_Rise*Temperature_Rise",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Total_Damage_Share",
+      "equation": "Market_Damage+Nonmarket_Damage",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Damage_Cost",
+      "equation": "Total_Damage_Share*GDP_Baseline",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Temperature_Rise",
+      "to_element": "Market_Damage"
+    },
+    {
+      "id": "c2",
+      "from_element": "Temperature_Rise",
+      "to_element": "Nonmarket_Damage"
+    },
+    {
+      "id": "c3",
+      "from_element": "Total_Damage_Share",
+      "to_element": "Damage_GDP_Share"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 6.0,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T20:44:13.929025+00:00",
+  "updated_at": "2026-01-15T20:44:13.929025+00:00",
+  "source": "https://doi.org/10.1257/aer.100.2.29",
+  "reference": "Stern, N. (2007) The Economics of Climate Change. Cambridge University Press"
+}

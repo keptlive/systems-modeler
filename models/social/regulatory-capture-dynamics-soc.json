@@ -1,0 +1,144 @@
+{
+  "id": "regulatory-capture-dynamics-soc",
+  "name": "Regulatory Capture Dynamics",
+  "description": "Industry influence over regulatory agencies over time. Source: Stigler (1971), Bell Journal of Economics. DOI: 10.2307/3003160",
+  "stocks": [
+    {
+      "id": "stock-indep",
+      "name": "Regulator_Independence",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-capture",
+      "name": "Industry_Influence",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-public",
+      "name": "Public_Interest",
+      "initial_value": 70,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-influence",
+      "name": "Industry_Pressure",
+      "equation": "Regulator_Independence * Lobbying_Intensity * Revolving_Door_Effect",
+      "from_stock": "stock-indep",
+      "to_stock": "stock-capture",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-reform",
+      "name": "Reform_Pressure",
+      "equation": "Industry_Influence * Reform_Rate * (1 - Public_Interest / 100)",
+      "from_stock": "stock-capture",
+      "to_stock": "stock-indep",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-pubchg",
+      "name": "Public_Interest_Change",
+      "equation": "(Base_Public_Interest - Public_Interest + Regulator_Independence * 0.5 - Industry_Influence * 0.3) * Adjustment_Rate",
+      "from_stock": null,
+      "to_stock": "stock-public",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-lobby",
+      "name": "Lobbying_Intensity",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-revolving",
+      "name": "Revolving_Door_Effect",
+      "equation": "1.5",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-reform",
+      "name": "Reform_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-basepub",
+      "name": "Base_Public_Interest",
+      "equation": "60",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-adj",
+      "name": "Adjustment_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 275
+      }
+    },
+    {
+      "id": "var-capture",
+      "name": "Capture_Index",
+      "equation": "Industry_Influence / (Regulator_Independence + Industry_Influence)",
+      "position": {
+        "x": 300,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Industry_Influence",
+      "to_element": "Public_Interest_Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:13:18.795812+00:00",
+  "updated_at": "2026-01-12T02:13:18.795815+00:00",
+  "source": "https://doi.org/10.2307/3003160",
+  "reference": "Stigler, G.J. (1971). The Theory of Economic Regulation. Bell Journal of Economics."
+}

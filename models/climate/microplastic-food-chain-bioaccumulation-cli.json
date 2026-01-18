@@ -1,0 +1,33 @@
+{
+  "id": "microplastic-food-chain-bioaccumulation-cli",
+  "name": "Microplastic Food Chain Bioaccumulation Model",
+  "description": "Model of microplastic accumulation through marine food chains. Particles concentrate at higher trophic levels. Source: Galloway et al. (2017). Nature Ecology & Evolution. DOI: 10.1038/s41559-017-0116",
+  "stocks": [
+    {"id": "stock-water", "name": "Water_Concentration", "initial_value": 1, "equation": "", "position": {"x": 100, "y": 200}},
+    {"id": "stock-plankton", "name": "Plankton_Concentration", "initial_value": 0, "equation": "", "position": {"x": 250, "y": 200}},
+    {"id": "stock-fish", "name": "Fish_Concentration", "initial_value": 0, "equation": "", "position": {"x": 400, "y": 200}},
+    {"id": "stock-predator", "name": "Predator_Concentration", "initial_value": 0, "equation": "", "position": {"x": 550, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-input", "name": "Plastic_Input", "equation": "Annual_Plastic_Input", "from_stock": null, "to_stock": "stock-water", "position": {"x": 50, "y": 200}},
+    {"id": "flow-plankton-uptake", "name": "Plankton_Uptake", "equation": "Water_Concentration * Uptake_Rate_Plankton", "from_stock": "stock-water", "to_stock": "stock-plankton", "position": {"x": 175, "y": 200}},
+    {"id": "flow-fish-uptake", "name": "Fish_Bioaccumulation", "equation": "Plankton_Concentration * Trophic_Transfer_Factor * Fish_Feeding_Rate", "from_stock": "stock-plankton", "to_stock": "stock-fish", "position": {"x": 325, "y": 200}},
+    {"id": "flow-predator-uptake", "name": "Predator_Bioaccumulation", "equation": "Fish_Concentration * Trophic_Transfer_Factor * Predator_Feeding_Rate", "from_stock": "stock-fish", "to_stock": "stock-predator", "position": {"x": 475, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-input", "name": "Annual_Plastic_Input", "equation": "0.1", "position": {"x": 50, "y": 100}},
+    {"id": "var-uptake-plankton", "name": "Uptake_Rate_Plankton", "equation": "0.1", "position": {"x": 175, "y": 100}},
+    {"id": "var-ttf", "name": "Trophic_Transfer_Factor", "equation": "10", "position": {"x": 325, "y": 100}},
+    {"id": "var-fish-feeding", "name": "Fish_Feeding_Rate", "equation": "0.3", "position": {"x": 400, "y": 100}},
+    {"id": "var-predator-feeding", "name": "Predator_Feeding_Rate", "equation": "0.2", "position": {"x": 550, "y": 100}},
+    {"id": "var-biomagnification", "name": "Biomagnification_Factor", "equation": "Predator_Concentration / (Water_Concentration + 0.001)", "position": {"x": 300, "y": 350}},
+    {"id": "var-human-exposure", "name": "Human_Exposure_Risk", "equation": "Fish_Concentration * Seafood_Consumption", "position": {"x": 450, "y": 350}},
+    {"id": "var-consumption", "name": "Seafood_Consumption", "equation": "20", "position": {"x": 550, "y": 350}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 50, "dt": 0.5},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1038/s41559-017-0116",
+  "reference": "Galloway, T.S., Cole, M. & Lewis, C. (2017). Interactions of microplastic debris throughout the marine ecosystem. Nature Ecology & Evolution, 1, 0116."
+}

@@ -1,0 +1,478 @@
+{
+  "id": "urban-migration-model-soc",
+  "name": "Urban Migration Model",
+  "description": "A system dynamics model of rural-to-urban migration based on push-pull theory. Models the feedback between economic opportunities, housing availability, infrastructure strain, and quality of life that drive migration patterns. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-rural-population",
+      "name": "Rural Population",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-urban-population",
+      "name": "Urban Population",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-urban-jobs",
+      "name": "Urban Jobs",
+      "initial_value": 900000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-urban-housing",
+      "name": "Urban Housing Stock",
+      "initial_value": 350000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 450
+      }
+    },
+    {
+      "id": "stock-infrastructure",
+      "name": "Infrastructure Capacity",
+      "initial_value": 1200000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "stock-rural-economy",
+      "name": "Rural Economic Activity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-rural-urban-migration",
+      "name": "Rural to Urban Migration",
+      "equation": "Rural_Population * Migration_Rate * Pull_Factors / Push_Factors",
+      "from_stock": "stock-rural-population",
+      "to_stock": "stock-urban-population",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-return-migration",
+      "name": "Return Migration",
+      "equation": "Urban_Population * Return_Rate * Urban_Stress_Factor",
+      "from_stock": "stock-urban-population",
+      "to_stock": "stock-rural-population",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-rural-births",
+      "name": "Rural Births",
+      "equation": "Rural_Population * Rural_Birth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-rural-population",
+      "position": {
+        "x": 75,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-urban-births",
+      "name": "Urban Births",
+      "equation": "Urban_Population * Urban_Birth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-urban-population",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-job-creation",
+      "name": "Job Creation",
+      "equation": "Urban_Population * Job_Creation_Rate * Economic_Growth_Factor",
+      "from_stock": null,
+      "to_stock": "stock-urban-jobs",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-job-destruction",
+      "name": "Job Destruction",
+      "equation": "Urban_Jobs * Job_Destruction_Rate",
+      "from_stock": "stock-urban-jobs",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-housing-construction",
+      "name": "Housing Construction",
+      "equation": "(Desired_Housing - Urban_Housing_Stock) / Construction_Time * Investment_Factor",
+      "from_stock": null,
+      "to_stock": "stock-urban-housing",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    },
+    {
+      "id": "flow-housing-depreciation",
+      "name": "Housing Depreciation",
+      "equation": "Urban_Housing_Stock / Housing_Lifetime",
+      "from_stock": "stock-urban-housing",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 450
+      }
+    },
+    {
+      "id": "flow-infrastructure-investment",
+      "name": "Infrastructure Investment",
+      "equation": "(Desired_Infrastructure - Infrastructure_Capacity) / Infrastructure_Lag * Public_Investment_Rate",
+      "from_stock": null,
+      "to_stock": "stock-infrastructure",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "flow-infrastructure-decay",
+      "name": "Infrastructure Decay",
+      "equation": "Infrastructure_Capacity * Decay_Rate",
+      "from_stock": "stock-infrastructure",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "flow-rural-economic-growth",
+      "name": "Rural Development",
+      "equation": "(Target_Rural_Economy - Rural_Economic_Activity) / Development_Time",
+      "from_stock": null,
+      "to_stock": "stock-rural-economy",
+      "position": {
+        "x": 150,
+        "y": 380
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-migration-rate",
+      "name": "Migration Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-pull-factors",
+      "name": "Pull Factors",
+      "equation": "Urban_Job_Availability * Urban_Wage_Premium * (1 - Housing_Pressure)",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-push-factors",
+      "name": "Push Factors",
+      "equation": "1 + Rural_Economic_Activity / 100",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-urban-job-availability",
+      "name": "Urban Job Availability",
+      "equation": "Urban_Jobs / Urban_Population",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-urban-wage-premium",
+      "name": "Urban Wage Premium",
+      "equation": "1.5",
+      "position": {
+        "x": 700,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-housing-pressure",
+      "name": "Housing Pressure",
+      "equation": "MAX(0, MIN(1, (Urban_Population / (Urban_Housing_Stock * People_Per_Unit) - 1)))",
+      "position": {
+        "x": 100,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-people-per-unit",
+      "name": "People Per Unit",
+      "equation": "3",
+      "position": {
+        "x": 250,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-urban-stress",
+      "name": "Urban Stress Factor",
+      "equation": "Housing_Pressure + Infrastructure_Strain",
+      "position": {
+        "x": 400,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-infrastructure-strain",
+      "name": "Infrastructure Strain",
+      "equation": "MAX(0, (Urban_Population - Infrastructure_Capacity) / Infrastructure_Capacity)",
+      "position": {
+        "x": 550,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-return-rate",
+      "name": "Return Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 700,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-rural-birth-rate",
+      "name": "Rural Birth Rate",
+      "equation": "0.025",
+      "position": {
+        "x": 100,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-urban-birth-rate",
+      "name": "Urban Birth Rate",
+      "equation": "0.015",
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-job-creation-rate",
+      "name": "Job Creation Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 400,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-economic-growth",
+      "name": "Economic Growth Factor",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-job-destruction-rate",
+      "name": "Job Destruction Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 700,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-desired-housing",
+      "name": "Desired Housing",
+      "equation": "Urban_Population / People_Per_Unit * 1.1",
+      "position": {
+        "x": 100,
+        "y": 750
+      }
+    },
+    {
+      "id": "var-construction-time",
+      "name": "Construction Time",
+      "equation": "3",
+      "position": {
+        "x": 250,
+        "y": 750
+      }
+    },
+    {
+      "id": "var-investment-factor",
+      "name": "Investment Factor",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 750
+      }
+    },
+    {
+      "id": "var-housing-lifetime",
+      "name": "Housing Lifetime",
+      "equation": "50",
+      "position": {
+        "x": 550,
+        "y": 750
+      }
+    },
+    {
+      "id": "var-desired-infrastructure",
+      "name": "Desired Infrastructure",
+      "equation": "Urban_Population * 1.2",
+      "position": {
+        "x": 700,
+        "y": 750
+      }
+    },
+    {
+      "id": "var-infrastructure-lag",
+      "name": "Infrastructure Lag",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 850
+      }
+    },
+    {
+      "id": "var-public-investment",
+      "name": "Public Investment Rate",
+      "equation": "0.8",
+      "position": {
+        "x": 250,
+        "y": 850
+      }
+    },
+    {
+      "id": "var-decay-rate",
+      "name": "Decay Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 850
+      }
+    },
+    {
+      "id": "var-target-rural",
+      "name": "Target Rural Economy",
+      "equation": "80",
+      "position": {
+        "x": 550,
+        "y": 850
+      }
+    },
+    {
+      "id": "var-development-time",
+      "name": "Development Time",
+      "equation": "10",
+      "position": {
+        "x": 700,
+        "y": 850
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Rural Population",
+      "to_element": "Rural to Urban Migration"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Pull Factors",
+      "to_element": "Rural to Urban Migration"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Push Factors",
+      "to_element": "Rural to Urban Migration"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Urban Job Availability",
+      "to_element": "Pull Factors"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Housing Pressure",
+      "to_element": "Pull Factors"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Urban Stress Factor",
+      "to_element": "Return Migration"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Urban Population",
+      "to_element": "Desired Housing"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Urban Population",
+      "to_element": "Infrastructure Strain"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Infrastructure Capacity",
+      "to_element": "Infrastructure Strain"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Rural Economic Activity",
+      "to_element": "Push Factors"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

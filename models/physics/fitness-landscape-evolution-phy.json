@@ -1,0 +1,144 @@
+{
+  "id": "fitness-landscape-evolution-phy",
+  "name": "Fitness Landscape and Evolutionary Dynamics",
+  "description": "Models adaptation on rugged fitness landscapes. Source: Kauffman (1993), The Origins of Order. DOI: 10.1093/oso/9780195079517.001.0001",
+  "stocks": [
+    {
+      "id": "stock-fitness",
+      "name": "Population_Fitness",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-diversity",
+      "name": "Genetic_Diversity",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-peak",
+      "name": "Distance_To_Peak",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adapt",
+      "name": "Adaptation",
+      "equation": "Selection_Strength * Genetic_Diversity * (Max_Fitness - Population_Fitness) / Max_Fitness",
+      "from_stock": null,
+      "to_stock": "stock-fitness",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-mutate",
+      "name": "Mutation_Effect",
+      "equation": "Mutation_Rate * Diversity_Generation - Genetic_Diversity * Selection_Strength * 0.1",
+      "from_stock": null,
+      "to_stock": "stock-diversity",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-peakchg",
+      "name": "Peak_Approach",
+      "equation": "(Population_Fitness / Max_Fitness * 50 - Distance_To_Peak) * 0.1",
+      "from_stock": null,
+      "to_stock": "stock-peak",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-select",
+      "name": "Selection_Strength",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-maxfit",
+      "name": "Max_Fitness",
+      "equation": "100",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-mutrate",
+      "name": "Mutation_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-divgen",
+      "name": "Diversity_Generation",
+      "equation": "50",
+      "position": {
+        "x": 250,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-rugged",
+      "name": "Landscape_Ruggedness",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-localopt",
+      "name": "Local_Optimum_Trap",
+      "equation": "IF(Distance_To_Peak > 10 AND Population_Fitness > 70, 1, 0)",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Genetic_Diversity",
+      "to_element": "Adaptation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 500,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:17:16.214201+00:00",
+  "updated_at": "2026-01-12T02:17:16.214204+00:00",
+  "source": "https://doi.org/10.1093/oso/9780195079517.001.0001",
+  "reference": "Kauffman, S.A. (1993). The Origins of Order: Self-Organization and Selection in Evolution. Oxford University Press."
+}

@@ -1,0 +1,149 @@
+{
+  "id": "lanchester-combat-model-soc",
+  "name": "Lanchester Combat Dynamics Model",
+  "description": "Frederick Lanchester's laws of combat attrition showing force dynamics. Source: Lanchester (1916), Aircraft in Warfare; Taylor (1983), Lanchester Models of Warfare.",
+  "stocks": [
+    {
+      "id": "stock-blue",
+      "name": "Blue_Forces",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-red",
+      "name": "Red_Forces",
+      "initial_value": 800,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-blueloss",
+      "name": "Blue_Attrition",
+      "equation": "Blue_Forces * Red_Fire_Rate * Red_Effectiveness * Red_Forces / MAX(1, Blue_Forces)",
+      "from_stock": "stock-blue",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-redloss",
+      "name": "Red_Attrition",
+      "equation": "Red_Forces * Blue_Fire_Rate * Blue_Effectiveness * Blue_Forces / MAX(1, Red_Forces)",
+      "from_stock": "stock-red",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-bluereinf",
+      "name": "Blue_Reinforcement",
+      "equation": "Blue_Reinf_Rate",
+      "from_stock": null,
+      "to_stock": "stock-blue",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-redreinf",
+      "name": "Red_Reinforcement",
+      "equation": "Red_Reinf_Rate",
+      "from_stock": null,
+      "to_stock": "stock-red",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-bluerate",
+      "name": "Blue_Fire_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-redrate",
+      "name": "Red_Fire_Rate",
+      "equation": "0.008",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-blueeff",
+      "name": "Blue_Effectiveness",
+      "equation": "1.0",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-redeff",
+      "name": "Red_Effectiveness",
+      "equation": "0.9",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-bluereinf",
+      "name": "Blue_Reinf_Rate",
+      "equation": "5",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-redreinf",
+      "name": "Red_Reinf_Rate",
+      "equation": "4",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-ratio",
+      "name": "Force_Ratio",
+      "equation": "Blue_Forces / MAX(1, Red_Forces)",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T12:45:39.561803+00:00",
+  "updated_at": "2026-01-12T12:45:39.561803+00:00",
+  "source": "https://systemdynamics.org/resources/",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

@@ -1,0 +1,219 @@
+{
+  "id": "goodwin-growth-cycle-model-eco",
+  "name": "Goodwin Growth Cycle Model",
+  "description": "A model of endogenous economic fluctuations based on class struggle dynamics between workers and capitalists. The interaction between wages and employment creates cycles analogous to predator-prey (Lotka-Volterra) dynamics. Workers' share of income acts as 'predator' and employment rate acts as 'prey'. Reference: Lotka, A. J. (1920). Analytical note on certain rhythmic relations in organic systems. PNAS, 6(7), 410-415. DOI: https://doi.org/10.1073/pnas.6.7.410",
+  "stocks": [
+    {
+      "id": "stock-employment-rate",
+      "name": "Employment Rate",
+      "initial_value": 0.95,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-wage-share",
+      "name": "Wage Share",
+      "initial_value": 0.6,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-employment-change",
+      "name": "Employment Change",
+      "equation": "Employment_Rate * (Capital_Growth_Rate - Labor_Force_Growth_Rate - Productivity_Growth_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-employment-rate",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-wage-share-change",
+      "name": "Wage Share Change",
+      "equation": "Wage_Share * (Real_Wage_Growth_Rate - Productivity_Growth_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-wage-share",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-productivity-growth-rate",
+      "name": "Productivity Growth Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-labor-force-growth-rate",
+      "name": "Labor Force Growth Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-capital-output-ratio",
+      "name": "Capital Output Ratio",
+      "equation": "3",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-profit-share",
+      "name": "Profit Share",
+      "equation": "1 - Wage_Share",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-capital-growth-rate",
+      "name": "Capital Growth Rate",
+      "equation": "Profit_Share / Capital_Output_Ratio",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-phillips-curve-intercept",
+      "name": "Phillips Curve Intercept",
+      "equation": "-0.04",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-phillips-curve-slope",
+      "name": "Phillips Curve Slope",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-real-wage-growth-rate",
+      "name": "Real Wage Growth Rate",
+      "equation": "Phillips_Curve_Intercept + Phillips_Curve_Slope * Employment_Rate",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-equilibrium-employment-rate",
+      "name": "Equilibrium Employment Rate",
+      "equation": "(Productivity_Growth_Rate - Phillips_Curve_Intercept) / Phillips_Curve_Slope",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-equilibrium-wage-share",
+      "name": "Equilibrium Wage Share",
+      "equation": "1 - Capital_Output_Ratio * (Productivity_Growth_Rate + Labor_Force_Growth_Rate)",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Employment Rate",
+      "to_element": "Employment Change"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Capital Growth Rate",
+      "to_element": "Employment Change"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Labor Force Growth Rate",
+      "to_element": "Employment Change"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Productivity Growth Rate",
+      "to_element": "Employment Change"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Wage Share",
+      "to_element": "Wage Share Change"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Real Wage Growth Rate",
+      "to_element": "Wage Share Change"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Productivity Growth Rate",
+      "to_element": "Wage Share Change"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Wage Share",
+      "to_element": "Profit Share"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Profit Share",
+      "to_element": "Capital Growth Rate"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Capital Output Ratio",
+      "to_element": "Capital Growth Rate"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Employment Rate",
+      "to_element": "Real Wage Growth Rate"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Phillips Curve Intercept",
+      "to_element": "Real Wage Growth Rate"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Phillips Curve Slope",
+      "to_element": "Real Wage Growth Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.0625
+  },
+  "created_at": "2026-01-11T20:04:50.751474Z",
+  "updated_at": "2026-01-11T20:04:50.751474Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

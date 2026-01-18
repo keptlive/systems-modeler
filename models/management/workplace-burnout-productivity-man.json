@@ -1,0 +1,281 @@
+{
+  "id": "workplace-burnout-productivity-man",
+  "name": "Workplace Burnout and Productivity Dynamics",
+  "description": "Model of employee burnout progression, recovery, and organizational productivity impacts. Based on Maslach & Leiter burnout research. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Engaged Employees",
+      "initial_value": 0.7,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Exhausted Employees",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Burned Out",
+      "initial_value": 0.08,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "On Leave",
+      "initial_value": 0.02,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Organizational Energy",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Exhaustion Onset",
+      "equation": "Engaged_Employees * Workload_Pressure * Engagement_Depletion_Rate",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Burnout Development",
+      "equation": "Exhausted_Employees * Burnout_Rate * Lack_of_Support",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Taking Leave",
+      "equation": "Burned_Out * Leave_Rate",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "position": {
+        "x": 450,
+        "y": 275
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Return from Leave",
+      "equation": "On_Leave / Leave_Duration",
+      "from_stock": "s4",
+      "to_stock": "s1",
+      "position": {
+        "x": 250,
+        "y": 275
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Recovery at Work",
+      "equation": "Exhausted_Employees * Recovery_Rate * Support_Effect",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Energy Drain",
+      "equation": "(Exhausted_Employees + Burned_Out * 2) * Energy_Drain_Rate * 10",
+      "from_stock": "s5",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Energy Recovery",
+      "equation": "Engaged_Employees * Energy_Recovery_Rate * 5",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Workload Pressure",
+      "equation": "1.5",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Engagement Depletion Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Burnout Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Lack of Support",
+      "equation": "1.2",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Leave Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Leave Duration",
+      "equation": "20",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Recovery Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Support Effect",
+      "equation": "Organizational_Energy / 100",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Energy Drain Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Energy Recovery Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Productivity Index",
+      "equation": "Engaged_Employees * 1 + Exhausted_Employees * 0.6 + Burned_Out * 0.2",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Burnout Prevalence",
+      "equation": "Burned_Out + On_Leave",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Turnover Risk",
+      "equation": "Burned_Out * 0.3",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Engaged Employees",
+      "to_element": "Exhaustion Onset"
+    },
+    {
+      "id": "c2",
+      "from_element": "Exhausted Employees",
+      "to_element": "Burnout Development"
+    },
+    {
+      "id": "c3",
+      "from_element": "Organizational Energy",
+      "to_element": "Support Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:14:19.574145",
+  "updated_at": "2026-01-15T14:14:19.574158",
+  "source": "https://doi.org/10.1146/annurev.psych.52.1.397",
+  "reference": "Maslach C, Schaufeli WB, Leiter MP. Job Burnout. Annual Review of Psychology. 2001;52:397-422."
+}

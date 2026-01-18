@@ -1,0 +1,114 @@
+{
+  "id": "moores-law-technological-progress-eco",
+  "name": "Moore's Law Technological Progress",
+  "description": "Exponential growth in computing capacity through transistor density doubling. Foundational technology forecasting model. Source: Moore (1965) and Schaller (1997). DOI: 10.1109/MAHC.2006.45",
+  "stocks": [
+    {
+      "id": "stock-trans",
+      "name": "Transistor_Count",
+      "initial_value": 2300,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-perf",
+      "name": "Computing_Performance",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-double",
+      "name": "Transistor_Growth",
+      "equation": "Transistor_Count * Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-trans",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-perfgrow",
+      "name": "Performance_Growth",
+      "equation": "Computing_Performance * (Growth_Rate * Performance_Multiplier)",
+      "from_stock": null,
+      "to_stock": "stock-perf",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-growth",
+      "name": "Growth_Rate",
+      "equation": "LN(2) / Doubling_Time",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-double",
+      "name": "Doubling_Time",
+      "equation": "2",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-perfmult",
+      "name": "Performance_Multiplier",
+      "equation": "0.8",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-feature",
+      "name": "Feature_Size",
+      "equation": "10000 / (Transistor_Count ^ 0.5)",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-cost",
+      "name": "Cost_Per_Transistor",
+      "equation": "1 / Transistor_Count",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Transistor_Count",
+      "to_element": "Transistor_Growth"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:02:23.927254Z",
+  "updated_at": "2026-01-12T02:02:23.927258Z",
+  "source": "https://doi.org/10.1109/MAHC.2006.45",
+  "reference": "Moore, G.E. (1965). Cramming more components onto integrated circuits. Electronics Magazine."
+}

@@ -1,0 +1,151 @@
+{
+  "id": "predator-prey",
+  "name": "Predator Prey",
+  "description": "Model from Predator_Prey.mdl",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Prey_Population",
+      "initial_value": 250.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Predator_Population",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Prey_Deaths",
+      "equation": "Predation_Rate*Prey_Population*Predator_Population",
+      "from_stock": "Prey_Population",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Predator_Births",
+      "equation": "Predator_Food_Driven_Fertility*Prey_Population*Predator_Population",
+      "from_stock": null,
+      "to_stock": "Predator_Population",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Predator_Deaths",
+      "equation": "Predator_Mortality*Predator_Population",
+      "from_stock": "Predator_Population",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Predation_Rate",
+      "equation": "0.0001",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Prey_Fertility",
+      "equation": "2.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Predator_Food_Driven_Fertility",
+      "equation": "0.001",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Predator_Mortality",
+      "equation": "0.01",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Predator_Population",
+      "to_element": "Prey_Deaths"
+    },
+    {
+      "id": "c2",
+      "from_element": "Prey_Population",
+      "to_element": "Prey_Deaths"
+    },
+    {
+      "id": "c3",
+      "from_element": "Predation_Rate",
+      "to_element": "Prey_Deaths"
+    },
+    {
+      "id": "c4",
+      "from_element": "Predator_Population",
+      "to_element": "Predator_Births"
+    },
+    {
+      "id": "c5",
+      "from_element": "Prey_Population",
+      "to_element": "Predator_Births"
+    },
+    {
+      "id": "c6",
+      "from_element": "Predator_Food_Driven_Fertility",
+      "to_element": "Predator_Births"
+    },
+    {
+      "id": "c7",
+      "from_element": "Predator_Population",
+      "to_element": "Predator_Deaths"
+    },
+    {
+      "id": "c8",
+      "from_element": "Predator_Mortality",
+      "to_element": "Predator_Deaths"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 50.0,
+    "dt": 0.015625
+  },
+  "created_at": "2026-01-15T19:13:16.472553+00:00",
+  "updated_at": "2026-01-15T19:13:16.472553+00:00",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "PySD Cookbook - Educational System Dynamics Models"
+}

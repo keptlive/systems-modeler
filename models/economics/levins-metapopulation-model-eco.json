@@ -1,0 +1,152 @@
+{
+  "id": "levins-metapopulation-model-eco",
+  "name": "Levins Metapopulation Model",
+  "description": "Models the dynamics of spatially structured populations occupying discrete habitat patches. Patches can be occupied or empty, with colonization from occupied patches and local extinction. A foundational model in conservation biology for understanding how habitat fragmentation affects species persistence. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-occupied-patches",
+      "name": "Occupied Patches",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-colonization",
+      "name": "Colonization",
+      "equation": "Colonization_Rate * Occupied_Patches * Empty_Patches",
+      "from_stock": null,
+      "to_stock": "stock-occupied-patches",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-extinction",
+      "name": "Extinction",
+      "equation": "Extinction_Rate * Occupied_Patches",
+      "from_stock": "stock-occupied-patches",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-empty-patches",
+      "name": "Empty Patches",
+      "equation": "Suitable_Habitat - Occupied_Patches",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-suitable-habitat",
+      "name": "Suitable Habitat",
+      "equation": "0.8",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-colonization-rate",
+      "name": "Colonization Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-extinction-rate",
+      "name": "Extinction Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-equilibrium-occupancy",
+      "name": "Equilibrium Occupancy",
+      "equation": "IF Colonization_Rate > Extinction_Rate THEN Suitable_Habitat * (1 - Extinction_Rate / Colonization_Rate) ELSE 0",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-metapopulation-capacity",
+      "name": "Metapopulation Capacity",
+      "equation": "Colonization_Rate * Suitable_Habitat / Extinction_Rate",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-habitat-threshold",
+      "name": "Habitat Threshold",
+      "equation": "Extinction_Rate / Colonization_Rate",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Occupied Patches",
+      "to_element": "Colonization"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Empty Patches",
+      "to_element": "Colonization"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Colonization Rate",
+      "to_element": "Colonization"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Occupied Patches",
+      "to_element": "Extinction"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Extinction Rate",
+      "to_element": "Extinction"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Occupied Patches",
+      "to_element": "Empty Patches"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Suitable Habitat",
+      "to_element": "Empty Patches"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.741636Z",
+  "updated_at": "2026-01-11T20:04:50.741636Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

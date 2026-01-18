@@ -1,0 +1,266 @@
+{
+  "id": "startup-ecosystem-dynamics-eco",
+  "name": "Startup Ecosystem Dynamics Model",
+  "description": "A model of startup ecosystem dynamics including funding cycles, success rates, and ecosystem feedback effects. Reference: Blank, S. (2013). The Four Steps to the Epiphany. K&S Ranch. Source: https://steveblank.com/",
+  "source": "https://doi.org/10.1016/j.respol.2015.12.007",
+  "reference": "Feld B. Startup Communities: Building an Entrepreneurial Ecosystem in Your City. Wiley, 2012.",
+  "stocks": [
+    {
+      "id": "stock-startups",
+      "name": "Active Startups",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-funding",
+      "name": "Available Funding",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-talent",
+      "name": "Startup Talent Pool",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exits",
+      "name": "Successful Exits",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-founding",
+      "name": "New Startups",
+      "equation": "Founding_Rate * Startup_Talent_Pool * Available_Funding / (10000 + Available_Funding)",
+      "from_stock": null,
+      "to_stock": "stock-startups",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-failure",
+      "name": "Startup Failures",
+      "equation": "Active_Startups * Base_Failure_Rate * (1 - Ecosystem_Support)",
+      "from_stock": "stock-startups",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-exit",
+      "name": "Exits",
+      "equation": "Active_Startups * Exit_Rate * Market_Conditions",
+      "from_stock": "stock-startups",
+      "to_stock": "stock-exits",
+      "position": {
+        "x": 250,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-new-funding",
+      "name": "New Funding",
+      "equation": "Base_Investment * (1 + Return_Multiplier * Successful_Exits / 10)",
+      "from_stock": null,
+      "to_stock": "stock-funding",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-deployment",
+      "name": "Funding Deployment",
+      "equation": "Active_Startups * Funding_per_Startup",
+      "from_stock": "stock-funding",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-talent-inflow",
+      "name": "Talent Inflow",
+      "equation": "Base_Talent_Inflow * (1 + Ecosystem_Attractiveness)",
+      "from_stock": null,
+      "to_stock": "stock-talent",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-hiring",
+      "name": "Hiring",
+      "equation": "Active_Startups * Hiring_Rate",
+      "from_stock": "stock-talent",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recycling",
+      "name": "Talent Recycling",
+      "equation": "Startup_Failures * Employees_per_Startup * Retention_Rate",
+      "from_stock": null,
+      "to_stock": "stock-talent",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-ecosystem-support",
+      "name": "Ecosystem Support",
+      "equation": "0.3 + 0.1 * LOG(1 + Active_Startups, 10)",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-ecosystem-attract",
+      "name": "Ecosystem Attractiveness",
+      "equation": "Successful_Exits / 20 + Active_Startups / 200",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-founding",
+      "name": "Founding Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-failure",
+      "name": "Base Failure Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-exit-rate",
+      "name": "Exit Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-market",
+      "name": "Market Conditions",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-base-invest",
+      "name": "Base Investment",
+      "equation": "500",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-return-mult",
+      "name": "Return Multiplier",
+      "equation": "0.5",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-funding-per",
+      "name": "Funding per Startup",
+      "equation": "50",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-base-talent",
+      "name": "Base Talent Inflow",
+      "equation": "200",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-hiring",
+      "name": "Hiring Rate",
+      "equation": "10",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-emp-per",
+      "name": "Employees per Startup",
+      "equation": "10",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-retention",
+      "name": "Retention Rate",
+      "equation": "0.7",
+      "position": {
+        "x": 650,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:51:23.910453+00:00",
+  "updated_at": "2026-01-11T21:51:23.910453+00:00"
+}

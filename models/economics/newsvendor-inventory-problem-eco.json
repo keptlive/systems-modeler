@@ -1,0 +1,126 @@
+{
+  "id": "newsvendor-inventory-problem-eco",
+  "name": "Newsvendor Inventory Problem",
+  "description": "Classic single-period inventory decision model balancing overage and underage costs. Foundation of modern inventory theory. Source: Arrow et al. (1951), Econometrica. DOI: 10.2307/1907729",
+  "stocks": [
+    {
+      "id": "stock-inv",
+      "name": "Inventory",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-sales",
+      "name": "Cumulative_Sales",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-lost",
+      "name": "Lost_Sales",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-order",
+      "name": "Order",
+      "equation": "IF(TIME = 0, Order_Quantity, 0)",
+      "from_stock": null,
+      "to_stock": "stock-inv",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-sell",
+      "name": "Sales",
+      "equation": "MIN(Inventory, Demand)",
+      "from_stock": "stock-inv",
+      "to_stock": "stock-sales",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-lostsale",
+      "name": "Lost_Sale_Rate",
+      "equation": "MAX(0, Demand - Inventory)",
+      "from_stock": null,
+      "to_stock": "stock-lost",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-demand",
+      "name": "Demand",
+      "equation": "100 + 30 * SIN(TIME)",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-orderq",
+      "name": "Order_Quantity",
+      "equation": "120",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-overage",
+      "name": "Overage_Cost",
+      "equation": "2",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-underage",
+      "name": "Underage_Cost",
+      "equation": "5",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Inventory",
+      "to_element": "Sales"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:02:23.926532Z",
+  "updated_at": "2026-01-12T02:02:23.926825Z",
+  "source": "https://doi.org/10.2307/1907729",
+  "reference": "Arrow, K.J., Harris, T., & Marschak, J. (1951). Optimal Inventory Policy. Econometrica."
+}

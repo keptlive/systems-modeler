@@ -1,0 +1,210 @@
+{
+  "id": "methane-emissions-agriculture-cli",
+  "name": "Agricultural Methane Emissions and Climate",
+  "description": "Model of methane emissions from agriculture (livestock, rice paddies) and their contribution to climate forcing. Based on IPCC methane budget assessments. Reference: IPCC (2021). Climate Change 2021: The Physical Science Basis. Cambridge University Press. Source: https://www.ipcc.ch/",
+  "source": "https://doi.org/10.5194/essd-12-1561-2020",
+  "reference": "Saunois M, et al. The Global Methane Budget 2000-2017. Earth System Science Data. 2020;12:1561-1623.",
+  "stocks": [
+    {
+      "id": "stock-livestock",
+      "name": "Livestock_Population",
+      "initial_value": 1500,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-rice",
+      "name": "Rice_Paddy_Area",
+      "initial_value": 160,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-atmos-ch4",
+      "name": "Atmospheric_Methane",
+      "initial_value": 1900,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-forcing",
+      "name": "Methane_Forcing",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-livestock-emit",
+      "name": "Livestock_Emissions",
+      "equation": "Livestock_Population * emission_factor_livestock",
+      "from_stock": null,
+      "to_stock": "stock-atmos-ch4",
+      "position": {
+        "x": 225,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-rice-emit",
+      "name": "Rice_Emissions",
+      "equation": "Rice_Paddy_Area * emission_factor_rice",
+      "from_stock": null,
+      "to_stock": "stock-atmos-ch4",
+      "position": {
+        "x": 225,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-decay",
+      "name": "Methane_Decay",
+      "equation": "Atmospheric_Methane * decay_rate",
+      "from_stock": "stock-atmos-ch4",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-forcing-change",
+      "name": "Forcing_Change",
+      "equation": "forcing_sensitivity * (Atmospheric_Methane - baseline_ch4) / 100",
+      "from_stock": null,
+      "to_stock": "stock-forcing",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-livestock-grow",
+      "name": "Livestock_Growth",
+      "equation": "Livestock_Population * livestock_growth_rate",
+      "from_stock": null,
+      "to_stock": "stock-livestock",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-rice-expand",
+      "name": "Rice_Expansion",
+      "equation": "Rice_Paddy_Area * rice_area_growth",
+      "from_stock": null,
+      "to_stock": "stock-rice",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-ef-live",
+      "name": "emission_factor_livestock",
+      "equation": "0.07",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-ef-rice",
+      "name": "emission_factor_rice",
+      "equation": "0.25",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-decay",
+      "name": "decay_rate",
+      "equation": "0.083",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-sens",
+      "name": "forcing_sensitivity",
+      "equation": "0.001",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-baseline",
+      "name": "baseline_ch4",
+      "equation": "1800",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-live-gr",
+      "name": "livestock_growth_rate",
+      "equation": "0.01",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-rice-gr",
+      "name": "rice_area_growth",
+      "equation": "0.005",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-total-emit",
+      "name": "Total_Agricultural_Emissions",
+      "equation": "Livestock_Population * emission_factor_livestock + Rice_Paddy_Area * emission_factor_rice",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-warming",
+      "name": "Methane_Warming_Contribution",
+      "equation": "Methane_Forcing * 0.3",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 80,
+    "dt": 1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

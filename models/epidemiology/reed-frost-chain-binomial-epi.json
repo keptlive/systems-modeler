@@ -1,0 +1,23 @@
+{
+  "id": "reed-frost-chain-binomial-epi",
+  "name": "Reed-Frost Chain Binomial Epidemic Model",
+  "description": "The Reed-Frost model (1928) is a discrete-time chain binomial model of epidemic spread, predating the Kermack-McKendrick SIR model. Each susceptible has independent probability of infection from each infectious individual. Foundational for stochastic epidemic modeling.",
+  "stocks": [
+    {"id": "stock-susceptible", "name": "Susceptible", "initial_value": 999, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-infected", "name": "Infected", "initial_value": 1, "equation": "", "position": {"x": 400, "y": 200}},
+    {"id": "stock-removed", "name": "Removed", "initial_value": 0, "equation": "", "position": {"x": 600, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-new-infections", "name": "New Infections", "equation": "Susceptible * (1 - (1 - Contact_Probability) ^ Infected)", "from_stock": "stock-susceptible", "to_stock": "stock-infected", "position": {"x": 300, "y": 200}},
+    {"id": "flow-recovery", "name": "Recovery", "equation": "Infected", "from_stock": "stock-infected", "to_stock": "stock-removed", "position": {"x": 500, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-contact-probability", "name": "Contact Probability", "equation": "0.02", "position": {"x": 300, "y": 100}},
+    {"id": "var-basic-reproduction-number", "name": "Basic Reproduction Number", "equation": "Contact_Probability * Susceptible", "position": {"x": 500, "y": 100}},
+    {"id": "var-attack-rate", "name": "Attack Rate", "equation": "Removed / (Susceptible + Infected + Removed)", "position": {"x": 400, "y": 300}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 50, "dt": 1},
+  "source": "https://doi.org/10.1093/oxfordjournals.aje.a118408",
+  "reference": "Abbey H. An Examination of the Reed-Frost Theory of Epidemics. Human Biology. 1952;24(3):201-233."
+}

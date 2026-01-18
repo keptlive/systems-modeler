@@ -1,0 +1,238 @@
+{
+  "id": "inflation-expectations-monetary-policy-eco",
+  "name": "Inflation Expectations and Monetary Policy Model",
+  "description": "Model of inflation dynamics with adaptive and rational expectations, central bank policy response. Based on Mankiw & Reis 2002. Reference: Federal Reserve Economic Data (FRED). Source: https://fred.stlouisfed.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Actual Inflation",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Expected Inflation",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Output Gap",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Policy Rate",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Inflation Change",
+      "equation": "Phillips_Curve_Effect + Cost_Push_Shock - Monetary_Policy_Effect",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Expectation Adjustment",
+      "equation": "(Actual_Inflation - Expected_Inflation) * Adjustment_Speed",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Output Change",
+      "equation": "Demand_Shock - Interest_Rate_Effect * (Policy_Rate - Natural_Rate)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Policy Adjustment",
+      "equation": "Taylor_Rule_Adjustment",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Phillips Curve Effect",
+      "equation": "Output_Gap * Phillips_Slope + Expected_Inflation * 0.5",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Phillips Slope",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Cost Push Shock",
+      "equation": "IF(TIME > 20 AND TIME < 30, 1, 0)",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Monetary Policy Effect",
+      "equation": "(Policy_Rate - Natural_Rate) * 0.2",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Adjustment Speed",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Demand Shock",
+      "equation": "IF(TIME > 40 AND TIME < 50, 0.5, 0)",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Interest Rate Effect",
+      "equation": "0.5",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Natural Rate",
+      "equation": "2",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Inflation Target",
+      "equation": "2",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Taylor Rule Adjustment",
+      "equation": "(1.5 * (Actual_Inflation - Inflation_Target) + 0.5 * Output_Gap) * 0.1",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Real Interest Rate",
+      "equation": "Policy_Rate - Expected_Inflation",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Inflation Gap",
+      "equation": "Actual_Inflation - Inflation_Target",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Credibility Index",
+      "equation": "1 / (1 + ABS(Expected_Inflation - Inflation_Target))",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Actual Inflation",
+      "to_element": "Expectation Adjustment"
+    },
+    {
+      "id": "c2",
+      "from_element": "Output Gap",
+      "to_element": "Phillips Curve Effect"
+    },
+    {
+      "id": "c3",
+      "from_element": "Policy Rate",
+      "to_element": "Monetary Policy Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:14:19.564664",
+  "updated_at": "2026-01-15T14:14:19.564675",
+  "source": "https://doi.org/10.1162/003355302320935034",
+  "reference": "Mankiw NG, Reis R. Sticky Information Versus Sticky Prices: A Proposal to Replace the New Keynesian Phillips Curve. Quarterly Journal of Economics. 2002;117(4):1295-1328."
+}

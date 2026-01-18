@@ -1,0 +1,184 @@
+{
+  "id": "glucose-insulin-regulation-hea",
+  "name": "Glucose-Insulin Homeostasis Model",
+  "description": "Models blood glucose regulation through insulin feedback. Source: Bergman et al. (1981), American Journal of Physiology. DOI: 10.1152/ajpendo.1979.236.6.E667",
+  "stocks": [
+    {
+      "id": "stock-glucose",
+      "name": "Blood_Glucose",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-insulin",
+      "name": "Plasma_Insulin",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-interstitial",
+      "name": "Interstitial_Insulin",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-glucin",
+      "name": "Glucose_Input",
+      "equation": "Meal_Glucose + Hepatic_Production",
+      "from_stock": null,
+      "to_stock": "stock-glucose",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-glucout",
+      "name": "Glucose_Uptake",
+      "equation": "(Glucose_Effectiveness + Insulin_Sensitivity * Interstitial_Insulin) * Blood_Glucose",
+      "from_stock": "stock-glucose",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-inssec",
+      "name": "Insulin_Secretion",
+      "equation": "MAX(0, Beta_Cell_Response * (Blood_Glucose - Glucose_Threshold))",
+      "from_stock": null,
+      "to_stock": "stock-insulin",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-insclear",
+      "name": "Insulin_Clearance",
+      "equation": "Plasma_Insulin * Insulin_Clearance_Rate",
+      "from_stock": "stock-insulin",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-insinter",
+      "name": "Insulin_Interstitial",
+      "equation": "(Plasma_Insulin - Interstitial_Insulin) / Insulin_Delay",
+      "from_stock": null,
+      "to_stock": "stock-interstitial",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-meal",
+      "name": "Meal_Glucose",
+      "equation": "IF(MOD(TIME, 8) < 1, 50, 0)",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-hepatic",
+      "name": "Hepatic_Production",
+      "equation": "2 * (1 - Plasma_Insulin / 20)",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-gluceff",
+      "name": "Glucose_Effectiveness",
+      "equation": "0.01",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-inssens",
+      "name": "Insulin_Sensitivity",
+      "equation": "0.001",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-betacell",
+      "name": "Beta_Cell_Response",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-glucthresh",
+      "name": "Glucose_Threshold",
+      "equation": "80",
+      "position": {
+        "x": 250,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-clearrate",
+      "name": "Insulin_Clearance_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-insdelay",
+      "name": "Insulin_Delay",
+      "equation": "10",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Blood_Glucose",
+      "to_element": "Insulin_Secretion"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 48,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T02:23:02.238224+00:00",
+  "updated_at": "2026-01-12T02:23:02.238227+00:00",
+  "source": "https://doi.org/10.1152/ajpendo.1979.236.6.E667",
+  "reference": "Bergman, R.N. et al. (1981). Quantitative estimation of insulin sensitivity. American Journal of Physiology."
+}

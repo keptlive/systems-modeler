@@ -1,0 +1,252 @@
+{
+  "id": "world3-food-production-cla",
+  "name": "World3 Food Production Subsystem",
+  "description": "Food production subsystem from World3 model (Meadows et al. 1972). Shows agricultural land development, productivity, and food per capita dynamics. From 'Limits to Growth' and 'Dynamics of Growth in a Finite World'. Reference: Meadows, D. H., et al. (1972). The Limits to Growth. Universe Books. Source: https://www.clubofrome.org/publication/the-limits-to-growth/",
+  "stocks": [
+    {
+      "id": "stock-arable-land",
+      "name": "Arable Land",
+      "initial_value": 900,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-land-fertility",
+      "name": "Land Fertility",
+      "initial_value": 600,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-agricultural-capital",
+      "name": "Agricultural Capital",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-land-development",
+      "name": "Land Development",
+      "equation": "Potentially_Arable_Land * Development_Rate * Capital_Effect",
+      "from_stock": null,
+      "to_stock": "stock-arable-land",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-land-degradation",
+      "name": "Land Degradation",
+      "equation": "Arable_Land * Land_Erosion_Rate * Intensity_Effect",
+      "from_stock": "stock-arable-land",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-fertility-regeneration",
+      "name": "Fertility Regeneration",
+      "equation": "(Inherent_Fertility - Land_Fertility) / Fertility_Regeneration_Time",
+      "from_stock": null,
+      "to_stock": "stock-land-fertility",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fertility-degradation",
+      "name": "Fertility Degradation",
+      "equation": "Land_Fertility * Pollution_Effect * Overuse_Effect",
+      "from_stock": "stock-land-fertility",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-ag-investment",
+      "name": "Agricultural Investment",
+      "equation": "Total_Investment * Ag_Investment_Fraction",
+      "from_stock": null,
+      "to_stock": "stock-agricultural-capital",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ag-depreciation",
+      "name": "Agricultural Depreciation",
+      "equation": "Agricultural_Capital / Capital_Lifetime",
+      "from_stock": "stock-agricultural-capital",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-potentially-arable-land",
+      "name": "Potentially Arable Land",
+      "equation": "3200 - Arable_Land",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-development-rate",
+      "name": "Development Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-capital-effect",
+      "name": "Capital Effect on Development",
+      "equation": "Agricultural_Capital / (Agricultural_Capital + 2)",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-land-erosion-rate",
+      "name": "Land Erosion Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-intensity-effect",
+      "name": "Intensity Effect",
+      "equation": "1 + Land_Yield / 1000",
+      "position": {
+        "x": 650,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-inherent-fertility",
+      "name": "Inherent Fertility",
+      "equation": "600",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-fertility-regeneration-time",
+      "name": "Fertility Regeneration Time",
+      "equation": "20",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-pollution-effect",
+      "name": "Pollution Effect",
+      "equation": "0.0001",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-overuse-effect",
+      "name": "Overuse Effect",
+      "equation": "0.0001",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-total-investment",
+      "name": "Total Investment",
+      "equation": "1",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-ag-investment-fraction",
+      "name": "Ag Investment Fraction",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 370
+      }
+    },
+    {
+      "id": "var-capital-lifetime",
+      "name": "Capital Lifetime",
+      "equation": "20",
+      "position": {
+        "x": 250,
+        "y": 370
+      }
+    },
+    {
+      "id": "var-land-yield",
+      "name": "Land Yield",
+      "equation": "Land_Fertility * Technology_Multiplier * Agricultural_Capital / (Arable_Land + 1)",
+      "position": {
+        "x": 450,
+        "y": 370
+      }
+    },
+    {
+      "id": "var-technology-multiplier",
+      "name": "Technology Multiplier",
+      "equation": "1",
+      "position": {
+        "x": 650,
+        "y": 370
+      }
+    },
+    {
+      "id": "var-food-production",
+      "name": "Food Production",
+      "equation": "Arable_Land * Land_Yield",
+      "position": {
+        "x": 100,
+        "y": 440
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T21:20:15.296042+00:00",
+  "updated_at": "2026-01-11T21:20:15.296042+00:00",
+  "source": "https://doi.org/10.1016/B978-0-12-850754-3.50020-2",
+  "reference": "Meadows DH, Meadows DL, Randers J, Behrens WW. The Limits to Growth. Universe Books, 1972."
+}

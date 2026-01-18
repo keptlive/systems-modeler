@@ -1,0 +1,166 @@
+{
+  "id": "social-capital-dynamics-soc",
+  "name": "Social Capital Accumulation and Decay",
+  "description": "Models trust, networks, and reciprocity in communities. Source: Putnam (2000) and Coleman (1988). DOI: 10.1086/228943",
+  "stocks": [
+    {
+      "id": "stock-trust",
+      "name": "Generalized_Trust",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-networks",
+      "name": "Social_Networks",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-norms",
+      "name": "Civic_Norms",
+      "initial_value": 55,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-trustbuild",
+      "name": "Trust_Building",
+      "equation": "Social_Networks * Interaction_Quality * 0.01 * (100 - Generalized_Trust) / 100",
+      "from_stock": null,
+      "to_stock": "stock-trust",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-trusterode",
+      "name": "Trust_Erosion",
+      "equation": "Generalized_Trust * Betrayal_Rate * Inequality_Effect",
+      "from_stock": "stock-trust",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-netgrow",
+      "name": "Network_Growth",
+      "equation": "Civic_Participation * (100 - Social_Networks) / 100 * 0.5",
+      "from_stock": null,
+      "to_stock": "stock-networks",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-netdecay",
+      "name": "Network_Decay",
+      "equation": "Social_Networks * Mobility_Rate",
+      "from_stock": "stock-networks",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-normchange",
+      "name": "Norm_Change",
+      "equation": "(Generalized_Trust * 0.4 + Social_Networks * 0.4 - Civic_Norms + 20) * 0.05",
+      "from_stock": null,
+      "to_stock": "stock-norms",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-interaction",
+      "name": "Interaction_Quality",
+      "equation": "0.7",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-betray",
+      "name": "Betrayal_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-inequality",
+      "name": "Inequality_Effect",
+      "equation": "1.2",
+      "position": {
+        "x": 350,
+        "y": 125
+      }
+    },
+    {
+      "id": "var-civic",
+      "name": "Civic_Participation",
+      "equation": "Civic_Norms / 100 * 10",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-mobility",
+      "name": "Mobility_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 350,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-socap",
+      "name": "Social_Capital_Index",
+      "equation": "(Generalized_Trust + Social_Networks + Civic_Norms) / 3",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Social_Networks",
+      "to_element": "Trust_Building"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:13:18.795929+00:00",
+  "updated_at": "2026-01-12T02:13:18.795932+00:00",
+  "source": "https://doi.org/10.1086/228943",
+  "reference": "Coleman, J.S. (1988). Social Capital in the Creation of Human Capital. American Journal of Sociology."
+}

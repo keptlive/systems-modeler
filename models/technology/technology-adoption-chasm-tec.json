@@ -1,0 +1,166 @@
+{
+  "id": "technology-adoption-chasm-tec",
+  "name": "Technology Adoption Chasm Model",
+  "description": "Model of Geoffrey Moore's technology adoption lifecycle showing the 'chasm' between early adopters and early majority. Reference: Rogers, E. M. (2003). Diffusion of Innovations. Free Press. Source: https://www.simonandschuster.com/",
+  "stocks": [
+    {
+      "id": "stock-innovators",
+      "name": "Innovators",
+      "initial_value": 250,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-early-adopters",
+      "name": "Early_Adopters",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-early-majority",
+      "name": "Early_Majority",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-late-majority",
+      "name": "Late_Majority",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-ea-adoption",
+      "name": "EA_Adoption",
+      "equation": "Innovators * Enthusiasm_Factor * 0.15",
+      "from_stock": "stock-innovators",
+      "to_stock": "stock-early-adopters",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-crossing-chasm",
+      "name": "Crossing_Chasm",
+      "equation": "Early_Adopters * Chasm_Factor * Product_Maturity * 0.1",
+      "from_stock": "stock-early-adopters",
+      "to_stock": "stock-early-majority",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mainstream",
+      "name": "Mainstream_Adoption",
+      "equation": "Early_Majority * 0.08 * Market_Pressure",
+      "from_stock": "stock-early-majority",
+      "to_stock": "stock-late-majority",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-enthusiasm",
+      "name": "Enthusiasm_Factor",
+      "equation": "1.5",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-chasm",
+      "name": "Chasm_Factor",
+      "equation": "0.3",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-maturity",
+      "name": "Product_Maturity",
+      "equation": "0.5",
+      "position": {
+        "x": 325,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-pressure",
+      "name": "Market_Pressure",
+      "equation": "1.2",
+      "position": {
+        "x": 475,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Innovators",
+      "to_element": "EA_Adoption"
+    },
+    {
+      "id": "c2",
+      "from_element": "Enthusiasm_Factor",
+      "to_element": "EA_Adoption"
+    },
+    {
+      "id": "c3",
+      "from_element": "Early_Adopters",
+      "to_element": "Crossing_Chasm"
+    },
+    {
+      "id": "c4",
+      "from_element": "Chasm_Factor",
+      "to_element": "Crossing_Chasm"
+    },
+    {
+      "id": "c5",
+      "from_element": "Product_Maturity",
+      "to_element": "Crossing_Chasm"
+    },
+    {
+      "id": "c6",
+      "from_element": "Early_Majority",
+      "to_element": "Mainstream_Adoption"
+    },
+    {
+      "id": "c7",
+      "from_element": "Market_Pressure",
+      "to_element": "Mainstream_Adoption"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T11:47:36.905355Z",
+  "updated_at": "2026-01-12T11:47:36.905359Z",
+  "source": "https://doi.org/10.1007/978-1-4419-0220-7",
+  "reference": "Moore GA. Crossing the Chasm: Marketing and Selling High-Tech Products to Mainstream Customers. HarperBusiness. 1991, 2014 (3rd ed)."
+}

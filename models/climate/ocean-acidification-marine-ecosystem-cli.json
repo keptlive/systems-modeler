@@ -1,0 +1,254 @@
+{
+  "id": "ocean-acidification-marine-ecosystem-cli",
+  "name": "Ocean Acidification and Marine Ecosystem Impacts",
+  "description": "Model of ocean pH decline from CO2 absorption and impacts on calcifying organisms. Based on Doney et al. 2009 and IPCC AR6 WGII. Reference: IPCC (2021). Climate Change 2021: The Physical Science Basis. Cambridge University Press. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Atmospheric CO2 ppm",
+      "initial_value": 420,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Ocean DIC",
+      "initial_value": 2100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Ocean pH x100",
+      "initial_value": 810,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Coral Cover",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 175
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Shellfish Population",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 325
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "CO2 Emissions",
+      "equation": "Annual_Emissions",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Ocean Uptake",
+      "equation": "Atmospheric_CO2_ppm * Ocean_Uptake_Rate",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "f3",
+      "name": "pH Decline",
+      "equation": "DIC_pH_Sensitivity * (Ocean_DIC - 2000) / 100",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Coral Bleaching",
+      "equation": "Coral_Cover * (Calcification_Stress + Temperature_Stress)",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Coral Recovery",
+      "equation": "Coral_Cover * Recovery_Rate * (1 - Coral_Cover)",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 550,
+        "y": 175
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Shellfish Mortality",
+      "equation": "Shellfish_Population * Shell_Dissolution_Rate * (810 - Ocean_pH_x100) / 10",
+      "from_stock": "s5",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 325
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Shellfish Reproduction",
+      "equation": "Shellfish_Population * Reproduction_Rate * (Ocean_pH_x100 / 810)",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {
+        "x": 550,
+        "y": 325
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Annual Emissions",
+      "equation": "40",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Ocean Uptake Rate",
+      "equation": "0.0001",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "DIC pH Sensitivity",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Calcification Stress",
+      "equation": "MAX(0, (810 - Ocean_pH_x100) / 100)",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Temperature Stress",
+      "equation": "0.01 * TIME",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Recovery Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 600,
+        "y": 175
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Shell Dissolution Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 350,
+        "y": 325
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Reproduction Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 325
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Aragonite Saturation",
+      "equation": "Ocean_pH_x100 / 80 - 2",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Ecosystem Health Index",
+      "equation": "(Coral_Cover + Shellfish_Population / 1000) / 2",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Atmospheric CO2 ppm",
+      "to_element": "Ocean Uptake"
+    },
+    {
+      "id": "c2",
+      "from_element": "Ocean DIC",
+      "to_element": "pH Decline"
+    },
+    {
+      "id": "c3",
+      "from_element": "Ocean pH x100",
+      "to_element": "Calcification Stress"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:14:19.556287",
+  "updated_at": "2026-01-15T14:14:19.556296",
+  "source": "https://doi.org/10.1146/annurev.marine.010908.163834",
+  "reference": "Doney SC, et al. Ocean Acidification: The Other CO2 Problem. Annual Review of Marine Science. 2009;1:169-192."
+}

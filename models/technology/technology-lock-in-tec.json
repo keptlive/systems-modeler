@@ -1,0 +1,182 @@
+{
+  "id": "technology-lock-in-tec",
+  "name": "Technology Lock-In Model",
+  "description": "Arthur (1989) increasing returns and path dependence model. Shows how early advantages can lock in inferior technologies through network effects and learning curves. Reference: Katz, M. L., & Shapiro, C. (1985). Network externalities, competition, and compatibility. AER. Source: https://doi.org/10.2307/1814809",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Technology_A_Share",
+      "initial_value": 0.5,
+      "position": {
+        "x": 200,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s2",
+      "name": "A_Learning_Stock",
+      "initial_value": 10,
+      "position": {
+        "x": 200,
+        "y": 350
+      },
+      "equation": ""
+    },
+    {
+      "id": "s3",
+      "name": "B_Learning_Stock",
+      "initial_value": 10,
+      "position": {
+        "x": 400,
+        "y": 350
+      },
+      "equation": ""
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "share_change",
+      "to_stock": "s1",
+      "equation": "adoption_rate * (probability_choose_A - Technology_A_Share)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f2",
+      "name": "a_learning",
+      "to_stock": "s2",
+      "equation": "Technology_A_Share * learning_rate",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f3",
+      "name": "b_learning",
+      "to_stock": "s3",
+      "equation": "(1 - Technology_A_Share) * learning_rate",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "adoption_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v2",
+      "name": "learning_rate",
+      "equation": "1",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v3",
+      "name": "network_weight",
+      "equation": "0.3",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v4",
+      "name": "learning_weight",
+      "equation": "0.4",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v5",
+      "name": "intrinsic_weight",
+      "equation": "0.3",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v6",
+      "name": "intrinsic_A",
+      "equation": "0.4",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v7",
+      "name": "intrinsic_B",
+      "equation": "0.5",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v8",
+      "name": "utility_A",
+      "equation": "network_weight * Technology_A_Share + learning_weight * A_Learning_Stock/(A_Learning_Stock + 10) + intrinsic_weight * intrinsic_A",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v9",
+      "name": "utility_B",
+      "equation": "network_weight * (1 - Technology_A_Share) + learning_weight * B_Learning_Stock/(B_Learning_Stock + 10) + intrinsic_weight * intrinsic_B",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v10",
+      "name": "probability_choose_A",
+      "equation": "utility_A / (utility_A + utility_B)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "probability_choose_A",
+      "to_element": "share_change"
+    },
+    {
+      "id": "c2",
+      "from_element": "Technology_A_Share",
+      "to_element": "a_learning"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "dt": 1,
+    "end": 100
+  },
+  "created_at": "2026-01-12T02:25:30.586832+00:00",
+  "updated_at": "2026-01-12T02:25:30.586835+00:00",
+  "source": "https://doi.org/10.2307/2234208",
+  "reference": "Arthur, W. B. (1989). Competing technologies, increasing returns, and lock-in by historical events. The economic journal, 99(394), 116-131."
+}

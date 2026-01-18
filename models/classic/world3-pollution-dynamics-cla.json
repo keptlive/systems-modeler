@@ -1,0 +1,185 @@
+{
+  "id": "world3-pollution-dynamics-cla",
+  "name": "World3 Pollution Sector Dynamics",
+  "description": "Model of pollution dynamics from the World3 model (Limits to Growth). Captures pollution generation, absorption, and its effects on land fertility and life expectancy. This is a simplified representation of the original pollution sector. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Persistent_Pollution",
+      "initial_value": 25,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Land_Fertility",
+      "initial_value": 600,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Industrial_Output",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Pollution_Generation",
+      "equation": "Industrial_Output * Pollution_Per_Unit * (1 - Pollution_Control_Fraction)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Pollution_Assimilation",
+      "equation": "Persistent_Pollution / Assimilation_Half_Life",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Fertility_Degradation",
+      "equation": "Land_Fertility * Pollution_Effect_On_Land * Persistent_Pollution / Normal_Pollution",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Industrial_Growth",
+      "equation": "Industrial_Output * Industrial_Growth_Rate * (1 - Pollution_Constraint)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Pollution_Per_Unit",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Pollution_Control_Fraction",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Assimilation_Half_Life",
+      "equation": "20",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Normal_Pollution",
+      "equation": "25",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Pollution_Effect_On_Land",
+      "equation": "0.001",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Industrial_Growth_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Pollution_Index",
+      "equation": "Persistent_Pollution / Normal_Pollution",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Pollution_Constraint",
+      "equation": "MIN(0.9, Pollution_Index * 0.1)",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Life_Expectancy_Multiplier",
+      "equation": "1 / (1 + 0.5 * Pollution_Index)",
+      "position": {
+        "x": 200,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Fertility_Index",
+      "equation": "Land_Fertility / 600",
+      "position": {
+        "x": 450,
+        "y": 180
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 1900,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1016/B978-0-12-850754-3.50020-2",
+  "reference": "Meadows DH, Meadows DL, Randers J, Behrens WW (1972) The Limits to Growth. Universe Books. Also: Meadows D et al. (2004) Limits to Growth: The 30-Year Update.",
+  "created_at": "2026-01-12T06:59:12.983559+00:00",
+  "updated_at": "2026-01-12T06:59:12.983559+00:00"
+}

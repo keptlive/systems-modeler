@@ -1,0 +1,205 @@
+{
+  "id": "mpox-outbreak-epi",
+  "name": "Mpox (Monkeypox) Outbreak Dynamics",
+  "description": "An SEIR model for Mpox (formerly Monkeypox) transmission, incorporating sexual and non-sexual transmission routes, vaccination, and behavioral change. Based on 2022-2023 outbreak data. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "source": "https://doi.org/10.1056/NEJMoa2207323",
+  "reference": "Thornhill JP, et al. Monkeypox Virus Infection in Humans across 16 Countries. NEJM. 2022;387:679-691. See also WHO Mpox Surveillance Data.",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 999000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exposed",
+      "name": "Exposed",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infectious",
+      "name": "Infectious",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-vaccinated",
+      "name": "Vaccinated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-exposure",
+      "name": "Exposure",
+      "equation": "Susceptible * (Beta_Sexual * Infectious / High_Risk_Pop + Beta_NonSexual * Infectious / Total_Pop) * Behavior_Factor",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-infection",
+      "name": "Infection Onset",
+      "equation": "Exposed / Incubation_Period",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-infectious",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "Infectious / Infectious_Period",
+      "from_stock": "stock-infectious",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-vaccination",
+      "name": "Vaccination",
+      "equation": "MIN(Susceptible * Vaccination_Rate, Vaccine_Supply / Doses_Required)",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-vaccinated",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta-sexual",
+      "name": "Beta Sexual",
+      "equation": "0.8",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-beta-nonsexual",
+      "name": "Beta NonSexual",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-incubation",
+      "name": "Incubation Period",
+      "equation": "9",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-infectious-period",
+      "name": "Infectious Period",
+      "equation": "21",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-total-pop",
+      "name": "Total Pop",
+      "equation": "1000000",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-high-risk",
+      "name": "High Risk Pop",
+      "equation": "50000",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-behavior",
+      "name": "Behavior Factor",
+      "equation": "MAX(0.3, 1 - 0.5 * Infectious / High_Risk_Pop)",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-vax-rate",
+      "name": "Vaccination Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-supply",
+      "name": "Vaccine Supply",
+      "equation": "10000",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-doses",
+      "name": "Doses Required",
+      "equation": "2",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T08:00:00.000000+00:00",
+  "updated_at": "2026-01-12T08:00:00.000000+00:00"
+}

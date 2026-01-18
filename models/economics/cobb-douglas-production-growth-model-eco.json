@@ -1,0 +1,191 @@
+{
+  "id": "cobb-douglas-production-growth-model-eco",
+  "name": "Cobb-Douglas Production Growth Model",
+  "description": "Economic growth model with Cobb-Douglas production function showing capital accumulation, labor growth, and technological progress. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-capital",
+      "name": "Capital",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-labor",
+      "name": "Labor",
+      "initial_value": 150,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-technology",
+      "name": "Technology",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-investment",
+      "name": "investment",
+      "equation": "savings_rate * output",
+      "from_stock": null,
+      "to_stock": "stock-capital",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-depreciation",
+      "name": "depreciation",
+      "equation": "delta * Capital",
+      "from_stock": "stock-capital",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-labor-growth",
+      "name": "labor_growth",
+      "equation": "n * Labor",
+      "from_stock": null,
+      "to_stock": "stock-labor",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-tech-progress",
+      "name": "tech_progress",
+      "equation": "g * Technology",
+      "from_stock": null,
+      "to_stock": "stock-technology",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-alpha",
+      "name": "alpha",
+      "equation": "0.33",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-savings-rate",
+      "name": "savings_rate",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-delta",
+      "name": "delta",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-n",
+      "name": "n",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-g",
+      "name": "g",
+      "equation": "0.02",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "savings_rate",
+      "to_element": "investment"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "n",
+      "to_element": "investment"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "g",
+      "to_element": "investment"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Capital",
+      "to_element": "depreciation"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "delta",
+      "to_element": "depreciation"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Labor",
+      "to_element": "labor_growth"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "n",
+      "to_element": "labor_growth"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Technology",
+      "to_element": "tech_progress"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "n",
+      "to_element": "tech_progress"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "g",
+      "to_element": "tech_progress"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.749044Z",
+  "updated_at": "2026-01-11T20:04:50.749044Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

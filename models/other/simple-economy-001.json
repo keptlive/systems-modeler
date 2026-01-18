@@ -1,0 +1,92 @@
+{
+  "id": "simple-economy-001",
+  "name": "Simple Economy Model",
+  "description": "Basic economic model with capital accumulation, investment, and depreciation",
+  "stocks": [
+    {
+      "id": "stock-capital",
+      "name": "Capital",
+      "initial_value": 1000,
+      "equation": "",
+      "position": { "x": 350, "y": 150 }
+    },
+    {
+      "id": "stock-output",
+      "name": "Output",
+      "initial_value": 100,
+      "equation": "",
+      "position": { "x": 350, "y": 350 }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-investment",
+      "name": "Investment",
+      "equation": "Output * savings_rate",
+      "from_stock": null,
+      "to_stock": "Capital",
+      "position": { "x": 200, "y": 150 }
+    },
+    {
+      "id": "flow-depreciation",
+      "name": "Depreciation",
+      "equation": "Capital * depreciation_rate",
+      "from_stock": "Capital",
+      "to_stock": null,
+      "position": { "x": 500, "y": 150 }
+    },
+    {
+      "id": "flow-production",
+      "name": "Production",
+      "equation": "productivity * Capital ** 0.3",
+      "from_stock": null,
+      "to_stock": "Output",
+      "position": { "x": 200, "y": 350 }
+    },
+    {
+      "id": "flow-consumption",
+      "name": "Consumption",
+      "equation": "Output * (1 - savings_rate)",
+      "from_stock": "Output",
+      "to_stock": null,
+      "position": { "x": 500, "y": 350 }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-savings-rate",
+      "name": "savings_rate",
+      "equation": "0.2",
+      "position": { "x": 150, "y": 250 }
+    },
+    {
+      "id": "var-depreciation-rate",
+      "name": "depreciation_rate",
+      "equation": "0.05",
+      "position": { "x": 550, "y": 100 }
+    },
+    {
+      "id": "var-productivity",
+      "name": "productivity",
+      "equation": "10",
+      "position": { "x": 150, "y": 400 }
+    }
+  ],
+  "connectors": [
+    { "id": "conn-1", "from_element": "Output", "to_element": "Investment" },
+    { "id": "conn-2", "from_element": "Capital", "to_element": "Depreciation" },
+    { "id": "conn-3", "from_element": "Capital", "to_element": "Production" },
+    { "id": "conn-4", "from_element": "Output", "to_element": "Consumption" },
+    { "id": "conn-5", "from_element": "savings_rate", "to_element": "Investment" },
+    { "id": "conn-6", "from_element": "savings_rate", "to_element": "Consumption" },
+    { "id": "conn-7", "from_element": "depreciation_rate", "to_element": "Depreciation" },
+    { "id": "conn-8", "from_element": "productivity", "to_element": "Production" }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z"
+}

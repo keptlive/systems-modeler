@@ -1,0 +1,32 @@
+{
+  "id": "budyko-ice-albedo-feedback-cli",
+  "name": "Budyko Ice-Albedo Feedback Model",
+  "description": "Mikhail Budyko's (1969) energy balance climate model demonstrating the ice-albedo feedback mechanism. As ice expands, planetary albedo increases, causing further cooling. Shows potential for 'Snowball Earth' states and climate bistability.",
+  "stocks": [
+    {"id": "stock-global-temperature", "name": "Global Temperature", "initial_value": 15, "equation": "", "position": {"x": 300, "y": 200}},
+    {"id": "stock-ice-coverage", "name": "Ice Coverage", "initial_value": 0.1, "equation": "", "position": {"x": 500, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-temperature-change", "name": "Temperature Change", "equation": "(Absorbed_Solar - Outgoing_Longwave) / Heat_Capacity", "from_stock": null, "to_stock": "stock-global-temperature", "position": {"x": 200, "y": 200}},
+    {"id": "flow-ice-change", "name": "Ice Change", "equation": "(Equilibrium_Ice - Ice_Coverage) / Ice_Response_Time", "from_stock": null, "to_stock": "stock-ice-coverage", "position": {"x": 400, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-solar-constant", "name": "Solar Constant", "equation": "1361", "position": {"x": 150, "y": 100}},
+    {"id": "var-planetary-albedo", "name": "Planetary Albedo", "equation": "Ice_Free_Albedo + (Ice_Albedo - Ice_Free_Albedo) * Ice_Coverage", "position": {"x": 350, "y": 100}},
+    {"id": "var-ice-free-albedo", "name": "Ice Free Albedo", "equation": "0.3", "position": {"x": 550, "y": 100}},
+    {"id": "var-ice-albedo", "name": "Ice Albedo", "equation": "0.6", "position": {"x": 150, "y": 300}},
+    {"id": "var-absorbed-solar", "name": "Absorbed Solar", "equation": "Solar_Constant * (1 - Planetary_Albedo) / 4", "position": {"x": 350, "y": 300}},
+    {"id": "var-outgoing-longwave", "name": "Outgoing Longwave", "equation": "A_OLR + B_OLR * Global_Temperature", "position": {"x": 550, "y": 300}},
+    {"id": "var-a-olr", "name": "A OLR", "equation": "204", "position": {"x": 150, "y": 400}},
+    {"id": "var-b-olr", "name": "B OLR", "equation": "2.17", "position": {"x": 300, "y": 400}},
+    {"id": "var-heat-capacity", "name": "Heat Capacity", "equation": "10", "position": {"x": 450, "y": 400}},
+    {"id": "var-equilibrium-ice", "name": "Equilibrium Ice", "equation": "MAX(0, MIN(1, (Freezing_Point - Global_Temperature) / Temperature_Range))", "position": {"x": 600, "y": 400}},
+    {"id": "var-freezing-point", "name": "Freezing Point", "equation": "0", "position": {"x": 200, "y": 500}},
+    {"id": "var-temperature-range", "name": "Temperature Range", "equation": "30", "position": {"x": 400, "y": 500}},
+    {"id": "var-ice-response-time", "name": "Ice Response Time", "equation": "10", "position": {"x": 600, "y": 500}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 200, "dt": 0.5},
+  "source": "https://doi.org/10.1111/j.2153-3490.1969.tb00466.x",
+  "reference": "Budyko MI. The effect of solar radiation variations on the climate of the Earth. Tellus. 1969;21(5):611-619."
+}

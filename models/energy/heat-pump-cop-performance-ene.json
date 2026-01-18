@@ -1,0 +1,159 @@
+{
+  "id": "heat-pump-cop-performance-ene",
+  "name": "Heat Pump COP Performance Model",
+  "description": "Model of heat pump efficiency varying with temperature difference. Source: IEA (2022), Future of Heat Pumps.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Building_Temperature",
+      "initial_value": 15,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Energy_Consumed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Temperature_Change",
+      "equation": "(Heat_Output - Heat_Loss) / Thermal_Mass",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Power_Consumption",
+      "equation": "Electrical_Input",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Outdoor_Temp",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Setpoint",
+      "equation": "20",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Thermal_Mass",
+      "equation": "1000",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Heat_Loss_Coeff",
+      "equation": "100",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Carnot_COP",
+      "equation": "(Setpoint + 273) / (Setpoint - Outdoor_Temp + 0.1)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Practical_COP",
+      "equation": "0.4 * Carnot_COP",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Heat_Loss",
+      "equation": "Heat_Loss_Coeff * (Building_Temperature - Outdoor_Temp)",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Heat_Demand",
+      "equation": "MAX(0, (Setpoint - Building_Temperature) * Thermal_Mass * 0.1 + Heat_Loss)",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Electrical_Input",
+      "equation": "Heat_Demand / Practical_COP",
+      "position": {
+        "x": 250,
+        "y": 420
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Heat_Output",
+      "equation": "Electrical_Input * Practical_COP",
+      "position": {
+        "x": 450,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Outdoor_Temp",
+      "to_element": "Carnot_COP"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 24,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-15T14:44:54.461086+00:00",
+  "updated_at": "2026-01-15T14:44:54.461090+00:00",
+  "source": "https://www.iea.org/reports/the-future-of-heat-pumps",
+  "reference": "IEA (2022). The Future of Heat Pumps. International Energy Agency."
+}

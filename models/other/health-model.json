@@ -1,0 +1,749 @@
+{
+  "id": "health-model",
+  "name": "Health Model",
+  "description": "Model from Health Model.mdl",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Expected_Retirement_rate",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "General_Practitioners",
+      "initial_value": 4000.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Patients_Being_Treated",
+      "initial_value": 24000000.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Net_Flow_Delivery",
+      "equation": "Patient_Visits-Completed_Visits",
+      "from_stock": null,
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Rate_C2_to_C3",
+      "equation": "Flows_On_Flag*\"Population Aged 15-39\"/D2",
+      "from_stock": null,
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Rate_C3_to_C4",
+      "equation": "Flows_On_Flag*\"Population Aged 40-64\"/D2",
+      "from_stock": null,
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Rate_C1_to_C2",
+      "equation": "Flows_On_Flag*\"Population Aged 0-14\"/D1",
+      "from_stock": null,
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 320
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Birth_Fraction",
+      "equation": "20/1000",
+      "from_stock": null,
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 320
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Births",
+      "equation": "Total_Population*Birth_Fraction*Flows_On_Flag",
+      "from_stock": null,
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 320
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Death_Fraction",
+      "equation": "7/1000",
+      "from_stock": null,
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 440
+      }
+    },
+    {
+      "id": "f8",
+      "name": "Deaths",
+      "equation": "Flows_On_Flag*Total_Population*Death_Fraction",
+      "from_stock": null,
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 440
+      }
+    },
+    {
+      "id": "f9",
+      "name": "Recruitment_Rate",
+      "equation": "MAX(0,Expected_Retirement_rate+Adjustment_for_GPs)",
+      "from_stock": null,
+      "to_stock": "General_Practitioners",
+      "position": {
+        "x": 600,
+        "y": 440
+      }
+    },
+    {
+      "id": "f10",
+      "name": "Retirement_Rate",
+      "equation": "General_Practitioners/Average_Career_Duration",
+      "from_stock": "General_Practitioners",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 560
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Workyear_Ratio",
+      "equation": "Workyear/Standard_Work_Year",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Productivity_Ratio",
+      "equation": "Productivity/Standard_GP_Productivity",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Average_Delay",
+      "equation": "Patients_Being_Treated/Completed_Visits",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Dependency_Ratio",
+      "equation": "100*(\"Population Aged 0-14\"+\"Population Aged 65+\")/(\"Population Aged 15-39\"+\"Population Aged 40-64\"\\ )",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Productivity",
+      "equation": "IF THEN ELSE(Productivity_Flag=1,Effect_of_System_Pressure_on_Productivity*Standard_GP_Productivity\\ ,Standard_GP_Productivity)",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Standard_Annual_Completed_Visits",
+      "equation": "Standard_GP_Productivity*Standard_Work_Year*General_Practitioners",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "D1",
+      "equation": "15.0",
+      "position": {
+        "x": 230,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "D2",
+      "equation": "25.0",
+      "position": {
+        "x": 360,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Effect_of_System_Pressure_on_Productivity",
+      "equation": "WITH LOOKUP ( System_Pressure, ([(0,0)-(2,2)],(0,0.62),(0.2,0.65),(0.4,0.7),(0.6,0.79),(0.8,0.89),(1,1),(1.2,1.14)\\ ,(1.4,1.24),(1.6,1.32),(1.8,1.37),(2,1.4) ))",
+      "position": {
+        "x": 490,
+        "y": 130
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Effect_of_System_Pressure_on_Work_Year",
+      "equation": "WITH LOOKUP ( System_Pressure, ([(0,0)-(2.5,1.5)],(0,0.75),(0.25,0.79),(0.5,0.84),(0.75,0.9),(1,1),(1.25,1.09),(1.5\\ ,1.17),(1.75,1.23),(2,1.25),(2.25,1.25),(2.5,1.25) ))",
+      "position": {
+        "x": 620,
+        "y": 130
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Completed_Visits",
+      "equation": "min(Desired_Completed_Visits,Potential_Completed_Visits)",
+      "position": {
+        "x": 100,
+        "y": 210
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Target_Completion_Time",
+      "equation": "1.0",
+      "position": {
+        "x": 230,
+        "y": 210
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Extra_Demand_Flag",
+      "equation": "0.0",
+      "position": {
+        "x": 360,
+        "y": 210
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Productivity_Flag",
+      "equation": "1.0",
+      "position": {
+        "x": 490,
+        "y": 210
+      }
+    },
+    {
+      "id": "v15",
+      "name": "Workyear_Flag",
+      "equation": "1.0",
+      "position": {
+        "x": 620,
+        "y": 210
+      }
+    },
+    {
+      "id": "v16",
+      "name": "Desired_Completed_Visits",
+      "equation": "Patients_Being_Treated/Target_Completion_Time",
+      "position": {
+        "x": 100,
+        "y": 290
+      }
+    },
+    {
+      "id": "v17",
+      "name": "System_Pressure",
+      "equation": "Desired_Completed_Visits/Standard_Annual_Completed_Visits",
+      "position": {
+        "x": 230,
+        "y": 290
+      }
+    },
+    {
+      "id": "v18",
+      "name": "Potential_Completed_Visits",
+      "equation": "General_Practitioners*Productivity*Workyear",
+      "position": {
+        "x": 360,
+        "y": 290
+      }
+    },
+    {
+      "id": "v19",
+      "name": "Workyear",
+      "equation": "IF THEN ELSE(Workyear_Flag=1,Effect_of_System_Pressure_on_Work_Year*Standard_Work_Year\\ ,Standard_Work_Year)",
+      "position": {
+        "x": 490,
+        "y": 290
+      }
+    },
+    {
+      "id": "v20",
+      "name": "Adjustment_for_GPs",
+      "equation": "(Desired_GPs-General_Practitioners)/Adjustment_Time",
+      "position": {
+        "x": 620,
+        "y": 290
+      }
+    },
+    {
+      "id": "v21",
+      "name": "Adjustment_Time",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 370
+      }
+    },
+    {
+      "id": "v22",
+      "name": "Average_Career_Duration",
+      "equation": "40.0",
+      "position": {
+        "x": 230,
+        "y": 370
+      }
+    },
+    {
+      "id": "v23",
+      "name": "CERR",
+      "equation": "Discrepancy/DC",
+      "position": {
+        "x": 360,
+        "y": 370
+      }
+    },
+    {
+      "id": "v24",
+      "name": "DC",
+      "equation": "3.0",
+      "position": {
+        "x": 490,
+        "y": 370
+      }
+    },
+    {
+      "id": "v25",
+      "name": "Desired_GPs",
+      "equation": "Total_Population*Desired_GPs_Per_Thousand_of_Population",
+      "position": {
+        "x": 620,
+        "y": 370
+      }
+    },
+    {
+      "id": "v26",
+      "name": "Desired_GPs_Per_Thousand_of_Population",
+      "equation": "0.8/1000",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "v27",
+      "name": "Discrepancy",
+      "equation": "Retirement_Rate-Expected_Retirement_rate",
+      "position": {
+        "x": 230,
+        "y": 450
+      }
+    },
+    {
+      "id": "v28",
+      "name": "Flows_On_Flag",
+      "equation": "1.0",
+      "position": {
+        "x": 360,
+        "y": 450
+      }
+    },
+    {
+      "id": "v29",
+      "name": "Standard_GP_Productivity",
+      "equation": "24.0",
+      "position": {
+        "x": 490,
+        "y": 450
+      }
+    },
+    {
+      "id": "v30",
+      "name": "Patient_Visits",
+      "equation": "Total_GP_Demand",
+      "position": {
+        "x": 620,
+        "y": 450
+      }
+    },
+    {
+      "id": "v31",
+      "name": "Standard_Work_Year",
+      "equation": "250.0",
+      "position": {
+        "x": 100,
+        "y": 530
+      }
+    },
+    {
+      "id": "v32",
+      "name": "Total_GP_Demand",
+      "equation": "\"Total GP Visits 0-14\"+\"Total GP Visits 15-39\"+\"Total GP Visits 40-64\"+\"Total GP Visits 65+\"",
+      "position": {
+        "x": 230,
+        "y": 530
+      }
+    },
+    {
+      "id": "v33",
+      "name": "Total_Population",
+      "equation": "\"Population Aged 0-14\"+\"Population Aged 15-39\"+\"Population Aged 40-64\"+\"Population Aged 65+\"",
+      "position": {
+        "x": 360,
+        "y": 530
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Completed_Visits",
+      "to_element": "Net_Flow_Delivery"
+    },
+    {
+      "id": "c2",
+      "from_element": "Patient_Visits",
+      "to_element": "Net_Flow_Delivery"
+    },
+    {
+      "id": "c3",
+      "from_element": "D2",
+      "to_element": "Rate_C2_to_C3"
+    },
+    {
+      "id": "c4",
+      "from_element": "Flows_On_Flag",
+      "to_element": "Rate_C2_to_C3"
+    },
+    {
+      "id": "c5",
+      "from_element": "D2",
+      "to_element": "Rate_C3_to_C4"
+    },
+    {
+      "id": "c6",
+      "from_element": "Flows_On_Flag",
+      "to_element": "Rate_C3_to_C4"
+    },
+    {
+      "id": "c7",
+      "from_element": "D1",
+      "to_element": "Rate_C1_to_C2"
+    },
+    {
+      "id": "c8",
+      "from_element": "Flows_On_Flag",
+      "to_element": "Rate_C1_to_C2"
+    },
+    {
+      "id": "c9",
+      "from_element": "Flows_On_Flag",
+      "to_element": "Births"
+    },
+    {
+      "id": "c10",
+      "from_element": "Total_Population",
+      "to_element": "Births"
+    },
+    {
+      "id": "c11",
+      "from_element": "Birth_Fraction",
+      "to_element": "Births"
+    },
+    {
+      "id": "c12",
+      "from_element": "Death_Fraction",
+      "to_element": "Deaths"
+    },
+    {
+      "id": "c13",
+      "from_element": "Flows_On_Flag",
+      "to_element": "Deaths"
+    },
+    {
+      "id": "c14",
+      "from_element": "Total_Population",
+      "to_element": "Deaths"
+    },
+    {
+      "id": "c15",
+      "from_element": "Expected_Retirement_rate",
+      "to_element": "Recruitment_Rate"
+    },
+    {
+      "id": "c16",
+      "from_element": "Adjustment_for_GPs",
+      "to_element": "Recruitment_Rate"
+    },
+    {
+      "id": "c17",
+      "from_element": "Average_Career_Duration",
+      "to_element": "Retirement_Rate"
+    },
+    {
+      "id": "c18",
+      "from_element": "General_Practitioners",
+      "to_element": "Retirement_Rate"
+    },
+    {
+      "id": "c19",
+      "from_element": "Standard_Work_Year",
+      "to_element": "Workyear_Ratio"
+    },
+    {
+      "id": "c20",
+      "from_element": "Workyear",
+      "to_element": "Workyear_Ratio"
+    },
+    {
+      "id": "c21",
+      "from_element": "Productivity",
+      "to_element": "Productivity_Ratio"
+    },
+    {
+      "id": "c22",
+      "from_element": "Standard_GP_Productivity",
+      "to_element": "Productivity_Ratio"
+    },
+    {
+      "id": "c23",
+      "from_element": "Patients_Being_Treated",
+      "to_element": "Average_Delay"
+    },
+    {
+      "id": "c24",
+      "from_element": "Completed_Visits",
+      "to_element": "Average_Delay"
+    },
+    {
+      "id": "c25",
+      "from_element": "Effect_of_System_Pressure_on_Productivity",
+      "to_element": "Productivity"
+    },
+    {
+      "id": "c26",
+      "from_element": "System_Pressure",
+      "to_element": "Productivity"
+    },
+    {
+      "id": "c27",
+      "from_element": "Productivity_Flag",
+      "to_element": "Productivity"
+    },
+    {
+      "id": "c28",
+      "from_element": "Standard_GP_Productivity",
+      "to_element": "Productivity"
+    },
+    {
+      "id": "c29",
+      "from_element": "General_Practitioners",
+      "to_element": "Standard_Annual_Completed_Visits"
+    },
+    {
+      "id": "c30",
+      "from_element": "Standard_Work_Year",
+      "to_element": "Standard_Annual_Completed_Visits"
+    },
+    {
+      "id": "c31",
+      "from_element": "Productivity",
+      "to_element": "Standard_Annual_Completed_Visits"
+    },
+    {
+      "id": "c32",
+      "from_element": "Standard_GP_Productivity",
+      "to_element": "Standard_Annual_Completed_Visits"
+    },
+    {
+      "id": "c33",
+      "from_element": "System_Pressure",
+      "to_element": "Effect_of_System_Pressure_on_Productivity"
+    },
+    {
+      "id": "c34",
+      "from_element": "System_Pressure",
+      "to_element": "Effect_of_System_Pressure_on_Work_Year"
+    },
+    {
+      "id": "c35",
+      "from_element": "Desired_Completed_Visits",
+      "to_element": "Completed_Visits"
+    },
+    {
+      "id": "c36",
+      "from_element": "Potential_Completed_Visits",
+      "to_element": "Completed_Visits"
+    },
+    {
+      "id": "c37",
+      "from_element": "Target_Completion_Time",
+      "to_element": "Desired_Completed_Visits"
+    },
+    {
+      "id": "c38",
+      "from_element": "Patients_Being_Treated",
+      "to_element": "Desired_Completed_Visits"
+    },
+    {
+      "id": "c39",
+      "from_element": "Standard_Annual_Completed_Visits",
+      "to_element": "System_Pressure"
+    },
+    {
+      "id": "c40",
+      "from_element": "Desired_Completed_Visits",
+      "to_element": "System_Pressure"
+    },
+    {
+      "id": "c41",
+      "from_element": "Completed_Visits",
+      "to_element": "System_Pressure"
+    },
+    {
+      "id": "c42",
+      "from_element": "General_Practitioners",
+      "to_element": "Potential_Completed_Visits"
+    },
+    {
+      "id": "c43",
+      "from_element": "Productivity",
+      "to_element": "Potential_Completed_Visits"
+    },
+    {
+      "id": "c44",
+      "from_element": "Workyear",
+      "to_element": "Potential_Completed_Visits"
+    },
+    {
+      "id": "c45",
+      "from_element": "System_Pressure",
+      "to_element": "Workyear"
+    },
+    {
+      "id": "c46",
+      "from_element": "Standard_Work_Year",
+      "to_element": "Workyear"
+    },
+    {
+      "id": "c47",
+      "from_element": "Effect_of_System_Pressure_on_Work_Year",
+      "to_element": "Workyear"
+    },
+    {
+      "id": "c48",
+      "from_element": "Workyear_Flag",
+      "to_element": "Workyear"
+    },
+    {
+      "id": "c49",
+      "from_element": "General_Practitioners",
+      "to_element": "Adjustment_for_GPs"
+    },
+    {
+      "id": "c50",
+      "from_element": "Desired_GPs",
+      "to_element": "Adjustment_for_GPs"
+    },
+    {
+      "id": "c51",
+      "from_element": "Adjustment_Time",
+      "to_element": "Adjustment_for_GPs"
+    },
+    {
+      "id": "c52",
+      "from_element": "DC",
+      "to_element": "CERR"
+    },
+    {
+      "id": "c53",
+      "from_element": "Discrepancy",
+      "to_element": "CERR"
+    },
+    {
+      "id": "c54",
+      "from_element": "Desired_GPs_Per_Thousand_of_Population",
+      "to_element": "Desired_GPs"
+    },
+    {
+      "id": "c55",
+      "from_element": "Total_Population",
+      "to_element": "Desired_GPs"
+    },
+    {
+      "id": "c56",
+      "from_element": "Retirement_Rate",
+      "to_element": "Discrepancy"
+    },
+    {
+      "id": "c57",
+      "from_element": "Expected_Retirement_rate",
+      "to_element": "Discrepancy"
+    },
+    {
+      "id": "c58",
+      "from_element": "Total_GP_Demand",
+      "to_element": "Patient_Visits"
+    }
+  ],
+  "time_settings": {
+    "start": 2014.0,
+    "end": 2050.0,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-15T19:13:16.558855+00:00",
+  "updated_at": "2026-01-15T19:13:16.558855+00:00",
+  "source": "https://github.com/JimDuggan/SDMR",
+  "reference": "System Dynamics Modeling with R (Duggan, 2016)"
+}

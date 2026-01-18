@@ -1,0 +1,210 @@
+{
+  "id": "is-lm-ad-as-macro-eco",
+  "name": "IS-LM-AD-AS Macroeconomic Model",
+  "description": "Combined IS-LM and AD-AS framework from Hicks (1937) and later extensions. Shows equilibrium in goods market (IS), money market (LM), aggregate demand (AD), and aggregate supply (AS). Fundamental for understanding monetary and fiscal policy. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-output",
+      "name": "Output",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-price-level",
+      "name": "Price Level",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-interest-rate",
+      "name": "Interest Rate",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-output-adjustment",
+      "name": "Output Adjustment",
+      "equation": "(Aggregate_Demand - Output) * Output_Adjustment_Speed",
+      "from_stock": null,
+      "to_stock": "stock-output",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-price-adjustment",
+      "name": "Price Adjustment",
+      "equation": "Price_Level * Inflation_Rate",
+      "from_stock": null,
+      "to_stock": "stock-price-level",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-interest-adjustment",
+      "name": "Interest Adjustment",
+      "equation": "(LM_Rate - Interest_Rate) * Interest_Adjustment_Speed",
+      "from_stock": null,
+      "to_stock": "stock-interest-rate",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-aggregate-demand",
+      "name": "Aggregate Demand",
+      "equation": "Autonomous_Spending + MPC * Output - Interest_Sensitivity_IS * Interest_Rate",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-lm-rate",
+      "name": "LM Rate",
+      "equation": "(Money_Demand_Income * Output / Price_Level - Money_Supply) / Money_Demand_Interest",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-inflation-rate",
+      "name": "Inflation Rate",
+      "equation": "Expected_Inflation + Phillips_Slope * (Output - Potential_Output) / Potential_Output",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-autonomous-spending",
+      "name": "Autonomous Spending",
+      "equation": "40",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-mpc",
+      "name": "MPC",
+      "equation": "0.6",
+      "position": {
+        "x": 200,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-interest-sensitivity-is",
+      "name": "Interest Sensitivity IS",
+      "equation": "200",
+      "position": {
+        "x": 300,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-money-supply",
+      "name": "Money Supply",
+      "equation": "100",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-money-demand-income",
+      "name": "Money Demand Income",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-money-demand-interest",
+      "name": "Money Demand Interest",
+      "equation": "1000",
+      "position": {
+        "x": 600,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-expected-inflation",
+      "name": "Expected Inflation",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-phillips-slope",
+      "name": "Phillips Slope",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-potential-output",
+      "name": "Potential Output",
+      "equation": "100",
+      "position": {
+        "x": 300,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-output-adjustment-speed",
+      "name": "Output Adjustment Speed",
+      "equation": "0.2",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-interest-adjustment-speed",
+      "name": "Interest Adjustment Speed",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:11:32.978575+00:00",
+  "updated_at": "2026-01-11T21:11:32.978575+00:00",
+  "source": "https://doi.org/10.2307/1907242",
+  "reference": "Hicks JR. Mr. Keynes and the Classics. Econometrica. 1937;5(2):147-159."
+}

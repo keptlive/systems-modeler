@@ -1,0 +1,223 @@
+{
+  "id": "ecosystem-services-valuation-cli",
+  "name": "Ecosystem Services Valuation Model",
+  "description": "Model of natural capital and ecosystem services showing how environmental degradation affects economic value. Based on Costanza et al. (2014). Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Natural Capital",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Ecosystem Services Flow",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "GDP",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Natural Regeneration",
+      "equation": "Natural_Capital * Regeneration_Rate * (1 - Natural_Capital / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Resource Extraction",
+      "equation": "Natural_Capital * Extraction_Rate",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Services Generation",
+      "equation": "Natural_Capital * Services_Coefficient",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Services Depreciation",
+      "equation": "Ecosystem_Services_Flow * Degradation_Rate",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Economic Growth",
+      "equation": "GDP * Growth_Rate * (1 + Ecosystem_Services_Flow / 100)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Environmental Damage",
+      "equation": "GDP * Damage_Coefficient * (100 - Natural_Capital) / 100",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Regeneration Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Carrying Capacity",
+      "equation": "150",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Extraction Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Services Coefficient",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Degradation Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Growth Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Damage Coefficient",
+      "equation": "0.005",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Total Wealth",
+      "equation": "Natural_Capital * Natural_Capital_Value + GDP",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Natural Capital Value",
+      "equation": "33",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Sustainability Index",
+      "equation": "Natural_Capital / 100 * Ecosystem_Services_Flow / 40",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Natural Capital",
+      "to_element": "Natural Regeneration"
+    },
+    {
+      "id": "c2",
+      "from_element": "Ecosystem Services Flow",
+      "to_element": "Economic Growth"
+    },
+    {
+      "id": "c3",
+      "from_element": "GDP",
+      "to_element": "Environmental Damage"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:55:42.037611+00:00",
+  "updated_at": "2026-01-12T01:55:42.037618+00:00",
+  "source": "https://doi.org/10.1016/j.gloenvcha.2014.04.002",
+  "reference": "Costanza R, et al. Changes in the global value of ecosystem services. Global Environmental Change. 2014;26:152-158."
+}

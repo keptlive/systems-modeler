@@ -1,0 +1,221 @@
+{
+  "id": "covid19-long-covid-disability-hea",
+  "name": "Long COVID Disability Burden",
+  "description": "Models the accumulation of long COVID cases and their impact on workforce participation. Based on Davis et al. (2023) and Bach (2022) estimates. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "category": "health",
+  "stocks": [
+    {
+      "id": "stock-active",
+      "name": "Active_Infections",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Fully_Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-long-covid",
+      "name": "Long_COVID_Cases",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-disabled",
+      "name": "Disability_From_LC",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-workforce-loss",
+      "name": "Workforce_Hours_Lost",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-new-cases",
+      "name": "New_Infections",
+      "equation": "Infection_Rate",
+      "from_stock": null,
+      "to_stock": "stock-active",
+      "position": {
+        "x": 25,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Full_Recovery",
+      "equation": "Active_Infections * (1 - Long_COVID_Rate) / Recovery_Time",
+      "from_stock": "stock-active",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-lc-onset",
+      "name": "Long_COVID_Onset",
+      "equation": "Active_Infections * Long_COVID_Rate / Recovery_Time",
+      "from_stock": "stock-active",
+      "to_stock": "stock-long-covid",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-lc-recovery",
+      "name": "LC_Recovery",
+      "equation": "Long_COVID_Cases * LC_Recovery_Rate",
+      "from_stock": "stock-long-covid",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-disability",
+      "name": "Disability_Onset",
+      "equation": "Long_COVID_Cases * Disability_Rate",
+      "from_stock": "stock-long-covid",
+      "to_stock": "stock-disabled",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-disability-recovery",
+      "name": "Disability_Recovery",
+      "equation": "Disability_From_LC * Disability_Recovery_Rate",
+      "from_stock": "stock-disabled",
+      "to_stock": "stock-long-covid",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-hours-lost",
+      "name": "Hours_Lost",
+      "equation": "(Long_COVID_Cases * Partial_Capacity_Loss + Disability_From_LC * Full_Capacity_Loss) * 40",
+      "from_stock": null,
+      "to_stock": "stock-workforce-loss",
+      "position": {
+        "x": 500,
+        "y": 275
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-infection-rate",
+      "name": "Infection_Rate",
+      "equation": "50000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-recovery-time",
+      "name": "Recovery_Time",
+      "equation": "2",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-lc-rate",
+      "name": "Long_COVID_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-lc-recovery",
+      "name": "LC_Recovery_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-disability-rate",
+      "name": "Disability_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-disability-recovery",
+      "name": "Disability_Recovery_Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-partial-loss",
+      "name": "Partial_Capacity_Loss",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-full-loss",
+      "name": "Full_Capacity_Loss",
+      "equation": "1.0",
+      "position": {
+        "x": 550,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 156,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1016/j.eclinm.2021.101019",
+  "reference": "Davis HE et al. (2023) Long COVID: major findings, mechanisms and recommendations. Nature Reviews Microbiology.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:12:55.731154+00:00",
+  "updated_at": "2026-01-12T06:12:55.731154+00:00"
+}

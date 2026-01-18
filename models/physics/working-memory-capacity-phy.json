@@ -1,0 +1,245 @@
+{
+  "id": "working-memory-capacity-phy",
+  "name": "Working Memory Capacity Model",
+  "description": "Models the dynamics of working memory with decay and interference. Based on Baddeley (2000). DOI: 10.1016/S1364-6613(00)01538-2",
+  "stocks": [
+    {
+      "id": "stock-phonloop",
+      "name": "Phonological_Loop",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-visuospatial",
+      "name": "Visuospatial_Sketchpad",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-episodic",
+      "name": "Episodic_Buffer",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    },
+    {
+      "id": "stock-central",
+      "name": "Central_Executive",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-phonin",
+      "name": "Phonological_Input",
+      "equation": "Verbal_Input * Attention_Allocation * Central_Executive / 100",
+      "from_stock": null,
+      "to_stock": "stock-phonloop",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-phondecay",
+      "name": "Phonological_Decay",
+      "equation": "Phonological_Loop / Phonological_Decay_Time",
+      "from_stock": "stock-phonloop",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-visuoin",
+      "name": "Visuospatial_Input",
+      "equation": "Visual_Input * (1 - Attention_Allocation) * Central_Executive / 100",
+      "from_stock": null,
+      "to_stock": "stock-visuospatial",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-visuodecay",
+      "name": "Visuospatial_Decay",
+      "equation": "Visuospatial_Sketchpad / Visuospatial_Decay_Time",
+      "from_stock": "stock-visuospatial",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-episodebind",
+      "name": "Episodic_Binding",
+      "equation": "(Phonological_Loop + Visuospatial_Sketchpad) * Binding_Rate",
+      "from_stock": null,
+      "to_stock": "stock-episodic",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-episodedecay",
+      "name": "Episodic_Decay",
+      "equation": "Episodic_Buffer / Episodic_Decay_Time",
+      "from_stock": "stock-episodic",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-fatigue",
+      "name": "Executive_Fatigue",
+      "equation": "Cognitive_Load * Fatigue_Rate",
+      "from_stock": "stock-central",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Executive_Recovery",
+      "equation": "(100 - Central_Executive) * Recovery_Rate * (1 - Cognitive_Load / 100)",
+      "from_stock": null,
+      "to_stock": "stock-central",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-verbalin",
+      "name": "Verbal_Input",
+      "equation": "5 * (1 + 0.3 * SIN(TIME / 3))",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-visualin",
+      "name": "Visual_Input",
+      "equation": "3 * (1 + 0.2 * COS(TIME / 4))",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-attnalloc",
+      "name": "Attention_Allocation",
+      "equation": "0.6",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-phondecaytime",
+      "name": "Phonological_Decay_Time",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-visuodecaytime",
+      "name": "Visuospatial_Decay_Time",
+      "equation": "3",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-bindrate",
+      "name": "Binding_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-episdecaytime",
+      "name": "Episodic_Decay_Time",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cogload",
+      "name": "Cognitive_Load",
+      "equation": "Phonological_Loop + Visuospatial_Sketchpad + Episodic_Buffer",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-fatiguerate",
+      "name": "Fatigue_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recovrate",
+      "name": "Recovery_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Central_Executive",
+      "to_element": "Phonological_Input"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T02:49:51.599781+00:00",
+  "updated_at": "2026-01-12T02:49:51.599789+00:00",
+  "source": "https://doi.org/10.1016/S1364-6613(00)01538-2",
+  "reference": "Baddeley A (2000). The episodic buffer: a new component of working memory? Trends in Cognitive Sciences."
+}

@@ -1,0 +1,111 @@
+{
+  "id": "becker-crime-punishment-eco",
+  "name": "Becker Crime and Punishment",
+  "description": "Economic model of criminal behavior, Nobel Prize 1992",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Crime_Rate",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Police_Resources",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Detection_Probability",
+      "equation": "0.2+0.003*Police_Resources",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Punishment_Severity",
+      "equation": "10.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Crime_Benefit",
+      "equation": "5.0",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Expected_Cost",
+      "equation": "Detection_Probability*Punishment_Severity",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Crime_Incentive",
+      "equation": "Crime_Benefit-Expected_Cost",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Police_Resources",
+      "to_element": "Detection_Probability"
+    },
+    {
+      "id": "c2",
+      "from_element": "Detection_Probability",
+      "to_element": "Expected_Cost"
+    },
+    {
+      "id": "c3",
+      "from_element": "Punishment_Severity",
+      "to_element": "Expected_Cost"
+    },
+    {
+      "id": "c4",
+      "from_element": "Crime_Benefit",
+      "to_element": "Crime_Incentive"
+    },
+    {
+      "id": "c5",
+      "from_element": "Expected_Cost",
+      "to_element": "Crime_Incentive"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 50.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:48:10.684027+00:00",
+  "updated_at": "2026-01-15T20:48:10.684027+00:00",
+  "source": "https://doi.org/10.1086/259394",
+  "reference": "Becker, G.S. (1968) Crime and punishment: An economic approach. J. Pol. Econ. 76:169-217 (Nobel Prize 1992)"
+}

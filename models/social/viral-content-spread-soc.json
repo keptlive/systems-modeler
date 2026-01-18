@@ -1,0 +1,194 @@
+{
+  "id": "viral-content-spread-soc",
+  "name": "Viral Content Spread Model",
+  "description": "Model of how content goes viral online, incorporating network effects, engagement, and decay. Reference: Katz, M. L., & Shapiro, C. (1985). Network externalities, competition, and compatibility. AER. Source: https://doi.org/10.2307/1814809",
+  "stocks": [
+    {
+      "id": "stock-unaware",
+      "name": "Unaware_Users",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-aware",
+      "name": "Aware_Users",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-shared",
+      "name": "Users_Who_Shared",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-exposure",
+      "name": "Exposure_Rate",
+      "equation": "Unaware_Users * (Aware_Users + Users_Who_Shared * Share_Multiplier) / Total_Users * Exposure_Prob",
+      "from_stock": "stock-unaware",
+      "to_stock": "stock-aware",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-sharing",
+      "name": "Sharing_Rate",
+      "equation": "Aware_Users * Share_Probability * Content_Quality",
+      "from_stock": "stock-aware",
+      "to_stock": "stock-shared",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-forgetting",
+      "name": "Forgetting_Rate",
+      "equation": "Aware_Users * Forget_Rate",
+      "from_stock": "stock-aware",
+      "to_stock": "stock-unaware",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total",
+      "name": "Total_Users",
+      "equation": "1000110",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-exp-prob",
+      "name": "Exposure_Prob",
+      "equation": "0.3",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-share-mult",
+      "name": "Share_Multiplier",
+      "equation": "3",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-share-prob",
+      "name": "Share_Probability",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-quality",
+      "name": "Content_Quality",
+      "equation": "1.5",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-forget",
+      "name": "Forget_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Unaware_Users",
+      "to_element": "Exposure_Rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "Aware_Users",
+      "to_element": "Exposure_Rate"
+    },
+    {
+      "id": "c3",
+      "from_element": "Users_Who_Shared",
+      "to_element": "Exposure_Rate"
+    },
+    {
+      "id": "c4",
+      "from_element": "Share_Multiplier",
+      "to_element": "Exposure_Rate"
+    },
+    {
+      "id": "c5",
+      "from_element": "Total_Users",
+      "to_element": "Exposure_Rate"
+    },
+    {
+      "id": "c6",
+      "from_element": "Exposure_Prob",
+      "to_element": "Exposure_Rate"
+    },
+    {
+      "id": "c7",
+      "from_element": "Aware_Users",
+      "to_element": "Sharing_Rate"
+    },
+    {
+      "id": "c8",
+      "from_element": "Share_Probability",
+      "to_element": "Sharing_Rate"
+    },
+    {
+      "id": "c9",
+      "from_element": "Content_Quality",
+      "to_element": "Sharing_Rate"
+    },
+    {
+      "id": "c10",
+      "from_element": "Aware_Users",
+      "to_element": "Forgetting_Rate"
+    },
+    {
+      "id": "c11",
+      "from_element": "Forget_Rate",
+      "to_element": "Forgetting_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T11:47:36.907918Z",
+  "updated_at": "2026-01-12T11:47:36.907921Z",
+  "source": "https://doi.org/10.1126/science.aap9559",
+  "reference": "Vosoughi S, Roy D, Aral S. The spread of true and false news online. Science. 2018;359(6380):1146-1151."
+}

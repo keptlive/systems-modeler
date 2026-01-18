@@ -1,0 +1,28 @@
+{
+  "id": "stommel-thermohaline-box-cli",
+  "name": "Stommel Thermohaline Circulation Box Model",
+  "description": "Henry Stommel's (1961) pioneering two-box model of thermohaline circulation showing bistability between temperature-driven and salinity-driven circulation states. Foundational for understanding Atlantic Meridional Overturning Circulation (AMOC) collapse scenarios.",
+  "stocks": [
+    {"id": "stock-temp-difference", "name": "Temperature Difference", "initial_value": 10, "equation": "", "position": {"x": 250, "y": 200}},
+    {"id": "stock-salinity-difference", "name": "Salinity Difference", "initial_value": 1, "equation": "", "position": {"x": 450, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-temp-relaxation", "name": "Temperature Relaxation", "equation": "Temp_Relaxation_Rate * (Equilibrium_Temp_Diff - Temperature_Difference) - ABS(Flow_Rate) * Temperature_Difference", "from_stock": null, "to_stock": "stock-temp-difference", "position": {"x": 150, "y": 200}},
+    {"id": "flow-salinity-relaxation", "name": "Salinity Relaxation", "equation": "Salinity_Relaxation_Rate * Freshwater_Flux - ABS(Flow_Rate) * Salinity_Difference", "from_stock": null, "to_stock": "stock-salinity-difference", "position": {"x": 350, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-flow-rate", "name": "Flow Rate", "equation": "K * (Alpha * Temperature_Difference - Beta * Salinity_Difference)", "position": {"x": 300, "y": 100}},
+    {"id": "var-k", "name": "K", "equation": "0.5", "position": {"x": 450, "y": 100}},
+    {"id": "var-alpha", "name": "Alpha", "equation": "0.0002", "position": {"x": 550, "y": 100}},
+    {"id": "var-beta", "name": "Beta", "equation": "0.0008", "position": {"x": 200, "y": 300}},
+    {"id": "var-temp-relaxation-rate", "name": "Temp Relaxation Rate", "equation": "0.5", "position": {"x": 350, "y": 300}},
+    {"id": "var-salinity-relaxation-rate", "name": "Salinity Relaxation Rate", "equation": "0.1", "position": {"x": 500, "y": 300}},
+    {"id": "var-equilibrium-temp-diff", "name": "Equilibrium Temp Diff", "equation": "15", "position": {"x": 200, "y": 400}},
+    {"id": "var-freshwater-flux", "name": "Freshwater Flux", "equation": "0.5", "position": {"x": 400, "y": 400}},
+    {"id": "var-density-ratio", "name": "Density Ratio", "equation": "Alpha * Temperature_Difference / (Beta * Salinity_Difference)", "position": {"x": 600, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 500, "dt": 1},
+  "source": "https://doi.org/10.1111/j.2153-3490.1961.tb00079.x",
+  "reference": "Stommel H. Thermohaline Convection with Two Stable Regimes of Flow. Tellus. 1961;13(2):224-230."
+}

@@ -1,0 +1,197 @@
+{
+  "id": "climate-amoc-weakening-cli",
+  "name": "Atlantic Meridional Overturning Circulation Weakening",
+  "description": "Models AMOC slowdown from freshwater input and warming. Based on Caesar et al. (2018) Nature and Rahmstorf et al. (2015). Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "category": "climate",
+  "stocks": [
+    {
+      "id": "stock-amoc",
+      "name": "AMOC_Strength_Sv",
+      "initial_value": 18,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fresh",
+      "name": "Freshwater_Anomaly",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-density",
+      "name": "Deep_Water_Density_Anomaly",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-weaken",
+      "name": "AMOC_Weakening",
+      "equation": "AMOC_Strength_Sv * Weakening_Rate * (Freshwater_Anomaly / Fresh_Threshold + Warming_Effect)",
+      "from_stock": "stock-amoc",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recover",
+      "name": "AMOC_Recovery",
+      "equation": "(Equilibrium_AMOC - AMOC_Strength_Sv) * Recovery_Rate * MAX(0, Deep_Water_Density_Anomaly)",
+      "from_stock": null,
+      "to_stock": "stock-amoc",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fresh-in",
+      "name": "Freshwater_Input",
+      "equation": "Greenland_Melt + Precipitation_Increase",
+      "from_stock": null,
+      "to_stock": "stock-fresh",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-fresh-out",
+      "name": "Freshwater_Export",
+      "equation": "Freshwater_Anomaly * Export_Rate",
+      "from_stock": "stock-fresh",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-density-change",
+      "name": "Density_Change",
+      "equation": "-Freshwater_Anomaly * Salinity_Effect + Cooling_Effect * AMOC_Strength_Sv",
+      "from_stock": null,
+      "to_stock": "stock-density",
+      "position": {
+        "x": 300,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-weak-rate",
+      "name": "Weakening_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-fresh-thresh",
+      "name": "Fresh_Threshold",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-warm-eff",
+      "name": "Warming_Effect",
+      "equation": "0.01 * TIME / 100",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-equil",
+      "name": "Equilibrium_AMOC",
+      "equation": "18",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recov-rate",
+      "name": "Recovery_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-greenland",
+      "name": "Greenland_Melt",
+      "equation": "0.01 * (1 + TIME/50)",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-precip",
+      "name": "Precipitation_Increase",
+      "equation": "0.005",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-export",
+      "name": "Export_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-salinity",
+      "name": "Salinity_Effect",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-cooling",
+      "name": "Cooling_Effect",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1038/s41586-018-0006-5",
+  "reference": "Caesar L et al. (2018) Observed fingerprint of a weakening Atlantic Ocean overturning circulation. Nature 556:191-196.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:32:44.851842+00:00",
+  "updated_at": "2026-01-12T06:32:44.851842+00:00"
+}

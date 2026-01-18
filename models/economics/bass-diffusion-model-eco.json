@@ -1,0 +1,114 @@
+{
+  "id": "bass-diffusion-model-eco",
+  "name": "Bass Diffusion Model",
+  "description": "A model for the timing of initial purchase of new products, particularly consumer durables. The adoption rate depends on innovation (external influence) and imitation (word-of-mouth). Originally developed to predict adoption timing for products like refrigerators, TVs, and air conditioners. Reference: Bass, F. M. (1969). A new product growth for model consumer durables. Management Science, 15(5), 215-227. DOI: https://doi.org/10.1287/mnsc.15.5.215",
+  "stocks": [
+    {
+      "id": "stock-adopters",
+      "name": "Adopters",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-potential-adopters",
+      "name": "Potential Adopters",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adoption-rate",
+      "name": "Adoption Rate",
+      "equation": "(Innovation_Coefficient + Imitation_Coefficient * Adopters / Market_Potential) * Potential_Adopters",
+      "from_stock": "stock-potential-adopters",
+      "to_stock": "stock-adopters",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-market-potential",
+      "name": "Market Potential",
+      "equation": "1000000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-innovation-coefficient",
+      "name": "Innovation Coefficient",
+      "equation": "0.03",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-imitation-coefficient",
+      "name": "Imitation Coefficient",
+      "equation": "0.38",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-adoption-fraction",
+      "name": "Adoption Fraction",
+      "equation": "Adopters / Market_Potential",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Adopters",
+      "to_element": "Adoption Rate"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Potential Adopters",
+      "to_element": "Adoption Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Market Potential",
+      "to_element": "Adoption Rate"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Innovation Coefficient",
+      "to_element": "Adoption Rate"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Imitation Coefficient",
+      "to_element": "Adoption Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-11T20:04:50.747104Z",
+  "updated_at": "2026-01-11T20:04:50.747104Z",
+  "source": "https://doi.org/10.1287/mnsc.15.5.215",
+  "reference": "Bass FM. A New Product Growth for Model Consumer Durables. Management Science. 1969;15(5):215-227."
+}

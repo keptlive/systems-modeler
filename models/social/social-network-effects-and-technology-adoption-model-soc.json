@@ -1,0 +1,537 @@
+{
+  "id": "social-network-effects-and-technology-adoption-model-soc",
+  "name": "Social Network Effects and Technology Adoption Model",
+  "description": "A system dynamics model of network effects in technology adoption, capturing viral growth, tipping points, and platform competition. Based on the economics of network externalities and two-sided markets. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-potential-users",
+      "name": "Potential Users",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-active-users",
+      "name": "Active Users",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-churned-users",
+      "name": "Churned Users",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-content-volume",
+      "name": "Content Volume",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-network-value-index",
+      "name": "Network Value Index",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-competitor-users",
+      "name": "Competitor Users",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-new-user-adoption",
+      "name": "New User Adoption",
+      "equation": "Potential_Users * Adoption_Rate",
+      "from_stock": "stock-potential-users",
+      "to_stock": "stock-active-users",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-user-churn",
+      "name": "User Churn",
+      "equation": "Active_Users * Churn_Rate",
+      "from_stock": "stock-active-users",
+      "to_stock": "stock-churned-users",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-user-reactivation",
+      "name": "User Reactivation",
+      "equation": "Churned_Users * Reactivation_Rate",
+      "from_stock": "stock-churned-users",
+      "to_stock": "stock-active-users",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-content-creation",
+      "name": "Content Creation",
+      "equation": "Active_Users * Content_Per_User * Engagement_Level",
+      "from_stock": null,
+      "to_stock": "stock-content-volume",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-content-decay",
+      "name": "Content Decay",
+      "equation": "Content_Volume / Content_Lifetime",
+      "from_stock": "stock-content-volume",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-network-value-growth",
+      "name": "Network Value Growth",
+      "equation": "(Target_Value - Network_Value) / Value_Adjustment_Time * IF Target_Value > Network_Value THEN 1 ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-network-value-index",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-network-value-depreciation",
+      "name": "Network Value Depreciation",
+      "equation": "(Network_Value - Target_Value) / Value_Adjustment_Time * IF Target_Value < Network_Value THEN 1 ELSE 0",
+      "from_stock": "stock-network-value-index",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-competitor-adoption",
+      "name": "Competitor Adoption",
+      "equation": "(Total_Market - Active_Users - Churned_Users - Competitor_Users) * Competitor_Adoption_Rate",
+      "from_stock": null,
+      "to_stock": "stock-competitor-users",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-competitor-churn",
+      "name": "Competitor Churn",
+      "equation": "Competitor_Users * Competitor_Churn_Rate",
+      "from_stock": "stock-competitor-users",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-switching-to-our-platform",
+      "name": "Switching to Our Platform",
+      "equation": "Competitor_Users * Switching_Rate",
+      "from_stock": "stock-competitor-users",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-addressable-market",
+      "name": "Total Addressable Market",
+      "equation": "100000000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-users",
+      "name": "Initial Users",
+      "equation": "10000",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-competitor-users",
+      "name": "Initial Competitor Users",
+      "equation": "50000",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-content",
+      "name": "Initial Content",
+      "equation": "100000",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-market-penetration",
+      "name": "Market Penetration",
+      "equation": "Active_Users / Total_Market",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-network-effect-strength",
+      "name": "Network Effect Strength",
+      "equation": "LOG(1 + Active_Users / Critical_Mass) / LOG(1 + Total_Market / Critical_Mass)",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-critical-mass",
+      "name": "Critical Mass",
+      "equation": "Total_Market * 0.05",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-adoption-rate",
+      "name": "Adoption Rate",
+      "equation": "Base_Adoption_Rate * Network_Effect_Multiplier * Word_of_Mouth_Effect * Marketing_Effect",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-base-adoption-rate",
+      "name": "Base Adoption Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-network-effect-multiplier",
+      "name": "Network Effect Multiplier",
+      "equation": "1 + Network_Effect_Coefficient * Network_Effect_Strength",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-network-effect-coefficient",
+      "name": "Network Effect Coefficient",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-word-of-mouth-effect",
+      "name": "Word of Mouth Effect",
+      "equation": "1 + WOM_Coefficient * Active_Users / Total_Market",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-word-of-mouth-coefficient",
+      "name": "Word of Mouth Coefficient",
+      "equation": "3",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-marketing-effect",
+      "name": "Marketing Effect",
+      "equation": "1 + Marketing_Spend / Marketing_Saturation",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-marketing-spend",
+      "name": "Marketing Spend",
+      "equation": "1000000",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-marketing-saturation",
+      "name": "Marketing Saturation",
+      "equation": "10000000",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-churn-rate",
+      "name": "Churn Rate",
+      "equation": "Base_Churn_Rate / (1 + Retention_Factor)",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-base-churn-rate",
+      "name": "Base Churn Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-retention-factor",
+      "name": "Retention Factor",
+      "equation": "Network_Effect_Strength * Retention_Network_Sensitivity + Content_Quality * Content_Retention_Sensitivity",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-retention-network-sensitivity",
+      "name": "Retention Network Sensitivity",
+      "equation": "2",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-content-retention-sensitivity",
+      "name": "Content Retention Sensitivity",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-content-quality",
+      "name": "Content Quality",
+      "equation": "Content_Volume / (Active_Users + 1)",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-reactivation-rate",
+      "name": "Reactivation Rate",
+      "equation": "0.1 * Network_Effect_Strength",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-engagement-level",
+      "name": "Engagement Level",
+      "equation": "0.5 + 0.5 * Network_Effect_Strength",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-content-per-user",
+      "name": "Content Per User",
+      "equation": "10",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-content-lifetime",
+      "name": "Content Lifetime",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-target-network-value",
+      "name": "Target Network Value",
+      "equation": "100 * Market_Penetration^2 * (1 + Content_Quality / 10)",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-value-adjustment-time",
+      "name": "Value Adjustment Time",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-competitor-adoption-rate",
+      "name": "Competitor Adoption Rate",
+      "equation": "0.015 * (1 + 3 * Competitor_Users / Total_Market)",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-competitor-churn-rate",
+      "name": "Competitor Churn Rate",
+      "equation": "0.25",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-switching-rate",
+      "name": "Switching Rate",
+      "equation": "0.05 * MAX(0, Network_Value / 100 - Competitor_Users / Active_Users)",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-market-share-vs-competitor",
+      "name": "Market Share vs Competitor",
+      "equation": "Active_Users / (Active_Users + Competitor_Users)",
+      "position": {
+        "x": 250,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-viral-coefficient-k",
+      "name": "Viral Coefficient (K)",
+      "equation": "Adoption * Total_Market / (Active_Users * Potential_Users)",
+      "position": {
+        "x": 400,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-tipping-point-indicator",
+      "name": "Tipping Point Indicator",
+      "equation": "IF Market_Penetration > 0.15 AND Network_Effect_Strength > 0.5 THEN 1 ELSE 0",
+      "position": {
+        "x": 550,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-winner-take-all-risk",
+      "name": "Winner-Take-All Risk",
+      "equation": "ABS(Market_Share - 0.5) * 2",
+      "position": {
+        "x": 700,
+        "y": 560
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Active Users",
+      "to_element": "Network Effect Strength"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Network Effect Strength",
+      "to_element": "Adoption Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Network Effect Strength",
+      "to_element": "Churn Rate"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Active Users",
+      "to_element": "Content Creation"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Content Volume",
+      "to_element": "Content Quality"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Potential Users",
+      "to_element": "New User Adoption"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.0625
+  },
+  "created_at": "2026-01-11T20:04:50.864328Z",
+  "updated_at": "2026-01-11T20:04:50.864328Z",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

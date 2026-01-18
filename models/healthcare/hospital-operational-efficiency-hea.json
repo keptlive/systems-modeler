@@ -1,0 +1,224 @@
+{
+  "id": "hospital-operational-efficiency-hea",
+  "name": "Hospital Operational Efficiency Model",
+  "description": "System dynamics model simulating hospital operational scenarios including bed occupancy rate, average length of stay, and workload index. Shows fiscal subsidies consistently improve operational efficiency. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-patients-waiting",
+      "name": "Patients Waiting",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-inpatients",
+      "name": "Inpatients",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-staff-capacity",
+      "name": "Staff Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-revenue",
+      "name": "Accumulated Revenue",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-admission",
+      "name": "Admission Rate",
+      "equation": "MIN(Patients_Waiting / Waiting_Time, Admission_Capacity)",
+      "from_stock": "stock-patients-waiting",
+      "to_stock": "stock-inpatients",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-discharge",
+      "name": "Discharge Rate",
+      "equation": "Inpatients / ALOS",
+      "from_stock": "stock-inpatients",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-arrivals",
+      "name": "Patient Arrivals",
+      "equation": "Arrival_Rate",
+      "from_stock": null,
+      "to_stock": "stock-patients-waiting",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-hiring",
+      "name": "Staff Hiring",
+      "equation": "IF Staff_Gap > 0 THEN Staff_Gap / Hiring_Time ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-staff-capacity",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-revenue-gen",
+      "name": "Revenue Generation",
+      "equation": "Discharge_Rate * Revenue_Per_Patient + Fiscal_Subsidy",
+      "from_stock": null,
+      "to_stock": "stock-revenue",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-arrival",
+      "name": "Arrival Rate",
+      "equation": "25",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-waiting-time",
+      "name": "Waiting Time",
+      "equation": "2",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-alos",
+      "name": "ALOS",
+      "equation": "4",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-bed-capacity",
+      "name": "Bed Capacity",
+      "equation": "120",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-bor",
+      "name": "BOR",
+      "equation": "Inpatients / Bed_Capacity",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-admission-cap",
+      "name": "Admission Capacity",
+      "equation": "MIN(Bed_Capacity - Inpatients, Staff_Capacity * Staff_Patient_Ratio)",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-staff-ratio",
+      "name": "Staff Patient Ratio",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-staff-gap",
+      "name": "Staff Gap",
+      "equation": "Inpatients / Staff_Patient_Ratio - Staff_Capacity",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-hiring-time",
+      "name": "Hiring Time",
+      "equation": "30",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-revenue-per",
+      "name": "Revenue Per Patient",
+      "equation": "5000",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-subsidy",
+      "name": "Fiscal Subsidy",
+      "equation": "50000",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-workload",
+      "name": "Workload Index",
+      "equation": "Inpatients / Staff_Capacity",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1186/s12961-025-01394-w",
+  "reference": "Implementing system dynamics in hospital services to improve operational efficiency. Health Research Policy and Systems (2025).",
+  "created_at": "2026-01-12T08:08:22.081275Z",
+  "updated_at": "2026-01-12T08:08:22.081275Z"
+}

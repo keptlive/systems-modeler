@@ -1,0 +1,153 @@
+{
+  "id": "akerlof-lemons-market-eco",
+  "name": "Akerlof Lemons Market - Adverse Selection",
+  "description": "Information asymmetry leads to market failure through adverse selection. Nobel Prize winning model. Source: Akerlof (1970), QJE. DOI: 10.2307/1879431",
+  "stocks": [
+    {
+      "id": "stock-hq",
+      "name": "High_Quality_Sellers",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-lq",
+      "name": "Low_Quality_Sellers",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-buyers",
+      "name": "Active_Buyers",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-hqexit",
+      "name": "HQ_Exit_Rate",
+      "equation": "IF(Market_Price < HQ_Reservation_Price, High_Quality_Sellers * Exit_Rate, 0)",
+      "from_stock": "stock-hq",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-lqentry",
+      "name": "LQ_Entry_Rate",
+      "equation": "IF(Market_Price > LQ_Reservation_Price, Entry_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-lq",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-buyexit",
+      "name": "Buyer_Exit",
+      "equation": "Active_Buyers * (1 - Expected_Quality / Reference_Quality) * 0.1",
+      "from_stock": "stock-buyers",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-hqres",
+      "name": "HQ_Reservation_Price",
+      "equation": "80",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-lqres",
+      "name": "LQ_Reservation_Price",
+      "equation": "40",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-mktprice",
+      "name": "Market_Price",
+      "equation": "Expected_Quality",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-expq",
+      "name": "Expected_Quality",
+      "equation": "(High_Quality_Sellers * 100 + Low_Quality_Sellers * 30) / (High_Quality_Sellers + Low_Quality_Sellers + 0.01)",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-refq",
+      "name": "Reference_Quality",
+      "equation": "65",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-exit",
+      "name": "Exit_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 50,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-entry",
+      "name": "Entry_Rate",
+      "equation": "2",
+      "position": {
+        "x": 50,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "High_Quality_Sellers",
+      "to_element": "Expected_Quality"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:02:23.927382Z",
+  "updated_at": "2026-01-12T02:02:23.927386Z",
+  "source": "https://doi.org/10.2307/1879431",
+  "reference": "Akerlof, G.A. (1970). The Market for Lemons: Quality Uncertainty and the Market Mechanism. Quarterly Journal of Economics."
+}

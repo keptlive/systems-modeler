@@ -1,0 +1,218 @@
+{
+  "id": "hospital-icu-surge-capacity-hea",
+  "name": "Hospital ICU Surge Capacity Model",
+  "description": "Models ICU capacity constraints during pandemic surges. Based on Moghadas et al. (2020) analysis of US hospital capacity during COVID-19. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "stock-available-beds",
+      "name": "Available_ICU_Beds",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-occupied-beds",
+      "name": "Occupied_ICU_Beds",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-surge-beds",
+      "name": "Surge_ICU_Beds",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-waiting-patients",
+      "name": "Waiting_Patients",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-deaths-overflow",
+      "name": "Deaths_From_Overflow",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 650,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-admissions",
+      "name": "ICU_Admissions",
+      "equation": "MIN(Daily_ICU_Demand, Available_ICU_Beds + Surge_ICU_Beds)",
+      "from_stock": "stock-available-beds",
+      "to_stock": "stock-occupied-beds",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-discharges",
+      "name": "ICU_Discharges",
+      "equation": "Occupied_ICU_Beds / Average_ICU_Stay",
+      "from_stock": "stock-occupied-beds",
+      "to_stock": "stock-available-beds",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-surge-activation",
+      "name": "Surge_Activation",
+      "equation": "IF(Occupied_ICU_Beds / Total_Base_Beds > Surge_Threshold, Surge_Capacity_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-surge-beds",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-surge-deactivation",
+      "name": "Surge_Deactivation",
+      "equation": "IF(Occupied_ICU_Beds / Total_Base_Beds < Surge_Threshold - 0.1, Surge_ICU_Beds / Surge_Decay, 0)",
+      "from_stock": "stock-surge-beds",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-overflow",
+      "name": "Patient_Overflow",
+      "equation": "MAX(0, Daily_ICU_Demand - Available_ICU_Beds - Surge_ICU_Beds)",
+      "from_stock": null,
+      "to_stock": "stock-waiting-patients",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-overflow-deaths",
+      "name": "Overflow_Deaths",
+      "equation": "Waiting_Patients * Overflow_Mortality_Rate",
+      "from_stock": "stock-waiting-patients",
+      "to_stock": "stock-deaths-overflow",
+      "position": {
+        "x": 575,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-daily-icu-demand",
+      "name": "Daily_ICU_Demand",
+      "equation": "Base_Demand * (1 + Surge_Factor * SIN(TIME * 0.05))",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-base-demand",
+      "name": "Base_Demand",
+      "equation": "50",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-surge-factor",
+      "name": "Surge_Factor",
+      "equation": "3",
+      "position": {
+        "x": 340,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-average-icu-stay",
+      "name": "Average_ICU_Stay",
+      "equation": "10",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-base-beds",
+      "name": "Total_Base_Beds",
+      "equation": "500",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-surge-threshold",
+      "name": "Surge_Threshold",
+      "equation": "0.8",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-surge-capacity-rate",
+      "name": "Surge_Capacity_Rate",
+      "equation": "20",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-surge-decay",
+      "name": "Surge_Decay",
+      "equation": "14",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-overflow-mortality-rate",
+      "name": "Overflow_Mortality_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 600,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T01:12:15.897602+00:00",
+  "updated_at": "2026-01-12T01:12:15.897610+00:00",
+  "source": "https://doi.org/10.1016/S1473-3099(20)30190-4",
+  "reference": "Moghadas SM, et al. Projecting hospital utilization during the COVID-19 outbreaks in the United States. PNAS. 2020;117(16):9122-9126."
+}

@@ -1,0 +1,175 @@
+{
+  "id": "homer-healthcare-delivery-hea",
+  "name": "Homer Healthcare Delivery Model",
+  "description": "Healthcare delivery system model showing the dynamics of patient flow, resource allocation, and quality of care. Based on Jack Homer's extensive work in healthcare system dynamics including his models for disease management, healthcare capacity, and public health interventions.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Patients_Waiting",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "Patients_In_Treatment",
+      "initial_value": 50,
+      "equation": "",
+      "position": {"x": 400, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Healthcare_Workforce",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 300, "y": 350}
+    },
+    {
+      "id": "s4",
+      "name": "Quality_of_Care",
+      "initial_value": 80,
+      "equation": "",
+      "position": {"x": 500, "y": 350}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "New_Patients",
+      "equation": "Population * Disease_Incidence",
+      "from_stock": null,
+      "to_stock": "Patients_Waiting",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Treatment_Starts",
+      "equation": "MIN(Patients_Waiting / Wait_Time, Treatment_Capacity)",
+      "from_stock": "Patients_Waiting",
+      "to_stock": "Patients_In_Treatment",
+      "position": {"x": 300, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Treatment_Completions",
+      "equation": "Patients_In_Treatment / Treatment_Duration",
+      "from_stock": "Patients_In_Treatment",
+      "to_stock": null,
+      "position": {"x": 500, "y": 200}
+    },
+    {
+      "id": "f4",
+      "name": "Hiring",
+      "equation": "MAX(0, (Desired_Workforce - Healthcare_Workforce) / Hiring_Time)",
+      "from_stock": null,
+      "to_stock": "Healthcare_Workforce",
+      "position": {"x": 200, "y": 350}
+    },
+    {
+      "id": "f5",
+      "name": "Attrition",
+      "equation": "Healthcare_Workforce * Attrition_Rate * Burnout_Effect",
+      "from_stock": "Healthcare_Workforce",
+      "to_stock": null,
+      "position": {"x": 400, "y": 350}
+    },
+    {
+      "id": "f6",
+      "name": "Quality_Change",
+      "equation": "(Target_Quality - Quality_of_Care) / Quality_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "Quality_of_Care",
+      "position": {"x": 600, "y": 350}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Population",
+      "equation": "1000000",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "v2",
+      "name": "Disease_Incidence",
+      "equation": "0.001",
+      "position": {"x": 200, "y": 100}
+    },
+    {
+      "id": "v3",
+      "name": "Wait_Time",
+      "equation": "1",
+      "position": {"x": 300, "y": 100}
+    },
+    {
+      "id": "v4",
+      "name": "Treatment_Capacity",
+      "equation": "Healthcare_Workforce * Patients_Per_Staff * Capacity_Utilization",
+      "position": {"x": 400, "y": 100}
+    },
+    {
+      "id": "v5",
+      "name": "Treatment_Duration",
+      "equation": "14",
+      "position": {"x": 500, "y": 100}
+    },
+    {
+      "id": "v6",
+      "name": "Patients_Per_Staff",
+      "equation": "5",
+      "position": {"x": 100, "y": 450}
+    },
+    {
+      "id": "v7",
+      "name": "Capacity_Utilization",
+      "equation": "Quality_of_Care / 100",
+      "position": {"x": 200, "y": 450}
+    },
+    {
+      "id": "v8",
+      "name": "Desired_Workforce",
+      "equation": "(Patients_Waiting + Patients_In_Treatment) / Patients_Per_Staff",
+      "position": {"x": 300, "y": 450}
+    },
+    {
+      "id": "v9",
+      "name": "Hiring_Time",
+      "equation": "12",
+      "position": {"x": 400, "y": 450}
+    },
+    {
+      "id": "v10",
+      "name": "Attrition_Rate",
+      "equation": "0.1",
+      "position": {"x": 500, "y": 450}
+    },
+    {
+      "id": "v11",
+      "name": "Burnout_Effect",
+      "equation": "1 + (Patients_In_Treatment / Healthcare_Workforce - Patients_Per_Staff) / Patients_Per_Staff",
+      "position": {"x": 600, "y": 450}
+    },
+    {
+      "id": "v12",
+      "name": "Target_Quality",
+      "equation": "100 - (Patients_In_Treatment / Treatment_Capacity - 0.8) * 50",
+      "position": {"x": 700, "y": 350}
+    },
+    {
+      "id": "v13",
+      "name": "Quality_Adjustment_Time",
+      "equation": "4",
+      "position": {"x": 700, "y": 450}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1002/sdr.379",
+  "reference": "Homer JB, Hirsch GB. System dynamics modeling for public health: background and opportunities. American Journal of Public Health. 2006;96(3):452-458. DOI: 10.2105/AJPH.2005.062059",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

@@ -1,0 +1,199 @@
+{
+  "id": "nelson-winter-evolutionary-eco",
+  "name": "Nelson-Winter Evolutionary Economics",
+  "description": "Firms follow routines, search for innovations, and are selected by market. Heterogeneous firms create industry dynamics. Alternative to neoclassical perfect rationality. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-firm-productivity",
+      "name": "Average Firm Productivity",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-industry-concentration",
+      "name": "Industry Concentration",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-frontier",
+      "name": "Technology Frontier",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-productivity-growth",
+      "name": "Productivity Growth",
+      "equation": "Innovation_Effect + Imitation_Effect + Selection_Effect",
+      "from_stock": null,
+      "to_stock": "stock-firm-productivity",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-concentration-change",
+      "name": "Concentration Change",
+      "equation": "Selection_Intensity * Productivity_Variance",
+      "from_stock": null,
+      "to_stock": "stock-industry-concentration",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-frontier-advance",
+      "name": "Frontier Advance",
+      "equation": "Frontier_Growth_Rate * Technology_Frontier",
+      "from_stock": null,
+      "to_stock": "stock-frontier",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-innovation-effect",
+      "name": "Innovation Effect",
+      "equation": "Innovation_Rate * Innovation_Step * (Technology_Frontier - Average_Firm_Productivity)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-imitation-effect",
+      "name": "Imitation Effect",
+      "equation": "Imitation_Rate * (Industry_Best - Average_Firm_Productivity)",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-selection-effect",
+      "name": "Selection Effect",
+      "equation": "Selection_Intensity * Productivity_Variance * Average_Firm_Productivity",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-innovation-rate",
+      "name": "Innovation Rate",
+      "equation": "R_and_D_Intensity * 0.1",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-imitation-rate",
+      "name": "Imitation Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-selection-intensity",
+      "name": "Selection Intensity",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-innovation-step",
+      "name": "Innovation Step",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-r-and-d",
+      "name": "R and D Intensity",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-industry-best",
+      "name": "Industry Best",
+      "equation": "Average_Firm_Productivity * (1 + 2 * SQRT(Productivity_Variance))",
+      "position": {
+        "x": 350,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-variance",
+      "name": "Productivity Variance",
+      "equation": "0.04",
+      "position": {
+        "x": 550,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-frontier-growth",
+      "name": "Frontier Growth Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 550
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Technology Frontier",
+      "to_element": "Innovation Effect"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Average Firm Productivity",
+      "to_element": "Imitation Effect"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Productivity Variance",
+      "to_element": "Selection Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:48:28.113868+00:00",
+  "updated_at": "2026-01-12T07:48:28.113872+00:00",
+  "source": "https://doi.org/10.2307/j.ctt1ht4wz0",
+  "reference": "Nelson RR, Winter SG. An Evolutionary Theory of Economic Change. Harvard University Press. 1982."
+}

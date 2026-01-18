@@ -1,0 +1,180 @@
+{
+  "id": "ocean-plastic-pollution-gyre-mar",
+  "name": "Ocean Plastic Pollution Model",
+  "description": "Marine plastic debris accumulation in gyres. Source: Lebreton et al. (2018), Scientific Reports.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Surface_Plastic",
+      "initial_value": 80000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Deep_Ocean_Plastic",
+      "initial_value": 20000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Microplastics",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Surface_Flux",
+      "equation": "Input_Rate - Removal - Sinking - Fragmentation_Surface",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Deep_Flux",
+      "equation": "Sinking - Deep_Burial",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Microplastic_Generation",
+      "equation": "Fragmentation_Surface + Fragmentation_Deep - Ingestion",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Plastic_Production_Rate",
+      "equation": "350",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Mismanagement_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Input_Rate",
+      "equation": "Plastic_Production_Rate * Mismanagement_Rate",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Removal",
+      "equation": "0.001 * Surface_Plastic",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Sinking",
+      "equation": "0.01 * Surface_Plastic",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Fragmentation_Surface",
+      "equation": "0.02 * Surface_Plastic",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Deep_Burial",
+      "equation": "0.005 * Deep_Ocean_Plastic",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Fragmentation_Deep",
+      "equation": "0.005 * Deep_Ocean_Plastic",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Ingestion",
+      "equation": "0.01 * Microplastics",
+      "position": {
+        "x": 300,
+        "y": 480
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Total_Ocean_Plastic",
+      "equation": "Surface_Plastic + Deep_Ocean_Plastic + Microplastics",
+      "position": {
+        "x": 500,
+        "y": 480
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Surface_Plastic",
+      "to_element": "Sinking"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-15T14:52:39.347064+00:00",
+  "updated_at": "2026-01-15T14:52:39.347072+00:00",
+  "source": "https://doi.org/10.1038/s41598-018-22939-w",
+  "reference": "Lebreton, L. et al. (2018). Evidence that the Great Pacific Garbage Patch is rapidly accumulating plastic. Scientific Reports 8:4666."
+}

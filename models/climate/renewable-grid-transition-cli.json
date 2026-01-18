@@ -1,0 +1,258 @@
+{
+  "id": "renewable-grid-transition-cli",
+  "name": "Renewable Electricity Grid Transition Model",
+  "description": "Model of electricity grid transition from fossil fuels to renewables showing capacity additions, retirements, and reliability. Based on IEA scenarios. Reference: Cachon, G., & Terwiesch, C. (2012). Matching Supply with Demand. McGraw-Hill. Source: https://www.mheducation.com/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Fossil Capacity",
+      "initial_value": 700,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Renewable Capacity",
+      "initial_value": 300,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Storage Capacity",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Grid Emissions",
+      "initial_value": 2000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Fossil Retirement",
+      "equation": "Fossil_Capacity * Retirement_Rate + Policy_Retirement",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Renewable Addition",
+      "equation": "Renewable_Investment / Renewable_Cost",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Renewable Retirement",
+      "equation": "Renewable_Capacity / Renewable_Lifetime",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Storage Addition",
+      "equation": "Storage_Investment / Storage_Cost",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Emissions Reduction",
+      "equation": "Fossil_Retirement * Emissions_per_MW",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Retirement Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Policy Retirement",
+      "equation": "10",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Renewable Investment",
+      "equation": "50",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Renewable Cost",
+      "equation": "1",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Renewable Lifetime",
+      "equation": "25",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Storage Investment",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Storage Cost",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Emissions per MW",
+      "equation": "3",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Total Capacity",
+      "equation": "Fossil_Capacity + Renewable_Capacity",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Renewable Share",
+      "equation": "Renewable_Capacity / Total_Capacity * 100",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Reliability Index",
+      "equation": "MIN(1, (Fossil_Capacity + Renewable_Capacity * Capacity_Factor + Storage_Capacity) / Peak_Demand)",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Capacity Factor",
+      "equation": "0.35",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Peak Demand",
+      "equation": "800",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Grid Carbon Intensity",
+      "equation": "Grid_Emissions / Total_Capacity",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Fossil Capacity",
+      "to_element": "Fossil Retirement"
+    },
+    {
+      "id": "c2",
+      "from_element": "Renewable Capacity",
+      "to_element": "Renewable Share"
+    },
+    {
+      "id": "c3",
+      "from_element": "Storage Capacity",
+      "to_element": "Reliability Index"
+    }
+  ],
+  "time_settings": {
+    "start": 2024,
+    "end": 2060,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:53:04.263290+00:00",
+  "updated_at": "2026-01-12T01:53:04.263293+00:00",
+  "source": "https://www.iea.org/reports/net-zero-by-2050",
+  "reference": "IEA. Net Zero by 2050: A Roadmap for the Global Energy Sector. International Energy Agency, 2021."
+}

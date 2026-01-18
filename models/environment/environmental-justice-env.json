@@ -1,0 +1,140 @@
+{
+  "id": "environmental-justice-env",
+  "name": "Environmental Justice Dynamics",
+  "description": "Model of environmental burden distribution. Source: EPA EJScreen; Bullard (1990).",
+  "stocks": [
+    {
+      "id": "stock-burden",
+      "name": "Environmental_Burden",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-health",
+      "name": "Community_Health",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-pollution",
+      "name": "Pollution_Input",
+      "equation": "Industrial_Activity * (1 - Regulation_Effect)",
+      "from_stock": null,
+      "to_stock": "stock-burden",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-cleanup",
+      "name": "Remediation",
+      "equation": "Environmental_Burden * Cleanup_Rate * Investment",
+      "from_stock": "stock-burden",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-healthdec",
+      "name": "Health_Decline",
+      "equation": "Environmental_Burden * Health_Impact / 100",
+      "from_stock": "stock-health",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-healthrec",
+      "name": "Health_Recovery",
+      "equation": "(100 - Community_Health) * Recovery_Rate * (100 - Environmental_Burden) / 100",
+      "from_stock": null,
+      "to_stock": "stock-health",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-industry",
+      "name": "Industrial_Activity",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-reg",
+      "name": "Regulation_Effect",
+      "equation": "0.3 + 0.005 * TIME",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-cleanup",
+      "name": "Cleanup_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-invest",
+      "name": "Investment",
+      "equation": "1 + 0.02 * TIME",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-impact",
+      "name": "Health_Impact",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-recov",
+      "name": "Recovery_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:53:13.195558+00:00",
+  "updated_at": "2026-01-12T12:53:13.195558+00:00",
+  "source": "https://doi.org/10.1289/ehp.1509967",
+  "reference": "Mohai P, Pellow D, Roberts JT. Environmental justice. Annual Review of Environment and Resources. 2009;34:405-430."
+}

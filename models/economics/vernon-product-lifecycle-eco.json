@@ -1,0 +1,160 @@
+{
+  "id": "vernon-product-lifecycle-eco",
+  "name": "Vernon Product Lifecycle Model",
+  "description": "Products progress through introduction, growth, maturity, decline. Production location shifts from innovator country to developing countries. Explains trade patterns evolution. Reference: Fisher, R. A. (1930). The Genetical Theory of Natural Selection. Oxford University Press. Source: https://doi.org/10.5962/bhl.title.27468",
+  "stocks": [
+    {
+      "id": "stock-sales",
+      "name": "Sales",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-production-shift",
+      "name": "Production Location Index",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-sales-change",
+      "name": "Sales Change",
+      "equation": "Sales * (Growth_Rate - Decline_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-sales",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-location-shift",
+      "name": "Location Shift",
+      "equation": "Shift_Rate * (Equilibrium_Location - Production_Location_Index)",
+      "from_stock": null,
+      "to_stock": "stock-production-shift",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-stage",
+      "name": "Lifecycle Stage",
+      "equation": "IF(TIME < 5, 1, IF(TIME < 15, 2, IF(TIME < 30, 3, 4)))",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-growth-rate",
+      "name": "Growth Rate",
+      "equation": "IF(Lifecycle_Stage = 1, 0.5, IF(Lifecycle_Stage = 2, 0.2, IF(Lifecycle_Stage = 3, 0, -0.1)))",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-decline-rate",
+      "name": "Decline Rate",
+      "equation": "IF(Lifecycle_Stage = 4, 0.15, 0)",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-eq-location",
+      "name": "Equilibrium Location",
+      "equation": "IF(Lifecycle_Stage <= 2, 1, IF(Lifecycle_Stage = 3, 0.5, 0))",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-shift-rate",
+      "name": "Shift Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-domestic-production",
+      "name": "Domestic Production",
+      "equation": "Sales * Production_Location_Index",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-foreign-production",
+      "name": "Foreign Production",
+      "equation": "Sales * (1 - Production_Location_Index)",
+      "position": {
+        "x": 250,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-net-exports",
+      "name": "Net Exports",
+      "equation": "Domestic_Production - Domestic_Consumption",
+      "position": {
+        "x": 500,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-domestic-consumption",
+      "name": "Domestic Consumption",
+      "equation": "Sales * 0.3",
+      "position": {
+        "x": 350,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Lifecycle Stage",
+      "to_element": "Growth Rate"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Lifecycle Stage",
+      "to_element": "Equilibrium Location"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Production Location Index",
+      "to_element": "Domestic Production"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:48:28.113786+00:00",
+  "updated_at": "2026-01-12T07:48:28.113789+00:00",
+  "source": "https://doi.org/10.2307/1880689",
+  "reference": "Vernon R. International Investment and International Trade in the Product Cycle. Quarterly Journal of Economics. 1966;80(2):190-207."
+}

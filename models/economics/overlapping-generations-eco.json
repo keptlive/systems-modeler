@@ -1,0 +1,153 @@
+{
+  "id": "overlapping-generations-eco",
+  "name": "Overlapping Generations Model",
+  "description": "Peter Diamond's (1965) OLG model where young and old generations coexist, each making consumption-savings decisions. Foundation for analyzing Social Security, public debt, and intergenerational transfers. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-capital",
+      "name": "Capital per Worker",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-population",
+      "name": "Working Population",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-capital-accumulation",
+      "name": "Capital Accumulation",
+      "equation": "Savings_Young - Capital_per_Worker * Population_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-capital",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-population-growth",
+      "name": "Population Growth",
+      "equation": "Working_Population * Population_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-population",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-wage",
+      "name": "Wage",
+      "equation": "(1 - Capital_Share) * Output_per_Worker",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-interest-rate",
+      "name": "Interest Rate",
+      "equation": "Capital_Share * Output_per_Worker / Capital_per_Worker",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-output-per-worker",
+      "name": "Output per Worker",
+      "equation": "TFP * (Capital_per_Worker ^ Capital_Share)",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-savings-young",
+      "name": "Savings Young",
+      "equation": "Wage * Savings_Rate_Young",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-consumption-young",
+      "name": "Consumption Young",
+      "equation": "Wage - Savings_Young",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-consumption-old",
+      "name": "Consumption Old",
+      "equation": "Savings_Young * (1 + Interest_Rate)",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-capital-share",
+      "name": "Capital Share",
+      "equation": "0.33",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-tfp",
+      "name": "TFP (Technology)",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-savings-rate-young",
+      "name": "Savings Rate Young",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-population-growth-rate",
+      "name": "Population Growth Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T21:11:32.978609+00:00",
+  "updated_at": "2026-01-11T21:11:32.978609+00:00",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

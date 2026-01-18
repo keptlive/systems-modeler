@@ -1,0 +1,204 @@
+{
+  "id": "cobb-douglas-environment-eco",
+  "name": "Cobb-Douglas with Environmental Input",
+  "description": "Extended Cobb-Douglas production function including natural resources as a factor of production. Models resource constraints on growth. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-capital",
+      "name": "Capital",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-resource",
+      "name": "Natural_Resource",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-output",
+      "name": "Cumulative_Output",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 225
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-investment",
+      "name": "Investment",
+      "equation": "Output * savings_rate",
+      "from_stock": null,
+      "to_stock": "stock-capital",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-depreciation",
+      "name": "Depreciation",
+      "equation": "Capital * depreciation_rate",
+      "from_stock": "stock-capital",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-extraction",
+      "name": "Resource_Use",
+      "equation": "resource_intensity * Output",
+      "from_stock": "stock-resource",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 380
+      }
+    },
+    {
+      "id": "flow-production",
+      "name": "Production",
+      "equation": "Output",
+      "from_stock": null,
+      "to_stock": "stock-output",
+      "position": {
+        "x": 300,
+        "y": 225
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-labor",
+      "name": "Labor",
+      "equation": "100 * exp(labor_growth * TIME)",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-output",
+      "name": "Output",
+      "equation": "TFP * Capital^alpha * Labor^beta * MAX(1, Natural_Resource)^gamma",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-tfp",
+      "name": "TFP",
+      "equation": "1",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-alpha",
+      "name": "alpha",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-beta",
+      "name": "beta",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "gamma",
+      "equation": "0.2",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-savings",
+      "name": "savings_rate",
+      "equation": "0.2",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-depr",
+      "name": "depreciation_rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-labor-growth",
+      "name": "labor_growth",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-resource-int",
+      "name": "resource_intensity",
+      "equation": "0.01",
+      "position": {
+        "x": 50,
+        "y": 380
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Capital",
+      "to_element": "Output"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Labor",
+      "to_element": "Output"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Natural_Resource",
+      "to_element": "Output"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Output",
+      "to_element": "Investment"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.2307/1905845",
+  "reference": "Based on Cobb CW, Douglas PH. A Theory of Production. American Economic Review. 1928;18(1):139-165. Extended for natural resources."
+}

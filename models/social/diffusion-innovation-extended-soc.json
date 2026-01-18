@@ -1,0 +1,193 @@
+{
+  "id": "diffusion-innovation-extended-soc",
+  "name": "Extended Diffusion of Innovations Model",
+  "description": "Extended Bass-Rogers model of innovation diffusion with adopter categories (innovators, early adopters, early majority, late majority, laggards). Based on Rogers (2003) and includes network effects and marketing. Reference: Bass, F. M. (1969). A new product growth for model consumer durables. Management Science, 15(5), 215-227. DOI: https://doi.org/10.1287/mnsc.15.5.215",
+  "stocks": [
+    {
+      "id": "stock-potential",
+      "name": "Potential Adopters",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-aware",
+      "name": "Aware Non-Adopters",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-adopters",
+      "name": "Adopters",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-discontinued",
+      "name": "Discontinued",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-awareness",
+      "name": "Awareness Generation",
+      "equation": "Potential_Adopters * (Advertising_Effect + Word_of_Mouth_Effect)",
+      "from_stock": "stock-potential",
+      "to_stock": "stock-aware",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-adoption",
+      "name": "Adoption",
+      "equation": "Aware_Non_Adopters * Adoption_Rate * Utility_Factor",
+      "from_stock": "stock-aware",
+      "to_stock": "stock-adopters",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-discontinuance",
+      "name": "Discontinuance",
+      "equation": "Adopters * Discontinuance_Rate",
+      "from_stock": "stock-adopters",
+      "to_stock": "stock-discontinued",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-market",
+      "name": "Total Market",
+      "equation": "10100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-market-penetration",
+      "name": "Market Penetration",
+      "equation": "Adopters / Total_Market",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-advertising-effect",
+      "name": "Advertising Effect",
+      "equation": "Advertising_Spending * Ad_Effectiveness / Total_Market",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-advertising-spending",
+      "name": "Advertising Spending",
+      "equation": "100",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-ad-effectiveness",
+      "name": "Ad Effectiveness",
+      "equation": "0.01",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-word-of-mouth-effect",
+      "name": "Word of Mouth Effect",
+      "equation": "WOM_Coefficient * Adopters / Total_Market",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-wom-coefficient",
+      "name": "WOM Coefficient",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-adoption-rate",
+      "name": "Adoption Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-utility-factor",
+      "name": "Utility Factor",
+      "equation": "1 + Network_Effect * Market_Penetration",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-network-effect",
+      "name": "Network Effect",
+      "equation": "1",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-discontinuance-rate",
+      "name": "Discontinuance Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:11:32.978794+00:00",
+  "updated_at": "2026-01-11T21:11:32.978794+00:00",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

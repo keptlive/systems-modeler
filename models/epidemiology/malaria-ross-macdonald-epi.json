@@ -1,0 +1,229 @@
+{
+  "id": "malaria-ross-macdonald-epi",
+  "name": "Malaria Ross-Macdonald Model",
+  "description": "Ross-Macdonald model for malaria transmission between humans and mosquito vectors. Classic model for vector-borne disease epidemiology. Source: Macdonald (1957), The Epidemiology and Control of Malaria, Oxford University Press.",
+  "stocks": [
+    {
+      "id": "stock-sh",
+      "name": "Susceptible_Humans",
+      "initial_value": 9000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-ih",
+      "name": "Infected_Humans",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-sm",
+      "name": "Susceptible_Mosquitoes",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-im",
+      "name": "Infected_Mosquitoes",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-human-infection",
+      "name": "Human_Infection",
+      "equation": "Mosquito_Bite_Rate * Susceptible_Humans * Infected_Mosquitoes * Prob_Transmission_MH / Human_Population",
+      "from_stock": "stock-sh",
+      "to_stock": "stock-ih",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-human-recovery",
+      "name": "Human_Recovery",
+      "equation": "Infected_Humans / Human_Recovery_Time",
+      "from_stock": "stock-ih",
+      "to_stock": "stock-sh",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "flow-mosquito-birth",
+      "name": "Mosquito_Birth",
+      "equation": "Mosquito_Birth_Rate * Mosquito_Population",
+      "from_stock": null,
+      "to_stock": "stock-sm",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-mosquito-infection",
+      "name": "Mosquito_Infection",
+      "equation": "Mosquito_Bite_Rate * Susceptible_Mosquitoes * Infected_Humans * Prob_Transmission_HM / Human_Population",
+      "from_stock": "stock-sm",
+      "to_stock": "stock-im",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-sm-death",
+      "name": "SM_Death",
+      "equation": "Susceptible_Mosquitoes * Mosquito_Death_Rate",
+      "from_stock": "stock-sm",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 380
+      }
+    },
+    {
+      "id": "flow-im-death",
+      "name": "IM_Death",
+      "equation": "Infected_Mosquitoes * Mosquito_Death_Rate",
+      "from_stock": "stock-im",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 380
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-bite-rate",
+      "name": "Mosquito_Bite_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 150,
+        "y": 230
+      }
+    },
+    {
+      "id": "var-prob-mh",
+      "name": "Prob_Transmission_MH",
+      "equation": "0.4",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-prob-hm",
+      "name": "Prob_Transmission_HM",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 230
+      }
+    },
+    {
+      "id": "var-human-recovery",
+      "name": "Human_Recovery_Time",
+      "equation": "180",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-mosquito-birth",
+      "name": "Mosquito_Birth_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 50,
+        "y": 230
+      }
+    },
+    {
+      "id": "var-mosquito-death",
+      "name": "Mosquito_Death_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-human-pop",
+      "name": "Human_Population",
+      "equation": "Susceptible_Humans + Infected_Humans",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mosquito-pop",
+      "name": "Mosquito_Population",
+      "equation": "Susceptible_Mosquitoes + Infected_Mosquitoes",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-vectorial-capacity",
+      "name": "Vectorial_Capacity",
+      "equation": "Mosquito_Population * Mosquito_Bite_Rate * Mosquito_Bite_Rate * Prob_Transmission_MH * Prob_Transmission_HM / (Mosquito_Death_Rate * Human_Population)",
+      "position": {
+        "x": 450,
+        "y": 380
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Susceptible_Humans",
+      "to_element": "Human_Infection"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Infected_Mosquitoes",
+      "to_element": "Human_Infection"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Infected_Humans",
+      "to_element": "Human_Recovery"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Susceptible_Mosquitoes",
+      "to_element": "Mosquito_Infection"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:52:52.274835+00:00",
+  "updated_at": "2026-01-11T20:52:52.274835+00:00",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

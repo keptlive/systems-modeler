@@ -1,0 +1,134 @@
+{
+  "id": "knowledge-retention-curve-edu",
+  "name": "Knowledge Retention and Spaced Repetition",
+  "description": "Models memory decay and optimal review scheduling. Based on Ebbinghaus. Source: Ebbinghaus (1885) and Pimsleur (1967). DOI: 10.1037/h0032286",
+  "stocks": [
+    {
+      "id": "stock-mem",
+      "name": "Memory_Strength",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-stability",
+      "name": "Memory_Stability",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-forget",
+      "name": "Forgetting",
+      "equation": "Memory_Strength * Forgetting_Rate / Memory_Stability",
+      "from_stock": "stock-mem",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-review",
+      "name": "Review_Boost",
+      "equation": "IF(Review_Due = 1, (100 - Memory_Strength) * Review_Efficiency, 0)",
+      "from_stock": null,
+      "to_stock": "stock-mem",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-stabgrow",
+      "name": "Stability_Growth",
+      "equation": "IF(Review_Due = 1, Stability_Increase, 0)",
+      "from_stock": null,
+      "to_stock": "stock-stability",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-forgetrate",
+      "name": "Forgetting_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-reveff",
+      "name": "Review_Efficiency",
+      "equation": "0.8",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-revdue",
+      "name": "Review_Due",
+      "equation": "IF(MOD(TIME, Review_Interval) < 1, 1, 0)",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-revint",
+      "name": "Review_Interval",
+      "equation": "Memory_Stability * 5",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-stabinc",
+      "name": "Stability_Increase",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-retrieval",
+      "name": "Retrieval_Probability",
+      "equation": "Memory_Strength / 100",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Memory_Stability",
+      "to_element": "Forgetting"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:13:18.795773+00:00",
+  "updated_at": "2026-01-12T02:13:18.795776+00:00",
+  "source": "https://doi.org/10.1037/h0032286",
+  "reference": "Ebbinghaus, H. (1885). Memory: A Contribution to Experimental Psychology."
+}

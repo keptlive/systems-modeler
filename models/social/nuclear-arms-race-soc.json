@@ -1,0 +1,157 @@
+{
+  "id": "nuclear-arms-race-soc",
+  "name": "Nuclear Arms Race Dynamics",
+  "description": "A Richardson arms race model applied to nuclear weapons, capturing the dynamics of nuclear arsenals between two superpowers. Based on Lewis Fry Richardson's mathematical theory of arms races. Reference: IAEA Nuclear Energy Data. Source: https://www.iaea.org/",
+  "source": "https://doi.org/10.1002/ejsp.2420010404",
+  "reference": "Richardson LF. Arms and Insecurity. Pittsburgh: Boxwood Press. 1960. See also Brams SJ. Superpower Games. Yale University Press. 1985.",
+  "stocks": [
+    {
+      "id": "stock-country-a",
+      "name": "Country A Warheads",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-country-b",
+      "name": "Country B Warheads",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-buildup-a",
+      "name": "Country A Buildup",
+      "equation": "MAX(0, Reaction_Coefficient_A * Country_B_Warheads - Fatigue_A * Country_A_Warheads + Grievance_A)",
+      "from_stock": null,
+      "to_stock": "stock-country-a",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-buildup-b",
+      "name": "Country B Buildup",
+      "equation": "MAX(0, Reaction_Coefficient_B * Country_A_Warheads - Fatigue_B * Country_B_Warheads + Grievance_B)",
+      "from_stock": null,
+      "to_stock": "stock-country-b",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-reduction-a",
+      "name": "Country A Reduction",
+      "equation": "Country_A_Warheads * Treaty_Reduction_Rate * Cooperation_Factor",
+      "from_stock": "stock-country-a",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-reduction-b",
+      "name": "Country B Reduction",
+      "equation": "Country_B_Warheads * Treaty_Reduction_Rate * Cooperation_Factor",
+      "from_stock": "stock-country-b",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-react-a",
+      "name": "Reaction Coefficient A",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-react-b",
+      "name": "Reaction Coefficient B",
+      "equation": "0.12",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-fatigue-a",
+      "name": "Fatigue A",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-fatigue-b",
+      "name": "Fatigue B",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-grievance-a",
+      "name": "Grievance A",
+      "equation": "2",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-grievance-b",
+      "name": "Grievance B",
+      "equation": "3",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-treaty",
+      "name": "Treaty Reduction Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-cooperation",
+      "name": "Cooperation Factor",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T08:00:00.000000+00:00",
+  "updated_at": "2026-01-12T08:00:00.000000+00:00"
+}

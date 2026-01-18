@@ -1,0 +1,366 @@
+{
+  "id": "herrington-world3-validation-cla",
+  "name": "Welfare_Adjustment_Time",
+  "description": "Simplified World3 model structure used by Herrington (2021) to compare model predictions with empirical data from 1972-2020. Shows that BAU2 scenario most closely matches observed trajectories. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Global_Population",
+      "initial_value": 3.7,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Industrial_Output_Index",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Food_Index",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Pollution_Index",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Welfare_Index",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Population_Growth",
+      "equation": "Global_Population * (Birth_Rate - Death_Rate)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Industrial_Change",
+      "equation": "(Target_Industrial - Industrial_Output_Index) / Industrial_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Food_Change",
+      "equation": "(Target_Food - Food_Index) / Food_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Pollution_Accumulation",
+      "equation": "Industrial_Output_Index * Pollution_Generation - Pollution_Index * Assimilation_Rate",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Welfare_Change",
+      "equation": "(Target_Welfare - Welfare_Index) / Welfare_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Birth_Rate",
+      "equation": "0.025 * Food_Index / (1 + Pollution_Index * 0.1)",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Death_Rate",
+      "equation": "0.012 * (1 + Pollution_Index * 0.05) / Food_Index",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Target_Industrial",
+      "equation": "1 + 0.03 * (TIME - 1970) * (1 - Pollution_Index * 0.1)",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Industrial_Adjustment_Time",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Target_Food",
+      "equation": "Industrial_Output_Index * 0.8 / (1 + Pollution_Index * 0.2)",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Food_Adjustment_Time",
+      "equation": "5",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Pollution_Generation",
+      "equation": "0.1",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Assimilation_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Target_Welfare",
+      "equation": "(Industrial_Output_Index + Food_Index) / 2 / (1 + Pollution_Index * 0.3)",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Welfare_Adjustment_Time",
+      "equation": "8",
+      "position": {
+        "x": 650,
+        "y": 400
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Ecological_Footprint",
+      "equation": "Global_Population * Industrial_Output_Index * 1.5",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Global_Population",
+      "to_element": "Population_Growth"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Birth_Rate",
+      "to_element": "Population_Growth"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Death_Rate",
+      "to_element": "Population_Growth"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Industrial_Output_Index",
+      "to_element": "Industrial_Change"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Industrial_Adjustment_Time",
+      "to_element": "Industrial_Change"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Target_Industrial",
+      "to_element": "Industrial_Change"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Target_Food",
+      "to_element": "Food_Change"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Food_Index",
+      "to_element": "Food_Change"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Food_Adjustment_Time",
+      "to_element": "Food_Change"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Industrial_Output_Index",
+      "to_element": "Pollution_Accumulation"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Pollution_Generation",
+      "to_element": "Pollution_Accumulation"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Assimilation_Rate",
+      "to_element": "Pollution_Accumulation"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Pollution_Index",
+      "to_element": "Pollution_Accumulation"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Welfare_Index",
+      "to_element": "Welfare_Change"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Target_Welfare",
+      "to_element": "Welfare_Change"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Welfare_Adjustment_Time",
+      "to_element": "Welfare_Change"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Food_Index",
+      "to_element": "Birth_Rate"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Pollution_Index",
+      "to_element": "Birth_Rate"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Food_Index",
+      "to_element": "Death_Rate"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Pollution_Index",
+      "to_element": "Death_Rate"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Pollution_Index",
+      "to_element": "Target_Industrial"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Industrial_Output_Index",
+      "to_element": "Target_Food"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "Pollution_Index",
+      "to_element": "Target_Food"
+    },
+    {
+      "id": "conn-24",
+      "from_element": "Industrial_Output_Index",
+      "to_element": "Target_Welfare"
+    },
+    {
+      "id": "conn-25",
+      "from_element": "Food_Index",
+      "to_element": "Target_Welfare"
+    },
+    {
+      "id": "conn-26",
+      "from_element": "Pollution_Index",
+      "to_element": "Target_Welfare"
+    },
+    {
+      "id": "conn-27",
+      "from_element": "Global_Population",
+      "to_element": "Ecological_Footprint"
+    },
+    {
+      "id": "conn-28",
+      "from_element": "Industrial_Output_Index",
+      "to_element": "Ecological_Footprint"
+    }
+  ],
+  "time_settings": {
+    "start": 1970,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T07:23:15.854474+00:00",
+  "updated_at": "2026-01-12T07:23:15.854474+00:00",
+  "source": "https://dash.harvard.edu/server/api/core/bitstreams/c5a728c0-e735-4bcf-bee8-b80ca370dbaf/content",
+  "reference": "Herrington, G. (2021). Update to Limits to Growth: Comparing the World3 Model with Empirical Data. Journal of Industrial Ecology 25(3): 614-626."
+}

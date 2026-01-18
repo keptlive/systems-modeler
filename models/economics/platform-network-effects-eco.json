@@ -1,0 +1,250 @@
+{
+  "id": "platform-network-effects-eco",
+  "name": "Platform Economy Network Effects Model",
+  "description": "Models two-sided platform dynamics with cross-side network effects (e.g., Uber, Airbnb). Based on Rochet & Tirole (2003). DOI: 10.1111/1467-6451.00173",
+  "stocks": [
+    {
+      "id": "stock-users",
+      "name": "Users",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-providers",
+      "name": "Service_Providers",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-transactions",
+      "name": "Transactions",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-revenue",
+      "name": "Platform_Revenue",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-useracq",
+      "name": "User_Acquisition",
+      "equation": "Potential_Users * User_Attraction * Provider_Network_Effect",
+      "from_stock": null,
+      "to_stock": "stock-users",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-userchurn",
+      "name": "User_Churn",
+      "equation": "Users * User_Churn_Rate / (1 + Service_Quality)",
+      "from_stock": "stock-users",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-provacq",
+      "name": "Provider_Acquisition",
+      "equation": "Potential_Providers * Provider_Attraction * User_Network_Effect",
+      "from_stock": null,
+      "to_stock": "stock-providers",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-provchurn",
+      "name": "Provider_Churn",
+      "equation": "Service_Providers * Provider_Churn_Rate / (1 + Revenue_Share)",
+      "from_stock": "stock-providers",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-trans",
+      "name": "Transaction_Flow",
+      "equation": "Users * Service_Providers * Transaction_Rate",
+      "from_stock": null,
+      "to_stock": "stock-transactions",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-rev",
+      "name": "Revenue_Flow",
+      "equation": "Transactions * Platform_Fee * Transaction_Value",
+      "from_stock": null,
+      "to_stock": "stock-revenue",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-potusers",
+      "name": "Potential_Users",
+      "equation": "100000 - Users",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-potprov",
+      "name": "Potential_Providers",
+      "equation": "10000 - Service_Providers",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-userattr",
+      "name": "User_Attraction",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-provattr",
+      "name": "Provider_Attraction",
+      "equation": "0.005",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-provnet",
+      "name": "Provider_Network_Effect",
+      "equation": "1 + 0.5 * LN(Service_Providers / 100 + 1)",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-usernet",
+      "name": "User_Network_Effect",
+      "equation": "1 + 0.3 * LN(Users / 1000 + 1)",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-userchurn",
+      "name": "User_Churn_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-provchurn",
+      "name": "Provider_Churn_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-transrate",
+      "name": "Transaction_Rate",
+      "equation": "0.0001",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-servqual",
+      "name": "Service_Quality",
+      "equation": "Service_Providers / Users",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-revshare",
+      "name": "Revenue_Share",
+      "equation": "0.75",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-platfee",
+      "name": "Platform_Fee",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-transval",
+      "name": "Transaction_Value",
+      "equation": "25",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Users",
+      "to_element": "User_Network_Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:45:00.574996+00:00",
+  "updated_at": "2026-01-12T02:45:00.574999+00:00",
+  "source": "https://doi.org/10.1111/1467-6451.00173",
+  "reference": "Rochet JC, Tirole J (2003). Platform Competition in Two-Sided Markets. Journal of the European Economic Association."
+}

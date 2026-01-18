@@ -1,0 +1,154 @@
+{
+  "id": "supply-chain-reshoring-eco",
+  "name": "Supply Chain Reshoring Dynamics",
+  "description": "Models reshoring decisions post-pandemic and deglobalization trends. Source: Javorcik (2020), World Bank Policy Research. DOI: 10.1596/1813-9450-9362",
+  "stocks": [
+    {
+      "id": "stock-offshore",
+      "name": "Offshore_Production",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-nearshore",
+      "name": "Nearshore_Production",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-domestic",
+      "name": "Domestic_Production",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-resilience",
+      "name": "Supply_Chain_Resilience",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-reshore",
+      "name": "Reshoring",
+      "equation": "Offshore_Production * Reshoring_Rate * Risk_Factor",
+      "from_stock": "stock-offshore",
+      "to_stock": "stock-domestic",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-nearshore",
+      "name": "Nearshoring",
+      "equation": "Offshore_Production * Nearshore_Rate * Risk_Factor",
+      "from_stock": "stock-offshore",
+      "to_stock": "stock-nearshore",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-resilience",
+      "name": "Resilience_Change",
+      "equation": "(Domestic_Production + Nearshore_Production * 0.5 - Offshore_Production * 0.3) * 0.1",
+      "from_stock": null,
+      "to_stock": "stock-resilience",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-reshrate",
+      "name": "Reshoring_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-nearrate",
+      "name": "Nearshore_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-risk",
+      "name": "Risk_Factor",
+      "equation": "1 + 0.5 * SIN(TIME / 10)",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-cost",
+      "name": "Total_Cost",
+      "equation": "Offshore_Production * 0.5 + Nearshore_Production * 0.7 + Domestic_Production * 1.0",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-leadtime",
+      "name": "Avg_Lead_Time",
+      "equation": "Offshore_Production * 60 + Nearshore_Production * 30 + Domestic_Production * 10",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-disruption",
+      "name": "Disruption_Exposure",
+      "equation": "Offshore_Production * 0.1 / Supply_Chain_Resilience",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Offshore_Production",
+      "to_element": "Reshoring"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:06:16.308150+00:00",
+  "updated_at": "2026-01-12T02:06:16.308153+00:00",
+  "source": "https://doi.org/10.1596/1813-9450-9362",
+  "reference": "Javorcik, B. (2020). Global Supply Chains Will Not Be the Same in the Post-COVID-19 World. World Bank."
+}

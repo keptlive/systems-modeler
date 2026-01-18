@@ -1,0 +1,34 @@
+{
+  "id": "monteith-crop-radiation-agr",
+  "name": "Monteith Radiation Use Efficiency Model",
+  "description": "John Monteith's (1977) model relating crop growth to intercepted solar radiation. Biomass accumulation is proportional to radiation interception and radiation use efficiency (RUE). Foundation of crop growth modeling.",
+  "stocks": [
+    {"id": "stock-leaf-area-index", "name": "Leaf Area Index", "initial_value": 0.1, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-biomass", "name": "Biomass", "initial_value": 10, "equation": "", "position": {"x": 450, "y": 200}},
+    {"id": "stock-yield", "name": "Yield", "initial_value": 0, "equation": "", "position": {"x": 450, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-lai-growth", "name": "LAI Growth", "equation": "IF Thermal_Time < Anthesis THEN Biomass_Growth * SLA * Leaf_Fraction ELSE 0", "from_stock": null, "to_stock": "stock-leaf-area-index", "position": {"x": 100, "y": 200}},
+    {"id": "flow-lai-senescence", "name": "LAI Senescence", "equation": "IF Thermal_Time > Anthesis THEN Leaf_Area_Index * Senescence_Rate ELSE 0", "from_stock": "stock-leaf-area-index", "to_stock": null, "position": {"x": 300, "y": 200}},
+    {"id": "flow-biomass-growth", "name": "Biomass Growth", "equation": "Intercepted_Radiation * RUE", "from_stock": null, "to_stock": "stock-biomass", "position": {"x": 350, "y": 200}},
+    {"id": "flow-grain-fill", "name": "Grain Fill", "equation": "IF Thermal_Time > Anthesis THEN Biomass_Growth * Harvest_Index_Rate ELSE 0", "from_stock": null, "to_stock": "stock-yield", "position": {"x": 350, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-daily-radiation", "name": "Daily Radiation", "equation": "20", "position": {"x": 100, "y": 100}},
+    {"id": "var-extinction-coefficient", "name": "Extinction Coefficient", "equation": "0.5", "position": {"x": 300, "y": 100}},
+    {"id": "var-fraction-intercepted", "name": "Fraction Intercepted", "equation": "1 - EXP(-Extinction_Coefficient * Leaf_Area_Index)", "position": {"x": 500, "y": 100}},
+    {"id": "var-intercepted-radiation", "name": "Intercepted Radiation", "equation": "Daily_Radiation * Fraction_Intercepted", "position": {"x": 650, "y": 100}},
+    {"id": "var-rue", "name": "RUE", "equation": "1.5", "position": {"x": 550, "y": 200}},
+    {"id": "var-sla", "name": "SLA", "equation": "0.02", "position": {"x": 150, "y": 280}},
+    {"id": "var-leaf-fraction", "name": "Leaf Fraction", "equation": "0.3", "position": {"x": 300, "y": 280}},
+    {"id": "var-thermal-time", "name": "Thermal Time", "equation": "Time * 15", "position": {"x": 500, "y": 280}},
+    {"id": "var-anthesis", "name": "Anthesis", "equation": "1000", "position": {"x": 650, "y": 280}},
+    {"id": "var-senescence-rate", "name": "Senescence Rate", "equation": "0.02", "position": {"x": 200, "y": 350}},
+    {"id": "var-harvest-index-rate", "name": "Harvest Index Rate", "equation": "0.5", "position": {"x": 600, "y": 350}},
+    {"id": "var-harvest-index", "name": "Harvest Index", "equation": "Yield / Biomass", "position": {"x": 450, "y": 420}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 150, "dt": 1},
+  "source": "https://doi.org/10.1098/rstb.1977.0140",
+  "reference": "Monteith JL. Climate and the efficiency of crop production in Britain. Philosophical Transactions of the Royal Society B. 1977;281(980):277-294."
+}

@@ -1,0 +1,178 @@
+{
+  "id": "spaced-repetition-memory-retention-edu",
+  "name": "Spaced Repetition Memory Retention Model",
+  "description": "Model of optimal learning through spaced repetition based on Ebbinghaus forgetting curve. Foundation of modern learning apps. Reference: Hattie, J. (2008). Visible Learning. Routledge. Source: https://www.routledge.com/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Memory Strength",
+      "initial_value": 0.9,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Stability",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Reviews Done",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 225
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Memory Decay",
+      "equation": "Memory_Strength * Decay_Rate / Stability",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Memory Refresh",
+      "equation": "(1 - Memory_Strength) * Review_Boost * Review_Occurs",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Stability Increase",
+      "equation": "Stability_Gain * Review_Occurs * Memory_Strength",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Review Count",
+      "equation": "Review_Occurs",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 50,
+        "y": 225
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Decay Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Review Boost",
+      "equation": "0.8",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Stability Gain",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Optimal Interval",
+      "equation": "Stability * LOG(1 / Retrieval_Threshold) / Decay_Rate",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Retrieval Threshold",
+      "equation": "0.9",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Review Occurs",
+      "equation": "IF(MOD(TIME, Optimal_Interval) < 1, 1, 0)",
+      "position": {
+        "x": 150,
+        "y": 225
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Retrievability",
+      "equation": "Memory_Strength",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Difficulty",
+      "equation": "1 / Stability",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Memory Strength",
+      "to_element": "Memory Decay"
+    },
+    {
+      "id": "c2",
+      "from_element": "Stability",
+      "to_element": "Optimal Interval"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:20:13.054438",
+  "updated_at": "2026-01-15T14:20:13.054444",
+  "source": "https://doi.org/10.3758/s13423-016-1221-x",
+  "reference": "Cepeda NJ, et al. Spacing effects in learning: A temporal ridgeline of optimal retention. Psychological Science. 2008;19(11):1095-1102."
+}

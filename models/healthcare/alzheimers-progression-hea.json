@@ -1,0 +1,198 @@
+{
+  "id": "alzheimers-progression-hea",
+  "name": "Alzheimer's Disease Progression Model",
+  "description": "Models amyloid plaque accumulation, tau spread, and cognitive decline. Based on Jack et al. (2010) Hypothetical Model of AD, Lancet Neurology. Reference: Jack, C. R., et al. (2018). NIA-AA Research Framework. Alzheimer's & Dementia. Source: https://doi.org/10.1016/j.jalz.2018.02.018",
+  "category": "health",
+  "stocks": [
+    {
+      "id": "stock-amyloid",
+      "name": "Amyloid_Burden",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-tau",
+      "name": "Tau_Pathology",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-neuron",
+      "name": "Neuronal_Health",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cognition",
+      "name": "Cognitive_Function",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-amyloid-acc",
+      "name": "Amyloid_Accumulation",
+      "equation": "Amyloid_Production * (1 - Amyloid_Clearance)",
+      "from_stock": null,
+      "to_stock": "stock-amyloid",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-amyloid-clear",
+      "name": "Amyloid_Removal",
+      "equation": "Amyloid_Burden * Clearance_Rate",
+      "from_stock": "stock-amyloid",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-tau-spread",
+      "name": "Tau_Spread",
+      "equation": "Tau_Pathology * Tau_Propagation * (Amyloid_Burden/100)",
+      "from_stock": null,
+      "to_stock": "stock-tau",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-neuron-loss",
+      "name": "Neuronal_Loss",
+      "equation": "Neuronal_Health * (Tau_Pathology * Tau_Toxicity + Amyloid_Burden * Amyloid_Toxicity) / 10000",
+      "from_stock": "stock-neuron",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-cog-decline",
+      "name": "Cognitive_Decline",
+      "equation": "(100 - Neuronal_Health) * Cog_Sensitivity + Tau_Pathology * Direct_Effect",
+      "from_stock": "stock-cognition",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-production",
+      "name": "Amyloid_Production",
+      "equation": "0.5 + Age_Factor",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-age",
+      "name": "Age_Factor",
+      "equation": "0.01 * TIME",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-clearance",
+      "name": "Amyloid_Clearance",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-clear-rate",
+      "name": "Clearance_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-tau-prop",
+      "name": "Tau_Propagation",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-tau-tox",
+      "name": "Tau_Toxicity",
+      "equation": "0.5",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-amyloid-tox",
+      "name": "Amyloid_Toxicity",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-cog-sens",
+      "name": "Cog_Sensitivity",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-direct",
+      "name": "Direct_Effect",
+      "equation": "0.01",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1016/S1474-4422(09)70299-6",
+  "reference": "Jack CR et al. (2010) Hypothetical model of dynamic biomarkers of the Alzheimer's pathological cascade. Lancet Neurology 9(1):119-128.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:36:48.752546+00:00",
+  "updated_at": "2026-01-12T06:36:48.752546+00:00"
+}

@@ -1,0 +1,188 @@
+{
+  "id": "misinformation-spread-model",
+  "name": "Misinformation Spread Model",
+  "description": "Model of false information spread through social networks with fact-checking dynamics.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Unaware",
+      "initial_value": 900000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Misinformed",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Corrected",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Immune",
+      "initial_value": 90000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Exposure",
+      "equation": "Unaware * Misinformed * Viral_Rate / Total_Pop",
+      "from_stock": "Unaware",
+      "to_stock": "Misinformed",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Fact_Check",
+      "equation": "Misinformed * Fact_Check_Rate * Media_Literacy",
+      "from_stock": "Misinformed",
+      "to_stock": "Corrected",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Natural_Skepticism",
+      "equation": "Unaware * Skepticism_Rate",
+      "from_stock": "Unaware",
+      "to_stock": "Immune",
+      "position": {
+        "x": 200,
+        "y": 275
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Immunization",
+      "equation": "Corrected * Immunization_Rate",
+      "from_stock": "Corrected",
+      "to_stock": "Immune",
+      "position": {
+        "x": 400,
+        "y": 275
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Re_exposure",
+      "equation": "Corrected * Re_exposure_Rate",
+      "from_stock": "Corrected",
+      "to_stock": "Misinformed",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Viral_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Fact_Check_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Media_Literacy",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Skepticism_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Immunization_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Re_exposure_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Total_Pop",
+      "equation": "Unaware + Misinformed + Corrected + Immune",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Misinformation_Prevalence",
+      "equation": "Misinformed / Total_Pop",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "source": "https://doi.org/10.1126/science.aap9559",
+  "reference": "Vosoughi, S., Roy, D., & Aral, S. (2018). The spread of true and false news online. Science, 359(6380), 1146-1151. DOI: 10.1126/science.aap9559",
+  "created_at": "2026-01-15T19:26:14.001716+00:00",
+  "updated_at": "2026-01-15T19:26:14.001716+00:00"
+}

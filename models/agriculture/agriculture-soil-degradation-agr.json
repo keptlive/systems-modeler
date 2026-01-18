@@ -1,0 +1,225 @@
+{
+  "id": "agriculture-soil-degradation-agr",
+  "name": "Agricultural Soil Degradation Dynamics",
+  "description": "Models soil health decline from intensive agriculture and regeneration through sustainable practices. Based on FAO (2015) Status of World Soil Resources and Pimentel (2006). Reference: UNCCD (2017). Global Land Outlook. Source: https://www.unccd.int/",
+  "category": "agriculture",
+  "stocks": [
+    {
+      "id": "stock-organic",
+      "name": "Soil_Organic_Carbon",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-topsoil",
+      "name": "Topsoil_Depth_cm",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-nutrients",
+      "name": "Soil_Nutrients",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-yield",
+      "name": "Crop_Yield_Index",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-carbon-loss",
+      "name": "Carbon_Loss",
+      "equation": "Soil_Organic_Carbon * (Tillage_Intensity * 0.02 + Baseline_Respiration)",
+      "from_stock": "stock-organic",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-carbon-add",
+      "name": "Carbon_Addition",
+      "equation": "Cover_Crop_Rate * Carbon_Input + Residue_Return * Residue_Carbon",
+      "from_stock": null,
+      "to_stock": "stock-organic",
+      "position": {
+        "x": 275,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-erosion",
+      "name": "Soil_Erosion",
+      "equation": "Topsoil_Depth_cm * Erosion_Rate * (1 - Cover_Factor)",
+      "from_stock": "stock-topsoil",
+      "to_stock": null,
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-nutrient-loss",
+      "name": "Nutrient_Depletion",
+      "equation": "Soil_Nutrients * Crop_Uptake - Fertilizer_Application",
+      "from_stock": "stock-nutrients",
+      "to_stock": null,
+      "position": {
+        "x": 525,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-yield-change",
+      "name": "Yield_Change",
+      "equation": "(Soil_Health_Index - Crop_Yield_Index) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-yield",
+      "position": {
+        "x": 400,
+        "y": 275
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-tillage",
+      "name": "Tillage_Intensity",
+      "equation": "0.8",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-respiration",
+      "name": "Baseline_Respiration",
+      "equation": "0.01",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cover-crop",
+      "name": "Cover_Crop_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-carbon-input",
+      "name": "Carbon_Input",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-residue",
+      "name": "Residue_Return",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-residue-c",
+      "name": "Residue_Carbon",
+      "equation": "1.5",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-erosion",
+      "name": "Erosion_Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-cover-factor",
+      "name": "Cover_Factor",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-crop-uptake",
+      "name": "Crop_Uptake",
+      "equation": "0.03",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-fertilizer",
+      "name": "Fertilizer_Application",
+      "equation": "2",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-soil-health",
+      "name": "Soil_Health_Index",
+      "equation": "(Soil_Organic_Carbon + Topsoil_Depth_cm + Soil_Nutrients) / 3",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-adjust",
+      "name": "Adjustment_Time",
+      "equation": "5",
+      "position": {
+        "x": 500,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 1
+  },
+  "source": "https://www.fao.org/3/i5199e/i5199e.pdf",
+  "reference": "FAO (2015) Status of the World's Soil Resources. Food and Agriculture Organization.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:10:19.338892+00:00",
+  "updated_at": "2026-01-12T06:10:19.338892+00:00"
+}

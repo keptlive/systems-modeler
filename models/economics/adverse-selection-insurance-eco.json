@@ -1,0 +1,196 @@
+{
+  "id": "adverse-selection-insurance-eco",
+  "name": "Adverse Selection Insurance Model",
+  "description": "Rothschild-Stiglitz (1976) insurance market model. Shows how information asymmetry leads to market unraveling as low-risk individuals exit when premiums rise. Reference: Rothschild, M., & Stiglitz, J. (1976). Equilibrium in competitive insurance markets. Quarterly Journal of Economics, 90(4), 629-649. DOI: https://doi.org/10.2307/1885326",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Insured_Pool_Size",
+      "initial_value": 1000,
+      "position": {
+        "x": 200,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s2",
+      "name": "Average_Risk",
+      "initial_value": 0.1,
+      "position": {
+        "x": 400,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s3",
+      "name": "Premium_Level",
+      "initial_value": 120,
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "equation": ""
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "low_risk_exit",
+      "from_stock": "s1",
+      "equation": "low_risk_in_pool * exit_rate_low",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f2",
+      "name": "risk_increase",
+      "to_stock": "s2",
+      "equation": "(new_average_risk - Average_Risk) / risk_adjustment_time",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f3",
+      "name": "premium_adjustment",
+      "to_stock": "s3",
+      "equation": "(actuarially_fair_premium - Premium_Level) / premium_adjustment_time",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "low_risk_prob",
+      "equation": "0.05",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v2",
+      "name": "high_risk_prob",
+      "equation": "0.2",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v3",
+      "name": "claim_amount",
+      "equation": "1000",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v4",
+      "name": "low_risk_willingness",
+      "equation": "low_risk_prob * claim_amount * 1.2",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v5",
+      "name": "high_risk_willingness",
+      "equation": "high_risk_prob * claim_amount * 1.5",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v6",
+      "name": "low_risk_in_pool",
+      "equation": "Insured_Pool_Size * (1 - Average_Risk/high_risk_prob)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v7",
+      "name": "exit_rate_low",
+      "equation": "IF(Premium_Level > low_risk_willingness, 0.1, 0)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v8",
+      "name": "new_average_risk",
+      "equation": "MIN(high_risk_prob, Average_Risk * Insured_Pool_Size / MAX(1, Insured_Pool_Size - low_risk_in_pool * exit_rate_low))",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v9",
+      "name": "actuarially_fair_premium",
+      "equation": "Average_Risk * claim_amount * 1.1",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v10",
+      "name": "risk_adjustment_time",
+      "equation": "1",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v11",
+      "name": "premium_adjustment_time",
+      "equation": "0.5",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "exit_rate_low",
+      "to_element": "low_risk_exit"
+    },
+    {
+      "id": "c2",
+      "from_element": "new_average_risk",
+      "to_element": "risk_increase"
+    },
+    {
+      "id": "c3",
+      "from_element": "actuarially_fair_premium",
+      "to_element": "premium_adjustment"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "dt": 0.25,
+    "end": 20
+  },
+  "created_at": "2026-01-12T02:25:30.586875+00:00",
+  "updated_at": "2026-01-12T02:25:30.586878+00:00",
+  "source": "https://doi.org/10.2307/1885326",
+  "reference": "Rothschild, M., & Stiglitz, J. (1976). Equilibrium in competitive insurance markets. The Quarterly Journal of Economics, 90(4), 629-649."
+}

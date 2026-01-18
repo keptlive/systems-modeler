@@ -1,0 +1,202 @@
+{
+  "id": "traffic-flow-dynamics-soc",
+  "name": "Traffic Flow Dynamics Model",
+  "description": "Models traffic density, speed, and congestion on highways. Based on Lighthill-Whitham-Richards (LWR) model. DOI: 10.1098/rspa.1955.0088",
+  "stocks": [
+    {
+      "id": "stock-density",
+      "name": "Traffic_Density",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-queue",
+      "name": "Queue_Length",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-throughput",
+      "name": "Cumulative_Throughput",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-inflow",
+      "name": "Traffic_Inflow",
+      "equation": "Demand * (1 + Peak_Factor * SIN(TIME / 12 * 3.14159))",
+      "from_stock": null,
+      "to_stock": "stock-density",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-outflow",
+      "name": "Traffic_Outflow",
+      "equation": "Flow_Rate",
+      "from_stock": "stock-density",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-queueform",
+      "name": "Queue_Formation",
+      "equation": "MAX(0, Traffic_Density - Critical_Density) * Spillback_Rate",
+      "from_stock": null,
+      "to_stock": "stock-queue",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-queuediss",
+      "name": "Queue_Dissipation",
+      "equation": "Queue_Length * Queue_Discharge_Rate * IF(Traffic_Density < Critical_Density, 1, 0.2)",
+      "from_stock": "stock-queue",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-thruput",
+      "name": "Throughput",
+      "equation": "Flow_Rate",
+      "from_stock": null,
+      "to_stock": "stock-throughput",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-demand",
+      "name": "Demand",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-peakfact",
+      "name": "Peak_Factor",
+      "equation": "0.4",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-critdens",
+      "name": "Critical_Density",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-jamdens",
+      "name": "Jam_Density",
+      "equation": "150",
+      "position": {
+        "x": 500,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-freeflow",
+      "name": "Free_Flow_Speed",
+      "equation": "60",
+      "position": {
+        "x": 150,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-speed",
+      "name": "Traffic_Speed",
+      "equation": "Free_Flow_Speed * (1 - Traffic_Density / Jam_Density)",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-flowrate",
+      "name": "Flow_Rate",
+      "equation": "Traffic_Density * Traffic_Speed",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-spillrate",
+      "name": "Spillback_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-discharge",
+      "name": "Queue_Discharge_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-los",
+      "name": "Level_of_Service",
+      "equation": "IF(Traffic_Density < 20, 1, IF(Traffic_Density < 35, 2, IF(Traffic_Density < 50, 3, IF(Traffic_Density < 70, 4, IF(Traffic_Density < 100, 5, 6)))))",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Traffic_Density",
+      "to_element": "Traffic_Speed"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 48,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T02:49:51.600040+00:00",
+  "updated_at": "2026-01-12T02:49:51.600050+00:00",
+  "source": "https://doi.org/10.1098/rspa.1955.0088",
+  "reference": "Lighthill MJ, Whitham GB (1955). On Kinematic Waves II: A Theory of Traffic Flow on Long Crowded Roads. Proc. R. Soc. A."
+}

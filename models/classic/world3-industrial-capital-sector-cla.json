@@ -1,0 +1,232 @@
+{
+  "id": "world3-industrial-capital-sector-cla",
+  "name": "Industrial_Depreciation",
+  "description": "Industrial capital sector from World3/Limits to Growth model. Models industrial capital, output, and investment dynamics. Based on Meadows et al. (1972, 2004) and Nebel et al. (2023) recalibration. Reference: Meadows, D. H., et al. (1972). The Limits to Growth. Universe Books. Source: https://www.clubofrome.org/publication/the-limits-to-growth/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Industrial_Capital",
+      "initial_value": 210,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Service_Capital",
+      "initial_value": 144,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Industrial_Investment",
+      "equation": "Industrial_Output * Fraction_Industrial_Output_to_Investment",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Industrial_Depreciation",
+      "equation": "Industrial_Capital / Industrial_Capital_Lifetime",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Service_Investment",
+      "equation": "Industrial_Output * Fraction_Output_to_Services",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Service_Depreciation",
+      "equation": "Service_Capital / Service_Capital_Lifetime",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Industrial_Output",
+      "equation": "Industrial_Capital * Industrial_Capital_Output_Ratio * Capacity_Utilization",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Industrial_Capital_Output_Ratio",
+      "equation": "3",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Capacity_Utilization",
+      "equation": "0.85",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Fraction_Industrial_Output_to_Investment",
+      "equation": "0.43",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Industrial_Capital_Lifetime",
+      "equation": "14",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Fraction_Output_to_Services",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Service_Capital_Lifetime",
+      "equation": "20",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Service_Output",
+      "equation": "Service_Capital * Service_Capital_Output_Ratio",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Service_Capital_Output_Ratio",
+      "equation": "1.5",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Fraction_Industrial_Output_to_Investment",
+      "to_element": "Industrial_Investment"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Industrial_Output",
+      "to_element": "Industrial_Investment"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Industrial_Capital",
+      "to_element": "Industrial_Depreciation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Industrial_Capital_Lifetime",
+      "to_element": "Industrial_Depreciation"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Industrial_Output",
+      "to_element": "Service_Investment"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Fraction_Output_to_Services",
+      "to_element": "Service_Investment"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Service_Capital",
+      "to_element": "Service_Depreciation"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Service_Capital_Lifetime",
+      "to_element": "Service_Depreciation"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Industrial_Capital_Output_Ratio",
+      "to_element": "Industrial_Output"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Capacity_Utilization",
+      "to_element": "Industrial_Output"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Industrial_Capital",
+      "to_element": "Industrial_Output"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Service_Capital",
+      "to_element": "Service_Output"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Service_Capital_Output_Ratio",
+      "to_element": "Service_Output"
+    }
+  ],
+  "time_settings": {
+    "start": 1900,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T07:23:15.854213+00:00",
+  "updated_at": "2026-01-12T07:23:15.854213+00:00",
+  "source": "https://doi.org/10.1111/jiec.13442",
+  "reference": "Nebel et al. (2023). Recalibration of limits to growth: An update of the World3 model. J Industrial Ecology. DOI: 10.1111/jiec.13442. Original: Meadows et al. (1972)."
+}

@@ -1,0 +1,409 @@
+{
+  "id": "climate-migration-model-soc",
+  "name": "Climate Migration Model",
+  "description": "A system dynamics model of climate-induced population movement based on Rigaud et al. (2018) World Bank 'Groundswell: Preparing for Internal Climate Migration' and Black et al. (2011) 'The effect of environmental change on human migration' (doi:10.1016/j.gloenvcha.2011.10.001). Models push-pull factors and migration flows. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "stock-origin-population",
+      "name": "Origin Region Population",
+      "initial_value": 50000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-in-transit",
+      "name": "Migrants In Transit",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-destination-population",
+      "name": "Destination Population",
+      "initial_value": 30000000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-climate-stress",
+      "name": "Climate Stress Index",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-infrastructure-capacity",
+      "name": "Destination Infrastructure",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-remittances",
+      "name": "Remittances",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-outmigration",
+      "name": "Outmigration",
+      "equation": "Origin_Region_Population * Migration_Propensity * Push_Factor * Pull_Factor",
+      "from_stock": "stock-origin-population",
+      "to_stock": "stock-in-transit",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-settlement",
+      "name": "Settlement",
+      "equation": "Migrants_In_Transit * Settlement_Rate * Absorption_Capacity",
+      "from_stock": "stock-in-transit",
+      "to_stock": "stock-destination-population",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-return-migration",
+      "name": "Return Migration",
+      "equation": "Destination_Population * Return_Rate * (1 - Climate_Stress_Index)",
+      "from_stock": "stock-destination-population",
+      "to_stock": "stock-origin-population",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-stranded",
+      "name": "Stranded Migrants",
+      "equation": "Migrants_In_Transit * (1 - Absorption_Capacity) * 0.1",
+      "from_stock": "stock-in-transit",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-climate-worsening",
+      "name": "Climate Worsening",
+      "equation": "Climate_Change_Rate * (1 - Climate_Stress_Index)",
+      "from_stock": null,
+      "to_stock": "stock-climate-stress",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-adaptation",
+      "name": "Adaptation",
+      "equation": "Climate_Stress_Index * Adaptation_Rate * Adaptation_Investment",
+      "from_stock": "stock-climate-stress",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-infrastructure-investment",
+      "name": "Infrastructure Investment",
+      "equation": "Base_Investment + Destination_Population * Per_Capita_Investment",
+      "from_stock": null,
+      "to_stock": "stock-infrastructure-capacity",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-infrastructure-strain",
+      "name": "Infrastructure Strain",
+      "equation": "Destination_Infrastructure * Strain_Rate * Overcrowding",
+      "from_stock": "stock-infrastructure-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-remittance-flow",
+      "name": "Remittance Flow",
+      "equation": "Destination_Population * Remittance_per_Migrant * Employment_Rate",
+      "from_stock": null,
+      "to_stock": "stock-remittances",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-remittance-use",
+      "name": "Remittance Use",
+      "equation": "Remittances * 0.8",
+      "from_stock": "stock-remittances",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-migration-propensity",
+      "name": "Migration Propensity",
+      "equation": "0.01",
+      "position": {
+        "x": 150,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-push-factor",
+      "name": "Push Factor",
+      "equation": "1 + Climate_Stress_Index * 2 + Economic_Decline",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-economic-decline",
+      "name": "Economic Decline",
+      "equation": "Climate_Stress_Index * 0.5",
+      "position": {
+        "x": 50,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-pull-factor",
+      "name": "Pull Factor",
+      "equation": "Economic_Opportunity * Safety_Factor",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-economic-opportunity",
+      "name": "Economic Opportunity",
+      "equation": "0.8",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-safety-factor",
+      "name": "Safety Factor",
+      "equation": "1 - Climate_Stress_Index * 0.3",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-settlement-rate",
+      "name": "Settlement Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-absorption-capacity",
+      "name": "Absorption Capacity",
+      "equation": "MIN(1, Destination_Infrastructure / (Destination_Population * 0.05))",
+      "position": {
+        "x": 450,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-return-rate",
+      "name": "Return Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-climate-change-rate",
+      "name": "Climate Change Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 50,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-adaptation-rate",
+      "name": "Adaptation Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-adaptation-investment",
+      "name": "Adaptation Investment",
+      "equation": "0.5",
+      "position": {
+        "x": 150,
+        "y": 430
+      }
+    },
+    {
+      "id": "var-base-investment",
+      "name": "Base Investment",
+      "equation": "10000",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-per-capita-investment",
+      "name": "Per Capita Investment",
+      "equation": "0.01",
+      "position": {
+        "x": 500,
+        "y": 430
+      }
+    },
+    {
+      "id": "var-strain-rate",
+      "name": "Strain Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-overcrowding",
+      "name": "Overcrowding",
+      "equation": "MAX(1, Destination_Population / Destination_Infrastructure / 30)",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-remittance-per-migrant",
+      "name": "Remittance per Migrant",
+      "equation": "500",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-employment-rate",
+      "name": "Employment Rate",
+      "equation": "0.6",
+      "position": {
+        "x": 300,
+        "y": 430
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Origin Region Population",
+      "to_element": "Outmigration"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Migration Propensity",
+      "to_element": "Outmigration"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Push Factor",
+      "to_element": "Outmigration"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Pull Factor",
+      "to_element": "Outmigration"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Climate Stress Index",
+      "to_element": "Push Factor"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Migrants In Transit",
+      "to_element": "Settlement"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Absorption Capacity",
+      "to_element": "Settlement"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Destination Infrastructure",
+      "to_element": "Absorption Capacity"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Destination Population",
+      "to_element": "Absorption Capacity"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Climate Stress Index",
+      "to_element": "Return Migration"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Destination Population",
+      "to_element": "Overcrowding"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://doi.org/10.1038/nature14240",
+  "reference": "IPCC Climate Models and Reports"
+}

@@ -1,0 +1,192 @@
+{
+  "id": "cell-cycle-checkpoint-phy",
+  "name": "Cell Cycle and Checkpoint Dynamics",
+  "description": "Models cell division cycle with G1/S and G2/M checkpoints. Source: Tyson et al. (2001), Current Opinion in Cell Biology. DOI: 10.1016/S0955-0674(00)00185-X",
+  "stocks": [
+    {
+      "id": "stock-g1",
+      "name": "G1_Phase_Cells",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-s",
+      "name": "S_Phase_Cells",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 225,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-g2",
+      "name": "G2_Phase_Cells",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-m",
+      "name": "M_Phase_Cells",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 475,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-g1s",
+      "name": "G1_S_Transition",
+      "equation": "G1_Phase_Cells * G1_S_Rate * Checkpoint_G1",
+      "from_stock": "stock-g1",
+      "to_stock": "stock-s",
+      "position": {
+        "x": 162,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-sg2",
+      "name": "S_G2_Transition",
+      "equation": "S_Phase_Cells / S_Duration",
+      "from_stock": "stock-s",
+      "to_stock": "stock-g2",
+      "position": {
+        "x": 287,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-g2m",
+      "name": "G2_M_Transition",
+      "equation": "G2_Phase_Cells * G2_M_Rate * Checkpoint_G2",
+      "from_stock": "stock-g2",
+      "to_stock": "stock-m",
+      "position": {
+        "x": 412,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-div",
+      "name": "Cell_Division",
+      "equation": "M_Phase_Cells / M_Duration",
+      "from_stock": "stock-m",
+      "to_stock": "stock-g1",
+      "position": {
+        "x": 287,
+        "y": 50
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-g1srate",
+      "name": "G1_S_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 162,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-sdur",
+      "name": "S_Duration",
+      "equation": "8",
+      "position": {
+        "x": 287,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-g2mrate",
+      "name": "G2_M_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 412,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-mdur",
+      "name": "M_Duration",
+      "equation": "1",
+      "position": {
+        "x": 475,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-cpg1",
+      "name": "Checkpoint_G1",
+      "equation": "IF(DNA_Damage < Damage_Threshold, 1, 0)",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-cpg2",
+      "name": "Checkpoint_G2",
+      "equation": "IF(DNA_Damage < Damage_Threshold, 1, 0)",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-damage",
+      "name": "DNA_Damage",
+      "equation": "5 + 10 * SIN(TIME / 10)",
+      "position": {
+        "x": 225,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-thresh",
+      "name": "Damage_Threshold",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Cells",
+      "equation": "G1_Phase_Cells + S_Phase_Cells + G2_Phase_Cells + M_Phase_Cells",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "DNA_Damage",
+      "to_element": "Checkpoint_G1"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T02:23:02.238207+00:00",
+  "updated_at": "2026-01-12T02:23:02.238210+00:00",
+  "source": "https://doi.org/10.1016/S0955-0674(00)00185-X",
+  "reference": "Tyson, J.J. et al. (2001). Regulation of the Eukaryotic Cell Cycle. Current Opinion in Cell Biology."
+}

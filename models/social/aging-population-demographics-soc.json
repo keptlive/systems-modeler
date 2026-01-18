@@ -1,0 +1,188 @@
+{
+  "id": "aging-population-demographics-soc",
+  "name": "Aging Population Demographics Model",
+  "description": "Model of demographic aging showing dependency ratios, healthcare demand, and pension sustainability. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Working_Age_Population",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Elderly_Population",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Pension_Fund",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Workforce_Entry",
+      "equation": "Birth_Cohort * Labor_Participation",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Retirement",
+      "equation": "Working_Age_Population * Retirement_Rate",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Elderly_Deaths",
+      "equation": "Elderly_Population * Mortality_Rate",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Contributions",
+      "equation": "Working_Age_Population * Contribution_Rate * Average_Wage",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Benefits_Paid",
+      "equation": "Elderly_Population * Benefit_Level",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Birth_Cohort",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Labor_Participation",
+      "equation": "0.65",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Retirement_Rate",
+      "equation": "0.025",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Mortality_Rate",
+      "equation": "0.04",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Contribution_Rate",
+      "equation": "0.12",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Average_Wage",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Benefit_Level",
+      "equation": "20",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Dependency_Ratio",
+      "equation": "Elderly_Population / Working_Age_Population",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Fund_Sustainability",
+      "equation": "Pension_Fund / (Benefits_Paid * 20 + 0.01)",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:34:23.558541+00:00",
+  "updated_at": "2026-01-12T11:34:23.558541+00:00",
+  "source": "https://doi.org/10.1126/science.1246304",
+  "reference": "Bloom DE, et al. Population aging: Facts, challenges, and responses. Benefits and Compensation International. 2011;41(1):22."
+}

@@ -1,0 +1,189 @@
+{
+  "id": "wilson-cowan-neural-population-neu",
+  "name": "Wilson-Cowan Neural Population Model",
+  "description": "Excitatory-inhibitory neural population dynamics. Source: Wilson & Cowan (1972), Biophysical Journal. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Excitatory_Activity",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Inhibitory_Activity",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Total_Activity",
+      "initial_value": 0.4,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "E_Change",
+      "equation": "(-Excitatory_Activity + Se) / tau_e",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "I_Change",
+      "equation": "(-Inhibitory_Activity + Si) / tau_i",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Total_Change",
+      "equation": "Excitatory_Activity + Inhibitory_Activity - Total_Activity",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "tau_e",
+      "equation": "10",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "tau_i",
+      "equation": "20",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "w_ee",
+      "equation": "12",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "w_ei",
+      "equation": "4",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "w_ie",
+      "equation": "13",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "w_ii",
+      "equation": "11",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "P",
+      "equation": "1.5",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Input_E",
+      "equation": "w_ee * Excitatory_Activity - w_ei * Inhibitory_Activity + P",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Input_I",
+      "equation": "w_ie * Excitatory_Activity - w_ii * Inhibitory_Activity",
+      "position": {
+        "x": 200,
+        "y": 480
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Se",
+      "equation": "1 / (1 + EXP(-Input_E + 4))",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Si",
+      "equation": "1 / (1 + EXP(-Input_I + 4))",
+      "position": {
+        "x": 300,
+        "y": 540
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Excitatory_Activity",
+      "to_element": "Input_E"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-15T14:54:39.082295+00:00",
+  "updated_at": "2026-01-15T14:54:39.082392+00:00",
+  "source": "https://doi.org/10.1016/S0006-3495(72)86068-5",
+  "reference": "Wilson, H.R. & Cowan, J.D. (1972). Excitatory and inhibitory interactions in localized populations of model neurons. Biophysical Journal 12:1-24."
+}

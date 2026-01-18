@@ -1,0 +1,41 @@
+{
+  "id": "porter-five-forces-eco",
+  "name": "Porter Five Forces Industry Dynamics",
+  "description": "Michael Porter's five forces model showing how competitive forces (rivalry, new entrants, substitutes, buyer power, supplier power) determine industry profitability. Dynamic version showing how forces evolve and interact over time.",
+  "stocks": [
+    {"id": "stock-industry-profitability", "name": "Industry Profitability", "initial_value": 15, "equation": "", "position": {"x": 350, "y": 200}},
+    {"id": "stock-number-of-competitors", "name": "Number of Competitors", "initial_value": 10, "equation": "", "position": {"x": 100, "y": 350}},
+    {"id": "stock-entry-barriers", "name": "Entry Barriers", "initial_value": 50, "equation": "", "position": {"x": 350, "y": 350}},
+    {"id": "stock-differentiation", "name": "Differentiation", "initial_value": 30, "equation": "", "position": {"x": 600, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-profit-change", "name": "Profit Change", "equation": "(Equilibrium_Profitability - Industry_Profitability) / Adjustment_Time", "from_stock": null, "to_stock": "stock-industry-profitability", "position": {"x": 250, "y": 200}},
+    {"id": "flow-entry", "name": "Entry", "equation": "IF Industry_Profitability > Entry_Threshold THEN Entry_Rate * (1 - Entry_Barriers / 100) ELSE 0", "from_stock": null, "to_stock": "stock-number-of-competitors", "position": {"x": 100, "y": 280}},
+    {"id": "flow-exit", "name": "Exit", "equation": "IF Industry_Profitability < Exit_Threshold THEN Number_of_Competitors * Exit_Rate ELSE 0", "from_stock": "stock-number-of-competitors", "to_stock": null, "position": {"x": 100, "y": 420}},
+    {"id": "flow-barrier-change", "name": "Barrier Change", "equation": "(Capital_Intensity + Brand_Investment - Barrier_Decay) * 0.1", "from_stock": null, "to_stock": "stock-entry-barriers", "position": {"x": 250, "y": 350}},
+    {"id": "flow-differentiation-change", "name": "Differentiation Change", "equation": "Innovation_Investment - Imitation_Rate", "from_stock": null, "to_stock": "stock-differentiation", "position": {"x": 500, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-rivalry-intensity", "name": "Rivalry Intensity", "equation": "Number_of_Competitors / 10 * (1 - Differentiation / 100)", "position": {"x": 100, "y": 100}},
+    {"id": "var-threat-of-entry", "name": "Threat of Entry", "equation": "(100 - Entry_Barriers) / 100 * Industry_Profitability / 10", "position": {"x": 300, "y": 100}},
+    {"id": "var-substitute-threat", "name": "Substitute Threat", "equation": "30", "position": {"x": 500, "y": 100}},
+    {"id": "var-buyer-power", "name": "Buyer Power", "equation": "40", "position": {"x": 650, "y": 100}},
+    {"id": "var-supplier-power", "name": "Supplier Power", "equation": "35", "position": {"x": 200, "y": 160}},
+    {"id": "var-total-force-pressure", "name": "Total Force Pressure", "equation": "Rivalry_Intensity * 0.3 + Threat_of_Entry * 0.2 + Substitute_Threat * 0.2 + Buyer_Power * 0.15 + Supplier_Power * 0.15", "position": {"x": 500, "y": 200}},
+    {"id": "var-equilibrium-profitability", "name": "Equilibrium Profitability", "equation": "MAX(0, 30 - Total_Force_Pressure)", "position": {"x": 500, "y": 280}},
+    {"id": "var-entry-threshold", "name": "Entry Threshold", "equation": "10", "position": {"x": 200, "y": 430}},
+    {"id": "var-exit-threshold", "name": "Exit Threshold", "equation": "5", "position": {"x": 100, "y": 500}},
+    {"id": "var-entry-rate", "name": "Entry Rate", "equation": "2", "position": {"x": 300, "y": 430}},
+    {"id": "var-exit-rate", "name": "Exit Rate", "equation": "0.1", "position": {"x": 200, "y": 500}},
+    {"id": "var-adjustment-time", "name": "Adjustment Time", "equation": "2", "position": {"x": 400, "y": 430}},
+    {"id": "var-capital-intensity", "name": "Capital Intensity", "equation": "50", "position": {"x": 500, "y": 430}},
+    {"id": "var-brand-investment", "name": "Brand Investment", "equation": "30", "position": {"x": 600, "y": 430}},
+    {"id": "var-barrier-decay", "name": "Barrier Decay", "equation": "20", "position": {"x": 350, "y": 500}},
+    {"id": "var-innovation-investment", "name": "Innovation Investment", "equation": "5", "position": {"x": 550, "y": 500}},
+    {"id": "var-imitation-rate", "name": "Imitation Rate", "equation": "3", "position": {"x": 700, "y": 500}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 50, "dt": 0.5},
+  "source": "https://doi.org/10.1002/smj.4250020202",
+  "reference": "Porter ME. The Five Competitive Forces That Shape Strategy. Harvard Business Review. 1979;57(2):137-145."
+}

@@ -1,0 +1,120 @@
+{
+  "id": "fund-integrated-assessment-cli",
+  "name": "FUND Integrated Assessment Model",
+  "description": "Climate-economy model focusing on climate change damages",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Global_Temperature",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Global_GDP",
+      "initial_value": 100000.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Climate_Damages",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Emissions",
+      "equation": "40.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Damage_Coefficient",
+      "equation": "0.0028",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "GDP_Growth",
+      "equation": "0.02",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Temperature_Impact",
+      "equation": "Damage_Coefficient*Global_Temperature*Global_Temperature",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Net_GDP_Growth",
+      "equation": "GDP_Growth-Temperature_Impact",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Damage_Change",
+      "equation": "Temperature_Impact*Global_GDP",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Global_Temperature",
+      "to_element": "Temperature_Impact"
+    },
+    {
+      "id": "c2",
+      "from_element": "Temperature_Impact",
+      "to_element": "Climate_Damages"
+    },
+    {
+      "id": "c3",
+      "from_element": "Global_GDP",
+      "to_element": "Damage_Change"
+    }
+  ],
+  "time_settings": {
+    "start": 2020.0,
+    "end": 2200.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:44:13.926779+00:00",
+  "updated_at": "2026-01-15T20:44:13.926779+00:00",
+  "source": "https://doi.org/10.1016/j.gloenvcha.2005.04.005",
+  "reference": "Tol, R.S.J. (2006) The FUND model: Technical description. Fund/CGE Documentation"
+}

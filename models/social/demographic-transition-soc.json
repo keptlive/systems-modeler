@@ -1,0 +1,161 @@
+{
+  "id": "demographic-transition-soc",
+  "name": "Demographic Transition Model",
+  "description": "Models population transition from high birth/death rates to low rates. Source: Notestein (1945) and Lee (2003). DOI: 10.1126/science.1089332",
+  "stocks": [
+    {
+      "id": "stock-pop",
+      "name": "Population",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-dev",
+      "name": "Development_Level",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-births",
+      "name": "Births",
+      "equation": "Population * Birth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-pop",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-deaths",
+      "name": "Deaths",
+      "equation": "Population * Death_Rate",
+      "from_stock": "stock-pop",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-dev",
+      "name": "Development",
+      "equation": "Development_Rate * (Max_Development - Development_Level) / Max_Development",
+      "from_stock": null,
+      "to_stock": "stock-dev",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-birthrate",
+      "name": "Birth_Rate",
+      "equation": "Max_Birth_Rate * (1 - Development_Level / Max_Development * Birth_Response)",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-deathrate",
+      "name": "Death_Rate",
+      "equation": "Min_Death_Rate + (Max_Death_Rate - Min_Death_Rate) * (1 - Development_Level / Max_Development)",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-maxbirth",
+      "name": "Max_Birth_Rate",
+      "equation": "0.04",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-mindeath",
+      "name": "Min_Death_Rate",
+      "equation": "0.008",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-maxdeath",
+      "name": "Max_Death_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-maxdev",
+      "name": "Max_Development",
+      "equation": "100",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-devrate",
+      "name": "Development_Rate",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-birthresp",
+      "name": "Birth_Response",
+      "equation": "0.8",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-growthrate",
+      "name": "Population_Growth_Rate",
+      "equation": "Birth_Rate - Death_Rate",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Development_Level",
+      "to_element": "Birth_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:09:47.460657+00:00",
+  "updated_at": "2026-01-12T02:09:47.460660+00:00",
+  "source": "https://doi.org/10.1126/science.1089332",
+  "reference": "Lee, R. (2003). The Demographic Transition: Three Centuries of Fundamental Change. Science."
+}

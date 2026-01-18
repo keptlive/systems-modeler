@@ -1,0 +1,31 @@
+{
+  "id": "uzawa-two-sector-growth-eco",
+  "name": "Uzawa Two-Sector Growth Model",
+  "description": "Hirofumi Uzawa's (1961, 1963) two-sector growth model distinguishing between consumption goods and capital goods sectors. Shows how factor intensity differences between sectors affect growth dynamics and stability. Foundational for multi-sector growth theory.",
+  "stocks": [
+    {"id": "stock-capital", "name": "Capital", "initial_value": 100, "equation": "", "position": {"x": 300, "y": 200}},
+    {"id": "stock-consumption-capital", "name": "Consumption Sector Capital", "initial_value": 40, "equation": "", "position": {"x": 500, "y": 200}},
+    {"id": "stock-investment-capital", "name": "Investment Sector Capital", "initial_value": 60, "equation": "", "position": {"x": 500, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-net-investment", "name": "Net Investment", "equation": "Investment_Good_Output - Depreciation_Rate * Capital", "from_stock": null, "to_stock": "stock-capital", "position": {"x": 200, "y": 200}},
+    {"id": "flow-capital-allocation", "name": "Capital Allocation", "equation": "(Desired_Share_Consumption - Consumption_Sector_Capital / Capital) * Allocation_Speed", "from_stock": "stock-investment-capital", "to_stock": "stock-consumption-capital", "position": {"x": 500, "y": 275}}
+  ],
+  "variables": [
+    {"id": "var-consumption-output", "name": "Consumption Output", "equation": "Consumption_Sector_Capital ^ Alpha_C * Labor_Consumption ^ (1 - Alpha_C)", "position": {"x": 200, "y": 100}},
+    {"id": "var-investment-output", "name": "Investment Good Output", "equation": "Investment_Sector_Capital ^ Alpha_I * Labor_Investment ^ (1 - Alpha_I)", "position": {"x": 400, "y": 100}},
+    {"id": "var-alpha-c", "name": "Alpha C", "equation": "0.4", "position": {"x": 550, "y": 100}},
+    {"id": "var-alpha-i", "name": "Alpha I", "equation": "0.5", "position": {"x": 650, "y": 100}},
+    {"id": "var-labor-consumption", "name": "Labor Consumption", "equation": "Total_Labor * Labor_Share_Consumption", "position": {"x": 200, "y": 300}},
+    {"id": "var-labor-investment", "name": "Labor Investment", "equation": "Total_Labor * (1 - Labor_Share_Consumption)", "position": {"x": 400, "y": 300}},
+    {"id": "var-total-labor", "name": "Total Labor", "equation": "100", "position": {"x": 550, "y": 300}},
+    {"id": "var-labor-share-consumption", "name": "Labor Share Consumption", "equation": "0.5", "position": {"x": 200, "y": 400}},
+    {"id": "var-desired-share-consumption", "name": "Desired Share Consumption", "equation": "0.4", "position": {"x": 400, "y": 400}},
+    {"id": "var-allocation-speed", "name": "Allocation Speed", "equation": "0.1", "position": {"x": 550, "y": 400}},
+    {"id": "var-depreciation-rate", "name": "Depreciation Rate", "equation": "0.05", "position": {"x": 650, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.25},
+  "source": "https://doi.org/10.2307/2296180",
+  "reference": "Uzawa H. On a Two-Sector Model of Economic Growth. Review of Economic Studies. 1961;29(1):40-47."
+}

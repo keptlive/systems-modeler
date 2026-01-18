@@ -1,0 +1,102 @@
+{
+  "id": "cryptocurrency-bubble-fin",
+  "name": "Cryptocurrency Bubble Model",
+  "description": "Model of crypto price dynamics. Source: Liu & Tsyvinski (2021), RFS.",
+  "stocks": [
+    {
+      "id": "stock-price",
+      "name": "Price",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-sentiment",
+      "name": "Sentiment",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-price",
+      "name": "Price_Change",
+      "equation": "Price * (Sentiment / 50 - 1) * Volatility",
+      "from_stock": null,
+      "to_stock": "stock-price",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-sent-up",
+      "name": "Sentiment_Up",
+      "equation": "FOMO * (100 - Sentiment) / 100",
+      "from_stock": null,
+      "to_stock": "stock-sentiment",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-sent-down",
+      "name": "Sentiment_Down",
+      "equation": "Sentiment * Decay",
+      "from_stock": "stock-sentiment",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-vol",
+      "name": "Volatility",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-fomo",
+      "name": "FOMO",
+      "equation": "MAX(0, Price_Change) * 0.1",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-decay",
+      "name": "Decay",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T12:50:58.059885+00:00",
+  "updated_at": "2026-01-12T12:50:58.059885+00:00",
+  "source": "https://systemdynamics.org/resources/",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

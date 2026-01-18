@@ -1,0 +1,190 @@
+{
+  "id": "nuclear-fusion-development-phy",
+  "name": "Nuclear Fusion Development Model",
+  "description": "Model of fusion energy development showing plasma physics milestones, engineering challenges, and commercialization pathway. Based on ITER and fusion research. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Plasma Performance Q",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Engineering Readiness",
+      "initial_value": 4,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Cumulative Investment",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Q Improvement",
+      "equation": "(Theoretical_Q_Max - Plasma_Performance_Q) * Learning_Rate * Annual_RD_Spending",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Engineering Progress",
+      "equation": "(9 - Engineering_Readiness) * Engineering_Rate * (Plasma_Performance_Q / 10)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Investment",
+      "equation": "Annual_RD_Spending",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Theoretical Q Max",
+      "equation": "30",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Learning Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Annual RD Spending",
+      "equation": "5 + Private_Investment",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Private Investment",
+      "equation": "IF(Plasma_Performance_Q > 5, 3, 0.5)",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Engineering Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Breakeven Threshold",
+      "equation": "10",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Net Energy Gain",
+      "equation": "Plasma_Performance_Q - 1",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Commercial Readiness",
+      "equation": "MIN(1, (Plasma_Performance_Q / Breakeven_Threshold) * (Engineering_Readiness / 9))",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Years to Commercial",
+      "equation": "IF(Commercial_Readiness < 1, (1 - Commercial_Readiness) * 30, 0)",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Cost per Watt Projection",
+      "equation": "10 / (1 + Cumulative_Investment / 100)",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Plasma Performance Q",
+      "to_element": "Q Improvement"
+    },
+    {
+      "id": "c2",
+      "from_element": "Engineering Readiness",
+      "to_element": "Engineering Progress"
+    },
+    {
+      "id": "c3",
+      "from_element": "Cumulative Investment",
+      "to_element": "Cost per Watt Projection"
+    }
+  ],
+  "time_settings": {
+    "start": 2024,
+    "end": 2074,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:53:04.263175+00:00",
+  "updated_at": "2026-01-12T01:53:04.263196+00:00",
+  "source": "https://www.iter.org/",
+  "reference": "ITER Organization. ITER Research Plan within the Staged Approach. ITER, 2018. DOI: ITER_D_2X3FKC"
+}

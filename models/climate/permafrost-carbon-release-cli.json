@@ -1,0 +1,158 @@
+{
+  "id": "permafrost-carbon-release-cli",
+  "name": "Permafrost Carbon Release Model",
+  "description": "Model of permafrost thaw and carbon release creating positive climate feedback. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Frozen_Carbon",
+      "initial_value": 1500,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Active_Layer_Carbon",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Atmospheric_Carbon",
+      "initial_value": 850,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Permafrost_Temperature",
+      "initial_value": -2,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Thaw",
+      "equation": "Thaw_Rate * Frozen_Carbon * MAX(0, Permafrost_Temperature)",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Decomposition",
+      "equation": "Decomposition_Rate * Active_Layer_Carbon",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Temp_Change",
+      "equation": "(Arctic_Amplification * Global_Warming_Rate - Permafrost_Temperature / Thermal_Inertia)",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Thaw_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Decomposition_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Arctic_Amplification",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Global_Warming_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Thermal_Inertia",
+      "equation": "50",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Carbon_Feedback",
+      "equation": "Decomposition * 0.001",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Methane_Fraction",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:23:21.189857+00:00",
+  "updated_at": "2026-01-12T11:23:21.189857+00:00",
+  "source": "https://doi.org/10.1038/nature14338",
+  "reference": "Schuur EAG, et al. Climate change and the permafrost carbon feedback. Nature. 2015;520:171-179."
+}

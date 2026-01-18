@@ -1,0 +1,148 @@
+{
+  "id": "delay-differential-seir-epi",
+  "name": "Delay-Differential SEIR Model",
+  "description": "SEIR model with explicit time delays representing incubation and infectious periods. Improves modeling of infection dynamics with more realistic delay structures. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exposed",
+      "name": "Exposed",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infectious",
+      "name": "Infectious",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-exposure",
+      "name": "Exposure Rate",
+      "equation": "Beta * Susceptible * Infectious / N",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-incubation",
+      "name": "End Incubation",
+      "equation": "DELAY(Exposure_Rate, Tau_E)",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-infectious",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "DELAY(End_Incubation, Tau_I)",
+      "from_stock": "stock-infectious",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-tau-e",
+      "name": "Tau E",
+      "equation": "5",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-tau-i",
+      "name": "Tau I",
+      "equation": "7",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-n",
+      "name": "N",
+      "equation": "1000000",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-r0",
+      "name": "R0",
+      "equation": "Beta * Tau_I",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-serial-interval",
+      "name": "Serial Interval",
+      "equation": "Tau_E + Tau_I / 2",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1038/s41598-023-40008-9",
+  "reference": "Delay-differential SEIR modeling for improved modelling of infection dynamics. Scientific Reports (2023).",
+  "created_at": "2026-01-12T08:11:11.789037+00:00",
+  "updated_at": "2026-01-12T08:11:11.789037+00:00"
+}

@@ -1,0 +1,35 @@
+{
+  "id": "antimicrobial-one-health-surveillance-hea",
+  "name": "Antimicrobial Resistance One Health Model",
+  "description": "Model of AMR transmission between human, animal, and environmental reservoirs following One Health framework. Agricultural antibiotic use drives resistance emergence. Source: Van Boeckel et al. (2019). Science. DOI: 10.1126/science.aaw1944",
+  "stocks": [
+    {"id": "stock-human-amr", "name": "Human_AMR_Prevalence", "initial_value": 0.05, "equation": "", "position": {"x": 200, "y": 150}},
+    {"id": "stock-animal-amr", "name": "Animal_AMR_Prevalence", "initial_value": 0.15, "equation": "", "position": {"x": 400, "y": 150}},
+    {"id": "stock-env-amr", "name": "Environmental_AMR", "initial_value": 0.02, "equation": "", "position": {"x": 300, "y": 300}}
+  ],
+  "flows": [
+    {"id": "flow-human-increase", "name": "Human_AMR_Increase", "equation": "Human_Antibiotic_Use * Selection_Pressure + Animal_To_Human_Transmission + Env_To_Human_Transmission", "from_stock": null, "to_stock": "stock-human-amr", "position": {"x": 100, "y": 150}},
+    {"id": "flow-animal-increase", "name": "Animal_AMR_Increase", "equation": "Animal_Antibiotic_Use * Selection_Pressure", "from_stock": null, "to_stock": "stock-animal-amr", "position": {"x": 500, "y": 150}},
+    {"id": "flow-env-contamination", "name": "Environmental_Contamination", "equation": "Human_AMR_Prevalence * Human_Waste_Rate + Animal_AMR_Prevalence * Animal_Waste_Rate", "from_stock": null, "to_stock": "stock-env-amr", "position": {"x": 200, "y": 300}},
+    {"id": "flow-env-decay", "name": "Environmental_Decay", "equation": "Environmental_AMR * Decay_Rate", "from_stock": "stock-env-amr", "to_stock": null, "position": {"x": 400, "y": 300}}
+  ],
+  "variables": [
+    {"id": "var-human-use", "name": "Human_Antibiotic_Use", "equation": "10", "position": {"x": 100, "y": 100}},
+    {"id": "var-animal-use", "name": "Animal_Antibiotic_Use", "equation": "70", "position": {"x": 450, "y": 100}},
+    {"id": "var-selection", "name": "Selection_Pressure", "equation": "0.001", "position": {"x": 300, "y": 50}},
+    {"id": "var-a2h", "name": "Animal_To_Human_Transmission", "equation": "Animal_AMR_Prevalence * Food_Contact_Rate * 0.01", "position": {"x": 300, "y": 100}},
+    {"id": "var-e2h", "name": "Env_To_Human_Transmission", "equation": "Environmental_AMR * Environmental_Exposure * 0.001", "position": {"x": 150, "y": 250}},
+    {"id": "var-food-contact", "name": "Food_Contact_Rate", "equation": "0.5", "position": {"x": 350, "y": 200}},
+    {"id": "var-env-exposure", "name": "Environmental_Exposure", "equation": "0.3", "position": {"x": 100, "y": 350}},
+    {"id": "var-human-waste", "name": "Human_Waste_Rate", "equation": "0.1", "position": {"x": 200, "y": 350}},
+    {"id": "var-animal-waste", "name": "Animal_Waste_Rate", "equation": "0.3", "position": {"x": 350, "y": 350}},
+    {"id": "var-decay", "name": "Decay_Rate", "equation": "0.05", "position": {"x": 450, "y": 350}},
+    {"id": "var-total-burden", "name": "Total_AMR_Burden", "equation": "Human_AMR_Prevalence * 7000000000 + Animal_AMR_Prevalence * 70000000000", "position": {"x": 300, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 50, "dt": 0.5},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1126/science.aaw1944",
+  "reference": "Van Boeckel, T.P. et al. (2019). Global trends in antimicrobial resistance in animals in low- and middle-income countries. Science, 365(6459), eaaw1944."
+}

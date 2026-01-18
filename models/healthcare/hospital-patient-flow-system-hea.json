@@ -1,0 +1,186 @@
+{
+  "id": "hospital-patient-flow-system-hea",
+  "name": "Hospital Patient Flow Model",
+  "description": "Healthcare system dynamics showing patient flow through different care stages. Source: Homer et al. (2009), Health Services Research.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Emergency_Department",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Inpatient_Unit",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "ICU",
+      "initial_value": 15,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "ED_Arrivals",
+      "equation": "Arrival_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "ED_to_Inpatient",
+      "equation": "Emergency_Department * Admission_Rate / ED_LOS",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 225,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Inpatient_to_ICU",
+      "equation": "Inpatient_Unit * ICU_Transfer_Rate / Inpatient_LOS",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 375,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "ED_Discharge",
+      "equation": "Emergency_Department * (1 - Admission_Rate) / ED_LOS",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Inpatient_Discharge",
+      "equation": "Inpatient_Unit * (1 - ICU_Transfer_Rate) / Inpatient_LOS",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "f6",
+      "name": "ICU_Discharge",
+      "equation": "ICU / ICU_LOS",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Arrival_Rate",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Admission_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "ICU_Transfer_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "ED_LOS",
+      "equation": "0.25",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Inpatient_LOS",
+      "equation": "4",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "ICU_LOS",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Total_Census",
+      "equation": "Emergency_Department + Inpatient_Unit + ICU",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Emergency_Department",
+      "to_element": "ED_to_Inpatient"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-15T14:39:40.986640+00:00",
+  "updated_at": "2026-01-15T14:39:40.986643+00:00",
+  "source": "https://doi.org/10.1111/j.1475-6773.2009.00953.x",
+  "reference": "Homer, J.B. & Hirsch, G.B. (2006). System Dynamics Modeling for Public Health. Am J Public Health 96:452-458."
+}

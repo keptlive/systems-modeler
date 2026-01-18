@@ -1,0 +1,172 @@
+{
+  "id": "si",
+  "name": "Si",
+  "description": "Model from SI.mdl",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Infected",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Susceptible",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Cumulative_Reported_Cases",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Infection_Rate",
+      "equation": "Contacts_Between_Infected_and_Uninfected_Persons * Infectivity",
+      "from_stock": "Susceptible",
+      "to_stock": "Infected",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Contact_Frequency",
+      "equation": "7.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Contacts_Between_Infected_and_Uninfected_Persons",
+      "equation": "Probability_of_Contact_with_Infected_Person * Susceptible_Contacts",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Infectivity",
+      "equation": "0.05",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Probability_of_Contact_with_Infected_Person",
+      "equation": "Infected / Total_Population",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Susceptible_Contacts",
+      "equation": "Contact_Frequency * Susceptible",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Total_Population",
+      "equation": "10000.0",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Infected",
+      "to_element": "Infection_Rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "Infectivity",
+      "to_element": "Infection_Rate"
+    },
+    {
+      "id": "c3",
+      "from_element": "Contacts_Between_Infected_and_Uninfected_Persons",
+      "to_element": "Infection_Rate"
+    },
+    {
+      "id": "c4",
+      "from_element": "Susceptible",
+      "to_element": "Contacts_Between_Infected_and_Uninfected_Persons"
+    },
+    {
+      "id": "c5",
+      "from_element": "Probability_of_Contact_with_Infected_Person",
+      "to_element": "Contacts_Between_Infected_and_Uninfected_Persons"
+    },
+    {
+      "id": "c6",
+      "from_element": "Infected",
+      "to_element": "Contacts_Between_Infected_and_Uninfected_Persons"
+    },
+    {
+      "id": "c7",
+      "from_element": "Susceptible_Contacts",
+      "to_element": "Contacts_Between_Infected_and_Uninfected_Persons"
+    },
+    {
+      "id": "c8",
+      "from_element": "Total_Population",
+      "to_element": "Probability_of_Contact_with_Infected_Person"
+    },
+    {
+      "id": "c9",
+      "from_element": "Infected",
+      "to_element": "Probability_of_Contact_with_Infected_Person"
+    },
+    {
+      "id": "c10",
+      "from_element": "Susceptible",
+      "to_element": "Susceptible_Contacts"
+    },
+    {
+      "id": "c11",
+      "from_element": "Contact_Frequency",
+      "to_element": "Susceptible_Contacts"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 35.0,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-15T19:13:16.476282+00:00",
+  "updated_at": "2026-01-15T19:13:16.476282+00:00",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "PySD Cookbook - Educational System Dynamics Models"
+}

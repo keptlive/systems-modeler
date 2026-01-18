@@ -1,0 +1,148 @@
+{
+  "id": "quantum-computing-development-tec",
+  "name": "Quantum Computing Development Model",
+  "description": "Model of quantum computing progress showing qubit scaling, error rates, and commercial applications. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Qubit_Count",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Error_Rate",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Commercial_Applications",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Qubit_Growth",
+      "equation": "R_D_Investment * Scaling_Factor",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Error_Reduction",
+      "equation": "Error_Correction_Progress * Error_Rate",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "New_Applications",
+      "equation": "Capability_Index * Market_Demand",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "R_D_Investment",
+      "equation": "50",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Scaling_Factor",
+      "equation": "0.5 * (1 - Qubit_Count / 10000)",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Error_Correction_Progress",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Capability_Index",
+      "equation": "Qubit_Count * (1 - Error_Rate) / 100",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Market_Demand",
+      "equation": "2",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Quantum_Advantage_Threshold",
+      "equation": "1000",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Advantage_Achieved",
+      "equation": "IF(Qubit_Count > Quantum_Advantage_Threshold AND Error_Rate < 0.001, 1, 0)",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.5,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:34:23.558482+00:00",
+  "updated_at": "2026-01-12T11:34:23.558482+00:00",
+  "source": "https://doi.org/10.1038/s41586-019-1666-5",
+  "reference": "Arute F, et al. Quantum supremacy using a programmable superconducting processor. Nature. 2019;574(7779):505-510."
+}

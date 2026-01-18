@@ -1,0 +1,206 @@
+{
+  "id": "remote-work-productivity-eco",
+  "name": "Remote Work Productivity and Hybrid Office",
+  "description": "Model of remote work productivity dynamics showing how work-from-home adoption affects productivity, real estate needs, and employee wellbeing. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "source": "https://doi.org/10.3386/w28731",
+  "reference": "Barrero JM, Bloom N, Davis SJ. Why Working from Home Will Stick. NBER Working Paper 28731. 2021.",
+  "stocks": [
+    {
+      "id": "stock-remote",
+      "name": "Remote_Workers",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-office",
+      "name": "Office_Workers",
+      "initial_value": 70,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-productivity",
+      "name": "Average_Productivity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-wellbeing",
+      "name": "Employee_Wellbeing",
+      "initial_value": 70,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-to-remote",
+      "name": "Shift_to_Remote",
+      "equation": "Office_Workers * remote_preference * flexibility_policy",
+      "from_stock": "stock-office",
+      "to_stock": "stock-remote",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-to-office",
+      "name": "Return_to_Office",
+      "equation": "Remote_Workers * office_preference * collaboration_need",
+      "from_stock": "stock-remote",
+      "to_stock": "stock-office",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-prod-change",
+      "name": "Productivity_Change",
+      "equation": "(Target_Productivity - Average_Productivity) * adjustment_speed",
+      "from_stock": null,
+      "to_stock": "stock-productivity",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-wellbeing-change",
+      "name": "Wellbeing_Change",
+      "equation": "(Target_Wellbeing - Employee_Wellbeing) * wellbeing_adjustment",
+      "from_stock": null,
+      "to_stock": "stock-wellbeing",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-remote-pref",
+      "name": "remote_preference",
+      "equation": "0.03",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-flex",
+      "name": "flexibility_policy",
+      "equation": "0.8",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-office-pref",
+      "name": "office_preference",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-collab",
+      "name": "collaboration_need",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-adj",
+      "name": "adjustment_speed",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-well-adj",
+      "name": "wellbeing_adjustment",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-remote-share",
+      "name": "Remote_Share",
+      "equation": "Remote_Workers / (Remote_Workers + Office_Workers)",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-target-prod",
+      "name": "Target_Productivity",
+      "equation": "95 + 10 * Remote_Share - 5 * Remote_Share * Remote_Share",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-target-well",
+      "name": "Target_Wellbeing",
+      "equation": "60 + 30 * Remote_Share",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-office-space",
+      "name": "Office_Space_Need",
+      "equation": "Office_Workers * space_per_worker",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-space",
+      "name": "space_per_worker",
+      "equation": "150",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

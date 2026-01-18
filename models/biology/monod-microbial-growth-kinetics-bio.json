@@ -1,0 +1,123 @@
+{
+  "id": "monod-microbial-growth-kinetics-bio",
+  "name": "Monod Microbial Growth Kinetics",
+  "description": "Classic model of bacterial growth with substrate limitation. Source: Monod (1949), Ann Rev Microbiology. Nobel Prize 1965.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Biomass",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Substrate",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Biomass_Growth",
+      "equation": "mu_max * Substrate / (Ks + Substrate) * Biomass - Death_Rate * Biomass",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Substrate_Consumption",
+      "equation": "-mu_max * Substrate / (Ks + Substrate) * Biomass / Y + S_input",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "mu_max",
+      "equation": "1.0",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Ks",
+      "equation": "1.0",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Y",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Death_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "S_input",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Specific_Growth_Rate",
+      "equation": "mu_max * Substrate / (Ks + Substrate)",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Substrate",
+      "to_element": "Biomass_Growth"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T14:38:02.262114+00:00",
+  "updated_at": "2026-01-15T14:38:02.262117+00:00",
+  "source": "https://doi.org/10.1146/annurev.mi.03.100149.002103",
+  "reference": "Monod, J. (1949). The growth of bacterial cultures. Ann Rev Microbiology 3:371-394. Nobel Prize 1965."
+}

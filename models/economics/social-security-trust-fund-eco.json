@@ -1,0 +1,252 @@
+{
+  "id": "social-security-trust-fund-eco",
+  "name": "Social Security Trust Fund Model",
+  "description": "Model of Social Security finances showing payroll tax revenue, benefit payments, and trust fund trajectory. Based on SSA Trustees Report. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Trust Fund Balance",
+      "initial_value": 2900,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Beneficiaries",
+      "initial_value": 65,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Covered Workers",
+      "initial_value": 180,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Payroll Tax Revenue",
+      "equation": "Covered_Workers * Average_Taxable_Wage * Tax_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Benefit Payments",
+      "equation": "Beneficiaries * Average_Benefit * 12",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Interest Income",
+      "equation": "Trust_Fund_Balance * Interest_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "f4",
+      "name": "New Retirees",
+      "equation": "Covered_Workers / Working_Life * Retirement_Rate",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Beneficiary Deaths",
+      "equation": "Beneficiaries / Average_Retirement_Duration",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "New Workers",
+      "equation": "Population_Growth * Labor_Force_Participation",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Worker Retirement",
+      "equation": "New_Retirees",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Average Taxable Wage",
+      "equation": "60",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Tax Rate",
+      "equation": "0.124",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Average Benefit",
+      "equation": "1.6",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Interest Rate",
+      "equation": "0.025",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Working Life",
+      "equation": "40",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Retirement Rate",
+      "equation": "1",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Average Retirement Duration",
+      "equation": "18",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Population Growth",
+      "equation": "3",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Labor Force Participation",
+      "equation": "0.62",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Worker to Beneficiary Ratio",
+      "equation": "Covered_Workers / Beneficiaries",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Annual Surplus Deficit",
+      "equation": "Payroll_Tax_Revenue + Interest_Income - Benefit_Payments",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Depletion Year",
+      "equation": "IF(Annual_Surplus_Deficit < 0, Trust_Fund_Balance / (-Annual_Surplus_Deficit), 999)",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Covered Workers",
+      "to_element": "Payroll Tax Revenue"
+    },
+    {
+      "id": "c2",
+      "from_element": "Beneficiaries",
+      "to_element": "Benefit Payments"
+    },
+    {
+      "id": "c3",
+      "from_element": "Trust Fund Balance",
+      "to_element": "Interest Income"
+    }
+  ],
+  "time_settings": {
+    "start": 2024,
+    "end": 2074,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:53:04.263256+00:00",
+  "updated_at": "2026-01-12T01:53:04.263259+00:00",
+  "source": "https://www.ssa.gov/OACT/TR/",
+  "reference": "Social Security Administration. The 2023 Annual Report of the Board of Trustees of the Federal Old-Age and Survivors Insurance and Federal Disability Insurance Trust Funds. SSA, 2023."
+}

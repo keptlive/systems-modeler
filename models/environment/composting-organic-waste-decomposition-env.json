@@ -1,0 +1,189 @@
+{
+  "id": "composting-organic-waste-decomposition-env",
+  "name": "Composting Process Model",
+  "description": "Model of organic waste decomposition during composting. Source: Haug (1993), The Practical Handbook of Compost Engineering.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Organic_Matter",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Temperature",
+      "initial_value": 25,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Moisture",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Decomposition",
+      "equation": "-k_decomp * Organic_Matter * Activity_Factor",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Heat_Generation",
+      "equation": "Heat_Produced - Heat_Loss",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Moisture_Change",
+      "equation": "-Evaporation + Water_Addition",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "k_decomp",
+      "equation": "0.05",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "C_N_Ratio",
+      "equation": "25",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Ambient_Temp",
+      "equation": "20",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Water_Addition",
+      "equation": "0",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Turning_Frequency",
+      "equation": "3",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Temp_Factor",
+      "equation": "IF(Temperature < 40, (Temperature - 20) / 20, IF(Temperature < 60, 1, 1 - (Temperature - 60) / 20))",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Moisture_Factor",
+      "equation": "IF(Moisture < 40, Moisture / 40, IF(Moisture < 65, 1, 1 - (Moisture - 65) / 35))",
+      "position": {
+        "x": 450,
+        "y": 420
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Activity_Factor",
+      "equation": "MAX(0, Temp_Factor * Moisture_Factor)",
+      "position": {
+        "x": 300,
+        "y": 480
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Heat_Produced",
+      "equation": "0.5 * k_decomp * Organic_Matter * Activity_Factor",
+      "position": {
+        "x": 150,
+        "y": 540
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Heat_Loss",
+      "equation": "0.1 * (Temperature - Ambient_Temp)",
+      "position": {
+        "x": 350,
+        "y": 540
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Evaporation",
+      "equation": "0.02 * Temperature * Moisture / 100",
+      "position": {
+        "x": 550,
+        "y": 540
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Temperature",
+      "to_element": "Temp_Factor"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 90,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:47:15.681969+00:00",
+  "updated_at": "2026-01-15T14:47:15.681972+00:00",
+  "source": "https://www.routledge.com/The-Practical-Handbook-of-Compost-Engineering/Haug/p/book/9780873713733",
+  "reference": "Haug, R.T. (1993). The Practical Handbook of Compost Engineering. Lewis Publishers."
+}

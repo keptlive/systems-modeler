@@ -1,0 +1,217 @@
+{
+  "id": "thaler-mental-accounting-eco",
+  "name": "Thaler Mental Accounting Model",
+  "description": "Richard Thaler's Nobel Prize model of mental accounting showing how people categorize and evaluate economic outcomes. Reference: Thaler, R.H. (1999). Mental Accounting Matters.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Checking_Account",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Savings_Account",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Investment_Account",
+      "initial_value": 20000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Consumption",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Income",
+      "equation": "Monthly_Income",
+      "from_stock": null,
+      "to_stock": "Checking_Account",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Regular_Expenses",
+      "equation": "Fixed_Expenses",
+      "from_stock": "Checking_Account",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Savings_Transfer",
+      "equation": "Checking_Account * Savings_Rate",
+      "from_stock": "Checking_Account",
+      "to_stock": "Savings_Account",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Investment_Transfer",
+      "equation": "Savings_Account * Investment_Rate",
+      "from_stock": "Savings_Account",
+      "to_stock": "Investment_Account",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Discretionary_Spending",
+      "equation": "MAX(0, Checking_Account - Buffer) * Spending_Propensity",
+      "from_stock": "Checking_Account",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Consumption_Flow",
+      "equation": "Regular_Expenses + Discretionary_Spending",
+      "from_stock": null,
+      "to_stock": "Consumption",
+      "position": {
+        "x": 850,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Monthly_Income",
+      "equation": "5000",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Fixed_Expenses",
+      "equation": "3000",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Savings_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Investment_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Buffer",
+      "equation": "2000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Spending_Propensity",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Total_Wealth",
+      "equation": "Checking_Account + Savings_Account + Investment_Account",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "MPC_Checking",
+      "equation": "0.8",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "MPC_Savings",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "MPC_Investment",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1002/(SICI)1099-0771(199909)12:3<183::AID-BDM318>3.0.CO;2-F",
+  "reference": "Thaler, R.H. (1999). Mental Accounting Matters. Journal of Behavioral Decision Making, 12(3), 183-206.",
+  "created_at": "2026-01-15T19:53:28.367590+00:00",
+  "updated_at": "2026-01-15T19:53:28.367590+00:00"
+}

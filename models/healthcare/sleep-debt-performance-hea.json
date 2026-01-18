@@ -1,0 +1,198 @@
+{
+  "id": "sleep-debt-performance-hea",
+  "name": "Sleep Debt and Cognitive Performance",
+  "description": "Models cumulative sleep debt effects on alertness and performance. Based on Van Dongen et al. (2003) Sleep debt, SLEEP. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "category": "health",
+  "stocks": [
+    {
+      "id": "stock-debt",
+      "name": "Sleep_Debt_Hours",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-alert",
+      "name": "Alertness_Level",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-perf",
+      "name": "Cognitive_Performance",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-circadian",
+      "name": "Circadian_Phase",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-debt-acc",
+      "name": "Debt_Accumulation",
+      "equation": "MAX(0, Sleep_Need - Actual_Sleep)",
+      "from_stock": null,
+      "to_stock": "stock-debt",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-debt-recov",
+      "name": "Debt_Recovery",
+      "equation": "MIN(Sleep_Debt_Hours, Recovery_Sleep * Recovery_Efficiency)",
+      "from_stock": "stock-debt",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-alert-change",
+      "name": "Alertness_Change",
+      "equation": "(Baseline_Alertness - Alertness_Level - Sleep_Debt_Hours * Debt_Impact + Circadian_Effect) / Adjust_Time",
+      "from_stock": null,
+      "to_stock": "stock-alert",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-perf-change",
+      "name": "Performance_Change",
+      "equation": "(Alertness_Level - Cognitive_Performance) / Perf_Lag",
+      "from_stock": null,
+      "to_stock": "stock-perf",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-circadian",
+      "name": "Circadian_Advance",
+      "equation": "1",
+      "from_stock": null,
+      "to_stock": "stock-circadian",
+      "position": {
+        "x": 400,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-need",
+      "name": "Sleep_Need",
+      "equation": "8",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-actual",
+      "name": "Actual_Sleep",
+      "equation": "6",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recovery",
+      "name": "Recovery_Sleep",
+      "equation": "IF(MOD(TIME, 7) < 2, 9, 6)",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-eff",
+      "name": "Recovery_Efficiency",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-baseline",
+      "name": "Baseline_Alertness",
+      "equation": "100",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-impact",
+      "name": "Debt_Impact",
+      "equation": "2",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-circadian-eff",
+      "name": "Circadian_Effect",
+      "equation": "10 * SIN((Circadian_Phase - 14) / 24 * 2 * 3.14159)",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-adjust",
+      "name": "Adjust_Time",
+      "equation": "2",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-lag",
+      "name": "Perf_Lag",
+      "equation": "1",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 168,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1093/sleep/26.2.117",
+  "reference": "Van Dongen HPA et al. (2003) The Cumulative Cost of Additional Wakefulness: Dose-Response Effects on Neurobehavioral Functions and Sleep Physiology. SLEEP 26(2):117-126.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:36:48.752546+00:00",
+  "updated_at": "2026-01-12T06:36:48.752546+00:00"
+}

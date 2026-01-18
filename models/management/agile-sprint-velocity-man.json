@@ -1,0 +1,189 @@
+{
+  "id": "agile-sprint-velocity-man",
+  "name": "Agile Sprint Velocity and Technical Debt",
+  "description": "Models sprint velocity, technical debt accumulation, and team productivity in agile development. Based on Kruchten et al. (2012) Technical Debt. Reference: Schwaber, K., & Sutherland, J. (2020). The Scrum Guide. Source: https://scrumguides.org/",
+  "category": "management",
+  "stocks": [
+    {
+      "id": "stock-backlog",
+      "name": "Product_Backlog_Points",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-wip",
+      "name": "Work_In_Progress",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-done",
+      "name": "Completed_Work",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-debt",
+      "name": "Technical_Debt",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-pull",
+      "name": "Sprint_Pull",
+      "equation": "MIN(Sprint_Capacity * Team_Velocity, Product_Backlog_Points)",
+      "from_stock": "stock-backlog",
+      "to_stock": "stock-wip",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-complete",
+      "name": "Sprint_Completion",
+      "equation": "Work_In_Progress * Completion_Rate * (1 - Technical_Debt/100)",
+      "from_stock": "stock-wip",
+      "to_stock": "stock-done",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-new-work",
+      "name": "New_Requirements",
+      "equation": "Requirement_Arrival_Rate",
+      "from_stock": null,
+      "to_stock": "stock-backlog",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-debt-create",
+      "name": "Debt_Creation",
+      "equation": "Sprint_Completion * Debt_Creation_Rate * Pressure_Factor",
+      "from_stock": null,
+      "to_stock": "stock-debt",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-debt-pay",
+      "name": "Debt_Paydown",
+      "equation": "Debt_Paydown_Effort * Paydown_Effectiveness",
+      "from_stock": "stock-debt",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-capacity",
+      "name": "Sprint_Capacity",
+      "equation": "40",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-velocity",
+      "name": "Team_Velocity",
+      "equation": "0.8 * (1 - Technical_Debt/200)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-complete",
+      "name": "Completion_Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-arrival",
+      "name": "Requirement_Arrival_Rate",
+      "equation": "15",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-debt-rate",
+      "name": "Debt_Creation_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-pressure",
+      "name": "Pressure_Factor",
+      "equation": "1 + MAX(0, (Product_Backlog_Points - 100) / 100)",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-paydown",
+      "name": "Debt_Paydown_Effort",
+      "equation": "5",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-pay-eff",
+      "name": "Paydown_Effectiveness",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1109/MS.2012.167",
+  "reference": "Kruchten P, Nord RL, Ozkaya I (2012) Technical Debt: From Metaphor to Theory and Practice. IEEE Software 29(6):18-21.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:35:24.695681+00:00",
+  "updated_at": "2026-01-12T06:35:24.695681+00:00"
+}

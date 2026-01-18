@@ -1,0 +1,158 @@
+{
+  "id": "endangered-species-recovery-env",
+  "name": "Endangered Species Recovery",
+  "description": "Model of endangered species population recovery. Source: IUCN Red List methodology. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-pop",
+      "name": "Population",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-habitat",
+      "name": "Habitat_Quality",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-birth",
+      "name": "Births",
+      "equation": "Population * Birth_Rate * Habitat_Effect",
+      "from_stock": null,
+      "to_stock": "stock-pop",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-death",
+      "name": "Deaths",
+      "equation": "Population * Death_Rate * (1 + Poaching_Pressure)",
+      "from_stock": "stock-pop",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-restore",
+      "name": "Habitat_Restoration",
+      "equation": "Conservation_Investment * Restoration_Efficiency",
+      "from_stock": null,
+      "to_stock": "stock-habitat",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-degrade",
+      "name": "Habitat_Loss",
+      "equation": "Habitat_Quality * Degradation_Rate * (1 - Protection_Level)",
+      "from_stock": "stock-habitat",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-birth",
+      "name": "Birth_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-habitat-eff",
+      "name": "Habitat_Effect",
+      "equation": "Habitat_Quality / 100",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-death",
+      "name": "Death_Rate",
+      "equation": "0.08",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-poach",
+      "name": "Poaching_Pressure",
+      "equation": "0.1 - 0.002 * TIME",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-invest",
+      "name": "Conservation_Investment",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-effic",
+      "name": "Restoration_Efficiency",
+      "equation": "0.3",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-degrad",
+      "name": "Degradation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-protect",
+      "name": "Protection_Level",
+      "equation": "0.3 + 0.01 * TIME",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:55:38.760917+00:00",
+  "updated_at": "2026-01-12T12:55:38.760917+00:00",
+  "source": "https://doi.org/10.1126/science.1206964",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

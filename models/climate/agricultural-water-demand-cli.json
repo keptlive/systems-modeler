@@ -1,0 +1,403 @@
+{
+  "id": "agricultural-water-demand-cli",
+  "name": "Agricultural Water Demand Model",
+  "description": "A system dynamics model of agricultural water demand and irrigation. Models the interactions between crop production, water availability, irrigation efficiency, and the feedback effects of water stress on yield and farmer adaptation. Reference: FAO AQUASTAT. Water resources and agricultural water management. Source: https://www.fao.org/aquastat/",
+  "stocks": [
+    {
+      "id": "stock-soil-moisture",
+      "name": "Soil Moisture",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-crop-biomass",
+      "name": "Crop Biomass",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-irrigation-capacity",
+      "name": "Irrigation Capacity",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-water-reservoir",
+      "name": "Water Reservoir",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-farm-revenue",
+      "name": "Cumulative Farm Revenue",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-precipitation",
+      "name": "Precipitation Input",
+      "equation": "Base_Precipitation * (1 + 0.5 * SIN(TIME * 2 * 3.14159 / 12))",
+      "from_stock": null,
+      "to_stock": "stock-soil-moisture",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-irrigation",
+      "name": "Irrigation",
+      "equation": "MIN(Irrigation_Demand, MIN(Irrigation_Capacity, Water_Reservoir / Time_Step))",
+      "from_stock": "stock-water-reservoir",
+      "to_stock": "stock-soil-moisture",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-evapotranspiration",
+      "name": "Evapotranspiration",
+      "equation": "Potential_ET * MIN(1, Soil_Moisture / Field_Capacity) * Crop_Coefficient",
+      "from_stock": "stock-soil-moisture",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-deep-percolation",
+      "name": "Deep Percolation",
+      "equation": "MAX(0, Soil_Moisture - Field_Capacity) * Percolation_Rate",
+      "from_stock": "stock-soil-moisture",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-crop-growth",
+      "name": "Crop Growth",
+      "equation": "Potential_Growth * Water_Stress_Factor * Temperature_Factor",
+      "from_stock": null,
+      "to_stock": "stock-crop-biomass",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-harvest",
+      "name": "Harvest",
+      "equation": "IF(MOD(TIME, 12) > 10, Crop_Biomass * Harvest_Fraction, 0)",
+      "from_stock": "stock-crop-biomass",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-capacity-investment",
+      "name": "Capacity Investment",
+      "equation": "Investment_Rate * Investment_Decision",
+      "from_stock": null,
+      "to_stock": "stock-irrigation-capacity",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-capacity-depreciation",
+      "name": "Capacity Depreciation",
+      "equation": "Irrigation_Capacity / Infrastructure_Lifetime",
+      "from_stock": "stock-irrigation-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-reservoir-inflow",
+      "name": "Reservoir Inflow",
+      "equation": "River_Flow_Rate",
+      "from_stock": null,
+      "to_stock": "stock-water-reservoir",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-revenue-generation",
+      "name": "Revenue Generation",
+      "equation": "Harvest * Crop_Price",
+      "from_stock": null,
+      "to_stock": "stock-farm-revenue",
+      "position": {
+        "x": 475,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-base-precip",
+      "name": "Base Precipitation",
+      "equation": "30",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-potential-et",
+      "name": "Potential ET",
+      "equation": "50 * (1 + 0.3 * SIN(TIME * 2 * 3.14159 / 12))",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-field-capacity",
+      "name": "Field Capacity",
+      "equation": "300",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-wilting-point",
+      "name": "Wilting Point",
+      "equation": "100",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-crop-coefficient",
+      "name": "Crop Coefficient",
+      "equation": "0.8",
+      "position": {
+        "x": 700,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-percolation-rate",
+      "name": "Percolation Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-irrigation-demand",
+      "name": "Irrigation Demand",
+      "equation": "MAX(0, (Target_Moisture - Soil_Moisture) * Irrigation_Efficiency)",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-target-moisture",
+      "name": "Target Moisture",
+      "equation": "Field_Capacity * 0.8",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-irrigation-efficiency",
+      "name": "Irrigation Efficiency",
+      "equation": "0.7",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-water-stress",
+      "name": "Water Stress Factor",
+      "equation": "MAX(0, MIN(1, (Soil_Moisture - Wilting_Point) / (Field_Capacity - Wilting_Point)))",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-potential-growth",
+      "name": "Potential Growth",
+      "equation": "20",
+      "position": {
+        "x": 100,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-temperature-factor",
+      "name": "Temperature Factor",
+      "equation": "0.8 + 0.2 * SIN(TIME * 2 * 3.14159 / 12)",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-harvest-fraction",
+      "name": "Harvest Fraction",
+      "equation": "0.9",
+      "position": {
+        "x": 400,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-crop-price",
+      "name": "Crop Price",
+      "equation": "2",
+      "position": {
+        "x": 550,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-investment-rate",
+      "name": "Investment Rate",
+      "equation": "5",
+      "position": {
+        "x": 700,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-investment-decision",
+      "name": "Investment Decision",
+      "equation": "IF(Water_Stress_Factor < 0.5, 1, 0)",
+      "position": {
+        "x": 100,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-infrastructure-lifetime",
+      "name": "Infrastructure Lifetime",
+      "equation": "20",
+      "position": {
+        "x": 250,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-river-flow",
+      "name": "River Flow Rate",
+      "equation": "100 * (1 + 0.3 * SIN(TIME * 2 * 3.14159 / 12))",
+      "position": {
+        "x": 400,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-time-step",
+      "name": "Time Step",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 600
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Soil Moisture",
+      "to_element": "Evapotranspiration"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Soil Moisture",
+      "to_element": "Water Stress Factor"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Water Stress Factor",
+      "to_element": "Crop Growth"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Crop Biomass",
+      "to_element": "Harvest"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Irrigation Demand",
+      "to_element": "Irrigation"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Irrigation Capacity",
+      "to_element": "Irrigation"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Water Reservoir",
+      "to_element": "Irrigation"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Water Stress Factor",
+      "to_element": "Investment Decision"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Investment Decision",
+      "to_element": "Capacity Investment"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Harvest",
+      "to_element": "Revenue Generation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

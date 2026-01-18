@@ -1,0 +1,200 @@
+{
+  "id": "circular-economy-materials-flow-eco",
+  "name": "Circular Economy Materials Flow Model",
+  "description": "Models material flows in a circular economy with recycling, reuse, and waste reduction. Based on Ellen MacArthur Foundation framework. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-virgin-materials",
+      "name": "Virgin_Materials",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-products-in-use",
+      "name": "Products_In_Use",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-end-of-life",
+      "name": "End_of_Life_Products",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-recycled-materials",
+      "name": "Recycled_Materials",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-waste",
+      "name": "Waste_Accumulated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-extraction",
+      "name": "Material_Extraction",
+      "equation": "Demand - Recycled_Materials * Recycled_Quality",
+      "from_stock": null,
+      "to_stock": "stock-virgin-materials",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-production",
+      "name": "Production",
+      "equation": "MIN(Virgin_Materials + Recycled_Materials * Recycled_Quality, Production_Capacity)",
+      "from_stock": "stock-virgin-materials",
+      "to_stock": "stock-products-in-use",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-recycled-input",
+      "name": "Recycled_Input",
+      "equation": "Recycled_Materials * Recycled_Quality",
+      "from_stock": "stock-recycled-materials",
+      "to_stock": "stock-products-in-use",
+      "position": {
+        "x": 300,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-disposal",
+      "name": "Product_Disposal",
+      "equation": "Products_In_Use / Product_Lifetime",
+      "from_stock": "stock-products-in-use",
+      "to_stock": "stock-end-of-life",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-recycling",
+      "name": "Recycling",
+      "equation": "End_of_Life_Products * Recycling_Rate",
+      "from_stock": "stock-end-of-life",
+      "to_stock": "stock-recycled-materials",
+      "position": {
+        "x": 400,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-waste-disposal",
+      "name": "Waste_Disposal",
+      "equation": "End_of_Life_Products * (1 - Recycling_Rate)",
+      "from_stock": "stock-end-of-life",
+      "to_stock": "stock-waste",
+      "position": {
+        "x": 550,
+        "y": 220
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-demand",
+      "name": "Demand",
+      "equation": "100 * (1 + 0.02 * TIME)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-recycled-quality",
+      "name": "Recycled_Quality",
+      "equation": "0.8",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-production-capacity",
+      "name": "Production_Capacity",
+      "equation": "150",
+      "position": {
+        "x": 340,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-product-lifetime",
+      "name": "Product_Lifetime",
+      "equation": "5",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-recycling-rate",
+      "name": "Recycling_Rate",
+      "equation": "0.3 + 0.005 * TIME",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-circularity-index",
+      "name": "Circularity_Index",
+      "equation": "Recycled_Materials / (Virgin_Materials + Recycled_Materials + 1)",
+      "position": {
+        "x": 300,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-resource-efficiency",
+      "name": "Resource_Efficiency",
+      "equation": "Products_In_Use / (Virgin_Materials + 1)",
+      "position": {
+        "x": 500,
+        "y": 380
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T01:15:55.421342+00:00",
+  "updated_at": "2026-01-12T01:15:55.421350+00:00",
+  "source": "https://www.ellenmacarthurfoundation.org/circular-economy/concept",
+  "reference": "Ellen MacArthur Foundation. Towards the Circular Economy: Economic and Business Rationale for an Accelerated Transition. 2013."
+}

@@ -1,0 +1,160 @@
+{
+  "id": "adaptive-expectations-inflation-eco",
+  "name": "Adaptive Expectations Inflation",
+  "description": "Inflation expectations adjust based on past forecast errors. Creates persistence in inflation. Foundation for understanding inflation dynamics and central bank credibility. Reference: Cagan, P. (1956). The monetary dynamics of hyperinflation. In Studies in the Quantity Theory of Money. Source: https://www.nber.org/chapters/c4241",
+  "stocks": [
+    {
+      "id": "stock-expected-inflation",
+      "name": "Expected Inflation",
+      "initial_value": 0.02,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-actual-inflation",
+      "name": "Actual Inflation",
+      "initial_value": 0.02,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-expectation-update",
+      "name": "Expectation Update",
+      "equation": "Adaptation_Speed * (Actual_Inflation - Expected_Inflation)",
+      "from_stock": null,
+      "to_stock": "stock-expected-inflation",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-inflation-change",
+      "name": "Inflation Change",
+      "equation": "(Phillips_Inflation + Expected_Inflation - Actual_Inflation) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-actual-inflation",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-unemployment",
+      "name": "Unemployment",
+      "equation": "0.05 + 0.02 * SIN(TIME / 5)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-natural",
+      "name": "Natural Unemployment",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-phillips",
+      "name": "Phillips Inflation",
+      "equation": "-Phillips_Slope * (Unemployment - Natural_Unemployment)",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-phillips-slope",
+      "name": "Phillips Slope",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-adapt",
+      "name": "Adaptation Speed",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-adjust",
+      "name": "Adjustment Time",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-forecast-error",
+      "name": "Forecast Error",
+      "equation": "Actual_Inflation - Expected_Inflation",
+      "position": {
+        "x": 250,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-real-interest",
+      "name": "Real Interest Rate",
+      "equation": "Nominal_Rate - Expected_Inflation",
+      "position": {
+        "x": 500,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-nominal",
+      "name": "Nominal Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Actual Inflation",
+      "to_element": "Expectation Update"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Expected Inflation",
+      "to_element": "Expectation Update"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Unemployment",
+      "to_element": "Phillips Inflation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:43:15.876040+00:00",
+  "updated_at": "2026-01-12T07:43:15.876043+00:00",
+  "source": "https://doi.org/10.1016/0304-3932(76)90024-1",
+  "reference": "Cagan P. The Monetary Dynamics of Hyperinflation. In: Friedman M, ed. Studies in the Quantity Theory of Money. University of Chicago Press. 1956."
+}

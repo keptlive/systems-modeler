@@ -1,0 +1,260 @@
+{
+  "id": "nordhaus-dice-integrated-assessment-cli",
+  "name": "Nordhaus DICE Integrated Assessment Model",
+  "description": "Simplified version of Nordhaus's Dynamic Integrated Climate-Economy (DICE) model. Links economic growth, carbon emissions, and climate damages. Nobel Prize in Economics 2018. Source: Nordhaus (2017), PNAS. DOI: 10.1073/pnas.1609244114",
+  "stocks": [
+    {
+      "id": "stock-k",
+      "name": "Capital",
+      "initial_value": 223,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-co2",
+      "name": "Atmospheric_CO2",
+      "initial_value": 851,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-temp",
+      "name": "Temperature_Anomaly",
+      "initial_value": 0.85,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-ocean",
+      "name": "Ocean_Temperature",
+      "initial_value": 0.0068,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-invest",
+      "name": "Investment",
+      "equation": "Savings_Rate * Net_Output",
+      "from_stock": null,
+      "to_stock": "stock-k",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-deprec",
+      "name": "Depreciation",
+      "equation": "Depreciation_Rate * Capital",
+      "from_stock": "stock-k",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-emit",
+      "name": "Emissions",
+      "equation": "Sigma * (1 - Abatement) * Gross_Output",
+      "from_stock": null,
+      "to_stock": "stock-co2",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-absorb",
+      "name": "Carbon_Absorption",
+      "equation": "Atmospheric_CO2 * Absorption_Rate",
+      "from_stock": "stock-co2",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-warm",
+      "name": "Atmospheric_Warming",
+      "equation": "Climate_Sensitivity * Forcing * 0.1",
+      "from_stock": null,
+      "to_stock": "stock-temp",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-ocean",
+      "name": "Ocean_Heat_Uptake",
+      "equation": "Ocean_Heat_Transfer * (Temperature_Anomaly - Ocean_Temperature)",
+      "from_stock": null,
+      "to_stock": "stock-ocean",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-sav",
+      "name": "Savings_Rate",
+      "equation": "0.23",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-dep",
+      "name": "Depreciation_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-sigma",
+      "name": "Sigma",
+      "equation": "0.35",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-abate",
+      "name": "Abatement",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-absorb",
+      "name": "Absorption_Rate",
+      "equation": "0.0023",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-gross",
+      "name": "Gross_Output",
+      "equation": "Productivity * (Capital ^ 0.3) * (Labor ^ 0.7)",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-labor",
+      "name": "Labor",
+      "equation": "7.4",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-prod",
+      "name": "Productivity",
+      "equation": "5.1",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-damage",
+      "name": "Damage_Fraction",
+      "equation": "0.00236 * (Temperature_Anomaly * Temperature_Anomaly)",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-net",
+      "name": "Net_Output",
+      "equation": "Gross_Output * (1 - Damage_Fraction)",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-force",
+      "name": "Forcing",
+      "equation": "3.7 * (Atmospheric_CO2 / 280)",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-sens",
+      "name": "Climate_Sensitivity",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-oht",
+      "name": "Ocean_Heat_Transfer",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Net_Output",
+      "to_element": "Investment"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Capital",
+      "to_element": "Gross_Output"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Temperature_Anomaly",
+      "to_element": "Damage_Fraction"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2200,
+    "dt": 5
+  },
+  "created_at": "2026-01-11T22:11:19.082840Z",
+  "updated_at": "2026-01-11T22:11:19.082850Z",
+  "source": "https://doi.org/10.1073/pnas.1609244114",
+  "reference": "Nordhaus, W.D. (2017). Revisiting the social cost of carbon. PNAS."
+}

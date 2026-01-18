@@ -1,0 +1,149 @@
+{
+  "id": "tiebout-voting-feet-eco",
+  "name": "Tiebout Voting with Feet",
+  "description": "Citizens reveal preferences for public goods by moving between jurisdictions. Competition among localities leads to efficient provision. Foundation of fiscal federalism. Reference: Tiebout, C. M. (1956). A Pure Theory of Local Expenditures. Journal of Political Economy, 64(5), 416-424. Source: https://doi.org/10.1086/257839",
+  "stocks": [
+    {
+      "id": "stock-population-a",
+      "name": "Community A Population",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-population-b",
+      "name": "Community B Population",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-migration",
+      "name": "Migration A to B",
+      "equation": "Migration_Rate * Community_A_Population * Utility_Differential",
+      "from_stock": "stock-population-a",
+      "to_stock": "stock-population-b",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-utility-a",
+      "name": "Utility in A",
+      "equation": "Public_Goods_A / Community_A_Population - Tax_Rate_A",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-utility-b",
+      "name": "Utility in B",
+      "equation": "Public_Goods_B / Community_B_Population - Tax_Rate_B",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-utility-diff",
+      "name": "Utility Differential",
+      "equation": "(Utility_in_B - Utility_in_A) / (ABS(Utility_in_A) + 0.01)",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-public-goods-a",
+      "name": "Public Goods A",
+      "equation": "Tax_Rate_A * Community_A_Population * 10",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-public-goods-b",
+      "name": "Public Goods B",
+      "equation": "Tax_Rate_B * Community_B_Population * 10",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-tax-a",
+      "name": "Tax Rate A",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-tax-b",
+      "name": "Tax Rate B",
+      "equation": "0.15",
+      "position": {
+        "x": 250,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-migration-rate",
+      "name": "Migration Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-sorting-efficiency",
+      "name": "Sorting Efficiency",
+      "equation": "1 - ABS(Utility_in_A - Utility_in_B) / (Utility_in_A + Utility_in_B + 0.01)",
+      "position": {
+        "x": 300,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Community A Population",
+      "to_element": "Utility in A"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Community B Population",
+      "to_element": "Utility in B"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Utility Differential",
+      "to_element": "Migration A to B"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:51:43.478129+00:00",
+  "updated_at": "2026-01-12T07:51:43.478132+00:00",
+  "source": "https://doi.org/10.1086/257839",
+  "reference": "Tiebout CM. A Pure Theory of Local Expenditures. Journal of Political Economy. 1956;64(5):416-424."
+}

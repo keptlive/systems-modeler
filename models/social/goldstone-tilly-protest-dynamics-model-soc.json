@@ -1,0 +1,345 @@
+{
+  "id": "goldstone-tilly-protest-dynamics-model-soc",
+  "name": "Goldstone-Tilly Protest Dynamics Model",
+  "description": "A model of regime-protester interaction based on rational choice theory. The model captures how regimes choose between concessions and repression in response to protest, and how protesters calculate expected gains from collective action. Demonstrates the feedback loops between regime policy and protest dynamics. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "stock-concessions",
+      "name": "Concessions",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-repressive-threat-tr",
+      "name": "Repressive Threat (Tr)",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-expectation-of-concessions-needed",
+      "name": "Expectation of Concessions Needed",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-expectation-of-repression-needed",
+      "name": "Expectation of Repression Needed",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-making-concessions",
+      "name": "Making Concessions",
+      "equation": "IF_THEN_ELSE(Protest > 0, IF_THEN_ELSE(Preference_for_Repression < 0, Concession_Rate, 0), 0)",
+      "from_stock": null,
+      "to_stock": "stock-concessions",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-making-threats",
+      "name": "Making Threats",
+      "equation": "IF_THEN_ELSE(Protest > 0, IF_THEN_ELSE(Preference_for_Repression >= 0, Threat_Rate, 0), 0)",
+      "from_stock": null,
+      "to_stock": "stock-repressive-threat-tr",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-adjusting-concession-expectation",
+      "name": "Adjusting Concession Expectation",
+      "equation": "IF_THEN_ELSE(Protest > 0, Concessions * Concession_Fractional_Adjustment - Expectation_of_Concessions_Needed, 0)",
+      "from_stock": null,
+      "to_stock": "stock-expectation-of-concessions-needed",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-adjusting-repression-expectation",
+      "name": "Adjusting Repression Expectation",
+      "equation": "IF_THEN_ELSE(Protest > 0, Repressive_Threat_Tr * Repression_Fractional_Adjustment - Expectation_of_Repression_Needed, 0)",
+      "from_stock": null,
+      "to_stock": "stock-expectation-of-repression-needed",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-initial-level-of-current-threat",
+      "name": "Initial Level of Current Threat",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-current-threat-tc",
+      "name": "Current Threat (Tc)",
+      "equation": "Initial_Level_of_Current_Threat - Concessions",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-new-advantages-a",
+      "name": "New Advantages (A)",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gains-from-success-v",
+      "name": "Gains from Success (V)",
+      "equation": "New_Advantages_A + Current_Threat_Tc",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-state-weakness-k1",
+      "name": "State Weakness (k1)",
+      "equation": "0.1666",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-popular-support-k2",
+      "name": "Popular Support (k2)",
+      "equation": "0.1667",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-strength-of-nonstate-allies-k3",
+      "name": "Strength of Nonstate Allies (k3)",
+      "equation": "0.1667",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-probability-of-success-o",
+      "name": "Probability of Success (O)",
+      "equation": "State_Weakness_k1 + Popular_Support_k2 + Strength_of_Nonstate_Allies_k3",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-cost-of-protest-c",
+      "name": "Cost of Protest (C)",
+      "equation": "Repressive_Threat_Tr",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-expected-net-gain-from-protest-g",
+      "name": "Expected Net Gain from Protest (G)",
+      "equation": "(Gains_from_Success_V * Probability_of_Success_O) - Cost_of_Protest_C",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-protest",
+      "name": "Protest",
+      "equation": "IF_THEN_ELSE(Expected_Net_Gain_from_Protest_G > 0, 1, 0)",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-concession-rate",
+      "name": "Concession Rate",
+      "equation": "1",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-threat-rate",
+      "name": "Threat Rate",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-concession-unit-cost",
+      "name": "Concession Unit Cost",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-repression-unit-cost",
+      "name": "Repression Unit Cost",
+      "equation": "1",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-concession-fractional-adjustment",
+      "name": "Concession Fractional Adjustment",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-repression-fractional-adjustment",
+      "name": "Repression Fractional Adjustment",
+      "equation": "1",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-preference-for-repression",
+      "name": "Preference for Repression",
+      "equation": "(Expectation_of_Concessions_Needed * Concession_Unit_Cost - Expectation_of_Repression_Needed * Repression_Unit_Cost) / (Expectation_of_Repression_Needed * Repression_Unit_Cost)",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-total-cost",
+      "name": "Total Cost",
+      "equation": "Concessions * Concession_Unit_Cost + Repressive_Threat_Tr * Repression_Unit_Cost",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-regime-capability",
+      "name": "Regime Capability",
+      "equation": "10",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-regime-survival",
+      "name": "Regime Survival",
+      "equation": "IF_THEN_ELSE(Total_Cost < Regime_Capability, 1, 0)",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Gains from Success (V)",
+      "to_element": "Expected Net Gain from Protest (G)"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Probability of Success (O)",
+      "to_element": "Expected Net Gain from Protest (G)"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Cost of Protest (C)",
+      "to_element": "Expected Net Gain from Protest (G)"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Expected Net Gain from Protest (G)",
+      "to_element": "Protest"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Protest",
+      "to_element": "Making Concessions"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Protest",
+      "to_element": "Making Threats"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Preference for Repression",
+      "to_element": "Making Concessions"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Preference for Repression",
+      "to_element": "Making Threats"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Concessions",
+      "to_element": "Current Threat (Tc)"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Repressive Threat (Tr)",
+      "to_element": "Cost of Protest (C)"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 10,
+    "dt": 0.03125
+  },
+  "created_at": "2026-01-11T20:04:50.859188Z",
+  "updated_at": "2026-01-11T20:04:50.859188Z",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

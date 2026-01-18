@@ -1,0 +1,125 @@
+{
+  "id": "leaky-integrate-fire-neuron-phy",
+  "name": "Leaky Integrate-and-Fire Neuron Model",
+  "description": "Simplified neuron model capturing membrane potential dynamics and spike generation. Foundation of computational neuroscience. Source: Lapicque (1907) and Gerstner & Kistler (2002). DOI: 10.1017/CBO9780511815706",
+  "stocks": [
+    {
+      "id": "stock-v",
+      "name": "Membrane_Potential",
+      "initial_value": -70,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-spk",
+      "name": "Spike_Count",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-charge",
+      "name": "Input_Current",
+      "equation": "(I_ext / C_m) - (Membrane_Potential - V_rest) / Tau_m",
+      "from_stock": null,
+      "to_stock": "stock-v",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-leak",
+      "name": "Leak_Current",
+      "equation": "0",
+      "from_stock": "stock-v",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-spike",
+      "name": "Spike_Rate",
+      "equation": "IF(Membrane_Potential > Threshold, 1 / DT, 0)",
+      "from_stock": null,
+      "to_stock": "stock-spk",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-iext",
+      "name": "I_ext",
+      "equation": "15 + 5 * SIN(TIME)",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-cm",
+      "name": "C_m",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-vrest",
+      "name": "V_rest",
+      "equation": "-70",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-tau",
+      "name": "Tau_m",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-thresh",
+      "name": "Threshold",
+      "equation": "-55",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Membrane_Potential",
+      "to_element": "Spike_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T02:02:23.927089Z",
+  "updated_at": "2026-01-12T02:02:23.927098Z",
+  "source": "https://doi.org/10.1017/CBO9780511815706",
+  "reference": "Gerstner, W. & Kistler, W.M. (2002). Spiking Neuron Models. Cambridge University Press."
+}

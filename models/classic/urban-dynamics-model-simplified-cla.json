@@ -1,0 +1,749 @@
+{
+  "id": "urban-dynamics-model-simplified-cla",
+  "name": "Urban Dynamics Model (Simplified)",
+  "description": "Based on Forrester's seminal Urban Dynamics model. Simulates the lifecycle of a city including population migration, housing construction, business development, and urban decay/renewal cycles. Reference: Forrester, J. W. (1961). Industrial Dynamics. MIT Press. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-underemployed-population",
+      "name": "Underemployed Population",
+      "initial_value": 20000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-labor-population",
+      "name": "Labor Population",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-managerialprofessional-population",
+      "name": "Managerial/Professional Population",
+      "initial_value": 30000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-new-enterprise",
+      "name": "New Enterprise",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-mature-business",
+      "name": "Mature Business",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-declining-industry",
+      "name": "Declining Industry",
+      "initial_value": 300,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-premium-housing",
+      "name": "Premium Housing",
+      "initial_value": 15000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-worker-housing",
+      "name": "Worker Housing",
+      "initial_value": 25000,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-underemployed-housing",
+      "name": "Underemployed Housing",
+      "initial_value": 15000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 500
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-underemployed-arrivals",
+      "name": "Underemployed Arrivals",
+      "equation": "Normal_Underemployed_Arrivals * Underemployed_Arrivals_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-underemployed-population",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-underemployed-departures",
+      "name": "Underemployed Departures",
+      "equation": "Underemployed * Normal_Departure_Rate * Underemployed_Departure_Multiplier",
+      "from_stock": "stock-underemployed-population",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-labor-arrivals",
+      "name": "Labor Arrivals",
+      "equation": "Normal_Labor_Arrivals * Labor_Arrivals_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-labor-population",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-labor-departures",
+      "name": "Labor Departures",
+      "equation": "Labor * Normal_Departure_Rate * Labor_Departure_Multiplier",
+      "from_stock": "stock-labor-population",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-manager-arrivals",
+      "name": "Manager Arrivals",
+      "equation": "Normal_Manager_Arrivals * Manager_Arrivals_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-managerialprofessional-population",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-manager-departures",
+      "name": "Manager Departures",
+      "equation": "Managers * Normal_Departure_Rate * Manager_Departure_Multiplier",
+      "from_stock": "stock-managerialprofessional-population",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-underemployed-to-labor",
+      "name": "Underemployed to Labor",
+      "equation": "Underemployed * Upward_Mobility_Rate * Job_Availability",
+      "from_stock": "stock-underemployed-population",
+      "to_stock": "stock-labor-population",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-labor-to-underemployed",
+      "name": "Labor to Underemployed",
+      "equation": "Labor * Downward_Mobility_Rate * (1 - Job_Availability)",
+      "from_stock": "stock-labor-population",
+      "to_stock": "stock-underemployed-population",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-labor-to-manager",
+      "name": "Labor to Manager",
+      "equation": "Labor * Promotion_Rate",
+      "from_stock": "stock-labor-population",
+      "to_stock": "stock-managerialprofessional-population",
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-manager-to-labor",
+      "name": "Manager to Labor",
+      "equation": "Managers * Demotion_Rate",
+      "from_stock": "stock-managerialprofessional-population",
+      "to_stock": "stock-labor-population",
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-new-enterprise-construction",
+      "name": "New Enterprise Construction",
+      "equation": "Normal_Enterprise_Construction * Enterprise_Construction_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-new-enterprise",
+      "position": {
+        "x": 450,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-enterprise-maturation",
+      "name": "Enterprise Maturation",
+      "equation": "New_Enterprise / New_Enterprise_Lifetime",
+      "from_stock": "stock-new-enterprise",
+      "to_stock": "stock-mature-business",
+      "position": {
+        "x": 650,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-business-decline",
+      "name": "Business Decline",
+      "equation": "Mature_Business / Mature_Business_Lifetime",
+      "from_stock": "stock-mature-business",
+      "to_stock": "stock-declining-industry",
+      "position": {
+        "x": 250,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-industry-demolition",
+      "name": "Industry Demolition",
+      "equation": "Declining_Industry / Declining_Industry_Lifetime * Demolition_Rate",
+      "from_stock": "stock-declining-industry",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-premium-housing-construction",
+      "name": "Premium Housing Construction",
+      "equation": "Normal_Premium_Construction * Premium_Housing_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-premium-housing",
+      "position": {
+        "x": 650,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-premium-housing-aging",
+      "name": "Premium Housing Aging",
+      "equation": "Premium_Housing / Premium_Housing_Lifetime",
+      "from_stock": "stock-premium-housing",
+      "to_stock": "stock-worker-housing",
+      "position": {
+        "x": 250,
+        "y": 950
+      }
+    },
+    {
+      "id": "flow-worker-housing-construction",
+      "name": "Worker Housing Construction",
+      "equation": "Normal_Worker_Housing_Construction * Worker_Housing_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-worker-housing",
+      "position": {
+        "x": 450,
+        "y": 950
+      }
+    },
+    {
+      "id": "flow-worker-housing-aging",
+      "name": "Worker Housing Aging",
+      "equation": "Worker_Housing / Worker_Housing_Lifetime",
+      "from_stock": "stock-worker-housing",
+      "to_stock": "stock-underemployed-housing",
+      "position": {
+        "x": 650,
+        "y": 950
+      }
+    },
+    {
+      "id": "flow-slum-demolition",
+      "name": "Slum Demolition",
+      "equation": "Underemployed_Housing / Underemployed_Housing_Lifetime * Demolition_Rate",
+      "from_stock": "stock-underemployed-housing",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 1100
+      }
+    },
+    {
+      "id": "flow-underemployed-deaths",
+      "name": "Underemployed Deaths",
+      "equation": "Underemployed * Death_Rate * 1.2",
+      "from_stock": "stock-underemployed-population",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 1100
+      }
+    },
+    {
+      "id": "flow-labor-deaths",
+      "name": "Labor Deaths",
+      "equation": "Labor * Death_Rate",
+      "from_stock": "stock-labor-population",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 1100
+      }
+    },
+    {
+      "id": "flow-manager-deaths",
+      "name": "Manager Deaths",
+      "equation": "Managers * Death_Rate * 0.9",
+      "from_stock": "stock-managerialprofessional-population",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 1250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "Underemployed + Labor + Managers",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-housing",
+      "name": "Total Housing",
+      "equation": "Premium_Housing + Worker_Housing + Underemployed_Housing",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-business",
+      "name": "Total Business",
+      "equation": "New_Enterprise + Mature_Business + Declining_Industry",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-housing-ratio",
+      "name": "Housing Ratio",
+      "equation": "Total_Housing / (Total_Population / People_Per_Housing_Unit)",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-people-per-housing-unit",
+      "name": "People per Housing Unit",
+      "equation": "2.5",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-job-ratio",
+      "name": "Job Ratio",
+      "equation": "Total_Jobs / (Labor + Underemployed)",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-total-jobs",
+      "name": "Total Jobs",
+      "equation": "(New_Enterprise * 50 + Mature_Business * 40 + Declining_Industry * 20)",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-job-availability",
+      "name": "Job Availability",
+      "equation": "MIN(1, Job_Ratio)",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-attractiveness-for-migration",
+      "name": "Attractiveness for Migration",
+      "equation": "Job_Ratio * Housing_Ratio * Tax_Ratio * Public_Services_Quality",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-tax-ratio",
+      "name": "Tax Ratio",
+      "equation": "1 / (1 + Tax_Rate / 0.05)",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-tax-rate",
+      "name": "Tax Rate",
+      "equation": "Tax_Needed / MAX(1, Tax_Base)",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-tax-base",
+      "name": "Tax Base",
+      "equation": "New_Enterprise * 100000 + Mature_Business * 80000 + Declining_Industry * 30000 + Premium_Housing * 10000 + Worker_Housing * 5000 + Underemployed_Housing * 1000",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-tax-needed",
+      "name": "Tax Needed",
+      "equation": "Total_Population * 500",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-public-services-quality",
+      "name": "Public Services Quality",
+      "equation": "MIN(1.5, Tax_Rate * Tax_Base / Tax_Needed)",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-normal-underemployed-arrivals",
+      "name": "Normal Underemployed Arrivals",
+      "equation": "1000",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-normal-labor-arrivals",
+      "name": "Normal Labor Arrivals",
+      "equation": "2000",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-normal-manager-arrivals",
+      "name": "Normal Manager Arrivals",
+      "equation": "1000",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-underemployed-arrivals-multiplier",
+      "name": "Underemployed Arrivals Multiplier",
+      "equation": "Attractiveness_for_Migration * 0.5 + 0.5",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-labor-arrivals-multiplier",
+      "name": "Labor Arrivals Multiplier",
+      "equation": "Attractiveness_for_Migration",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-manager-arrivals-multiplier",
+      "name": "Manager Arrivals Multiplier",
+      "equation": "Attractiveness_for_Migration * Premium_Housing / MAX(1, Managers / 10)",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-underemployed-departure-multiplier",
+      "name": "Underemployed Departure Multiplier",
+      "equation": "2 - Attractiveness_for_Migration",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-labor-departure-multiplier",
+      "name": "Labor Departure Multiplier",
+      "equation": "2 - Attractiveness_for_Migration",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-manager-departure-multiplier",
+      "name": "Manager Departure Multiplier",
+      "equation": "2 - Attractiveness_for_Migration",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-normal-departure-rate",
+      "name": "Normal Departure Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-death-rate",
+      "name": "Death Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-upward-mobility-rate",
+      "name": "Upward Mobility Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-downward-mobility-rate",
+      "name": "Downward Mobility Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-promotion-rate",
+      "name": "Promotion Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-demotion-rate",
+      "name": "Demotion Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-normal-enterprise-construction",
+      "name": "Normal Enterprise Construction",
+      "equation": "20",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-enterprise-construction-multiplier",
+      "name": "Enterprise Construction Multiplier",
+      "equation": "Attractiveness_for_Migration * Land_Fraction_Available",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-land-fraction-available",
+      "name": "Land Fraction Available",
+      "equation": "MAX(0, 1 - (Total_Housing + Total_Business * 5) / Land_Area)",
+      "position": {
+        "x": 250,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-land-area",
+      "name": "Land Area",
+      "equation": "100000",
+      "position": {
+        "x": 400,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-new-enterprise-lifetime",
+      "name": "New Enterprise Lifetime",
+      "equation": "20",
+      "position": {
+        "x": 550,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-mature-business-lifetime",
+      "name": "Mature Business Lifetime",
+      "equation": "30",
+      "position": {
+        "x": 700,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-declining-industry-lifetime",
+      "name": "Declining Industry Lifetime",
+      "equation": "40",
+      "position": {
+        "x": 100,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-normal-premium-construction",
+      "name": "Normal Premium Construction",
+      "equation": "500",
+      "position": {
+        "x": 250,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-premium-housing-multiplier",
+      "name": "Premium Housing Multiplier",
+      "equation": "Manager_Arrivals_Multiplier * Land_Fraction_Available",
+      "position": {
+        "x": 400,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-normal-worker-housing-construction",
+      "name": "Normal Worker Housing Construction",
+      "equation": "800",
+      "position": {
+        "x": 550,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-worker-housing-multiplier",
+      "name": "Worker Housing Multiplier",
+      "equation": "Labor_Arrivals_Multiplier * Land_Fraction_Available",
+      "position": {
+        "x": 700,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-premium-housing-lifetime",
+      "name": "Premium Housing Lifetime",
+      "equation": "30",
+      "position": {
+        "x": 100,
+        "y": 720
+      }
+    },
+    {
+      "id": "var-worker-housing-lifetime",
+      "name": "Worker Housing Lifetime",
+      "equation": "40",
+      "position": {
+        "x": 250,
+        "y": 720
+      }
+    },
+    {
+      "id": "var-underemployed-housing-lifetime",
+      "name": "Underemployed Housing Lifetime",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 720
+      }
+    },
+    {
+      "id": "var-demolition-rate",
+      "name": "Demolition Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 720
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 250,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.691962Z",
+  "updated_at": "2026-01-11T20:04:50.691962Z",
+  "source": "https://doi.org/10.1287/mnsc.35.3.321",
+  "reference": "Sterman JD. Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill, 2000."
+}

@@ -1,0 +1,110 @@
+{
+  "id": "pest-population-dynamics-agr",
+  "name": "Pest Population Dynamics Model",
+  "description": "Insect pest population growth and crop damage",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Pest_Population",
+      "initial_value": 10.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Crop_Damage",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Intrinsic_Growth_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Carrying_Capacity",
+      "equation": "1000.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Damage_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Economic_Threshold",
+      "equation": "50.0",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Pest_Growth",
+      "equation": "Intrinsic_Growth_Rate*Pest_Population*(1-Pest_Population/Carrying_Capacity)",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Crop_Loss",
+      "equation": "Damage_Rate*Pest_Population",
+      "position": {
+        "x": 300,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Pest_Population",
+      "to_element": "Pest_Growth"
+    },
+    {
+      "id": "c2",
+      "from_element": "Carrying_Capacity",
+      "to_element": "Pest_Growth"
+    },
+    {
+      "id": "c3",
+      "from_element": "Pest_Population",
+      "to_element": "Crop_Loss"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 100.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:51:57.249480+00:00",
+  "updated_at": "2026-01-15T20:51:57.249480+00:00",
+  "source": "https://doi.org/10.1146/annurev.ento.50.071803.130439",
+  "reference": "Pedigo, L.P. & Rice, M.E. (2009) Entomology and Pest Management. Prentice Hall"
+}

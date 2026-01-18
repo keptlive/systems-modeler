@@ -1,0 +1,96 @@
+{
+  "id": "world3-resources-sector-cla",
+  "name": "World3 Nonrenewable Resources Sector",
+  "description": "Nonrenewable resource depletion sector from World3. Models extraction, technology effects, and resource discovery dynamics. Reference: IRENA Renewable Energy Statistics. Source: https://www.irena.org/",
+  "stocks": [
+    {
+      "id": "stock-resources",
+      "name": "Nonrenewable Resources",
+      "initial_value": 1000000000000.0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-extraction",
+      "name": "Resource Extraction",
+      "equation": "Population * Per_Capita_Resource_Use * Technology_Effect",
+      "from_stock": "stock-resources",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-population",
+      "name": "Population",
+      "equation": "3e9 * EXP(0.017 * Time)",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-pcru",
+      "name": "Per Capita Resource Use",
+      "equation": "0.25 * (1 + 0.01 * Time)",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-tech-effect",
+      "name": "Technology Effect",
+      "equation": "1 / (1 + 0.01 * Time)",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-resource-fraction",
+      "name": "Resource Fraction Remaining",
+      "equation": "Nonrenewable_Resources / Initial_Resources",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-initial-res",
+      "name": "Initial Resources",
+      "equation": "1e12",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-years-remaining",
+      "name": "Years of Resources Remaining",
+      "equation": "IF Resource_Extraction > 0 THEN Nonrenewable_Resources / Resource_Extraction ELSE 999",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 1900,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1111/jiec.13442",
+  "reference": "Meadows et al. Limits to Growth (1972); Nebel et al. World3 recalibration (2024).",
+  "created_at": "2026-01-12T08:11:11.789037+00:00",
+  "updated_at": "2026-01-12T08:11:11.789037+00:00"
+}

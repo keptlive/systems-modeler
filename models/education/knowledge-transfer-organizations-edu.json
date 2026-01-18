@@ -1,0 +1,217 @@
+{
+  "id": "knowledge-transfer-organizations-edu",
+  "name": "Knowledge Transfer in Organizations",
+  "description": "Knowledge transfer model showing how expertise spreads between experienced and novice employees. Models mentoring, documentation, and learning-by-doing. Source: Based on organizational learning literature.",
+  "stocks": [
+    {
+      "id": "stock-novice",
+      "name": "Novice_Employees",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-experienced",
+      "name": "Experienced_Employees",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-documented",
+      "name": "Documented_Knowledge",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 275,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-learning",
+      "name": "Skill_Development",
+      "equation": "Novice_Employees * Learning_Rate",
+      "from_stock": "stock-novice",
+      "to_stock": "stock-experienced",
+      "position": {
+        "x": 275,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-hiring",
+      "name": "New_Hires",
+      "equation": "Hiring_Rate",
+      "from_stock": null,
+      "to_stock": "stock-novice",
+      "position": {
+        "x": 75,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-retirement",
+      "name": "Retirement",
+      "equation": "Experienced_Employees * Retirement_Rate",
+      "from_stock": "stock-experienced",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-documentation",
+      "name": "Knowledge_Documentation",
+      "equation": "Experienced_Employees * Documentation_Rate",
+      "from_stock": null,
+      "to_stock": "stock-documented",
+      "position": {
+        "x": 375,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-obsolescence",
+      "name": "Knowledge_Obsolescence",
+      "equation": "Documented_Knowledge * Obsolescence_Rate",
+      "from_stock": "stock-documented",
+      "to_stock": null,
+      "position": {
+        "x": 175,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-learning-rate",
+      "name": "Learning_Rate",
+      "equation": "Base_Learning_Rate * (Mentoring_Effect + Documentation_Effect)",
+      "position": {
+        "x": 275,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-base-learning",
+      "name": "Base_Learning_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 150,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mentoring-effect",
+      "name": "Mentoring_Effect",
+      "equation": "Experienced_Employees / (Novice_Employees + 1) * Mentoring_Effectiveness",
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-mentoring-effectiveness",
+      "name": "Mentoring_Effectiveness",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-documentation-effect",
+      "name": "Documentation_Effect",
+      "equation": "Documented_Knowledge / (Documented_Knowledge + 100)",
+      "position": {
+        "x": 200,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-hiring-rate",
+      "name": "Hiring_Rate",
+      "equation": "5",
+      "position": {
+        "x": 75,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-retirement-rate",
+      "name": "Retirement_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-documentation-rate",
+      "name": "Documentation_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 425,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-obsolescence-rate",
+      "name": "Obsolescence_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 175,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-org-knowledge",
+      "name": "Organizational_Knowledge",
+      "equation": "Experienced_Employees * 10 + Documented_Knowledge",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Novice_Employees",
+      "to_element": "Skill_Development"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Learning_Rate",
+      "to_element": "Skill_Development"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Experienced_Employees",
+      "to_element": "Mentoring_Effect"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Documented_Knowledge",
+      "to_element": "Documentation_Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T20:57:03.374059+00:00",
+  "updated_at": "2026-01-11T20:57:03.374059+00:00",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "System Dynamics Educational Models - PySD Cookbook"
+}

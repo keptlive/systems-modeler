@@ -1,0 +1,303 @@
+{
+  "id": "public-health-emergency-response-hea",
+  "name": "Public Health Emergency Response Model",
+  "description": "Models public health emergency response capacity and coordination. Based on WHO Health Emergency Framework. Reference: Cachon, G., & Terwiesch, C. (2012). Matching Supply with Demand. McGraw-Hill. Source: https://www.mheducation.com/",
+  "stocks": [
+    {
+      "id": "stock-detection-capacity",
+      "name": "Detection_Capacity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-response-teams",
+      "name": "Response_Teams",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-medical-supplies",
+      "name": "Medical_Supplies",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-cases-detected",
+      "name": "Cases_Detected",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-cases-treated",
+      "name": "Cases_Treated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-detection-investment",
+      "name": "Detection_Investment",
+      "equation": "Emergency_Budget * Detection_Priority / Detection_Cost",
+      "from_stock": null,
+      "to_stock": "stock-detection-capacity",
+      "position": {
+        "x": 75,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-detection-decay",
+      "name": "Detection_Decay",
+      "equation": "Detection_Capacity * Decay_Rate",
+      "from_stock": "stock-detection-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-team-deployment",
+      "name": "Team_Deployment",
+      "equation": "Emergency_Budget * Team_Priority / Team_Cost",
+      "from_stock": null,
+      "to_stock": "stock-response-teams",
+      "position": {
+        "x": 275,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-team-fatigue",
+      "name": "Team_Fatigue",
+      "equation": "Response_Teams * Fatigue_Rate * Emergency_Duration",
+      "from_stock": "stock-response-teams",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-supply-procurement",
+      "name": "Supply_Procurement",
+      "equation": "Emergency_Budget * Supply_Priority / Supply_Cost",
+      "from_stock": null,
+      "to_stock": "stock-medical-supplies",
+      "position": {
+        "x": 475,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-supply-usage",
+      "name": "Supply_Usage",
+      "equation": "Cases_Treated * Supply_Per_Case",
+      "from_stock": "stock-medical-supplies",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-case-detection",
+      "name": "Case_Detection",
+      "equation": "True_Cases * Detection_Capacity / Reference_Detection * Detection_Delay",
+      "from_stock": null,
+      "to_stock": "stock-cases-detected",
+      "position": {
+        "x": 175,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-case-treatment",
+      "name": "Case_Treatment",
+      "equation": "MIN(Cases_Detected - Cases_Treated, Response_Teams * Treatment_Capacity)",
+      "from_stock": "stock-cases-detected",
+      "to_stock": "stock-cases-treated",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-emergency-budget",
+      "name": "Emergency_Budget",
+      "equation": "100 * (1 + Emergency_Level)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-detection-priority",
+      "name": "Detection_Priority",
+      "equation": "0.3",
+      "position": {
+        "x": 260,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-team-priority",
+      "name": "Team_Priority",
+      "equation": "0.4",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-supply-priority",
+      "name": "Supply_Priority",
+      "equation": "0.3",
+      "position": {
+        "x": 540,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-detection-cost",
+      "name": "Detection_Cost",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-team-cost",
+      "name": "Team_Cost",
+      "equation": "20",
+      "position": {
+        "x": 220,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-supply-cost",
+      "name": "Supply_Cost",
+      "equation": "5",
+      "position": {
+        "x": 340,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-decay-rate",
+      "name": "Decay_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 460,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-fatigue-rate",
+      "name": "Fatigue_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 580,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-emergency-duration",
+      "name": "Emergency_Duration",
+      "equation": "TIME",
+      "position": {
+        "x": 100,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-true-cases",
+      "name": "True_Cases",
+      "equation": "1000 * (1 + SIN(TIME * 0.2))",
+      "position": {
+        "x": 240,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-reference-detection",
+      "name": "Reference_Detection",
+      "equation": "100",
+      "position": {
+        "x": 400,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-detection-delay",
+      "name": "Detection_Delay",
+      "equation": "0.5",
+      "position": {
+        "x": 540,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-supply-per-case",
+      "name": "Supply_Per_Case",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-treatment-capacity",
+      "name": "Treatment_Capacity",
+      "equation": "10",
+      "position": {
+        "x": 240,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-emergency-level",
+      "name": "Emergency_Level",
+      "equation": "IF(True_Cases > 500, 2, IF(True_Cases > 200, 1, 0))",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:19:34.567242+00:00",
+  "updated_at": "2026-01-12T01:19:34.567254+00:00",
+  "source": "https://www.who.int/emergencies/health-emergency-programme",
+  "reference": "WHO. Health Emergencies Programme. World Health Organization. 2022."
+}

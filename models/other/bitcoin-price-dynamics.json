@@ -1,0 +1,167 @@
+{
+  "id": "bitcoin-price-dynamics",
+  "name": "Bitcoin Price Dynamics Model",
+  "description": "Model of cryptocurrency price dynamics with speculation, mining economics, and network effects.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Bitcoin_Price",
+      "initial_value": 20000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Hash_Rate",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "User_Adoption",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Price_Change",
+      "equation": "Bitcoin_Price * (Demand_Pressure - Supply_Pressure)",
+      "from_stock": null,
+      "to_stock": "Bitcoin_Price",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Mining_Investment",
+      "equation": "MAX(0, Mining_Profitability * Investment_Sensitivity)",
+      "from_stock": null,
+      "to_stock": "Hash_Rate",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Mining_Exit",
+      "equation": "Hash_Rate * MAX(0, -Mining_Profitability) * 0.1",
+      "from_stock": "Hash_Rate",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "New_Users",
+      "equation": "User_Adoption * Network_Effect * Price_Momentum",
+      "from_stock": null,
+      "to_stock": "User_Adoption",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Block_Reward",
+      "equation": "6.25",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Mining_Cost",
+      "equation": "15000",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Mining_Profitability",
+      "equation": "(Bitcoin_Price * Block_Reward - Mining_Cost) / Mining_Cost",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Investment_Sensitivity",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Network_Effect",
+      "equation": "0.01",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Price_Momentum",
+      "equation": "MAX(0.1, 1 + Price_Change / Bitcoin_Price)",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Demand_Pressure",
+      "equation": "0.01 * User_Adoption / 100",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Supply_Pressure",
+      "equation": "0.005 * Hash_Rate / 200",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1016/j.jfineco.2021.03.001",
+  "reference": "Liu, Y. & Tsyvinski, A. (2021). Risks and Returns of Cryptocurrency. Review of Financial Studies, 34(6), 2689-2727. DOI: 10.1016/j.jfineco.2021.03.001",
+  "created_at": "2026-01-15T19:28:04.273639+00:00",
+  "updated_at": "2026-01-15T19:28:04.273639+00:00"
+}

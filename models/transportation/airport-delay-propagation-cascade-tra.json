@@ -1,0 +1,171 @@
+{
+  "id": "airport-delay-propagation-cascade-tra",
+  "name": "Airport Delay Propagation Model",
+  "description": "Model of how flight delays cascade through a network. Source: Ball et al. (2010), Transportation Science.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "On_Time_Flights",
+      "initial_value": 90,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Delayed_Flights",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Average_Delay",
+      "initial_value": 15,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "New_Delays",
+      "equation": "Delay_Rate * On_Time_Flights",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Recovery",
+      "equation": "Recovery_Rate * Delayed_Flights",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 300,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Delay_Growth",
+      "equation": "(Propagation_Factor * Delayed_Flights / Total_Flights - Absorption_Rate) * Average_Delay",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Base_Delay_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Weather_Factor",
+      "equation": "1 + 0.5 * SIN(TIME * 0.3)",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Congestion_Factor",
+      "equation": "1 + (Delayed_Flights / Total_Flights)",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Total_Flights",
+      "equation": "On_Time_Flights + Delayed_Flights",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Delay_Rate",
+      "equation": "Base_Delay_Rate * Weather_Factor * Congestion_Factor",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Recovery_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Propagation_Factor",
+      "equation": "0.8",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Absorption_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 480
+      }
+    },
+    {
+      "id": "v9",
+      "name": "On_Time_Performance",
+      "equation": "On_Time_Flights / Total_Flights * 100",
+      "position": {
+        "x": 500,
+        "y": 480
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Delayed_Flights",
+      "to_element": "Congestion_Factor"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 24,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-15T14:49:43.657757+00:00",
+  "updated_at": "2026-01-15T14:49:43.657761+00:00",
+  "source": "https://doi.org/10.1287/trsc.1090.0300",
+  "reference": "Ball, M.O. et al. (2010). Total Delay Impact Study. Transportation Science 44:307-322."
+}

@@ -1,0 +1,160 @@
+{
+  "id": "vaccine-opinion-dynamics-peer-influence-epi",
+  "name": "Vaccine Opinion Dynamics with Peer Influence",
+  "description": "Model of vaccine hesitancy diffusion as opinion dynamics shaped by personal beliefs, social pressure, and pro-vaccine campaigns. Based on Burgio et al. (2022) mathematical model calibrated on survey data to predict modification of pre-existing willingness to be vaccinated. Reference: Burgio, M., et al. (2022). A model-based opinion dynamics approach to tackle vaccine hesitancy. Scientific Reports, 12, 11835. Source: https://doi.org/10.1038/s41598-022-15082-0",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Pro Vaccine Opinion",
+      "initial_value": 0.4,
+      "equation": "",
+      "position": {"x": 100, "y": 150}
+    },
+    {
+      "id": "s2",
+      "name": "Neutral Opinion",
+      "initial_value": 0.35,
+      "equation": "",
+      "position": {"x": 250, "y": 150}
+    },
+    {
+      "id": "s3",
+      "name": "Anti Vaccine Opinion",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {"x": 400, "y": 150}
+    },
+    {
+      "id": "s4",
+      "name": "Campaign Intensity",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {"x": 250, "y": 300}
+    },
+    {
+      "id": "s5",
+      "name": "Social Pressure Index",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {"x": 400, "y": 300}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Neutral to Pro",
+      "equation": "Neutral_Opinion * (Campaign_Effect + Pro_Vaccine_Opinion * Peer_Influence_Rate)",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {"x": 175, "y": 150}
+    },
+    {
+      "id": "f2",
+      "name": "Neutral to Anti",
+      "equation": "Neutral_Opinion * Anti_Vaccine_Opinion * Hesitancy_Spread_Rate * (1 - Campaign_Intensity)",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {"x": 325, "y": 150}
+    },
+    {
+      "id": "f3",
+      "name": "Anti to Neutral",
+      "equation": "Anti_Vaccine_Opinion * Social_Pressure_Index * Pressure_Effect",
+      "from_stock": "s3",
+      "to_stock": "s2",
+      "position": {"x": 325, "y": 200}
+    },
+    {
+      "id": "f4",
+      "name": "Pro to Neutral",
+      "equation": "Pro_Vaccine_Opinion * Vaccine_Event_Concern * Event_Impact",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {"x": 175, "y": 200}
+    },
+    {
+      "id": "f5",
+      "name": "Campaign Buildup",
+      "equation": "Campaign_Investment * (1 - Campaign_Intensity / Max_Campaign)",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {"x": 200, "y": 300}
+    },
+    {
+      "id": "f6",
+      "name": "Pressure Adjustment",
+      "equation": "(Pro_Vaccine_Opinion - Social_Pressure_Index) * Adjustment_Speed",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {"x": 400, "y": 350}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Peer Influence Rate",
+      "equation": "0.15",
+      "position": {"x": 100, "y": 50}
+    },
+    {
+      "id": "v2",
+      "name": "Hesitancy Spread Rate",
+      "equation": "0.12",
+      "position": {"x": 400, "y": 50}
+    },
+    {
+      "id": "v3",
+      "name": "Campaign Effect",
+      "equation": "Campaign_Intensity * 0.08",
+      "position": {"x": 250, "y": 50}
+    },
+    {
+      "id": "v4",
+      "name": "Pressure Effect",
+      "equation": "0.05",
+      "position": {"x": 450, "y": 250}
+    },
+    {
+      "id": "v5",
+      "name": "Vaccine Event Concern",
+      "equation": "0.02",
+      "position": {"x": 100, "y": 250}
+    },
+    {
+      "id": "v6",
+      "name": "Event Impact",
+      "equation": "0.5",
+      "position": {"x": 150, "y": 300}
+    },
+    {
+      "id": "v7",
+      "name": "Campaign Investment",
+      "equation": "0.02",
+      "position": {"x": 150, "y": 350}
+    },
+    {
+      "id": "v8",
+      "name": "Max Campaign",
+      "equation": "1.0",
+      "position": {"x": 300, "y": 350}
+    },
+    {
+      "id": "v9",
+      "name": "Adjustment Speed",
+      "equation": "0.1",
+      "position": {"x": 450, "y": 400}
+    },
+    {
+      "id": "v10",
+      "name": "Total Hesitant Fraction",
+      "equation": "Anti_Vaccine_Opinion + Neutral_Opinion * 0.3",
+      "position": {"x": 300, "y": 400}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 365, "dt": 1},
+  "created_at": "2026-01-15T16:00:00.000000",
+  "updated_at": "2026-01-15T16:00:00.000000",
+  "source": "https://doi.org/10.1038/s41598-022-15082-0",
+  "reference": "Burgio, M., et al. (2022). A model-based opinion dynamics approach to tackle vaccine hesitancy. Scientific Reports, 12, 11835."
+}

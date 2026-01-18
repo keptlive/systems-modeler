@@ -1,0 +1,162 @@
+{
+  "id": "energy-storage-grid-cli",
+  "name": "Energy Storage Grid Integration Model",
+  "description": "Model of grid-scale energy storage showing battery charge/discharge cycles, renewable intermittency, and grid stability. Based on Denholm & Mai (2019). Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Battery Energy Storage",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Grid Frequency Deviation",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Charging Rate",
+      "equation": "MAX(0, (Renewable_Generation - Grid_Demand) * Charging_Efficiency)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Discharging Rate",
+      "equation": "MAX(0, (Grid_Demand - Renewable_Generation) / Discharging_Efficiency)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Frequency Correction",
+      "equation": "Grid_Frequency_Deviation / Correction_Time",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Renewable Generation",
+      "equation": "100 * (1 + 0.5 * SIN(2 * 3.14159 * TIME / 24))",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Grid Demand",
+      "equation": "100 * (1 + 0.3 * SIN(2 * 3.14159 * TIME / 24 + 3))",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Charging Efficiency",
+      "equation": "0.9",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Discharging Efficiency",
+      "equation": "0.9",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Battery Capacity",
+      "equation": "200",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Correction Time",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "State of Charge",
+      "equation": "Battery_Energy_Storage / Battery_Capacity",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Power Imbalance",
+      "equation": "Renewable_Generation - Grid_Demand - Discharging_Rate + Charging_Rate",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Renewable Generation",
+      "to_element": "Charging Rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "Grid Demand",
+      "to_element": "Discharging Rate"
+    },
+    {
+      "id": "c3",
+      "from_element": "Battery Energy Storage",
+      "to_element": "State of Charge"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 168,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:41:05.118038Z",
+  "updated_at": "2026-01-12T01:41:05.118041Z",
+  "source": "https://doi.org/10.1016/j.joule.2019.06.014",
+  "reference": "Denholm P, Mai T. Timescales of energy storage needed for reducing renewable energy curtailment. Renewable Energy. 2019;130:388-399."
+}

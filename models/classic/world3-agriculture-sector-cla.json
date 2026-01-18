@@ -1,0 +1,196 @@
+{
+  "id": "world3-agriculture-sector-cla",
+  "name": "World3 Agriculture Sector",
+  "description": "Agriculture and food production sector from World3. Models arable land, land fertility, and food output with yield dynamics. Reference: USDA Economic Research Service. Source: https://www.ers.usda.gov/",
+  "stocks": [
+    {
+      "id": "stock-arable-land",
+      "name": "Arable Land",
+      "initial_value": 900000000.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-potentially-arable",
+      "name": "Potentially Arable Land",
+      "initial_value": 2300000000.0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-land-fertility",
+      "name": "Land Fertility",
+      "initial_value": 600,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-land-dev",
+      "name": "Land Development",
+      "equation": "Potentially_Arable_Land * Land_Development_Rate",
+      "from_stock": "stock-potentially-arable",
+      "to_stock": "stock-arable-land",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-land-erosion",
+      "name": "Land Erosion",
+      "equation": "Arable_Land / Land_Life * Land_Erosion_Factor",
+      "from_stock": "stock-arable-land",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-land-urban",
+      "name": "Land to Urban",
+      "equation": "Arable_Land * Urbanization_Rate",
+      "from_stock": "stock-arable-land",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-fert-regen",
+      "name": "Fertility Regeneration",
+      "equation": "(Inherent_Land_Fertility - Land_Fertility) / Fertility_Regen_Time",
+      "from_stock": null,
+      "to_stock": "stock-land-fertility",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-fert-degrade",
+      "name": "Fertility Degradation",
+      "equation": "Land_Fertility * Pollution_Effect * 0.01",
+      "from_stock": "stock-land-fertility",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-dev-rate",
+      "name": "Land Development Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-land-life",
+      "name": "Land Life",
+      "equation": "1000",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-erosion-factor",
+      "name": "Land Erosion Factor",
+      "equation": "1 + 0.5 * Intensive_Farming",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-urban-rate",
+      "name": "Urbanization Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-inherent-fert",
+      "name": "Inherent Land Fertility",
+      "equation": "600",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-regen-time",
+      "name": "Fertility Regen Time",
+      "equation": "20",
+      "position": {
+        "x": 500,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-poll-effect",
+      "name": "Pollution Effect",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-intensive",
+      "name": "Intensive Farming",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-food-output",
+      "name": "Food Output",
+      "equation": "Arable_Land * Land_Fertility * Land_Yield_Multiplier",
+      "position": {
+        "x": 500,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-yield-mult",
+      "name": "Land Yield Multiplier",
+      "equation": "1 + 0.01 * Time",
+      "position": {
+        "x": 150,
+        "y": 550
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 1900,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://github.com/cvanwynsberghe/pyworld3",
+  "reference": "Meadows et al. Dynamics of Growth in a Finite World (1974); PyWorld3.",
+  "created_at": "2026-01-12T08:11:11.789037+00:00",
+  "updated_at": "2026-01-12T08:11:11.789037+00:00"
+}

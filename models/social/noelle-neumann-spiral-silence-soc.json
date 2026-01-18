@@ -1,0 +1,144 @@
+{
+  "id": "noelle-neumann-spiral-silence-soc",
+  "name": "Spiral of Silence Model",
+  "description": "Model of public opinion formation and silencing of minority views. Source: Noelle-Neumann (1974), J Communication.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Expressed_Opinion_A",
+      "initial_value": 0.45,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Expressed_Opinion_B",
+      "initial_value": 0.45,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Silent_Population",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "A_Expression",
+      "equation": "Expression_Rate * Silent_Population * Perceived_Climate_A - Silencing_Rate * Expressed_Opinion_A * (1 - Perceived_Climate_A)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "B_Expression",
+      "equation": "Expression_Rate * Silent_Population * Perceived_Climate_B - Silencing_Rate * Expressed_Opinion_B * (1 - Perceived_Climate_B)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Silence_Change",
+      "equation": "Silencing_Rate * (Expressed_Opinion_A * (1 - Perceived_Climate_A) + Expressed_Opinion_B * (1 - Perceived_Climate_B)) - Expression_Rate * Silent_Population",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "True_Opinion_A",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Expression_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Silencing_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Media_Bias",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Perceived_Climate_A",
+      "equation": "MIN(1, MAX(0, Expressed_Opinion_A / (Expressed_Opinion_A + Expressed_Opinion_B + 0.01) + Media_Bias))",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Perceived_Climate_B",
+      "equation": "1 - Perceived_Climate_A",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Expressed_Opinion_A",
+      "to_element": "Perceived_Climate_A"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-15T14:43:05.813289+00:00",
+  "updated_at": "2026-01-15T14:43:05.813294+00:00",
+  "source": "https://doi.org/10.1111/j.1460-2466.1974.tb00367.x",
+  "reference": "Noelle-Neumann, E. (1974). The Spiral of Silence: A Theory of Public Opinion. J Communication 24:43-51."
+}

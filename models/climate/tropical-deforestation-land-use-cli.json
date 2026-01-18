@@ -1,0 +1,284 @@
+{
+  "id": "tropical-deforestation-land-use-cli",
+  "name": "Tropical Deforestation and Land Use Model",
+  "description": "A system dynamics model of Amazon and tropical forest deforestation based on Soares-Filho et al. (2006) 'Modelling conservation in the Amazon basin' (doi:10.1038/nature04389) and Nepstad et al. (2008) in Conservation Biology. Models transitions between forest, agricultural land, degraded land, and secondary forest growth. Reference: Global Forest Watch. Source: https://www.globalforestwatch.org/",
+  "stocks": [
+    {
+      "id": "stock-primary-forest",
+      "name": "Primary Forest",
+      "initial_value": 400000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-agricultural-land",
+      "name": "Agricultural Land",
+      "initial_value": 50000000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-degraded-land",
+      "name": "Degraded Land",
+      "initial_value": 30000000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-secondary-forest",
+      "name": "Secondary Forest",
+      "initial_value": 20000000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-carbon-emissions",
+      "name": "Cumulative Carbon Emissions",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-deforestation",
+      "name": "Deforestation",
+      "equation": "Primary_Forest * Deforestation_Rate * Economic_Pressure * (1 - Enforcement_Effectiveness)",
+      "from_stock": "stock-primary-forest",
+      "to_stock": "stock-agricultural-land",
+      "position": {
+        "x": 225,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-land-degradation",
+      "name": "Land Degradation",
+      "equation": "Agricultural_Land * Degradation_Rate",
+      "from_stock": "stock-agricultural-land",
+      "to_stock": "stock-degraded-land",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-natural-regeneration",
+      "name": "Natural Regeneration",
+      "equation": "Degraded_Land * Regeneration_Rate",
+      "from_stock": "stock-degraded-land",
+      "to_stock": "stock-secondary-forest",
+      "position": {
+        "x": 450,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-reforestation",
+      "name": "Active Reforestation",
+      "equation": "Degraded_Land * Reforestation_Rate * Reforestation_Investment",
+      "from_stock": "stock-degraded-land",
+      "to_stock": "stock-secondary-forest",
+      "position": {
+        "x": 500,
+        "y": 320
+      }
+    },
+    {
+      "id": "flow-secondary-clearing",
+      "name": "Secondary Forest Clearing",
+      "equation": "Secondary_Forest * Secondary_Clearing_Rate * Economic_Pressure",
+      "from_stock": "stock-secondary-forest",
+      "to_stock": "stock-agricultural-land",
+      "position": {
+        "x": 350,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-carbon-release",
+      "name": "Carbon Release",
+      "equation": "Deforestation * Carbon_per_Hectare + Secondary_Forest_Clearing * Carbon_per_Hectare * 0.4",
+      "from_stock": null,
+      "to_stock": "stock-carbon-emissions",
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-deforestation-rate",
+      "name": "Deforestation Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 150,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-economic-pressure",
+      "name": "Economic Pressure",
+      "equation": "1.2",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-enforcement-effectiveness",
+      "name": "Enforcement Effectiveness",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-degradation-rate",
+      "name": "Degradation Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-regeneration-rate",
+      "name": "Regeneration Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 600,
+        "y": 275
+      }
+    },
+    {
+      "id": "var-reforestation-rate",
+      "name": "Reforestation Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-reforestation-investment",
+      "name": "Reforestation Investment",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-secondary-clearing-rate",
+      "name": "Secondary Clearing Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-carbon-per-hectare",
+      "name": "Carbon per Hectare",
+      "equation": "150",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Primary Forest",
+      "to_element": "Deforestation"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Deforestation Rate",
+      "to_element": "Deforestation"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Economic Pressure",
+      "to_element": "Deforestation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Enforcement Effectiveness",
+      "to_element": "Deforestation"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Agricultural Land",
+      "to_element": "Land Degradation"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Degradation Rate",
+      "to_element": "Land Degradation"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Degraded Land",
+      "to_element": "Natural Regeneration"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Regeneration Rate",
+      "to_element": "Natural Regeneration"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Degraded Land",
+      "to_element": "Active Reforestation"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Reforestation Rate",
+      "to_element": "Active Reforestation"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Secondary Forest",
+      "to_element": "Secondary Forest Clearing"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Economic Pressure",
+      "to_element": "Secondary Forest Clearing"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Carbon per Hectare",
+      "to_element": "Carbon Release"
+    }
+  ],
+  "time_settings": {
+    "start": 2000,
+    "end": 2100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

@@ -1,0 +1,151 @@
+{
+  "id": "urban-rail-transit-ridership-tra",
+  "name": "Urban Rail Transit Ridership Dynamics",
+  "description": "Model of urban rail transit ridership dynamics showing how service quality, network effects, and urban development interact to drive transit adoption and modal shift. Based on public transit research. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "source": "https://doi.org/10.1016/j.tra.2009.07.005",
+  "reference": "Taylor BD, Miller D, Iseki H, Fink C. Nature and/or nurture? Analyzing the determinants of transit ridership across US urbanized areas. Transportation Research Part A. 2009;43(1):60-77.",
+  "stocks": [
+    {
+      "id": "stock-riders",
+      "name": "Regular_Riders",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-potential",
+      "name": "Potential_Riders",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-quality",
+      "name": "Service_Quality",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adoption",
+      "name": "Rider_Adoption",
+      "equation": "Potential_Riders * adoption_rate * Service_Quality / 100",
+      "from_stock": "stock-potential",
+      "to_stock": "stock-riders",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-attrition",
+      "name": "Rider_Attrition",
+      "equation": "Regular_Riders * attrition_rate * (100 - Service_Quality) / 100",
+      "from_stock": "stock-riders",
+      "to_stock": "stock-potential",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-invest",
+      "name": "Quality_Investment",
+      "equation": "investment_rate * Revenue",
+      "from_stock": null,
+      "to_stock": "stock-quality",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-depreciate",
+      "name": "Quality_Depreciation",
+      "equation": "Service_Quality * depreciation_rate",
+      "from_stock": "stock-quality",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-adopt",
+      "name": "adoption_rate",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-attrition",
+      "name": "attrition_rate",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-invest",
+      "name": "investment_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-deprec",
+      "name": "depreciation_rate",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-revenue",
+      "name": "Revenue",
+      "equation": "Regular_Riders * fare",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-fare",
+      "name": "fare",
+      "equation": "2.5",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

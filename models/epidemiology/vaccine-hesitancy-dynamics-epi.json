@@ -1,0 +1,197 @@
+{
+  "id": "vaccine-hesitancy-dynamics-epi",
+  "name": "Vaccine Hesitancy Social Dynamics",
+  "description": "Model of vaccine acceptance and hesitancy in populations. Captures social influence, risk perception, and trust in institutions. Based on behavioral epidemiology and health communication research. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Vaccine_Acceptors",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Hesitant",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Refusers",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Trust_Level",
+      "initial_value": 0.6,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Acceptance_Increase",
+      "equation": "Hesitant * Conversion_Rate * Trust_Level * Social_Norm_Effect",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Hesitancy_From_Acceptors",
+      "equation": "Vaccine_Acceptors * Doubt_Rate * Misinformation_Effect",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 270
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Hardening",
+      "equation": "Hesitant * Hardening_Rate * (1 - Trust_Level)",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Refuser_Softening",
+      "equation": "Refusers * Softening_Rate * Trust_Level",
+      "from_stock": "s3",
+      "to_stock": "s2",
+      "position": {
+        "x": 450,
+        "y": 270
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Trust_Change",
+      "equation": "(Institution_Credibility - Trust_Level) / Trust_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 250,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Conversion_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Doubt_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Hardening_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Softening_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Social_Norm_Effect",
+      "equation": "Vaccine_Acceptors / 100",
+      "position": {
+        "x": 150,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Misinformation_Effect",
+      "equation": "1.5",
+      "position": {
+        "x": 350,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Institution_Credibility",
+      "equation": "0.7",
+      "position": {
+        "x": 500,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Trust_Adjustment_Time",
+      "equation": "12",
+      "position": {
+        "x": 150,
+        "y": 180
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Coverage_Rate",
+      "equation": "Vaccine_Acceptors / 100",
+      "position": {
+        "x": 400,
+        "y": 180
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1016/j.vaccine.2014.03.059",
+  "reference": "Larson HJ et al. (2014) Understanding vaccine hesitancy around vaccines and vaccination from a global perspective. Vaccine.",
+  "created_at": "2026-01-12T07:00:37.510230+00:00",
+  "updated_at": "2026-01-12T07:00:37.510230+00:00"
+}

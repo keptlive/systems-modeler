@@ -1,0 +1,208 @@
+{
+  "id": "disinformation-spread-virality-soc",
+  "name": "Disinformation Spread and Virality",
+  "description": "Model of how disinformation spreads through social networks, showing the dynamics of belief change, fact-checking effectiveness, and platform intervention. Reference: Parker, G. G., et al. (2016). Platform Revolution. Norton. Source: https://www.wwnorton.com/",
+  "source": "https://doi.org/10.1126/science.aap9559",
+  "reference": "Vosoughi S, Roy D, Aral S. The spread of true and false news online. Science. 2018;359(6380):1146-1151.",
+  "stocks": [
+    {
+      "id": "stock-unaware",
+      "name": "Unaware",
+      "initial_value": 900000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exposed",
+      "name": "Exposed_to_Disinfo",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-believing",
+      "name": "Believing_Disinfo",
+      "initial_value": 30000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-corrected",
+      "name": "Fact_Checked",
+      "initial_value": 20000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-expose",
+      "name": "Exposure",
+      "equation": "exposure_rate * Unaware * (Believing_Disinfo / Total_Pop) * virality_factor",
+      "from_stock": "stock-unaware",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-believe",
+      "name": "Belief_Adoption",
+      "equation": "Exposed_to_Disinfo * belief_rate * (1 - media_literacy)",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-believing",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-correct",
+      "name": "Fact_Checking",
+      "equation": "Believing_Disinfo * correction_rate * fact_check_reach",
+      "from_stock": "stock-believing",
+      "to_stock": "stock-corrected",
+      "position": {
+        "x": 400,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-forget",
+      "name": "Forgetting",
+      "equation": "Exposed_to_Disinfo * forgetting_rate",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-unaware",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-relapse",
+      "name": "Belief_Relapse",
+      "equation": "Fact_Checked * relapse_rate * (Believing_Disinfo / Total_Pop)",
+      "from_stock": "stock-corrected",
+      "to_stock": "stock-believing",
+      "position": {
+        "x": 500,
+        "y": 275
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-expose",
+      "name": "exposure_rate",
+      "equation": "10",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-viral",
+      "name": "virality_factor",
+      "equation": "1.5",
+      "position": {
+        "x": 175,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-belief",
+      "name": "belief_rate",
+      "equation": "0.3",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-lit",
+      "name": "media_literacy",
+      "equation": "0.3",
+      "position": {
+        "x": 325,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-correct",
+      "name": "correction_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-reach",
+      "name": "fact_check_reach",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-forget",
+      "name": "forgetting_rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-relapse",
+      "name": "relapse_rate",
+      "equation": "0.02",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Pop",
+      "equation": "Unaware + Exposed_to_Disinfo + Believing_Disinfo + Fact_Checked",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-prevalence",
+      "name": "Disinfo_Prevalence",
+      "equation": "(Exposed_to_Disinfo + Believing_Disinfo) / Total_Pop",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

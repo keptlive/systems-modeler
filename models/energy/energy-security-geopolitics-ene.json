@@ -1,0 +1,225 @@
+{
+  "id": "energy-security-geopolitics-ene",
+  "name": "Energy Security and Geopolitics Model",
+  "description": "Models the dynamics of energy security including dependency on fossil fuel imports, strategic reserves, renewable energy transition as a security measure, and price volatility impacts. Informed by the 2022 European energy crisis and IEA energy security frameworks.",
+  "source": "https://doi.org/10.1016/j.enpol.2022.113159",
+  "reference": "IEA World Energy Outlook 2023. Energy Security in a Time of Transition. Bordoff J, O'Sullivan ML. The New Energy Order: How Governments Will Transform Energy Markets. Foreign Affairs. 2022.",
+  "stocks": [
+    {
+      "id": "stock-domestic-production",
+      "name": "Domestic Energy Production",
+      "initial_value": 400,
+      "equation": "",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "stock-import-capacity",
+      "name": "Import Capacity",
+      "initial_value": 600,
+      "equation": "",
+      "position": {"x": 100, "y": 250}
+    },
+    {
+      "id": "stock-strategic-reserves",
+      "name": "Strategic Reserves",
+      "initial_value": 180,
+      "equation": "",
+      "position": {"x": 250, "y": 175}
+    },
+    {
+      "id": "stock-renewable-capacity",
+      "name": "Renewable Capacity",
+      "initial_value": 200,
+      "equation": "",
+      "position": {"x": 400, "y": 100}
+    },
+    {
+      "id": "stock-energy-demand",
+      "name": "Energy Demand",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {"x": 400, "y": 250}
+    },
+    {
+      "id": "stock-price-level",
+      "name": "Energy Price Level",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 550, "y": 175}
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-domestic-investment",
+      "name": "Domestic Investment",
+      "equation": "Domestic_Investment_Rate * Security_Premium",
+      "from_stock": null,
+      "to_stock": "stock-domestic-production",
+      "position": {"x": 100, "y": 50}
+    },
+    {
+      "id": "flow-domestic-depletion",
+      "name": "Domestic Depletion",
+      "equation": "Domestic_Energy_Production * Depletion_Rate",
+      "from_stock": "stock-domestic-production",
+      "to_stock": null,
+      "position": {"x": 100, "y": 150}
+    },
+    {
+      "id": "flow-reserve-buildup",
+      "name": "Reserve Buildup",
+      "equation": "MAX(0, (Target_Reserve_Days - Reserve_Days) * Reserve_Fill_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-strategic-reserves",
+      "position": {"x": 175, "y": 175}
+    },
+    {
+      "id": "flow-reserve-release",
+      "name": "Reserve Release",
+      "equation": "IF(Supply_Gap > 0, MIN(Strategic_Reserves / Emergency_Release_Time, Supply_Gap), 0)",
+      "from_stock": "stock-strategic-reserves",
+      "to_stock": null,
+      "position": {"x": 325, "y": 175}
+    },
+    {
+      "id": "flow-renewable-deployment",
+      "name": "Renewable Deployment",
+      "equation": "Renewable_Investment_Rate * (1 + Price_Signal + Security_Incentive)",
+      "from_stock": null,
+      "to_stock": "stock-renewable-capacity",
+      "position": {"x": 400, "y": 50}
+    },
+    {
+      "id": "flow-price-adjustment",
+      "name": "Price Adjustment",
+      "equation": "(Supply_Demand_Gap * Price_Sensitivity + Geopolitical_Risk_Premium) / Price_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-price-level",
+      "position": {"x": 550, "y": 125}
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-domestic-invest",
+      "name": "Domestic_Investment_Rate",
+      "equation": "10",
+      "position": {"x": 50, "y": 50}
+    },
+    {
+      "id": "var-security-premium",
+      "name": "Security_Premium",
+      "equation": "1 + Import_Dependency * 0.5",
+      "position": {"x": 150, "y": 50}
+    },
+    {
+      "id": "var-depletion",
+      "name": "Depletion_Rate",
+      "equation": "0.02",
+      "position": {"x": 50, "y": 150}
+    },
+    {
+      "id": "var-import-dependency",
+      "name": "Import_Dependency",
+      "equation": "Import_Capacity / (Domestic_Energy_Production + Import_Capacity + Renewable_Capacity)",
+      "position": {"x": 250, "y": 100}
+    },
+    {
+      "id": "var-target-reserves",
+      "name": "Target_Reserve_Days",
+      "equation": "90",
+      "position": {"x": 175, "y": 125}
+    },
+    {
+      "id": "var-reserve-days",
+      "name": "Reserve_Days",
+      "equation": "Strategic_Reserves / (Energy_Demand / 365)",
+      "position": {"x": 250, "y": 225}
+    },
+    {
+      "id": "var-fill-rate",
+      "name": "Reserve_Fill_Rate",
+      "equation": "0.5",
+      "position": {"x": 175, "y": 225}
+    },
+    {
+      "id": "var-supply-gap",
+      "name": "Supply_Gap",
+      "equation": "MAX(0, Energy_Demand - Total_Supply)",
+      "position": {"x": 325, "y": 250}
+    },
+    {
+      "id": "var-total-supply",
+      "name": "Total_Supply",
+      "equation": "Domestic_Energy_Production + Available_Imports + Renewable_Capacity",
+      "position": {"x": 325, "y": 125}
+    },
+    {
+      "id": "var-available-imports",
+      "name": "Available_Imports",
+      "equation": "Import_Capacity * (1 - Disruption_Factor)",
+      "position": {"x": 175, "y": 300}
+    },
+    {
+      "id": "var-disruption",
+      "name": "Disruption_Factor",
+      "equation": "0.2",
+      "position": {"x": 100, "y": 300}
+    },
+    {
+      "id": "var-release-time",
+      "name": "Emergency_Release_Time",
+      "equation": "30",
+      "position": {"x": 325, "y": 225}
+    },
+    {
+      "id": "var-renewable-invest",
+      "name": "Renewable_Investment_Rate",
+      "equation": "15",
+      "position": {"x": 400, "y": 50}
+    },
+    {
+      "id": "var-price-signal",
+      "name": "Price_Signal",
+      "equation": "(Energy_Price_Level - 100) / 100",
+      "position": {"x": 475, "y": 50}
+    },
+    {
+      "id": "var-security-incentive",
+      "name": "Security_Incentive",
+      "equation": "Import_Dependency * 0.3",
+      "position": {"x": 475, "y": 100}
+    },
+    {
+      "id": "var-sd-gap",
+      "name": "Supply_Demand_Gap",
+      "equation": "(Energy_Demand - Total_Supply) / Energy_Demand",
+      "position": {"x": 550, "y": 75}
+    },
+    {
+      "id": "var-price-sens",
+      "name": "Price_Sensitivity",
+      "equation": "50",
+      "position": {"x": 625, "y": 75}
+    },
+    {
+      "id": "var-geo-risk",
+      "name": "Geopolitical_Risk_Premium",
+      "equation": "Disruption_Factor * 30",
+      "position": {"x": 625, "y": 125}
+    },
+    {
+      "id": "var-price-adj-time",
+      "name": "Price_Adjustment_Time",
+      "equation": "4",
+      "position": {"x": 625, "y": 175}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 520,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T21:00:00.000000+00:00",
+  "updated_at": "2026-01-15T21:00:00.000000+00:00"
+}

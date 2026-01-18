@@ -1,0 +1,106 @@
+{
+  "id": "mm1-queue-model-ops",
+  "name": "M/M/1 Queuing Model",
+  "description": "Single server queue with Poisson arrivals and exponential service",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Queue_Length",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Server_Busy",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Arrival_Rate",
+      "equation": "0.8",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Service_Rate",
+      "equation": "1.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Utilization",
+      "equation": "Arrival_Rate/Service_Rate",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Mean_Queue_Length",
+      "equation": "Utilization*Utilization/(1-Utilization)",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Mean_Wait_Time",
+      "equation": "Utilization/(Service_Rate-Arrival_Rate)",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Arrival_Rate",
+      "to_element": "Utilization"
+    },
+    {
+      "id": "c2",
+      "from_element": "Service_Rate",
+      "to_element": "Utilization"
+    },
+    {
+      "id": "c3",
+      "from_element": "Utilization",
+      "to_element": "Mean_Queue_Length"
+    },
+    {
+      "id": "c4",
+      "from_element": "Utilization",
+      "to_element": "Mean_Wait_Time"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 100.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:53:08.357715+00:00",
+  "updated_at": "2026-01-15T20:53:08.357715+00:00",
+  "source": "https://doi.org/10.1002/9781118400678",
+  "reference": "Gross, D. et al. (2008) Fundamentals of Queueing Theory. Wiley"
+}

@@ -1,0 +1,186 @@
+{
+  "id": "cdc-flu-burden-hea",
+  "name": "CDC Influenza Burden Model",
+  "description": "CDC model for estimating seasonal influenza burden including hospitalizations and deaths. Reference: CDC (2020). Estimated Influenza Illnesses and Hospitalizations.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Symptomatic_Cases",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Medical_Visits",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Hospitalizations",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Deaths",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "New_Cases",
+      "equation": "Attack_Rate * Population * Season_Factor",
+      "from_stock": null,
+      "to_stock": "Symptomatic_Cases",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Visits",
+      "equation": "Symptomatic_Cases * Visit_Rate",
+      "from_stock": null,
+      "to_stock": "Medical_Visits",
+      "position": {
+        "x": 220,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Hospital_Admissions",
+      "equation": "Symptomatic_Cases * Hospitalization_Rate_Overall",
+      "from_stock": null,
+      "to_stock": "Hospitalizations",
+      "position": {
+        "x": 340,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Flu_Deaths",
+      "equation": "Hospitalizations * In_Hospital_Death_Rate",
+      "from_stock": null,
+      "to_stock": "Deaths",
+      "position": {
+        "x": 460,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Population",
+      "equation": "330000000",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Attack_Rate",
+      "equation": "0.08",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Season_Factor",
+      "equation": "0.5 + 0.5 * SIN((time - 13) * 3.14159 / 26)",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Visit_Rate",
+      "equation": "0.42",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Hospitalization_Rate_Overall",
+      "equation": "0.015",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "In_Hospital_Death_Rate",
+      "equation": "0.04",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "CFR",
+      "equation": "0.001",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Weekly_Cases",
+      "equation": "New_Cases * 7",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Cumulative_Burden",
+      "equation": "Symptomatic_Cases + Medical_Visits + Hospitalizations",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 1
+  },
+  "source": "https://www.cdc.gov/flu/about/burden/",
+  "reference": "CDC (2020). Estimated Influenza Illnesses, Medical Visits, Hospitalizations, and Deaths in the United States. Centers for Disease Control and Prevention.",
+  "created_at": "2026-01-15T19:57:16.864548+00:00",
+  "updated_at": "2026-01-15T19:57:16.864548+00:00"
+}

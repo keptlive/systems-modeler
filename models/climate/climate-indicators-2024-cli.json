@@ -1,0 +1,189 @@
+{
+  "id": "climate-indicators-2024-cli",
+  "name": "IPCC Global Climate Indicators 2024 Update",
+  "description": "Model tracking key climate indicators following IPCC AR6 methodology. Includes radiative forcing, temperature anomaly, and sea level rise. Source: Forster et al. (2024), ESSD. DOI: 10.5194/essd-16-2625-2024",
+  "stocks": [
+    {
+      "id": "stock-co2",
+      "name": "Atmospheric_CO2",
+      "initial_value": 420,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-temp",
+      "name": "Temperature_Anomaly",
+      "initial_value": 1.2,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ocean",
+      "name": "Ocean_Heat_Content",
+      "initial_value": 300,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-sea",
+      "name": "Sea_Level_Rise",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-emit",
+      "name": "CO2_Emissions",
+      "equation": "Annual_Emissions",
+      "from_stock": null,
+      "to_stock": "stock-co2",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-sink",
+      "name": "Natural_Sinks",
+      "equation": "Sink_Fraction * (Atmospheric_CO2 - 280)",
+      "from_stock": "stock-co2",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-warm",
+      "name": "Warming",
+      "equation": "(Forcing - Lambda * Temperature_Anomaly) / Heat_Capacity",
+      "from_stock": null,
+      "to_stock": "stock-temp",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-oceanheat",
+      "name": "Ocean_Heating",
+      "equation": "Ocean_Uptake_Fraction * (Forcing - Lambda * Temperature_Anomaly)",
+      "from_stock": null,
+      "to_stock": "stock-ocean",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-slr",
+      "name": "Sea_Level_Change",
+      "equation": "Thermal_Expansion * Temperature_Anomaly + Ice_Melt_Rate",
+      "from_stock": null,
+      "to_stock": "stock-sea",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-emit",
+      "name": "Annual_Emissions",
+      "equation": "10",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-sink",
+      "name": "Sink_Fraction",
+      "equation": "0.02",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-force",
+      "name": "Forcing",
+      "equation": "5.35 * LOG(Atmospheric_CO2 / 280)",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-lambda",
+      "name": "Lambda",
+      "equation": "1.2",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cap",
+      "name": "Heat_Capacity",
+      "equation": "10",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-uptake",
+      "name": "Ocean_Uptake_Fraction",
+      "equation": "0.6",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-therm",
+      "name": "Thermal_Expansion",
+      "equation": "1.5",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-ice",
+      "name": "Ice_Melt_Rate",
+      "equation": "3.5",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T12:41:31.048996+00:00",
+  "updated_at": "2026-01-12T12:41:31.048996+00:00",
+  "source": "https://doi.org/10.1017/9781009157896",
+  "reference": "IPCC. Climate Change 2023: Synthesis Report. Cambridge University Press; 2023."
+}

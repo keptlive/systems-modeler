@@ -1,0 +1,172 @@
+{
+  "id": "shifting-burden-archetype-edu",
+  "name": "Shifting the Burden Archetype",
+  "description": "Shifting the burden system archetype from Senge's Fifth Discipline and Sterman's Business Dynamics. Shows how symptomatic solutions can undermine fundamental solutions, creating dependency. Source: Senge, P. (1990), The Fifth Discipline, Doubleday. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-problem",
+      "name": "Problem_Symptom",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-capability",
+      "name": "Fundamental_Capability",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-addiction",
+      "name": "Symptomatic_Addiction",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-symptomatic-fix",
+      "name": "Symptomatic_Fix",
+      "equation": "-Problem_Symptom * Symptomatic_Intensity",
+      "from_stock": null,
+      "to_stock": "stock-problem",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fundamental-fix",
+      "name": "Fundamental_Fix",
+      "equation": "-Problem_Symptom * Fundamental_Intensity * Fundamental_Capability / 100",
+      "from_stock": null,
+      "to_stock": "stock-problem",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-problem-growth",
+      "name": "Problem_Growth",
+      "equation": "Problem_Generation_Rate",
+      "from_stock": null,
+      "to_stock": "stock-problem",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-capability-erosion",
+      "name": "Capability_Erosion",
+      "equation": "Symptomatic_Addiction * Side_Effect_Rate",
+      "from_stock": "stock-capability",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "flow-addiction-growth",
+      "name": "Addiction_Growth",
+      "equation": "Symptomatic_Fix * Addiction_Rate",
+      "from_stock": null,
+      "to_stock": "stock-addiction",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-symptomatic-intensity",
+      "name": "Symptomatic_Intensity",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fundamental-intensity",
+      "name": "Fundamental_Intensity",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-problem-generation",
+      "name": "Problem_Generation_Rate",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-side-effect-rate",
+      "name": "Side_Effect_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-addiction-rate",
+      "name": "Addiction_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Problem_Symptom",
+      "to_element": "Symptomatic_Fix"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Problem_Symptom",
+      "to_element": "Fundamental_Fix"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Fundamental_Capability",
+      "to_element": "Fundamental_Fix"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Symptomatic_Addiction",
+      "to_element": "Capability_Erosion"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T20:52:52.274700+00:00",
+  "updated_at": "2026-01-11T20:52:52.274700+00:00",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "System Dynamics Educational Models - PySD Cookbook"
+}

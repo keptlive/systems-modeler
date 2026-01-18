@@ -1,0 +1,223 @@
+{
+  "id": "mundell-fleming-open-eco",
+  "name": "Mundell-Fleming Open Economy",
+  "description": "IS-LM extended to open economy with capital mobility. Shows how fiscal/monetary policy effectiveness depends on exchange rate regime. Nobel Prize 1999 (Mundell). Reference: Mundell, R. A. (1963). Capital mobility and stabilization policy under fixed and flexible exchange rates. Canadian Journal of Economics, 29(4), 475-485. Source: https://doi.org/10.2307/139336",
+  "stocks": [
+    {
+      "id": "stock-output",
+      "name": "Output",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exchange-rate",
+      "name": "Exchange Rate",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-output-change",
+      "name": "Output Adjustment",
+      "equation": "Adjustment_Speed * (Aggregate_Demand - Output)",
+      "from_stock": null,
+      "to_stock": "stock-output",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-exchange-change",
+      "name": "Exchange Rate Change",
+      "equation": "IF(Fixed_Exchange_Rate = 1, 0, Capital_Flow_Sensitivity * Interest_Differential)",
+      "from_stock": null,
+      "to_stock": "stock-exchange-rate",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-aggregate-demand",
+      "name": "Aggregate Demand",
+      "equation": "Consumption + Investment + Government + Net_Exports",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-consumption",
+      "name": "Consumption",
+      "equation": "MPC * Output",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mpc",
+      "name": "MPC",
+      "equation": "0.8",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-investment",
+      "name": "Investment",
+      "equation": "Investment_Autonomous - Interest_Sensitivity * Domestic_Interest_Rate",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-investment-auto",
+      "name": "Investment Autonomous",
+      "equation": "20",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-interest-sens",
+      "name": "Interest Sensitivity",
+      "equation": "5",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-domestic-rate",
+      "name": "Domestic Interest Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-government",
+      "name": "Government",
+      "equation": "20",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-net-exports",
+      "name": "Net Exports",
+      "equation": "Export_Sensitivity * Exchange_Rate - Import_Propensity * Output",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-export-sens",
+      "name": "Export Sensitivity",
+      "equation": "10",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-import-prop",
+      "name": "Import Propensity",
+      "equation": "0.2",
+      "position": {
+        "x": 450,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-foreign-rate",
+      "name": "Foreign Interest Rate",
+      "equation": "0.04",
+      "position": {
+        "x": 600,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-interest-diff",
+      "name": "Interest Differential",
+      "equation": "Domestic_Interest_Rate - Foreign_Interest_Rate",
+      "position": {
+        "x": 200,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-capital-sens",
+      "name": "Capital Flow Sensitivity",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-fixed",
+      "name": "Fixed Exchange Rate",
+      "equation": "0",
+      "position": {
+        "x": 550,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-adjust",
+      "name": "Adjustment Speed",
+      "equation": "0.2",
+      "position": {
+        "x": 300,
+        "y": 550
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Output",
+      "to_element": "Consumption"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Exchange Rate",
+      "to_element": "Net Exports"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Interest Differential",
+      "to_element": "Exchange Rate Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:43:15.875811+00:00",
+  "updated_at": "2026-01-12T07:43:15.875816+00:00",
+  "source": "https://www.jstor.org/stable/2534660",
+  "reference": "Mundell RA. Capital Mobility and Stabilization Policy under Fixed and Flexible Exchange Rates. Canadian Journal of Economics. 1963;29(4):475-485. Nobel Prize 1999."
+}

@@ -1,0 +1,536 @@
+{
+  "id": "forest-ecosystem-carbon-and-succession-model-eco",
+  "name": "Forest Ecosystem Carbon and Succession Model",
+  "description": "Models forest ecosystem dynamics including tree growth, succession stages, carbon sequestration, disturbance (fire, logging), and climate feedbacks. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "stock-young-forest-0-20-yr",
+      "name": "Young Forest (0-20 yr)",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-mature-forest-20-100-yr",
+      "name": "Mature Forest (20-100 yr)",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-old-growth-100-yr",
+      "name": "Old Growth (100+ yr)",
+      "initial_value": 400000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-forest-carbon-stock",
+      "name": "Forest Carbon Stock",
+      "initial_value": 15000000,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-soil-carbon-stock",
+      "name": "Soil Carbon Stock",
+      "initial_value": 20000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-wood-products-carbon",
+      "name": "Wood Products Carbon",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-forest-regeneration",
+      "name": "Forest Regeneration",
+      "equation": "(Young_Disturbance + Mature_Disturbance + Old_Growth_Disturbance) * Regeneration_Success + Afforestation",
+      "from_stock": null,
+      "to_stock": "stock-young-forest-0-20-yr",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-young-to-mature",
+      "name": "Young to Mature",
+      "equation": "Young_Forest / Young_Forest_Age",
+      "from_stock": "stock-young-forest-0-20-yr",
+      "to_stock": "stock-mature-forest-20-100-yr",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mature-to-old-growth",
+      "name": "Mature to Old Growth",
+      "equation": "Mature_Forest / Mature_Forest_Age",
+      "from_stock": "stock-mature-forest-20-100-yr",
+      "to_stock": "stock-old-growth-100-yr",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-young-forest-disturbance",
+      "name": "Young Forest Disturbance",
+      "equation": "Young_Forest * (Fire_Rate + Pest_Rate)",
+      "from_stock": "stock-young-forest-0-20-yr",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-mature-forest-disturbance",
+      "name": "Mature Forest Disturbance",
+      "equation": "Mature_Forest * (Fire_Rate + Pest_Rate)",
+      "from_stock": "stock-mature-forest-20-100-yr",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-old-growth-disturbance",
+      "name": "Old Growth Disturbance",
+      "equation": "Old_Growth * (Fire_Rate * 1.5 + Pest_Rate)",
+      "from_stock": "stock-old-growth-100-yr",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-timber-harvest-mature",
+      "name": "Timber Harvest (Mature)",
+      "equation": "MIN(Mature_Forest * Harvest_Rate, Sustainable_Harvest)",
+      "from_stock": "stock-mature-forest-20-100-yr",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-timber-harvest-old-growth",
+      "name": "Timber Harvest (Old Growth)",
+      "equation": "Old_Growth * Old_Growth_Harvest_Rate",
+      "from_stock": "stock-old-growth-100-yr",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-carbon-sequestration",
+      "name": "Carbon Sequestration",
+      "equation": "Young_Forest * Young_NPP + Mature_Forest * Mature_NPP + Old_Growth * Old_Growth_NPP",
+      "from_stock": null,
+      "to_stock": "stock-forest-carbon-stock",
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-autotrophic-respiration",
+      "name": "Autotrophic Respiration",
+      "equation": "Forest_Carbon * Respiration_Rate * Temperature_Effect",
+      "from_stock": "stock-forest-carbon-stock",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-litterfall-carbon",
+      "name": "Litterfall Carbon",
+      "equation": "Forest_Carbon * Litterfall_Rate",
+      "from_stock": null,
+      "to_stock": "stock-soil-carbon-stock",
+      "position": {
+        "x": 450,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-soil-respiration",
+      "name": "Soil Respiration",
+      "equation": "Soil_Carbon * Soil_Respiration_Rate * Temperature_Effect",
+      "from_stock": "stock-soil-carbon-stock",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-disturbance-emissions",
+      "name": "Disturbance Emissions",
+      "equation": "(Young_Disturbance * Young_Carbon_Density + Mature_Disturbance * Mature_Carbon_Density + Old_Growth_Disturbance * Old_Growth_Carbon_Density) * Combustion_Fraction",
+      "from_stock": "stock-forest-carbon-stock",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-harvest-emissions",
+      "name": "Harvest Emissions",
+      "equation": "(Harvest * Mature_Carbon_Density + Old_Growth_Harvest * Old_Growth_Carbon_Density) * Slash_Fraction",
+      "from_stock": "stock-forest-carbon-stock",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-harvest-to-products",
+      "name": "Harvest to Products",
+      "equation": "(Harvest * Mature_Carbon_Density + Old_Growth_Harvest * Old_Growth_Carbon_Density) * (1 - Slash_Fraction) * Product_Retention",
+      "from_stock": null,
+      "to_stock": "stock-wood-products-carbon",
+      "position": {
+        "x": 650,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-product-decay",
+      "name": "Product Decay",
+      "equation": "Wood_Products / Product_Halflife",
+      "from_stock": "stock-wood-products-carbon",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 950
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-forest-area",
+      "name": "Total Forest Area",
+      "equation": "Young_Forest + Mature_Forest + Old_Growth",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-young-forest-age-span",
+      "name": "Young Forest Age Span",
+      "equation": "20",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mature-forest-age-span",
+      "name": "Mature Forest Age Span",
+      "equation": "80",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-regeneration-success-rate",
+      "name": "Regeneration Success Rate",
+      "equation": "0.8 * (1 - Climate_Stress)",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fire-disturbance-rate",
+      "name": "Fire Disturbance Rate",
+      "equation": "Base_Fire_Rate * (1 + Climate_Warming * Fire_Sensitivity)",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-base-fire-rate",
+      "name": "Base Fire Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fire-sensitivity-to-warming",
+      "name": "Fire Sensitivity to Warming",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-pestdisease-rate",
+      "name": "Pest/Disease Rate",
+      "equation": "0.002 * (1 + Climate_Warming * 0.2)",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-harvest-rate",
+      "name": "Harvest Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-old-growth-harvest-rate",
+      "name": "Old Growth Harvest Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-sustainable-harvest",
+      "name": "Sustainable Harvest",
+      "equation": "Maturation_Young * 0.8",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-afforestation-rate",
+      "name": "Afforestation Rate",
+      "equation": "1000",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-young-forest-npp",
+      "name": "Young Forest NPP",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-mature-forest-npp",
+      "name": "Mature Forest NPP",
+      "equation": "4",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-old-growth-npp",
+      "name": "Old Growth NPP",
+      "equation": "2",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-young-forest-carbon-density",
+      "name": "Young Forest Carbon Density",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-mature-forest-carbon-density",
+      "name": "Mature Forest Carbon Density",
+      "equation": "150",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-old-growth-carbon-density",
+      "name": "Old Growth Carbon Density",
+      "equation": "250",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-respiration-rate",
+      "name": "Respiration Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-litterfall-rate",
+      "name": "Litterfall Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-soil-respiration-rate",
+      "name": "Soil Respiration Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-temperature-effect-on-respiration",
+      "name": "Temperature Effect on Respiration",
+      "equation": "Q10 ^ (Climate_Warming / 10)",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-q10-factor",
+      "name": "Q10 Factor",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-climate-warming",
+      "name": "Climate Warming",
+      "equation": "Time / 100",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-climate-stress",
+      "name": "Climate Stress",
+      "equation": "MIN(0.5, Climate_Warming * 0.1)",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-combustion-fraction",
+      "name": "Combustion Fraction",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-slash-fraction",
+      "name": "Slash Fraction",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-product-retention",
+      "name": "Product Retention",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-product-halflife",
+      "name": "Product Halflife",
+      "equation": "30",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-total-carbon-stock",
+      "name": "Total Carbon Stock",
+      "equation": "Forest_Carbon + Soil_Carbon + Wood_Products",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-net-ecosystem-exchange",
+      "name": "Net Ecosystem Exchange",
+      "equation": "Carbon_Sequestration - Respiration - Soil_Respiration - Disturbance_Emissions - Harvest_Emissions + Product_Decay",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.732937Z",
+  "updated_at": "2026-01-11T20:04:50.732937Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

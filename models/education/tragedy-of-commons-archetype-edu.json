@@ -1,0 +1,156 @@
+{
+  "id": "tragedy-of-commons-archetype-edu",
+  "name": "Tragedy of the Commons System Archetype",
+  "description": "Classic archetype showing how individual rational behavior leads to collective resource depletion. From Hardin (1968) and system dynamics formulation by Senge (1990). Demonstrates need for governance mechanisms. Reference: Senge, P. M. (1990). The Fifth Discipline. Doubleday/Currency. Source: https://mitsloan.mit.edu/",
+  "stocks": [
+    {
+      "id": "stock-common-resource",
+      "name": "Common Resource",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-actor-a-gain",
+      "name": "Actor A Cumulative Gain",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-actor-b-gain",
+      "name": "Actor B Cumulative Gain",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-resource-regeneration",
+      "name": "Resource Regeneration",
+      "equation": "Regeneration_Rate * Common_Resource * (1 - Common_Resource / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-common-resource",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-actor-a-harvest",
+      "name": "Actor A Harvest",
+      "equation": "Actor_A_Effort * Common_Resource / (Common_Resource + Half_Saturation)",
+      "from_stock": "stock-common-resource",
+      "to_stock": "stock-actor-a-gain",
+      "position": {
+        "x": 225,
+        "y": 225
+      }
+    },
+    {
+      "id": "flow-actor-b-harvest",
+      "name": "Actor B Harvest",
+      "equation": "Actor_B_Effort * Common_Resource / (Common_Resource + Half_Saturation)",
+      "from_stock": "stock-common-resource",
+      "to_stock": "stock-actor-b-gain",
+      "position": {
+        "x": 375,
+        "y": 225
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-regeneration-rate",
+      "name": "Regeneration Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-carrying-capacity",
+      "name": "Carrying Capacity",
+      "equation": "1000",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-half-saturation",
+      "name": "Half Saturation",
+      "equation": "200",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-actor-a-effort",
+      "name": "Actor A Effort",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-actor-b-effort",
+      "name": "Actor B Effort",
+      "equation": "50",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-harvest",
+      "name": "Total Harvest",
+      "equation": "Actor_A_Harvest + Actor_B_Harvest",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-sustainable-yield",
+      "name": "Sustainable Yield",
+      "equation": "Regeneration_Rate * Carrying_Capacity / 4",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-overexploitation",
+      "name": "Overexploitation",
+      "equation": "IF Total_Harvest > Sustainable_Yield THEN 1 ELSE 0",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T21:20:15.295841+00:00",
+  "updated_at": "2026-01-11T21:20:15.295841+00:00",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "System Dynamics Educational Models - PySD Cookbook"
+}

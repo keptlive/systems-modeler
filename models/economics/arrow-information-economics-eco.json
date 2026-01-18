@@ -1,0 +1,197 @@
+{
+  "id": "arrow-information-economics-eco",
+  "name": "Arrow Information Economics Model",
+  "description": "Nobel Prize model of information asymmetry and market efficiency with adverse selection dynamics. Reference: Arrow, K. J. (1962). The economic implications of learning by doing. Review of Economic Studies, 29(3), 155-173. DOI: https://doi.org/10.2307/2295952",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "High_Quality_Sellers",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Low_Quality_Sellers",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Market_Price",
+      "initial_value": 75,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "High_Quality_Exit",
+      "equation": "Exit_Rate_High * High_Quality_Sellers",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "f2",
+      "name": "High_Quality_Entry",
+      "equation": "Entry_Rate_High * Potential_High",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Low_Quality_Exit",
+      "equation": "Exit_Rate_Low * Low_Quality_Sellers",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Low_Quality_Entry",
+      "equation": "Entry_Rate_Low * Potential_Low",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Price_Adjustment",
+      "equation": "(Average_Quality * 100 - Market_Price) / Price_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "High_Quality_Value",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Low_Quality_Value",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Average_Quality",
+      "equation": "(High_Quality_Sellers * High_Quality_Value + Low_Quality_Sellers * Low_Quality_Value) / (High_Quality_Sellers + Low_Quality_Sellers + 0.01) / 100",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Exit_Rate_High",
+      "equation": "IF(Market_Price < High_Quality_Value * 0.8, 0.1, 0.01)",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Exit_Rate_Low",
+      "equation": "IF(Market_Price < Low_Quality_Value * 0.8, 0.05, 0.01)",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Entry_Rate_High",
+      "equation": "IF(Market_Price >= High_Quality_Value * 0.9, 0.05, 0.01)",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Entry_Rate_Low",
+      "equation": "IF(Market_Price >= Low_Quality_Value, 0.1, 0.03)",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Potential_High",
+      "equation": "100",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Potential_Low",
+      "equation": "100",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Price_Adjustment_Time",
+      "equation": "4",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:26:32.201925+00:00",
+  "updated_at": "2026-01-12T11:26:32.201925+00:00",
+  "source": "https://doi.org/10.2307/1879431",
+  "reference": "Arrow KJ. Uncertainty and the welfare economics of medical care. American Economic Review. 1963;53(5):941-973. Nobel Prize 1972."
+}

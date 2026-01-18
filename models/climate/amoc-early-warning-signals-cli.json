@@ -1,0 +1,176 @@
+{
+  "id": "amoc-early-warning-signals-cli",
+  "name": "AMOC Early Warning Signals Detection Model",
+  "description": "Model representing Atlantic Meridional Overturning Circulation dynamics with critical slowing down indicators for tipping point detection. Based on Boers (2021) evidence of AMOC approaching critical threshold and ESD (2024) early warning methods. Reference: Boers, N. (2021). Observation-based early-warning signals for a collapse of the AMOC. Nature Climate Change, 11, 680-688. Source: https://doi.org/10.1038/s41558-021-01097-4",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "AMOC Strength Index",
+      "initial_value": 18.0,
+      "equation": "",
+      "position": {"x": 200, "y": 150}
+    },
+    {
+      "id": "s2",
+      "name": "North Atlantic Salinity",
+      "initial_value": 35.0,
+      "equation": "",
+      "position": {"x": 400, "y": 150}
+    },
+    {
+      "id": "s3",
+      "name": "Freshwater Flux Anomaly",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {"x": 200, "y": 300}
+    },
+    {
+      "id": "s4",
+      "name": "Variance Indicator",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {"x": 400, "y": 300}
+    },
+    {
+      "id": "s5",
+      "name": "Autocorrelation Indicator",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {"x": 300, "y": 450}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "AMOC Change",
+      "equation": "Salinity_Feedback - Freshwater_Forcing - Nonlinear_Collapse_Term",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Salinity Change",
+      "equation": "AMOC_Salt_Advection - Freshwater_Dilution",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {"x": 400, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Freshwater Increase",
+      "equation": "Greenland_Melt_Rate + Precipitation_Increase",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {"x": 200, "y": 350}
+    },
+    {
+      "id": "f4",
+      "name": "Variance Increase",
+      "equation": "(Critical_Slowing_Factor - Variance_Indicator) * Variance_Response_Rate",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {"x": 400, "y": 350}
+    },
+    {
+      "id": "f5",
+      "name": "Autocorrelation Increase",
+      "equation": "(Critical_Slowing_Factor - Autocorrelation_Indicator) * Autocorr_Response_Rate",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {"x": 300, "y": 500}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Salinity Feedback",
+      "equation": "(North_Atlantic_Salinity - 34.5) * Salinity_Sensitivity",
+      "position": {"x": 300, "y": 100}
+    },
+    {
+      "id": "v2",
+      "name": "Salinity Sensitivity",
+      "equation": "0.5",
+      "position": {"x": 350, "y": 50}
+    },
+    {
+      "id": "v3",
+      "name": "Freshwater Forcing",
+      "equation": "Freshwater_Flux_Anomaly * 0.3",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "v4",
+      "name": "Nonlinear Collapse Term",
+      "equation": "IF(AMOC_Strength_Index < Critical_Threshold, (Critical_Threshold - AMOC_Strength_Index) * Collapse_Rate, 0)",
+      "position": {"x": 100, "y": 250}
+    },
+    {
+      "id": "v5",
+      "name": "Critical Threshold",
+      "equation": "10.0",
+      "position": {"x": 50, "y": 300}
+    },
+    {
+      "id": "v6",
+      "name": "Collapse Rate",
+      "equation": "0.5",
+      "position": {"x": 50, "y": 350}
+    },
+    {
+      "id": "v7",
+      "name": "AMOC Salt Advection",
+      "equation": "AMOC_Strength_Index * 0.02",
+      "position": {"x": 500, "y": 100}
+    },
+    {
+      "id": "v8",
+      "name": "Freshwater Dilution",
+      "equation": "Freshwater_Flux_Anomaly * 0.1",
+      "position": {"x": 500, "y": 200}
+    },
+    {
+      "id": "v9",
+      "name": "Greenland Melt Rate",
+      "equation": "0.005 + 0.002 * TIME / 100",
+      "position": {"x": 100, "y": 400}
+    },
+    {
+      "id": "v10",
+      "name": "Precipitation Increase",
+      "equation": "0.003",
+      "position": {"x": 250, "y": 400}
+    },
+    {
+      "id": "v11",
+      "name": "Critical Slowing Factor",
+      "equation": "1 / MAX(0.1, (AMOC_Strength_Index - Critical_Threshold + 5))",
+      "position": {"x": 500, "y": 350}
+    },
+    {
+      "id": "v12",
+      "name": "Variance Response Rate",
+      "equation": "0.05",
+      "position": {"x": 500, "y": 400}
+    },
+    {
+      "id": "v13",
+      "name": "Autocorr Response Rate",
+      "equation": "0.03",
+      "position": {"x": 400, "y": 500}
+    },
+    {
+      "id": "v14",
+      "name": "Tipping Proximity Index",
+      "equation": "Variance_Indicator * Autocorrelation_Indicator * 10",
+      "position": {"x": 300, "y": 550}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 200, "dt": 1},
+  "created_at": "2026-01-15T16:00:00.000000",
+  "updated_at": "2026-01-15T16:00:00.000000",
+  "source": "https://doi.org/10.1038/s41558-021-01097-4",
+  "reference": "Boers, N. (2021). Observation-based early-warning signals for a collapse of the AMOC. Nature Climate Change, 11, 680-688."
+}

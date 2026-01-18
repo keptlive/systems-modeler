@@ -1,0 +1,136 @@
+{
+  "id": "solar-irradiance-and-climate-model-cli",
+  "name": "Solar Irradiance and Climate Model",
+  "description": "Model of solar variability effects on Earth's climate including 11-year solar cycle and longer-term variations. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "stock-temperature",
+      "name": "Temperature",
+      "initial_value": 287.5,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ocean-heat",
+      "name": "Ocean_Heat",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-solar-forcing",
+      "name": "solar_forcing",
+      "equation": "(TSI - TSI_mean) * 0.175 / 4",
+      "from_stock": null,
+      "to_stock": "stock-temperature",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-co2-forcing",
+      "name": "co2_forcing",
+      "equation": "0",
+      "from_stock": null,
+      "to_stock": "stock-temperature",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-outgoing-longwave",
+      "name": "outgoing_longwave",
+      "equation": "0",
+      "from_stock": "stock-temperature",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ocean-uptake",
+      "name": "ocean_uptake",
+      "equation": "0",
+      "from_stock": "stock-temperature",
+      "to_stock": "stock-ocean-heat",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-tsi-mean",
+      "name": "TSI_mean",
+      "equation": "1361",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-tsi-amplitude",
+      "name": "TSI_amplitude",
+      "equation": "1.1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cycle-period",
+      "name": "cycle_period",
+      "equation": "11",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-climate-sensitivity",
+      "name": "climate_sensitivity",
+      "equation": "3.0",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-ocean-heat-capacity",
+      "name": "ocean_heat_capacity",
+      "equation": "8.5",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "TSI_mean",
+      "to_element": "solar_forcing"
+    }
+  ],
+  "time_settings": {
+    "start": 1850,
+    "end": 2020,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T20:04:50.721448Z",
+  "updated_at": "2026-01-11T20:04:50.721448Z",
+  "source": "https://doi.org/10.1038/nature14240",
+  "reference": "IPCC Climate Models and Reports"
+}

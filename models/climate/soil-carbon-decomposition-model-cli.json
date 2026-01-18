@@ -1,0 +1,181 @@
+{
+  "id": "soil-carbon-decomposition-model-cli",
+  "name": "Soil Carbon Decomposition Model",
+  "description": "Century-type soil carbon model with multiple pools (labile, slow, passive) and temperature-dependent decomposition. Reference: IPCC (2021). Climate Change 2021: The Physical Science Basis. Source: https://www.ipcc.ch/report/ar6/wg1/",
+  "stocks": [
+    {
+      "id": "stock-c-labile",
+      "name": "C_Labile",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-c-slow",
+      "name": "C_Slow",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-c-passive",
+      "name": "C_Passive",
+      "initial_value": 1500,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-c-litter",
+      "name": "C_Litter",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-litterfall",
+      "name": "litterfall",
+      "equation": "0",
+      "from_stock": null,
+      "to_stock": "stock-c-litter",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-litter-decomp",
+      "name": "litter_decomp",
+      "equation": "0",
+      "from_stock": "stock-c-litter",
+      "to_stock": "stock-c-labile",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-labile-decomp",
+      "name": "labile_decomp",
+      "equation": "0",
+      "from_stock": "stock-c-labile",
+      "to_stock": "stock-c-slow",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-slow-decomp",
+      "name": "slow_decomp",
+      "equation": "0",
+      "from_stock": "stock-c-slow",
+      "to_stock": "stock-c-passive",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-passive-decomp",
+      "name": "passive_decomp",
+      "equation": "0",
+      "from_stock": "stock-c-passive",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-respiration",
+      "name": "respiration",
+      "equation": "0",
+      "from_stock": "stock-c-labile",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-k-litter",
+      "name": "k_litter",
+      "equation": "4.0",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-k-labile",
+      "name": "k_labile",
+      "equation": "1.0",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-k-slow",
+      "name": "k_slow",
+      "equation": "0.025",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-k-passive",
+      "name": "k_passive",
+      "equation": "0.001",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-q10",
+      "name": "Q10",
+      "equation": "2.0",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-f-resp",
+      "name": "f_resp",
+      "equation": "0.55",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T20:04:50.720746Z",
+  "updated_at": "2026-01-11T20:04:50.720746Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

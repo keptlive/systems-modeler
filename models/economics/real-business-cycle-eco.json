@@ -1,0 +1,164 @@
+{
+  "id": "real-business-cycle-eco",
+  "name": "Real Business Cycle Model",
+  "description": "Macroeconomic fluctuations from productivity shocks. Nobel Prize model (Kydland & Prescott). Source: Kydland & Prescott (1982), Econometrica. DOI: 10.2307/1913386",
+  "stocks": [
+    {
+      "id": "stock-k",
+      "name": "Capital_Stock",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-c",
+      "name": "Consumption",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-output",
+      "name": "Output",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-invest",
+      "name": "Investment",
+      "equation": "Output - Consumption",
+      "from_stock": null,
+      "to_stock": "stock-k",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-deprec",
+      "name": "Depreciation",
+      "equation": "Capital_Stock * Delta",
+      "from_stock": "stock-k",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-cchg",
+      "name": "Consumption_Change",
+      "equation": "(Optimal_Consumption - Consumption) * Adjustment",
+      "from_stock": null,
+      "to_stock": "stock-c",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-ychg",
+      "name": "Output_Change",
+      "equation": "(Production - Output) * 0.5",
+      "from_stock": null,
+      "to_stock": "stock-output",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-tfp",
+      "name": "TFP",
+      "equation": "1 + 0.1 * SIN(TIME / 10)",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-alpha",
+      "name": "Alpha",
+      "equation": "0.35",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-delta",
+      "name": "Delta",
+      "equation": "0.025",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-labor",
+      "name": "Labor",
+      "equation": "100",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-prod",
+      "name": "Production",
+      "equation": "TFP * (Capital_Stock ^ Alpha) * (Labor ^ (1 - Alpha))",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-optc",
+      "name": "Optimal_Consumption",
+      "equation": "Output * 0.7",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-adj",
+      "name": "Adjustment",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Capital_Stock",
+      "to_element": "Production"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:09:47.460837+00:00",
+  "updated_at": "2026-01-12T02:09:47.460840+00:00",
+  "source": "https://doi.org/10.2307/1913386",
+  "reference": "Kydland, F.E. & Prescott, E.C. (1982). Time to Build and Aggregate Fluctuations. Econometrica."
+}

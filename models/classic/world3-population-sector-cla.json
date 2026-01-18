@@ -1,0 +1,221 @@
+{
+  "id": "world3-population-sector-cla",
+  "name": "World3 Population Sector",
+  "description": "Population dynamics sector from the World3 model (Limits to Growth). Includes age cohorts, fertility dynamics, mortality, and demographic transition. Based on Meadows et al. (1972) and 2004 30-year update. Reference: Meadows, D. H., et al. (1972). The Limits to Growth. Universe Books. Source: https://www.clubofrome.org/publication/the-limits-to-growth/",
+  "stocks": [
+    {
+      "id": "stock-p0-14",
+      "name": "Population 0-14",
+      "initial_value": 650000000.0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-p15-44",
+      "name": "Population 15-44",
+      "initial_value": 700000000.0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-p45-64",
+      "name": "Population 45-64",
+      "initial_value": 190000000.0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-p65plus",
+      "name": "Population 65+",
+      "initial_value": 60000000.0,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-births",
+      "name": "Births",
+      "equation": "Population_15_44 * Fertility * 0.5 / 30",
+      "from_stock": null,
+      "to_stock": "stock-p0-14",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-mat1",
+      "name": "Maturation 14 to 15",
+      "equation": "Population_0_14 / 15",
+      "from_stock": "stock-p0-14",
+      "to_stock": "stock-p15-44",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-mat2",
+      "name": "Maturation 44 to 45",
+      "equation": "Population_15_44 / 30",
+      "from_stock": "stock-p15-44",
+      "to_stock": "stock-p45-64",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-mat3",
+      "name": "Maturation 64 to 65",
+      "equation": "Population_45_64 / 20",
+      "from_stock": "stock-p45-64",
+      "to_stock": "stock-p65plus",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-death0",
+      "name": "Deaths 0-14",
+      "equation": "Population_0_14 * Mortality_0_14",
+      "from_stock": "stock-p0-14",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-death1",
+      "name": "Deaths 15-44",
+      "equation": "Population_15_44 * Mortality_15_44",
+      "from_stock": "stock-p15-44",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-death2",
+      "name": "Deaths 45-64",
+      "equation": "Population_45_64 * Mortality_45_64",
+      "from_stock": "stock-p45-64",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-death3",
+      "name": "Deaths 65+",
+      "equation": "Population_65plus * Mortality_65plus",
+      "from_stock": "stock-p65plus",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-fertility",
+      "name": "Fertility",
+      "equation": "MAX(1.5, 6 * (1 - 0.5 * Industrial_Output_Per_Capita / 200))",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-iopc",
+      "name": "Industrial Output Per Capita",
+      "equation": "50 * (1 + 0.02 * Time)",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-m0",
+      "name": "Mortality 0-14",
+      "equation": "MAX(0.005, 0.03 - 0.0002 * Life_Expectancy)",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-m1",
+      "name": "Mortality 15-44",
+      "equation": "0.003",
+      "position": {
+        "x": 700,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-m2",
+      "name": "Mortality 45-64",
+      "equation": "0.012",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-m3",
+      "name": "Mortality 65plus",
+      "equation": "0.07",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-life-exp",
+      "name": "Life Expectancy",
+      "equation": "50 + 0.3 * Time",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-total-pop",
+      "name": "Total Population",
+      "equation": "Population_0_14 + Population_15_44 + Population_45_64 + Population_65plus",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 1900,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1111/jiec.13442",
+  "reference": "Meadows et al. Limits to Growth (1972); Nebel et al. Recalibration of limits to growth: World3 model update. J Industrial Ecology (2024).",
+  "created_at": "2026-01-12T08:11:11.789037+00:00",
+  "updated_at": "2026-01-12T08:11:11.789037+00:00"
+}

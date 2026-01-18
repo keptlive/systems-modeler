@@ -1,0 +1,32 @@
+{
+  "id": "covid-19-long-covid-burden-hea",
+  "name": "Long COVID Disease Burden Model",
+  "description": "Model of Long COVID (Post-Acute Sequelae of SARS-CoV-2) disease burden tracking patients with persistent symptoms. Based on ONS and CDC surveillance data showing 10-30% of cases develop prolonged symptoms.",
+  "stocks": [
+    {"id": "stock-acute-covid", "name": "Acute COVID", "initial_value": 100000, "equation": "", "position": {"x": 150, "y": 200}},
+    {"id": "stock-long-covid", "name": "Long COVID", "initial_value": 20000, "equation": "", "position": {"x": 400, "y": 200}},
+    {"id": "stock-recovered", "name": "Recovered", "initial_value": 1000000, "equation": "", "position": {"x": 650, "y": 200}},
+    {"id": "stock-cumulative-dalys", "name": "Cumulative DALYs", "initial_value": 0, "equation": "", "position": {"x": 400, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-new-cases", "name": "New Cases", "equation": "Daily_Incidence", "from_stock": null, "to_stock": "stock-acute-covid", "position": {"x": 50, "y": 200}},
+    {"id": "flow-develop-long-covid", "name": "Develop Long COVID", "equation": "Acute_COVID * Long_COVID_Risk / Acute_Duration", "from_stock": "stock-acute-covid", "to_stock": "stock-long-covid", "position": {"x": 275, "y": 200}},
+    {"id": "flow-acute-recovery", "name": "Acute Recovery", "equation": "Acute_COVID * (1 - Long_COVID_Risk) / Acute_Duration", "from_stock": "stock-acute-covid", "to_stock": "stock-recovered", "position": {"x": 400, "y": 130}},
+    {"id": "flow-long-covid-recovery", "name": "Long COVID Recovery", "equation": "Long_COVID / Long_COVID_Duration", "from_stock": "stock-long-covid", "to_stock": "stock-recovered", "position": {"x": 525, "y": 200}},
+    {"id": "flow-daly-accrual", "name": "DALY Accrual", "equation": "Acute_COVID * Acute_Disability_Weight / 365 + Long_COVID * Long_COVID_Disability_Weight / 365", "from_stock": null, "to_stock": "stock-cumulative-dalys", "position": {"x": 300, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-daily-incidence", "name": "Daily Incidence", "equation": "10000", "position": {"x": 100, "y": 100}},
+    {"id": "var-long-covid-risk", "name": "Long COVID Risk", "equation": "0.2", "position": {"x": 300, "y": 100}},
+    {"id": "var-acute-duration", "name": "Acute Duration", "equation": "14", "position": {"x": 450, "y": 100}},
+    {"id": "var-long-covid-duration", "name": "Long COVID Duration", "equation": "180", "position": {"x": 600, "y": 100}},
+    {"id": "var-acute-disability-weight", "name": "Acute Disability Weight", "equation": "0.133", "position": {"x": 200, "y": 420}},
+    {"id": "var-long-covid-disability-weight", "name": "Long COVID Disability Weight", "equation": "0.219", "position": {"x": 450, "y": 420}},
+    {"id": "var-prevalence-long-covid", "name": "Prevalence Long COVID", "equation": "Long_COVID", "position": {"x": 600, "y": 420}},
+    {"id": "var-annual-dalys", "name": "Annual DALYs", "equation": "Daily_Incidence * 365 * (Acute_Disability_Weight * Acute_Duration / 365 + Long_COVID_Risk * Long_COVID_Disability_Weight * Long_COVID_Duration / 365)", "position": {"x": 400, "y": 500}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 730, "dt": 1},
+  "source": "https://doi.org/10.1016/S0140-6736(22)01214-4",
+  "reference": "Global Burden of Disease Long COVID Collaborators. Estimated Global Proportions of Individuals With Persistent Fatigue, Cognitive, and Respiratory Symptom Clusters Following Symptomatic COVID-19. JAMA. 2022;328(16):1604-1615."
+}

@@ -1,0 +1,276 @@
+{
+  "id": "glucose-insulin-homeostasis-model-hea",
+  "name": "Glucose-Insulin Homeostasis Model",
+  "description": "Models the feedback regulation of blood glucose by insulin. After a meal, blood glucose rises, triggering insulin release from the pancreas. Insulin promotes glucose uptake by cells, lowering blood glucose. Dysfunction of this system leads to diabetes. Used to study metabolic disorders and design treatment strategies. Reference: ADA Standards of Medical Care in Diabetes. Diabetes Care. Source: https://diabetesjournals.org/",
+  "stocks": [
+    {
+      "id": "stock-blood-glucose",
+      "name": "Blood Glucose",
+      "initial_value": 90,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-plasma-insulin",
+      "name": "Plasma Insulin",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-remote-insulin",
+      "name": "Remote Insulin",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-glucose-input",
+      "name": "Glucose Input",
+      "equation": "Meal_Glucose_Rate",
+      "from_stock": null,
+      "to_stock": "stock-blood-glucose",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-hepatic-glucose-output",
+      "name": "Hepatic Glucose Output",
+      "equation": "Basal_HGO * (1 - Hepatic_Insulin_Sensitivity * (Plasma_Insulin - Basal_Insulin))",
+      "from_stock": null,
+      "to_stock": "stock-blood-glucose",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-glucose-uptake",
+      "name": "Glucose Uptake",
+      "equation": "(SG + Remote_Insulin) * Blood_Glucose",
+      "from_stock": "stock-blood-glucose",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-insulin-secretion",
+      "name": "Insulin Secretion",
+      "equation": "IF Blood_Glucose > Glucose_Threshold THEN Beta_Cell_Sensitivity * (Blood_Glucose - Glucose_Threshold) ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-plasma-insulin",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-insulin-clearance",
+      "name": "Insulin Clearance",
+      "equation": "Insulin_Clearance_Rate * Plasma_Insulin",
+      "from_stock": "stock-plasma-insulin",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-insulin-action",
+      "name": "Insulin Action",
+      "equation": "P2 * (Plasma_Insulin - Basal_Insulin)",
+      "from_stock": null,
+      "to_stock": "stock-remote-insulin",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-insulin-effect-decay",
+      "name": "Insulin Effect Decay",
+      "equation": "P3 * Remote_Insulin",
+      "from_stock": "stock-remote-insulin",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-meal-glucose-rate",
+      "name": "Meal Glucose Rate",
+      "equation": "IF Time >= Meal_Time AND Time <= Meal_Time + Meal_Duration THEN Meal_Size / Meal_Duration ELSE 0",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-meal-time",
+      "name": "Meal Time",
+      "equation": "30",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-meal-duration",
+      "name": "Meal Duration",
+      "equation": "30",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-meal-size",
+      "name": "Meal Size",
+      "equation": "100",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-sg",
+      "name": "SG",
+      "equation": "0.01",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-basal-hgo",
+      "name": "Basal HGO",
+      "equation": "0.9",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-basal-insulin",
+      "name": "Basal Insulin",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-hepatic-insulin-sensitivity",
+      "name": "Hepatic Insulin Sensitivity",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-glucose-threshold",
+      "name": "Glucose Threshold",
+      "equation": "80",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-beta-cell-sensitivity",
+      "name": "Beta Cell Sensitivity",
+      "equation": "0.5",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-insulin-clearance-rate",
+      "name": "Insulin Clearance Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-p2",
+      "name": "P2",
+      "equation": "0.03",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-p3",
+      "name": "P3",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Blood Glucose",
+      "to_element": "Glucose Uptake"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Remote Insulin",
+      "to_element": "Glucose Uptake"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Blood Glucose",
+      "to_element": "Insulin Secretion"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Plasma Insulin",
+      "to_element": "Insulin Clearance"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Plasma Insulin",
+      "to_element": "Insulin Action"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Remote Insulin",
+      "to_element": "Insulin Effect Decay"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 300,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.813003Z",
+  "updated_at": "2026-01-11T20:04:50.813003Z",
+  "source": "https://doi.org/10.1016/j.socscimed.2013.03.004",
+  "reference": "Healthcare System Dynamics Models"
+}

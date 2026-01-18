@@ -1,0 +1,125 @@
+{
+  "id": "01-s-shaped-growth",
+  "name": "01 S Shaped Growth",
+  "description": "Model from 01 S Shaped Growth.mdl",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Stock",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Growth_Rate",
+      "equation": "Ref_Growth_Rate*Effect_Of_Availability_on_Growth_Rate",
+      "from_stock": null,
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Effect_Of_Availability_on_Growth_Rate",
+      "equation": "Availability/Ref_Availability",
+      "from_stock": null,
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Availability",
+      "equation": "1-Stock/Capacity",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Capacity",
+      "equation": "10000.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Ref_Availability",
+      "equation": "1.0",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Ref_Growth_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Ref_Growth_Rate",
+      "to_element": "Growth_Rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "Effect_Of_Availability_on_Growth_Rate",
+      "to_element": "Growth_Rate"
+    },
+    {
+      "id": "c3",
+      "from_element": "Availability",
+      "to_element": "Growth_Rate"
+    },
+    {
+      "id": "c4",
+      "from_element": "Ref_Availability",
+      "to_element": "Effect_Of_Availability_on_Growth_Rate"
+    },
+    {
+      "id": "c5",
+      "from_element": "Availability",
+      "to_element": "Effect_Of_Availability_on_Growth_Rate"
+    },
+    {
+      "id": "c6",
+      "from_element": "Stock",
+      "to_element": "Availability"
+    },
+    {
+      "id": "c7",
+      "from_element": "Capacity",
+      "to_element": "Availability"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 100.0,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-15T19:13:16.533851+00:00",
+  "updated_at": "2026-01-15T19:13:16.533851+00:00",
+  "source": "https://github.com/JimDuggan/SDMR",
+  "reference": "System Dynamics Modeling with R (Duggan, 2016)"
+}

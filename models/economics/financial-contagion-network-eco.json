@@ -1,0 +1,249 @@
+{
+  "id": "financial-contagion-network-eco",
+  "name": "Financial Contagion Network Model",
+  "description": "Models systemic risk propagation through banking networks. Based on Acemoglu et al. (2015) analysis of how network structure affects financial contagion. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-bank-a-assets",
+      "name": "Bank_A_Assets",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-bank-b-assets",
+      "name": "Bank_B_Assets",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-bank-c-assets",
+      "name": "Bank_C_Assets",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-bank-a-capital",
+      "name": "Bank_A_Capital",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-bank-b-capital",
+      "name": "Bank_B_Capital",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-bank-c-capital",
+      "name": "Bank_C_Capital",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-systemic-stress",
+      "name": "Systemic_Stress",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-a-losses",
+      "name": "Bank_A_Losses",
+      "equation": "Bank_A_Assets * Shock_A + Interbank_Exposure * MAX(0, Bank_B_Capital - B_Threshold) * Contagion_Rate",
+      "from_stock": "stock-bank-a-assets",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-b-losses",
+      "name": "Bank_B_Losses",
+      "equation": "Bank_B_Assets * Shock_B + Interbank_Exposure * MAX(0, Bank_A_Capital - A_Threshold) * Contagion_Rate",
+      "from_stock": "stock-bank-b-assets",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-c-losses",
+      "name": "Bank_C_Losses",
+      "equation": "Bank_C_Assets * Shock_C + Interbank_Exposure * (MAX(0, Bank_A_Capital - A_Threshold) + MAX(0, Bank_B_Capital - B_Threshold)) * Contagion_Rate",
+      "from_stock": "stock-bank-c-assets",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-a-capital-erosion",
+      "name": "Bank_A_Capital_Erosion",
+      "equation": "Bank_A_Losses * Capital_Impact",
+      "from_stock": "stock-bank-a-capital",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 370
+      }
+    },
+    {
+      "id": "flow-b-capital-erosion",
+      "name": "Bank_B_Capital_Erosion",
+      "equation": "Bank_B_Losses * Capital_Impact",
+      "from_stock": "stock-bank-b-capital",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 370
+      }
+    },
+    {
+      "id": "flow-c-capital-erosion",
+      "name": "Bank_C_Capital_Erosion",
+      "equation": "Bank_C_Losses * Capital_Impact",
+      "from_stock": "stock-bank-c-capital",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 370
+      }
+    },
+    {
+      "id": "flow-stress-buildup",
+      "name": "Stress_Buildup",
+      "equation": "MAX(0, A_Threshold - Bank_A_Capital) + MAX(0, B_Threshold - Bank_B_Capital) + MAX(0, C_Threshold - Bank_C_Capital)",
+      "from_stock": null,
+      "to_stock": "stock-systemic-stress",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-shock-a",
+      "name": "Shock_A",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-shock-b",
+      "name": "Shock_B",
+      "equation": "0",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-shock-c",
+      "name": "Shock_C",
+      "equation": "0",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-interbank-exposure",
+      "name": "Interbank_Exposure",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-contagion-rate",
+      "name": "Contagion_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-capital-impact",
+      "name": "Capital_Impact",
+      "equation": "0.8",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-a-threshold",
+      "name": "A_Threshold",
+      "equation": "10",
+      "position": {
+        "x": 150,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-b-threshold",
+      "name": "B_Threshold",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-c-threshold",
+      "name": "C_Threshold",
+      "equation": "10",
+      "position": {
+        "x": 550,
+        "y": 500
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:12:15.897070+00:00",
+  "updated_at": "2026-01-12T01:12:15.897078+00:00",
+  "source": "https://doi.org/10.1257/aer.20130456",
+  "reference": "Acemoglu D, Ozdaglar A, Tahbaz-Salehi A. Systemic Risk and Stability in Financial Networks. American Economic Review. 2015;105(2):564-608."
+}

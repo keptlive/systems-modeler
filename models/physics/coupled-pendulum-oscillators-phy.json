@@ -1,0 +1,602 @@
+{
+  "id": "coupled-pendulum-oscillators-phy",
+  "name": "Coupled Pendulum Oscillators",
+  "description": "A system dynamics model of two coupled pendulums connected by a spring, demonstrating normal modes, energy transfer, and beat phenomena. Classic example of coupled oscillator dynamics with applications from molecular physics to mechanical engineering. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "stock-angular-position-1",
+      "name": "Angular Position 1",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-angular-velocity-1",
+      "name": "Angular Velocity 1",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-angular-position-2",
+      "name": "Angular Position 2",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-angular-velocity-2",
+      "name": "Angular Velocity 2",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-energy-pendulum-1",
+      "name": "Energy Pendulum 1",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-energy-pendulum-2",
+      "name": "Energy Pendulum 2",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-angular-velocity-1-flow",
+      "name": "Angular Velocity 1 Flow",
+      "equation": "Omega1",
+      "from_stock": null,
+      "to_stock": "stock-angular-position-1",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-angular-acceleration-1",
+      "name": "Angular Acceleration 1",
+      "equation": "Angular_Acceleration_1",
+      "from_stock": null,
+      "to_stock": "stock-angular-velocity-1",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-angular-velocity-2-flow",
+      "name": "Angular Velocity 2 Flow",
+      "equation": "Omega2",
+      "from_stock": null,
+      "to_stock": "stock-angular-position-2",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-angular-acceleration-2",
+      "name": "Angular Acceleration 2",
+      "equation": "Angular_Acceleration_2",
+      "from_stock": null,
+      "to_stock": "stock-angular-velocity-2",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-energy-transfer-to-pendulum-1",
+      "name": "Energy Transfer to Pendulum 1",
+      "equation": "MAX(0, Coupling_Power)",
+      "from_stock": null,
+      "to_stock": "stock-energy-pendulum-1",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-energy-transfer-from-pendulum-1",
+      "name": "Energy Transfer from Pendulum 1",
+      "equation": "MAX(0, -Coupling_Power)",
+      "from_stock": "stock-energy-pendulum-1",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-energy-transfer-to-pendulum-2",
+      "name": "Energy Transfer to Pendulum 2",
+      "equation": "MAX(0, -Coupling_Power)",
+      "from_stock": null,
+      "to_stock": "stock-energy-pendulum-2",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-energy-transfer-from-pendulum-2",
+      "name": "Energy Transfer from Pendulum 2",
+      "equation": "MAX(0, Coupling_Power)",
+      "from_stock": "stock-energy-pendulum-2",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-energy-dissipation-1",
+      "name": "Energy Dissipation 1",
+      "equation": "Damping_Coefficient * Omega1^2 * Length_1",
+      "from_stock": "stock-energy-pendulum-1",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-energy-dissipation-2",
+      "name": "Energy Dissipation 2",
+      "equation": "Damping_Coefficient * Omega2^2 * Length_2",
+      "from_stock": "stock-energy-pendulum-2",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-mass-of-pendulum-1",
+      "name": "Mass of Pendulum 1",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mass-of-pendulum-2",
+      "name": "Mass of Pendulum 2",
+      "equation": "1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-length-of-pendulum-1",
+      "name": "Length of Pendulum 1",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-length-of-pendulum-2",
+      "name": "Length of Pendulum 2",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gravitational-acceleration",
+      "name": "Gravitational Acceleration",
+      "equation": "9.81",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-coupling-spring-constant",
+      "name": "Coupling Spring Constant",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-coupling-distance-from-pivot",
+      "name": "Coupling Distance from Pivot",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-damping-coefficient",
+      "name": "Damping Coefficient",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-initial-angle-1",
+      "name": "Initial Angle 1",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-initial-angle-2",
+      "name": "Initial Angle 2",
+      "equation": "0",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-initial-velocity-1",
+      "name": "Initial Velocity 1",
+      "equation": "0",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-initial-velocity-2",
+      "name": "Initial Velocity 2",
+      "equation": "0",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-natural-frequency-1",
+      "name": "Natural Frequency 1",
+      "equation": "SQRT(Gravity / Length_1)",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-natural-frequency-2",
+      "name": "Natural Frequency 2",
+      "equation": "SQRT(Gravity / Length_2)",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-coupling-frequency",
+      "name": "Coupling Frequency",
+      "equation": "SQRT(Spring_Constant * Coupling_Distance^2 / (Mass_1 * Length_1^2))",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-normal-mode-1-frequency-in-phase",
+      "name": "Normal Mode 1 Frequency (In-Phase)",
+      "equation": "Natural_Frequency_1",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-normal-mode-2-frequency-out-of-phase",
+      "name": "Normal Mode 2 Frequency (Out-of-Phase)",
+      "equation": "SQRT(Natural_Frequency_1^2 + 2 * Coupling_Frequency^2)",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-beat-frequency",
+      "name": "Beat Frequency",
+      "equation": "ABS(Normal_Mode_2_Frequency - Normal_Mode_1_Frequency)",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-beat-period",
+      "name": "Beat Period",
+      "equation": "2 * 3.14159 / Beat_Frequency",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-angular-acceleration-1",
+      "name": "Angular Acceleration 1",
+      "equation": "-Gravity / Length_1 * SIN(Theta1) - Damping_Coefficient / (Mass_1 * Length_1) * Omega1 - Coupling_Term_1",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-angular-acceleration-2",
+      "name": "Angular Acceleration 2",
+      "equation": "-Gravity / Length_2 * SIN(Theta2) - Damping_Coefficient / (Mass_2 * Length_2) * Omega2 - Coupling_Term_2",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-coupling-term-1",
+      "name": "Coupling Term 1",
+      "equation": "Spring_Constant * Coupling_Distance^2 / (Mass_1 * Length_1^2) * (Theta1 - Theta2)",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-coupling-term-2",
+      "name": "Coupling Term 2",
+      "equation": "Spring_Constant * Coupling_Distance^2 / (Mass_2 * Length_2^2) * (Theta2 - Theta1)",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-coupling-power-transfer",
+      "name": "Coupling Power Transfer",
+      "equation": "Spring_Constant * Coupling_Distance * (Theta1 - Theta2) * (Omega1 * Coupling_Distance)",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-kinetic-energy-1",
+      "name": "Kinetic Energy 1",
+      "equation": "0.5 * Mass_1 * (Length_1 * Omega1)^2",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-potential-energy-1",
+      "name": "Potential Energy 1",
+      "equation": "Mass_1 * Gravity * Length_1 * (1 - COS(Theta1))",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-kinetic-energy-2",
+      "name": "Kinetic Energy 2",
+      "equation": "0.5 * Mass_2 * (Length_2 * Omega2)^2",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-potential-energy-2",
+      "name": "Potential Energy 2",
+      "equation": "Mass_2 * Gravity * Length_2 * (1 - COS(Theta2))",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-spring-potential-energy",
+      "name": "Spring Potential Energy",
+      "equation": "0.5 * Spring_Constant * (Coupling_Distance * (Theta1 - Theta2))^2",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-total-system-energy",
+      "name": "Total System Energy",
+      "equation": "Kinetic_Energy_1 + Potential_Energy_1 + Kinetic_Energy_2 + Potential_Energy_2 + Spring_Potential_Energy",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-initial-energy-1",
+      "name": "Initial Energy 1",
+      "equation": "Mass_1 * Gravity * Length_1 * (1 - COS(Initial_Angle_1))",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-initial-energy-2",
+      "name": "Initial Energy 2",
+      "equation": "Mass_2 * Gravity * Length_2 * (1 - COS(Initial_Angle_2))",
+      "position": {
+        "x": 250,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-horizontal-position-1",
+      "name": "Horizontal Position 1",
+      "equation": "Length_1 * SIN(Theta1)",
+      "position": {
+        "x": 400,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-vertical-position-1",
+      "name": "Vertical Position 1",
+      "equation": "-Length_1 * COS(Theta1)",
+      "position": {
+        "x": 550,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-horizontal-position-2",
+      "name": "Horizontal Position 2",
+      "equation": "Length_2 * SIN(Theta2)",
+      "position": {
+        "x": 700,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-vertical-position-2",
+      "name": "Vertical Position 2",
+      "equation": "-Length_2 * COS(Theta2)",
+      "position": {
+        "x": 100,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-phase-difference",
+      "name": "Phase Difference",
+      "equation": "Theta1 - Theta2",
+      "position": {
+        "x": 250,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-in-phase-mode-amplitude",
+      "name": "In-Phase Mode Amplitude",
+      "equation": "(Theta1 + Theta2) / 2",
+      "position": {
+        "x": 400,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-out-of-phase-mode-amplitude",
+      "name": "Out-of-Phase Mode Amplitude",
+      "equation": "(Theta1 - Theta2) / 2",
+      "position": {
+        "x": 550,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-coupling-strength-ratio",
+      "name": "Coupling Strength Ratio",
+      "equation": "Coupling_Frequency / Natural_Frequency_1",
+      "position": {
+        "x": 700,
+        "y": 640
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Angular Velocity 1",
+      "to_element": "Angular Velocity 1 Flow"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Angular Position 1",
+      "to_element": "Angular Acceleration 1"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Angular Velocity 1",
+      "to_element": "Angular Acceleration 1"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Angular Position 2",
+      "to_element": "Angular Acceleration 1"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Angular Velocity 2",
+      "to_element": "Angular Velocity 2 Flow"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Angular Position 2",
+      "to_element": "Angular Acceleration 2"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Angular Velocity 2",
+      "to_element": "Angular Acceleration 2"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Angular Position 1",
+      "to_element": "Angular Acceleration 2"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Coupling Spring Constant",
+      "to_element": "Coupling Term 1"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Coupling Spring Constant",
+      "to_element": "Coupling Term 2"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-11T20:04:50.834270Z",
+  "updated_at": "2026-01-11T20:04:50.834270Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "Classical mechanics demonstration - PySD Cookbook"
+}

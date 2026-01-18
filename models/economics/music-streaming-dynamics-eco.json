@@ -1,0 +1,150 @@
+{
+  "id": "music-streaming-dynamics-eco",
+  "name": "Music Streaming Industry Model",
+  "description": "Model of music streaming market dynamics. Source: RIAA; IFPI Global Music Report.",
+  "stocks": [
+    {
+      "id": "stock-physical",
+      "name": "Physical_Sales",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-stream",
+      "name": "Streaming_Revenue",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-subs",
+      "name": "Paid_Subscribers",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-phys-dec",
+      "name": "Physical_Decline",
+      "equation": "Physical_Sales * Physical_Decline_Rate",
+      "from_stock": "stock-physical",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-stream-grow",
+      "name": "Streaming_Growth",
+      "equation": "Paid_Subscribers * Revenue_Per_Sub / 12",
+      "from_stock": null,
+      "to_stock": "stock-stream",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-subs-grow",
+      "name": "Subscriber_Growth",
+      "equation": "(Market_Potential - Paid_Subscribers) * Conversion_Rate",
+      "from_stock": null,
+      "to_stock": "stock-subs",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-churn",
+      "name": "Subscriber_Churn",
+      "equation": "Paid_Subscribers * Churn_Rate",
+      "from_stock": "stock-subs",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-physdec",
+      "name": "Physical_Decline_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-revper",
+      "name": "Revenue_Per_Sub",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-potential",
+      "name": "Market_Potential",
+      "equation": "1000",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-convert",
+      "name": "Conversion_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-churn",
+      "name": "Churn_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Revenue",
+      "equation": "Physical_Sales + Streaming_Revenue",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:53:13.195596+00:00",
+  "updated_at": "2026-01-12T12:53:13.195596+00:00",
+  "source": "https://doi.org/10.1287/mnsc.2017.2770",
+  "reference": "Aguiar L, Waldfogel J. Streaming reaches flood stage: Does Spotify stimulate or depress music sales? International Journal of Industrial Organization. 2018;57:278-307."
+}

@@ -1,0 +1,302 @@
+{
+  "id": "drug-development-pipeline-hea",
+  "name": "Pharmaceutical Drug Development Pipeline Model",
+  "description": "Model of drug development process showing attrition rates through clinical trial phases. Based on DiMasi et al. (2016). Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Discovery Candidates",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Preclinical",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Phase 1",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Phase 2",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Phase 3",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s6",
+      "name": "Approved Drugs",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "New Discovery",
+      "equation": "Discovery_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "To Preclinical",
+      "equation": "Discovery_Candidates * Discovery_Success_Rate / Discovery_Duration",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "To Phase 1",
+      "equation": "Preclinical * Preclinical_Success_Rate / Preclinical_Duration",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "To Phase 2",
+      "equation": "Phase_1 * Phase1_Success_Rate / Phase1_Duration",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "To Phase 3",
+      "equation": "Phase_2 * Phase2_Success_Rate / Phase2_Duration",
+      "from_stock": "s4",
+      "to_stock": "s5",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "FDA Approval",
+      "equation": "Phase_3 * Phase3_Success_Rate / Phase3_Duration",
+      "from_stock": "s5",
+      "to_stock": "s6",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Discovery Failure",
+      "equation": "Discovery_Candidates * (1 - Discovery_Success_Rate) / Discovery_Duration",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f8",
+      "name": "Preclinical Failure",
+      "equation": "Preclinical * (1 - Preclinical_Success_Rate) / Preclinical_Duration",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Discovery Rate",
+      "equation": "10",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Discovery Duration",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Discovery Success Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Preclinical Duration",
+      "equation": "2",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Preclinical Success Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Phase1 Duration",
+      "equation": "1.5",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Phase1 Success Rate",
+      "equation": "0.64",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Phase2 Duration",
+      "equation": "2.5",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Phase2 Success Rate",
+      "equation": "0.32",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Phase3 Duration",
+      "equation": "3",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Phase3 Success Rate",
+      "equation": "0.58",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Overall Success Rate",
+      "equation": "Discovery_Success_Rate * Preclinical_Success_Rate * Phase1_Success_Rate * Phase2_Success_Rate * Phase3_Success_Rate",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Total Pipeline",
+      "equation": "Discovery_Candidates + Preclinical + Phase_1 + Phase_2 + Phase_3",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Discovery Candidates",
+      "to_element": "To Preclinical"
+    },
+    {
+      "id": "c2",
+      "from_element": "Preclinical",
+      "to_element": "To Phase 1"
+    },
+    {
+      "id": "c3",
+      "from_element": "Phase 1",
+      "to_element": "To Phase 2"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:53:04.261475+00:00",
+  "updated_at": "2026-01-12T01:53:04.261478+00:00",
+  "source": "https://doi.org/10.1016/j.jhealeco.2016.01.012",
+  "reference": "DiMasi JA, Grabowski HG, Hansen RW. Innovation in the pharmaceutical industry: New estimates of R&D costs. J Health Econ. 2016;47:20-33."
+}

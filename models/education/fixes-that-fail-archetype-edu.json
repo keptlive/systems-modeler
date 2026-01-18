@@ -1,0 +1,136 @@
+{
+  "id": "fixes-that-fail-archetype-edu",
+  "name": "Fixes That Fail System Archetype",
+  "description": "Quick fixes create unintended consequences that worsen the original problem. Classic system archetype. Source: Senge (1990), The Fifth Discipline. DOI: 10.1108/eb025496",
+  "stocks": [
+    {
+      "id": "stock-problem",
+      "name": "Problem_Symptom",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-unintended",
+      "name": "Unintended_Consequences",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-quick",
+      "name": "Quick_Fix",
+      "equation": "Problem_Symptom * Fix_Intensity",
+      "from_stock": "stock-problem",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-backfire",
+      "name": "Backfire_Effect",
+      "equation": "Unintended_Consequences * Consequence_Rate",
+      "from_stock": null,
+      "to_stock": "stock-problem",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-unintend",
+      "name": "Unintended_Generation",
+      "equation": "Quick_Fix * Delay_Factor",
+      "from_stock": null,
+      "to_stock": "stock-unintended",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-decay",
+      "name": "Consequence_Decay",
+      "equation": "Unintended_Consequences * Decay_Rate",
+      "from_stock": "stock-unintended",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-fixint",
+      "name": "Fix_Intensity",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-delay",
+      "name": "Delay_Factor",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-consrate",
+      "name": "Consequence_Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-decay",
+      "name": "Decay_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-neteff",
+      "name": "Net_Effect",
+      "equation": "Quick_Fix - Backfire_Effect",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Unintended_Consequences",
+      "to_element": "Backfire_Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:13:18.795582+00:00",
+  "updated_at": "2026-01-12T02:13:18.795659+00:00",
+  "source": "https://doi.org/10.1108/eb025496",
+  "reference": "Senge, P.M. (1990). The Fifth Discipline: The Art and Practice of the Learning Organization."
+}

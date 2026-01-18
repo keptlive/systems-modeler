@@ -1,0 +1,211 @@
+{
+  "id": "supply-chain-disruption-ripple-effect-eco",
+  "name": "Supply Chain Disruption Ripple Effect Model",
+  "description": "Model of how supply chain disruptions propagate through tiers causing long-lasting shortages and amplification effects. Based on pandemic and conflict disruption research showing 20-50% demand reductions amplify through tiers. Reference: Ivanov, D. (2024). Optimisation of recovery policies in supply chain disruptions. International Journal of Production Research. Source: https://doi.org/10.1080/00207543.2024.2383293",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "OEM Inventory",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 500, "y": 150}
+    },
+    {
+      "id": "s2",
+      "name": "Tier 1 Inventory",
+      "initial_value": 80,
+      "equation": "",
+      "position": {"x": 350, "y": 150}
+    },
+    {
+      "id": "s3",
+      "name": "Tier 2 Inventory",
+      "initial_value": 60,
+      "equation": "",
+      "position": {"x": 200, "y": 150}
+    },
+    {
+      "id": "s4",
+      "name": "Raw Material Stock",
+      "initial_value": 150,
+      "equation": "",
+      "position": {"x": 50, "y": 150}
+    },
+    {
+      "id": "s5",
+      "name": "Customer Demand",
+      "initial_value": 10,
+      "equation": "",
+      "position": {"x": 600, "y": 150}
+    },
+    {
+      "id": "s6",
+      "name": "Disruption Severity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {"x": 300, "y": 300}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "OEM Shipments",
+      "equation": "MIN(OEM_Inventory / Lead_Time_OEM, Customer_Demand)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {"x": 550, "y": 150}
+    },
+    {
+      "id": "f2",
+      "name": "Tier1 to OEM",
+      "equation": "MIN(Tier_1_Inventory / Lead_Time_T1, OEM_Order_Rate) * (1 - Disruption_Severity * T1_Vulnerability)",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {"x": 425, "y": 150}
+    },
+    {
+      "id": "f3",
+      "name": "Tier2 to Tier1",
+      "equation": "MIN(Tier_2_Inventory / Lead_Time_T2, Tier1_Order_Rate) * (1 - Disruption_Severity * T2_Vulnerability)",
+      "from_stock": "s3",
+      "to_stock": "s2",
+      "position": {"x": 275, "y": 150}
+    },
+    {
+      "id": "f4",
+      "name": "Raw to Tier2",
+      "equation": "MIN(Raw_Material_Stock / Lead_Time_Raw, Tier2_Order_Rate) * (1 - Disruption_Severity * Raw_Vulnerability)",
+      "from_stock": "s4",
+      "to_stock": "s3",
+      "position": {"x": 125, "y": 150}
+    },
+    {
+      "id": "f5",
+      "name": "Raw Replenishment",
+      "equation": "Raw_Supply_Rate * (1 - Disruption_Severity)",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {"x": 50, "y": 200}
+    },
+    {
+      "id": "f6",
+      "name": "Demand Shock",
+      "equation": "IF(TIME > 50, IF(TIME < 100, -0.3 * Customer_Demand, 0.1 * (Normal_Demand - Customer_Demand)), 0)",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {"x": 600, "y": 200}
+    },
+    {
+      "id": "f7",
+      "name": "Disruption Onset",
+      "equation": "IF(TIME > 30, IF(TIME < 40, 0.1, -0.02 * Disruption_Severity), 0)",
+      "from_stock": null,
+      "to_stock": "s6",
+      "position": {"x": 300, "y": 350}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Lead Time OEM",
+      "equation": "5",
+      "position": {"x": 500, "y": 50}
+    },
+    {
+      "id": "v2",
+      "name": "Lead Time T1",
+      "equation": "7",
+      "position": {"x": 350, "y": 50}
+    },
+    {
+      "id": "v3",
+      "name": "Lead Time T2",
+      "equation": "10",
+      "position": {"x": 200, "y": 50}
+    },
+    {
+      "id": "v4",
+      "name": "Lead Time Raw",
+      "equation": "14",
+      "position": {"x": 50, "y": 50}
+    },
+    {
+      "id": "v5",
+      "name": "OEM Order Rate",
+      "equation": "Customer_Demand * 1.1 + (Target_OEM_Inv - OEM_Inventory) / Inv_Adj_Time",
+      "position": {"x": 450, "y": 250}
+    },
+    {
+      "id": "v6",
+      "name": "Tier1 Order Rate",
+      "equation": "Tier1_to_OEM * 1.2 + (Target_T1_Inv - Tier_1_Inventory) / Inv_Adj_Time",
+      "position": {"x": 300, "y": 250}
+    },
+    {
+      "id": "v7",
+      "name": "Tier2 Order Rate",
+      "equation": "Tier2_to_Tier1 * 1.3 + (Target_T2_Inv - Tier_2_Inventory) / Inv_Adj_Time",
+      "position": {"x": 150, "y": 250}
+    },
+    {
+      "id": "v8",
+      "name": "Target OEM Inv",
+      "equation": "100",
+      "position": {"x": 550, "y": 250}
+    },
+    {
+      "id": "v9",
+      "name": "Target T1 Inv",
+      "equation": "80",
+      "position": {"x": 400, "y": 300}
+    },
+    {
+      "id": "v10",
+      "name": "Target T2 Inv",
+      "equation": "60",
+      "position": {"x": 250, "y": 350}
+    },
+    {
+      "id": "v11",
+      "name": "Inv Adj Time",
+      "equation": "10",
+      "position": {"x": 350, "y": 400}
+    },
+    {
+      "id": "v12",
+      "name": "T1 Vulnerability",
+      "equation": "0.3",
+      "position": {"x": 400, "y": 100}
+    },
+    {
+      "id": "v13",
+      "name": "T2 Vulnerability",
+      "equation": "0.5",
+      "position": {"x": 250, "y": 100}
+    },
+    {
+      "id": "v14",
+      "name": "Raw Vulnerability",
+      "equation": "0.7",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "v15",
+      "name": "Raw Supply Rate",
+      "equation": "12",
+      "position": {"x": 50, "y": 250}
+    },
+    {
+      "id": "v16",
+      "name": "Normal Demand",
+      "equation": "10",
+      "position": {"x": 650, "y": 100}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 200, "dt": 1},
+  "created_at": "2026-01-15T16:00:00.000000",
+  "updated_at": "2026-01-15T16:00:00.000000",
+  "source": "https://doi.org/10.1080/00207543.2024.2383293",
+  "reference": "Ivanov, D., et al. (2024). Optimisation of recovery policies in the era of supply chain disruptions. International Journal of Production Research."
+}

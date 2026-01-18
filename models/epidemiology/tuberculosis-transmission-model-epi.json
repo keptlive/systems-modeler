@@ -1,0 +1,267 @@
+{
+  "id": "tuberculosis-transmission-model-epi",
+  "name": "Tuberculosis Transmission Model",
+  "description": "SEIR-type model for tuberculosis transmission including latent TB, active disease, and treatment. Incorporates the long latency period characteristic of TB. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 9900,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-latent-early",
+      "name": "Latent_Early",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-latent-late",
+      "name": "Latent_Late",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-active-tb",
+      "name": "Active_TB",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "infection",
+      "equation": "beta * Susceptible * Active_TB / N",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-latent-early",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-early-progression",
+      "name": "early_progression",
+      "equation": "p_fast * epsilon * Latent_Early",
+      "from_stock": "stock-latent-early",
+      "to_stock": "stock-active-tb",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-late-latency",
+      "name": "late_latency",
+      "equation": "(1 - p_fast) * epsilon * Latent_Early",
+      "from_stock": "stock-latent-early",
+      "to_stock": "stock-latent-late",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-reactivation",
+      "name": "reactivation",
+      "equation": "nu * Latent_Late",
+      "from_stock": "stock-latent-late",
+      "to_stock": "stock-active-tb",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-treatment",
+      "name": "treatment",
+      "equation": "gamma * Active_TB",
+      "from_stock": "stock-active-tb",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-tb-death",
+      "name": "tb_death",
+      "equation": "mu_tb * Active_TB",
+      "from_stock": "stock-active-tb",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "beta",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-p-fast",
+      "name": "p_fast",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-epsilon",
+      "name": "epsilon",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-nu",
+      "name": "nu",
+      "equation": "0.001",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "gamma",
+      "equation": "2",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mu-tb",
+      "name": "mu_tb",
+      "equation": "0.15",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Susceptible",
+      "to_element": "infection"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Active_TB",
+      "to_element": "infection"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "beta",
+      "to_element": "infection"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Latent_Early",
+      "to_element": "early_progression"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "p_fast",
+      "to_element": "early_progression"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "epsilon",
+      "to_element": "early_progression"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Latent_Early",
+      "to_element": "late_latency"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "p_fast",
+      "to_element": "late_latency"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "epsilon",
+      "to_element": "late_latency"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Latent_Late",
+      "to_element": "reactivation"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "nu",
+      "to_element": "reactivation"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Active_TB",
+      "to_element": "treatment"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "gamma",
+      "to_element": "treatment"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Active_TB",
+      "to_element": "tb_death"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "mu_tb",
+      "to_element": "tb_death"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-11T20:04:50.807641Z",
+  "updated_at": "2026-01-11T20:04:50.807641Z",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

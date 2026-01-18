@@ -1,0 +1,178 @@
+{
+  "id": "urban-heat-island-dynamics-cli",
+  "name": "Urban Heat Island Dynamics Model",
+  "description": "Model of urban heat island effect including surface albedo, vegetation, and building density. Source: Oke et al. (2017), Urban Climates. DOI: 10.1017/9781139016476",
+  "stocks": [
+    {
+      "id": "stock-urban",
+      "name": "Urban_Area",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-green",
+      "name": "Green_Space",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cool",
+      "name": "Cool_Surfaces",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-temp",
+      "name": "UHI_Intensity",
+      "initial_value": 3,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-expand",
+      "name": "Urban_Expansion",
+      "equation": "Urban_Area * Urban_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-urban",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-green-loss",
+      "name": "Green_Space_Loss",
+      "equation": "Green_Space * Urban_Growth_Rate * 0.5",
+      "from_stock": "stock-green",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-green-add",
+      "name": "Green_Addition",
+      "equation": "Green_Investment * Urban_Area / 100",
+      "from_stock": null,
+      "to_stock": "stock-green",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-cool-add",
+      "name": "Cool_Surface_Addition",
+      "equation": "Cool_Investment * Urban_Area / 100",
+      "from_stock": null,
+      "to_stock": "stock-cool",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-heat",
+      "name": "Heating",
+      "equation": "(Urban_Area / (Green_Space + Cool_Surfaces + 1)) * Solar_Intensity * 0.01",
+      "from_stock": null,
+      "to_stock": "stock-temp",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-cool",
+      "name": "Cooling",
+      "equation": "UHI_Intensity * (Green_Space + Cool_Surfaces * 2) / Urban_Area * 0.1",
+      "from_stock": "stock-temp",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-urban-grow",
+      "name": "Urban_Growth_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-green-inv",
+      "name": "Green_Investment",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cool-inv",
+      "name": "Cool_Investment",
+      "equation": "0.3",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-solar",
+      "name": "Solar_Intensity",
+      "equation": "1000",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-uhi-max",
+      "name": "Max_UHI",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Green_Space",
+      "to_element": "Cooling"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T22:18:53.216775+00:00",
+  "updated_at": "2026-01-11T22:18:53.216775+00:00",
+  "source": "https://doi.org/10.1017/9781139016476",
+  "reference": "Oke, T.R. et al. (2017). Urban Climates."
+}

@@ -1,0 +1,536 @@
+{
+  "id": "chronic-disease-progression-model-hea",
+  "name": "Chronic Disease Progression Model",
+  "description": "Models the progression of chronic diseases like diabetes or cardiovascular disease through population stages: healthy, at-risk, diagnosed, managed, and complications. Includes prevention and treatment interventions. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-healthy-population",
+      "name": "Healthy Population",
+      "initial_value": 600000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-at-risk-population",
+      "name": "At-Risk Population",
+      "initial_value": 250000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-undiagnosed-disease",
+      "name": "Undiagnosed Disease",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-diagnosed-uncontrolled",
+      "name": "Diagnosed Uncontrolled",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-diagnosed-controlled",
+      "name": "Diagnosed Controlled",
+      "initial_value": 30000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-with-complications",
+      "name": "With Complications",
+      "initial_value": 20000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-birthsimmigration",
+      "name": "Births/Immigration",
+      "equation": "Total_Population * Birth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-healthy-population",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-becoming-at-risk",
+      "name": "Becoming At-Risk",
+      "equation": "Healthy * Risk_Factor_Development_Rate * (1 - Prevention_Program_Effect)",
+      "from_stock": "stock-healthy-population",
+      "to_stock": "stock-at-risk-population",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-risk-reversal",
+      "name": "Risk Reversal",
+      "equation": "At_Risk * Risk_Reversal_Rate * (1 + Lifestyle_Intervention_Effect)",
+      "from_stock": "stock-at-risk-population",
+      "to_stock": "stock-healthy-population",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-disease-onset",
+      "name": "Disease Onset",
+      "equation": "At_Risk * Disease_Onset_Rate",
+      "from_stock": "stock-at-risk-population",
+      "to_stock": "stock-undiagnosed-disease",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-diagnosis",
+      "name": "Diagnosis",
+      "equation": "Undiagnosed * Diagnosis_Rate * (1 + Screening_Program_Effect)",
+      "from_stock": "stock-undiagnosed-disease",
+      "to_stock": "stock-diagnosed-uncontrolled",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-achieving-control",
+      "name": "Achieving Control",
+      "equation": "Diagnosed_Uncontrolled * Control_Achievement_Rate * (1 + Treatment_Access_Effect)",
+      "from_stock": "stock-diagnosed-uncontrolled",
+      "to_stock": "stock-diagnosed-controlled",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-loss-of-control",
+      "name": "Loss of Control",
+      "equation": "Diagnosed_Controlled * Control_Loss_Rate * (1 - Adherence_Support_Effect)",
+      "from_stock": "stock-diagnosed-controlled",
+      "to_stock": "stock-diagnosed-uncontrolled",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-undiagnosed-complications",
+      "name": "Undiagnosed Complications",
+      "equation": "Undiagnosed * Complication_Rate_Undiagnosed",
+      "from_stock": "stock-undiagnosed-disease",
+      "to_stock": "stock-with-complications",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-uncontrolled-complications",
+      "name": "Uncontrolled Complications",
+      "equation": "Diagnosed_Uncontrolled * Complication_Rate_Uncontrolled",
+      "from_stock": "stock-diagnosed-uncontrolled",
+      "to_stock": "stock-with-complications",
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-controlled-complications",
+      "name": "Controlled Complications",
+      "equation": "Diagnosed_Controlled * Complication_Rate_Controlled",
+      "from_stock": "stock-diagnosed-controlled",
+      "to_stock": "stock-with-complications",
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-healthy-deaths",
+      "name": "Healthy Deaths",
+      "equation": "Healthy * Background_Death_Rate",
+      "from_stock": "stock-healthy-population",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-at-risk-deaths",
+      "name": "At-Risk Deaths",
+      "equation": "At_Risk * Background_Death_Rate * 1.2",
+      "from_stock": "stock-at-risk-population",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-undiagnosed-deaths",
+      "name": "Undiagnosed Deaths",
+      "equation": "Undiagnosed * Background_Death_Rate * 1.5",
+      "from_stock": "stock-undiagnosed-disease",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-uncontrolled-deaths",
+      "name": "Uncontrolled Deaths",
+      "equation": "Diagnosed_Uncontrolled * Background_Death_Rate * 1.8",
+      "from_stock": "stock-diagnosed-uncontrolled",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-controlled-deaths",
+      "name": "Controlled Deaths",
+      "equation": "Diagnosed_Controlled * Background_Death_Rate * 1.3",
+      "from_stock": "stock-diagnosed-controlled",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-complication-deaths",
+      "name": "Complication Deaths",
+      "equation": "With_Complications * Background_Death_Rate * 3",
+      "from_stock": "stock-with-complications",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 950
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "Healthy + At_Risk + Undiagnosed + Diagnosed_Uncontrolled + Diagnosed_Controlled + With_Complications",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-disease-prevalence",
+      "name": "Disease Prevalence",
+      "equation": "(Undiagnosed + Diagnosed_Uncontrolled + Diagnosed_Controlled + With_Complications) / Total_Population",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-diagnosed-prevalence",
+      "name": "Diagnosed Prevalence",
+      "equation": "(Diagnosed_Uncontrolled + Diagnosed_Controlled) / Total_Population",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-control-rate",
+      "name": "Control Rate",
+      "equation": "Diagnosed_Controlled / (Diagnosed_Controlled + Diagnosed_Uncontrolled + 1)",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-birthimmigration-rate",
+      "name": "Birth/Immigration Rate",
+      "equation": "0.012",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-background-death-rate",
+      "name": "Background Death Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-risk-factor-development-rate",
+      "name": "Risk Factor Development Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-risk-reversal-rate",
+      "name": "Risk Reversal Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-disease-onset-rate",
+      "name": "Disease Onset Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-diagnosis-rate",
+      "name": "Diagnosis Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-control-achievement-rate",
+      "name": "Control Achievement Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-control-loss-rate",
+      "name": "Control Loss Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-complication-rate-undiagnosed",
+      "name": "Complication Rate Undiagnosed",
+      "equation": "0.08",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-complication-rate-uncontrolled",
+      "name": "Complication Rate Uncontrolled",
+      "equation": "0.05",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-complication-rate-controlled",
+      "name": "Complication Rate Controlled",
+      "equation": "0.01",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-prevention-program-effect",
+      "name": "Prevention Program Effect",
+      "equation": "Prevention_Investment / 10000000 * 0.2",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-prevention-investment",
+      "name": "Prevention Investment",
+      "equation": "5000000",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-lifestyle-intervention-effect",
+      "name": "Lifestyle Intervention Effect",
+      "equation": "Lifestyle_Investment / 5000000 * 0.3",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-lifestyle-investment",
+      "name": "Lifestyle Investment",
+      "equation": "3000000",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-screening-program-effect",
+      "name": "Screening Program Effect",
+      "equation": "Screening_Investment / 5000000 * 0.5",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-screening-investment",
+      "name": "Screening Investment",
+      "equation": "4000000",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-treatment-access-effect",
+      "name": "Treatment Access Effect",
+      "equation": "Treatment_Investment / 20000000 * 0.4",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-treatment-investment",
+      "name": "Treatment Investment",
+      "equation": "15000000",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-adherence-support-effect",
+      "name": "Adherence Support Effect",
+      "equation": "Adherence_Investment / 5000000 * 0.3",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-adherence-investment",
+      "name": "Adherence Investment",
+      "equation": "2000000",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-total-healthcare-cost",
+      "name": "Total Healthcare Cost",
+      "equation": "Undiagnosed * Cost_Per_Undiagnosed + Diagnosed_Uncontrolled * Cost_Per_Uncontrolled + Diagnosed_Controlled * Cost_Per_Controlled + With_Complications * Cost_Per_Complication",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-cost-per-undiagnosed",
+      "name": "Cost Per Undiagnosed",
+      "equation": "500",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-cost-per-uncontrolled",
+      "name": "Cost Per Uncontrolled",
+      "equation": "5000",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-cost-per-controlled",
+      "name": "Cost Per Controlled",
+      "equation": "3000",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-cost-per-complication",
+      "name": "Cost Per Complication",
+      "equation": "25000",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-qalys-lost",
+      "name": "QALYs Lost",
+      "equation": "Undiagnosed * 0.05 + Diagnosed_Uncontrolled * 0.1 + With_Complications * 0.3",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.810718Z",
+  "updated_at": "2026-01-11T20:04:50.810718Z",
+  "source": "https://doi.org/10.1016/j.socscimed.2013.03.004",
+  "reference": "Healthcare System Dynamics Models"
+}

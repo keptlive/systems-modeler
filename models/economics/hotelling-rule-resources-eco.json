@@ -1,0 +1,106 @@
+{
+  "id": "hotelling-rule-resources-eco",
+  "name": "Hotelling Rule Resource Extraction",
+  "description": "Harold Hotelling's 1931 model showing optimal non-renewable resource extraction where resource price rises at the rate of interest. Foundation of resource economics. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-resource",
+      "name": "Resource_Stock",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-extracted",
+      "name": "Cumulative_Extracted",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-extraction",
+      "name": "Extraction",
+      "equation": "Resource_Stock * extraction_rate * (Price / extraction_cost - 1) * 0.1",
+      "from_stock": "stock-resource",
+      "to_stock": "stock-extracted",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-price",
+      "name": "Price",
+      "equation": "initial_price * exp(interest_rate * TIME)",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-initial-price",
+      "name": "initial_price",
+      "equation": "10",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-interest",
+      "name": "interest_rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cost",
+      "name": "extraction_cost",
+      "equation": "5",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-extr-rate",
+      "name": "extraction_rate",
+      "equation": "0.02",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Resource_Stock",
+      "to_element": "Extraction"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Price",
+      "to_element": "Extraction"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1086/254195",
+  "reference": "Hotelling H. The Economics of Exhaustible Resources. Journal of Political Economy. 1931;39(2):137-175."
+}

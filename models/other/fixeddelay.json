@@ -1,0 +1,58 @@
+{
+  "id": "fixeddelay",
+  "name": "Fixeddelay",
+  "description": "Model from FixedDelay.mdl",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Material_in_Transit",
+      "initial_value": 400.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Inflow",
+      "equation": "100+step(100,8)",
+      "from_stock": null,
+      "to_stock": "Material_in_Transit",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Outflow",
+      "equation": "DELAY FIXED(Inflow , Average Delay , 100 )",
+      "from_stock": "Material_in_Transit",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Inflow",
+      "to_element": "Outflow"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 20.0,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-15T19:13:16.563290+00:00",
+  "updated_at": "2026-01-15T19:13:16.563290+00:00",
+  "source": "https://github.com/JimDuggan/SDMR",
+  "reference": "System Dynamics Modeling with R (Duggan, 2016)"
+}

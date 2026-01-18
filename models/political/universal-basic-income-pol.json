@@ -1,0 +1,175 @@
+{
+  "id": "universal-basic-income-pol",
+  "name": "Universal Basic Income Policy Model",
+  "description": "Model of UBI implementation effects on labor supply, poverty, and fiscal sustainability. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Labor_Force_Participation",
+      "initial_value": 0.63,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Poverty_Rate",
+      "initial_value": 0.12,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Fiscal_Balance",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Participation_Change",
+      "equation": "(Base_Participation - Labor_Force_Participation) * Adjustment_Rate - UBI_Labor_Effect",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Poverty_Change",
+      "equation": "-Poverty_Reduction_Effect + Economic_Cycle_Effect",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Fiscal_Flow",
+      "equation": "Tax_Revenue - UBI_Cost - Other_Spending",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "UBI_Amount",
+      "equation": "12000",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Population",
+      "equation": "330",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Base_Participation",
+      "equation": "0.65",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Adjustment_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "UBI_Labor_Effect",
+      "equation": "0.001 * UBI_Amount / 12000",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Poverty_Reduction_Effect",
+      "equation": "0.05 * UBI_Amount / 12000 * Poverty_Rate",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Economic_Cycle_Effect",
+      "equation": "0.001",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Tax_Revenue",
+      "equation": "4000",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "UBI_Cost",
+      "equation": "UBI_Amount * Population",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Other_Spending",
+      "equation": "1000",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:32:16.976792+00:00",
+  "updated_at": "2026-01-12T11:32:16.976792+00:00",
+  "source": "https://doi.org/10.1257/aer.20190388",
+  "reference": "Hoynes H, Rothstein J. Universal basic income in the United States and advanced countries. Annual Review of Economics. 2019;11:929-958."
+}

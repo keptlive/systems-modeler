@@ -1,0 +1,189 @@
+{
+  "id": "disinformation-spread-soc",
+  "name": "Disinformation Spread and Correction Model",
+  "description": "Model of disinformation dynamics showing spread, correction, and belief persistence. Source: Vosoughi et al. (2018), Science. DOI: 10.1126/science.aap9559",
+  "stocks": [
+    {
+      "id": "stock-naive",
+      "name": "Naive_Population",
+      "initial_value": 900,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-misinfo",
+      "name": "Misinformed",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-correct",
+      "name": "Correctly_Informed",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-resistant",
+      "name": "Resistant_Misinformed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-misinfect",
+      "name": "Misinformation_Spread",
+      "equation": "Beta_Mis * Naive_Population * Misinformed / Total_Pop * Novelty_Factor",
+      "from_stock": "stock-naive",
+      "to_stock": "stock-misinfo",
+      "position": {
+        "x": 175,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-corinfect",
+      "name": "Correct_Info_Spread",
+      "equation": "Beta_Cor * Naive_Population * Correctly_Informed / Total_Pop",
+      "from_stock": "stock-naive",
+      "to_stock": "stock-correct",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-factcheck",
+      "name": "Fact_Checking",
+      "equation": "Misinformed * Fact_Check_Rate * Correction_Effectiveness",
+      "from_stock": "stock-misinfo",
+      "to_stock": "stock-correct",
+      "position": {
+        "x": 325,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-backfire",
+      "name": "Backfire_Effect",
+      "equation": "Misinformed * Fact_Check_Rate * (1 - Correction_Effectiveness) * Backfire_Probability",
+      "from_stock": "stock-misinfo",
+      "to_stock": "stock-resistant",
+      "position": {
+        "x": 250,
+        "y": 225
+      }
+    },
+    {
+      "id": "flow-forget",
+      "name": "Forgetting",
+      "equation": "(Correctly_Informed + Misinformed) * Forget_Rate",
+      "from_stock": null,
+      "to_stock": "stock-naive",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-betamis",
+      "name": "Beta_Mis",
+      "equation": "0.3",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-betacor",
+      "name": "Beta_Cor",
+      "equation": "0.15",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-novel",
+      "name": "Novelty_Factor",
+      "equation": "1 + 0.5 * (1 - Misinformed / Total_Pop)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-factrate",
+      "name": "Fact_Check_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-correff",
+      "name": "Correction_Effectiveness",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-backfire",
+      "name": "Backfire_Probability",
+      "equation": "0.2",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-forget",
+      "name": "Forget_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Pop",
+      "equation": "Naive_Population + Misinformed + Correctly_Informed + Resistant_Misinformed",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T12:45:39.561877+00:00",
+  "updated_at": "2026-01-12T12:45:39.561877+00:00",
+  "source": "https://doi.org/10.1126/science.aap9559",
+  "reference": "Vosoughi S, Roy D, Aral S. The spread of true and false news online. Science. 2018;359(6380):1146-1151."
+}

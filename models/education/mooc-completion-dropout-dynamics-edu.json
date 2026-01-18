@@ -1,0 +1,227 @@
+{
+  "id": "mooc-completion-dropout-dynamics-edu",
+  "name": "MOOC Completion and Dropout Dynamics",
+  "description": "Model of online course completion patterns showing high initial enrollment with progressive dropout. Based on Jordan 2015 MOOC research. Reference: Reich, J., & Ruip\u00e9rez-Valiente, J. A. (2019). The MOOC pivot. Science. Source: https://doi.org/10.1126/science.aav7958",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Enrolled Active",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Disengaged",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Dropped Out",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Completed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Course Progress",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Disengagement",
+      "equation": "Enrolled_Active * Disengagement_Rate * (1 - Engagement_Effect)",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 225,
+        "y": 225
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Reengagement",
+      "equation": "Disengaged * Reengagement_Rate * Reminder_Effect",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 225,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Dropout",
+      "equation": "Disengaged * Dropout_Rate * Time_Pressure",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 375,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Completion",
+      "equation": "Enrolled_Active * Completion_Rate * IF(Course_Progress > 0.9, 1, 0)",
+      "from_stock": "s1",
+      "to_stock": "s4",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Progress Made",
+      "equation": "Learning_Rate * Enrolled_Active / 10000",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Disengagement Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 225
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Reengagement Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Dropout Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Completion Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Learning Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Engagement Effect",
+      "equation": "Course_Progress * 0.5",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Reminder Effect",
+      "equation": "1.5",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Time Pressure",
+      "equation": "1 + Course_Progress",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Completion Rate Overall",
+      "equation": "Completed / (Completed + Dropped_Out + Enrolled_Active + Disengaged + 1)",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Active Learners",
+      "equation": "Enrolled_Active + Disengaged * 0.5",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Enrolled Active",
+      "to_element": "Disengagement"
+    },
+    {
+      "id": "c2",
+      "from_element": "Course Progress",
+      "to_element": "Completion"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:20:13.055015",
+  "updated_at": "2026-01-15T14:20:13.055021",
+  "source": "https://www.irrodl.org/index.php/irrodl/article/view/2112",
+  "reference": "Jordan K. Massive open online course completion rates revisited: Assessment, length and attrition. IRRODL. 2015;16(3)."
+}

@@ -1,0 +1,32 @@
+{
+  "id": "modigliani-miller-capital-structure-fin",
+  "name": "Modigliani-Miller Capital Structure Model",
+  "description": "Franco Modigliani and Merton Miller's (1958) capital structure irrelevance proposition showing firm value independence from debt-equity mix in perfect markets. With taxes, debt creates value through interest tax shields. Both received Nobel Prizes.",
+  "stocks": [
+    {"id": "stock-equity-value", "name": "Equity Value", "initial_value": 500, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-debt-value", "name": "Debt Value", "initial_value": 500, "equation": "", "position": {"x": 450, "y": 200}},
+    {"id": "stock-tax-shield", "name": "Tax Shield PV", "initial_value": 100, "equation": "", "position": {"x": 325, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-equity-return", "name": "Equity Return", "equation": "Equity_Value * Levered_Equity_Return", "from_stock": null, "to_stock": "stock-equity-value", "position": {"x": 100, "y": 200}},
+    {"id": "flow-debt-change", "name": "Debt Change", "equation": "New_Debt_Issuance - Debt_Repayment", "from_stock": null, "to_stock": "stock-debt-value", "position": {"x": 350, "y": 200}},
+    {"id": "flow-tax-shield-accrual", "name": "Tax Shield Accrual", "equation": "Tax_Rate * Interest_Payment", "from_stock": null, "to_stock": "stock-tax-shield", "position": {"x": 225, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-firm-value", "name": "Firm Value", "equation": "Equity_Value + Debt_Value", "position": {"x": 150, "y": 100}},
+    {"id": "var-unlevered-value", "name": "Unlevered Value", "equation": "Firm_Value - Tax_Shield_PV", "position": {"x": 350, "y": 100}},
+    {"id": "var-debt-equity-ratio", "name": "Debt Equity Ratio", "equation": "Debt_Value / Equity_Value", "position": {"x": 550, "y": 100}},
+    {"id": "var-unlevered-return", "name": "Unlevered Return", "equation": "0.1", "position": {"x": 150, "y": 280}},
+    {"id": "var-cost-of-debt", "name": "Cost of Debt", "equation": "0.05", "position": {"x": 350, "y": 280}},
+    {"id": "var-levered-equity-return", "name": "Levered Equity Return", "equation": "Unlevered_Return + (Unlevered_Return - Cost_of_Debt) * Debt_Equity_Ratio * (1 - Tax_Rate)", "position": {"x": 550, "y": 280}},
+    {"id": "var-tax-rate", "name": "Tax Rate", "equation": "0.3", "position": {"x": 150, "y": 420}},
+    {"id": "var-interest-payment", "name": "Interest Payment", "equation": "Cost_of_Debt * Debt_Value", "position": {"x": 350, "y": 420}},
+    {"id": "var-new-debt-issuance", "name": "New Debt Issuance", "equation": "0", "position": {"x": 550, "y": 420}},
+    {"id": "var-debt-repayment", "name": "Debt Repayment", "equation": "0", "position": {"x": 350, "y": 500}},
+    {"id": "var-wacc", "name": "WACC", "equation": "Equity_Value / Firm_Value * Levered_Equity_Return + Debt_Value / Firm_Value * Cost_of_Debt * (1 - Tax_Rate)", "position": {"x": 550, "y": 500}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 20, "dt": 0.25},
+  "source": "https://doi.org/10.1257/aer.48.3.261",
+  "reference": "Modigliani F, Miller MH. The Cost of Capital, Corporation Finance and the Theory of Investment. American Economic Review. 1958;48(3):261-297."
+}

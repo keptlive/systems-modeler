@@ -1,0 +1,169 @@
+{
+  "id": "coastal-erosion-sea-level-env",
+  "name": "Coastal Erosion Under Sea Level Rise",
+  "description": "Model of coastal erosion dynamics under sea level rise, showing how shoreline retreat accelerates with rising seas and affects coastal property values. Reference: IPCC (2019). Ocean and Cryosphere in a Changing Climate. Source: https://www.ipcc.ch/srocc/",
+  "source": "https://doi.org/10.1038/nclimate2829",
+  "reference": "Vousdoukas MI, et al. Climatic and socioeconomic controls of future coastal flood risk in Europe. Nature Climate Change. 2018;8:776-780.",
+  "stocks": [
+    {
+      "id": "stock-shore",
+      "name": "Shoreline_Position",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-sea",
+      "name": "Sea_Level",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-sediment",
+      "name": "Sediment_Budget",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-slr",
+      "name": "Sea_Level_Rise",
+      "equation": "slr_rate * (1 + acceleration * TIME / 100)",
+      "from_stock": null,
+      "to_stock": "stock-sea",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-retreat",
+      "name": "Shoreline_Retreat",
+      "equation": "bruun_factor * Sea_Level_Rise + storm_erosion",
+      "from_stock": "stock-shore",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-sed-loss",
+      "name": "Sediment_Loss",
+      "equation": "Sediment_Budget * loss_rate * (1 + Sea_Level / 10)",
+      "from_stock": "stock-sediment",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-sed-supply",
+      "name": "Sediment_Supply",
+      "equation": "river_supply * (1 - dam_retention)",
+      "from_stock": null,
+      "to_stock": "stock-sediment",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-slr",
+      "name": "slr_rate",
+      "equation": "0.003",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-accel",
+      "name": "acceleration",
+      "equation": "0.5",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-bruun",
+      "name": "bruun_factor",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-storm",
+      "name": "storm_erosion",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-loss",
+      "name": "loss_rate",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-river",
+      "name": "river_supply",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-dam",
+      "name": "dam_retention",
+      "equation": "0.7",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-land-loss",
+      "name": "Cumulative_Land_Loss",
+      "equation": "100 - Shoreline_Position",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

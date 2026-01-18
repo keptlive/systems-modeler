@@ -1,0 +1,300 @@
+{
+  "id": "bank-run-dynamics-eco",
+  "name": "Bank Run Dynamics Model",
+  "description": "A system dynamics model of bank runs based on Diamond & Dybvig (1983) 'Bank Runs, Deposit Insurance, and Liquidity' (doi:10.1086/261155). Models depositor confidence, withdrawal behavior, and the self-fulfilling prophecy of bank runs through liquidity dynamics. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-deposits",
+      "name": "Total Deposits",
+      "initial_value": 100000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-liquid-reserves",
+      "name": "Liquid Reserves",
+      "initial_value": 15000000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-illiquid-assets",
+      "name": "Illiquid Assets",
+      "initial_value": 85000000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-depositor-confidence",
+      "name": "Depositor Confidence",
+      "initial_value": 0.9,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-panic-withdrawals",
+      "name": "Cumulative Panic Withdrawals",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-new-deposits",
+      "name": "New Deposits",
+      "equation": "Normal_Deposit_Rate * Depositor_Confidence",
+      "from_stock": null,
+      "to_stock": "stock-deposits",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-normal-withdrawals",
+      "name": "Normal Withdrawals",
+      "equation": "Total_Deposits * Normal_Withdrawal_Rate",
+      "from_stock": "stock-deposits",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-panic-withdrawals",
+      "name": "Panic Withdrawals",
+      "equation": "Total_Deposits * Panic_Withdrawal_Rate * (1 - Depositor_Confidence)",
+      "from_stock": "stock-deposits",
+      "to_stock": "stock-panic-withdrawals",
+      "position": {
+        "x": 250,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-reserve-drain",
+      "name": "Reserve Drain",
+      "equation": "Normal_Withdrawals + Panic_Withdrawals",
+      "from_stock": "stock-liquid-reserves",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-asset-liquidation",
+      "name": "Asset Liquidation",
+      "equation": "IF(Reserve_Ratio < Target_Reserve_Ratio, Illiquid_Assets * Fire_Sale_Rate * Liquidation_Discount, 0)",
+      "from_stock": "stock-illiquid-assets",
+      "to_stock": "stock-liquid-reserves",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-confidence-erosion",
+      "name": "Confidence Erosion",
+      "equation": "Depositor_Confidence * Erosion_Rate * (1 - Reserve_Ratio / Target_Reserve_Ratio)",
+      "from_stock": "stock-depositor-confidence",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-confidence-recovery",
+      "name": "Confidence Recovery",
+      "equation": "(1 - Depositor_Confidence) * Recovery_Rate * (Reserve_Ratio / Target_Reserve_Ratio)",
+      "from_stock": null,
+      "to_stock": "stock-depositor-confidence",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-normal-deposit-rate",
+      "name": "Normal Deposit Rate",
+      "equation": "500000",
+      "position": {
+        "x": 50,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-normal-withdrawal-rate",
+      "name": "Normal Withdrawal Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-panic-withdrawal-rate",
+      "name": "Panic Withdrawal Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-reserve-ratio",
+      "name": "Reserve Ratio",
+      "equation": "Liquid_Reserves / Total_Deposits",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-target-reserve-ratio",
+      "name": "Target Reserve Ratio",
+      "equation": "0.1",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fire-sale-rate",
+      "name": "Fire Sale Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-liquidation-discount",
+      "name": "Liquidation Discount",
+      "equation": "0.7",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-erosion-rate",
+      "name": "Erosion Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-recovery-rate",
+      "name": "Recovery Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Normal Deposit Rate",
+      "to_element": "New Deposits"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Depositor Confidence",
+      "to_element": "New Deposits"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Total Deposits",
+      "to_element": "Normal Withdrawals"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Normal Withdrawal Rate",
+      "to_element": "Normal Withdrawals"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Total Deposits",
+      "to_element": "Panic Withdrawals"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Panic Withdrawal Rate",
+      "to_element": "Panic Withdrawals"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Depositor Confidence",
+      "to_element": "Panic Withdrawals"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Reserve Ratio",
+      "to_element": "Asset Liquidation"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Target Reserve Ratio",
+      "to_element": "Asset Liquidation"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Fire Sale Rate",
+      "to_element": "Asset Liquidation"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Liquid Reserves",
+      "to_element": "Reserve Ratio"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Total Deposits",
+      "to_element": "Reserve Ratio"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Depositor Confidence",
+      "to_element": "Confidence Erosion"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Reserve Ratio",
+      "to_element": "Confidence Erosion"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.0625
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

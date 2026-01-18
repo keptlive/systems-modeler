@@ -1,0 +1,233 @@
+{
+  "id": "dice-climate-economy-cli",
+  "name": "DICE Climate-Economy Integrated Assessment Model",
+  "description": "Simplified version of Nordhaus's Nobel Prize-winning Dynamic Integrated Climate-Economy model linking economic activity to climate change. Reference: Nordhaus, W. D. (2008). A question of balance. Yale University Press. DOI: https://doi.org/10.1093/reep/ren023",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Capital",
+      "initial_value": 137,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "CO2_Atmosphere",
+      "initial_value": 851,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Temperature_Anomaly",
+      "initial_value": 0.85,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Investment",
+      "equation": "Savings_Rate * Output",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Depreciation",
+      "equation": "Depreciation_Rate * Capital",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Emissions",
+      "equation": "Emission_Intensity * Output * (1 - Abatement)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "CO2_Decay",
+      "equation": "Decay_Rate * (CO2_Atmosphere - Preindustrial_CO2)",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Warming",
+      "equation": "(Climate_Sensitivity * LOG(CO2_Atmosphere / Preindustrial_CO2, 2) - Temperature_Anomaly) / Thermal_Inertia",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Output",
+      "equation": "TFP * (Capital ^ Alpha) * (Labor ^ (1 - Alpha)) * Damage_Factor",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "TFP",
+      "equation": "5",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Labor",
+      "equation": "7.4",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Alpha",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Savings_Rate",
+      "equation": "0.22",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Depreciation_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Emission_Intensity",
+      "equation": "0.4",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Abatement",
+      "equation": "0",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Decay_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Preindustrial_CO2",
+      "equation": "588",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Climate_Sensitivity",
+      "equation": "3",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Thermal_Inertia",
+      "equation": "30",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Damage_Factor",
+      "equation": "1 / (1 + Damage_Coeff * Temperature_Anomaly ^ 2)",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Damage_Coeff",
+      "equation": "0.0028",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:20:56.316196+00:00",
+  "updated_at": "2026-01-12T11:20:56.316196+00:00",
+  "source": "https://doi.org/10.1073/pnas.1609244114",
+  "reference": "Nordhaus WD. Revisiting the social cost of carbon. PNAS. 2017;114(7):1518-1523. Nobel Prize 2018."
+}

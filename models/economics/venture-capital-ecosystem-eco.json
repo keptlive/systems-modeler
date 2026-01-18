@@ -1,0 +1,184 @@
+{
+  "id": "venture-capital-ecosystem-eco",
+  "name": "Venture Capital Ecosystem Dynamics",
+  "description": "Models VC fund cycles, startup valuations, and exit dynamics. Source: Gompers & Lerner (2001), J. Financial Economics. DOI: 10.1016/S0304-405X(01)00044-7",
+  "stocks": [
+    {
+      "id": "stock-portfolio",
+      "name": "Portfolio_Companies",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-fundassets",
+      "name": "Fund_Assets",
+      "initial_value": 100000000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-exits",
+      "name": "Cumulative_Exits",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-invest",
+      "name": "New_Investments",
+      "equation": "Investment_Rate * IF(Fund_Assets > Min_Dry_Powder, 1, 0)",
+      "from_stock": null,
+      "to_stock": "stock-portfolio",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-fail",
+      "name": "Failures",
+      "equation": "Portfolio_Companies * Failure_Rate",
+      "from_stock": "stock-portfolio",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-exit",
+      "name": "Successful_Exits",
+      "equation": "Portfolio_Companies * Success_Rate",
+      "from_stock": "stock-portfolio",
+      "to_stock": "stock-exits",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-deploy",
+      "name": "Capital_Deployment",
+      "equation": "New_Investments * Avg_Check_Size",
+      "from_stock": "stock-fundassets",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-return",
+      "name": "Exit_Returns",
+      "equation": "Successful_Exits * Avg_Exit_Value * Success_Multiple",
+      "from_stock": null,
+      "to_stock": "stock-fundassets",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-invrate",
+      "name": "Investment_Rate",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-failrate",
+      "name": "Failure_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-succrate",
+      "name": "Success_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-checksize",
+      "name": "Avg_Check_Size",
+      "equation": "5000000",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-exitval",
+      "name": "Avg_Exit_Value",
+      "equation": "10000000",
+      "position": {
+        "x": 300,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-multiple",
+      "name": "Success_Multiple",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-minpowder",
+      "name": "Min_Dry_Powder",
+      "equation": "10000000",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-moic",
+      "name": "MOIC",
+      "equation": "Fund_Assets / 100000000",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Portfolio_Companies",
+      "to_element": "Failures"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 10,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T02:06:16.308088+00:00",
+  "updated_at": "2026-01-12T02:06:16.308090+00:00",
+  "source": "https://doi.org/10.1016/S0304-405X(01)00044-7",
+  "reference": "Gompers, P.A. & Lerner, J. (2001). The Venture Capital Revolution. Journal of Economic Perspectives."
+}

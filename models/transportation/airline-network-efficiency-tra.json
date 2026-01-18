@@ -1,0 +1,151 @@
+{
+  "id": "airline-network-efficiency-tra",
+  "name": "Airline Network Hub-and-Spoke Efficiency",
+  "description": "Model of airline hub-and-spoke network dynamics showing how hub congestion, connection times, and route profitability interact. Reference: Belobaba, P., et al. (2015). The Global Airline Industry. Wiley. Source: https://doi.org/10.1002/9780470744734",
+  "source": "https://doi.org/10.1016/j.tra.2005.01.003",
+  "reference": "Berechman J, Shy O. The structure of airline equilibrium networks. In: Recent Developments in Transport Economics. 2007.",
+  "stocks": [
+    {
+      "id": "stock-capacity",
+      "name": "Hub_Capacity",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-traffic",
+      "name": "Daily_Traffic",
+      "initial_value": 800,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-delays",
+      "name": "Accumulated_Delays",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-expand",
+      "name": "Capacity_Expansion",
+      "equation": "investment_rate * Congestion_Index",
+      "from_stock": null,
+      "to_stock": "stock-capacity",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-traffic-grow",
+      "name": "Traffic_Growth",
+      "equation": "Daily_Traffic * demand_growth * (1 - Congestion_Index)",
+      "from_stock": null,
+      "to_stock": "stock-traffic",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-delay-add",
+      "name": "Delay_Generation",
+      "equation": "max(0, Daily_Traffic - Hub_Capacity) * delay_factor",
+      "from_stock": null,
+      "to_stock": "stock-delays",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-delay-clear",
+      "name": "Delay_Clearance",
+      "equation": "Accumulated_Delays * clearance_rate",
+      "from_stock": "stock-delays",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-invest",
+      "name": "investment_rate",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "demand_growth",
+      "equation": "0.03",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-delay-f",
+      "name": "delay_factor",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-clear",
+      "name": "clearance_rate",
+      "equation": "0.8",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-congest",
+      "name": "Congestion_Index",
+      "equation": "min(1, Daily_Traffic / Hub_Capacity)",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-util",
+      "name": "Capacity_Utilization",
+      "equation": "Daily_Traffic / Hub_Capacity",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

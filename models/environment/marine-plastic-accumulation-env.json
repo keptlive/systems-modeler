@@ -1,0 +1,172 @@
+{
+  "id": "marine-plastic-accumulation-env",
+  "name": "Marine Plastic Pollution Accumulation",
+  "description": "Model of plastic pollution accumulation in marine environments, tracking flows from land-based sources to ocean gyres. Based on Jambeck et al. research on ocean plastics. Reference: NOAA Ocean Climate. Source: https://www.climate.gov/news-features/understanding-climate/climate-change-ocean-heat-content",
+  "source": "https://doi.org/10.1126/science.1260352",
+  "reference": "Jambeck JR, Geyer R, Wilcox C, et al. Plastic waste inputs from land into the ocean. Science. 2015;347(6223):768-771.",
+  "stocks": [
+    {
+      "id": "stock-land",
+      "name": "Plastic_Waste_on_Land",
+      "initial_value": 300,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-coastal",
+      "name": "Coastal_Plastic",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ocean",
+      "name": "Ocean_Plastic",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-microplastic",
+      "name": "Microplastic",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-generate",
+      "name": "Plastic_Generation",
+      "equation": "population * per_capita_waste",
+      "from_stock": null,
+      "to_stock": "stock-land",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mismanage",
+      "name": "Mismanaged_Waste",
+      "equation": "Plastic_Waste_on_Land * mismanagement_rate",
+      "from_stock": "stock-land",
+      "to_stock": "stock-coastal",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ocean-entry",
+      "name": "Ocean_Entry",
+      "equation": "Coastal_Plastic * leakage_rate",
+      "from_stock": "stock-coastal",
+      "to_stock": "stock-ocean",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fragment",
+      "name": "Fragmentation",
+      "equation": "Ocean_Plastic * fragmentation_rate",
+      "from_stock": "stock-ocean",
+      "to_stock": "stock-microplastic",
+      "position": {
+        "x": 400,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-recycle",
+      "name": "Recycling",
+      "equation": "Plastic_Waste_on_Land * recycling_rate",
+      "from_stock": "stock-land",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-pop",
+      "name": "population",
+      "equation": "7800",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-waste",
+      "name": "per_capita_waste",
+      "equation": "0.01",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-mismanage",
+      "name": "mismanagement_rate",
+      "equation": "0.02",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-leak",
+      "name": "leakage_rate",
+      "equation": "0.15",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-frag",
+      "name": "fragmentation_rate",
+      "equation": "0.01",
+      "position": {
+        "x": 500,
+        "y": 275
+      }
+    },
+    {
+      "id": "var-recycle",
+      "name": "recycling_rate",
+      "equation": "0.09",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

@@ -1,0 +1,274 @@
+{
+  "id": "urban-traffic-flow-dynamics-soc",
+  "name": "Urban Traffic Flow Dynamics Model",
+  "description": "Models urban traffic congestion and flow dynamics. Based on Lighthill-Whitham-Richards (LWR) theory and Vickrey bottleneck model for rush-hour dynamics. Reference: Highway Capacity Manual. Transportation Research Board. Source: https://www.trb.org/",
+  "stocks": [
+    {
+      "id": "stock-road-segment-1",
+      "name": "Vehicles_Segment_1",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-road-segment-2",
+      "name": "Vehicles_Segment_2",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-road-segment-3",
+      "name": "Vehicles_Segment_3",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-queue-length",
+      "name": "Queue_Length",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-cumulative-delay",
+      "name": "Cumulative_Delay",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-inflow",
+      "name": "Traffic_Inflow",
+      "equation": "Demand_Rate * (1 + 0.5 * SIN((TIME - 8) * 3.14159 / 4))",
+      "from_stock": null,
+      "to_stock": "stock-road-segment-1",
+      "position": {
+        "x": 75,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-1-to-2",
+      "name": "Flow_1_to_2",
+      "equation": "Flow_Rate_1",
+      "from_stock": "stock-road-segment-1",
+      "to_stock": "stock-road-segment-2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-2-to-3",
+      "name": "Flow_2_to_3",
+      "equation": "Flow_Rate_2",
+      "from_stock": "stock-road-segment-2",
+      "to_stock": "stock-road-segment-3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-outflow",
+      "name": "Traffic_Outflow",
+      "equation": "Flow_Rate_3",
+      "from_stock": "stock-road-segment-3",
+      "to_stock": null,
+      "position": {
+        "x": 625,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-queue-buildup",
+      "name": "Queue_Buildup",
+      "equation": "MAX(0, Flow_Rate_2 - Bottleneck_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-queue-length",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-queue-discharge",
+      "name": "Queue_Discharge",
+      "equation": "MIN(Queue_Length / DT, Bottleneck_Capacity)",
+      "from_stock": "stock-queue-length",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 420
+      }
+    },
+    {
+      "id": "flow-delay-accrual",
+      "name": "Delay_Accrual",
+      "equation": "Queue_Length / Bottleneck_Capacity * Flow_Rate_2",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-delay",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-demand-rate",
+      "name": "Demand_Rate",
+      "equation": "500",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-free-flow-speed",
+      "name": "Free_Flow_Speed",
+      "equation": "60",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-jam-density",
+      "name": "Jam_Density",
+      "equation": "200",
+      "position": {
+        "x": 340,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-segment-length",
+      "name": "Segment_Length",
+      "equation": "1",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-bottleneck-capacity",
+      "name": "Bottleneck_Capacity",
+      "equation": "400",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-density-1",
+      "name": "Density_1",
+      "equation": "Vehicles_Segment_1 / Segment_Length",
+      "position": {
+        "x": 150,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-density-2",
+      "name": "Density_2",
+      "equation": "Vehicles_Segment_2 / Segment_Length",
+      "position": {
+        "x": 350,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-density-3",
+      "name": "Density_3",
+      "equation": "Vehicles_Segment_3 / Segment_Length",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-speed-1",
+      "name": "Speed_1",
+      "equation": "Free_Flow_Speed * (1 - Density_1 / Jam_Density)",
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-speed-2",
+      "name": "Speed_2",
+      "equation": "Free_Flow_Speed * (1 - Density_2 / Jam_Density)",
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-speed-3",
+      "name": "Speed_3",
+      "equation": "Free_Flow_Speed * (1 - Density_3 / Jam_Density)",
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-flow-rate-1",
+      "name": "Flow_Rate_1",
+      "equation": "Density_1 * Speed_1",
+      "position": {
+        "x": 150,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-flow-rate-2",
+      "name": "Flow_Rate_2",
+      "equation": "Density_2 * Speed_2",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-flow-rate-3",
+      "name": "Flow_Rate_3",
+      "equation": "Density_3 * Speed_3",
+      "position": {
+        "x": 550,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 24,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T01:12:15.899821+00:00",
+  "updated_at": "2026-01-12T01:12:15.899832+00:00",
+  "source": "https://doi.org/10.1098/rspa.1955.0088",
+  "reference": "Lighthill MJ, Whitham GB. On kinematic waves II. A theory of traffic flow on long crowded roads. Proceedings of the Royal Society A. 1955;229(1178):317-345."
+}

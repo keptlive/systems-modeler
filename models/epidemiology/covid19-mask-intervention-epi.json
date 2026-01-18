@@ -1,0 +1,168 @@
+{
+  "id": "covid19-mask-intervention-epi",
+  "name": "COVID-19 Mask Intervention Effectiveness",
+  "description": "Model of COVID-19 transmission reduction through mask wearing interventions, showing how mask adoption rates and filtration efficiency affect epidemic dynamics. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "source": "https://doi.org/10.1073/pnas.2014564118",
+  "reference": "Brooks JT, Butler JC. Effectiveness of Mask Wearing to Control Community Spread of SARS-CoV-2. JAMA. 2021;325(10):998-999.",
+  "stocks": [
+    {
+      "id": "stock-s",
+      "name": "Susceptible",
+      "initial_value": 990000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-e",
+      "name": "Exposed",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-i",
+      "name": "Infectious",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-r",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "Infection",
+      "equation": "beta * Susceptible * Infectious * transmission_reduction / Total_Pop",
+      "from_stock": "stock-s",
+      "to_stock": "stock-e",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-progression",
+      "name": "Disease_Progression",
+      "equation": "Exposed / latent_period",
+      "from_stock": "stock-e",
+      "to_stock": "stock-i",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "Infectious / infectious_period",
+      "from_stock": "stock-i",
+      "to_stock": "stock-r",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "beta",
+      "equation": "0.4",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-latent",
+      "name": "latent_period",
+      "equation": "5",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-infect",
+      "name": "infectious_period",
+      "equation": "10",
+      "position": {
+        "x": 475,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-mask",
+      "name": "mask_adoption",
+      "equation": "0.7",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-eff",
+      "name": "mask_efficacy",
+      "equation": "0.7",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-reduce",
+      "name": "transmission_reduction",
+      "equation": "1 - mask_adoption * mask_efficacy",
+      "position": {
+        "x": 175,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Pop",
+      "equation": "Susceptible + Exposed + Infectious + Recovered",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-r0",
+      "name": "Effective_R0",
+      "equation": "beta * infectious_period * transmission_reduction",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

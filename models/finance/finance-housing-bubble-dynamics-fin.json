@@ -1,0 +1,207 @@
+{
+  "id": "finance-housing-bubble-dynamics-fin",
+  "name": "Housing Market Bubble Dynamics",
+  "description": "Models speculative housing bubbles with feedback between prices, expectations, and leverage. Based on Case & Shiller (2003) and Glaeser et al. (2008). Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "category": "finance",
+  "stocks": [
+    {
+      "id": "stock-price",
+      "name": "House_Price_Index",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-expect",
+      "name": "Price_Expectations",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-leverage",
+      "name": "Household_Leverage",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-inventory",
+      "name": "Housing_Inventory",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-price-change",
+      "name": "Price_Change",
+      "equation": "(Speculative_Demand - Supply_Response) * Price_Sensitivity",
+      "from_stock": null,
+      "to_stock": "stock-price",
+      "position": {
+        "x": 125,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-expect-update",
+      "name": "Expectation_Update",
+      "equation": "(House_Price_Index - Price_Expectations) / Expectation_Lag",
+      "from_stock": null,
+      "to_stock": "stock-expect",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-leverage-change",
+      "name": "Leverage_Change",
+      "equation": "(Target_Leverage - Household_Leverage) / Leverage_Adj_Time",
+      "from_stock": null,
+      "to_stock": "stock-leverage",
+      "position": {
+        "x": 525,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-construction",
+      "name": "New_Construction",
+      "equation": "Construction_Rate * (House_Price_Index / 100 - 1)",
+      "from_stock": null,
+      "to_stock": "stock-inventory",
+      "position": {
+        "x": 225,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-demolition",
+      "name": "Demolition",
+      "equation": "Housing_Inventory * Depreciation_Rate",
+      "from_stock": "stock-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 375,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-spec-demand",
+      "name": "Speculative_Demand",
+      "equation": "Base_Demand * (1 + Speculation_Factor * (Price_Expectations / 100 - 1))",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-base-demand",
+      "name": "Base_Demand",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-speculation",
+      "name": "Speculation_Factor",
+      "equation": "2",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-supply",
+      "name": "Supply_Response",
+      "equation": "Housing_Inventory / 20",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-price-sens",
+      "name": "Price_Sensitivity",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-expect-lag",
+      "name": "Expectation_Lag",
+      "equation": "4",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-target-lev",
+      "name": "Target_Leverage",
+      "equation": "0.3 + 0.2 * (Price_Expectations / 100 - 1)",
+      "position": {
+        "x": 150,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-lev-adj",
+      "name": "Leverage_Adj_Time",
+      "equation": "8",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-const-rate",
+      "name": "Construction_Rate",
+      "equation": "3",
+      "position": {
+        "x": 450,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-deprec",
+      "name": "Depreciation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 600,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1353/eca.2003.0011",
+  "reference": "Case KE & Shiller RJ (2003) Is There a Bubble in the Housing Market? Brookings Papers.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:10:19.341912+00:00",
+  "updated_at": "2026-01-12T06:10:19.341912+00:00"
+}

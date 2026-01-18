@@ -1,0 +1,169 @@
+{
+  "id": "scheffer-lake-eutrophication-cli",
+  "name": "Scheffer Lake Eutrophication Model",
+  "description": "Model of lake ecosystem with alternative stable states (clear vs turbid) showing catastrophic shifts due to nutrient loading. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Phosphorus",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Algae",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "P_Loading",
+      "equation": "External_Loading",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "P_Outflow",
+      "equation": "Flushing_Rate * Phosphorus",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "P_Uptake",
+      "equation": "Uptake_Rate * Algae * Phosphorus / (Phosphorus + K_P)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 220
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Algae_Growth",
+      "equation": "Growth_Rate_A * Algae * Phosphorus / (Phosphorus + K_P)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Algae_Loss",
+      "equation": "Loss_Rate * Algae + Grazing_Max * Algae ^ 2 / (Algae ^ 2 + K_A ^ 2)",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "External_Loading",
+      "equation": "0.5",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Flushing_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Uptake_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 220
+      }
+    },
+    {
+      "id": "v4",
+      "name": "K_P",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 220
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Growth_Rate_A",
+      "equation": "2",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Loss_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Grazing_Max",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "K_A",
+      "equation": "0.3",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:20:56.316178+00:00",
+  "updated_at": "2026-01-12T11:20:56.316178+00:00",
+  "source": "https://doi.org/10.1038/35098000",
+  "reference": "Scheffer M, et al. Catastrophic shifts in ecosystems. Nature. 2001;413:591-596."
+}

@@ -1,0 +1,92 @@
+{
+  "id": "watts-cascade-threshold-soc",
+  "name": "Watts Cascade Threshold Model",
+  "description": "Information cascade model on random networks",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Active_Fraction",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Vulnerable_Fraction",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Average_Degree",
+      "equation": "10.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Threshold",
+      "equation": "0.18",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Cascade_Condition",
+      "equation": "1/Average_Degree",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Activation_Rate",
+      "equation": "Vulnerable_Fraction*Active_Fraction*Average_Degree",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Active_Fraction",
+      "to_element": "Activation_Rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "Vulnerable_Fraction",
+      "to_element": "Activation_Rate"
+    },
+    {
+      "id": "c3",
+      "from_element": "Average_Degree",
+      "to_element": "Activation_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 50.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:47:17.009299+00:00",
+  "updated_at": "2026-01-15T20:47:17.009299+00:00",
+  "source": "https://doi.org/10.1073/pnas.082090499",
+  "reference": "Watts, D.J. (2002) A simple model of global cascades on random networks. PNAS 99:5766-5771"
+}

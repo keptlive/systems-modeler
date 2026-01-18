@@ -1,0 +1,281 @@
+{
+  "id": "pandemic-preparedness-capacity-epi",
+  "name": "Pandemic Preparedness Capacity",
+  "description": "Models the buildup and decay of pandemic preparedness capacity. Based on lessons from COVID-19 and WHO IHR core capacities. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "category": "epidemiology",
+  "stocks": [
+    {
+      "id": "stock-surge",
+      "name": "Surge_Capacity_Beds",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ppe",
+      "name": "PPE_Stockpile_Days",
+      "initial_value": 90,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-testing",
+      "name": "Testing_Capacity_Daily",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-workforce",
+      "name": "Trained_Workforce",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-funding",
+      "name": "Preparedness_Funding_B",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-surge-build",
+      "name": "Surge_Buildup",
+      "equation": "Funding_Allocation * Surge_Investment_Rate",
+      "from_stock": null,
+      "to_stock": "stock-surge",
+      "position": {
+        "x": 25,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-surge-decay",
+      "name": "Surge_Decay",
+      "equation": "Surge_Capacity_Beds * Decay_Rate",
+      "from_stock": "stock-surge",
+      "to_stock": null,
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ppe-procure",
+      "name": "PPE_Procurement",
+      "equation": "Funding_Allocation * PPE_Investment_Rate",
+      "from_stock": null,
+      "to_stock": "stock-ppe",
+      "position": {
+        "x": 225,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ppe-expire",
+      "name": "PPE_Expiration",
+      "equation": "PPE_Stockpile_Days / PPE_Shelf_Life",
+      "from_stock": "stock-ppe",
+      "to_stock": null,
+      "position": {
+        "x": 375,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-test-build",
+      "name": "Testing_Buildup",
+      "equation": "Funding_Allocation * Testing_Investment_Rate",
+      "from_stock": null,
+      "to_stock": "stock-testing",
+      "position": {
+        "x": 425,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-test-decay",
+      "name": "Testing_Decay",
+      "equation": "Testing_Capacity_Daily * Test_Decay_Rate",
+      "from_stock": "stock-testing",
+      "to_stock": null,
+      "position": {
+        "x": 575,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-training",
+      "name": "Training",
+      "equation": "Funding_Allocation * Training_Rate",
+      "from_stock": null,
+      "to_stock": "stock-workforce",
+      "position": {
+        "x": 25,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-attrition",
+      "name": "Workforce_Attrition",
+      "equation": "Trained_Workforce * Attrition_Rate",
+      "from_stock": "stock-workforce",
+      "to_stock": null,
+      "position": {
+        "x": 175,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-budget",
+      "name": "Annual_Budget",
+      "equation": "Base_Budget * Political_Will",
+      "from_stock": null,
+      "to_stock": "stock-funding",
+      "position": {
+        "x": 225,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-spending",
+      "name": "Spending",
+      "equation": "Funding_Allocation",
+      "from_stock": "stock-funding",
+      "to_stock": null,
+      "position": {
+        "x": 375,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-decay",
+      "name": "Decay_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-shelf-life",
+      "name": "PPE_Shelf_Life",
+      "equation": "3",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-test-decay",
+      "name": "Test_Decay_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-attrition",
+      "name": "Attrition_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-base-budget",
+      "name": "Base_Budget",
+      "equation": "5",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-political",
+      "name": "Political_Will",
+      "equation": "1",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-allocation",
+      "name": "Funding_Allocation",
+      "equation": "Preparedness_Funding_B / 4",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-surge-inv",
+      "name": "Surge_Investment_Rate",
+      "equation": "1000",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-ppe-inv",
+      "name": "PPE_Investment_Rate",
+      "equation": "10",
+      "position": {
+        "x": 500,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-test-inv",
+      "name": "Testing_Investment_Rate",
+      "equation": "50000",
+      "position": {
+        "x": 650,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-train-rate",
+      "name": "Training_Rate",
+      "equation": "5000",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 1
+  },
+  "source": "https://www.who.int/health-topics/international-health-regulations",
+  "reference": "WHO (2023) International Health Regulations Core Capacities.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:15:34.764437+00:00",
+  "updated_at": "2026-01-12T06:15:34.764437+00:00"
+}

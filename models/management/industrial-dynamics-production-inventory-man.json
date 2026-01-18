@@ -1,0 +1,345 @@
+{
+  "id": "industrial-dynamics-production-inventory-man",
+  "name": "Industrial Dynamics Production-Inventory Model",
+  "description": "A classic production-inventory system based on Forrester's Industrial Dynamics (1961). Models the feedback loops between production capacity, inventory, orders, and workforce adjustments that create oscillatory behavior in manufacturing systems. Reference: Forrester, J. W. (1961). Industrial Dynamics. MIT Press. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-inventory",
+      "name": "Inventory",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-production-capacity",
+      "name": "Production Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-backlog",
+      "name": "Order Backlog",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-workforce",
+      "name": "Workforce",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-production",
+      "name": "Production Rate",
+      "equation": "MIN(Production_Capacity, Desired_Production)",
+      "from_stock": null,
+      "to_stock": "stock-inventory",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-shipments",
+      "name": "Shipment Rate",
+      "equation": "MIN(Inventory / Shipment_Time, Order_Backlog / Delivery_Time)",
+      "from_stock": "stock-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-orders-in",
+      "name": "Order Rate",
+      "equation": "Customer_Orders",
+      "from_stock": null,
+      "to_stock": "stock-backlog",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-orders-filled",
+      "name": "Order Fulfillment",
+      "equation": "Shipment_Rate",
+      "from_stock": "stock-backlog",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-capacity-investment",
+      "name": "Capacity Investment",
+      "equation": "(Desired_Capacity - Production_Capacity) / Capacity_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-production-capacity",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-capacity-depreciation",
+      "name": "Capacity Depreciation",
+      "equation": "Production_Capacity / Equipment_Lifetime",
+      "from_stock": "stock-production-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-hiring",
+      "name": "Hiring Rate",
+      "equation": "MAX(0, (Desired_Workforce - Workforce) / Hiring_Time)",
+      "from_stock": null,
+      "to_stock": "stock-workforce",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-attrition",
+      "name": "Attrition Rate",
+      "equation": "Workforce / Average_Tenure",
+      "from_stock": "stock-workforce",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-customer-orders",
+      "name": "Customer Orders",
+      "equation": "80 + 20 * STEP(1, 10)",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-desired-production",
+      "name": "Desired Production",
+      "equation": "Customer_Orders + (Desired_Inventory - Inventory) / Inventory_Adjustment_Time",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-desired-inventory",
+      "name": "Desired Inventory",
+      "equation": "Customer_Orders * Inventory_Coverage",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-inventory-coverage",
+      "name": "Inventory Coverage",
+      "equation": "10",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-inventory-adjustment-time",
+      "name": "Inventory Adjustment Time",
+      "equation": "4",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-shipment-time",
+      "name": "Shipment Time",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-delivery-time",
+      "name": "Delivery Time",
+      "equation": "2",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-desired-capacity",
+      "name": "Desired Capacity",
+      "equation": "Desired_Production * Capacity_Utilization_Target",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-capacity-utilization",
+      "name": "Capacity Utilization Target",
+      "equation": "1.2",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-capacity-adjustment",
+      "name": "Capacity Adjustment Time",
+      "equation": "12",
+      "position": {
+        "x": 600,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-equipment-lifetime",
+      "name": "Equipment Lifetime",
+      "equation": "120",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-desired-workforce",
+      "name": "Desired Workforce",
+      "equation": "Production_Capacity / Labor_Productivity",
+      "position": {
+        "x": 100,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-labor-productivity",
+      "name": "Labor Productivity",
+      "equation": "2",
+      "position": {
+        "x": 200,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-hiring-time",
+      "name": "Hiring Time",
+      "equation": "2",
+      "position": {
+        "x": 300,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-average-tenure",
+      "name": "Average Tenure",
+      "equation": "36",
+      "position": {
+        "x": 400,
+        "y": 500
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Production Capacity",
+      "to_element": "Production Rate"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Desired Production",
+      "to_element": "Production Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Inventory",
+      "to_element": "Shipment Rate"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Order Backlog",
+      "to_element": "Shipment Rate"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Customer Orders",
+      "to_element": "Order Rate"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Shipment Rate",
+      "to_element": "Order Fulfillment"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Production Capacity",
+      "to_element": "Capacity Investment"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Desired Capacity",
+      "to_element": "Capacity Investment"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Production Capacity",
+      "to_element": "Capacity Depreciation"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Workforce",
+      "to_element": "Hiring Rate"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Desired Workforce",
+      "to_element": "Hiring Rate"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Workforce",
+      "to_element": "Attrition Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://doi.org/10.1287/mnsc.35.3.321",
+  "reference": "Sterman JD. Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill, 2000."
+}

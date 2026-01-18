@@ -1,0 +1,181 @@
+{
+  "id": "sales-agency-fit-adjustment",
+  "name": "Sales Agency Fit Adjustment",
+  "description": "Model from Sales_Agency_Fit_Adjustment.mdl",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Sales_Agents_with_Good_Fit",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Sales_Agents_with_Poor_Fit",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Good_Fit_Mean_Tenure",
+      "equation": "48.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Good_Fit_Productivity",
+      "equation": "1.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Gross_Hiring_Rate",
+      "equation": "1.0",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Hiring_Good_Fit_Agents",
+      "equation": "Good Fit Fraction * Gross_Hiring_Rate",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Hiring_Poor_Fit_Agents",
+      "equation": "(1 - Good Fit Fraction) * Gross_Hiring_Rate",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Poor_Fit_Mean_Tenure",
+      "equation": "6.0",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Poor_Fit_Productivity",
+      "equation": "0.5",
+      "position": {
+        "x": 230,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Total_Productivity",
+      "equation": "Good_Fit_Productivity*Sales_Agents_with_Good_Fit + Poor_Fit_Productivity*Sales_Agents_with_Poor_Fit",
+      "position": {
+        "x": 360,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Turnover_of_Good_Fit_Agents",
+      "equation": "Sales_Agents_with_Good_Fit/Good_Fit_Mean_Tenure",
+      "position": {
+        "x": 490,
+        "y": 130
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Turnover_of_Poor_Fit_Agents",
+      "equation": "Sales_Agents_with_Poor_Fit/Poor_Fit_Mean_Tenure",
+      "position": {
+        "x": 620,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Gross_Hiring_Rate",
+      "to_element": "Hiring_Good_Fit_Agents"
+    },
+    {
+      "id": "c2",
+      "from_element": "Gross_Hiring_Rate",
+      "to_element": "Hiring_Poor_Fit_Agents"
+    },
+    {
+      "id": "c3",
+      "from_element": "Poor_Fit_Productivity",
+      "to_element": "Total_Productivity"
+    },
+    {
+      "id": "c4",
+      "from_element": "Sales_Agents_with_Good_Fit",
+      "to_element": "Total_Productivity"
+    },
+    {
+      "id": "c5",
+      "from_element": "Good_Fit_Productivity",
+      "to_element": "Total_Productivity"
+    },
+    {
+      "id": "c6",
+      "from_element": "Sales_Agents_with_Poor_Fit",
+      "to_element": "Total_Productivity"
+    },
+    {
+      "id": "c7",
+      "from_element": "Good_Fit_Mean_Tenure",
+      "to_element": "Turnover_of_Good_Fit_Agents"
+    },
+    {
+      "id": "c8",
+      "from_element": "Sales_Agents_with_Good_Fit",
+      "to_element": "Turnover_of_Good_Fit_Agents"
+    },
+    {
+      "id": "c9",
+      "from_element": "Poor_Fit_Mean_Tenure",
+      "to_element": "Turnover_of_Poor_Fit_Agents"
+    },
+    {
+      "id": "c10",
+      "from_element": "Sales_Agents_with_Poor_Fit",
+      "to_element": "Turnover_of_Poor_Fit_Agents"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 120.0,
+    "dt": 0.0625
+  },
+  "created_at": "2026-01-15T19:13:16.445070+00:00",
+  "updated_at": "2026-01-15T19:13:16.445070+00:00",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "PySD Cookbook - Educational System Dynamics Models"
+}

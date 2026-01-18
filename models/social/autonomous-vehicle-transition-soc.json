@@ -1,0 +1,231 @@
+{
+  "id": "autonomous-vehicle-transition-soc",
+  "name": "Autonomous Vehicle Transition Model",
+  "description": "Models transition from conventional to autonomous vehicles. Based on Litman (2021) analysis of AV deployment timeline. Reference: IEA Global EV Outlook. Source: https://www.iea.org/reports/global-ev-outlook-2021",
+  "stocks": [
+    {
+      "id": "stock-conventional",
+      "name": "Conventional_Vehicles",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-level2",
+      "name": "Level_2_ADAS",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-level4",
+      "name": "Level_4_AV",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-level5",
+      "name": "Level_5_AV",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-infrastructure",
+      "name": "AV_Infrastructure",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 375,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-new-conventional",
+      "name": "New_Conventional",
+      "equation": "New_Vehicle_Sales * (1 - Tech_Adoption_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-conventional",
+      "position": {
+        "x": 75,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-conventional-retirement",
+      "name": "Conventional_Retirement",
+      "equation": "Conventional_Vehicles / Vehicle_Lifetime",
+      "from_stock": "stock-conventional",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-l2-adoption",
+      "name": "Level2_Adoption",
+      "equation": "New_Vehicle_Sales * Tech_Adoption_Rate * (1 - L4_Readiness)",
+      "from_stock": null,
+      "to_stock": "stock-level2",
+      "position": {
+        "x": 225,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-l2-retirement",
+      "name": "Level2_Retirement",
+      "equation": "Level_2_ADAS / Vehicle_Lifetime",
+      "from_stock": "stock-level2",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-l4-adoption",
+      "name": "Level4_Adoption",
+      "equation": "New_Vehicle_Sales * Tech_Adoption_Rate * L4_Readiness * (1 - L5_Readiness)",
+      "from_stock": null,
+      "to_stock": "stock-level4",
+      "position": {
+        "x": 375,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-l4-retirement",
+      "name": "Level4_Retirement",
+      "equation": "Level_4_AV / Vehicle_Lifetime",
+      "from_stock": "stock-level4",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-l5-adoption",
+      "name": "Level5_Adoption",
+      "equation": "New_Vehicle_Sales * Tech_Adoption_Rate * L5_Readiness",
+      "from_stock": null,
+      "to_stock": "stock-level5",
+      "position": {
+        "x": 525,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-infra-investment",
+      "name": "Infrastructure_Investment",
+      "equation": "Infra_Budget * (Level_4_AV + Level_5_AV) / Total_Vehicles",
+      "from_stock": null,
+      "to_stock": "stock-infrastructure",
+      "position": {
+        "x": 275,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-new-vehicle-sales",
+      "name": "New_Vehicle_Sales",
+      "equation": "1000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-tech-adoption-rate",
+      "name": "Tech_Adoption_Rate",
+      "equation": "0.1 + 0.02 * TIME",
+      "position": {
+        "x": 260,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-vehicle-lifetime",
+      "name": "Vehicle_Lifetime",
+      "equation": "15",
+      "position": {
+        "x": 420,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-l4-readiness",
+      "name": "L4_Readiness",
+      "equation": "MIN(1, 0.1 + 0.05 * TIME)",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-l5-readiness",
+      "name": "L5_Readiness",
+      "equation": "MIN(1, MAX(0, 0.02 * (TIME - 10)))",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-infra-budget",
+      "name": "Infra_Budget",
+      "equation": "100",
+      "position": {
+        "x": 280,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-total-vehicles",
+      "name": "Total_Vehicles",
+      "equation": "Conventional_Vehicles + Level_2_ADAS + Level_4_AV + Level_5_AV + 1",
+      "position": {
+        "x": 480,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-av-market-share",
+      "name": "AV_Market_Share",
+      "equation": "(Level_4_AV + Level_5_AV) / Total_Vehicles",
+      "position": {
+        "x": 300,
+        "y": 380
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T01:22:14.814322+00:00",
+  "updated_at": "2026-01-12T01:22:14.814359+00:00",
+  "source": "https://www.vtpi.org/avip.pdf",
+  "reference": "Litman T. Autonomous Vehicle Implementation Predictions: Implications for Transport Planning. Victoria Transport Policy Institute. 2021."
+}

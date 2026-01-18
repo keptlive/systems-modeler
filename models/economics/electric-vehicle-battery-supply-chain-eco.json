@@ -1,0 +1,40 @@
+{
+  "id": "electric-vehicle-battery-supply-chain-eco",
+  "name": "Electric Vehicle Battery Supply Chain Model",
+  "description": "Models the dynamics of the EV battery supply chain including lithium mining, battery cell production, vehicle manufacturing, and recycling. Captures critical mineral constraints and geopolitical supply risks.",
+  "source": "https://doi.org/10.1038/s41560-021-00914-8",
+  "reference": "IEA Global EV Outlook 2023. BloombergNEF Electric Vehicle Outlook. Olivetti EA, et al. Lithium-Ion Battery Supply Chain Considerations. Joule. 2017.",
+  "stocks": [
+    {"id": "stock-lithium-reserves", "name": "Lithium Reserves", "initial_value": 22000000, "equation": "", "position": {"x": 100, "y": 100}},
+    {"id": "stock-mining-capacity", "name": "Mining Capacity", "initial_value": 100000, "equation": "", "position": {"x": 100, "y": 250}},
+    {"id": "stock-battery-cells", "name": "Battery Cell Inventory", "initial_value": 500000, "equation": "", "position": {"x": 300, "y": 175}},
+    {"id": "stock-ev-fleet", "name": "EV Fleet Size", "initial_value": 10000000, "equation": "", "position": {"x": 500, "y": 175}},
+    {"id": "stock-end-of-life", "name": "End of Life Batteries", "initial_value": 100000, "equation": "", "position": {"x": 500, "y": 350}},
+    {"id": "stock-recycled-lithium", "name": "Recycled Lithium", "initial_value": 5000, "equation": "", "position": {"x": 300, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-mining", "name": "Lithium Mining", "equation": "Mining_Capacity * Mining_Utilization", "from_stock": "stock-lithium-reserves", "to_stock": null, "position": {"x": 100, "y": 150}},
+    {"id": "flow-capacity-expansion", "name": "Capacity Expansion", "equation": "Investment_Rate * Price_Signal", "from_stock": null, "to_stock": "stock-mining-capacity", "position": {"x": 100, "y": 300}},
+    {"id": "flow-cell-production", "name": "Cell Production", "equation": "(Mining_Capacity * Mining_Utilization + Recycled_Lithium / Recycling_Time) * Cells_Per_Ton", "from_stock": null, "to_stock": "stock-battery-cells", "position": {"x": 200, "y": 175}},
+    {"id": "flow-ev-production", "name": "EV Production", "equation": "MIN(Battery_Cell_Inventory / Cells_Per_Vehicle, Manufacturing_Capacity)", "from_stock": null, "to_stock": "stock-ev-fleet", "position": {"x": 400, "y": 175}},
+    {"id": "flow-ev-retirement", "name": "EV Retirement", "equation": "EV_Fleet_Size / Vehicle_Lifetime", "from_stock": "stock-ev-fleet", "to_stock": "stock-end-of-life", "position": {"x": 500, "y": 262}},
+    {"id": "flow-recycling", "name": "Battery Recycling", "equation": "End_of_Life_Batteries * Recycling_Rate", "from_stock": "stock-end-of-life", "to_stock": "stock-recycled-lithium", "position": {"x": 400, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-utilization", "name": "Mining_Utilization", "equation": "0.85", "position": {"x": 50, "y": 150}},
+    {"id": "var-investment", "name": "Investment_Rate", "equation": "5000", "position": {"x": 50, "y": 300}},
+    {"id": "var-price-signal", "name": "Price_Signal", "equation": "1 + (Demand_Gap / 100000)", "position": {"x": 175, "y": 300}},
+    {"id": "var-demand-gap", "name": "Demand_Gap", "equation": "MAX(0, EV_Demand - Battery_Cell_Inventory / Cells_Per_Vehicle)", "position": {"x": 300, "y": 100}},
+    {"id": "var-ev-demand", "name": "EV_Demand", "equation": "1000000 * (1 + 0.3 * TIME / 12)", "position": {"x": 400, "y": 100}},
+    {"id": "var-cells-per-ton", "name": "Cells_Per_Ton", "equation": "10000", "position": {"x": 200, "y": 125}},
+    {"id": "var-cells-per-vehicle", "name": "Cells_Per_Vehicle", "equation": "100", "position": {"x": 400, "y": 125}},
+    {"id": "var-mfg-capacity", "name": "Manufacturing_Capacity", "equation": "500000", "position": {"x": 475, "y": 125}},
+    {"id": "var-lifetime", "name": "Vehicle_Lifetime", "equation": "15", "position": {"x": 575, "y": 262}},
+    {"id": "var-recycling-rate", "name": "Recycling_Rate", "equation": "0.5", "position": {"x": 400, "y": 400}},
+    {"id": "var-recycling-time", "name": "Recycling_Time", "equation": "2", "position": {"x": 250, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 240, "dt": 1},
+  "created_at": "2026-01-15T21:00:00.000000+00:00",
+  "updated_at": "2026-01-15T21:00:00.000000+00:00"
+}

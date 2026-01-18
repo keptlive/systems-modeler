@@ -1,0 +1,254 @@
+{
+  "id": "global-tipping-points-2023-assessment-cli",
+  "name": "Global Tipping Points 2023 Assessment Model",
+  "description": "Integrated model of 26 Earth system tipping elements identified in the Global Tipping Points Report presented at COP28. Incorporates climate, ecosystem, and cryosphere tipping elements with their interactions. Reference: Lenton, T.M., et al. (2023). Global Tipping Points Report 2023. University of Exeter. Source: https://global-tipping-points.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Arctic Summer Sea Ice",
+      "initial_value": 0.7,
+      "equation": "",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "s2",
+      "name": "Greenland Ice Sheet",
+      "initial_value": 0.95,
+      "equation": "",
+      "position": {"x": 250, "y": 100}
+    },
+    {
+      "id": "s3",
+      "name": "West Antarctic Ice Sheet",
+      "initial_value": 0.9,
+      "equation": "",
+      "position": {"x": 400, "y": 100}
+    },
+    {
+      "id": "s4",
+      "name": "Boreal Permafrost",
+      "initial_value": 0.85,
+      "equation": "",
+      "position": {"x": 550, "y": 100}
+    },
+    {
+      "id": "s5",
+      "name": "Amazon Rainforest",
+      "initial_value": 0.75,
+      "equation": "",
+      "position": {"x": 100, "y": 250}
+    },
+    {
+      "id": "s6",
+      "name": "Warm Water Coral Reefs",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {"x": 250, "y": 250}
+    },
+    {
+      "id": "s7",
+      "name": "Atlantic Subpolar Gyre",
+      "initial_value": 0.9,
+      "equation": "",
+      "position": {"x": 400, "y": 250}
+    },
+    {
+      "id": "s8",
+      "name": "Labrador Sea Convection",
+      "initial_value": 0.85,
+      "equation": "",
+      "position": {"x": 550, "y": 250}
+    },
+    {
+      "id": "s9",
+      "name": "Global Mean Temperature",
+      "initial_value": 1.2,
+      "equation": "",
+      "position": {"x": 325, "y": 400}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Sea Ice Loss",
+      "equation": "Arctic_Summer_Sea_Ice * Ice_Albedo_Feedback * Temp_Sensitivity",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {"x": 100, "y": 150}
+    },
+    {
+      "id": "f2",
+      "name": "GIS Decline",
+      "equation": "Greenland_Ice_Sheet * GIS_Melt_Rate * (Global_Mean_Temperature - 1.0)",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {"x": 250, "y": 150}
+    },
+    {
+      "id": "f3",
+      "name": "WAIS Instability",
+      "equation": "West_Antarctic_Ice_Sheet * WAIS_Rate * Marine_Ice_Instability",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {"x": 400, "y": 150}
+    },
+    {
+      "id": "f4",
+      "name": "Permafrost Thaw",
+      "equation": "Boreal_Permafrost * Permafrost_Rate * Global_Mean_Temperature",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {"x": 550, "y": 150}
+    },
+    {
+      "id": "f5",
+      "name": "Amazon Dieback",
+      "equation": "Amazon_Rainforest * Amazon_Stress * (Deforestation_Rate + Drought_Intensity)",
+      "from_stock": "s5",
+      "to_stock": null,
+      "position": {"x": 100, "y": 300}
+    },
+    {
+      "id": "f6",
+      "name": "Coral Die Off",
+      "equation": "Warm_Water_Coral_Reefs * Bleaching_Rate * (Global_Mean_Temperature - 1.0)",
+      "from_stock": "s6",
+      "to_stock": null,
+      "position": {"x": 250, "y": 300}
+    },
+    {
+      "id": "f7",
+      "name": "Gyre Weakening",
+      "equation": "Atlantic_Subpolar_Gyre * Freshwater_Input * Convection_Sensitivity",
+      "from_stock": "s7",
+      "to_stock": null,
+      "position": {"x": 400, "y": 300}
+    },
+    {
+      "id": "f8",
+      "name": "Convection Shutdown",
+      "equation": "Labrador_Sea_Convection * Stratification_Effect * (1 - Atlantic_Subpolar_Gyre)",
+      "from_stock": "s8",
+      "to_stock": null,
+      "position": {"x": 550, "y": 300}
+    },
+    {
+      "id": "f9",
+      "name": "Warming",
+      "equation": "Emission_Forcing + Permafrost_Carbon_Feedback + Albedo_Feedback - Ocean_Heat_Uptake",
+      "from_stock": null,
+      "to_stock": "s9",
+      "position": {"x": 325, "y": 450}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Ice Albedo Feedback",
+      "equation": "0.03 * (1.5 - Global_Mean_Temperature)",
+      "position": {"x": 50, "y": 175}
+    },
+    {
+      "id": "v2",
+      "name": "Temp Sensitivity",
+      "equation": "Global_Mean_Temperature / 1.5",
+      "position": {"x": 150, "y": 175}
+    },
+    {
+      "id": "v3",
+      "name": "GIS Melt Rate",
+      "equation": "0.005",
+      "position": {"x": 300, "y": 50}
+    },
+    {
+      "id": "v4",
+      "name": "WAIS Rate",
+      "equation": "0.008",
+      "position": {"x": 450, "y": 50}
+    },
+    {
+      "id": "v5",
+      "name": "Marine Ice Instability",
+      "equation": "1.5",
+      "position": {"x": 500, "y": 175}
+    },
+    {
+      "id": "v6",
+      "name": "Permafrost Rate",
+      "equation": "0.004",
+      "position": {"x": 600, "y": 50}
+    },
+    {
+      "id": "v7",
+      "name": "Amazon Stress",
+      "equation": "0.01",
+      "position": {"x": 50, "y": 325}
+    },
+    {
+      "id": "v8",
+      "name": "Deforestation Rate",
+      "equation": "0.02",
+      "position": {"x": 150, "y": 325}
+    },
+    {
+      "id": "v9",
+      "name": "Drought Intensity",
+      "equation": "MAX(0, Global_Mean_Temperature - 1.5) * 0.1",
+      "position": {"x": 50, "y": 375}
+    },
+    {
+      "id": "v10",
+      "name": "Bleaching Rate",
+      "equation": "0.15",
+      "position": {"x": 300, "y": 325}
+    },
+    {
+      "id": "v11",
+      "name": "Freshwater Input",
+      "equation": "(1 - Greenland_Ice_Sheet) * 0.1",
+      "position": {"x": 350, "y": 325}
+    },
+    {
+      "id": "v12",
+      "name": "Convection Sensitivity",
+      "equation": "0.05",
+      "position": {"x": 450, "y": 325}
+    },
+    {
+      "id": "v13",
+      "name": "Stratification Effect",
+      "equation": "0.03",
+      "position": {"x": 600, "y": 325}
+    },
+    {
+      "id": "v14",
+      "name": "Emission Forcing",
+      "equation": "0.025",
+      "position": {"x": 200, "y": 450}
+    },
+    {
+      "id": "v15",
+      "name": "Permafrost Carbon Feedback",
+      "equation": "(1 - Boreal_Permafrost) * 0.01",
+      "position": {"x": 450, "y": 450}
+    },
+    {
+      "id": "v16",
+      "name": "Albedo Feedback",
+      "equation": "(1 - Arctic_Summer_Sea_Ice) * 0.005",
+      "position": {"x": 200, "y": 500}
+    },
+    {
+      "id": "v17",
+      "name": "Ocean Heat Uptake",
+      "equation": "0.01",
+      "position": {"x": 450, "y": 500}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 200, "dt": 1},
+  "created_at": "2026-01-15T16:00:00.000000",
+  "updated_at": "2026-01-15T16:00:00.000000",
+  "source": "https://global-tipping-points.org/",
+  "reference": "Lenton, T.M., et al. (2023). Global Tipping Points Report 2023. University of Exeter. Presented at COP28."
+}

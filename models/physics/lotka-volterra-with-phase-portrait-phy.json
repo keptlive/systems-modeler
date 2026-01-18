@@ -1,0 +1,208 @@
+{
+  "id": "lotka-volterra-with-phase-portrait-phy",
+  "name": "Lotka-Volterra with Phase Portrait",
+  "description": "The classic predator-prey model showing oscillatory dynamics. This version emphasizes the phase portrait view - predator and prey populations cycle around a center equilibrium. When prey is abundant, predators increase; when predators are abundant, prey decreases. The cycles are neutrally stable - perturbations change the orbit but oscillations persist. Reference: Lotka, A. J. (1920). Analytical note on certain rhythmic relations in organic systems. PNAS, 6(7), 410-415. DOI: https://doi.org/10.1073/pnas.6.7.410",
+  "stocks": [
+    {
+      "id": "stock-prey",
+      "name": "Prey",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-predator",
+      "name": "Predator",
+      "initial_value": 9,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-prey-births",
+      "name": "Prey Births",
+      "equation": "Alpha * Prey",
+      "from_stock": null,
+      "to_stock": "stock-prey",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-predation",
+      "name": "Predation",
+      "equation": "Beta * Prey * Predator",
+      "from_stock": "stock-prey",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-predator-births",
+      "name": "Predator Births",
+      "equation": "Delta * Prey * Predator",
+      "from_stock": null,
+      "to_stock": "stock-predator",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-predator-deaths",
+      "name": "Predator Deaths",
+      "equation": "Gamma * Predator",
+      "from_stock": "stock-predator",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-alpha",
+      "name": "Alpha",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "Gamma",
+      "equation": "1.5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-delta",
+      "name": "Delta",
+      "equation": "0.075",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-prey-equilibrium",
+      "name": "Prey Equilibrium",
+      "equation": "Gamma / Delta",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-predator-equilibrium",
+      "name": "Predator Equilibrium",
+      "equation": "Alpha / Beta",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-conserved-quantity",
+      "name": "Conserved Quantity",
+      "equation": "Delta * Prey - Gamma * LN(Prey) + Beta * Predator - Alpha * LN(Predator)",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-period-estimate",
+      "name": "Period Estimate",
+      "equation": "2 * 3.14159 / SQRT(Alpha * Gamma)",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Prey",
+      "to_element": "Prey Births"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Alpha",
+      "to_element": "Prey Births"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Prey",
+      "to_element": "Predation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Predator",
+      "to_element": "Predation"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Beta",
+      "to_element": "Predation"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Prey",
+      "to_element": "Predator Births"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Predator",
+      "to_element": "Predator Births"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Delta",
+      "to_element": "Predator Births"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Predator",
+      "to_element": "Predator Deaths"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Gamma",
+      "to_element": "Predator Deaths"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-11T20:04:50.836505Z",
+  "updated_at": "2026-01-11T20:04:50.836505Z",
+  "source": "https://doi.org/10.1073/pnas.6.7.410",
+  "reference": "Lotka AJ. Elements of Physical Biology. Williams & Wilkins, 1925; Volterra V. Variations and fluctuations of the number of individuals in animal species living together. ICES J Mar Sci. 1928."
+}

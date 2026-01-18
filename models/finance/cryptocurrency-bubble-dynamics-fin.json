@@ -1,0 +1,206 @@
+{
+  "id": "cryptocurrency-bubble-dynamics-fin",
+  "name": "Cryptocurrency Bubble Dynamics",
+  "description": "Model of cryptocurrency price bubbles and crashes. Captures speculative demand, FOMO behavior, and market sentiment shifts. Based on behavioral finance and asset bubble research. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Crypto_Price",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Speculative_Capital",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Market_Sentiment",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "HODLer_Holdings",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Price_Change",
+      "equation": "(Net_Demand / Market_Depth) * Price_Sensitivity",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Capital_Inflow",
+      "equation": "New_Money * FOMO_Effect * Market_Sentiment",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Capital_Outflow",
+      "equation": "Speculative_Capital * Panic_Selling * (1 - Market_Sentiment)",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Sentiment_Change",
+      "equation": "(Price_Momentum + News_Effect - Market_Sentiment) / Sentiment_Adjustment",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    },
+    {
+      "id": "f5",
+      "name": "HODLer_Accumulation",
+      "equation": "Speculative_Capital * 0.01 * Market_Sentiment",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 250,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "New_Money",
+      "equation": "1000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Market_Depth",
+      "equation": "50000",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Price_Sensitivity",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Panic_Selling",
+      "equation": "0.05",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "FOMO_Effect",
+      "equation": "IF Crypto_Price > DELAY(Crypto_Price, 1) THEN 1.5 ELSE 0.5",
+      "position": {
+        "x": 150,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Net_Demand",
+      "equation": "Capital_Inflow - Capital_Outflow",
+      "position": {
+        "x": 350,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Price_Momentum",
+      "equation": "(Crypto_Price - DELAY(Crypto_Price, 5)) / MAX(DELAY(Crypto_Price, 5), 1)",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "News_Effect",
+      "equation": "0.5",
+      "position": {
+        "x": 150,
+        "y": 180
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Sentiment_Adjustment",
+      "equation": "5",
+      "position": {
+        "x": 350,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Bubble_Index",
+      "equation": "Crypto_Price / 1000",
+      "position": {
+        "x": 550,
+        "y": 180
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1093/rfs/hhaa113",
+  "reference": "Liu Y, Tsyvinski A (2021) Risks and Returns of Cryptocurrency. Review of Financial Studies.",
+  "created_at": "2026-01-12T07:01:58.706342+00:00",
+  "updated_at": "2026-01-12T07:01:58.706342+00:00"
+}

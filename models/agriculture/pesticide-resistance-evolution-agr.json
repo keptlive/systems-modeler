@@ -1,0 +1,188 @@
+{
+  "id": "pesticide-resistance-evolution-agr",
+  "name": "Pesticide Resistance Evolution in Agriculture",
+  "description": "Models the evolution of pesticide resistance in pest populations under selection pressure. Based on Tabashnik (1994) Evolution of resistance, Annual Review of Entomology. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "category": "agriculture",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible_Pests",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-resistant",
+      "name": "Resistant_Pests",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-crop",
+      "name": "Crop_Damage",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-s-birth",
+      "name": "Susceptible_Reproduction",
+      "equation": "Susceptible_Pests * Reproduction_Rate * (1 - Total_Pests/Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-susceptible",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-s-death",
+      "name": "Susceptible_Mortality",
+      "equation": "Susceptible_Pests * (Natural_Mortality + Pesticide_Efficacy * Spray_Intensity)",
+      "from_stock": "stock-susceptible",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-r-birth",
+      "name": "Resistant_Reproduction",
+      "equation": "Resistant_Pests * Reproduction_Rate * (1 - Fitness_Cost) * (1 - Total_Pests/Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-resistant",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-r-death",
+      "name": "Resistant_Mortality",
+      "equation": "Resistant_Pests * (Natural_Mortality + Pesticide_Efficacy * Spray_Intensity * Resistance_Factor)",
+      "from_stock": "stock-resistant",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-damage",
+      "name": "Crop_Damage_Rate",
+      "equation": "Total_Pests * Damage_Per_Pest",
+      "from_stock": null,
+      "to_stock": "stock-crop",
+      "position": {
+        "x": 300,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-repro",
+      "name": "Reproduction_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-carry",
+      "name": "Carrying_Capacity",
+      "equation": "5000",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-nat-mort",
+      "name": "Natural_Mortality",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-efficacy",
+      "name": "Pesticide_Efficacy",
+      "equation": "0.8",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-spray",
+      "name": "Spray_Intensity",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-fitness",
+      "name": "Fitness_Cost",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-resist",
+      "name": "Resistance_Factor",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Pests",
+      "equation": "Susceptible_Pests + Resistant_Pests",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-damage",
+      "name": "Damage_Per_Pest",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1146/annurev.en.39.010194.001415",
+  "reference": "Tabashnik BE (1994) Evolution of resistance to Bacillus thuringiensis. Annual Review of Entomology 39:47-79.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:26:04.512256+00:00",
+  "updated_at": "2026-01-12T06:26:04.512256+00:00"
+}

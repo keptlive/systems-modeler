@@ -1,0 +1,253 @@
+{
+  "id": "gentrification-displacement-soc",
+  "name": "Gentrification and Displacement Dynamics",
+  "description": "Model of neighborhood gentrification and resident displacement. Captures housing investment, rent increases, and demographic change. Based on urban sociology and housing economics research. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Original_Residents",
+      "initial_value": 8000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "New_Residents",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Housing_Quality",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Rent_Level",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Displacement",
+      "equation": "Original_Residents * Displacement_Rate * Affordability_Pressure",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    },
+    {
+      "id": "f2",
+      "name": "In_Migration",
+      "equation": "Neighborhood_Attractiveness * Base_Immigration",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "New_Resident_Turnover",
+      "equation": "New_Residents * Base_Turnover",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Investment",
+      "equation": "Investment_Rate * New_Residents / 1000 * Expected_Return",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Depreciation",
+      "equation": "Housing_Quality * Depreciation_Rate",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Rent_Increase",
+      "equation": "(Target_Rent - Rent_Level) / Rent_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 250,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Displacement_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Base_Immigration",
+      "equation": "200",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Base_Turnover",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Investment_Rate",
+      "equation": "5",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Depreciation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Original_Income",
+      "equation": "40000",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "New_Resident_Income",
+      "equation": "80000",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Rent_Burden_Threshold",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Affordability_Pressure",
+      "equation": "MAX(0, Rent_Level * 12 / Original_Income - Rent_Burden_Threshold) * 3",
+      "position": {
+        "x": 150,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Neighborhood_Attractiveness",
+      "equation": "Housing_Quality / 50 * (1 - Rent_Level / 2000)",
+      "position": {
+        "x": 400,
+        "y": 180
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Expected_Return",
+      "equation": "1 + New_Residents / 10000",
+      "position": {
+        "x": 550,
+        "y": 180
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Target_Rent",
+      "equation": "800 + Housing_Quality * 5 + New_Residents * 0.1",
+      "position": {
+        "x": 200,
+        "y": 230
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Rent_Adjustment_Time",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 230
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Gentrification_Index",
+      "equation": "New_Residents / (Original_Residents + New_Residents)",
+      "position": {
+        "x": 550,
+        "y": 230
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1080/02723638.2015.1049480",
+  "reference": "Lees L, Slater T, Wyly E (2008) Gentrification. Routledge. Freeman L (2005) Displacement or Succession? Urban Affairs Review.",
+  "created_at": "2026-01-12T07:01:58.706342+00:00",
+  "updated_at": "2026-01-12T07:01:58.706342+00:00"
+}

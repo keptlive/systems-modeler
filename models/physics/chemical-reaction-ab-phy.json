@@ -1,0 +1,138 @@
+{
+  "id": "chemical-reaction-ab-phy",
+  "name": "Chemical Reaction A to B",
+  "description": "First-order reversible chemical reaction kinetics A <-> B. Shows approach to equilibrium determined by forward and reverse rate constants. Source: Standard chemical kinetics.",
+  "stocks": [
+    {
+      "id": "stock-a",
+      "name": "Concentration_A",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-b",
+      "name": "Concentration_B",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-forward",
+      "name": "Forward_Reaction",
+      "equation": "k_forward * Concentration_A",
+      "from_stock": "stock-a",
+      "to_stock": "stock-b",
+      "position": {
+        "x": 325,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-reverse",
+      "name": "Reverse_Reaction",
+      "equation": "k_reverse * Concentration_B",
+      "from_stock": "stock-b",
+      "to_stock": "stock-a",
+      "position": {
+        "x": 325,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-k-forward",
+      "name": "k_forward",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-k-reverse",
+      "name": "k_reverse",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-equilibrium-constant",
+      "name": "Equilibrium_Constant",
+      "equation": "k_forward / k_reverse",
+      "position": {
+        "x": 325,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-total-concentration",
+      "name": "Total_Concentration",
+      "equation": "Concentration_A + Concentration_B",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-equilibrium-a",
+      "name": "Equilibrium_A",
+      "equation": "Total_Concentration / (1 + Equilibrium_Constant)",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-conversion",
+      "name": "Conversion",
+      "equation": "1 - Concentration_A / (Concentration_A + Concentration_B + 0.001)",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Concentration_A",
+      "to_element": "Forward_Reaction"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "k_forward",
+      "to_element": "Forward_Reaction"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Concentration_B",
+      "to_element": "Reverse_Reaction"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "k_reverse",
+      "to_element": "Reverse_Reaction"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T20:52:52.274799+00:00",
+  "updated_at": "2026-01-11T20:52:52.274799+00:00",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg System Dynamics Test Models"
+}

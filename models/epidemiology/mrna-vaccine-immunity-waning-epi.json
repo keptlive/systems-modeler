@@ -1,0 +1,219 @@
+{
+  "id": "mrna-vaccine-immunity-waning-epi",
+  "name": "mRNA Vaccine Immunity Waning Model",
+  "description": "Models antibody kinetics and immunity waning after mRNA vaccination. Based on Goldberg et al. (2021) analysis of BNT162b2 vaccine effectiveness over time. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-antibody-level",
+      "name": "Antibody_Level",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-memory-b-cells",
+      "name": "Memory_B_Cells",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-memory-t-cells",
+      "name": "Memory_T_Cells",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-protection-level",
+      "name": "Protection_Level",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-antibody-production",
+      "name": "Antibody_Production",
+      "equation": "Vaccine_Boost * Production_Rate * Memory_B_Cells",
+      "from_stock": null,
+      "to_stock": "stock-antibody-level",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-antibody-decay",
+      "name": "Antibody_Decay",
+      "equation": "Antibody_Level / Antibody_Half_Life",
+      "from_stock": "stock-antibody-level",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-b-cell-activation",
+      "name": "B_Cell_Activation",
+      "equation": "Vaccine_Boost * B_Cell_Activation_Rate",
+      "from_stock": null,
+      "to_stock": "stock-memory-b-cells",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-b-cell-decay",
+      "name": "B_Cell_Decay",
+      "equation": "Memory_B_Cells / B_Cell_Half_Life",
+      "from_stock": "stock-memory-b-cells",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-t-cell-activation",
+      "name": "T_Cell_Activation",
+      "equation": "Vaccine_Boost * T_Cell_Activation_Rate",
+      "from_stock": null,
+      "to_stock": "stock-memory-t-cells",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-t-cell-decay",
+      "name": "T_Cell_Decay",
+      "equation": "Memory_T_Cells / T_Cell_Half_Life",
+      "from_stock": "stock-memory-t-cells",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-protection-update",
+      "name": "Protection_Update",
+      "equation": "(Effective_Protection - Protection_Level) / Adaptation_Time",
+      "from_stock": null,
+      "to_stock": "stock-protection-level",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-vaccine-boost",
+      "name": "Vaccine_Boost",
+      "equation": "IF(TIME < 1 OR (TIME > 21 AND TIME < 22), 1, 0)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-production-rate",
+      "name": "Production_Rate",
+      "equation": "100",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-antibody-half-life",
+      "name": "Antibody_Half_Life",
+      "equation": "36",
+      "position": {
+        "x": 340,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-b-cell-activation-rate",
+      "name": "B_Cell_Activation_Rate",
+      "equation": "10",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-b-cell-half-life",
+      "name": "B_Cell_Half_Life",
+      "equation": "180",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-t-cell-activation-rate",
+      "name": "T_Cell_Activation_Rate",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 370
+      }
+    },
+    {
+      "id": "var-t-cell-half-life",
+      "name": "T_Cell_Half_Life",
+      "equation": "365",
+      "position": {
+        "x": 220,
+        "y": 370
+      }
+    },
+    {
+      "id": "var-effective-protection",
+      "name": "Effective_Protection",
+      "equation": "MIN(0.95, Antibody_Level / (Antibody_Level + 50) * 0.7 + Memory_T_Cells / (Memory_T_Cells + 10) * 0.3)",
+      "position": {
+        "x": 400,
+        "y": 370
+      }
+    },
+    {
+      "id": "var-adaptation-time",
+      "name": "Adaptation_Time",
+      "equation": "7",
+      "position": {
+        "x": 580,
+        "y": 370
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:12:15.899057+00:00",
+  "updated_at": "2026-01-12T01:12:15.899069+00:00",
+  "source": "https://doi.org/10.1056/NEJMoa2114228",
+  "reference": "Goldberg Y, et al. Waning Immunity after the BNT162b2 Vaccine in Israel. NEJM. 2021;385(24):e85."
+}

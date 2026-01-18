@@ -1,0 +1,167 @@
+{
+  "id": "nuclear-waste-management",
+  "name": "Nuclear Waste Management Model",
+  "description": "Model of nuclear waste accumulation and long-term storage dynamics.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Spent_Fuel",
+      "initial_value": 80000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Interim_Storage",
+      "initial_value": 60000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Permanent_Repository",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Generation",
+      "equation": "Reactor_Count * Annual_Output",
+      "from_stock": null,
+      "to_stock": "Spent_Fuel",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "To_Interim",
+      "equation": "Spent_Fuel * Transfer_Rate",
+      "from_stock": "Spent_Fuel",
+      "to_stock": "Interim_Storage",
+      "position": {
+        "x": 275,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "To_Permanent",
+      "equation": "Interim_Storage * Repository_Rate * Repository_Capacity_Available",
+      "from_stock": "Interim_Storage",
+      "to_stock": "Permanent_Repository",
+      "position": {
+        "x": 525,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Reprocessing",
+      "equation": "Spent_Fuel * Reprocessing_Rate",
+      "from_stock": "Spent_Fuel",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Reactor_Count",
+      "equation": "93",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Annual_Output",
+      "equation": "20",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Transfer_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 275,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Repository_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 525,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Repository_Capacity_Available",
+      "equation": "MAX(0, 1 - Permanent_Repository / 70000)",
+      "position": {
+        "x": 525,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Reprocessing_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Total_Inventory",
+      "equation": "Spent_Fuel + Interim_Storage + Permanent_Repository",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Storage_Pressure",
+      "equation": "Interim_Storage / 100000",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1038/s41560-019-0388-3",
+  "reference": "Krall, L.M., et al. (2020). Nuclear waste from small modular and advanced reactors. PNAS, 119(23). DOI: 10.1038/s41560-019-0388-3",
+  "created_at": "2026-01-15T19:31:51.617641+00:00",
+  "updated_at": "2026-01-15T19:31:51.617641+00:00"
+}

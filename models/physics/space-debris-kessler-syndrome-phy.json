@@ -1,0 +1,268 @@
+{
+  "id": "space-debris-kessler-syndrome-phy",
+  "name": "Space Debris Kessler Syndrome Model",
+  "description": "Model of orbital debris accumulation and collision cascade making space unusable. Based on Kessler & Cour-Palais 1978. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Active Satellites",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Debris Objects",
+      "initial_value": 30000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Small Debris",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Defunct Satellites",
+      "initial_value": 3000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Launches",
+      "equation": "Launch_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Mission End",
+      "equation": "Active_Satellites / Mission_Lifetime",
+      "from_stock": "s1",
+      "to_stock": "s4",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Collision Events",
+      "equation": "Collision_Probability * Active_Satellites * Debris_Objects / Orbital_Volume",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Debris Fragmentation",
+      "equation": "Debris_Objects * Fragmentation_Rate * Debris_Objects / Orbital_Volume",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 300,
+        "y": 225
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Natural Decay",
+      "equation": "Debris_Objects * Decay_Rate",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Small Debris Decay",
+      "equation": "Small_Debris * Small_Decay_Rate",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Defunct to Debris",
+      "equation": "Defunct_Satellites * Breakup_Rate",
+      "from_stock": "s4",
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f8",
+      "name": "Active Removal",
+      "equation": "Debris_Objects * Removal_Rate * Removal_Capability",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Launch Rate",
+      "equation": "200",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Mission Lifetime",
+      "equation": "15",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Collision Probability",
+      "equation": "0.00001",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Orbital Volume",
+      "equation": "100000000",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Fragmentation Rate",
+      "equation": "0.0001",
+      "position": {
+        "x": 350,
+        "y": 225
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Decay Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Small Decay Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Breakup Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Removal Rate",
+      "equation": "0",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Removal Capability",
+      "equation": "0",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Collision Risk Index",
+      "equation": "(Debris_Objects + Small_Debris * 0.1) / Orbital_Volume * Active_Satellites",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Kessler Threshold",
+      "equation": "IF(Debris_Objects > 100000, 1, 0)",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Debris Objects",
+      "to_element": "Collision Events"
+    },
+    {
+      "id": "c2",
+      "from_element": "Active Satellites",
+      "to_element": "Collision Events"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:20:13.056056",
+  "updated_at": "2026-01-15T14:20:13.056062",
+  "source": "https://doi.org/10.1029/JA083iA06p02637",
+  "reference": "Kessler DJ, Cour-Palais BG. Collision frequency of artificial satellites: The creation of a debris belt. Journal of Geophysical Research. 1978;83(A6):2637-2646."
+}

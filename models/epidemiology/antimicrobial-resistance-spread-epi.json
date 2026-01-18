@@ -1,0 +1,40 @@
+{
+  "id": "antimicrobial-resistance-spread-epi",
+  "name": "Antimicrobial Resistance Spread Model",
+  "description": "Model of antimicrobial resistance (AMR) emergence and spread in hospital and community settings. Based on WHO and CDC models showing how antibiotic use drives resistance evolution and selection.",
+  "stocks": [
+    {"id": "stock-susceptible-bacteria", "name": "Susceptible Bacteria", "initial_value": 900, "equation": "", "position": {"x": 150, "y": 200}},
+    {"id": "stock-resistant-bacteria", "name": "Resistant Bacteria", "initial_value": 100, "equation": "", "position": {"x": 450, "y": 200}},
+    {"id": "stock-infected-susceptible", "name": "Infected Susceptible", "initial_value": 50, "equation": "", "position": {"x": 150, "y": 350}},
+    {"id": "stock-infected-resistant", "name": "Infected Resistant", "initial_value": 10, "equation": "", "position": {"x": 450, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-susceptible-growth", "name": "Susceptible Growth", "equation": "Growth_Rate * Susceptible_Bacteria * (1 - Total_Bacteria / Carrying_Capacity)", "from_stock": null, "to_stock": "stock-susceptible-bacteria", "position": {"x": 50, "y": 200}},
+    {"id": "flow-antibiotic-killing", "name": "Antibiotic Killing", "equation": "Antibiotic_Exposure * Susceptible_Bacteria * Kill_Rate", "from_stock": "stock-susceptible-bacteria", "to_stock": null, "position": {"x": 250, "y": 200}},
+    {"id": "flow-resistance-mutation", "name": "Resistance Mutation", "equation": "Mutation_Rate * Susceptible_Bacteria", "from_stock": "stock-susceptible-bacteria", "to_stock": "stock-resistant-bacteria", "position": {"x": 300, "y": 200}},
+    {"id": "flow-resistant-growth", "name": "Resistant Growth", "equation": "Growth_Rate * Resistant_Bacteria * (1 - Total_Bacteria / Carrying_Capacity) * Fitness_Cost", "from_stock": null, "to_stock": "stock-resistant-bacteria", "position": {"x": 350, "y": 200}},
+    {"id": "flow-susceptible-infection", "name": "Susceptible Infection", "equation": "Transmission_Rate * Susceptible_Bacteria * Susceptible_Population / Population", "from_stock": null, "to_stock": "stock-infected-susceptible", "position": {"x": 50, "y": 350}},
+    {"id": "flow-resistant-infection", "name": "Resistant Infection", "equation": "Transmission_Rate * Resistant_Bacteria * Susceptible_Population / Population", "from_stock": null, "to_stock": "stock-infected-resistant", "position": {"x": 350, "y": 350}},
+    {"id": "flow-susceptible-treatment", "name": "Susceptible Treatment", "equation": "Treatment_Rate * Infected_Susceptible", "from_stock": "stock-infected-susceptible", "to_stock": null, "position": {"x": 250, "y": 350}},
+    {"id": "flow-resistant-treatment-fail", "name": "Resistant Treatment Fail", "equation": "Treatment_Rate * Infected_Resistant * Treatment_Failure_Rate", "from_stock": "stock-infected-resistant", "to_stock": null, "position": {"x": 550, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-total-bacteria", "name": "Total Bacteria", "equation": "Susceptible_Bacteria + Resistant_Bacteria", "position": {"x": 300, "y": 100}},
+    {"id": "var-carrying-capacity", "name": "Carrying Capacity", "equation": "1000", "position": {"x": 500, "y": 100}},
+    {"id": "var-growth-rate", "name": "Growth Rate", "equation": "0.3", "position": {"x": 100, "y": 130}},
+    {"id": "var-antibiotic-exposure", "name": "Antibiotic Exposure", "equation": "0.5", "position": {"x": 300, "y": 130}},
+    {"id": "var-kill-rate", "name": "Kill Rate", "equation": "0.8", "position": {"x": 500, "y": 130}},
+    {"id": "var-mutation-rate", "name": "Mutation Rate", "equation": "0.0001", "position": {"x": 200, "y": 450}},
+    {"id": "var-fitness-cost", "name": "Fitness Cost", "equation": "0.9", "position": {"x": 400, "y": 450}},
+    {"id": "var-transmission-rate", "name": "Transmission Rate", "equation": "0.1", "position": {"x": 550, "y": 450}},
+    {"id": "var-susceptible-population", "name": "Susceptible Population", "equation": "10000", "position": {"x": 200, "y": 520}},
+    {"id": "var-population", "name": "Population", "equation": "10000", "position": {"x": 400, "y": 520}},
+    {"id": "var-treatment-rate", "name": "Treatment Rate", "equation": "0.2", "position": {"x": 550, "y": 520}},
+    {"id": "var-treatment-failure-rate", "name": "Treatment Failure Rate", "equation": "0.9", "position": {"x": 350, "y": 590}},
+    {"id": "var-resistance-fraction", "name": "Resistance Fraction", "equation": "Resistant_Bacteria / Total_Bacteria", "position": {"x": 550, "y": 590}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 365, "dt": 1},
+  "source": "https://doi.org/10.1038/s41579-021-00649-x",
+  "reference": "Murray CJL et al. Global burden of bacterial antimicrobial resistance in 2019: a systematic analysis. The Lancet. 2022;399(10325):629-655."
+}

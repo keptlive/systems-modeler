@@ -1,0 +1,179 @@
+{
+  "id": "sir-behavioral-response-epi",
+  "name": "SIR with Behavioral Response",
+  "description": "Epidemic model where individuals change behavior based on disease prevalence. Higher infection rates lead to more protective behavior, creating negative feedback that moderates epidemic peak. Reference: WHO Disease Outbreak Information. Source: https://www.who.int/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 999000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Infected",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "Infection Rate",
+      "equation": "Effective_Beta * Susceptible * Infected / Total_Population",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery Rate",
+      "equation": "Infected / Infectious_Period",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "Base Beta",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-effective-beta",
+      "name": "Effective Beta",
+      "equation": "Base_Beta * (1 - Behavior_Reduction)",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-behavior",
+      "name": "Behavior Reduction",
+      "equation": "MAX(0, MIN(0.8, Sensitivity * (Infected / Total_Population - Threshold)))",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-sensitivity",
+      "name": "Sensitivity",
+      "equation": "50",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-threshold",
+      "name": "Threshold",
+      "equation": "0.001",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-infectious",
+      "name": "Infectious Period",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total Population",
+      "equation": "Susceptible + Infected + Recovered",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-r0",
+      "name": "R0",
+      "equation": "Base_Beta * Infectious_Period",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-rt",
+      "name": "Rt",
+      "equation": "Effective_Beta * Infectious_Period * Susceptible / Total_Population",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-prevalence",
+      "name": "Prevalence",
+      "equation": "Infected / Total_Population",
+      "position": {
+        "x": 450,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Infected",
+      "to_element": "Behavior Reduction"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Behavior Reduction",
+      "to_element": "Effective Beta"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Effective Beta",
+      "to_element": "Infection Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:39:15.413710+00:00",
+  "updated_at": "2026-01-12T07:39:15.413717+00:00",
+  "source": "https://doi.org/10.1098/rsif.2010.0142",
+  "reference": "Funk S, Salathe M, Jansen VAA. Modelling the influence of human behaviour on the spread of infectious diseases. Journal of the Royal Society Interface. 2010;7(50):1247-1256."
+}

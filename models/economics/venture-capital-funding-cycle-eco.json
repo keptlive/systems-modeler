@@ -1,0 +1,212 @@
+{
+  "id": "venture-capital-funding-cycle-eco",
+  "name": "Venture Capital Funding Cycle Model",
+  "description": "Models the dynamics of VC fundraising, investment, and returns over economic cycles. Based on Gompers & Lerner (2001). DOI: 10.1016/S0304-405X(00)00086-0",
+  "stocks": [
+    {
+      "id": "stock-dryfunds",
+      "name": "Dry_Powder",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-invested",
+      "name": "Invested_Capital",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-returns",
+      "name": "Realized_Returns",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-startups",
+      "name": "Active_Startups",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-fundraise",
+      "name": "Fundraising",
+      "equation": "LP_Commitment * Fund_Attractiveness",
+      "from_stock": null,
+      "to_stock": "stock-dryfunds",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-deploy",
+      "name": "Capital_Deployment",
+      "equation": "MIN(Dry_Powder * Deployment_Rate, Deal_Flow * Average_Deal_Size)",
+      "from_stock": "stock-dryfunds",
+      "to_stock": "stock-invested",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-exits",
+      "name": "Exits",
+      "equation": "Invested_Capital * Exit_Rate * Exit_Multiple",
+      "from_stock": "stock-invested",
+      "to_stock": "stock-returns",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-newstart",
+      "name": "Startup_Formation",
+      "equation": "Startup_Formation_Rate * (1 + Ecosystem_Effect)",
+      "from_stock": null,
+      "to_stock": "stock-startups",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-failure",
+      "name": "Startup_Failure",
+      "equation": "Active_Startups * Failure_Rate",
+      "from_stock": "stock-startups",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-lpcommit",
+      "name": "LP_Commitment",
+      "equation": "100 * (1 + 0.2 * SIN(TIME / 20))",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-fundattr",
+      "name": "Fund_Attractiveness",
+      "equation": "1 + 0.5 * (Realized_Returns / (Invested_Capital + 1) - 0.1)",
+      "position": {
+        "x": 150,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-deployrate",
+      "name": "Deployment_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-dealflow",
+      "name": "Deal_Flow",
+      "equation": "Active_Startups * 0.1",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-avgdeal",
+      "name": "Average_Deal_Size",
+      "equation": "10",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-exitrate",
+      "name": "Exit_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-exitmult",
+      "name": "Exit_Multiple",
+      "equation": "3 * (1 + 0.3 * SIN(TIME / 15))",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-startform",
+      "name": "Startup_Formation_Rate",
+      "equation": "200",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-ecoeff",
+      "name": "Ecosystem_Effect",
+      "equation": "0.1 * LN(Active_Startups / 1000 + 1)",
+      "position": {
+        "x": 250,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-failrate",
+      "name": "Failure_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 450,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Dry_Powder",
+      "to_element": "Capital_Deployment"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T02:45:00.575014+00:00",
+  "updated_at": "2026-01-12T02:45:00.575017+00:00",
+  "source": "https://doi.org/10.1016/S0304-405X(00)00086-0",
+  "reference": "Gompers PA, Lerner J (2001). The Venture Capital Revolution. Journal of Economic Perspectives."
+}

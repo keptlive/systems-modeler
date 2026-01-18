@@ -1,0 +1,119 @@
+{
+  "id": "wiener-cybernetic-feedback-cla",
+  "name": "Wiener Cybernetic Feedback System",
+  "description": "Norbert Wiener's foundational cybernetic feedback model demonstrating negative feedback control principles. Shows how systems self-regulate through error correction. Reference: Wiener, N. (1948). Cybernetics: Or Control and Communication in the Animal and the Machine.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "System_State",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Error_Accumulator",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Control_Action",
+      "equation": "Gain * Error * Control_Strength",
+      "from_stock": null,
+      "to_stock": "System_State",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Decay",
+      "equation": "System_State * Decay_Rate",
+      "from_stock": "System_State",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Error_Integration",
+      "equation": "Error",
+      "from_stock": null,
+      "to_stock": "Error_Accumulator",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Goal",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Error",
+      "equation": "Goal - System_State",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Gain",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Control_Strength",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Decay_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.7551/mitpress/2868.001.0001",
+  "reference": "Wiener, N. (1948). Cybernetics: Or Control and Communication in the Animal and the Machine. MIT Press.",
+  "created_at": "2026-01-15T19:52:37.285857+00:00",
+  "updated_at": "2026-01-15T19:52:37.285857+00:00"
+}

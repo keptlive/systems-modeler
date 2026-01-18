@@ -1,0 +1,186 @@
+{
+  "id": "planetary-boundaries-framework-cli",
+  "name": "Planetary Boundaries Safe Operating Space",
+  "description": "Quantifies safe operating space for humanity across Earth system processes. Key framework for sustainability. Source: Rockstrom et al. (2009), Nature. DOI: 10.1038/461472a",
+  "stocks": [
+    {
+      "id": "stock-climate",
+      "name": "Climate_Change_Stress",
+      "initial_value": 350,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-biodiv",
+      "name": "Biodiversity_Loss",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-nitrogen",
+      "name": "Nitrogen_Loading",
+      "initial_value": 35,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-land",
+      "name": "Land_System_Change",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-freshwater",
+      "name": "Freshwater_Use",
+      "initial_value": 2000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-co2",
+      "name": "CO2_Emissions",
+      "equation": "2 * (1 + 0.02 * TIME)",
+      "from_stock": null,
+      "to_stock": "stock-climate",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-extinct",
+      "name": "Extinction_Rate",
+      "equation": "0.5 * Land_System_Change / 100",
+      "from_stock": null,
+      "to_stock": "stock-biodiv",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-nfert",
+      "name": "N_Fertilizer",
+      "equation": "3",
+      "from_stock": null,
+      "to_stock": "stock-nitrogen",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-landchange",
+      "name": "Land_Conversion",
+      "equation": "0.5",
+      "from_stock": null,
+      "to_stock": "stock-land",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-wateruse",
+      "name": "Water_Withdrawal",
+      "equation": "50",
+      "from_stock": null,
+      "to_stock": "stock-freshwater",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-climatebnd",
+      "name": "Climate_Boundary",
+      "equation": "350",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-biodivbnd",
+      "name": "Biodiversity_Boundary",
+      "equation": "10",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-nitrobnd",
+      "name": "Nitrogen_Boundary",
+      "equation": "35",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-landbnd",
+      "name": "Land_Boundary",
+      "equation": "75",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-waterbnd",
+      "name": "Water_Boundary",
+      "equation": "4000",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-overshoot",
+      "name": "Boundaries_Exceeded",
+      "equation": "IF(Climate_Change_Stress > Climate_Boundary, 1, 0) + IF(Biodiversity_Loss > Biodiversity_Boundary, 1, 0) + IF(Nitrogen_Loading > Nitrogen_Boundary, 1, 0)",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Land_System_Change",
+      "to_element": "Extinction_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:02:23.927228Z",
+  "updated_at": "2026-01-12T02:02:23.927232Z",
+  "source": "https://doi.org/10.1038/461472a",
+  "reference": "Rockstrom, J. et al. (2009). A safe operating space for humanity. Nature."
+}

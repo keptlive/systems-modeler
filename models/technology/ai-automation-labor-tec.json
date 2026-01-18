@@ -1,0 +1,231 @@
+{
+  "id": "ai-automation-labor-tec",
+  "name": "AI Automation and Labor Model",
+  "description": "Models impact of AI automation on employment and skill requirements. Based on Acemoglu & Restrepo (2020). DOI: 10.1257/jel.20191246",
+  "stocks": [
+    {
+      "id": "stock-routinejobs",
+      "name": "Routine_Jobs",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-cognjobs",
+      "name": "Cognitive_Jobs",
+      "initial_value": 300,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-newjobs",
+      "name": "New_Tech_Jobs",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-unemploy",
+      "name": "Technological_Unemployment",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-aicap",
+      "name": "AI_Capability",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-routineauto",
+      "name": "Routine_Automation",
+      "equation": "Routine_Jobs * Automation_Rate * AI_Capability / 100",
+      "from_stock": "stock-routinejobs",
+      "to_stock": "stock-unemploy",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-cognauto",
+      "name": "Cognitive_Automation",
+      "equation": "Cognitive_Jobs * Cognitive_Automation_Rate * (AI_Capability / 100)^2",
+      "from_stock": "stock-cognjobs",
+      "to_stock": "stock-unemploy",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-newjobcreate",
+      "name": "New_Job_Creation",
+      "equation": "AI_Capability * Job_Creation_Rate * Economic_Growth",
+      "from_stock": null,
+      "to_stock": "stock-newjobs",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-retrain",
+      "name": "Retraining",
+      "equation": "Technological_Unemployment * Retraining_Rate * Education_Investment",
+      "from_stock": "stock-unemploy",
+      "to_stock": "stock-newjobs",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-aigrowth",
+      "name": "AI_Improvement",
+      "equation": "AI_Capability * AI_Growth_Rate * R_and_D_Investment",
+      "from_stock": null,
+      "to_stock": "stock-aicap",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-autorate",
+      "name": "Automation_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 150,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-cognautorate",
+      "name": "Cognitive_Automation_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-jobcreate",
+      "name": "Job_Creation_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-econgrowth",
+      "name": "Economic_Growth",
+      "equation": "1.02",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-retrainrate",
+      "name": "Retraining_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-eduinvest",
+      "name": "Education_Investment",
+      "equation": "1 + 0.01 * TIME",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-aigrowrate",
+      "name": "AI_Growth_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-rdinvest",
+      "name": "R_and_D_Investment",
+      "equation": "1.5",
+      "position": {
+        "x": 150,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-totaljobs",
+      "name": "Total_Jobs",
+      "equation": "Routine_Jobs + Cognitive_Jobs + New_Tech_Jobs",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-techunemprate",
+      "name": "Tech_Unemployment_Rate",
+      "equation": "Technological_Unemployment / (Total_Jobs + Technological_Unemployment)",
+      "position": {
+        "x": 250,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-polarization",
+      "name": "Job_Polarization",
+      "equation": "New_Tech_Jobs / (Routine_Jobs + 1)",
+      "position": {
+        "x": 500,
+        "y": 175
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "AI_Capability",
+      "to_element": "Routine_Automation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:59:36.700382+00:00",
+  "updated_at": "2026-01-12T02:59:36.700385+00:00",
+  "source": "https://doi.org/10.1257/jel.20191246",
+  "reference": "Acemoglu D, Restrepo P (2020). Robots and Jobs: Evidence from US Labor Markets. JEL."
+}

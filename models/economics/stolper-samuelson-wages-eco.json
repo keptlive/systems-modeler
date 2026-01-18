@@ -1,0 +1,169 @@
+{
+  "id": "stolper-samuelson-wages-eco",
+  "name": "Stolper-Samuelson Theorem",
+  "description": "Trade liberalization benefits owners of abundant factor and hurts owners of scarce factor. Explains why some groups oppose free trade. Key for understanding trade policy politics. Reference: WTO Trade Statistics. Source: https://www.wto.org/",
+  "stocks": [
+    {
+      "id": "stock-real-wage",
+      "name": "Real Wage",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-real-return",
+      "name": "Real Return to Capital",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-wage-change",
+      "name": "Wage Change",
+      "equation": "Wage_Adjustment * (Equilibrium_Wage - Real_Wage)",
+      "from_stock": null,
+      "to_stock": "stock-real-wage",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-return-change",
+      "name": "Return Change",
+      "equation": "Return_Adjustment * (Equilibrium_Return - Real_Return_to_Capital)",
+      "from_stock": null,
+      "to_stock": "stock-real-return",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-tariff",
+      "name": "Tariff Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-labor-abundant",
+      "name": "Labor Abundant",
+      "equation": "1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-labor-intensity",
+      "name": "Import Labor Intensity",
+      "equation": "0.8",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-eq-wage",
+      "name": "Equilibrium Wage",
+      "equation": "1 + Labor_Abundant * (1 - Tariff_Rate) * Labor_Intensity_Effect",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-eq-return",
+      "name": "Equilibrium Return",
+      "equation": "1 - Labor_Abundant * (1 - Tariff_Rate) * Labor_Intensity_Effect",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-labor-effect",
+      "name": "Labor Intensity Effect",
+      "equation": "Import_Labor_Intensity - 0.5",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-wage-adj",
+      "name": "Wage Adjustment",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-return-adj",
+      "name": "Return Adjustment",
+      "equation": "0.2",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-inequality",
+      "name": "Factor Income Inequality",
+      "equation": "Real_Return_to_Capital / Real_Wage",
+      "position": {
+        "x": 500,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-welfare",
+      "name": "Total Welfare",
+      "equation": "0.5 * Real_Wage + 0.5 * Real_Return_to_Capital + 0.1 * (1 - Tariff_Rate)",
+      "position": {
+        "x": 300,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Tariff Rate",
+      "to_element": "Equilibrium Wage"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Tariff Rate",
+      "to_element": "Equilibrium Return"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Import Labor Intensity",
+      "to_element": "Labor Intensity Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:45:54.017265+00:00",
+  "updated_at": "2026-01-12T07:45:54.017273+00:00",
+  "source": "https://doi.org/10.2307/2967638",
+  "reference": "Stolper WF, Samuelson PA. Protection and Real Wages. Review of Economic Studies. 1941;9(1):58-73."
+}

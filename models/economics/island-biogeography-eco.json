@@ -1,0 +1,131 @@
+{
+  "id": "island-biogeography-eco",
+  "name": "Island Biogeography Theory",
+  "description": "Models species richness as balance between immigration and extinction. MacArthur-Wilson theory. Source: MacArthur & Wilson (1967). DOI: 10.1515/9781400881376",
+  "stocks": [
+    {
+      "id": "stock-species",
+      "name": "Species_Richness",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-immig",
+      "name": "Immigration",
+      "equation": "Immigration_Rate * (Species_Pool - Species_Richness) / Species_Pool",
+      "from_stock": null,
+      "to_stock": "stock-species",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-extinct",
+      "name": "Extinction",
+      "equation": "Extinction_Rate * Species_Richness / Species_Pool",
+      "from_stock": "stock-species",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-pool",
+      "name": "Species_Pool",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-immrate",
+      "name": "Immigration_Rate",
+      "equation": "10 / Distance_Effect",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-extrate",
+      "name": "Extinction_Rate",
+      "equation": "5 / Area_Effect",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-area",
+      "name": "Area_Effect",
+      "equation": "SQRT(Island_Area)",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-dist",
+      "name": "Distance_Effect",
+      "equation": "Distance_From_Mainland / 100",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-islandarea",
+      "name": "Island_Area",
+      "equation": "100",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-dist2",
+      "name": "Distance_From_Mainland",
+      "equation": "50",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-equilibrium",
+      "name": "Equilibrium_Species",
+      "equation": "Species_Pool * Immigration_Rate / (Immigration_Rate + Extinction_Rate)",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Species_Richness",
+      "to_element": "Immigration"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:09:47.460584+00:00",
+  "updated_at": "2026-01-12T02:09:47.460588+00:00",
+  "source": "https://doi.org/10.1515/9781400881376",
+  "reference": "MacArthur, R.H. & Wilson, E.O. (1967). The Theory of Island Biogeography. Princeton University Press."
+}

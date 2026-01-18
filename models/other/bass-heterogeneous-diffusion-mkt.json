@@ -1,0 +1,130 @@
+{
+  "id": "bass-heterogeneous-diffusion-mkt",
+  "name": "Bass Diffusion with Heterogeneity",
+  "description": "Extended Bass model with adopter heterogeneity",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Early_Adopters",
+      "initial_value": 10.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Early_Majority",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Late_Majority",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Potential_Market",
+      "initial_value": 980.0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "p_innovators",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "q_imitators",
+      "equation": "0.38",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Total_Adopters",
+      "equation": "Early_Adopters+Early_Majority+Late_Majority",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Market_Size",
+      "equation": "1000.0",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Adoption_Rate_Early",
+      "equation": "(p_innovators+q_imitators*Total_Adopters/Market_Size)*Potential_Market*0.5",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Adoption_Rate_Late",
+      "equation": "(p_innovators+q_imitators*Total_Adopters/Market_Size)*Potential_Market*0.3",
+      "position": {
+        "x": 300,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Total_Adopters",
+      "to_element": "Adoption_Rate_Early"
+    },
+    {
+      "id": "c2",
+      "from_element": "Potential_Market",
+      "to_element": "Adoption_Rate_Early"
+    },
+    {
+      "id": "c3",
+      "from_element": "Total_Adopters",
+      "to_element": "Adoption_Rate_Late"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 30.0,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-15T20:47:17.009686+00:00",
+  "updated_at": "2026-01-15T20:47:17.009686+00:00",
+  "source": "https://doi.org/10.1287/mnsc.15.5.215",
+  "reference": "Bass, F.M. (1969) A new product growth model for consumer durables. Mgmt. Sci. 15:215-227"
+}

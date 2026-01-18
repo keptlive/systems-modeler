@@ -1,0 +1,143 @@
+{
+  "id": "emails-in-2-fixed-categories",
+  "name": "Emails In 2 Fixed Categories",
+  "description": "Model from Emails_in_2_fixed_categories.mdl",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Easy_Emails",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Hard_Emails",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Easy_Email_Volume",
+      "equation": "Total Emails * Easy_Fraction",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Easy_Fraction",
+      "equation": "0.5",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Easy_Reply",
+      "equation": "DELAY N(Easy Arrival, Easy_Reply_Time, 0, 1)",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Hard_Email_Volume",
+      "equation": "Total Emails * (1 - Easy_Fraction)",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Net_Email_Output",
+      "equation": "Easy_Reply + Hard_Reply",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Easy_Reply_Time",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Hard_Reply",
+      "equation": "DELAY N(Hard Arrival, Hard_Reply_Time, 0, 3)",
+      "position": {
+        "x": 230,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Hard_Reply_Time",
+      "equation": "4.0",
+      "position": {
+        "x": 360,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Easy_Fraction",
+      "to_element": "Easy_Email_Volume"
+    },
+    {
+      "id": "c2",
+      "from_element": "Easy_Reply_Time",
+      "to_element": "Easy_Reply"
+    },
+    {
+      "id": "c3",
+      "from_element": "Easy_Fraction",
+      "to_element": "Hard_Email_Volume"
+    },
+    {
+      "id": "c4",
+      "from_element": "Easy_Reply",
+      "to_element": "Net_Email_Output"
+    },
+    {
+      "id": "c5",
+      "from_element": "Hard_Reply",
+      "to_element": "Net_Email_Output"
+    },
+    {
+      "id": "c6",
+      "from_element": "Hard_Reply_Time",
+      "to_element": "Hard_Reply"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 100.0,
+    "dt": 0.0625
+  },
+  "created_at": "2026-01-15T19:13:16.470583+00:00",
+  "updated_at": "2026-01-15T19:13:16.470583+00:00",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "PySD Cookbook - Educational System Dynamics Models"
+}

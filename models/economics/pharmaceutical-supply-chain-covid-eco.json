@@ -1,0 +1,209 @@
+{
+  "id": "pharmaceutical-supply-chain-covid-eco",
+  "name": "Market_Demand",
+  "description": "System dynamics model for an agile pharmaceutical supply chain during the COVID-19 pandemic. Models inventory levels, demand surges, production capacity, and distribution efficiency. Based on Hamzehlou (2024) PLoS ONE study of Iran's pharmaceutical system. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Raw_Materials_Inventory",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Production_Capacity",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Finished_Goods_Inventory",
+      "initial_value": 8000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Distribution_Network_Capacity",
+      "initial_value": 4000,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Raw_Material_Procurement",
+      "equation": "Desired_Procurement * Supply_Availability",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Production_Rate",
+      "equation": "MIN(Raw_Materials_Inventory * Processing_Rate, Production_Capacity)",
+      "from_stock": "s1",
+      "to_stock": "s3",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Distribution_Rate",
+      "equation": "MIN(Finished_Goods_Inventory * Distribution_Efficiency, Market_Demand)",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Desired_Procurement",
+      "equation": "Production_Capacity * 1.2",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Supply_Availability",
+      "equation": "0.7 + 0.3 * (1 - Pandemic_Severity)",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Processing_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Distribution_Efficiency",
+      "equation": "0.2 * (1 - Pandemic_Severity * 0.3)",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Market_Demand",
+      "equation": "3000 * (1 + Pandemic_Severity * 0.5)",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Pandemic_Severity",
+      "equation": "0.5 + 0.3 * SIN(TIME / 50)",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Supply_Availability",
+      "to_element": "Raw_Material_Procurement"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Desired_Procurement",
+      "to_element": "Raw_Material_Procurement"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Processing_Rate",
+      "to_element": "Production_Rate"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Production_Capacity",
+      "to_element": "Production_Rate"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Raw_Materials_Inventory",
+      "to_element": "Production_Rate"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Distribution_Efficiency",
+      "to_element": "Distribution_Rate"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Finished_Goods_Inventory",
+      "to_element": "Distribution_Rate"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Market_Demand",
+      "to_element": "Distribution_Rate"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Production_Capacity",
+      "to_element": "Desired_Procurement"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Pandemic_Severity",
+      "to_element": "Supply_Availability"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Pandemic_Severity",
+      "to_element": "Distribution_Efficiency"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Pandemic_Severity",
+      "to_element": "Market_Demand"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T07:15:44.245692+00:00",
+  "updated_at": "2026-01-12T07:15:44.245692+00:00",
+  "source": "https://doi.org/10.1371/journal.pone.0290789",
+  "reference": "Hamzehlou M et al. (2024). System dynamics model for an agile pharmaceutical supply chain during COVID-19 pandemic in Iran. PLoS ONE 19(1): e0290789."
+}

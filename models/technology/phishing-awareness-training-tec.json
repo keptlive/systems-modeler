@@ -1,0 +1,91 @@
+{
+  "id": "phishing-awareness-training-tec",
+  "name": "Phishing Awareness Training Model",
+  "description": "Model of employee phishing susceptibility over time. Source: Proofpoint Human Factor Report.",
+  "stocks": [
+    {
+      "id": "stock-naive",
+      "name": "Susceptible_Users",
+      "initial_value": 800,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-aware",
+      "name": "Aware_Users",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-train",
+      "name": "Training",
+      "equation": "Susceptible_Users * Training_Rate",
+      "from_stock": "stock-naive",
+      "to_stock": "stock-aware",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-forget",
+      "name": "Skill_Decay",
+      "equation": "Aware_Users * Decay_Rate",
+      "from_stock": "stock-aware",
+      "to_stock": "stock-naive",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-train",
+      "name": "Training_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-decay",
+      "name": "Decay_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-clickrate",
+      "name": "Phishing_Click_Rate",
+      "equation": "Susceptible_Users * 0.3 / (Susceptible_Users + Aware_Users)",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:53:13.193318+00:00",
+  "updated_at": "2026-01-12T12:53:13.193318+00:00",
+  "source": "https://doi.org/10.1016/j.cose.2014.02.007",
+  "reference": "Hadnagy C. Social Engineering: The Science of Human Hacking. Wiley; 2018."
+}

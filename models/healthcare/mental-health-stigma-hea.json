@@ -1,0 +1,175 @@
+{
+  "id": "mental-health-stigma-hea",
+  "name": "Mental Health Stigma Model",
+  "description": "System dynamics model of mental health stigma showing how stigma affects treatment-seeking behavior and recovery outcomes. Reference: WHO (2022). Mental Health Action Plan. Source: https://www.who.int/publications/i/item/9789241506021",
+  "stocks": [
+    {
+      "id": "stock-untreated",
+      "name": "Untreated_Population",
+      "initial_value": 800,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-in-treatment",
+      "name": "In_Treatment",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-seeking",
+      "name": "Treatment_Seeking",
+      "equation": "Untreated_Population * Base_Seeking_Rate * (1 - Stigma_Level) * Awareness_Effect",
+      "from_stock": "stock-untreated",
+      "to_stock": "stock-in-treatment",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovering",
+      "name": "Recovery_Rate",
+      "equation": "In_Treatment * Treatment_Effectiveness",
+      "from_stock": "stock-in-treatment",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-relapsing",
+      "name": "Relapse_Rate",
+      "equation": "Recovered * Relapse_Probability * Stigma_Level",
+      "from_stock": "stock-recovered",
+      "to_stock": "stock-untreated",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-stigma",
+      "name": "Stigma_Level",
+      "equation": "0.4",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-base-rate",
+      "name": "Base_Seeking_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-awareness",
+      "name": "Awareness_Effect",
+      "equation": "1.2",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-effectiveness",
+      "name": "Treatment_Effectiveness",
+      "equation": "0.15",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-relapse",
+      "name": "Relapse_Probability",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Untreated_Population",
+      "to_element": "Treatment_Seeking"
+    },
+    {
+      "id": "c2",
+      "from_element": "Base_Seeking_Rate",
+      "to_element": "Treatment_Seeking"
+    },
+    {
+      "id": "c3",
+      "from_element": "Stigma_Level",
+      "to_element": "Treatment_Seeking"
+    },
+    {
+      "id": "c4",
+      "from_element": "Awareness_Effect",
+      "to_element": "Treatment_Seeking"
+    },
+    {
+      "id": "c5",
+      "from_element": "In_Treatment",
+      "to_element": "Recovery_Rate"
+    },
+    {
+      "id": "c6",
+      "from_element": "Treatment_Effectiveness",
+      "to_element": "Recovery_Rate"
+    },
+    {
+      "id": "c7",
+      "from_element": "Recovered",
+      "to_element": "Relapse_Rate"
+    },
+    {
+      "id": "c8",
+      "from_element": "Relapse_Probability",
+      "to_element": "Relapse_Rate"
+    },
+    {
+      "id": "c9",
+      "from_element": "Stigma_Level",
+      "to_element": "Relapse_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T11:47:36.905410Z",
+  "updated_at": "2026-01-12T11:47:36.905413Z",
+  "source": "https://doi.org/10.1016/S0140-6736(07)61241-8",
+  "reference": "Thornicroft G. Stigma and discrimination limit access to mental health care. Epidemiologia e Psichiatria Sociale. 2008;17(1):14-19."
+}

@@ -1,0 +1,214 @@
+{
+  "id": "marine-fishery-msy-eco",
+  "name": "Marine Fishery Maximum Sustainable Yield",
+  "description": "Model of fish population dynamics and sustainable harvest. Captures the relationship between fishing effort, stock biomass, and maximum sustainable yield. Based on fisheries science and bioeconomics. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Fish_Biomass",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Fishing_Fleet",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Cumulative_Catch",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Natural_Growth",
+      "equation": "Fish_Biomass * Intrinsic_Growth_Rate * (1 - Fish_Biomass / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Harvest",
+      "equation": "Catchability * Fishing_Fleet * Fish_Biomass",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Fleet_Entry",
+      "equation": "IF Profit > 0 THEN Entry_Rate * Profit ELSE 0",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Fleet_Exit",
+      "equation": "IF Profit < 0 THEN Fishing_Fleet * Exit_Rate * ABS(Profit) / Cost ELSE 0",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Catch_Accumulation",
+      "equation": "Harvest",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Carrying_Capacity",
+      "equation": "1000000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Intrinsic_Growth_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Catchability",
+      "equation": "0.00001",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Fish_Price",
+      "equation": "5",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Cost",
+      "equation": "100000",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Entry_Rate",
+      "equation": "0.0001",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Exit_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Revenue",
+      "equation": "Harvest * Fish_Price",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Profit",
+      "equation": "Revenue - Fishing_Fleet * Cost",
+      "position": {
+        "x": 200,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "MSY_Biomass",
+      "equation": "Carrying_Capacity / 2",
+      "position": {
+        "x": 400,
+        "y": 180
+      }
+    },
+    {
+      "id": "v11",
+      "name": "MSY",
+      "equation": "Intrinsic_Growth_Rate * Carrying_Capacity / 4",
+      "position": {
+        "x": 550,
+        "y": 180
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Stock_Status",
+      "equation": "Fish_Biomass / MSY_Biomass",
+      "position": {
+        "x": 300,
+        "y": 230
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1126/science.1058830",
+  "reference": "Clark CW (2010) Mathematical Bioeconomics: The Mathematics of Conservation. Hilborn R, Walters CJ (1992) Quantitative Fisheries Stock Assessment.",
+  "created_at": "2026-01-12T06:59:12.983559+00:00",
+  "updated_at": "2026-01-12T06:59:12.983559+00:00"
+}

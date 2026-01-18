@@ -1,0 +1,102 @@
+{
+  "id": "droop-quota-phytoplankton-bio",
+  "name": "Droop Quota Model",
+  "description": "Models phytoplankton growth based on internal nutrient quota rather than external concentration",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Cell_Density",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Internal_Quota",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "External_Nutrient",
+      "initial_value": 10.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "mu_max",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Q_min",
+      "equation": "0.001",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Growth_Rate",
+      "equation": "mu_max*(1-Q_min/Internal_Quota)",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Uptake_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Internal_Quota",
+      "to_element": "Growth_Rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "Q_min",
+      "to_element": "Growth_Rate"
+    },
+    {
+      "id": "c3",
+      "from_element": "mu_max",
+      "to_element": "Growth_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 30.0,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T20:40:14.097871+00:00",
+  "updated_at": "2026-01-15T20:40:14.097880+00:00",
+  "source": "https://doi.org/10.1007/BF00386231",
+  "reference": "Droop, M.R. (1973) Some thoughts on nutrient limitation in algae. J. Phycol. 9:264-272"
+}

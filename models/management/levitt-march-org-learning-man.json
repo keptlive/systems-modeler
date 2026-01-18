@@ -1,0 +1,190 @@
+{
+  "id": "levitt-march-org-learning-man",
+  "name": "Levitt-March Organizational Learning",
+  "description": "Organizations learn from experience but imperfectly. Learning is local, history-dependent, and target-oriented. Success and failure traps can emerge. Reference: Hattie, J. (2008). Visible Learning. Routledge. Source: https://www.routledge.com/",
+  "stocks": [
+    {
+      "id": "stock-competence",
+      "name": "Organizational Competence",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-aspiration",
+      "name": "Aspiration Level",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-search-intensity",
+      "name": "Search Intensity",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-learning",
+      "name": "Learning",
+      "equation": "Learning_Rate * Search_Intensity * (1 - Organizational_Competence)",
+      "from_stock": null,
+      "to_stock": "stock-competence",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-aspiration-update",
+      "name": "Aspiration Update",
+      "equation": "Aspiration_Adaptation * (Performance - Aspiration_Level)",
+      "from_stock": null,
+      "to_stock": "stock-aspiration",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-search-change",
+      "name": "Search Change",
+      "equation": "Search_Adaptation * (Target_Search - Search_Intensity)",
+      "from_stock": null,
+      "to_stock": "stock-search-intensity",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-performance",
+      "name": "Performance",
+      "equation": "Organizational_Competence + Random_Shock",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-random-shock",
+      "name": "Random Shock",
+      "equation": "0.1 * SIN(TIME / 3)",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-performance-gap",
+      "name": "Performance Gap",
+      "equation": "Aspiration_Level - Performance",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-target-search",
+      "name": "Target Search",
+      "equation": "MIN(1, MAX(0, Base_Search + Search_Sensitivity * Performance_Gap))",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-learning-rate",
+      "name": "Learning Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-aspiration-adapt",
+      "name": "Aspiration Adaptation",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-search-adapt",
+      "name": "Search Adaptation",
+      "equation": "0.3",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-base-search",
+      "name": "Base Search",
+      "equation": "0.2",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-search-sensitivity",
+      "name": "Search Sensitivity",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-success-trap",
+      "name": "Success Trap Risk",
+      "equation": "IF(Performance > Aspiration_Level AND Search_Intensity < 0.1, 1, 0)",
+      "position": {
+        "x": 300,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Search Intensity",
+      "to_element": "Learning"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Performance",
+      "to_element": "Aspiration Update"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Performance Gap",
+      "to_element": "Target Search"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:48:28.113903+00:00",
+  "updated_at": "2026-01-12T07:48:28.113906+00:00",
+  "source": "https://doi.org/10.1146/annurev.so.14.080188.001535",
+  "reference": "Levitt B, March JG. Organizational Learning. Annual Review of Sociology. 1988;14:319-340."
+}

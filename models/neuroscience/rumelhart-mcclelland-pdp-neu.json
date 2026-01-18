@@ -1,0 +1,183 @@
+{
+  "id": "rumelhart-mcclelland-pdp-neu",
+  "name": "Rumelhart-McClelland PDP Model",
+  "description": "Parallel Distributed Processing model of word recognition. Reference: Rumelhart, D.E. & McClelland, J.L. (1986). Parallel Distributed Processing.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Feature_Activation",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Letter_Activation",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Word_Activation",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Feature_Input",
+      "equation": "(Input_Strength - Feature_Activation) * Feature_Rate + Noise_F",
+      "from_stock": null,
+      "to_stock": "Feature_Activation",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Letter_Processing",
+      "equation": "(Feature_Activation * FL_Weight - Letter_Activation) * Letter_Rate + LW_Feedback",
+      "from_stock": null,
+      "to_stock": "Letter_Activation",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Word_Processing",
+      "equation": "(Letter_Activation * LW_Weight - Word_Activation) * Word_Rate - Lateral_Inhibition",
+      "from_stock": null,
+      "to_stock": "Word_Activation",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Input_Strength",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Feature_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Letter_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Word_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "FL_Weight",
+      "equation": "0.8",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "LW_Weight",
+      "equation": "0.6",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "LW_Feedback",
+      "equation": "Word_Activation * 0.2",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Lateral_Inhibition",
+      "equation": "Word_Activation * 0.1",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Noise_F",
+      "equation": "0.01 * SIN(time * 50)",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Recognition_Threshold",
+      "equation": "0.8",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Recognized",
+      "equation": "IF Word_Activation > Recognition_Threshold THEN 1 ELSE 0",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.1
+  },
+  "source": "https://doi.org/10.7551/mitpress/5236.001.0001",
+  "reference": "Rumelhart, D.E. & McClelland, J.L. (1986). Parallel Distributed Processing: Explorations in the Microstructure of Cognition. MIT Press.",
+  "created_at": "2026-01-15T19:58:51.626980+00:00",
+  "updated_at": "2026-01-15T19:58:51.626980+00:00"
+}

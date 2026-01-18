@@ -1,0 +1,29 @@
+{
+  "id": "revelle-co2-buffer-cli",
+  "name": "Revelle Factor Ocean CO2 Buffer Model",
+  "description": "Roger Revelle's (1957) model of ocean CO2 buffering capacity showing that only a fraction of emitted CO2 can be absorbed by oceans due to carbonate chemistry. The Revelle factor (~10) indicates that a 10% increase in atmospheric CO2 only increases ocean CO2 by 1%.",
+  "stocks": [
+    {"id": "stock-atmospheric-co2", "name": "Atmospheric CO2", "initial_value": 280, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-surface-ocean-dic", "name": "Surface Ocean DIC", "initial_value": 2000, "equation": "", "position": {"x": 450, "y": 200}},
+    {"id": "stock-deep-ocean-dic", "name": "Deep Ocean DIC", "initial_value": 2200, "equation": "", "position": {"x": 450, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-emissions", "name": "Emissions", "equation": "Anthropogenic_Emissions", "from_stock": null, "to_stock": "stock-atmospheric-co2", "position": {"x": 100, "y": 200}},
+    {"id": "flow-air-sea-flux", "name": "Air Sea Flux", "equation": "Piston_Velocity * (Atmospheric_CO2 - Equilibrium_pCO2) / Revelle_Factor", "from_stock": "stock-atmospheric-co2", "to_stock": "stock-surface-ocean-dic", "position": {"x": 325, "y": 200}},
+    {"id": "flow-deep-mixing", "name": "Deep Mixing", "equation": "(Surface_Ocean_DIC - Deep_Ocean_DIC) / Mixing_Time", "from_stock": "stock-surface-ocean-dic", "to_stock": "stock-deep-ocean-dic", "position": {"x": 450, "y": 275}}
+  ],
+  "variables": [
+    {"id": "var-anthropogenic-emissions", "name": "Anthropogenic Emissions", "equation": "10", "position": {"x": 100, "y": 100}},
+    {"id": "var-revelle-factor", "name": "Revelle Factor", "equation": "10", "position": {"x": 300, "y": 100}},
+    {"id": "var-piston-velocity", "name": "Piston Velocity", "equation": "0.05", "position": {"x": 450, "y": 100}},
+    {"id": "var-equilibrium-pco2", "name": "Equilibrium pCO2", "equation": "Surface_Ocean_DIC * pCO2_Sensitivity", "position": {"x": 600, "y": 100}},
+    {"id": "var-pco2-sensitivity", "name": "pCO2 Sensitivity", "equation": "0.14", "position": {"x": 200, "y": 300}},
+    {"id": "var-mixing-time", "name": "Mixing Time", "equation": "500", "position": {"x": 350, "y": 300}},
+    {"id": "var-ocean-uptake-fraction", "name": "Ocean Uptake Fraction", "equation": "Air_Sea_Flux / Anthropogenic_Emissions", "position": {"x": 550, "y": 300}},
+    {"id": "var-airborne-fraction", "name": "Airborne Fraction", "equation": "1 - Ocean_Uptake_Fraction", "position": {"x": 350, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 200, "dt": 1},
+  "source": "https://doi.org/10.1111/j.2153-3490.1957.tb01849.x",
+  "reference": "Revelle R, Suess HE. Carbon Dioxide Exchange Between Atmosphere and Ocean and the Question of an Increase of Atmospheric CO2 during the Past Decades. Tellus. 1957;9(1):18-27."
+}

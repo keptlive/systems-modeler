@@ -1,0 +1,206 @@
+{
+  "id": "misinformation-correction-soc",
+  "name": "Misinformation Spread and Correction Dynamics",
+  "description": "Model of misinformation propagation and fact-checking effectiveness on social media. Captures the asymmetry between viral false claims and slower corrections. Based on computational social science research. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Uninformed",
+      "initial_value": 90000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Misinformed",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Correctly_Informed",
+      "initial_value": 9000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Fact_Check_Coverage",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Misinformation_Spread",
+      "equation": "Uninformed * Misinformed / Population * Viral_Rate * Platform_Amplification",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Correction_Spread",
+      "equation": "Uninformed * Correctly_Informed / Population * Truth_Rate",
+      "from_stock": "s1",
+      "to_stock": "s3",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Fact_Check_Correction",
+      "equation": "Misinformed * Fact_Check_Coverage * Correction_Effectiveness",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Backfire_Effect",
+      "equation": "Misinformed * Fact_Check_Coverage * Backfire_Rate",
+      "from_stock": "s3",
+      "to_stock": "s2",
+      "position": {
+        "x": 400,
+        "y": 270
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Fact_Check_Expansion",
+      "equation": "(Target_Coverage - Fact_Check_Coverage) / Expansion_Time",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 300,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Population",
+      "equation": "100000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Viral_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Truth_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Platform_Amplification",
+      "equation": "1.5",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Correction_Effectiveness",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Backfire_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Target_Coverage",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Expansion_Time",
+      "equation": "30",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Misinformation_Prevalence",
+      "equation": "Misinformed / Population",
+      "position": {
+        "x": 200,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Information_Quality",
+      "equation": "Correctly_Informed / (Correctly_Informed + Misinformed + 1)",
+      "position": {
+        "x": 450,
+        "y": 180
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1126/science.aap9559",
+  "reference": "Vosoughi S, Roy D, Aral S (2018) The spread of true and false news online. Science.",
+  "created_at": "2026-01-12T06:57:53.545407+00:00",
+  "updated_at": "2026-01-12T06:57:53.545407+00:00"
+}

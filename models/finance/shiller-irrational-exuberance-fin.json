@@ -1,0 +1,174 @@
+{
+  "id": "shiller-irrational-exuberance-fin",
+  "name": "Shiller Irrational Exuberance Model",
+  "description": "Nobel Prize model of speculative bubbles and behavioral market dynamics. Reference: Shiller, R.J. (2000). Irrational Exuberance.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Market_Price",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Fundamental_Value",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Investor_Sentiment",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Price_Change",
+      "equation": "Market_Price * (Fundamental_Growth + Sentiment_Effect + Feedback_Effect)",
+      "from_stock": null,
+      "to_stock": "Market_Price",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Fundamental_Growth",
+      "equation": "Fundamental_Value * Earnings_Growth",
+      "from_stock": null,
+      "to_stock": "Fundamental_Value",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Sentiment_Shift",
+      "equation": "(Price_Momentum - 0.5) * Sentiment_Sensitivity + Mean_Reversion",
+      "from_stock": null,
+      "to_stock": "Investor_Sentiment",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Earnings_Growth",
+      "equation": "0.03 / 252",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Price_Momentum",
+      "equation": "0.5 + 0.3 * SIN(time / 50)",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Sentiment_Effect",
+      "equation": "(Investor_Sentiment - 0.5) * 0.1 / 252",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Feedback_Effect",
+      "equation": "Price_Momentum * 0.05 / 252",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Sentiment_Sensitivity",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Mean_Reversion",
+      "equation": "(0.5 - Investor_Sentiment) * 0.02",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "PE_Ratio",
+      "equation": "Market_Price / MAX(1, Fundamental_Value * 0.1)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "CAPE_Ratio",
+      "equation": "PE_Ratio",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Overvaluation",
+      "equation": "(Market_Price - Fundamental_Value) / Fundamental_Value",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Bubble_Indicator",
+      "equation": "IF PE_Ratio > 25 AND Investor_Sentiment > 0.7 THEN 1 ELSE 0",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 500,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.2307/j.ctt7s3jz",
+  "reference": "Shiller, R.J. (2000). Irrational Exuberance. Princeton University Press.",
+  "created_at": "2026-01-15T20:01:09.823797+00:00",
+  "updated_at": "2026-01-15T20:01:09.823797+00:00"
+}

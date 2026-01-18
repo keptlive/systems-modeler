@@ -1,0 +1,206 @@
+{
+  "id": "daisyworld-model-cli",
+  "name": "Daisyworld Climate Model",
+  "description": "Watson and Lovelock's 1983 model demonstrating Gaia theory principles. Shows how life can regulate planetary temperature through feedback between daisy populations and albedo, without invoking teleological explanations. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "stock-white-daisies",
+      "name": "White Daisies",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-black-daisies",
+      "name": "Black Daisies",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-white-growth",
+      "name": "White Daisy Growth",
+      "equation": "White_Daisies * (Bare_Ground * White_Growth_Rate - Death_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-white-daisies",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-black-growth",
+      "name": "Black Daisy Growth",
+      "equation": "Black_Daisies * (Bare_Ground * Black_Growth_Rate - Death_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-black-daisies",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-bare-ground",
+      "name": "Bare Ground",
+      "equation": "MAX(0, 1 - White_Daisies - Black_Daisies)",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-planetary-albedo",
+      "name": "Planetary Albedo",
+      "equation": "Bare_Ground * Bare_Albedo + White_Daisies * White_Albedo + Black_Daisies * Black_Albedo",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-white-albedo",
+      "name": "White Albedo",
+      "equation": "0.75",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-black-albedo",
+      "name": "Black Albedo",
+      "equation": "0.25",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-bare-albedo",
+      "name": "Bare Albedo",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-solar-luminosity",
+      "name": "Solar Luminosity",
+      "equation": "0.7 + Time * 0.01",
+      "position": {
+        "x": 350,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-planetary-temp",
+      "name": "Planetary Temperature",
+      "equation": "(Solar_Luminosity * (1 - Planetary_Albedo) / Stefan_Boltzmann) ^ 0.25 - 273",
+      "position": {
+        "x": 500,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-stefan-boltzmann",
+      "name": "Stefan Boltzmann",
+      "equation": "5.67e-8",
+      "position": {
+        "x": 650,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-white-temp",
+      "name": "White Local Temperature",
+      "equation": "Planetary_Temperature - 10",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-black-temp",
+      "name": "Black Local Temperature",
+      "equation": "Planetary_Temperature + 10",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-white-growth-rate",
+      "name": "White Growth Rate",
+      "equation": "MAX(0, 1 - 0.003265 * (22.5 - White_Local_Temperature)^2)",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-black-growth-rate",
+      "name": "Black Growth Rate",
+      "equation": "MAX(0, 1 - 0.003265 * (22.5 - Black_Local_Temperature)^2)",
+      "position": {
+        "x": 600,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-death-rate",
+      "name": "Death Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "White Daisies",
+      "to_element": "Planetary Albedo"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Black Daisies",
+      "to_element": "Planetary Albedo"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Planetary Albedo",
+      "to_element": "Planetary Temperature"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Planetary Temperature",
+      "to_element": "White Growth Rate"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Planetary Temperature",
+      "to_element": "Black Growth Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T01:30:00.000Z",
+  "updated_at": "2026-01-12T01:30:00.000Z",
+  "source": "https://doi.org/10.1111/j.1600-0889.1983.tb00031.x",
+  "reference": "Watson AJ, Lovelock JE. Biological homeostasis of the global environment: the parable of Daisyworld. Tellus B. 1983;35(4):284-289."
+}

@@ -1,0 +1,163 @@
+{
+  "id": "cbdc-central-bank-digital-currency-adoption-fin",
+  "name": "Central Bank Digital Currency Adoption Model",
+  "description": "Models the adoption dynamics of Central Bank Digital Currencies (CBDCs) including retail and wholesale adoption, impact on commercial bank deposits, privacy concerns, and financial inclusion effects. Based on BIS and IMF research on CBDC implementation.",
+  "source": "https://doi.org/10.5089/9781513592039.001",
+  "reference": "Auer R, Böhme R. Central bank digital currency: the quest for minimally invasive technology. BIS Working Papers No 948. 2021. IMF CBDC Virtual Handbook.",
+  "stocks": [
+    {
+      "id": "stock-unbanked",
+      "name": "Unbanked Population",
+      "initial_value": 2000000,
+      "equation": "",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "stock-cash-users",
+      "name": "Cash Users",
+      "initial_value": 5000000,
+      "equation": "",
+      "position": {"x": 250, "y": 100}
+    },
+    {
+      "id": "stock-bank-deposits",
+      "name": "Bank Deposit Users",
+      "initial_value": 8000000,
+      "equation": "",
+      "position": {"x": 400, "y": 100}
+    },
+    {
+      "id": "stock-cbdc-users",
+      "name": "CBDC Users",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {"x": 550, "y": 100}
+    },
+    {
+      "id": "stock-cbdc-balances",
+      "name": "CBDC Balances",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 550, "y": 250}
+    },
+    {
+      "id": "stock-bank-reserves",
+      "name": "Bank Reserves",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {"x": 400, "y": 250}
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-unbanked-adoption",
+      "name": "Unbanked CBDC Adoption",
+      "equation": "Financial_Inclusion_Rate * Unbanked_Population * CBDC_Awareness",
+      "from_stock": "stock-unbanked",
+      "to_stock": "stock-cbdc-users",
+      "position": {"x": 325, "y": 50}
+    },
+    {
+      "id": "flow-cash-to-cbdc",
+      "name": "Cash to CBDC Migration",
+      "equation": "Cash_Migration_Rate * Cash_Users * (Convenience_Factor - Privacy_Concern)",
+      "from_stock": "stock-cash-users",
+      "to_stock": "stock-cbdc-users",
+      "position": {"x": 400, "y": 50}
+    },
+    {
+      "id": "flow-deposit-to-cbdc",
+      "name": "Deposit to CBDC Migration",
+      "equation": "Deposit_Migration_Rate * Bank_Deposit_Users * Interest_Rate_Differential",
+      "from_stock": "stock-bank-deposits",
+      "to_stock": "stock-cbdc-users",
+      "position": {"x": 475, "y": 100}
+    },
+    {
+      "id": "flow-cbdc-inflows",
+      "name": "CBDC Balance Inflows",
+      "equation": "Average_CBDC_Holding * (Cash_to_CBDC_Migration + Deposit_to_CBDC_Migration)",
+      "from_stock": null,
+      "to_stock": "stock-cbdc-balances",
+      "position": {"x": 550, "y": 200}
+    },
+    {
+      "id": "flow-reserve-drain",
+      "name": "Reserve Drain",
+      "equation": "Deposit_to_CBDC_Migration * Average_Deposit_Balance * Reserve_Ratio",
+      "from_stock": "stock-bank-reserves",
+      "to_stock": null,
+      "position": {"x": 400, "y": 300}
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-inclusion-rate",
+      "name": "Financial_Inclusion_Rate",
+      "equation": "0.001",
+      "position": {"x": 100, "y": 50}
+    },
+    {
+      "id": "var-awareness",
+      "name": "CBDC_Awareness",
+      "equation": "0.1 + 0.9 * (1 - EXP(-TIME / 52))",
+      "position": {"x": 100, "y": 150}
+    },
+    {
+      "id": "var-cash-migration",
+      "name": "Cash_Migration_Rate",
+      "equation": "0.0005",
+      "position": {"x": 250, "y": 50}
+    },
+    {
+      "id": "var-convenience",
+      "name": "Convenience_Factor",
+      "equation": "0.7",
+      "position": {"x": 250, "y": 150}
+    },
+    {
+      "id": "var-privacy",
+      "name": "Privacy_Concern",
+      "equation": "0.4",
+      "position": {"x": 325, "y": 150}
+    },
+    {
+      "id": "var-deposit-migration",
+      "name": "Deposit_Migration_Rate",
+      "equation": "0.0002",
+      "position": {"x": 400, "y": 50}
+    },
+    {
+      "id": "var-interest-diff",
+      "name": "Interest_Rate_Differential",
+      "equation": "0.005",
+      "position": {"x": 475, "y": 50}
+    },
+    {
+      "id": "var-avg-holding",
+      "name": "Average_CBDC_Holding",
+      "equation": "500",
+      "position": {"x": 550, "y": 150}
+    },
+    {
+      "id": "var-avg-deposit",
+      "name": "Average_Deposit_Balance",
+      "equation": "5000",
+      "position": {"x": 400, "y": 200}
+    },
+    {
+      "id": "var-reserve-ratio",
+      "name": "Reserve_Ratio",
+      "equation": "0.1",
+      "position": {"x": 400, "y": 350}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 260,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T21:00:00.000000+00:00",
+  "updated_at": "2026-01-15T21:00:00.000000+00:00"
+}

@@ -1,0 +1,395 @@
+{
+  "id": "dice-integrated-assessment-model-simplified-cli",
+  "name": "DICE Integrated Assessment Model (Simplified)",
+  "description": "A simplified version of Nordhaus' Dynamic Integrated Climate-Economy (DICE) model. Links economic production, CO2 emissions, climate change, and climate damages in an integrated framework for policy analysis. Reference: Nordhaus, W. D. (2008). A question of balance. Yale University Press. DOI: https://doi.org/10.1093/reep/ren023",
+  "stocks": [
+    {
+      "id": "stock-capital-stock",
+      "name": "Capital Stock",
+      "initial_value": 223000000000000.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-atmospheric-co2",
+      "name": "Atmospheric CO2",
+      "initial_value": 851,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-upper-ocean-co2",
+      "name": "Upper Ocean CO2",
+      "initial_value": 460,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-deep-ocean-co2",
+      "name": "Deep Ocean CO2",
+      "initial_value": 1740,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-atmospheric-temperature",
+      "name": "Atmospheric Temperature",
+      "initial_value": 0.85,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-ocean-temperature",
+      "name": "Ocean Temperature",
+      "initial_value": 0.0068,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-cumulative-industrial-emissions",
+      "name": "Cumulative Industrial Emissions",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-investment",
+      "name": "Investment",
+      "equation": "Savings_Rate * Net_Output",
+      "from_stock": null,
+      "to_stock": "stock-capital-stock",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-depreciation",
+      "name": "Depreciation",
+      "equation": "Capital * Depreciation_Rate",
+      "from_stock": "stock-capital-stock",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-industrial-emissions",
+      "name": "Industrial Emissions",
+      "equation": "Carbon_Intensity * Gross_Output * (1 - Emissions_Control_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-industrial-emissions",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-emissions-to-atmosphere",
+      "name": "Emissions to Atmosphere",
+      "equation": "Industrial_Emissions + Land_Use_Emissions",
+      "from_stock": null,
+      "to_stock": "stock-atmospheric-co2",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-atmosphere-to-upper-ocean",
+      "name": "Atmosphere to Upper Ocean",
+      "equation": "Phi_12 * Atmospheric_CO2 - Phi_21 * Upper_Ocean_CO2",
+      "from_stock": "stock-atmospheric-co2",
+      "to_stock": "stock-upper-ocean-co2",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-upper-to-deep-ocean",
+      "name": "Upper to Deep Ocean",
+      "equation": "Phi_23 * Upper_Ocean_CO2 - Phi_32 * Deep_Ocean_CO2",
+      "from_stock": "stock-upper-ocean-co2",
+      "to_stock": "stock-deep-ocean-co2",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-temperature-increase",
+      "name": "Temperature Increase",
+      "equation": "Climate_Sensitivity * Forcing / 3.7 - Temperature_Atmosphere",
+      "from_stock": null,
+      "to_stock": "stock-atmospheric-temperature",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-heat-transfer-to-ocean",
+      "name": "Heat Transfer to Ocean",
+      "equation": "Heat_Transfer_Coefficient * (Temperature_Atmosphere - Temperature_Ocean)",
+      "from_stock": "stock-atmospheric-temperature",
+      "to_stock": "stock-ocean-temperature",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-population",
+      "name": "Population",
+      "equation": "7403 * (11500 / 7403) ^ (1 - EXP(-0.134 * (Time - 2015)))",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-factor-productivity",
+      "name": "Total Factor Productivity",
+      "equation": "5.115 * EXP(0.076 * (1 - EXP(-0.005 * (Time - 2015))))",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gross-output",
+      "name": "Gross Output",
+      "equation": "Total_Factor_Productivity * Capital^Gamma * (Population/1000)^(1-Gamma)",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma-capital-elasticity",
+      "name": "Gamma (Capital Elasticity)",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-depreciation-rate",
+      "name": "Depreciation Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-savings-rate",
+      "name": "Savings Rate",
+      "equation": "0.23",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-carbon-intensity",
+      "name": "Carbon Intensity",
+      "equation": "0.35 * EXP(-0.015 * (Time - 2015))",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-emissions-control-rate",
+      "name": "Emissions Control Rate",
+      "equation": "MIN(1, 0.03 + 0.01 * (Time - 2015))",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-land-use-emissions",
+      "name": "Land Use Emissions",
+      "equation": "2.6 * 0.9^((Time - 2015)/5)",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-radiative-forcing",
+      "name": "Radiative Forcing",
+      "equation": "Forcing_Coefficient * LOG(Atmospheric_CO2 / 588) / LOG(2) + Exogenous_Forcing",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-forcing-coefficient",
+      "name": "Forcing Coefficient",
+      "equation": "3.7",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-exogenous-forcing",
+      "name": "Exogenous Forcing",
+      "equation": "0.5 + 0.25 * (Time - 2015) / 100",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-climate-sensitivity",
+      "name": "Climate Sensitivity",
+      "equation": "3.1",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-heat-transfer-coefficient",
+      "name": "Heat Transfer Coefficient",
+      "equation": "0.0248",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-phi-12",
+      "name": "Phi 12",
+      "equation": "0.088",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-phi-21",
+      "name": "Phi 21",
+      "equation": "0.025",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-phi-23",
+      "name": "Phi 23",
+      "equation": "0.003",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-phi-32",
+      "name": "Phi 32",
+      "equation": "0.0003",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-damage-fraction",
+      "name": "Damage Fraction",
+      "equation": "Damage_Coefficient * Temperature_Atmosphere^2",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-damage-coefficient",
+      "name": "Damage Coefficient",
+      "equation": "0.00236",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-net-output",
+      "name": "Net Output",
+      "equation": "Gross_Output * (1 - Damage_Fraction) - Abatement_Cost",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-abatement-cost",
+      "name": "Abatement Cost",
+      "equation": "Gross_Output * Backstop_Cost * Emissions_Control_Rate^2.6 / 2.6",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-backstop-cost",
+      "name": "Backstop Cost",
+      "equation": "0.55 * 0.99^(Time - 2015)",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-social-cost-of-carbon",
+      "name": "Social Cost of Carbon",
+      "equation": "Gross_Output * Damage_Coefficient * 2 * Temperature_Atmosphere / Industrial_Emissions * 1000",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2015,
+    "end": 2100,
+    "dt": 5
+  },
+  "created_at": "2026-01-11T20:04:50.703015Z",
+  "updated_at": "2026-01-11T20:04:50.703015Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

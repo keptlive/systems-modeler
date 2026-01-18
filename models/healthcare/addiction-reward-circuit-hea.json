@@ -1,0 +1,224 @@
+{
+  "id": "addiction-reward-circuit-hea",
+  "name": "Addiction and Reward Circuit Dynamics",
+  "description": "Model of addiction development through changes in brain reward circuitry. Captures tolerance (opponent process), withdrawal, and craving dynamics. Based on neurobiological models of drug addiction and opponent-process theory. Reference: Koob, G. F., & Volkow, N. D. (2016). Neurobiology of addiction. Lancet Psychiatry. Source: https://doi.org/10.1016/S2215-0366(16)00104-8",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Reward_Sensitivity",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Opponent_Process",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Drug_Level",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Craving",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Reward_Adaptation",
+      "equation": "(Normal_Sensitivity - Reward_Sensitivity) / Adaptation_Time - Chronic_Drug_Effect * Reward_Sensitivity",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Opponent_Buildup",
+      "equation": "Drug_Level * Buildup_Rate - Opponent_Process * Decay_Rate",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Drug_Intake",
+      "equation": "IF PULSE(Dose_Time, Dose_Duration) THEN Dose_Amount ELSE 0",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Drug_Clearance",
+      "equation": "Drug_Level / Clearance_Time",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 430
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Craving_Change",
+      "equation": "(Opponent_Process * Craving_Sensitivity - Craving) / Craving_Time",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 450,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Normal_Sensitivity",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Adaptation_Time",
+      "equation": "30",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Buildup_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Decay_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Dose_Amount",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Dose_Time",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Dose_Duration",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Clearance_Time",
+      "equation": "4",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Chronic_Drug_Effect",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Craving_Sensitivity",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 180
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Craving_Time",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 180
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Net_Reward",
+      "equation": "Drug_Level * Reward_Sensitivity - Opponent_Process",
+      "position": {
+        "x": 250,
+        "y": 230
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "source": "https://doi.org/10.1038/nrn2912",
+  "reference": "Koob GF, Volkow ND (2010) Neurocircuitry of Addiction. Neuropsychopharmacology. Solomon RL (1980) Opponent-process theory of acquired motivation.",
+  "created_at": "2026-01-12T06:54:12.140274+00:00",
+  "updated_at": "2026-01-12T06:54:12.140274+00:00"
+}

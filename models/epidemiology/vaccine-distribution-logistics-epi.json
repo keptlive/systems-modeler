@@ -1,0 +1,227 @@
+{
+  "id": "vaccine-distribution-logistics-epi",
+  "name": "Vaccine Distribution Logistics Model",
+  "description": "Model of vaccine supply chain and distribution showing manufacturing, cold chain logistics, and administration. Based on Tanner et al. (2008) and COVID vaccine experiences. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Vaccines in Production",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Vaccines in Distribution",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Vaccines at Sites",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Vaccinated Population",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Production Start",
+      "equation": "Production_Capacity",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Production Complete",
+      "equation": "Vaccines_in_Production / Manufacturing_Time",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Distribution Rate",
+      "equation": "MIN(Vaccines_in_Distribution / Distribution_Time, Site_Receiving_Capacity)",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Administration Rate",
+      "equation": "MIN(Vaccines_at_Sites / Administration_Time, Daily_Capacity * Willing_Population_Fraction)",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Wastage",
+      "equation": "Vaccines_at_Sites * Wastage_Rate",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Production Capacity",
+      "equation": "2000000",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Manufacturing Time",
+      "equation": "60",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Distribution Time",
+      "equation": "7",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Administration Time",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Site Receiving Capacity",
+      "equation": "500000",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Daily Capacity",
+      "equation": "1000000",
+      "position": {
+        "x": 650,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Willing Population Fraction",
+      "equation": "0.7",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Wastage Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Total Population",
+      "equation": "330000000",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Vaccination Coverage",
+      "equation": "Vaccinated_Population / Total_Population",
+      "position": {
+        "x": 700,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Vaccines in Production",
+      "to_element": "Production Complete"
+    },
+    {
+      "id": "c2",
+      "from_element": "Vaccines in Distribution",
+      "to_element": "Distribution Rate"
+    },
+    {
+      "id": "c3",
+      "from_element": "Vaccines at Sites",
+      "to_element": "Administration Rate"
+    },
+    {
+      "id": "c4",
+      "from_element": "Vaccinated Population",
+      "to_element": "Vaccination Coverage"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:41:05.118059Z",
+  "updated_at": "2026-01-12T01:41:05.118063Z",
+  "source": "https://doi.org/10.1016/j.vaccine.2008.02.066",
+  "reference": "Tanner JC, et al. WHO Guide to Good Manufacturing Practice (GMP) requirements: Part 2, Validation. WHO Technical Report Series. 2021."
+}

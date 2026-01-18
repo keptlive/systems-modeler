@@ -1,0 +1,253 @@
+{
+  "id": "lenton-tipping-elements-climate-cli",
+  "name": "Lenton Climate Tipping Elements Model",
+  "description": "Model of climate tipping elements including ice sheets, AMOC, and ecosystems. Based on Lenton et al.'s framework for abrupt climate change. Source: Lenton et al. (2008), PNAS. DOI: 10.1073/pnas.0705414105",
+  "stocks": [
+    {
+      "id": "stock-gis",
+      "name": "Greenland_Ice_Sheet",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-wais",
+      "name": "West_Antarctic_Ice_Sheet",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-amoc",
+      "name": "AMOC_Strength",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-amazon",
+      "name": "Amazon_Forest_Cover",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-arctic",
+      "name": "Arctic_Sea_Ice",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-temp",
+      "name": "Global_Temperature",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-gis-melt",
+      "name": "GIS_Melting",
+      "equation": "Greenland_Ice_Sheet * GIS_Melt_Rate * MAX(0, (Global_Temperature - GIS_Threshold))",
+      "from_stock": "stock-gis",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-wais-melt",
+      "name": "WAIS_Collapse",
+      "equation": "West_Antarctic_Ice_Sheet * WAIS_Collapse_Rate * MAX(0, (Global_Temperature - WAIS_Threshold))",
+      "from_stock": "stock-wais",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-amoc-weak",
+      "name": "AMOC_Weakening",
+      "equation": "AMOC_Strength * AMOC_Weaken_Rate * (1 - Greenland_Ice_Sheet)",
+      "from_stock": "stock-amoc",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-amazon-die",
+      "name": "Amazon_Dieback",
+      "equation": "Amazon_Forest_Cover * Amazon_Dieback_Rate * MAX(0, (Global_Temperature - Amazon_Threshold))",
+      "from_stock": "stock-amazon",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-arctic-melt",
+      "name": "Arctic_Ice_Loss",
+      "equation": "Arctic_Sea_Ice * Arctic_Melt_Rate * Global_Temperature",
+      "from_stock": "stock-arctic",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-warm",
+      "name": "Warming",
+      "equation": "Emissions_Rate * (1 + Albedo_Feedback * (1 - Arctic_Sea_Ice))",
+      "from_stock": null,
+      "to_stock": "stock-temp",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-gis-rate",
+      "name": "GIS_Melt_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-gis-thresh",
+      "name": "GIS_Threshold",
+      "equation": "1.5",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-wais-rate",
+      "name": "WAIS_Collapse_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-wais-thresh",
+      "name": "WAIS_Threshold",
+      "equation": "3.0",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-amoc-rate",
+      "name": "AMOC_Weaken_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-amazon-rate",
+      "name": "Amazon_Dieback_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-amazon-thresh",
+      "name": "Amazon_Threshold",
+      "equation": "3.0",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-arctic-rate",
+      "name": "Arctic_Melt_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-emit",
+      "name": "Emissions_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-albedo",
+      "name": "Albedo_Feedback",
+      "equation": "0.2",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Global_Temperature",
+      "to_element": "GIS_Melting"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Greenland_Ice_Sheet",
+      "to_element": "AMOC_Weakening"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Arctic_Sea_Ice",
+      "to_element": "Warming"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2300,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T22:11:19.082894Z",
+  "updated_at": "2026-01-11T22:11:19.082904Z",
+  "source": "https://doi.org/10.1073/pnas.0705414105",
+  "reference": "Lenton, T.M. et al. (2008). Tipping elements in the Earth's climate system."
+}

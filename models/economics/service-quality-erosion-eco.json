@@ -1,0 +1,137 @@
+{
+  "id": "service-quality-erosion-eco",
+  "name": "Service Quality Erosion",
+  "description": "Service quality erosion model from Sterman's Business Dynamics (2000), Chapter 6. Shows how growth in demand can erode service quality, which eventually undermines demand - a limits to growth archetype. Source: Sterman, J.D. (2000), Business Dynamics, McGraw-Hill. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-customers",
+      "name": "Customers",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-customer-acquisition",
+      "name": "Customer_Acquisition",
+      "equation": "Potential_Customers * Attractiveness * Marketing_Effectiveness",
+      "from_stock": null,
+      "to_stock": "stock-customers",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-customer-loss",
+      "name": "Customer_Loss",
+      "equation": "Customers * Churn_Rate",
+      "from_stock": "stock-customers",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-potential-customers",
+      "name": "Potential_Customers",
+      "equation": "10000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-marketing-effectiveness",
+      "name": "Marketing_Effectiveness",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-service-capacity",
+      "name": "Service_Capacity",
+      "equation": "2000",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-service-quality",
+      "name": "Service_Quality",
+      "equation": "MIN(1, Service_Capacity / (Customers + 1))",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-attractiveness",
+      "name": "Attractiveness",
+      "equation": "Service_Quality * Reputation",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-reputation",
+      "name": "Reputation",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-churn-rate",
+      "name": "Churn_Rate",
+      "equation": "0.05 + 0.2 * (1 - Service_Quality)",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Potential_Customers",
+      "to_element": "Customer_Acquisition"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Customers",
+      "to_element": "Service_Quality"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Service_Quality",
+      "to_element": "Attractiveness"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Service_Quality",
+      "to_element": "Churn_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:52:52.274442+00:00",
+  "updated_at": "2026-01-11T20:52:52.274442+00:00",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

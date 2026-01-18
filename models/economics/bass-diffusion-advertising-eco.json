@@ -1,0 +1,119 @@
+{
+  "id": "bass-diffusion-advertising-eco",
+  "name": "Bass Diffusion with Advertising Model",
+  "description": "Extended Bass diffusion model incorporating advertising effectiveness and market saturation effects on product adoption. Reference: Bass, F. M. (1969). A new product growth for model consumer durables. Management Science, 15(5), 215-227. DOI: https://doi.org/10.1287/mnsc.15.5.215",
+  "stocks": [
+    {
+      "id": "stock-potential",
+      "name": "Potential_Adopters",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-adopters",
+      "name": "Adopters",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adoption",
+      "name": "Adoption_Rate",
+      "equation": "Potential_Adopters * (Innovation_Coefficient + Imitation_Coefficient * Adopters / Market_Size) * Advertising_Effect",
+      "from_stock": "stock-potential",
+      "to_stock": "stock-adopters",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-p",
+      "name": "Innovation_Coefficient",
+      "equation": "0.03",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-q",
+      "name": "Imitation_Coefficient",
+      "equation": "0.38",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-m",
+      "name": "Market_Size",
+      "equation": "10010",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-ad",
+      "name": "Advertising_Effect",
+      "equation": "1.2",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Potential_Adopters",
+      "to_element": "Adoption_Rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "Innovation_Coefficient",
+      "to_element": "Adoption_Rate"
+    },
+    {
+      "id": "c3",
+      "from_element": "Imitation_Coefficient",
+      "to_element": "Adoption_Rate"
+    },
+    {
+      "id": "c4",
+      "from_element": "Adopters",
+      "to_element": "Adoption_Rate"
+    },
+    {
+      "id": "c5",
+      "from_element": "Market_Size",
+      "to_element": "Adoption_Rate"
+    },
+    {
+      "id": "c6",
+      "from_element": "Advertising_Effect",
+      "to_element": "Adoption_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-12T11:47:36.905305Z",
+  "updated_at": "2026-01-12T11:47:36.905310Z",
+  "source": "https://doi.org/10.1287/mnsc.15.5.215",
+  "reference": "Bass FM. A New Product Growth Model for Consumer Durables. Management Science. 1969;15(5):215-227."
+}

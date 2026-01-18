@@ -1,0 +1,200 @@
+{
+  "id": "collective-action-problem-soc",
+  "name": "Collective Action Problem Model",
+  "description": "Models free rider problem and conditions for collective action. Based on Olson (1965) and Ostrom (1990). DOI: 10.1017/CBO9780511807763",
+  "stocks": [
+    {
+      "id": "stock-contributors",
+      "name": "Contributors",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-freeriders",
+      "name": "Free_Riders",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-publicgood",
+      "name": "Public_Good_Level",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-joincontrib",
+      "name": "Join_Contributing",
+      "equation": "Free_Riders * (Conditional_Cooperation + Incentive_Effect) * (1 - Anonymity_Effect)",
+      "from_stock": "stock-freeriders",
+      "to_stock": "stock-contributors",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-stopcontrib",
+      "name": "Stop_Contributing",
+      "equation": "Contributors * Defection_Rate * (1 - Punishment_Effect)",
+      "from_stock": "stock-contributors",
+      "to_stock": "stock-freeriders",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-provision",
+      "name": "Good_Provision",
+      "equation": "Contributors * Contribution_Rate",
+      "from_stock": null,
+      "to_stock": "stock-publicgood",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-deprec",
+      "name": "Good_Depreciation",
+      "equation": "Public_Good_Level * Depreciation_Rate",
+      "from_stock": "stock-publicgood",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-condcoop",
+      "name": "Conditional_Cooperation",
+      "equation": "Contributors / 100 * 0.1",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-incentive",
+      "name": "Incentive_Effect",
+      "equation": "Selective_Incentives * 0.05",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-selinc",
+      "name": "Selective_Incentives",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-anon",
+      "name": "Anonymity_Effect",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-defect",
+      "name": "Defection_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-punish",
+      "name": "Punishment_Effect",
+      "equation": "0.3",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-contribrate",
+      "name": "Contribution_Rate",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-deprecrate",
+      "name": "Depreciation_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-groupsize",
+      "name": "Group_Size",
+      "equation": "Contributors + Free_Riders",
+      "position": {
+        "x": 300,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-freerideprob",
+      "name": "Free_Rider_Problem",
+      "equation": "Free_Riders / Group_Size",
+      "position": {
+        "x": 400,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-percapita",
+      "name": "Per_Capita_Benefit",
+      "equation": "Public_Good_Level / Group_Size",
+      "position": {
+        "x": 200,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Contributors",
+      "to_element": "Conditional_Cooperation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:55:29.074459+00:00",
+  "updated_at": "2026-01-12T02:55:29.074468+00:00",
+  "source": "https://doi.org/10.1017/CBO9780511807763",
+  "reference": "Ostrom E (1990). Governing the Commons. Cambridge. Nobel Prize 2009. Also: Olson M (1965). Logic of Collective Action."
+}

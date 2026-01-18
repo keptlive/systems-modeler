@@ -1,0 +1,266 @@
+{
+  "id": "invasive-species-spread-model-eco",
+  "name": "Invasive Species Spread Model",
+  "description": "Models the spread of invasive species through a landscape. Invasive species often show a lag phase of slow growth followed by explosive spread. Competition with native species, lack of natural predators, and habitat modification create feedback loops that can lead to ecosystem transformation. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-invasive-population",
+      "name": "Invasive Population",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-native-population",
+      "name": "Native Population",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-invaded-area",
+      "name": "Invaded Area",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-invasive-reproduction",
+      "name": "Invasive Reproduction",
+      "equation": "Invasive_Growth_Rate * Invasive_Population * (1 - Total_Population / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-invasive-population",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-invasive-mortality",
+      "name": "Invasive Mortality",
+      "equation": "Invasive_Death_Rate * Invasive_Population",
+      "from_stock": "stock-invasive-population",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-native-reproduction",
+      "name": "Native Reproduction",
+      "equation": "Native_Growth_Rate * Native_Population * (1 - Total_Population / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-native-population",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-native-mortality",
+      "name": "Native Mortality",
+      "equation": "Native_Death_Rate * Native_Population",
+      "from_stock": "stock-native-population",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-displacement",
+      "name": "Displacement",
+      "equation": "Competition_Coefficient * Invasive_Population * Native_Population / Carrying_Capacity",
+      "from_stock": "stock-native-population",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-spread",
+      "name": "Spread",
+      "equation": "Spread_Rate * SQRT(Invaded_Area) * (1 - Invaded_Area / Total_Area)",
+      "from_stock": null,
+      "to_stock": "stock-invaded-area",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "Invasive_Population + Native_Population",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-carrying-capacity",
+      "name": "Carrying Capacity",
+      "equation": "2000",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-invasive-growth-rate",
+      "name": "Invasive Growth Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-native-growth-rate",
+      "name": "Native Growth Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-invasive-death-rate",
+      "name": "Invasive Death Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-native-death-rate",
+      "name": "Native Death Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-competition-coefficient",
+      "name": "Competition Coefficient",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-spread-rate",
+      "name": "Spread Rate",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-total-area",
+      "name": "Total Area",
+      "equation": "10000",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-invasion-fraction",
+      "name": "Invasion Fraction",
+      "equation": "Invaded_Area / Total_Area",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-native-fraction",
+      "name": "Native Fraction",
+      "equation": "Native_Population / Total_Population",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-invasion-phase",
+      "name": "Invasion Phase",
+      "equation": "IF Invasive_Population < 100 THEN 1 ELSE IF Invasive_Population < 500 THEN 2 ELSE 3",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Invasive Population",
+      "to_element": "Invasive Reproduction"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Total Population",
+      "to_element": "Invasive Reproduction"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Invasive Population",
+      "to_element": "Invasive Mortality"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Native Population",
+      "to_element": "Native Reproduction"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Total Population",
+      "to_element": "Native Reproduction"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Invasive Population",
+      "to_element": "Displacement"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Native Population",
+      "to_element": "Displacement"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Invaded Area",
+      "to_element": "Spread"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.737230Z",
+  "updated_at": "2026-01-11T20:04:50.737230Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

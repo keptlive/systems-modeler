@@ -1,0 +1,219 @@
+{
+  "id": "forest-fire-dynamics-eco",
+  "name": "Forest Fire Dynamics",
+  "description": "Forest fire dynamics model showing how fuel accumulation and fire suppression affect fire regimes. Models interactions between vegetation, fire, and management. Source: Based on Stephens & Ruth (2005), Forest Ecology and Management. DOI: 10.1016/j.foreco.2005.02.016",
+  "stocks": [
+    {
+      "id": "stock-forest",
+      "name": "Forest_Biomass",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-fuel",
+      "name": "Surface_Fuel",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-burned-area",
+      "name": "Recently_Burned",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-growth",
+      "name": "Forest_Growth",
+      "equation": "Growth_Rate * Forest_Biomass * (1 - Forest_Biomass / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-forest",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-litterfall",
+      "name": "Litterfall",
+      "equation": "Litterfall_Rate * Forest_Biomass",
+      "from_stock": null,
+      "to_stock": "stock-fuel",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-decomposition",
+      "name": "Decomposition",
+      "equation": "Decomposition_Rate * Surface_Fuel",
+      "from_stock": "stock-fuel",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-fire-spread",
+      "name": "Fire_Burning",
+      "equation": "Fire_Probability * Surface_Fuel * Fire_Weather_Index * (1 - Suppression_Effectiveness)",
+      "from_stock": "stock-forest",
+      "to_stock": "stock-burned-area",
+      "position": {
+        "x": 330,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-fuel-consumption",
+      "name": "Fuel_Consumption",
+      "equation": "Fire_Burning * Fuel_Consumption_Ratio",
+      "from_stock": "stock-fuel",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Vegetation_Recovery",
+      "equation": "Recently_Burned / Recovery_Time",
+      "from_stock": "stock-burned-area",
+      "to_stock": "stock-forest",
+      "position": {
+        "x": 330,
+        "y": 225
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-growth-rate",
+      "name": "Growth_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-carrying-capacity",
+      "name": "Carrying_Capacity",
+      "equation": "200",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-litterfall-rate",
+      "name": "Litterfall_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-decomposition-rate",
+      "name": "Decomposition_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 350,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-fire-probability",
+      "name": "Fire_Probability",
+      "equation": "0.01",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fire-weather",
+      "name": "Fire_Weather_Index",
+      "equation": "1.0",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-suppression",
+      "name": "Suppression_Effectiveness",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fuel-consumption-ratio",
+      "name": "Fuel_Consumption_Ratio",
+      "equation": "0.8",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-recovery-time",
+      "name": "Recovery_Time",
+      "equation": "20",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Forest_Biomass",
+      "to_element": "Forest_Growth"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Forest_Biomass",
+      "to_element": "Litterfall"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Surface_Fuel",
+      "to_element": "Fire_Burning"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Fire_Weather_Index",
+      "to_element": "Fire_Burning"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T20:47:58.495650Z",
+  "updated_at": "2026-01-11T20:47:58.495650Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

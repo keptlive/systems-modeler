@@ -1,0 +1,197 @@
+{
+  "id": "ecology-fishery-collapse-dynamics-eco",
+  "name": "Fishery Collapse and Recovery",
+  "description": "Models fish stock dynamics with harvesting, potential collapse, and recovery under management. Based on Hilborn & Walters classic fisheries models and FAO data. Reference: FAO State of World Fisheries. Source: https://www.fao.org/fishery/",
+  "category": "ecology",
+  "stocks": [
+    {
+      "id": "stock-fish",
+      "name": "Fish_Stock_Mt",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fleet",
+      "name": "Fishing_Fleet_Vessels",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-catch",
+      "name": "Cumulative_Catch",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-growth",
+      "name": "Fish_Growth",
+      "equation": "Fish_Stock_Mt * Growth_Rate * (1 - Fish_Stock_Mt / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-fish",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-harvest",
+      "name": "Harvest",
+      "equation": "MIN(Catch_Per_Vessel * Fishing_Fleet_Vessels * Catchability * Fish_Stock_Mt / Carrying_Capacity, Fish_Stock_Mt * Max_Harvest_Rate)",
+      "from_stock": "stock-fish",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fleet-growth",
+      "name": "Fleet_Growth",
+      "equation": "Fishing_Fleet_Vessels * Fleet_Growth_Rate * (Profitability - 1) / 10",
+      "from_stock": null,
+      "to_stock": "stock-fleet",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fleet-exit",
+      "name": "Fleet_Exit",
+      "equation": "Fishing_Fleet_Vessels * Exit_Rate * MAX(0, 1 - Profitability)",
+      "from_stock": "stock-fleet",
+      "to_stock": null,
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-catch-accum",
+      "name": "Catch_Accumulation",
+      "equation": "Harvest",
+      "from_stock": null,
+      "to_stock": "stock-catch",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-growth",
+      "name": "Growth_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-capacity",
+      "name": "Carrying_Capacity",
+      "equation": "150",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-catch-per",
+      "name": "Catch_Per_Vessel",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-catchability",
+      "name": "Catchability",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-max-harvest",
+      "name": "Max_Harvest_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fleet-growth",
+      "name": "Fleet_Growth_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-exit",
+      "name": "Exit_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-price",
+      "name": "Fish_Price",
+      "equation": "1000",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-cost",
+      "name": "Operating_Cost",
+      "equation": "500",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-profit",
+      "name": "Profitability",
+      "equation": "(Harvest * Fish_Price / Fishing_Fleet_Vessels) / Operating_Cost",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "source": "https://www.fao.org/fishery/sofia/en",
+  "reference": "FAO (2022) State of World Fisheries and Aquaculture. Food and Agriculture Organization.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:12:55.729462+00:00",
+  "updated_at": "2026-01-12T06:12:55.729462+00:00"
+}

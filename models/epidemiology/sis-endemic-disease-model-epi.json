@@ -1,0 +1,130 @@
+{
+  "id": "sis-endemic-disease-model-epi",
+  "name": "SIS Endemic Disease Model",
+  "description": "A Susceptible-Infected-Susceptible (SIS) model for diseases with no lasting immunity. Individuals can be reinfected after recovery, leading to endemic equilibrium where the disease persists in the population. Common for bacterial infections, STIs, and some respiratory infections. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 990,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Infected",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "Infection",
+      "equation": "Beta * Susceptible * Infected / Total_Population",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "Gamma * Infected",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-susceptible",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.4",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "Gamma",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "Susceptible + Infected",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-basic-reproduction-number",
+      "name": "Basic Reproduction Number",
+      "equation": "Beta / Gamma",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Susceptible",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Infected",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Beta",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Total Population",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Infected",
+      "to_element": "Recovery"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Gamma",
+      "to_element": "Recovery"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-11T20:04:50.807061Z",
+  "updated_at": "2026-01-11T20:04:50.807061Z",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

@@ -1,0 +1,229 @@
+{
+  "id": "opioid-crisis-dynamics",
+  "name": "Opioid Crisis Model",
+  "description": "Model of opioid epidemic dynamics including prescription pathways, addiction, treatment, and overdose.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Naive_Users",
+      "initial_value": 50000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Prescription_Users",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Addicted",
+      "initial_value": 2000000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "In_Treatment",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Recovered",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "New_Prescriptions",
+      "equation": "Naive_Users * Prescription_Rate",
+      "from_stock": "Naive_Users",
+      "to_stock": "Prescription_Users",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Addiction_Onset",
+      "equation": "Prescription_Users * Addiction_Rate",
+      "from_stock": "Prescription_Users",
+      "to_stock": "Addicted",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Prescription_End",
+      "equation": "Prescription_Users * Cessation_Rate",
+      "from_stock": "Prescription_Users",
+      "to_stock": "Naive_Users",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Enter_Treatment",
+      "equation": "Addicted * Treatment_Rate",
+      "from_stock": "Addicted",
+      "to_stock": "In_Treatment",
+      "position": {
+        "x": 500,
+        "y": 275
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Treatment_Success",
+      "equation": "In_Treatment * Success_Rate",
+      "from_stock": "In_Treatment",
+      "to_stock": "Recovered",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Relapse",
+      "equation": "Recovered * Relapse_Rate",
+      "from_stock": "Recovered",
+      "to_stock": "Addicted",
+      "position": {
+        "x": 400,
+        "y": 275
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Overdose_Deaths",
+      "equation": "Addicted * Overdose_Rate",
+      "from_stock": "Addicted",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Prescription_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Addiction_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Cessation_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Treatment_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Success_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Relapse_Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Overdose_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Total_Addicted",
+      "equation": "Addicted + In_Treatment",
+      "position": {
+        "x": 500,
+        "y": 450
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Annual_Overdose_Deaths",
+      "equation": "Overdose_Deaths * 365",
+      "position": {
+        "x": 600,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2000,
+    "end": 2030,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1126/science.aau5631",
+  "reference": "Volkow, N.D. & Blanco, C. (2021). The changing opioid crisis. Science, 361(6407), 1057-1058. DOI: 10.1126/science.aau5631",
+  "created_at": "2026-01-15T19:23:00.599757+00:00",
+  "updated_at": "2026-01-15T19:23:00.599757+00:00"
+}

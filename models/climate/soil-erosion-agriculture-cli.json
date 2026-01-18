@@ -1,0 +1,230 @@
+{
+  "id": "soil-erosion-agriculture-cli",
+  "name": "Soil Erosion and Agricultural Productivity Model",
+  "description": "Model of soil degradation from agricultural practices showing topsoil loss, fertility decline, and productivity impacts. Based on Pimentel et al. (1995). Reference: UNCCD (2017). Global Land Outlook. Source: https://www.unccd.int/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Topsoil Depth",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Soil Organic Matter",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Crop Yield",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Erosion",
+      "equation": "Topsoil_Depth * Erosion_Rate * Tillage_Factor * (1 - Cover_Crop_Protection)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Soil Formation",
+      "equation": "Soil_Formation_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Organic Matter Decomposition",
+      "equation": "Soil_Organic_Matter * Decomposition_Rate",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Organic Matter Addition",
+      "equation": "Crop_Residue_Return + Manure_Application",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Yield Change",
+      "equation": "(Potential_Yield - Crop_Yield) / Yield_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Erosion Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Tillage Factor",
+      "equation": "1.5",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Cover Crop Protection",
+      "equation": "0.3",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Soil Formation Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Decomposition Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Crop Residue Return",
+      "equation": "Crop_Yield * 0.02",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Manure Application",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Soil Quality Index",
+      "equation": "Topsoil_Depth / 30 * Soil_Organic_Matter / 5",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Potential Yield",
+      "equation": "100 * Soil_Quality_Index * Water_Availability",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Water Availability",
+      "equation": "0.8",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Yield Adjustment Time",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Degradation Indicator",
+      "equation": "(30 - Topsoil_Depth) / 30 * 100",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Topsoil Depth",
+      "to_element": "Erosion"
+    },
+    {
+      "id": "c2",
+      "from_element": "Soil Organic Matter",
+      "to_element": "Soil Quality Index"
+    },
+    {
+      "id": "c3",
+      "from_element": "Crop Yield",
+      "to_element": "Crop Residue Return"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:53:04.261534+00:00",
+  "updated_at": "2026-01-12T01:53:04.261537+00:00",
+  "source": "https://doi.org/10.1126/science.267.5201.1117",
+  "reference": "Pimentel D, et al. Environmental and Economic Costs of Soil Erosion and Conservation Benefits. Science. 1995;267(5201):1117-1123."
+}

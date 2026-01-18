@@ -1,0 +1,101 @@
+{
+  "id": "boussinesq-thermal-convection-phy",
+  "name": "Boussinesq Thermal Convection Model",
+  "description": "The Boussinesq approximation for buoyancy-driven convection, fundamental to atmospheric and oceanic dynamics. Density variations due to temperature drive convective flows. Source: Boussinesq, J. (1903). Théorie analytique de la chaleur. DOI: 10.1017/S0022112067001284",
+  "stocks": [
+    {
+      "id": "stock-temperature",
+      "name": "Temperature_Anomaly",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "stock-velocity",
+      "name": "Vertical_Velocity",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {"x": 400, "y": 200}
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-heating",
+      "name": "Temperature_Change",
+      "equation": "Heat_Source - Thermal_Diffusion",
+      "from_stock": null,
+      "to_stock": "stock-temperature",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "flow-buoyancy",
+      "name": "Velocity_Change",
+      "equation": "Buoyancy_Force - Viscous_Drag",
+      "from_stock": null,
+      "to_stock": "stock-velocity",
+      "position": {"x": 300, "y": 200}
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-alpha",
+      "name": "Thermal_Expansion",
+      "equation": "0.0002",
+      "position": {"x": 150, "y": 100}
+    },
+    {
+      "id": "var-gravity",
+      "name": "Gravity",
+      "equation": "9.81",
+      "position": {"x": 250, "y": 100}
+    },
+    {
+      "id": "var-buoyancy",
+      "name": "Buoyancy_Force",
+      "equation": "Thermal_Expansion * Gravity * Temperature_Anomaly",
+      "position": {"x": 300, "y": 300}
+    },
+    {
+      "id": "var-diffusion",
+      "name": "Thermal_Diffusion",
+      "equation": "Thermal_Diffusivity * Temperature_Anomaly",
+      "position": {"x": 150, "y": 300}
+    },
+    {
+      "id": "var-thermal-diff",
+      "name": "Thermal_Diffusivity",
+      "equation": "0.01",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "var-viscous",
+      "name": "Viscous_Drag",
+      "equation": "Kinematic_Viscosity * Vertical_Velocity",
+      "position": {"x": 400, "y": 300}
+    },
+    {
+      "id": "var-viscosity",
+      "name": "Kinematic_Viscosity",
+      "equation": "0.01",
+      "position": {"x": 450, "y": 100}
+    },
+    {
+      "id": "var-heat-source",
+      "name": "Heat_Source",
+      "equation": "0.1",
+      "position": {"x": 50, "y": 300}
+    },
+    {
+      "id": "var-rayleigh",
+      "name": "Rayleigh_Number",
+      "equation": "Thermal_Expansion * Gravity * Temperature_Anomaly * 1^3 / (Thermal_Diffusivity * Kinematic_Viscosity)",
+      "position": {"x": 300, "y": 50}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.1},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1017/S0022112067001284",
+  "reference": "Spiegel, E.A. & Veronis, G. (1960). On the Boussinesq approximation for a compressible fluid. Astrophysical Journal, 131, 442-447."
+}

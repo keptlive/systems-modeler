@@ -1,0 +1,555 @@
+{
+  "id": "housing-market-dynamics-model-eco",
+  "name": "Housing Market Dynamics Model",
+  "description": "A system dynamics model of housing market cycles, bubbles, and crashes. Captures the interaction between housing supply, demand, prices, speculation, and credit availability that drives boom-bust cycles in real estate markets. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "stock-housing-stock",
+      "name": "Housing Stock",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-housing-price-index",
+      "name": "Housing Price Index",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-construction-pipeline",
+      "name": "Construction Pipeline",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-total-mortgage-debt",
+      "name": "Total Mortgage Debt",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-speculator-holdings",
+      "name": "Speculator Holdings",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-price-expectations",
+      "name": "Price Expectations",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-construction-starts",
+      "name": "Construction Starts",
+      "equation": "Normal_Construction_Rate * Effect_of_Price_on_Construction * Effect_of_Credit_on_Construction",
+      "from_stock": null,
+      "to_stock": "stock-construction-pipeline",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-construction-completions",
+      "name": "Construction Completions",
+      "equation": "Construction_Pipeline / Construction_Time",
+      "from_stock": "stock-construction-pipeline",
+      "to_stock": "stock-housing-stock",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-depreciation",
+      "name": "Depreciation",
+      "equation": "Housing_Stock * Depreciation_Rate",
+      "from_stock": "stock-housing-stock",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-price-increase",
+      "name": "Price Increase",
+      "equation": "Housing_Price * Price_Change_Rate * IF Price_Change_Rate > 0 THEN 1 ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-housing-price-index",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-price-decrease",
+      "name": "Price Decrease",
+      "equation": "Housing_Price * ABS(Price_Change_Rate) * IF Price_Change_Rate < 0 THEN 1 ELSE 0",
+      "from_stock": "stock-housing-price-index",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-new-mortgages",
+      "name": "New Mortgages",
+      "equation": "(Construction + Market_Turnover) * Housing_Price * Average_LTV",
+      "from_stock": null,
+      "to_stock": "stock-total-mortgage-debt",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-mortgage-paydown",
+      "name": "Mortgage Paydown",
+      "equation": "Mortgage_Debt * Mortgage_Paydown_Rate",
+      "from_stock": "stock-total-mortgage-debt",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-mortgage-defaults",
+      "name": "Mortgage Defaults",
+      "equation": "Mortgage_Debt * Default_Rate",
+      "from_stock": "stock-total-mortgage-debt",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-speculator-buying",
+      "name": "Speculator Buying",
+      "equation": "MAX(0, Speculator_Demand - Speculator_Holdings) / Speculation_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-speculator-holdings",
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-speculator-selling",
+      "name": "Speculator Selling",
+      "equation": "MAX(0, Speculator_Holdings - Speculator_Demand) / Speculation_Adjustment_Time",
+      "from_stock": "stock-speculator-holdings",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-expectation-increase",
+      "name": "Expectation Increase",
+      "equation": "(Recent_Price_Change - Price_Expectations) / Expectation_Formation_Time * IF Recent_Price_Change > Price_Expectations THEN 1 ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-price-expectations",
+      "position": {
+        "x": 450,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-expectation-decrease",
+      "name": "Expectation Decrease",
+      "equation": "(Price_Expectations - Recent_Price_Change) / Expectation_Formation_Time * IF Recent_Price_Change < Price_Expectations THEN 1 ELSE 0",
+      "from_stock": "stock-price-expectations",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 650
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-initial-housing-stock",
+      "name": "Initial Housing Stock",
+      "equation": "1000000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-price",
+      "name": "Initial Price",
+      "equation": "100",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-ltv",
+      "name": "Initial LTV",
+      "equation": "0.7",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-normal-construction-rate",
+      "name": "Normal Construction Rate",
+      "equation": "Initial_Housing_Stock * 0.02",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-construction-time",
+      "name": "Construction Time",
+      "equation": "2",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-depreciation-rate",
+      "name": "Depreciation Rate",
+      "equation": "0.015",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-household-formation-rate",
+      "name": "Household Formation Rate",
+      "equation": "0.012",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-population-households",
+      "name": "Population (Households)",
+      "equation": "Initial_Housing_Stock * (1 + Household_Formation_Rate * Time)",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fundamental-demand",
+      "name": "Fundamental Demand",
+      "equation": "Population * Housing_Demand_Per_Household",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-housing-demand-per-household",
+      "name": "Housing Demand per Household",
+      "equation": "1.05",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-speculator-demand",
+      "name": "Speculator Demand",
+      "equation": "Housing_Stock * Speculator_Demand_Fraction",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-speculator-demand-fraction",
+      "name": "Speculator Demand Fraction",
+      "equation": "MAX(0, 0.02 + 0.1 * Price_Expectations / 10)",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-total-demand",
+      "name": "Total Demand",
+      "equation": "Fundamental_Demand + Speculator_Demand",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-vacancy-rate",
+      "name": "Vacancy Rate",
+      "equation": "(Housing_Stock - Total_Demand + Speculator_Holdings) / Housing_Stock",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-normal-vacancy-rate",
+      "name": "Normal Vacancy Rate",
+      "equation": "0.06",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-price-change-rate",
+      "name": "Price Change Rate",
+      "equation": "Price_Sensitivity * (Normal_Vacancy_Rate - Vacancy_Rate) / Normal_Vacancy_Rate + Speculation_Effect",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-price-sensitivity",
+      "name": "Price Sensitivity",
+      "equation": "0.15",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-speculation-effect",
+      "name": "Speculation Effect",
+      "equation": "Speculation_Sensitivity * Price_Expectations / 100",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-speculation-sensitivity",
+      "name": "Speculation Sensitivity",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-recent-price-change",
+      "name": "Recent Price Change",
+      "equation": "Price_Change_Rate * 100",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-expectation-formation-time",
+      "name": "Expectation Formation Time",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-effect-of-price-on-construction",
+      "name": "Effect of Price on Construction",
+      "equation": "(Housing_Price / 100)^Construction_Price_Elasticity",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-construction-price-elasticity",
+      "name": "Construction Price Elasticity",
+      "equation": "1.5",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-effect-of-credit-on-construction",
+      "name": "Effect of Credit on Construction",
+      "equation": "1 + 0.3 * (Credit_Availability - 1)",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-credit-availability",
+      "name": "Credit Availability",
+      "equation": "1 + 0.5 * Price_Expectations / 10 - 0.1 * Default_Rate * 100",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-average-ltv",
+      "name": "Average LTV",
+      "equation": "MIN(0.95, Initial_LTV + 0.1 * Price_Expectations / 10)",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-mortgage-paydown-rate",
+      "name": "Mortgage Paydown Rate",
+      "equation": "0.04",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-base-default-rate",
+      "name": "Base Default Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-default-rate",
+      "name": "Default Rate",
+      "equation": "Base_Default_Rate * (1 + 5 * MAX(0, -Price_Change_Rate))",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-market-turnover",
+      "name": "Market Turnover",
+      "equation": "Housing_Stock * 0.05",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-speculation-adjustment-time",
+      "name": "Speculation Adjustment Time",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-price-to-income-ratio",
+      "name": "Price to Income Ratio",
+      "equation": "Housing_Price / (100 * (1 + 0.02 * Time))",
+      "position": {
+        "x": 250,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-debt-to-value-ratio",
+      "name": "Debt to Value Ratio",
+      "equation": "Mortgage_Debt / (Housing_Stock * Housing_Price)",
+      "position": {
+        "x": 400,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-bubble-indicator",
+      "name": "Bubble Indicator",
+      "equation": "Price_to_Income_Ratio + 0.5 * Price_Expectations / 10 + Speculator_Holdings / Housing_Stock * 10",
+      "position": {
+        "x": 550,
+        "y": 560
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Housing Price Index",
+      "to_element": "Price Change Rate"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Vacancy Rate",
+      "to_element": "Price Change Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Price Expectations",
+      "to_element": "Speculation Effect"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Housing Stock",
+      "to_element": "Vacancy Rate"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Total Demand",
+      "to_element": "Vacancy Rate"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Construction Pipeline",
+      "to_element": "Construction Completions"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Housing Price Index",
+      "to_element": "Effect of Price on Construction"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-11T20:04:50.754054Z",
+  "updated_at": "2026-01-11T20:04:50.754054Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

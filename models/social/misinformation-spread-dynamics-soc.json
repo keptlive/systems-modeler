@@ -1,0 +1,168 @@
+{
+  "id": "misinformation-spread-dynamics-soc",
+  "name": "Misinformation Spread Dynamics Model",
+  "description": "Model of misinformation diffusion through social networks with fact-checking interventions. Reference: Crank, J. (1979). The Mathematics of Diffusion. Oxford University Press. Source: https://global.oup.com/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Uninformed",
+      "initial_value": 90000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Misinformed",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Correctly_Informed",
+      "initial_value": 9000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Misinformation_Spread",
+      "equation": "Beta_Mis * Uninformed * Misinformed / Total_Pop * Sharing_Probability",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Truth_Spread",
+      "equation": "Beta_Truth * Uninformed * Correctly_Informed / Total_Pop",
+      "from_stock": "s1",
+      "to_stock": "s3",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Fact_Check_Correction",
+      "equation": "Fact_Check_Rate * Misinformed",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Forgetting",
+      "equation": "Forgetting_Rate * (Misinformed + Correctly_Informed)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Beta_Mis",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Beta_Truth",
+      "equation": "0.15",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Sharing_Probability",
+      "equation": "0.8",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Fact_Check_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Forgetting_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Total_Pop",
+      "equation": "Uninformed + Misinformed + Correctly_Informed",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Misinformation_Prevalence",
+      "equation": "Misinformed / Total_Pop",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "R0_Misinformation",
+      "equation": "Beta_Mis * Sharing_Probability / Fact_Check_Rate",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:29:23.539598+00:00",
+  "updated_at": "2026-01-12T11:29:23.539598+00:00",
+  "source": "https://doi.org/10.1126/science.aap9559",
+  "reference": "Vosoughi S, Roy D, Aral S. The spread of true and false news online. Science. 2018;359(6380):1146-1151."
+}

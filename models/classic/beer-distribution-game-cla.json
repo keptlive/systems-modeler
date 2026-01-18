@@ -1,0 +1,231 @@
+{
+  "id": "beer-distribution-game-cla",
+  "name": "Beer Distribution Game",
+  "description": "The classic 'Beer Game' supply chain simulation developed at MIT Sloan. Demonstrates the bullwhip effect where small changes in retail demand cause increasingly larger fluctuations at each upstream stage (retailer, wholesaler, distributor, factory). Reference: Based on System Dynamics supply chain models (Sterman, 2000). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-retailer-inventory",
+      "name": "Retailer Inventory",
+      "initial_value": 12,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-wholesaler-inventory",
+      "name": "Wholesaler Inventory",
+      "initial_value": 12,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-distributor-inventory",
+      "name": "Distributor Inventory",
+      "initial_value": 12,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-factory-inventory",
+      "name": "Factory Inventory",
+      "initial_value": 12,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-retailer-backlog",
+      "name": "Retailer Backlog",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-supply-line-retailer",
+      "name": "Supply Line Retailer",
+      "initial_value": 8,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-supply-line-wholesaler",
+      "name": "Supply Line Wholesaler",
+      "initial_value": 8,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-supply-line-distributor",
+      "name": "Supply Line Distributor",
+      "initial_value": 8,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-customer-demand",
+      "name": "Customer Demand",
+      "equation": "IF Time < 5 THEN 4 ELSE 8",
+      "from_stock": null,
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-retailer-orders",
+      "name": "Retailer Orders",
+      "equation": "MAX(0, Expected_Demand + Inventory_Adjustment_Retailer + Supply_Line_Adjustment_Retailer)",
+      "from_stock": null,
+      "to_stock": "stock-supply-line-retailer",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-wholesaler-orders",
+      "name": "Wholesaler Orders",
+      "equation": "MAX(0, Retailer_Orders + Inventory_Adjustment_Wholesaler + Supply_Line_Adjustment_Wholesaler)",
+      "from_stock": null,
+      "to_stock": "stock-supply-line-wholesaler",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-distributor-orders",
+      "name": "Distributor Orders",
+      "equation": "MAX(0, Wholesaler_Orders + Inventory_Adjustment_Distributor + Supply_Line_Adjustment_Distributor)",
+      "from_stock": null,
+      "to_stock": "stock-supply-line-distributor",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-production",
+      "name": "Production",
+      "equation": "DELAY3(Production_Order, Production_Delay)",
+      "from_stock": null,
+      "to_stock": "stock-factory-inventory",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-shipping-delay",
+      "name": "Shipping Delay",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-production-delay",
+      "name": "Production Delay",
+      "equation": "3",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-desired-inventory",
+      "name": "Desired Inventory",
+      "equation": "12",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-inventory-adjustment-time",
+      "name": "Inventory Adjustment Time",
+      "equation": "4",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-expected-demand",
+      "name": "Expected Demand",
+      "equation": "SMOOTH(Customer_Demand, Demand_Forecast_Time)",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-demand-forecast-time",
+      "name": "Demand Forecast Time",
+      "equation": "4",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Customer Demand",
+      "to_element": "retailer_shipments"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Retailer Orders",
+      "to_element": "Supply Line Retailer"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Wholesaler Orders",
+      "to_element": "Supply Line Wholesaler"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Distributor Orders",
+      "to_element": "Supply Line Distributor"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.689151Z",
+  "updated_at": "2026-01-11T20:04:50.689151Z",
+  "source": "https://doi.org/10.1287/mnsc.35.3.321",
+  "reference": "Sterman JD. Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill, 2000."
+}

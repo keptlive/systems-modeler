@@ -1,0 +1,259 @@
+{
+  "id": "opioid-epidemic-treatment-hea",
+  "name": "Opioid Epidemic Treatment Dynamics",
+  "description": "Model of opioid use disorder progression and treatment. Captures prescription initiation, misuse, addiction, and medication-assisted treatment pathways. Based on addiction medicine and public health research. Reference: WHO Disease Outbreak Information. Source: https://www.who.int/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Non_Users",
+      "initial_value": 95000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Prescription_Users",
+      "initial_value": 3000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Misusers",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Opioid_Use_Disorder",
+      "initial_value": 800,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s5",
+      "name": "In_Treatment",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "s6",
+      "name": "In_Recovery",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "New_Prescriptions",
+      "equation": "Non_Users * Prescription_Rate",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Prescription_End",
+      "equation": "Prescription_Users / Prescription_Duration",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 175,
+        "y": 270
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Misuse_Onset",
+      "equation": "Prescription_Users * Misuse_Rate",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Addiction_Development",
+      "equation": "Misusers * Addiction_Rate",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Treatment_Entry",
+      "equation": "Opioid_Use_Disorder * Treatment_Seeking_Rate * Treatment_Availability",
+      "from_stock": "s4",
+      "to_stock": "s5",
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Treatment_Completion",
+      "equation": "In_Treatment / Treatment_Duration",
+      "from_stock": "s5",
+      "to_stock": "s6",
+      "position": {
+        "x": 475,
+        "y": 350
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Relapse",
+      "equation": "In_Recovery * Relapse_Rate",
+      "from_stock": "s6",
+      "to_stock": "s4",
+      "position": {
+        "x": 475,
+        "y": 280
+      }
+    },
+    {
+      "id": "f8",
+      "name": "Overdose_Deaths",
+      "equation": "Opioid_Use_Disorder * Overdose_Rate + Misusers * Overdose_Rate * 0.3",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Prescription_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Prescription_Duration",
+      "equation": "0.25",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Misuse_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Addiction_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Treatment_Seeking_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Treatment_Availability",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Treatment_Duration",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Relapse_Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Overdose_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 200,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Total_Affected",
+      "equation": "Misusers + Opioid_Use_Disorder + In_Treatment + In_Recovery",
+      "position": {
+        "x": 450,
+        "y": 180
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2010,
+    "end": 2030,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1001/jamanetworkopen.2019.11929",
+  "reference": "Homer J et al. (2019) System dynamics modeling to assess the impact of opioid overdose prevention policies. PLOS ONE.",
+  "created_at": "2026-01-12T07:00:37.510230+00:00",
+  "updated_at": "2026-01-12T07:00:37.510230+00:00"
+}

@@ -1,0 +1,224 @@
+{
+  "id": "housing-bubble-dynamics",
+  "name": "Housing Market Bubble Model",
+  "description": "Model of housing price dynamics with speculative feedback, credit availability, and construction delays.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Housing_Price",
+      "initial_value": 300000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Housing_Stock",
+      "initial_value": 140000000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Construction_Pipeline",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Mortgage_Debt",
+      "initial_value": 10000000000000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Price_Change",
+      "equation": "Housing_Price * Price_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "Housing_Price",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Construction_Start",
+      "equation": "Desired_Construction",
+      "from_stock": null,
+      "to_stock": "Construction_Pipeline",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Construction_Completion",
+      "equation": "Construction_Pipeline / Construction_Time",
+      "from_stock": "Construction_Pipeline",
+      "to_stock": "Housing_Stock",
+      "position": {
+        "x": 500,
+        "y": 275
+      }
+    },
+    {
+      "id": "f4",
+      "name": "New_Mortgages",
+      "equation": "Housing_Price * Annual_Sales * LTV_Ratio",
+      "from_stock": null,
+      "to_stock": "Mortgage_Debt",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Mortgage_Paydown",
+      "equation": "Mortgage_Debt / Mortgage_Term",
+      "from_stock": "Mortgage_Debt",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Fundamental_Value",
+      "equation": "250000",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Price_Gap",
+      "equation": "(Housing_Price - Fundamental_Value) / Fundamental_Value",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Speculative_Demand",
+      "equation": "0.05 * Price_Gap",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Price_Growth_Rate",
+      "equation": "0.02 + Speculative_Demand - Supply_Pressure",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Supply_Pressure",
+      "equation": "0.01 * (Housing_Stock - Households) / Households",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Households",
+      "equation": "130000000",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Desired_Construction",
+      "equation": "MAX(0, (Households - Housing_Stock) * 0.1)",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Construction_Time",
+      "equation": "2",
+      "position": {
+        "x": 600,
+        "y": 50
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Annual_Sales",
+      "equation": "6000000",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "v10",
+      "name": "LTV_Ratio",
+      "equation": "0.8",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Mortgage_Term",
+      "equation": "30",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Affordability_Index",
+      "equation": "Fundamental_Value / Housing_Price",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2000,
+    "end": 2030,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1257/aer.102.6.2546",
+  "reference": "Glaeser, E.L., et al. (2012). Urban Real Estate Bubbles. American Economic Review, 102(6), 2546-2577. DOI: 10.1257/aer.102.6.2546",
+  "created_at": "2026-01-15T19:23:00.599757+00:00",
+  "updated_at": "2026-01-15T19:23:00.599757+00:00"
+}

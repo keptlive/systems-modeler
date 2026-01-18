@@ -1,0 +1,185 @@
+{
+  "id": "michaelis-menten-enzyme-phy",
+  "name": "Michaelis-Menten Enzyme Kinetics Model",
+  "description": "Models enzyme-substrate interaction and product formation. Classic biochemistry model from 1913. DOI: 10.1016/j.bbrc.2013.10.107",
+  "stocks": [
+    {
+      "id": "stock-substrate",
+      "name": "Substrate",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-complex",
+      "name": "Enzyme_Substrate_Complex",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-product",
+      "name": "Product",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-enzyme",
+      "name": "Free_Enzyme",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-binding",
+      "name": "Substrate_Binding",
+      "equation": "k1 * Substrate * Free_Enzyme",
+      "from_stock": "stock-substrate",
+      "to_stock": "stock-complex",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-unbinding",
+      "name": "Complex_Dissociation",
+      "equation": "k_minus1 * Enzyme_Substrate_Complex",
+      "from_stock": "stock-complex",
+      "to_stock": "stock-substrate",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-catalysis",
+      "name": "Catalysis",
+      "equation": "k2 * Enzyme_Substrate_Complex",
+      "from_stock": "stock-complex",
+      "to_stock": "stock-product",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-enzrelease",
+      "name": "Enzyme_Release",
+      "equation": "k2 * Enzyme_Substrate_Complex",
+      "from_stock": null,
+      "to_stock": "stock-enzyme",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-enzuse",
+      "name": "Enzyme_Binding",
+      "equation": "k1 * Substrate * Free_Enzyme",
+      "from_stock": "stock-enzyme",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-k1",
+      "name": "k1",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-kminus1",
+      "name": "k_minus1",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-k2",
+      "name": "k2",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-km",
+      "name": "Km",
+      "equation": "(k_minus1 + k2) / k1",
+      "position": {
+        "x": 500,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-vmax",
+      "name": "Vmax",
+      "equation": "k2 * (Free_Enzyme + Enzyme_Substrate_Complex)",
+      "position": {
+        "x": 500,
+        "y": 225
+      }
+    },
+    {
+      "id": "var-velocity",
+      "name": "Reaction_Velocity",
+      "equation": "Vmax * Substrate / (Km + Substrate)",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-totenz",
+      "name": "Total_Enzyme",
+      "equation": "Free_Enzyme + Enzyme_Substrate_Complex",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Substrate",
+      "to_element": "Substrate_Binding"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-12T02:49:51.599863+00:00",
+  "updated_at": "2026-01-12T02:49:51.599889+00:00",
+  "source": "https://doi.org/10.1016/j.bbrc.2013.10.107",
+  "reference": "Michaelis L, Menten ML (1913). Die Kinetik der Invertinwirkung. Biochem Z. (Centennial review: BBRC 2013)"
+}

@@ -1,0 +1,169 @@
+{
+  "id": "building-thermal-mass-model-phy",
+  "name": "Building Thermal Mass Model",
+  "description": "Dynamic thermal model of a building including thermal mass effects. Shows how building inertia affects temperature response. Reference: NASA GISS Surface Temperature Analysis. Source: https://data.giss.nasa.gov/gistemp/",
+  "stocks": [
+    {
+      "id": "stock-wall-temperature",
+      "name": "Wall_Temperature",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-room-air-temperature",
+      "name": "Room_Air_Temperature",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-floor-temperature",
+      "name": "Floor_Temperature",
+      "initial_value": 18,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-wall-heat-gain",
+      "name": "wall_heat_gain",
+      "equation": "0",
+      "from_stock": null,
+      "to_stock": "stock-wall-temperature",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-wall-to-room",
+      "name": "wall_to_room",
+      "equation": "0",
+      "from_stock": "stock-wall-temperature",
+      "to_stock": "stock-room-air-temperature",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-hvac-heat",
+      "name": "hvac_heat",
+      "equation": "0",
+      "from_stock": null,
+      "to_stock": "stock-room-air-temperature",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-infiltration-loss",
+      "name": "infiltration_loss",
+      "equation": "0",
+      "from_stock": "stock-room-air-temperature",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-floor-charging",
+      "name": "floor_charging",
+      "equation": "0",
+      "from_stock": null,
+      "to_stock": "stock-floor-temperature",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-wall-mass",
+      "name": "wall_mass",
+      "equation": "500000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-room-mass",
+      "name": "room_mass",
+      "equation": "50000",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-floor-mass",
+      "name": "floor_mass",
+      "equation": "1000000",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-ua-wall",
+      "name": "UA_wall",
+      "equation": "200",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-ua-room",
+      "name": "UA_room",
+      "equation": "500",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-t-outdoor",
+      "name": "T_outdoor",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-hvac-capacity",
+      "name": "HVAC_capacity",
+      "equation": "5000",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 86400,
+    "dt": 60
+  },
+  "created_at": "2026-01-11T20:04:50.854225Z",
+  "updated_at": "2026-01-11T20:04:50.854225Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg System Dynamics Test Models"
+}

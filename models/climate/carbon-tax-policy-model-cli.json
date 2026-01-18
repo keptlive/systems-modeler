@@ -1,0 +1,177 @@
+{
+  "id": "carbon-tax-policy-model-cli",
+  "name": "Carbon Tax Policy Model",
+  "description": "Model of carbon tax effects on emissions, economic output, and technological transition. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "CO2_Emissions",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Clean_Tech_Share",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Tax_Revenue",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Emission_Reduction",
+      "equation": "Price_Effect + Tech_Effect",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Tech_Adoption",
+      "equation": "Adoption_Rate * (1 - Clean_Tech_Share) * Relative_Cost_Advantage",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Revenue_Collection",
+      "equation": "Carbon_Tax * CO2_Emissions",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Revenue_Recycling",
+      "equation": "Tax_Revenue * Recycling_Rate",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Carbon_Tax",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Price_Effect",
+      "equation": "Price_Elasticity * Carbon_Tax / 100 * CO2_Emissions",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Tech_Effect",
+      "equation": "Clean_Tech_Share * CO2_Emissions * Tech_Reduction_Factor",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Price_Elasticity",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Tech_Reduction_Factor",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Adoption_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Relative_Cost_Advantage",
+      "equation": "Carbon_Tax / 100",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Recycling_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "GDP_Impact",
+      "equation": "-0.01 * Carbon_Tax / 50",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2050,
+    "dt": 1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:23:21.190138+00:00",
+  "updated_at": "2026-01-12T11:23:21.190138+00:00",
+  "source": "https://doi.org/10.1073/pnas.1609244114",
+  "reference": "Nordhaus WD. Revisiting the social cost of carbon. PNAS. 2017;114(7):1518-1523."
+}

@@ -1,0 +1,823 @@
+{
+  "id": "mental-health-treatment-system-dynamics-hea",
+  "name": "Mental Health Treatment System Dynamics",
+  "description": "A system dynamics model of mental health in a population, capturing the flow through different states of mental health, access to treatment, healthcare system capacity, and the effects of social determinants. Models depression, anxiety, and severe mental illness. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-mentally-healthy-population",
+      "name": "Mentally Healthy Population",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-mild-disorder-untreated",
+      "name": "Mild Disorder Untreated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-mild-disorder-in-treatment",
+      "name": "Mild Disorder in Treatment",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-moderate-disorder-untreated",
+      "name": "Moderate Disorder Untreated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-moderate-disorder-in-treatment",
+      "name": "Moderate Disorder in Treatment",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-severe-disorder-untreated",
+      "name": "Severe Disorder Untreated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-severe-disorder-in-treatment",
+      "name": "Severe Disorder in Treatment",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-in-mental-health-crisis",
+      "name": "In Mental Health Crisis",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-treatment-system-capacity",
+      "name": "Treatment System Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 500
+      }
+    },
+    {
+      "id": "stock-mental-health-workforce",
+      "name": "Mental Health Workforce",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 500
+      }
+    },
+    {
+      "id": "stock-social-stigma-level",
+      "name": "Social Stigma Level",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 500
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-onset-of-mild-disorder",
+      "name": "Onset of Mild Disorder",
+      "equation": "Healthy * Incidence_Rate_Mild * Risk_Factor_Effect",
+      "from_stock": "stock-mentally-healthy-population",
+      "to_stock": "stock-mild-disorder-untreated",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mild-disorder-seeking-treatment",
+      "name": "Mild Disorder Seeking Treatment",
+      "equation": "Mild_Untreated * Treatment_Seeking_Rate_Mild * Treatment_Access",
+      "from_stock": "stock-mild-disorder-untreated",
+      "to_stock": "stock-mild-disorder-in-treatment",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-spontaneous-recovery-mild",
+      "name": "Spontaneous Recovery Mild",
+      "equation": "Mild_Untreated * Spontaneous_Recovery_Rate",
+      "from_stock": "stock-mild-disorder-untreated",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery-from-mild-disorder",
+      "name": "Recovery from Mild Disorder",
+      "equation": "Mild_Treated * Treatment_Success_Rate_Mild",
+      "from_stock": "stock-mild-disorder-in-treatment",
+      "to_stock": "stock-mentally-healthy-population",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-progression-mild-to-moderate",
+      "name": "Progression Mild to Moderate",
+      "equation": "Mild_Untreated * Progression_Rate_Mild",
+      "from_stock": "stock-mild-disorder-untreated",
+      "to_stock": "stock-moderate-disorder-untreated",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-progression-while-treated",
+      "name": "Progression While Treated",
+      "equation": "Mild_Treated * Progression_Rate_Mild * 0.3",
+      "from_stock": "stock-mild-disorder-in-treatment",
+      "to_stock": "stock-moderate-disorder-in-treatment",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-treatment-dropout-mild",
+      "name": "Treatment Dropout Mild",
+      "equation": "Mild_Treated * Dropout_Rate",
+      "from_stock": "stock-mild-disorder-in-treatment",
+      "to_stock": "stock-moderate-disorder-untreated",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-relapse-to-mild-disorder",
+      "name": "Relapse to Mild Disorder",
+      "equation": "Healthy * Relapse_Rate * Previous_Episode_Fraction",
+      "from_stock": null,
+      "to_stock": "stock-mild-disorder-untreated",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-moderate-seeking-treatment",
+      "name": "Moderate Seeking Treatment",
+      "equation": "Moderate_Untreated * Treatment_Seeking_Rate_Moderate * Treatment_Access",
+      "from_stock": "stock-moderate-disorder-untreated",
+      "to_stock": "stock-moderate-disorder-in-treatment",
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-recovery-from-moderate",
+      "name": "Recovery from Moderate",
+      "equation": "Moderate_Treated * Treatment_Success_Rate_Moderate",
+      "from_stock": "stock-moderate-disorder-in-treatment",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-progression-to-severe",
+      "name": "Progression to Severe",
+      "equation": "Moderate_Untreated * Progression_Rate_Moderate",
+      "from_stock": "stock-moderate-disorder-untreated",
+      "to_stock": "stock-severe-disorder-untreated",
+      "position": {
+        "x": 450,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-treatment-dropout-moderate",
+      "name": "Treatment Dropout Moderate",
+      "equation": "Moderate_Treated * Dropout_Rate * 1.5",
+      "from_stock": "stock-moderate-disorder-in-treatment",
+      "to_stock": "stock-severe-disorder-untreated",
+      "position": {
+        "x": 650,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-relapse-to-moderate",
+      "name": "Relapse to Moderate",
+      "equation": "Mild_Treated * Relapse_Rate * 0.3",
+      "from_stock": null,
+      "to_stock": "stock-moderate-disorder-untreated",
+      "position": {
+        "x": 250,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-severe-seeking-treatment",
+      "name": "Severe Seeking Treatment",
+      "equation": "Severe_Untreated * Treatment_Seeking_Rate_Severe * Treatment_Access",
+      "from_stock": "stock-severe-disorder-untreated",
+      "to_stock": "stock-severe-disorder-in-treatment",
+      "position": {
+        "x": 450,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-recovery-from-severe",
+      "name": "Recovery from Severe",
+      "equation": "Severe_Treated * Treatment_Success_Rate_Severe",
+      "from_stock": "stock-severe-disorder-in-treatment",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-severe-relapse",
+      "name": "Severe Relapse",
+      "equation": "Severe_Treated * Severe_Relapse_Rate",
+      "from_stock": "stock-severe-disorder-in-treatment",
+      "to_stock": "stock-in-mental-health-crisis",
+      "position": {
+        "x": 250,
+        "y": 950
+      }
+    },
+    {
+      "id": "flow-crisis-events",
+      "name": "Crisis Events",
+      "equation": "Severe_Untreated * Crisis_Rate",
+      "from_stock": "stock-severe-disorder-untreated",
+      "to_stock": "stock-in-mental-health-crisis",
+      "position": {
+        "x": 450,
+        "y": 950
+      }
+    },
+    {
+      "id": "flow-post-crisis-treatment-entry",
+      "name": "Post-Crisis Treatment Entry",
+      "equation": "In_Crisis * Crisis_Treatment_Rate",
+      "from_stock": "stock-in-mental-health-crisis",
+      "to_stock": "stock-severe-disorder-in-treatment",
+      "position": {
+        "x": 650,
+        "y": 950
+      }
+    },
+    {
+      "id": "flow-crisis-mortality",
+      "name": "Crisis Mortality",
+      "equation": "In_Crisis * Crisis_Mortality_Rate",
+      "from_stock": "stock-in-mental-health-crisis",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 1100
+      }
+    },
+    {
+      "id": "flow-population-entry",
+      "name": "Population Entry",
+      "equation": "Total_Population * Birth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-mentally-healthy-population",
+      "position": {
+        "x": 450,
+        "y": 1100
+      }
+    },
+    {
+      "id": "flow-deaths-healthy",
+      "name": "Deaths Healthy",
+      "equation": "Healthy * Base_Death_Rate",
+      "from_stock": "stock-mentally-healthy-population",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 1100
+      }
+    },
+    {
+      "id": "flow-deaths-mild-disorder",
+      "name": "Deaths Mild Disorder",
+      "equation": "(Mild_Untreated + Mild_Treated) * Base_Death_Rate * 1.1",
+      "from_stock": "stock-mild-disorder-untreated",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 1250
+      }
+    },
+    {
+      "id": "flow-capacity-expansion",
+      "name": "Capacity Expansion",
+      "equation": "Investment_Rate * Budget_Allocation",
+      "from_stock": null,
+      "to_stock": "stock-treatment-system-capacity",
+      "position": {
+        "x": 450,
+        "y": 1250
+      }
+    },
+    {
+      "id": "flow-capacity-attrition",
+      "name": "Capacity Attrition",
+      "equation": "Treatment_Capacity * 0.03",
+      "from_stock": "stock-treatment-system-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 1250
+      }
+    },
+    {
+      "id": "flow-workforce-hiring",
+      "name": "Workforce Hiring",
+      "equation": "Workforce_Gap * Hiring_Rate * Budget_Allocation",
+      "from_stock": null,
+      "to_stock": "stock-mental-health-workforce",
+      "position": {
+        "x": 250,
+        "y": 1400
+      }
+    },
+    {
+      "id": "flow-workforce-leaving",
+      "name": "Workforce Leaving",
+      "equation": "Workforce * Turnover_Rate * Burnout_Effect",
+      "from_stock": "stock-mental-health-workforce",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 1400
+      }
+    },
+    {
+      "id": "flow-stigma-reduction",
+      "name": "Stigma Reduction",
+      "equation": "Social_Stigma * Stigma_Reduction_Rate * Awareness_Campaign_Effect",
+      "from_stock": "stock-social-stigma-level",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 1400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "Healthy + Mild_Untreated + Mild_Treated + Moderate_Untreated + Moderate_Treated + Severe_Untreated + Severe_Treated + In_Crisis",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-population",
+      "name": "Initial Population",
+      "equation": "10000000",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-any-disorder-prevalence",
+      "name": "Any Disorder Prevalence",
+      "equation": "(Total_Population - Healthy) / Total_Population",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-treatment-gap",
+      "name": "Treatment Gap",
+      "equation": "(Mild_Untreated + Moderate_Untreated + Severe_Untreated) / (Total_Population - Healthy)",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-incidence-rate-mild",
+      "name": "Incidence Rate Mild",
+      "equation": "0.03",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-risk-factor-effect",
+      "name": "Risk Factor Effect",
+      "equation": "1 + Social_Determinant_Risk + Economic_Stress_Factor",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-social-determinant-risk",
+      "name": "Social Determinant Risk",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-economic-stress-factor",
+      "name": "Economic Stress Factor",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-treatment-seeking-rate-mild",
+      "name": "Treatment Seeking Rate Mild",
+      "equation": "0.1 * (1 - Social_Stigma / 100)",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-treatment-seeking-rate-moderate",
+      "name": "Treatment Seeking Rate Moderate",
+      "equation": "0.2 * (1 - Social_Stigma / 100)",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-treatment-seeking-rate-severe",
+      "name": "Treatment Seeking Rate Severe",
+      "equation": "0.3 * (1 - Social_Stigma / 100)",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-treatment-access",
+      "name": "Treatment Access",
+      "equation": "MIN(1, Treatment_Capacity / 100 * Workforce / 100 * Insurance_Coverage)",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-insurance-coverage",
+      "name": "Insurance Coverage",
+      "equation": "0.7",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-spontaneous-recovery-rate",
+      "name": "Spontaneous Recovery Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-treatment-success-rate-mild",
+      "name": "Treatment Success Rate Mild",
+      "equation": "0.4 * Treatment_Quality",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-treatment-success-rate-moderate",
+      "name": "Treatment Success Rate Moderate",
+      "equation": "0.25 * Treatment_Quality",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-treatment-success-rate-severe",
+      "name": "Treatment Success Rate Severe",
+      "equation": "0.1 * Treatment_Quality",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-treatment-quality",
+      "name": "Treatment Quality",
+      "equation": "MIN(1.5, Workforce / 100 * Evidence_Based_Practice_Adoption)",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-evidence-based-practice-adoption",
+      "name": "Evidence-Based Practice Adoption",
+      "equation": "0.6",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-progression-rate-mild",
+      "name": "Progression Rate Mild",
+      "equation": "0.08",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-progression-rate-moderate",
+      "name": "Progression Rate Moderate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-treatment-dropout-rate",
+      "name": "Treatment Dropout Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-relapse-rate",
+      "name": "Relapse Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-previous-episode-fraction",
+      "name": "Previous Episode Fraction",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-crisis-rate",
+      "name": "Crisis Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-severe-relapse-rate",
+      "name": "Severe Relapse Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-crisis-treatment-rate",
+      "name": "Crisis Treatment Rate",
+      "equation": "4",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-crisis-mortality-rate",
+      "name": "Crisis Mortality Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-birth-rate",
+      "name": "Birth Rate",
+      "equation": "0.012",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-base-death-rate",
+      "name": "Base Death Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-mental-health-budget-allocation",
+      "name": "Mental Health Budget Allocation",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-investment-rate",
+      "name": "Investment Rate",
+      "equation": "5",
+      "position": {
+        "x": 250,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-workforce-gap",
+      "name": "Workforce Gap",
+      "equation": "MAX(0, Needed_Workforce - Workforce)",
+      "position": {
+        "x": 400,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-needed-workforce",
+      "name": "Needed Workforce",
+      "equation": "100 * (1 + (Prevalence_Any_Disorder - 0.15) * 2)",
+      "position": {
+        "x": 550,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-hiring-rate",
+      "name": "Hiring Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 700,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-turnover-rate",
+      "name": "Turnover Rate",
+      "equation": "0.08",
+      "position": {
+        "x": 100,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-burnout-effect",
+      "name": "Burnout Effect",
+      "equation": "1 + 0.5 * MAX(0, (Treatment_Gap - 0.5))",
+      "position": {
+        "x": 250,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-stigma-reduction-rate",
+      "name": "Stigma Reduction Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-awareness-campaign-effect",
+      "name": "Awareness Campaign Effect",
+      "equation": "1.5",
+      "position": {
+        "x": 550,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-disability-burden-dalys",
+      "name": "Disability Burden (DALYs)",
+      "equation": "Mild_Untreated * 0.1 + Mild_Treated * 0.05 + Moderate_Untreated * 0.25 + Moderate_Treated * 0.15 + Severe_Untreated * 0.5 + Severe_Treated * 0.3 + In_Crisis * 0.8",
+      "position": {
+        "x": 700,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-annual-economic-cost",
+      "name": "Annual Economic Cost",
+      "equation": "(Mild_Untreated + Mild_Treated) * 2000 + (Moderate_Untreated + Moderate_Treated) * 8000 + (Severe_Untreated + Severe_Treated) * 25000 + In_Crisis * 50000",
+      "position": {
+        "x": 100,
+        "y": 720
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Social Stigma Level",
+      "to_element": "Treatment Seeking Rate Mild"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Mental Health Workforce",
+      "to_element": "Treatment Quality"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Treatment System Capacity",
+      "to_element": "Treatment Access"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Risk Factor Effect",
+      "to_element": "Onset of Mild Disorder"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Treatment Gap",
+      "to_element": "Burnout Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-11T20:04:50.816440Z",
+  "updated_at": "2026-01-11T20:04:50.816440Z",
+  "source": "https://doi.org/10.1016/j.socscimed.2013.03.004",
+  "reference": "Healthcare System Dynamics Models"
+}

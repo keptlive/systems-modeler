@@ -1,0 +1,149 @@
+{
+  "id": "krugman-economic-geography-eco",
+  "name": "Krugman New Economic Geography Model",
+  "description": "Explains spatial concentration of economic activity through interaction of increasing returns, transport costs, and factor mobility. Core-periphery pattern emerges. Nobel Prize 2008. Reference: Krugman, P. (1991). Increasing returns and economic geography. Journal of Political Economy, 99(3), 483-499. DOI: https://doi.org/10.1086/261763",
+  "stocks": [
+    {
+      "id": "stock-core-workers",
+      "name": "Core Region Workers",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-periphery-workers",
+      "name": "Periphery Workers",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-migration",
+      "name": "Migration to Core",
+      "equation": "Migration_Rate * (Core_Real_Wage - Periphery_Real_Wage) * Periphery_Workers",
+      "from_stock": "stock-periphery-workers",
+      "to_stock": "stock-core-workers",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-transport",
+      "name": "Transport Cost",
+      "equation": "1.5",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-sigma",
+      "name": "Elasticity of Substitution",
+      "equation": "4",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-core-wage",
+      "name": "Core Nominal Wage",
+      "equation": "1 + Core_Region_Workers / 100",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-periphery-wage",
+      "name": "Periphery Nominal Wage",
+      "equation": "1 + Periphery_Workers / 100",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-core-price",
+      "name": "Core Price Index",
+      "equation": "(Core_Region_Workers + Periphery_Workers * Transport_Cost^(1 - Elasticity_of_Substitution))^(1 / (1 - Elasticity_of_Substitution))",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-periphery-price",
+      "name": "Periphery Price Index",
+      "equation": "(Periphery_Workers + Core_Region_Workers * Transport_Cost^(1 - Elasticity_of_Substitution))^(1 / (1 - Elasticity_of_Substitution))",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-core-real",
+      "name": "Core Real Wage",
+      "equation": "Core_Nominal_Wage / Core_Price_Index",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-periphery-real",
+      "name": "Periphery Real Wage",
+      "equation": "Periphery_Nominal_Wage / Periphery_Price_Index",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-migration",
+      "name": "Migration Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Core Region Workers",
+      "to_element": "Core Nominal Wage"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Core Real Wage",
+      "to_element": "Migration to Core"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Periphery Real Wage",
+      "to_element": "Migration to Core"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:39:15.413435+00:00",
+  "updated_at": "2026-01-12T07:39:15.413448+00:00",
+  "source": "https://doi.org/10.1086/261763",
+  "reference": "Krugman P. Increasing Returns and Economic Geography. Journal of Political Economy. 1991;99(3):483-499. Nobel Prize 2008."
+}

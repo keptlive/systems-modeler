@@ -1,0 +1,131 @@
+{
+  "id": "public-trust-institutions-pol",
+  "name": "Public Trust in Institutions",
+  "description": "Model of institutional trust dynamics. Source: Edelman Trust Barometer; Putnam (2000).",
+  "stocks": [
+    {
+      "id": "stock-trust",
+      "name": "Public_Trust",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-perform",
+      "name": "Institutional_Performance",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-trustinc",
+      "name": "Trust_Building",
+      "equation": "Institutional_Performance * Trust_Gain_Rate * (100 - Public_Trust) / 100",
+      "from_stock": null,
+      "to_stock": "stock-trust",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-trustdec",
+      "name": "Trust_Erosion",
+      "equation": "Public_Trust * Erosion_Rate * (100 - Institutional_Performance) / 100",
+      "from_stock": "stock-trust",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-perfinc",
+      "name": "Performance_Improvement",
+      "equation": "Investment * Improvement_Rate * Public_Trust / 100",
+      "from_stock": null,
+      "to_stock": "stock-perform",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-perfdec",
+      "name": "Performance_Decline",
+      "equation": "Institutional_Performance * Decline_Rate",
+      "from_stock": "stock-perform",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-gain",
+      "name": "Trust_Gain_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-erode",
+      "name": "Erosion_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-invest",
+      "name": "Investment",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-improve",
+      "name": "Improvement_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-decline",
+      "name": "Decline_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:55:38.760871+00:00",
+  "updated_at": "2026-01-12T12:55:38.760871+00:00",
+  "source": "https://systemdynamics.org/resources/",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

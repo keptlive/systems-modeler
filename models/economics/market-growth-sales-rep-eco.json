@@ -1,0 +1,350 @@
+{
+  "id": "market-growth-sales-rep-eco",
+  "name": "Rep_Turnover_Rate",
+  "description": "Model of market growth where sales representatives are fundamental to achieving expansion. Shows how sales force expansion and customer acquisition create reinforcing growth dynamics. From Vensim sample models. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Customers",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Sales_Representatives",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Revenue_Pool",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Customer_Acquisition",
+      "equation": "Potential_Customers * Contact_Rate * Conversion_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Customer_Loss",
+      "equation": "Customers * Churn_Rate",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Hiring_Sales_Reps",
+      "equation": "(Desired_Sales_Reps - Sales_Representatives) / Rep_Hiring_Time",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Sales_Rep_Turnover",
+      "equation": "Sales_Representatives * Rep_Turnover_Rate",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Revenue_Inflow",
+      "equation": "Customers * Revenue_Per_Customer",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Expenses",
+      "equation": "Fixed_Costs + Sales_Representatives * Cost_Per_Rep",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Market_Size",
+      "equation": "10000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Potential_Customers",
+      "equation": "Market_Size - Customers",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Contact_Rate",
+      "equation": "Sales_Representatives * Contacts_Per_Rep / Market_Size",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Contacts_Per_Rep",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Conversion_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Churn_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Desired_Sales_Reps",
+      "equation": "Customers / Customers_Per_Rep",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Customers_Per_Rep",
+      "equation": "20",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Rep_Hiring_Time",
+      "equation": "8",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Rep_Turnover_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Revenue_Per_Customer",
+      "equation": "1000",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Fixed_Costs",
+      "equation": "50000",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Cost_Per_Rep",
+      "equation": "5000",
+      "position": {
+        "x": 750,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Customers",
+      "to_element": "Customer_Acquisition"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Potential_Customers",
+      "to_element": "Customer_Acquisition"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Conversion_Rate",
+      "to_element": "Customer_Acquisition"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Contact_Rate",
+      "to_element": "Customer_Acquisition"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Customers",
+      "to_element": "Customer_Loss"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Churn_Rate",
+      "to_element": "Customer_Loss"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Rep_Hiring_Time",
+      "to_element": "Hiring_Sales_Reps"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Sales_Representatives",
+      "to_element": "Hiring_Sales_Reps"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Desired_Sales_Reps",
+      "to_element": "Hiring_Sales_Reps"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Sales_Representatives",
+      "to_element": "Sales_Rep_Turnover"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Rep_Turnover_Rate",
+      "to_element": "Sales_Rep_Turnover"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Customers",
+      "to_element": "Revenue_Inflow"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Revenue_Per_Customer",
+      "to_element": "Revenue_Inflow"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Cost_Per_Rep",
+      "to_element": "Expenses"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Fixed_Costs",
+      "to_element": "Expenses"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Sales_Representatives",
+      "to_element": "Expenses"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Customers",
+      "to_element": "Potential_Customers"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Market_Size",
+      "to_element": "Potential_Customers"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Contacts_Per_Rep",
+      "to_element": "Contact_Rate"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Sales_Representatives",
+      "to_element": "Contact_Rate"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Market_Size",
+      "to_element": "Contact_Rate"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Customers",
+      "to_element": "Desired_Sales_Reps"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "Customers_Per_Rep",
+      "to_element": "Desired_Sales_Reps"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T07:19:37.013776+00:00",
+  "updated_at": "2026-01-12T07:19:37.013776+00:00",
+  "source": "https://vensim.com/documentation/sample_models.html",
+  "reference": "Vensim Sample Models. Market growth with sales representative dynamics."
+}

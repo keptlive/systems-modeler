@@ -1,0 +1,161 @@
+{
+  "id": "opinion-dynamics-social-soc",
+  "name": "Opinion Dynamics Model",
+  "description": "Social opinion dynamics model showing how opinions spread and polarize through social networks. Based on bounded confidence models. Source: Deffuant et al. (2000), Advances in Complex Systems. DOI: 10.1142/S0219525900000078",
+  "stocks": [
+    {
+      "id": "stock-supportive",
+      "name": "Supportive_Population",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-neutral",
+      "name": "Neutral_Population",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-opposed",
+      "name": "Opposed_Population",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-support-to-neutral",
+      "name": "Support_to_Neutral",
+      "equation": "Supportive_Population * Opposed_Influence_Rate",
+      "from_stock": "stock-supportive",
+      "to_stock": "stock-neutral",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-neutral-to-support",
+      "name": "Neutral_to_Support",
+      "equation": "Neutral_Population * Support_Influence_Rate * (Supportive_Population / Total_Population)",
+      "from_stock": "stock-neutral",
+      "to_stock": "stock-supportive",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-neutral-to-opposed",
+      "name": "Neutral_to_Opposed",
+      "equation": "Neutral_Population * Opposed_Influence_Rate * (Opposed_Population / Total_Population)",
+      "from_stock": "stock-neutral",
+      "to_stock": "stock-opposed",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-opposed-to-neutral",
+      "name": "Opposed_to_Neutral",
+      "equation": "Opposed_Population * Support_Influence_Rate",
+      "from_stock": "stock-opposed",
+      "to_stock": "stock-neutral",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-pop",
+      "name": "Total_Population",
+      "equation": "Supportive_Population + Neutral_Population + Opposed_Population",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-support-influence",
+      "name": "Support_Influence_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-opposed-influence",
+      "name": "Opposed_Influence_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-support-fraction",
+      "name": "Support_Fraction",
+      "equation": "Supportive_Population / Total_Population",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-opposed-fraction",
+      "name": "Opposed_Fraction",
+      "equation": "Opposed_Population / Total_Population",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Supportive_Population",
+      "to_element": "Support_to_Neutral"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Neutral_Population",
+      "to_element": "Neutral_to_Support"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Neutral_Population",
+      "to_element": "Neutral_to_Opposed"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Opposed_Population",
+      "to_element": "Opposed_to_Neutral"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T20:47:58.495568Z",
+  "updated_at": "2026-01-11T20:47:58.495568Z",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

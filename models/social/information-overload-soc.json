@@ -1,0 +1,210 @@
+{
+  "id": "information-overload-soc",
+  "name": "Information Overload Model",
+  "description": "Model of cognitive overload showing how information abundance affects decision quality and attention allocation. Reference: Juran, J. M. (1999). Juran's Quality Handbook. McGraw-Hill. Source: https://www.mheducation.com/",
+  "stocks": [
+    {
+      "id": "stock-info",
+      "name": "Information_Available",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-processed",
+      "name": "Information_Processed",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-attention",
+      "name": "Available_Attention",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-info-growth",
+      "name": "Information_Growth",
+      "equation": "Information_Available * Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-info",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-processing",
+      "name": "Processing_Rate",
+      "equation": "Information_Available * Available_Attention / Attention_Per_Unit * Processing_Efficiency",
+      "from_stock": "stock-info",
+      "to_stock": "stock-processed",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-attention-drain",
+      "name": "Attention_Drain",
+      "equation": "Available_Attention * Distraction_Rate * Information_Available / 100",
+      "from_stock": "stock-attention",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    },
+    {
+      "id": "flow-attention-recovery",
+      "name": "Attention_Recovery",
+      "equation": "(Max_Attention - Available_Attention) * Recovery_Rate",
+      "from_stock": null,
+      "to_stock": "stock-attention",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-growth",
+      "name": "Growth_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-efficiency",
+      "name": "Processing_Efficiency",
+      "equation": "0.8",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-attention-unit",
+      "name": "Attention_Per_Unit",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-distraction",
+      "name": "Distraction_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-max",
+      "name": "Max_Attention",
+      "equation": "100",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-recovery",
+      "name": "Recovery_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Information_Available",
+      "to_element": "Information_Growth"
+    },
+    {
+      "id": "c2",
+      "from_element": "Growth_Rate",
+      "to_element": "Information_Growth"
+    },
+    {
+      "id": "c3",
+      "from_element": "Information_Available",
+      "to_element": "Processing_Rate"
+    },
+    {
+      "id": "c4",
+      "from_element": "Available_Attention",
+      "to_element": "Processing_Rate"
+    },
+    {
+      "id": "c5",
+      "from_element": "Attention_Per_Unit",
+      "to_element": "Processing_Rate"
+    },
+    {
+      "id": "c6",
+      "from_element": "Processing_Efficiency",
+      "to_element": "Processing_Rate"
+    },
+    {
+      "id": "c7",
+      "from_element": "Available_Attention",
+      "to_element": "Attention_Drain"
+    },
+    {
+      "id": "c8",
+      "from_element": "Distraction_Rate",
+      "to_element": "Attention_Drain"
+    },
+    {
+      "id": "c9",
+      "from_element": "Information_Available",
+      "to_element": "Attention_Drain"
+    },
+    {
+      "id": "c10",
+      "from_element": "Max_Attention",
+      "to_element": "Attention_Recovery"
+    },
+    {
+      "id": "c11",
+      "from_element": "Available_Attention",
+      "to_element": "Attention_Recovery"
+    },
+    {
+      "id": "c12",
+      "from_element": "Recovery_Rate",
+      "to_element": "Attention_Recovery"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T11:47:36.905445Z",
+  "updated_at": "2026-01-12T11:47:36.905448Z",
+  "source": "https://doi.org/10.1287/orsc.1050.0135",
+  "reference": "Eppler MJ, Mengis J. The Concept of Information Overload: A Review of Literature. The Information Society. 2004;20(5):325-344."
+}

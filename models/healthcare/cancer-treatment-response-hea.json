@@ -1,0 +1,176 @@
+{
+  "id": "cancer-treatment-response-hea",
+  "name": "Cancer Treatment Response Model",
+  "description": "Model of tumor response to treatment combining Gompertzian growth with treatment effects. Based on Norton-Simon hypothesis and models from Hahnfeldt et al. (1999). Shows tumor regression and potential resistance development. Reference: Andersson, D. I., & Hughes, D. (2014). Microbiological effects of sublethal antibiotic concentrations. Nature Reviews Microbiology. Source: https://doi.org/10.1038/nrmicro3270",
+  "stocks": [
+    {
+      "id": "stock-tumor",
+      "name": "Tumor Volume",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-carrying-capacity",
+      "name": "Carrying Capacity",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-resistant-cells",
+      "name": "Resistant Cells",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-tumor-growth",
+      "name": "Tumor Growth",
+      "equation": "Tumor_Volume * Growth_Rate * LN(Carrying_Capacity / Tumor_Volume)",
+      "from_stock": null,
+      "to_stock": "stock-tumor",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-tumor-death",
+      "name": "Tumor Death",
+      "equation": "Treatment_Kill_Rate * Tumor_Volume",
+      "from_stock": "stock-tumor",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-resistance-development",
+      "name": "Resistance Development",
+      "equation": "Mutation_Rate * Tumor_Volume * Treatment_Kill_Rate",
+      "from_stock": null,
+      "to_stock": "stock-resistant-cells",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-carrying-capacity-change",
+      "name": "Carrying Capacity Change",
+      "equation": "Angiogenesis_Rate * Tumor_Volume - Endogenous_Loss * Carrying_Capacity",
+      "from_stock": null,
+      "to_stock": "stock-carrying-capacity",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-growth-rate",
+      "name": "Growth Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-treatment-on",
+      "name": "Treatment On",
+      "equation": "IF Time > Treatment_Start AND Time < Treatment_End THEN 1 ELSE 0",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-treatment-kill-rate",
+      "name": "Treatment Kill Rate",
+      "equation": "Treatment_On * Drug_Efficacy",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-drug-efficacy",
+      "name": "Drug Efficacy",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-treatment-start",
+      "name": "Treatment Start",
+      "equation": "10",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-treatment-end",
+      "name": "Treatment End",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-mutation-rate",
+      "name": "Mutation Rate",
+      "equation": "0.0001",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-angiogenesis-rate",
+      "name": "Angiogenesis Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-endogenous-loss",
+      "name": "Endogenous Loss",
+      "equation": "0.001",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:11:32.978676+00:00",
+  "updated_at": "2026-01-11T21:11:32.978676+00:00",
+  "source": "https://doi.org/10.1016/j.socscimed.2013.03.004",
+  "reference": "Healthcare System Dynamics Models"
+}

@@ -1,0 +1,375 @@
+{
+  "id": "sterman-customer-service-quality-man",
+  "name": "Capacity_Change",
+  "description": "Customer service quality model from Sterman (2000) Business Dynamics Chapter 14. Shows service capacity, quality, and customer satisfaction dynamics with feedback effects on demand. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Service_Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Customer_Queue",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Customer_Base",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Perceived_Quality",
+      "initial_value": 0.8,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Capacity_Change",
+      "equation": "(Desired_Capacity - Service_Capacity) / Capacity_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Customer_Arrivals",
+      "equation": "Base_Arrival_Rate * Customer_Base / 1000 * Effect_of_Quality_on_Demand",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Service_Completions",
+      "equation": "MIN(Customer_Queue / Minimum_Service_Time, Service_Capacity)",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Customer_Gain",
+      "equation": "New_Customers * Effect_of_Quality_on_Acquisition",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Customer_Loss",
+      "equation": "Customer_Base * Base_Churn_Rate / Effect_of_Quality_on_Retention",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Quality_Update",
+      "equation": "(Actual_Quality - Perceived_Quality) / Quality_Perception_Time",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Desired_Capacity",
+      "equation": "Customer_Queue / Target_Queue_Time * 1.2",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Capacity_Adjustment_Time",
+      "equation": "12",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Base_Arrival_Rate",
+      "equation": "20",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Minimum_Service_Time",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Target_Queue_Time",
+      "equation": "2",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Actual_Queue_Time",
+      "equation": "Customer_Queue / MAX(1, Service_Completions)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Actual_Quality",
+      "equation": "MAX(0, 1 - (Actual_Queue_Time - Target_Queue_Time) / Target_Queue_Time)",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Quality_Perception_Time",
+      "equation": "8",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Effect_of_Quality_on_Demand",
+      "equation": "0.5 + 0.5 * Perceived_Quality",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Effect_of_Quality_on_Acquisition",
+      "equation": "Perceived_Quality",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Effect_of_Quality_on_Retention",
+      "equation": "0.5 + 0.5 * Perceived_Quality",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "v12",
+      "name": "New_Customers",
+      "equation": "50",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Base_Churn_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 650,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Desired_Capacity",
+      "to_element": "Capacity_Change"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Service_Capacity",
+      "to_element": "Capacity_Change"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Capacity_Adjustment_Time",
+      "to_element": "Capacity_Change"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Effect_of_Quality_on_Demand",
+      "to_element": "Customer_Arrivals"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Customer_Base",
+      "to_element": "Customer_Arrivals"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Base_Arrival_Rate",
+      "to_element": "Customer_Arrivals"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Customer_Queue",
+      "to_element": "Service_Completions"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Minimum_Service_Time",
+      "to_element": "Service_Completions"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Service_Capacity",
+      "to_element": "Service_Completions"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "New_Customers",
+      "to_element": "Customer_Gain"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Effect_of_Quality_on_Acquisition",
+      "to_element": "Customer_Gain"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Customer_Base",
+      "to_element": "Customer_Loss"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Effect_of_Quality_on_Retention",
+      "to_element": "Customer_Loss"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Base_Churn_Rate",
+      "to_element": "Customer_Loss"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Quality_Perception_Time",
+      "to_element": "Quality_Update"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Perceived_Quality",
+      "to_element": "Quality_Update"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Actual_Quality",
+      "to_element": "Quality_Update"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Customer_Queue",
+      "to_element": "Desired_Capacity"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Target_Queue_Time",
+      "to_element": "Desired_Capacity"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Customer_Queue",
+      "to_element": "Actual_Queue_Time"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Service_Completions",
+      "to_element": "Actual_Queue_Time"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Actual_Queue_Time",
+      "to_element": "Actual_Quality"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "Target_Queue_Time",
+      "to_element": "Actual_Quality"
+    },
+    {
+      "id": "conn-24",
+      "from_element": "Perceived_Quality",
+      "to_element": "Effect_of_Quality_on_Demand"
+    },
+    {
+      "id": "conn-25",
+      "from_element": "Perceived_Quality",
+      "to_element": "Effect_of_Quality_on_Acquisition"
+    },
+    {
+      "id": "conn-26",
+      "from_element": "Perceived_Quality",
+      "to_element": "Effect_of_Quality_on_Retention"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T07:19:37.014585+00:00",
+  "updated_at": "2026-01-12T07:19:37.014585+00:00",
+  "source": "https://web.mit.edu/jsterman/www/BusDyn2.html",
+  "reference": "Sterman, J.D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. Chapter 14: Service Quality."
+}

@@ -1,0 +1,222 @@
+{
+  "id": "renewable-grid-integration-ene",
+  "name": "Renewable Energy Grid Integration Model",
+  "description": "Models integration of variable renewable energy (solar, wind) into electricity grids with storage. Based on IEA (2021) Net Zero by 2050. DOI: 10.1787/c8328405-en",
+  "stocks": [
+    {
+      "id": "stock-solar",
+      "name": "Solar_Capacity",
+      "initial_value": 750,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-wind",
+      "name": "Wind_Capacity",
+      "initial_value": 750,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-storage",
+      "name": "Battery_Storage",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-fossil",
+      "name": "Fossil_Capacity",
+      "initial_value": 4000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-emissions",
+      "name": "Annual_Emissions",
+      "initial_value": 36,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-solaradd",
+      "name": "Solar_Addition",
+      "equation": "Solar_Investment * Solar_Cost_Decline",
+      "from_stock": null,
+      "to_stock": "stock-solar",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-windadd",
+      "name": "Wind_Addition",
+      "equation": "Wind_Investment * Wind_Cost_Decline",
+      "from_stock": null,
+      "to_stock": "stock-wind",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-storadd",
+      "name": "Storage_Addition",
+      "equation": "Storage_Investment * Storage_Learning",
+      "from_stock": null,
+      "to_stock": "stock-storage",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-fossilretire",
+      "name": "Fossil_Retirement",
+      "equation": "Fossil_Capacity * Retirement_Rate + Renewable_Displacement",
+      "from_stock": "stock-fossil",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-emisreduce",
+      "name": "Emission_Reduction",
+      "equation": "Renewable_Share * Emission_Intensity",
+      "from_stock": "stock-emissions",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 225
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-solarinvest",
+      "name": "Solar_Investment",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-windinvest",
+      "name": "Wind_Investment",
+      "equation": "80",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-storinvest",
+      "name": "Storage_Investment",
+      "equation": "50",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-solarcost",
+      "name": "Solar_Cost_Decline",
+      "equation": "1 + 0.1 * LN(Solar_Capacity / 750 + 1)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-windcost",
+      "name": "Wind_Cost_Decline",
+      "equation": "1 + 0.08 * LN(Wind_Capacity / 750 + 1)",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-storlearn",
+      "name": "Storage_Learning",
+      "equation": "1 + 0.15 * LN(Battery_Storage / 50 + 1)",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-retirerate",
+      "name": "Retirement_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-rendisp",
+      "name": "Renewable_Displacement",
+      "equation": "(Solar_Capacity + Wind_Capacity) * 0.01",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-renshare",
+      "name": "Renewable_Share",
+      "equation": "(Solar_Capacity + Wind_Capacity) / (Solar_Capacity + Wind_Capacity + Fossil_Capacity)",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-emissint",
+      "name": "Emission_Intensity",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Solar_Capacity",
+      "to_element": "Renewable_Share"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:45:00.574976+00:00",
+  "updated_at": "2026-01-12T02:45:00.574979+00:00",
+  "source": "https://doi.org/10.1787/c8328405-en",
+  "reference": "IEA (2021). Net Zero by 2050: A Roadmap for the Global Energy Sector."
+}

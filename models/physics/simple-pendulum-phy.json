@@ -1,0 +1,201 @@
+{
+  "id": "simple-pendulum-phy",
+  "name": "Simple Pendulum",
+  "description": "A single pendulum model using system dynamics formulation. Angular position and velocity are stocks, with torque from gravity driving oscillation. Includes optional damping coefficient. Reference: Baker, G. L., & Blackburn, J. A. (2005). The Pendulum. Oxford University Press. Source: https://global.oup.com/",
+  "stocks": [
+    {
+      "id": "stock-angular-position",
+      "name": "Angular Position",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-angular-velocity",
+      "name": "Angular Velocity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-change-in-angular-position",
+      "name": "Change in Angular Position",
+      "equation": "Angular_Velocity",
+      "from_stock": null,
+      "to_stock": "stock-angular-position",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-change-in-angular-velocity",
+      "name": "Change in Angular Velocity",
+      "equation": "Torque / Pendulum_Moment_of_Inertia",
+      "from_stock": null,
+      "to_stock": "stock-angular-velocity",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-acceleration-due-to-gravity",
+      "name": "Acceleration due to Gravity",
+      "equation": "-9.8",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mass-of-pendulum",
+      "name": "Mass of Pendulum",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-length-of-pendulum",
+      "name": "Length of Pendulum",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-damping-coefficient",
+      "name": "Damping Coefficient",
+      "equation": "0",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-force-of-gravity",
+      "name": "Force of Gravity",
+      "equation": "Acceleration_due_to_Gravity * Mass_of_Pendulum",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-angular-component-of-gravity",
+      "name": "Angular component of Gravity",
+      "equation": "Force_of_Gravity * SIN(Angular_Position)",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-pendulum-moment-of-inertia",
+      "name": "Pendulum Moment of Inertia",
+      "equation": "Mass_of_Pendulum * Length_of_Pendulum^2",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-torque",
+      "name": "Torque",
+      "equation": "Angular_component_of_Gravity * Length_of_Pendulum - Angular_Velocity * Damping_Coefficient",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Angular Velocity",
+      "to_element": "Change in Angular Position"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Torque",
+      "to_element": "Change in Angular Velocity"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Pendulum Moment of Inertia",
+      "to_element": "Change in Angular Velocity"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Angular Position",
+      "to_element": "Angular component of Gravity"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Force of Gravity",
+      "to_element": "Angular component of Gravity"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Acceleration due to Gravity",
+      "to_element": "Force of Gravity"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Mass of Pendulum",
+      "to_element": "Force of Gravity"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Mass of Pendulum",
+      "to_element": "Pendulum Moment of Inertia"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Length of Pendulum",
+      "to_element": "Pendulum Moment of Inertia"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Angular component of Gravity",
+      "to_element": "Torque"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Length of Pendulum",
+      "to_element": "Torque"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Angular Velocity",
+      "to_element": "Torque"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Damping Coefficient",
+      "to_element": "Torque"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.0078125
+  },
+  "created_at": "2026-01-11T20:04:50.840398Z",
+  "updated_at": "2026-01-11T20:04:50.840398Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "Classical mechanics demonstration - PySD Cookbook"
+}

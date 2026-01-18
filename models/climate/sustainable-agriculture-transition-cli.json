@@ -1,0 +1,177 @@
+{
+  "id": "sustainable-agriculture-transition-cli",
+  "name": "Sustainable Agriculture Transition Model",
+  "description": "Models transition from conventional to sustainable agriculture. Based on Pretty et al. (2018) analysis of sustainable intensification. Reference: USDA Economic Research Service. Source: https://www.ers.usda.gov/",
+  "stocks": [
+    {
+      "id": "stock-conventional-farms",
+      "name": "Conventional_Farms",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-transitioning-farms",
+      "name": "Transitioning_Farms",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-sustainable-farms",
+      "name": "Sustainable_Farms",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-soil-health",
+      "name": "Soil_Health_Index",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adoption-start",
+      "name": "Transition_Start",
+      "equation": "Conventional_Farms * Adoption_Rate * (1 + Peer_Effect * Sustainable_Farms / Total_Farms)",
+      "from_stock": "stock-conventional-farms",
+      "to_stock": "stock-transitioning-farms",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-transition-complete",
+      "name": "Transition_Complete",
+      "equation": "Transitioning_Farms / Transition_Period",
+      "from_stock": "stock-transitioning-farms",
+      "to_stock": "stock-sustainable-farms",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-reversion",
+      "name": "Reversion",
+      "equation": "Sustainable_Farms * Reversion_Rate * (1 - Economic_Viability)",
+      "from_stock": "stock-sustainable-farms",
+      "to_stock": "stock-conventional-farms",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "flow-soil-improvement",
+      "name": "Soil_Improvement",
+      "equation": "Sustainable_Farms * Soil_Recovery_Rate - Conventional_Farms * Soil_Degradation_Rate",
+      "from_stock": null,
+      "to_stock": "stock-soil-health",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-adoption-rate",
+      "name": "Adoption_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-peer-effect",
+      "name": "Peer_Effect",
+      "equation": "0.5",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-farms",
+      "name": "Total_Farms",
+      "equation": "Conventional_Farms + Transitioning_Farms + Sustainable_Farms",
+      "position": {
+        "x": 360,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-transition-period",
+      "name": "Transition_Period",
+      "equation": "3",
+      "position": {
+        "x": 520,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-reversion-rate",
+      "name": "Reversion_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 640,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-economic-viability",
+      "name": "Economic_Viability",
+      "equation": "0.7 + 0.3 * Soil_Health_Index / 100",
+      "position": {
+        "x": 100,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-soil-recovery-rate",
+      "name": "Soil_Recovery_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 280,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-soil-degradation-rate",
+      "name": "Soil_Degradation_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 440,
+        "y": 380
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:19:34.564764+00:00",
+  "updated_at": "2026-01-12T01:19:34.564812+00:00",
+  "source": "https://doi.org/10.1038/s41893-018-0114-0",
+  "reference": "Pretty J, et al. Global assessment of agricultural system redesign for sustainable intensification. Nature Sustainability. 2018;1:441-446."
+}

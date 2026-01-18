@@ -1,0 +1,44 @@
+{
+  "id": "manabe-wetherald-radiative-cli",
+  "name": "Manabe-Wetherald Radiative-Convective Model",
+  "description": "Syukuro Manabe and Richard Wetherald's (1967) foundational radiative-convective equilibrium model predicting climate sensitivity to CO2 doubling. Found ~2°C warming per CO2 doubling - remarkably close to modern estimates. Manabe received the 2021 Nobel Prize in Physics.",
+  "stocks": [
+    {"id": "stock-surface-temperature", "name": "Surface Temperature", "initial_value": 288, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-tropospheric-temp", "name": "Tropospheric Temperature", "initial_value": 250, "equation": "", "position": {"x": 450, "y": 200}},
+    {"id": "stock-stratospheric-temp", "name": "Stratospheric Temperature", "initial_value": 220, "equation": "", "position": {"x": 700, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-surface-heating", "name": "Surface Heating", "equation": "(Absorbed_Solar_Surface + Downwelling_LW - Surface_LW_Up - Convective_Flux) / Surface_Heat_Capacity", "from_stock": null, "to_stock": "stock-surface-temperature", "position": {"x": 100, "y": 200}},
+    {"id": "flow-tropo-heating", "name": "Tropospheric Heating", "equation": "(Absorbed_Solar_Atmos + Surface_LW_Absorbed - Tropo_LW_Up - Tropo_LW_Down + Convective_Flux) / Atmos_Heat_Capacity", "from_stock": null, "to_stock": "stock-tropospheric-temp", "position": {"x": 350, "y": 200}},
+    {"id": "flow-strat-heating", "name": "Stratospheric Heating", "equation": "(Absorbed_Solar_Strat + Tropo_LW_Up - Strat_LW_Up - Strat_LW_Down) / Strat_Heat_Capacity", "from_stock": null, "to_stock": "stock-stratospheric-temp", "position": {"x": 600, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-solar-constant", "name": "Solar Constant", "equation": "1361", "position": {"x": 100, "y": 100}},
+    {"id": "var-co2-concentration", "name": "CO2 Concentration", "equation": "400", "position": {"x": 250, "y": 100}},
+    {"id": "var-reference-co2", "name": "Reference CO2", "equation": "280", "position": {"x": 400, "y": 100}},
+    {"id": "var-co2-forcing", "name": "CO2 Forcing", "equation": "5.35 * LN(CO2_Concentration / Reference_CO2)", "position": {"x": 550, "y": 100}},
+    {"id": "var-absorbed-solar-surface", "name": "Absorbed Solar Surface", "equation": "Solar_Constant * (1 - Albedo) * 0.5 / 4", "position": {"x": 100, "y": 350}},
+    {"id": "var-albedo", "name": "Albedo", "equation": "0.3", "position": {"x": 250, "y": 350}},
+    {"id": "var-surface-lw-up", "name": "Surface LW Up", "equation": "Stefan_Boltzmann * Surface_Temperature ^ 4", "position": {"x": 400, "y": 350}},
+    {"id": "var-stefan-boltzmann", "name": "Stefan Boltzmann", "equation": "0.0000000567", "position": {"x": 550, "y": 350}},
+    {"id": "var-downwelling-lw", "name": "Downwelling LW", "equation": "Stefan_Boltzmann * Tropospheric_Temp ^ 4 * Emissivity", "position": {"x": 100, "y": 450}},
+    {"id": "var-emissivity", "name": "Emissivity", "equation": "0.78 + 0.02 * LN(CO2_Concentration / Reference_CO2)", "position": {"x": 300, "y": 450}},
+    {"id": "var-convective-flux", "name": "Convective Flux", "equation": "MAX(0, (Surface_Temperature - Tropospheric_Temp - 65) * Convection_Coeff)", "position": {"x": 500, "y": 450}},
+    {"id": "var-convection-coeff", "name": "Convection Coeff", "equation": "5", "position": {"x": 700, "y": 450}},
+    {"id": "var-climate-sensitivity", "name": "Climate Sensitivity", "equation": "CO2_Forcing / (4 * Stefan_Boltzmann * 255 ^ 3)", "position": {"x": 300, "y": 550}},
+    {"id": "var-surface-heat-capacity", "name": "Surface Heat Capacity", "equation": "20", "position": {"x": 100, "y": 550}},
+    {"id": "var-atmos-heat-capacity", "name": "Atmos Heat Capacity", "equation": "5", "position": {"x": 500, "y": 550}},
+    {"id": "var-strat-heat-capacity", "name": "Strat Heat Capacity", "equation": "1", "position": {"x": 700, "y": 550}},
+    {"id": "var-absorbed-solar-atmos", "name": "Absorbed Solar Atmos", "equation": "Solar_Constant * 0.2 / 4", "position": {"x": 200, "y": 650}},
+    {"id": "var-absorbed-solar-strat", "name": "Absorbed Solar Strat", "equation": "Solar_Constant * 0.05 / 4", "position": {"x": 400, "y": 650}},
+    {"id": "var-surface-lw-absorbed", "name": "Surface LW Absorbed", "equation": "Surface_LW_Up * Emissivity", "position": {"x": 600, "y": 650}},
+    {"id": "var-tropo-lw-up", "name": "Tropo LW Up", "equation": "Stefan_Boltzmann * Tropospheric_Temp ^ 4", "position": {"x": 200, "y": 750}},
+    {"id": "var-tropo-lw-down", "name": "Tropo LW Down", "equation": "Downwelling_LW", "position": {"x": 400, "y": 750}},
+    {"id": "var-strat-lw-up", "name": "Strat LW Up", "equation": "Stefan_Boltzmann * Stratospheric_Temp ^ 4", "position": {"x": 600, "y": 750}},
+    {"id": "var-strat-lw-down", "name": "Strat LW Down", "equation": "Stefan_Boltzmann * Stratospheric_Temp ^ 4 * 0.5", "position": {"x": 200, "y": 850}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.1},
+  "source": "https://doi.org/10.1175/1520-0469(1967)024<0241:TEOTAW>2.0.CO;2",
+  "reference": "Manabe S, Wetherald RT. Thermal Equilibrium of the Atmosphere with a Given Distribution of Relative Humidity. Journal of the Atmospheric Sciences. 1967;24(3):241-259."
+}

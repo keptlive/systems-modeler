@@ -1,0 +1,371 @@
+{
+  "id": "retailer",
+  "name": "Retailer",
+  "description": "Model from Retailer.mdl",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Expected_Customer_Orders",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Stock",
+      "initial_value": 400.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Supply_Line",
+      "initial_value": 400.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Acquisition_Rate",
+      "equation": "Supply_Line/Delivery_Delay",
+      "from_stock": "Supply_Line",
+      "to_stock": "Stock",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Desired_Delivery_Rate",
+      "equation": "Adjustment_for_Inventory+Expected_Customer_Orders",
+      "from_stock": null,
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Order_Rate",
+      "equation": "max(0,Indicated_Orders)",
+      "from_stock": null,
+      "to_stock": "Supply_Line",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Shipment_Rate",
+      "equation": "MIN(Customer_Orders,Maximum_Shipped_Orders)",
+      "from_stock": "Stock",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 320
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "BETA",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "ALPHA",
+      "equation": "1.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Inventory_Adjustment_Time",
+      "equation": "1/ALPHA",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Adjustment_for_Inventory",
+      "equation": "(Desired_Inventory-Stock)/Inventory_Adjustment_Time",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Adjustment_for_Supply_Line",
+      "equation": "(Desired_Supply_Line-Supply_Line)/Supply_Line Adjustment_Time",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Adjustment_Time",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "CECO",
+      "equation": "Error_Term/Adjustment_Time",
+      "position": {
+        "x": 230,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Min_Shipment_Time",
+      "equation": "1.0",
+      "position": {
+        "x": 360,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Delivery_Delay",
+      "equation": "4.0",
+      "position": {
+        "x": 490,
+        "y": 130
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Desired_Inventory",
+      "equation": "400.0",
+      "position": {
+        "x": 620,
+        "y": 130
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Desired_Supply_Line",
+      "equation": "Delivery_Delay*Expected_Customer_Orders",
+      "position": {
+        "x": 100,
+        "y": 210
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Error_Term",
+      "equation": "Customer_Orders-Expected_Customer_Orders",
+      "position": {
+        "x": 230,
+        "y": 210
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Indicated_Orders",
+      "equation": "Adjustment_for_Supply_Line+Desired_Delivery_Rate",
+      "position": {
+        "x": 360,
+        "y": 210
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Maximum_Shipped_Orders",
+      "equation": "Stock/Min_Shipment_Time",
+      "position": {
+        "x": 490,
+        "y": 210
+      }
+    },
+    {
+      "id": "v15",
+      "name": "Customer_Orders",
+      "equation": "100+step(100,10)",
+      "position": {
+        "x": 620,
+        "y": 210
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Supply_Line",
+      "to_element": "Acquisition_Rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "Delivery_Delay",
+      "to_element": "Acquisition_Rate"
+    },
+    {
+      "id": "c3",
+      "from_element": "Adjustment_for_Inventory",
+      "to_element": "Desired_Delivery_Rate"
+    },
+    {
+      "id": "c4",
+      "from_element": "Customer_Orders",
+      "to_element": "Desired_Delivery_Rate"
+    },
+    {
+      "id": "c5",
+      "from_element": "Expected_Customer_Orders",
+      "to_element": "Desired_Delivery_Rate"
+    },
+    {
+      "id": "c6",
+      "from_element": "Indicated_Orders",
+      "to_element": "Order_Rate"
+    },
+    {
+      "id": "c7",
+      "from_element": "Customer_Orders",
+      "to_element": "Shipment_Rate"
+    },
+    {
+      "id": "c8",
+      "from_element": "Maximum_Shipped_Orders",
+      "to_element": "Shipment_Rate"
+    },
+    {
+      "id": "c9",
+      "from_element": "ALPHA",
+      "to_element": "Inventory_Adjustment_Time"
+    },
+    {
+      "id": "c10",
+      "from_element": "Inventory_Adjustment_Time",
+      "to_element": "Adjustment_for_Inventory"
+    },
+    {
+      "id": "c11",
+      "from_element": "Adjustment_Time",
+      "to_element": "Adjustment_for_Inventory"
+    },
+    {
+      "id": "c12",
+      "from_element": "Desired_Inventory",
+      "to_element": "Adjustment_for_Inventory"
+    },
+    {
+      "id": "c13",
+      "from_element": "Stock",
+      "to_element": "Adjustment_for_Inventory"
+    },
+    {
+      "id": "c14",
+      "from_element": "Adjustment_Time",
+      "to_element": "Adjustment_for_Supply_Line"
+    },
+    {
+      "id": "c15",
+      "from_element": "Desired_Supply_Line",
+      "to_element": "Adjustment_for_Supply_Line"
+    },
+    {
+      "id": "c16",
+      "from_element": "Supply_Line",
+      "to_element": "Adjustment_for_Supply_Line"
+    },
+    {
+      "id": "c17",
+      "from_element": "Adjustment_Time",
+      "to_element": "CECO"
+    },
+    {
+      "id": "c18",
+      "from_element": "Error_Term",
+      "to_element": "CECO"
+    },
+    {
+      "id": "c19",
+      "from_element": "Customer_Orders",
+      "to_element": "Desired_Supply_Line"
+    },
+    {
+      "id": "c20",
+      "from_element": "Expected_Customer_Orders",
+      "to_element": "Desired_Supply_Line"
+    },
+    {
+      "id": "c21",
+      "from_element": "Delivery_Delay",
+      "to_element": "Desired_Supply_Line"
+    },
+    {
+      "id": "c22",
+      "from_element": "Customer_Orders",
+      "to_element": "Error_Term"
+    },
+    {
+      "id": "c23",
+      "from_element": "Expected_Customer_Orders",
+      "to_element": "Error_Term"
+    },
+    {
+      "id": "c24",
+      "from_element": "Supply_Line",
+      "to_element": "Indicated_Orders"
+    },
+    {
+      "id": "c25",
+      "from_element": "Adjustment_for_Supply_Line",
+      "to_element": "Indicated_Orders"
+    },
+    {
+      "id": "c26",
+      "from_element": "Desired_Delivery_Rate",
+      "to_element": "Indicated_Orders"
+    },
+    {
+      "id": "c27",
+      "from_element": "Stock",
+      "to_element": "Maximum_Shipped_Orders"
+    },
+    {
+      "id": "c28",
+      "from_element": "Min_Shipment_Time",
+      "to_element": "Maximum_Shipped_Orders"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 40.0,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-15T19:13:16.575747+00:00",
+  "updated_at": "2026-01-15T19:13:16.575747+00:00",
+  "source": "https://github.com/JimDuggan/SDMR",
+  "reference": "System Dynamics Modeling with R (Duggan, 2016)"
+}

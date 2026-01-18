@@ -1,0 +1,329 @@
+{
+  "id": "climate-projections-sd-cli",
+  "name": "Productivity_Change",
+  "description": "Methodology for implementing climate change projections in system dynamics models. Combines climate scenarios (RCP/SSP) with land degradation and agricultural systems. Based on Martinez-Valderrama et al. (2023) MethodsX paper. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Vegetation_Cover",
+      "initial_value": 0.6,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Soil_Quality",
+      "initial_value": 0.7,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Agricultural_Productivity",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Climate_Stress_Index",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Vegetation_Growth",
+      "equation": "Vegetation_Cover * Growth_Rate * Precipitation_Effect * (1 - Climate_Stress_Index)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Vegetation_Loss",
+      "equation": "Vegetation_Cover * (Degradation_Rate + Temperature_Stress)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Soil_Regeneration",
+      "equation": "Soil_Quality * 0.01 * Vegetation_Cover",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Soil_Erosion",
+      "equation": "Soil_Quality * Erosion_Rate * (1 - Vegetation_Cover)",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Productivity_Change",
+      "equation": "(Potential_Productivity - Agricultural_Productivity) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Climate_Stress_Change",
+      "equation": "(Projected_Stress - Climate_Stress_Index) / 10",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Growth_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Precipitation_Effect",
+      "equation": "1 - 0.3 * Climate_Stress_Index",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Degradation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Temperature_Stress",
+      "equation": "0.05 * Climate_Stress_Index",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Erosion_Rate",
+      "equation": "0.03 * (1 + Climate_Stress_Index)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Potential_Productivity",
+      "equation": "Vegetation_Cover * Soil_Quality * (1 - Climate_Stress_Index)",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Adjustment_Time",
+      "equation": "5",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "RCP_Scenario",
+      "equation": "4.5",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Projected_Stress",
+      "equation": "0.2 + (RCP_Scenario / 8.5) * 0.5 * (TIME / 100)",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Climate_Stress_Index",
+      "to_element": "Vegetation_Growth"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Vegetation_Cover",
+      "to_element": "Vegetation_Growth"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Precipitation_Effect",
+      "to_element": "Vegetation_Growth"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Growth_Rate",
+      "to_element": "Vegetation_Growth"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Temperature_Stress",
+      "to_element": "Vegetation_Loss"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Degradation_Rate",
+      "to_element": "Vegetation_Loss"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Vegetation_Cover",
+      "to_element": "Vegetation_Loss"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Soil_Quality",
+      "to_element": "Soil_Regeneration"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Vegetation_Cover",
+      "to_element": "Soil_Regeneration"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Soil_Quality",
+      "to_element": "Soil_Erosion"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Erosion_Rate",
+      "to_element": "Soil_Erosion"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Vegetation_Cover",
+      "to_element": "Soil_Erosion"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Adjustment_Time",
+      "to_element": "Productivity_Change"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Potential_Productivity",
+      "to_element": "Productivity_Change"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Agricultural_Productivity",
+      "to_element": "Productivity_Change"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Projected_Stress",
+      "to_element": "Climate_Stress_Change"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Climate_Stress_Index",
+      "to_element": "Climate_Stress_Change"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Climate_Stress_Index",
+      "to_element": "Precipitation_Effect"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Climate_Stress_Index",
+      "to_element": "Temperature_Stress"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Climate_Stress_Index",
+      "to_element": "Erosion_Rate"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Soil_Quality",
+      "to_element": "Potential_Productivity"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Climate_Stress_Index",
+      "to_element": "Potential_Productivity"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "Vegetation_Cover",
+      "to_element": "Potential_Productivity"
+    },
+    {
+      "id": "conn-24",
+      "from_element": "RCP_Scenario",
+      "to_element": "Projected_Stress"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:15:44.245964+00:00",
+  "updated_at": "2026-01-12T07:15:44.245964+00:00",
+  "source": "https://doi.org/10.1016/j.mex.2023.102044",
+  "reference": "Martinez-Valderrama et al. (2023). Implementing climate change projections in System Dynamics models. MethodsX 10, 102044."
+}

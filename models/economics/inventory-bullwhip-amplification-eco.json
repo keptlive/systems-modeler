@@ -1,0 +1,228 @@
+{
+  "id": "inventory-bullwhip-amplification-eco",
+  "name": "Inventory Bullwhip Effect Amplification Model",
+  "description": "Multi-echelon supply chain showing demand amplification through the bullwhip effect. Reference: Based on System Dynamics supply chain models (Sterman, 2000). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Retailer_Inventory",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Distributor_Inventory",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Manufacturer_Inventory",
+      "initial_value": 300,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Retailer_Orders",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Distributor_Orders",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Customer_Demand",
+      "equation": "Base_Demand + Demand_Variation",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Retailer_Receives",
+      "equation": "MIN(Distributor_Inventory / Lead_Time, Retailer_Orders)",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Distributor_Receives",
+      "equation": "MIN(Manufacturer_Inventory / Lead_Time, Distributor_Orders)",
+      "from_stock": "s3",
+      "to_stock": "s2",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Production",
+      "equation": "Production_Rate",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Retailer_Order_Change",
+      "equation": "(Desired_Retailer_Order - Retailer_Orders) / Order_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Distributor_Order_Change",
+      "equation": "(Desired_Distributor_Order - Distributor_Orders) / Order_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Base_Demand",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Demand_Variation",
+      "equation": "2 * SIN(TIME / 10)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Lead_Time",
+      "equation": "2",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Target_Inventory_Coverage",
+      "equation": "4",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Desired_Retailer_Order",
+      "equation": "Customer_Demand + (Target_Inventory_Coverage * Customer_Demand - Retailer_Inventory) / Adjustment_Time",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Desired_Distributor_Order",
+      "equation": "Retailer_Orders + (Target_Inventory_Coverage * Retailer_Orders - Distributor_Inventory) / Adjustment_Time",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Production_Rate",
+      "equation": "Distributor_Orders",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Order_Adjustment_Time",
+      "equation": "2",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Adjustment_Time",
+      "equation": "4",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Bullwhip_Ratio",
+      "equation": "Distributor_Orders / Customer_Demand",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:23:21.190214+00:00",
+  "updated_at": "2026-01-12T11:23:21.190214+00:00",
+  "source": "https://doi.org/10.1287/mnsc.43.4.546",
+  "reference": "Lee HL, Padmanabhan V, Whang S. Information distortion in a supply chain: The bullwhip effect. Management Science. 1997;43(4):546-558."
+}

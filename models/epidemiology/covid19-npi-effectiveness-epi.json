@@ -1,0 +1,203 @@
+{
+  "id": "covid19-npi-effectiveness-epi",
+  "name": "COVID-19 Non-Pharmaceutical Interventions",
+  "description": "Models the effectiveness of various NPIs (masks, distancing, lockdowns) on transmission. Based on Brauner et al. (2021) Science paper. DOI: 10.1126/science.abd9338",
+  "category": "epidemiology",
+  "stocks": [
+    {
+      "id": "stock-s",
+      "name": "Susceptible",
+      "initial_value": 99000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-i",
+      "name": "Infected",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-r",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-compliance",
+      "name": "NPI_Compliance",
+      "initial_value": 0.8,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "New_Infections",
+      "equation": "Beta_base * (1 - Total_NPI_Effect) * Susceptible * Infected / Total_Pop",
+      "from_stock": "stock-s",
+      "to_stock": "stock-i",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "Infected / Recovery_Time",
+      "from_stock": "stock-i",
+      "to_stock": "stock-r",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fatigue",
+      "name": "Compliance_Fatigue",
+      "equation": "(Base_Compliance - NPI_Compliance) / Fatigue_Time",
+      "from_stock": null,
+      "to_stock": "stock-compliance",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "Beta_base",
+      "equation": "0.4",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-recovery",
+      "name": "Recovery_Time",
+      "equation": "10",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-pop",
+      "name": "Total_Pop",
+      "equation": "100000",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mask-effect",
+      "name": "Mask_Effectiveness",
+      "equation": "0.4",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-distance-effect",
+      "name": "Distancing_Effectiveness",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-lockdown-effect",
+      "name": "Lockdown_Effectiveness",
+      "equation": "0.5",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mask-mandate",
+      "name": "Mask_Mandate",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-distancing",
+      "name": "Social_Distancing",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-lockdown",
+      "name": "Lockdown_Active",
+      "equation": "0",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-total-npi",
+      "name": "Total_NPI_Effect",
+      "equation": "NPI_Compliance * (Mask_Mandate * Mask_Effectiveness + Social_Distancing * Distancing_Effectiveness + Lockdown_Active * Lockdown_Effectiveness)",
+      "position": {
+        "x": 450,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-base-comply",
+      "name": "Base_Compliance",
+      "equation": "0.6",
+      "position": {
+        "x": 550,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-fatigue",
+      "name": "Fatigue_Time",
+      "equation": "30",
+      "position": {
+        "x": 650,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1126/science.abd9338",
+  "reference": "Brauner JM et al. (2021) Inferring the effectiveness of government interventions against COVID-19. Science.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:10:19.347864+00:00",
+  "updated_at": "2026-01-12T06:10:19.347864+00:00"
+}

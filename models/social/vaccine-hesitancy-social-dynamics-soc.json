@@ -1,0 +1,147 @@
+{
+  "id": "vaccine-hesitancy-social-dynamics-soc",
+  "name": "Vaccine Hesitancy Social Dynamics",
+  "description": "A model of vaccine hesitancy spreading through social networks. Based on social contagion theory and behavioral epidemiology research on vaccine uptake decisions. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "source": "https://doi.org/10.1016/j.vaccine.2015.04.036",
+  "reference": "Larson HJ, et al. The State of Vaccine Confidence 2016: Global Insights Through a 67-Country Survey. EBioMedicine. 2016;12:295-301.",
+  "stocks": [
+    {
+      "id": "stock-confident",
+      "name": "Vaccine Confident",
+      "initial_value": 700000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-hesitant",
+      "name": "Vaccine Hesitant",
+      "initial_value": 250000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-refusers",
+      "name": "Vaccine Refusers",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-losing-confidence",
+      "name": "Losing Confidence",
+      "equation": "Vaccine_Confident * Social_Influence * (Vaccine_Hesitant + Vaccine_Refusers) / Total_Pop + Vaccine_Confident * Adverse_Event_Rate",
+      "from_stock": "stock-confident",
+      "to_stock": "stock-hesitant",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-becoming-refuser",
+      "name": "Becoming Refuser",
+      "equation": "Vaccine_Hesitant * Refuser_Conversion * Vaccine_Refusers / Total_Pop",
+      "from_stock": "stock-hesitant",
+      "to_stock": "stock-refusers",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-regaining-confidence",
+      "name": "Regaining Confidence",
+      "equation": "Vaccine_Hesitant * (Pro_Vaccine_Messaging + Disease_Fear * Disease_Incidence)",
+      "from_stock": "stock-hesitant",
+      "to_stock": "stock-confident",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-pop",
+      "name": "Total Pop",
+      "equation": "Vaccine_Confident + Vaccine_Hesitant + Vaccine_Refusers",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-social-influence",
+      "name": "Social Influence",
+      "equation": "0.00001",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-adverse",
+      "name": "Adverse Event Rate",
+      "equation": "0.00001",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-refuser-conv",
+      "name": "Refuser Conversion",
+      "equation": "0.0001",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-messaging",
+      "name": "Pro Vaccine Messaging",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-disease-fear",
+      "name": "Disease Fear",
+      "equation": "1",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-disease-inc",
+      "name": "Disease Incidence",
+      "equation": "0.001",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T21:34:33.051227+00:00",
+  "updated_at": "2026-01-11T21:34:33.051227+00:00"
+}

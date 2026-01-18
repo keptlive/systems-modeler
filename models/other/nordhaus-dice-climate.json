@@ -1,0 +1,187 @@
+{
+  "id": "nordhaus-dice-climate",
+  "name": "DICE Climate-Economy Model (Simplified)",
+  "description": "Simplified version of William Nordhaus's DICE model showing the interaction between economic growth and climate change.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Atmospheric_CO2",
+      "initial_value": 851,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Temperature_Anomaly",
+      "initial_value": 0.85,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Capital_Stock",
+      "initial_value": 223,
+      "equation": "",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Emissions",
+      "equation": "Output * Emission_Intensity * (1 - Abatement_Rate)",
+      "from_stock": null,
+      "to_stock": "Atmospheric_CO2",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Natural_Absorption",
+      "equation": "Atmospheric_CO2 * 0.002",
+      "from_stock": "Atmospheric_CO2",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Warming_Rate",
+      "equation": "Climate_Sensitivity * (Forcing - Lambda * Temperature_Anomaly)",
+      "from_stock": null,
+      "to_stock": "Temperature_Anomaly",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Investment",
+      "equation": "Output * Savings_Rate",
+      "from_stock": null,
+      "to_stock": "Capital_Stock",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Depreciation",
+      "equation": "Capital_Stock * Depreciation_Rate",
+      "from_stock": "Capital_Stock",
+      "to_stock": null,
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Emission_Intensity",
+      "equation": "0.35",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Abatement_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Climate_Sensitivity",
+      "equation": "0.01",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Lambda",
+      "equation": "1.2",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Forcing",
+      "equation": "5.35 * LOG(Atmospheric_CO2 / 280) / LOG(2.718)",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Output",
+      "equation": "Capital_Stock**0.3 * 7000**0.7",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Savings_Rate",
+      "equation": "0.22",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Depreciation_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 700,
+        "y": 50
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Climate_Damage",
+      "equation": "1 - 0.00267 * Temperature_Anomaly**2",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2015,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1073/pnas.1609244114",
+  "reference": "Nordhaus, W.D. (2017). Revisiting the social cost of carbon. PNAS, 114(7), 1518-1523. DOI: 10.1073/pnas.1609244114",
+  "created_at": "2026-01-15T19:20:16.771919+00:00",
+  "updated_at": "2026-01-15T19:20:16.771919+00:00"
+}

@@ -1,0 +1,388 @@
+{
+  "id": "covid19-quarantine-detection-epi",
+  "name": "Infected_Undetected",
+  "description": "Mathematical model of COVID-19 dynamics with quarantine measures and detection protocols. Models efficiency of testing, quarantine compliance, and transmission reduction. Based on 2024 Partial Differential Equations paper. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Susceptible",
+      "initial_value": 980000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Exposed",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Infected_Undetected",
+      "initial_value": 3000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Infected_Detected",
+      "initial_value": 2000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Quarantined",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s6",
+      "name": "Recovered",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Exposure_Rate",
+      "equation": "Beta * Susceptible * (Infected_Undetected + Infected_Detected * Reduced_Transmission) / Total_Population",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Undetected_Infection",
+      "equation": "Exposed * (1 - Detection_Rate) / Latent_Period",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 325,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Detected_Infection",
+      "equation": "Exposed * Detection_Rate / Latent_Period",
+      "from_stock": "s2",
+      "to_stock": "s4",
+      "position": {
+        "x": 325,
+        "y": 250
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Late_Detection",
+      "equation": "Infected_Undetected * Test_Rate",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Quarantine_Compliance",
+      "equation": "Infected_Detected * Quarantine_Rate",
+      "from_stock": "s4",
+      "to_stock": "s5",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Recovery_Undetected",
+      "equation": "Infected_Undetected / Infectious_Period",
+      "from_stock": "s3",
+      "to_stock": "s6",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Recovery_Quarantine",
+      "equation": "Quarantined / Quarantine_Duration",
+      "from_stock": "s5",
+      "to_stock": "s6",
+      "position": {
+        "x": 625,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Beta",
+      "equation": "0.4",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Total_Population",
+      "equation": "1000000",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Latent_Period",
+      "equation": "4",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Detection_Rate",
+      "equation": "0.4 + 0.3 * Testing_Capacity",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Test_Rate",
+      "equation": "0.1 * Testing_Capacity",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Quarantine_Rate",
+      "equation": "0.8",
+      "position": {
+        "x": 475,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Infectious_Period",
+      "equation": "10",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Quarantine_Duration",
+      "equation": "14",
+      "position": {
+        "x": 625,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Reduced_Transmission",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Testing_Capacity",
+      "equation": "MIN(1, 0.2 + 0.01 * TIME)",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Effective_R0",
+      "equation": "Beta * Infectious_Period * (1 - Detection_Rate * (1 - Reduced_Transmission))",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Beta",
+      "to_element": "Exposure_Rate"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Infected_Detected",
+      "to_element": "Exposure_Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Susceptible",
+      "to_element": "Exposure_Rate"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Total_Population",
+      "to_element": "Exposure_Rate"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Reduced_Transmission",
+      "to_element": "Exposure_Rate"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Infected_Undetected",
+      "to_element": "Exposure_Rate"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Exposed",
+      "to_element": "Undetected_Infection"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Latent_Period",
+      "to_element": "Undetected_Infection"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Detection_Rate",
+      "to_element": "Undetected_Infection"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Exposed",
+      "to_element": "Detected_Infection"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Latent_Period",
+      "to_element": "Detected_Infection"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Detection_Rate",
+      "to_element": "Detected_Infection"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Test_Rate",
+      "to_element": "Late_Detection"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Infected_Undetected",
+      "to_element": "Late_Detection"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Quarantine_Rate",
+      "to_element": "Quarantine_Compliance"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Infected_Detected",
+      "to_element": "Quarantine_Compliance"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Infectious_Period",
+      "to_element": "Recovery_Undetected"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Infected_Undetected",
+      "to_element": "Recovery_Undetected"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Quarantine_Duration",
+      "to_element": "Recovery_Quarantine"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Quarantined",
+      "to_element": "Recovery_Quarantine"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Testing_Capacity",
+      "to_element": "Detection_Rate"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Testing_Capacity",
+      "to_element": "Test_Rate"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "Infectious_Period",
+      "to_element": "Effective_R0"
+    },
+    {
+      "id": "conn-24",
+      "from_element": "Beta",
+      "to_element": "Effective_R0"
+    },
+    {
+      "id": "conn-25",
+      "from_element": "Detection_Rate",
+      "to_element": "Effective_R0"
+    },
+    {
+      "id": "conn-26",
+      "from_element": "Reduced_Transmission",
+      "to_element": "Effective_R0"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T07:15:44.246321+00:00",
+  "updated_at": "2026-01-12T07:15:44.246321+00:00",
+  "source": "https://doi.org/10.1016/j.padiff.2023.100609",
+  "reference": "Partial Differential Equations in Applied Mathematics (2024). Mathematical modeling of COVID-19 with the effects of quarantine and detection."
+}

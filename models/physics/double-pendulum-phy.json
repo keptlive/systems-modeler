@@ -1,0 +1,251 @@
+{
+  "id": "double-pendulum-phy",
+  "name": "Double Pendulum",
+  "description": "A chaotic double pendulum system demonstrating sensitive dependence on initial conditions. Two pendulums are connected end-to-end, with the first attached to a fixed pivot point. The system exhibits complex, unpredictable motion characteristic of deterministic chaos. Reference: http://www.myphysicslab.com/dbl_pendulum.html",
+  "stocks": [
+    {
+      "id": "stock-angular-position",
+      "name": "Angular Position",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-angular-velocity",
+      "name": "Angular Velocity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-angular-position-2",
+      "name": "Angular Position 2",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-angular-velocity-2",
+      "name": "Angular Velocity 2",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-change-in-angular-position",
+      "name": "Change in Angular Position",
+      "equation": "Angular_Velocity",
+      "from_stock": null,
+      "to_stock": "stock-angular-position",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-change-in-angular-velocity",
+      "name": "Change in Angular Velocity",
+      "equation": "(g*(2*m1+m2)*SIN(theta1) - m2*g*SIN(theta1-2*theta2) - 2*SIN(theta1-theta2)*m2*(omega2^2*L2 + omega1^2*L1*COS(theta1-theta2))) / (L1*(2*m1+m2-m2*COS(2*theta1-2*theta2)))",
+      "from_stock": null,
+      "to_stock": "stock-angular-velocity",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-change-in-angular-position-2",
+      "name": "Change in Angular Position 2",
+      "equation": "Angular_Velocity2",
+      "from_stock": null,
+      "to_stock": "stock-angular-position-2",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-change-in-angular-velocity-2",
+      "name": "Change in Angular Velocity 2",
+      "equation": "(2*SIN(theta1-theta2)*(omega1^2*L1*(m1+m2) + g*(m1+m2)*COS(theta1) + omega2^2*L2*m2*COS(theta1-theta2))) / (L2*(2*m1+m2-m2*COS(2*theta1-2*theta2)))",
+      "from_stock": null,
+      "to_stock": "stock-angular-velocity-2",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-acceleration-due-to-gravity",
+      "name": "Acceleration due to Gravity",
+      "equation": "-9.8",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-length-of-pendulum",
+      "name": "Length of Pendulum",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-length-of-pendulum-2",
+      "name": "Length of Pendulum 2",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mass-of-pendulum",
+      "name": "Mass of Pendulum",
+      "equation": "10",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mass-of-pendulum-2",
+      "name": "Mass of Pendulum 2",
+      "equation": "10",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Angular Velocity",
+      "to_element": "Change in Angular Position"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Angular Position",
+      "to_element": "Change in Angular Velocity"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Angular Position 2",
+      "to_element": "Change in Angular Velocity"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Angular Velocity",
+      "to_element": "Change in Angular Velocity"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Angular Velocity 2",
+      "to_element": "Change in Angular Velocity"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Acceleration due to Gravity",
+      "to_element": "Change in Angular Velocity"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Mass of Pendulum",
+      "to_element": "Change in Angular Velocity"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Mass of Pendulum 2",
+      "to_element": "Change in Angular Velocity"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Length of Pendulum",
+      "to_element": "Change in Angular Velocity"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Length of Pendulum 2",
+      "to_element": "Change in Angular Velocity"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Angular Velocity 2",
+      "to_element": "Change in Angular Position 2"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Angular Position",
+      "to_element": "Change in Angular Velocity 2"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Angular Position 2",
+      "to_element": "Change in Angular Velocity 2"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Angular Velocity",
+      "to_element": "Change in Angular Velocity 2"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Angular Velocity 2",
+      "to_element": "Change in Angular Velocity 2"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Acceleration due to Gravity",
+      "to_element": "Change in Angular Velocity 2"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Mass of Pendulum",
+      "to_element": "Change in Angular Velocity 2"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Mass of Pendulum 2",
+      "to_element": "Change in Angular Velocity 2"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Length of Pendulum",
+      "to_element": "Change in Angular Velocity 2"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Length of Pendulum 2",
+      "to_element": "Change in Angular Velocity 2"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.0078125
+  },
+  "created_at": "2026-01-11T20:04:50.828622Z",
+  "updated_at": "2026-01-11T20:04:50.828622Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "Classical mechanics demonstration - PySD Cookbook"
+}

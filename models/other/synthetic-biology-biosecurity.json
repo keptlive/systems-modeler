@@ -1,0 +1,179 @@
+{
+  "id": "synthetic-biology-biosecurity",
+  "name": "Synthetic Biology Biosecurity Model",
+  "description": "Model of dual-use research benefits and biosecurity risks.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Research_Capacity",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Beneficial_Applications",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Biosecurity_Risk",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Governance_Capacity",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 225
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Research_Growth",
+      "equation": "Funding * Researcher_Training",
+      "from_stock": null,
+      "to_stock": "Research_Capacity",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Application_Development",
+      "equation": "Research_Capacity * Application_Rate * Governance_Capacity / 100",
+      "from_stock": null,
+      "to_stock": "Beneficial_Applications",
+      "position": {
+        "x": 275,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Risk_Increase",
+      "equation": "Research_Capacity * Risk_Factor * (1 - Governance_Capacity / 100)",
+      "from_stock": null,
+      "to_stock": "Biosecurity_Risk",
+      "position": {
+        "x": 275,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Risk_Mitigation",
+      "equation": "Biosecurity_Risk * Mitigation_Rate * Governance_Capacity / 50",
+      "from_stock": "Biosecurity_Risk",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Governance_Building",
+      "equation": "Policy_Investment * 0.1",
+      "from_stock": null,
+      "to_stock": "Governance_Capacity",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Funding",
+      "equation": "50",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Researcher_Training",
+      "equation": "1.5",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Application_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Risk_Factor",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Mitigation_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Policy_Investment",
+      "equation": "10",
+      "position": {
+        "x": 650,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Benefit_Risk_Ratio",
+      "equation": "Beneficial_Applications / (Biosecurity_Risk + 1)",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2050,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1126/science.abn5637",
+  "reference": "Esvelt, K.M. (2022). Delay, Detect, Defend: Preparing for a Future in which Thousands Can Release New Pandemics. Nature Communications. DOI: 10.1126/science.abn5637",
+  "created_at": "2026-01-15T19:34:06.223149+00:00",
+  "updated_at": "2026-01-15T19:34:06.223149+00:00"
+}

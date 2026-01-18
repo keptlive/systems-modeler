@@ -1,0 +1,225 @@
+{
+  "id": "opinion-polarization-soc",
+  "name": "Opinion Polarization Model",
+  "description": "Model of opinion dynamics showing how social influence and confirmation bias lead to polarization. Based on Hegselmann & Krause (2002). Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Moderate Left Opinion",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Extreme Left Opinion",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Moderate Right Opinion",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Extreme Right Opinion",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Centrist Opinion",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Left Radicalization",
+      "equation": "Moderate_Left_Opinion * Radicalization_Rate * Echo_Chamber_Effect",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 150,
+        "y": 275
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Right Radicalization",
+      "equation": "Moderate_Right_Opinion * Radicalization_Rate * Echo_Chamber_Effect",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "position": {
+        "x": 450,
+        "y": 275
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Left Moderation",
+      "equation": "Extreme_Left_Opinion * Moderation_Rate * Cross_Exposure",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 275
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Right Moderation",
+      "equation": "Extreme_Right_Opinion * Moderation_Rate * Cross_Exposure",
+      "from_stock": "s4",
+      "to_stock": "s3",
+      "position": {
+        "x": 400,
+        "y": 275
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Center to Left",
+      "equation": "Centrist_Opinion * Political_Events * 0.5",
+      "from_stock": "s5",
+      "to_stock": "s1",
+      "position": {
+        "x": 225,
+        "y": 175
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Center to Right",
+      "equation": "Centrist_Opinion * Political_Events * 0.5",
+      "from_stock": "s5",
+      "to_stock": "s3",
+      "position": {
+        "x": 375,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Radicalization Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Moderation Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Echo Chamber Effect",
+      "equation": "1 + Social_Media_Use * 0.5",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Social Media Use",
+      "equation": "0.7",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Cross Exposure",
+      "equation": "1 - Social_Media_Use * 0.3",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Political Events",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Polarization Index",
+      "equation": "(Extreme_Left_Opinion + Extreme_Right_Opinion) / (Moderate_Left_Opinion + Moderate_Right_Opinion + Centrist_Opinion)",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Total Population",
+      "equation": "100",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Moderate Left Opinion",
+      "to_element": "Left Radicalization"
+    },
+    {
+      "id": "c2",
+      "from_element": "Moderate Right Opinion",
+      "to_element": "Right Radicalization"
+    },
+    {
+      "id": "c3",
+      "from_element": "Echo Chamber Effect",
+      "to_element": "Left Radicalization"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:53:04.261431+00:00",
+  "updated_at": "2026-01-12T01:53:04.261435+00:00",
+  "source": "https://doi.org/10.1002/cplx.10049",
+  "reference": "Hegselmann R, Krause U. Opinion dynamics and bounded confidence: models, analysis and simulation. J Artif Soc Soc Simul. 2002;5(3)."
+}

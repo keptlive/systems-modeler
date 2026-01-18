@@ -1,0 +1,171 @@
+{
+  "id": "metcalfe-network-effects-tec",
+  "name": "Metcalfe's Law Network Effects",
+  "description": "Value of a network grows quadratically with number of users. Creates winner-take-all dynamics in platform competition. Explains rapid growth and market dominance of social networks and communication platforms. Reference: Katz, M. L., & Shapiro, C. (1985). Network externalities, competition, and compatibility. AER. Source: https://doi.org/10.2307/1814809",
+  "stocks": [
+    {
+      "id": "stock-users",
+      "name": "Network Users",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-value",
+      "name": "Network Value",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adoption",
+      "name": "User Adoption",
+      "equation": "Potential_Users * Adoption_Rate * Network_Value / (Network_Value + Half_Saturation)",
+      "from_stock": null,
+      "to_stock": "stock-users",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-churn",
+      "name": "User Churn",
+      "equation": "Network_Users * Churn_Rate / (1 + Network_Effect_Strength * Network_Users / 100000)",
+      "from_stock": "stock-users",
+      "to_stock": null,
+      "position": {
+        "x": 80,
+        "y": 280
+      }
+    },
+    {
+      "id": "flow-value-change",
+      "name": "Value Growth",
+      "equation": "Value_Per_Connection * Connection_Growth",
+      "from_stock": null,
+      "to_stock": "stock-value",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-connections",
+      "name": "Potential Connections",
+      "equation": "Network_Users * (Network_Users - 1) / 2",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-metcalfe",
+      "name": "Metcalfe Value",
+      "equation": "Value_Per_Connection * Potential_Connections",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-value-per",
+      "name": "Value Per Connection",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-potential",
+      "name": "Potential Users",
+      "equation": "1000000 - Network_Users",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-adoption",
+      "name": "Adoption Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-churn",
+      "name": "Churn Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-half-sat",
+      "name": "Half Saturation",
+      "equation": "100000",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-effect",
+      "name": "Network Effect Strength",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-conn-growth",
+      "name": "Connection Growth",
+      "equation": "Network_Users * (User_Adoption - User_Churn) / Network_Users",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Network Users",
+      "to_element": "Potential Connections"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Network Value",
+      "to_element": "User Adoption"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Network Users",
+      "to_element": "User Churn"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:39:15.413676+00:00",
+  "updated_at": "2026-01-12T07:39:15.413685+00:00",
+  "source": "https://www.cs.cmu.edu/~odlyzko/doc/metcalfe.pdf",
+  "reference": "Metcalfe B. Metcalfe's Law After 40 Years of Ethernet. IEEE Computer. 2013;46(12):26-31."
+}

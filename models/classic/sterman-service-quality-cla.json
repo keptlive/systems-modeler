@@ -1,0 +1,190 @@
+{
+  "id": "sterman-service-quality-cla",
+  "name": "Sterman Service Quality Dynamics",
+  "description": "Model showing service quality erosion under cost pressure. From Business Dynamics Ch. 14. Source: Sterman (2000), Business Dynamics. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-quality",
+      "name": "Service_Quality",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-staff",
+      "name": "Staff_Level",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-demand",
+      "name": "Customer_Demand",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-improve",
+      "name": "Quality_Improvement",
+      "equation": "Staff_Level * Improvement_Effort / 1000",
+      "from_stock": null,
+      "to_stock": "stock-quality",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-erode",
+      "name": "Quality_Erosion",
+      "equation": "Service_Quality * Erosion_Rate * Customer_Demand / (Staff_Level * Capacity_Per_Staff)",
+      "from_stock": "stock-quality",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-hire",
+      "name": "Staff_Hiring",
+      "equation": "MAX(0, (Desired_Staff - Staff_Level) / Hiring_Time)",
+      "from_stock": null,
+      "to_stock": "stock-staff",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-quit",
+      "name": "Staff_Quit",
+      "equation": "Staff_Level * Quit_Rate",
+      "from_stock": "stock-staff",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-demgrow",
+      "name": "Demand_Growth",
+      "equation": "Customer_Demand * Growth_Rate * Service_Quality / 80",
+      "from_stock": null,
+      "to_stock": "stock-demand",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-demloss",
+      "name": "Customer_Loss",
+      "equation": "Customer_Demand * Churn_Rate * (80 - Service_Quality) / 80",
+      "from_stock": "stock-demand",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-improve",
+      "name": "Improvement_Effort",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-erode",
+      "name": "Erosion_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cap",
+      "name": "Capacity_Per_Staff",
+      "equation": "15",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-desired",
+      "name": "Desired_Staff",
+      "equation": "Customer_Demand / Capacity_Per_Staff",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-hiretime",
+      "name": "Hiring_Time",
+      "equation": "4",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-quit",
+      "name": "Quit_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-growth",
+      "name": "Growth_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-churn",
+      "name": "Churn_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T12:45:39.561678+00:00",
+  "updated_at": "2026-01-12T12:45:39.561678+00:00",
+  "source": "https://systemdynamics.org/resources/",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

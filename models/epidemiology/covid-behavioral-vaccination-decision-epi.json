@@ -1,0 +1,161 @@
+{
+  "id": "covid-behavioral-vaccination-decision-epi",
+  "name": "COVID-19 Behavioral Vaccination Decision Model",
+  "description": "Compartmental epidemic model describing COVID-19 spread where vaccine decisions are based on present and past disease information via an information index. Based on Buonomo et al. (2021) showing that voluntary vaccination reduces but cannot eliminate disease impact. Reference: Buonomo, B., Della Marca, R., d'Onofrio, A. (2021). A behavioural modelling approach to assess the impact of COVID-19 vaccine hesitancy. Journal of Theoretical Biology, 534, 110973. Source: https://doi.org/10.1016/j.jtbi.2021.110973",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Susceptible",
+      "initial_value": 0.9,
+      "equation": "",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "Infected",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {"x": 250, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Recovered",
+      "initial_value": 0.04,
+      "equation": "",
+      "position": {"x": 400, "y": 200}
+    },
+    {
+      "id": "s4",
+      "name": "Vaccinated",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {"x": 250, "y": 350}
+    },
+    {
+      "id": "s5",
+      "name": "Information Index",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {"x": 100, "y": 350}
+    },
+    {
+      "id": "s6",
+      "name": "Historical Memory",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {"x": 100, "y": 450}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Infection",
+      "equation": "Beta * Susceptible * Infected",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {"x": 175, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Recovery",
+      "equation": "Gamma * Infected",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {"x": 325, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Vaccination",
+      "equation": "Susceptible * Vaccination_Rate * Information_Index",
+      "from_stock": "s1",
+      "to_stock": "s4",
+      "position": {"x": 150, "y": 275}
+    },
+    {
+      "id": "f4",
+      "name": "Info Update",
+      "equation": "(Current_Risk_Perception - Information_Index) / Info_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {"x": 100, "y": 400}
+    },
+    {
+      "id": "f5",
+      "name": "Memory Accumulation",
+      "equation": "Memory_Weight * Infected - Memory_Decay * Historical_Memory",
+      "from_stock": null,
+      "to_stock": "s6",
+      "position": {"x": 100, "y": 500}
+    },
+    {
+      "id": "f6",
+      "name": "Immunity Waning",
+      "equation": "Vaccinated * Waning_Rate",
+      "from_stock": "s4",
+      "to_stock": "s1",
+      "position": {"x": 175, "y": 350}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Beta",
+      "equation": "0.4",
+      "position": {"x": 175, "y": 100}
+    },
+    {
+      "id": "v2",
+      "name": "Gamma",
+      "equation": "0.1",
+      "position": {"x": 325, "y": 100}
+    },
+    {
+      "id": "v3",
+      "name": "Vaccination Rate",
+      "equation": "0.05",
+      "position": {"x": 50, "y": 275}
+    },
+    {
+      "id": "v4",
+      "name": "Current Risk Perception",
+      "equation": "Infected * 10 + Historical_Memory * 2",
+      "position": {"x": 200, "y": 400}
+    },
+    {
+      "id": "v5",
+      "name": "Info Adjustment Time",
+      "equation": "14",
+      "position": {"x": 200, "y": 450}
+    },
+    {
+      "id": "v6",
+      "name": "Memory Weight",
+      "equation": "0.1",
+      "position": {"x": 200, "y": 500}
+    },
+    {
+      "id": "v7",
+      "name": "Memory Decay",
+      "equation": "0.02",
+      "position": {"x": 200, "y": 550}
+    },
+    {
+      "id": "v8",
+      "name": "Waning Rate",
+      "equation": "0.003",
+      "position": {"x": 300, "y": 400}
+    },
+    {
+      "id": "v9",
+      "name": "Basic Reproduction Number",
+      "equation": "Beta / Gamma",
+      "position": {"x": 400, "y": 100}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 730, "dt": 1},
+  "created_at": "2026-01-15T16:00:00.000000",
+  "updated_at": "2026-01-15T16:00:00.000000",
+  "source": "https://doi.org/10.1016/j.jtbi.2021.110973",
+  "reference": "Buonomo, B., Della Marca, R., d'Onofrio, A. (2021). A behavioural modelling approach to assess the impact of COVID-19 vaccine hesitancy. Journal of Theoretical Biology, 534, 110973."
+}

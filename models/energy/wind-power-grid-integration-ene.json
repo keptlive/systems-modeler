@@ -1,0 +1,139 @@
+{
+  "id": "wind-power-grid-integration-ene",
+  "name": "Wind Power Grid Integration with Storage",
+  "description": "Models wind power variability, grid integration challenges, and battery storage requirements. Based on Denholm et al. (2010) The Role of Energy Storage, NREL. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "category": "energy",
+  "stocks": [
+    {
+      "id": "stock-wind",
+      "name": "Wind_Generation_GW",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-storage",
+      "name": "Battery_Storage_GWh",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-curtailed",
+      "name": "Curtailed_Energy",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-charge",
+      "name": "Storage_Charging",
+      "equation": "IF(Wind_Generation_GW > Grid_Demand, MIN((Wind_Generation_GW - Grid_Demand) * Efficiency, Max_Charge_Rate), 0)",
+      "from_stock": null,
+      "to_stock": "stock-storage",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-discharge",
+      "name": "Storage_Discharge",
+      "equation": "IF(Wind_Generation_GW < Grid_Demand, MIN(Grid_Demand - Wind_Generation_GW, Battery_Storage_GWh * Max_Discharge_Rate), 0)",
+      "from_stock": "stock-storage",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-curtail",
+      "name": "Curtailment",
+      "equation": "IF(Wind_Generation_GW > Grid_Demand + Max_Charge_Rate, Wind_Generation_GW - Grid_Demand - Max_Charge_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-curtailed",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-wind-var",
+      "name": "Wind_Variability",
+      "equation": "SIN(TIME/24 * 3.14159) * 0.3 + 0.7",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Grid_Demand",
+      "equation": "8 + SIN(TIME/12 * 3.14159) * 2",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-efficiency",
+      "name": "Efficiency",
+      "equation": "0.85",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-max-charge",
+      "name": "Max_Charge_Rate",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-max-discharge",
+      "name": "Max_Discharge_Rate",
+      "equation": "0.25",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-reliability",
+      "name": "Grid_Reliability",
+      "equation": "1 - Curtailed_Energy / (Wind_Generation_GW * TIME + 0.001)",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 168,
+    "dt": 1
+  },
+  "source": "https://www.nrel.gov/docs/fy10osti/47187.pdf",
+  "reference": "Denholm P, Ela E, Kirby B, Milligan M (2010) The Role of Energy Storage with Renewable Electricity Generation. NREL/TP-6A2-47187.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:28:32.560951+00:00",
+  "updated_at": "2026-01-12T06:28:32.560951+00:00"
+}

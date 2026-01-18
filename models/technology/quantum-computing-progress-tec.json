@@ -1,0 +1,216 @@
+{
+  "id": "quantum-computing-progress-tec",
+  "name": "Quantum Computing Development Progress",
+  "description": "A model of quantum computing technology development, capturing qubit counts, error rates, algorithm development, and commercial adoption. Based on quantum computing roadmaps and progress metrics. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "source": "https://doi.org/10.1038/s41586-019-1666-5",
+  "reference": "Arute F, et al. Quantum supremacy using a programmable superconducting processor. Nature. 2019;574:505-510. See also IBM Quantum Roadmap.",
+  "stocks": [
+    {
+      "id": "stock-qubits",
+      "name": "Physical Qubits",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-error-rate",
+      "name": "Error Rate",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-algorithms",
+      "name": "Useful Algorithms",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-commercial",
+      "name": "Commercial Applications",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "stock-investment",
+      "name": "R&D Investment",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-qubit-growth",
+      "name": "Qubit Growth",
+      "equation": "Physical_Qubits * Qubit_Growth_Rate * R_and_D_Investment / 1000",
+      "from_stock": null,
+      "to_stock": "stock-qubits",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-error-improvement",
+      "name": "Error Improvement",
+      "equation": "Error_Rate * Error_Reduction_Rate * R_and_D_Investment / 1000",
+      "from_stock": "stock-error-rate",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-algorithm-development",
+      "name": "Algorithm Development",
+      "equation": "Algorithm_Discovery_Rate * Quantum_Utility * Research_Community_Size",
+      "from_stock": null,
+      "to_stock": "stock-algorithms",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-commercialization",
+      "name": "Commercialization",
+      "equation": "IF(Quantum_Utility > Utility_Threshold, Commercial_Adoption_Rate * Useful_Algorithms * Market_Pull, 0)",
+      "from_stock": null,
+      "to_stock": "stock-commercial",
+      "position": {
+        "x": 400,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-investment-growth",
+      "name": "Investment Growth",
+      "equation": "R_and_D_Investment * Investment_Growth_Rate * (1 + Commercial_Applications * 0.1)",
+      "from_stock": null,
+      "to_stock": "stock-investment",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-qubit-growth",
+      "name": "Qubit Growth Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-error-reduction",
+      "name": "Error Reduction Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-algorithm-rate",
+      "name": "Algorithm Discovery Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-research-community",
+      "name": "Research Community Size",
+      "equation": "1 + 0.1 * Time",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-quantum-utility",
+      "name": "Quantum Utility",
+      "equation": "Physical_Qubits * (1 - Error_Rate)^(Physical_Qubits / 10)",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-utility-threshold",
+      "name": "Utility Threshold",
+      "equation": "50",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-commercial-rate",
+      "name": "Commercial Adoption Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-market-pull",
+      "name": "Market Pull",
+      "equation": "1.5",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-investment-growth",
+      "name": "Investment Growth Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-logical-qubits",
+      "name": "Logical Qubits",
+      "equation": "Physical_Qubits / (1000 * Error_Rate)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T08:00:00.000000+00:00",
+  "updated_at": "2026-01-12T08:00:00.000000+00:00"
+}

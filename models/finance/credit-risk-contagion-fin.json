@@ -1,0 +1,160 @@
+{
+  "id": "credit-risk-contagion-fin",
+  "name": "Credit Risk Contagion in Banking Networks",
+  "description": "Models how credit defaults spread through interconnected banking systems. Based on Allen & Gale (2000) Financial Contagion, Journal of Political Economy. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "category": "finance",
+  "stocks": [
+    {
+      "id": "stock-healthy",
+      "name": "Healthy_Banks",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-stressed",
+      "name": "Stressed_Banks",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-failed",
+      "name": "Failed_Banks",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-credit",
+      "name": "System_Credit",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-stress",
+      "name": "Becoming_Stressed",
+      "equation": "Healthy_Banks * Contagion_Rate * Stressed_Banks/Total_Banks",
+      "from_stock": "stock-healthy",
+      "to_stock": "stock-stressed",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fail",
+      "name": "Bank_Failures",
+      "equation": "Stressed_Banks * Failure_Rate * (1 - Government_Support)",
+      "from_stock": "stock-stressed",
+      "to_stock": "stock-failed",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recover",
+      "name": "Recovery",
+      "equation": "Stressed_Banks * Recovery_Rate * System_Credit/1000",
+      "from_stock": "stock-stressed",
+      "to_stock": "stock-healthy",
+      "position": {
+        "x": 300,
+        "y": 280
+      }
+    },
+    {
+      "id": "flow-credit-loss",
+      "name": "Credit_Contraction",
+      "equation": "Failed_Banks * Credit_Per_Bank * 0.1 + Stressed_Banks * Credit_Per_Bank * 0.02",
+      "from_stock": "stock-credit",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-contagion",
+      "name": "Contagion_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Banks",
+      "equation": "Healthy_Banks + Stressed_Banks + Failed_Banks",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-fail-rate",
+      "name": "Failure_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-govt",
+      "name": "Government_Support",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recover",
+      "name": "Recovery_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-credit-per",
+      "name": "Credit_Per_Bank",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1086/262109",
+  "reference": "Allen F, Gale D (2000) Financial Contagion. Journal of Political Economy 108(1):1-33.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:27:18.295470+00:00",
+  "updated_at": "2026-01-12T06:27:18.295470+00:00"
+}

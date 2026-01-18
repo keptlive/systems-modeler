@@ -1,0 +1,169 @@
+{
+  "id": "ai-safety-alignment-tec",
+  "name": "AI Safety and Alignment Research Dynamics",
+  "description": "Models the dynamics of AI capability progress versus safety research, including the alignment tax, race dynamics between labs, and the gap between capabilities and safety understanding. Based on AI safety literature and concerns from leading researchers.",
+  "source": "https://doi.org/10.1080/0952813X.2019.1667124",
+  "reference": "Amodei D, et al. Concrete Problems in AI Safety. arXiv:1606.06565. 2016. Bostrom N. Superintelligence: Paths, Dangers, Strategies. Oxford University Press. 2014.",
+  "stocks": [
+    {
+      "id": "stock-capability",
+      "name": "AI Capability Level",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "stock-safety-understanding",
+      "name": "Safety Understanding",
+      "initial_value": 50,
+      "equation": "",
+      "position": {"x": 100, "y": 250}
+    },
+    {
+      "id": "stock-safety-researchers",
+      "name": "Safety Researchers",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {"x": 250, "y": 250}
+    },
+    {
+      "id": "stock-capability-researchers",
+      "name": "Capability Researchers",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {"x": 250, "y": 100}
+    },
+    {
+      "id": "stock-deployed-systems",
+      "name": "Deployed AI Systems",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {"x": 400, "y": 175}
+    },
+    {
+      "id": "stock-safety-incidents",
+      "name": "Safety Incidents",
+      "initial_value": 0,
+      "equation": "",
+      "position": {"x": 550, "y": 175}
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-capability-progress",
+      "name": "Capability Progress",
+      "equation": "Capability_Researchers * Researcher_Productivity * Compute_Scaling_Factor",
+      "from_stock": null,
+      "to_stock": "stock-capability",
+      "position": {"x": 100, "y": 50}
+    },
+    {
+      "id": "flow-safety-progress",
+      "name": "Safety Progress",
+      "equation": "Safety_Researchers * Safety_Researcher_Productivity",
+      "from_stock": null,
+      "to_stock": "stock-safety-understanding",
+      "position": {"x": 100, "y": 300}
+    },
+    {
+      "id": "flow-safety-hiring",
+      "name": "Safety Hiring",
+      "equation": "Base_Safety_Hiring * (1 + Incident_Response_Factor + Regulation_Pressure)",
+      "from_stock": null,
+      "to_stock": "stock-safety-researchers",
+      "position": {"x": 250, "y": 300}
+    },
+    {
+      "id": "flow-deployment",
+      "name": "New Deployments",
+      "equation": "Deployment_Rate * AI_Capability_Level * Market_Pressure",
+      "from_stock": null,
+      "to_stock": "stock-deployed-systems",
+      "position": {"x": 400, "y": 125}
+    },
+    {
+      "id": "flow-incidents",
+      "name": "Incident Occurrence",
+      "equation": "Deployed_AI_Systems * Incident_Rate * Alignment_Gap",
+      "from_stock": null,
+      "to_stock": "stock-safety-incidents",
+      "position": {"x": 550, "y": 125}
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-researcher-productivity",
+      "name": "Researcher_Productivity",
+      "equation": "0.1",
+      "position": {"x": 175, "y": 50}
+    },
+    {
+      "id": "var-compute-scaling",
+      "name": "Compute_Scaling_Factor",
+      "equation": "1 + 0.3 * LN(1 + TIME / 12)",
+      "position": {"x": 175, "y": 100}
+    },
+    {
+      "id": "var-safety-productivity",
+      "name": "Safety_Researcher_Productivity",
+      "equation": "0.05",
+      "position": {"x": 175, "y": 300}
+    },
+    {
+      "id": "var-base-safety-hiring",
+      "name": "Base_Safety_Hiring",
+      "equation": "50",
+      "position": {"x": 325, "y": 300}
+    },
+    {
+      "id": "var-incident-response",
+      "name": "Incident_Response_Factor",
+      "equation": "Safety_Incidents / 100",
+      "position": {"x": 400, "y": 300}
+    },
+    {
+      "id": "var-regulation",
+      "name": "Regulation_Pressure",
+      "equation": "0.1 + 0.5 * (Safety_Incidents / 50)",
+      "position": {"x": 475, "y": 300}
+    },
+    {
+      "id": "var-deployment-rate",
+      "name": "Deployment_Rate",
+      "equation": "0.01",
+      "position": {"x": 400, "y": 75}
+    },
+    {
+      "id": "var-market-pressure",
+      "name": "Market_Pressure",
+      "equation": "1.5",
+      "position": {"x": 475, "y": 75}
+    },
+    {
+      "id": "var-incident-rate",
+      "name": "Incident_Rate",
+      "equation": "0.0001",
+      "position": {"x": 550, "y": 75}
+    },
+    {
+      "id": "var-alignment-gap",
+      "name": "Alignment_Gap",
+      "equation": "MAX(0, (AI_Capability_Level - Safety_Understanding) / AI_Capability_Level)",
+      "position": {"x": 325, "y": 175}
+    },
+    {
+      "id": "var-safety-ratio",
+      "name": "Safety_Research_Ratio",
+      "equation": "Safety_Researchers / (Safety_Researchers + Capability_Researchers)",
+      "position": {"x": 175, "y": 175}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T21:00:00.000000+00:00",
+  "updated_at": "2026-01-15T21:00:00.000000+00:00"
+}

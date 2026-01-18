@@ -1,0 +1,37 @@
+{
+  "id": "global-food-security-agr",
+  "name": "Global Food Security Model",
+  "description": "Models the dynamics of global food security including crop production, climate impacts, population growth, food waste, and trade dependencies. Based on FAO food security indicators and IPCC agriculture assessments.",
+  "source": "https://doi.org/10.1038/s43016-021-00315-8",
+  "reference": "FAO State of Food Security and Nutrition. 2023. IPCC AR6 WGII Chapter 5: Food Systems. Wheeler T, von Braun J. Climate Change Impacts on Global Food Security. Science. 2013.",
+  "stocks": [
+    {"id": "stock-food-production", "name": "Food Production", "initial_value": 10000, "equation": "", "position": {"x": 100, "y": 150}},
+    {"id": "stock-population", "name": "World Population", "initial_value": 8000, "equation": "", "position": {"x": 300, "y": 100}},
+    {"id": "stock-food-insecure", "name": "Food Insecure Population", "initial_value": 800, "equation": "", "position": {"x": 300, "y": 300}},
+    {"id": "stock-arable-land", "name": "Arable Land", "initial_value": 1500, "equation": "", "position": {"x": 100, "y": 300}},
+    {"id": "stock-food-reserves", "name": "Food Reserves", "initial_value": 300, "equation": "", "position": {"x": 500, "y": 150}}
+  ],
+  "flows": [
+    {"id": "flow-production", "name": "Food Production Rate", "equation": "Arable_Land * Yield * (1 - Climate_Impact)", "from_stock": null, "to_stock": "stock-food-production", "position": {"x": 100, "y": 100}},
+    {"id": "flow-consumption", "name": "Food Consumption", "equation": "World_Population * Per_Capita_Demand * (1 - Food_Waste)", "from_stock": "stock-food-production", "to_stock": null, "position": {"x": 200, "y": 150}},
+    {"id": "flow-pop-growth", "name": "Population Growth", "equation": "World_Population * Population_Growth_Rate", "from_stock": null, "to_stock": "stock-population", "position": {"x": 300, "y": 50}},
+    {"id": "flow-to-insecure", "name": "Becoming Insecure", "equation": "World_Population * Insecurity_Rate * (1 - Food_Availability)", "from_stock": null, "to_stock": "stock-food-insecure", "position": {"x": 200, "y": 300}},
+    {"id": "flow-land-loss", "name": "Land Loss", "equation": "Arable_Land * Land_Degradation_Rate", "from_stock": "stock-arable-land", "to_stock": null, "position": {"x": 100, "y": 350}},
+    {"id": "flow-reserves-change", "name": "Reserves Change", "equation": "(Food_Production - World_Population * Per_Capita_Demand) * Reserve_Allocation", "from_stock": null, "to_stock": "stock-food-reserves", "position": {"x": 400, "y": 150}}
+  ],
+  "variables": [
+    {"id": "var-yield", "name": "Yield", "equation": "5", "position": {"x": 50, "y": 100}},
+    {"id": "var-climate", "name": "Climate_Impact", "equation": "0.05 + 0.01 * TIME / 12", "position": {"x": 150, "y": 100}},
+    {"id": "var-demand", "name": "Per_Capita_Demand", "equation": "1", "position": {"x": 250, "y": 200}},
+    {"id": "var-waste", "name": "Food_Waste", "equation": "0.3", "position": {"x": 150, "y": 200}},
+    {"id": "var-pop-growth", "name": "Population_Growth_Rate", "equation": "0.01", "position": {"x": 400, "y": 50}},
+    {"id": "var-insecurity", "name": "Insecurity_Rate", "equation": "0.001", "position": {"x": 200, "y": 350}},
+    {"id": "var-availability", "name": "Food_Availability", "equation": "MIN(1, Food_Production / (World_Population * Per_Capita_Demand))", "position": {"x": 400, "y": 200}},
+    {"id": "var-degradation", "name": "Land_Degradation_Rate", "equation": "0.005", "position": {"x": 50, "y": 350}},
+    {"id": "var-reserve-alloc", "name": "Reserve_Allocation", "equation": "0.1", "position": {"x": 500, "y": 100}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 600, "dt": 1},
+  "created_at": "2026-01-15T21:00:00.000000+00:00",
+  "updated_at": "2026-01-15T21:00:00.000000+00:00"
+}

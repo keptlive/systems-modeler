@@ -1,0 +1,31 @@
+{
+  "id": "diamond-overlapping-generations-eco",
+  "name": "Diamond Overlapping Generations Model",
+  "description": "Peter Diamond's (1965) overlapping generations model where successive generations save for retirement, creating dynamic equilibrium in capital markets. Foundational for studying social security, public debt, and intergenerational transfers. Diamond received the 2010 Nobel Prize for labor market analysis.",
+  "stocks": [
+    {"id": "stock-capital-per-worker", "name": "Capital per Worker", "initial_value": 5, "equation": "", "position": {"x": 300, "y": 200}},
+    {"id": "stock-young-population", "name": "Young Population", "initial_value": 100, "equation": "", "position": {"x": 500, "y": 200}},
+    {"id": "stock-old-population", "name": "Old Population", "initial_value": 50, "equation": "", "position": {"x": 500, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-capital-change", "name": "Capital Change", "equation": "(Savings_Rate * Wage - (1 + Population_Growth) * Capital_per_Worker) / (1 + Population_Growth)", "from_stock": null, "to_stock": "stock-capital-per-worker", "position": {"x": 200, "y": 200}},
+    {"id": "flow-births", "name": "Births", "equation": "Birth_Rate * Old_Population", "from_stock": null, "to_stock": "stock-young-population", "position": {"x": 400, "y": 200}},
+    {"id": "flow-aging", "name": "Aging", "equation": "Young_Population / Lifespan_Young", "from_stock": "stock-young-population", "to_stock": "stock-old-population", "position": {"x": 500, "y": 275}},
+    {"id": "flow-deaths", "name": "Deaths", "equation": "Old_Population / Lifespan_Old", "from_stock": "stock-old-population", "to_stock": null, "position": {"x": 600, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-output-per-worker", "name": "Output per Worker", "equation": "Capital_per_Worker ^ Alpha", "position": {"x": 150, "y": 100}},
+    {"id": "var-alpha", "name": "Alpha", "equation": "0.33", "position": {"x": 300, "y": 100}},
+    {"id": "var-wage", "name": "Wage", "equation": "(1 - Alpha) * Output_per_Worker", "position": {"x": 450, "y": 100}},
+    {"id": "var-savings-rate", "name": "Savings Rate", "equation": "1 / (2 + Discount_Rate)", "position": {"x": 150, "y": 300}},
+    {"id": "var-discount-rate", "name": "Discount Rate", "equation": "0.05", "position": {"x": 300, "y": 300}},
+    {"id": "var-population-growth", "name": "Population Growth", "equation": "0.02", "position": {"x": 150, "y": 400}},
+    {"id": "var-birth-rate", "name": "Birth Rate", "equation": "0.04", "position": {"x": 300, "y": 400}},
+    {"id": "var-lifespan-young", "name": "Lifespan Young", "equation": "30", "position": {"x": 450, "y": 400}},
+    {"id": "var-lifespan-old", "name": "Lifespan Old", "equation": "20", "position": {"x": 600, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 200, "dt": 1},
+  "source": "https://doi.org/10.1257/aer.55.5.1126",
+  "reference": "Diamond PA. National Debt in a Neoclassical Growth Model. American Economic Review. 1965;55(5):1126-1150."
+}

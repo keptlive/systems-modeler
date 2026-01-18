@@ -1,0 +1,179 @@
+{
+  "id": "food-waste-reduction-env",
+  "name": "Food Waste Reduction Model",
+  "description": "Model of food waste across supply chain showing interventions and environmental impact. Reference: Based on System Dynamics supply chain models (Sterman, 2000). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Food_Production",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Food_Consumed",
+      "initial_value": 600,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Food_Waste",
+      "initial_value": 300,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Production_Flow",
+      "equation": "Production_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "f2",
+      "name": "To_Consumption",
+      "equation": "Food_Production * (1 - Supply_Chain_Loss)",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Consumer_Waste",
+      "equation": "Food_Consumed * Consumer_Waste_Rate * (1 - Awareness_Effect)",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Supply_Waste",
+      "equation": "Food_Production * Supply_Chain_Loss",
+      "from_stock": "s1",
+      "to_stock": "s3",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Waste_Diverted",
+      "equation": "Food_Waste * Diversion_Rate",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Production_Rate",
+      "equation": "100",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Supply_Chain_Loss",
+      "equation": "0.15",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Consumer_Waste_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Awareness_Effect",
+      "equation": "0.3",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Diversion_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Total_Waste_Rate",
+      "equation": "Food_Waste / Food_Production",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "GHG_Emissions",
+      "equation": "Food_Waste * 2.5",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Economic_Loss",
+      "equation": "Food_Waste * 5",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.5,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:34:23.558571+00:00",
+  "updated_at": "2026-01-12T11:34:23.558571+00:00",
+  "source": "https://doi.org/10.1016/j.resconrec.2018.11.023",
+  "reference": "FAO. Food wastage footprint: Impacts on natural resources. Food and Agriculture Organization of the United Nations. 2013."
+}

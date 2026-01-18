@@ -1,0 +1,160 @@
+{
+  "id": "covid19-superspreading-dynamics-epi",
+  "name": "COVID-19 Superspreading Events Model",
+  "description": "Model of heterogeneous transmission with superspreading events driving epidemic dynamics. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Susceptible",
+      "initial_value": 99900,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Infected_Regular",
+      "initial_value": 90,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Infected_Superspreader",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Regular_Infection",
+      "equation": "Beta_Regular * Susceptible * Infected_Regular / Total_Pop",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Super_Infection",
+      "equation": "Beta_Super * Susceptible * Infected_Superspreader / Total_Pop",
+      "from_stock": "s1",
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Regular_Recovery",
+      "equation": "Infected_Regular / Recovery_Time",
+      "from_stock": "s2",
+      "to_stock": "s4",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Super_Recovery",
+      "equation": "Infected_Superspreader / Recovery_Time",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Beta_Regular",
+      "equation": "0.2",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Beta_Super",
+      "equation": "2.0",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Recovery_Time",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Superspreader_Fraction",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Total_Pop",
+      "equation": "Susceptible + Infected_Regular + Infected_Superspreader + Recovered",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Dispersion_k",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:23:21.189756+00:00",
+  "updated_at": "2026-01-12T11:23:21.189756+00:00",
+  "source": "https://doi.org/10.12688/wellcomeopenres.15842.3",
+  "reference": "Endo A, et al. Estimating the overdispersion in COVID-19 transmission using outbreak sizes outside China. Wellcome Open Res. 2020;5:67."
+}

@@ -1,0 +1,165 @@
+{
+  "id": "pid-controller-response-phy",
+  "name": "PID Controller Response",
+  "description": "PID (Proportional-Integral-Derivative) controller model showing control system dynamics. Demonstrates how different gain settings affect system response. Source: Standard control systems engineering.",
+  "stocks": [
+    {
+      "id": "stock-process-variable",
+      "name": "Process_Variable",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-integral-error",
+      "name": "Integral_Error",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-process-change",
+      "name": "Process_Change",
+      "equation": "(Control_Signal - Process_Variable) / Process_Time_Constant + Disturbance",
+      "from_stock": null,
+      "to_stock": "stock-process-variable",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-error-accumulation",
+      "name": "Error_Accumulation",
+      "equation": "Error",
+      "from_stock": null,
+      "to_stock": "stock-integral-error",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-setpoint",
+      "name": "Setpoint",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-error",
+      "name": "Error",
+      "equation": "Setpoint - Process_Variable",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-derivative-error",
+      "name": "Derivative_Error",
+      "equation": "-Process_Change",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-kp",
+      "name": "Kp",
+      "equation": "2.0",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-ki",
+      "name": "Ki",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-kd",
+      "name": "Kd",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-control-signal",
+      "name": "Control_Signal",
+      "equation": "Kp * Error + Ki * Integral_Error + Kd * Derivative_Error",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-process-time-constant",
+      "name": "Process_Time_Constant",
+      "equation": "5",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-disturbance",
+      "name": "Disturbance",
+      "equation": "0",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Setpoint",
+      "to_element": "Error"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Process_Variable",
+      "to_element": "Error"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Error",
+      "to_element": "Control_Signal"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Control_Signal",
+      "to_element": "Process_Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T20:52:52.274770+00:00",
+  "updated_at": "2026-01-11T20:52:52.274770+00:00",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg System Dynamics Test Models"
+}

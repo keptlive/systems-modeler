@@ -1,0 +1,112 @@
+{
+  "id": "hotelling-resource-extraction-eco",
+  "name": "Hotelling Resource Extraction Model",
+  "description": "Optimal extraction path for non-renewable resources. Foundation of natural resource economics showing price growth at interest rate. Source: Hotelling (1931), JPE. DOI: 10.1086/254195",
+  "stocks": [
+    {
+      "id": "stock-res",
+      "name": "Resource_Stock",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-cum",
+      "name": "Cumulative_Extraction",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-extract",
+      "name": "Extraction_Rate",
+      "equation": "Resource_Stock * Extraction_Fraction",
+      "from_stock": "stock-res",
+      "to_stock": "stock-cum",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-efrac",
+      "name": "Extraction_Fraction",
+      "equation": "Interest_Rate",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-int",
+      "name": "Interest_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-price",
+      "name": "Resource_Price",
+      "equation": "Initial_Price * EXP(Interest_Rate * TIME)",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-initp",
+      "name": "Initial_Price",
+      "equation": "10",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-scarcity",
+      "name": "Scarcity_Rent",
+      "equation": "Resource_Price - Extraction_Cost",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-cost",
+      "name": "Extraction_Cost",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Resource_Stock",
+      "to_element": "Extraction_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:02:23.927025Z",
+  "updated_at": "2026-01-12T02:02:23.927031Z",
+  "source": "https://doi.org/10.1086/254195",
+  "reference": "Hotelling, H. (1931). The Economics of Exhaustible Resources. Journal of Political Economy."
+}

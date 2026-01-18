@@ -1,0 +1,76 @@
+{
+  "id": "teacup-cooling-cla",
+  "name": "Teacup Cooling",
+  "description": "A 'hello world' style demonstration model showing Newton's Law of Cooling. The teacup temperature decreases exponentially toward room temperature, with the rate proportional to the temperature difference. Reference: NASA GISS Surface Temperature Analysis. Source: https://data.giss.nasa.gov/gistemp/",
+  "stocks": [
+    {
+      "id": "stock-teacup-temperature",
+      "name": "Teacup Temperature",
+      "initial_value": 180,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-heat-loss-to-room",
+      "name": "Heat Loss to Room",
+      "equation": "(Teacup_Temperature - Room_Temperature) / Characteristic_Time",
+      "from_stock": "stock-teacup-temperature",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-room-temperature",
+      "name": "Room Temperature",
+      "equation": "70",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-characteristic-time",
+      "name": "Characteristic Time",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Teacup Temperature",
+      "to_element": "Heat Loss to Room"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Room Temperature",
+      "to_element": "Heat Loss to Room"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Characteristic Time",
+      "to_element": "Heat Loss to Room"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-11T20:04:50.690439Z",
+  "updated_at": "2026-01-11T20:04:50.690439Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "Classic system dynamics teaching model - Newton's Law of Cooling"
+}

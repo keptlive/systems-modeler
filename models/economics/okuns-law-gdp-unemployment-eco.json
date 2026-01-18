@@ -1,0 +1,153 @@
+{
+  "id": "okuns-law-gdp-unemployment-eco",
+  "name": "Okun's Law GDP-Unemployment Relationship",
+  "description": "Empirical relationship between unemployment and GDP growth. Source: Okun (1962). DOI: 10.2307/1558490",
+  "stocks": [
+    {
+      "id": "stock-gdp",
+      "name": "Real_GDP",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-unemp",
+      "name": "Unemployment_Rate",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-potgdp",
+      "name": "Potential_GDP",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-gdpgrow",
+      "name": "GDP_Growth",
+      "equation": "Real_GDP * (Trend_Growth + Demand_Shock)",
+      "from_stock": null,
+      "to_stock": "stock-gdp",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-unempchg",
+      "name": "Unemployment_Change",
+      "equation": "-Okun_Coefficient * GDP_Gap_Change + Labor_Force_Growth - Productivity_Growth",
+      "from_stock": null,
+      "to_stock": "stock-unemp",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-potgrow",
+      "name": "Potential_Growth",
+      "equation": "Potential_GDP * Trend_Growth",
+      "from_stock": null,
+      "to_stock": "stock-potgdp",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-trend",
+      "name": "Trend_Growth",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-demshock",
+      "name": "Demand_Shock",
+      "equation": "0.02 * SIN(TIME / 15)",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-okun",
+      "name": "Okun_Coefficient",
+      "equation": "2",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-gap",
+      "name": "Output_Gap",
+      "equation": "(Real_GDP - Potential_GDP) / Potential_GDP * 100",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-gapchg",
+      "name": "GDP_Gap_Change",
+      "equation": "GDP_Growth / Real_GDP - Potential_Growth / Potential_GDP",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-labforce",
+      "name": "Labor_Force_Growth",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-prod",
+      "name": "Productivity_Growth",
+      "equation": "0.015",
+      "position": {
+        "x": 250,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Real_GDP",
+      "to_element": "Output_Gap"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T02:23:02.238169+00:00",
+  "updated_at": "2026-01-12T02:23:02.238173+00:00",
+  "source": "https://doi.org/10.2307/1558490",
+  "reference": "Okun, A.M. (1962). Potential GNP: Its Measurement and Significance. American Statistical Association."
+}

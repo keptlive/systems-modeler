@@ -1,0 +1,205 @@
+{
+  "id": "nigeria-food-security-agriculture-agr",
+  "name": "Nigeria Agricultural Practices and Food Security Model",
+  "description": "System dynamics model comparing traditional, sustainable, and industrial agriculture impacts on food security in Nigeria 2000-2022. Shows productivity alone insufficient without sustainable practices and climate adaptation. Reference: Ogunniyi, A.I., et al. (2025). A system dynamics analysis of agricultural practices and food security in Nigeria. Journal of Health, Population and Nutrition, 44, 51. Source: https://doi.org/10.1186/s41043-025-01037-4",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Arable Land",
+      "initial_value": 34,
+      "equation": "",
+      "position": {"x": 100, "y": 150}
+    },
+    {
+      "id": "s2",
+      "name": "Crop Yield Index",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 300, "y": 150}
+    },
+    {
+      "id": "s3",
+      "name": "Food Production",
+      "initial_value": 150,
+      "equation": "",
+      "position": {"x": 500, "y": 150}
+    },
+    {
+      "id": "s4",
+      "name": "Food Security Index",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {"x": 400, "y": 300}
+    },
+    {
+      "id": "s5",
+      "name": "Population",
+      "initial_value": 200,
+      "equation": "",
+      "position": {"x": 200, "y": 300}
+    },
+    {
+      "id": "s6",
+      "name": "Land Degradation",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {"x": 100, "y": 400}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Land Conversion",
+      "equation": "Conversion_Rate * (Agricultural_Land_Target - Arable_Land) * (1 - Land_Degradation)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {"x": 50, "y": 150}
+    },
+    {
+      "id": "f2",
+      "name": "Land Loss",
+      "equation": "Arable_Land * Land_Degradation * Degradation_Impact",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {"x": 150, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Yield Improvement",
+      "equation": "Technology_Investment * (1 + Sustainable_Practice_Effect) - Climate_Impact",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {"x": 300, "y": 100}
+    },
+    {
+      "id": "f4",
+      "name": "Production Change",
+      "equation": "Arable_Land * Crop_Yield_Index * 0.01 - Food_Production * Spoilage_Rate",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {"x": 500, "y": 100}
+    },
+    {
+      "id": "f5",
+      "name": "Food Security Change",
+      "equation": "(Food_Per_Capita - Target_Per_Capita) / Target_Per_Capita * Adjustment_Speed",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {"x": 400, "y": 350}
+    },
+    {
+      "id": "f6",
+      "name": "Population Growth",
+      "equation": "Population * Population_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {"x": 200, "y": 350}
+    },
+    {
+      "id": "f7",
+      "name": "Degradation Accumulation",
+      "equation": "Traditional_Agriculture_Share * Degradation_Rate - Restoration_Effort",
+      "from_stock": null,
+      "to_stock": "s6",
+      "position": {"x": 100, "y": 450}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Conversion Rate",
+      "equation": "0.02",
+      "position": {"x": 50, "y": 100}
+    },
+    {
+      "id": "v2",
+      "name": "Agricultural Land Target",
+      "equation": "40",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "v3",
+      "name": "Degradation Impact",
+      "equation": "0.01",
+      "position": {"x": 150, "y": 250}
+    },
+    {
+      "id": "v4",
+      "name": "Technology Investment",
+      "equation": "0.5",
+      "position": {"x": 250, "y": 50}
+    },
+    {
+      "id": "v5",
+      "name": "Sustainable Practice Effect",
+      "equation": "Sustainable_Agriculture_Share * 0.5",
+      "position": {"x": 350, "y": 50}
+    },
+    {
+      "id": "v6",
+      "name": "Climate Impact",
+      "equation": "0.3 + 0.01 * TIME",
+      "position": {"x": 400, "y": 50}
+    },
+    {
+      "id": "v7",
+      "name": "Spoilage Rate",
+      "equation": "0.02",
+      "position": {"x": 550, "y": 50}
+    },
+    {
+      "id": "v8",
+      "name": "Food Per Capita",
+      "equation": "Food_Production / Population",
+      "position": {"x": 350, "y": 250}
+    },
+    {
+      "id": "v9",
+      "name": "Target Per Capita",
+      "equation": "0.8",
+      "position": {"x": 450, "y": 250}
+    },
+    {
+      "id": "v10",
+      "name": "Adjustment Speed",
+      "equation": "0.1",
+      "position": {"x": 500, "y": 350}
+    },
+    {
+      "id": "v11",
+      "name": "Population Growth Rate",
+      "equation": "0.026",
+      "position": {"x": 250, "y": 400}
+    },
+    {
+      "id": "v12",
+      "name": "Traditional Agriculture Share",
+      "equation": "0.6",
+      "position": {"x": 50, "y": 350}
+    },
+    {
+      "id": "v13",
+      "name": "Sustainable Agriculture Share",
+      "equation": "0.15",
+      "position": {"x": 50, "y": 450}
+    },
+    {
+      "id": "v14",
+      "name": "Degradation Rate",
+      "equation": "0.005",
+      "position": {"x": 150, "y": 500}
+    },
+    {
+      "id": "v15",
+      "name": "Restoration Effort",
+      "equation": "Land_Degradation * Sustainable_Agriculture_Share * 0.1",
+      "position": {"x": 200, "y": 450}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 50, "dt": 1},
+  "created_at": "2026-01-15T16:00:00.000000",
+  "updated_at": "2026-01-15T16:00:00.000000",
+  "source": "https://doi.org/10.1186/s41043-025-01037-4",
+  "reference": "Ogunniyi, A.I., et al. (2025). A system dynamics analysis of agricultural practices and food security in Nigeria. Journal of Health, Population and Nutrition, 44, 51."
+}

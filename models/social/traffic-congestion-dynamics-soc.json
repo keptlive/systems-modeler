@@ -1,0 +1,196 @@
+{
+  "id": "traffic-congestion-dynamics-soc",
+  "name": "Traffic Congestion Dynamics Model",
+  "description": "Model of urban traffic congestion showing induced demand and the futility of capacity expansion alone. Based on Downs (1962) 'Triple Convergence' and Duranton & Turner (2011) induced demand research. Reference: Cachon, G., & Terwiesch, C. (2012). Matching Supply with Demand. McGraw-Hill. Source: https://www.mheducation.com/",
+  "stocks": [
+    {
+      "id": "stock-road-capacity",
+      "name": "Road Capacity",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-traffic-volume",
+      "name": "Traffic Volume",
+      "initial_value": 800,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-latent-demand",
+      "name": "Latent Demand",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-capacity-expansion",
+      "name": "Capacity Expansion",
+      "equation": "IF Congestion_Level > Expansion_Trigger THEN Expansion_Rate ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-road-capacity",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-capacity-deterioration",
+      "name": "Capacity Deterioration",
+      "equation": "Road_Capacity * Deterioration_Rate",
+      "from_stock": "stock-road-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-induced-demand",
+      "name": "Induced Demand",
+      "equation": "Latent_Demand * Induced_Demand_Rate * (1 - Congestion_Level)",
+      "from_stock": "stock-latent-demand",
+      "to_stock": "stock-traffic-volume",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-demand-growth",
+      "name": "Latent Demand Growth",
+      "equation": "Population_Growth_Rate * Base_Latent_Demand + Development_Effect",
+      "from_stock": null,
+      "to_stock": "stock-latent-demand",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mode-shift",
+      "name": "Mode Shift Away",
+      "equation": "Traffic_Volume * Mode_Shift_Rate * Congestion_Level",
+      "from_stock": "stock-traffic-volume",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-congestion-level",
+      "name": "Congestion Level",
+      "equation": "Traffic_Volume / Road_Capacity",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-travel-time-ratio",
+      "name": "Travel Time Ratio",
+      "equation": "1 + 0.15 * (Congestion_Level ^ 4)",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-expansion-trigger",
+      "name": "Expansion Trigger",
+      "equation": "0.9",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-expansion-rate",
+      "name": "Expansion Rate",
+      "equation": "50",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-deterioration-rate",
+      "name": "Deterioration Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-induced-demand-rate",
+      "name": "Induced Demand Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-population-growth-rate",
+      "name": "Population Growth Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-base-latent-demand",
+      "name": "Base Latent Demand",
+      "equation": "500",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-development-effect",
+      "name": "Development Effect",
+      "equation": "10",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-mode-shift-rate",
+      "name": "Mode Shift Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:20:15.296007+00:00",
+  "updated_at": "2026-01-11T21:20:15.296007+00:00",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

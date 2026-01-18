@@ -1,0 +1,153 @@
+{
+  "id": "npz-ocean-ecosystem-eco",
+  "name": "NPZ Ocean Ecosystem Model",
+  "description": "Nutrient-Phytoplankton-Zooplankton model for marine ecosystem dynamics. Source: Franks (2002), J Marine Research.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Nutrient",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Phytoplankton",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Zooplankton",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Nutrient_Uptake",
+      "equation": "-Vm * Nutrient * Phytoplankton / (Ks + Nutrient) + m_P * Phytoplankton + m_Z * Zooplankton",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Phyto_Growth",
+      "equation": "Vm * Nutrient * Phytoplankton / (Ks + Nutrient) - G * Zooplankton * Phytoplankton / (Kg + Phytoplankton) - m_P * Phytoplankton",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Zoo_Growth",
+      "equation": "gamma * G * Zooplankton * Phytoplankton / (Kg + Phytoplankton) - m_Z * Zooplankton",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Vm",
+      "equation": "2.0",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Ks",
+      "equation": "1.0",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "G",
+      "equation": "0.6",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Kg",
+      "equation": "1.0",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "gamma",
+      "equation": "0.3",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "m_P",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "m_Z",
+      "equation": "0.2",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Nutrient",
+      "to_element": "Nutrient_Uptake"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:38:02.261947+00:00",
+  "updated_at": "2026-01-15T14:38:02.261951+00:00",
+  "source": "https://doi.org/10.1357/002224002762231292",
+  "reference": "Franks, P.J.S. (2002). NPZ models of plankton dynamics: Their construction, coupling to physics, and application. J Marine Research 60:605-626."
+}

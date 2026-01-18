@@ -1,0 +1,238 @@
+{
+  "id": "mental-health-crisis-dynamics-hea",
+  "name": "Mental Health Crisis Dynamics Model",
+  "description": "Models mental health service demand and treatment capacity. Based on Patel et al. (2018) Lancet Commission on global mental health. Reference: WHO (2022). Mental Health Action Plan. Source: https://www.who.int/publications/i/item/9789241506021",
+  "stocks": [
+    {
+      "id": "stock-untreated",
+      "name": "Untreated_Population",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-in-treatment",
+      "name": "In_Treatment",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-relapsed",
+      "name": "Relapsed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-treatment-capacity",
+      "name": "Treatment_Capacity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-onset",
+      "name": "Illness_Onset",
+      "equation": "Population * Incidence_Rate * Stress_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-untreated",
+      "position": {
+        "x": 75,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-treatment-entry",
+      "name": "Treatment_Entry",
+      "equation": "MIN(Untreated_Population * Treatment_Seeking_Rate, Treatment_Capacity - In_Treatment)",
+      "from_stock": "stock-untreated",
+      "to_stock": "stock-in-treatment",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Treatment_Recovery",
+      "equation": "In_Treatment * Recovery_Rate",
+      "from_stock": "stock-in-treatment",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-relapse",
+      "name": "Relapse",
+      "equation": "Recovered * Relapse_Rate",
+      "from_stock": "stock-recovered",
+      "to_stock": "stock-relapsed",
+      "position": {
+        "x": 450,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-relapse-treatment",
+      "name": "Relapse_Treatment",
+      "equation": "Relapsed * Treatment_Seeking_Rate * 1.5",
+      "from_stock": "stock-relapsed",
+      "to_stock": "stock-in-treatment",
+      "position": {
+        "x": 350,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-capacity-expansion",
+      "name": "Capacity_Expansion",
+      "equation": "Investment_Rate * Capacity_Response",
+      "from_stock": null,
+      "to_stock": "stock-treatment-capacity",
+      "position": {
+        "x": 150,
+        "y": 450
+      }
+    },
+    {
+      "id": "flow-capacity-retirement",
+      "name": "Capacity_Retirement",
+      "equation": "Treatment_Capacity * Retirement_Rate",
+      "from_stock": "stock-treatment-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-population",
+      "name": "Population",
+      "equation": "1000000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-incidence-rate",
+      "name": "Incidence_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-stress-multiplier",
+      "name": "Stress_Multiplier",
+      "equation": "1 + 0.3 * SIN(TIME * 0.2)",
+      "position": {
+        "x": 340,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-treatment-seeking-rate",
+      "name": "Treatment_Seeking_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-recovery-rate",
+      "name": "Recovery_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-relapse-rate",
+      "name": "Relapse_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-investment-rate",
+      "name": "Investment_Rate",
+      "equation": "100",
+      "position": {
+        "x": 220,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-capacity-response",
+      "name": "Capacity_Response",
+      "equation": "0.1",
+      "position": {
+        "x": 340,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-retirement-rate",
+      "name": "Retirement_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 460,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-treatment-gap",
+      "name": "Treatment_Gap",
+      "equation": "Untreated_Population / (Untreated_Population + In_Treatment + 1)",
+      "position": {
+        "x": 580,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:12:15.902376+00:00",
+  "updated_at": "2026-01-12T01:12:15.902386+00:00",
+  "source": "https://doi.org/10.1016/S0140-6736(18)31612-X",
+  "reference": "Patel V, et al. The Lancet Commission on global mental health and sustainable development. Lancet. 2018;392(10157):1553-1598."
+}

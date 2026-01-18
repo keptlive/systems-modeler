@@ -1,0 +1,228 @@
+{
+  "id": "water-resources-management-cli",
+  "name": "Water Resources Management Model",
+  "description": "Models water supply, demand, and reservoir management. Based on Gleick (2018) analysis of water challenges. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-reservoir",
+      "name": "Reservoir_Storage",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-groundwater",
+      "name": "Groundwater_Aquifer",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-demand",
+      "name": "Water_Demand",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-shortage",
+      "name": "Cumulative_Shortage",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-precipitation",
+      "name": "Precipitation_Inflow",
+      "equation": "Catchment_Area * Precipitation_Rate * Runoff_Coefficient",
+      "from_stock": null,
+      "to_stock": "stock-reservoir",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-surface-withdrawal",
+      "name": "Surface_Withdrawal",
+      "equation": "MIN(Reservoir_Storage / DT, Surface_Allocation)",
+      "from_stock": "stock-reservoir",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-evaporation",
+      "name": "Evaporation_Loss",
+      "equation": "Reservoir_Storage * Evaporation_Rate * Temperature_Factor",
+      "from_stock": "stock-reservoir",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "flow-recharge",
+      "name": "Groundwater_Recharge",
+      "equation": "Precipitation_Rate * Catchment_Area * Infiltration_Rate",
+      "from_stock": null,
+      "to_stock": "stock-groundwater",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-groundwater-pumping",
+      "name": "Groundwater_Pumping",
+      "equation": "MIN(Groundwater_Aquifer / DT, Groundwater_Allocation)",
+      "from_stock": "stock-groundwater",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-demand-growth",
+      "name": "Demand_Growth",
+      "equation": "Water_Demand * (Population_Growth_Rate + Economic_Growth_Effect)",
+      "from_stock": null,
+      "to_stock": "stock-demand",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-shortage-calc",
+      "name": "Shortage_Accumulation",
+      "equation": "MAX(0, Water_Demand - Surface_Withdrawal - Groundwater_Pumping)",
+      "from_stock": null,
+      "to_stock": "stock-shortage",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-catchment-area",
+      "name": "Catchment_Area",
+      "equation": "1000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-precipitation-rate",
+      "name": "Precipitation_Rate",
+      "equation": "0.8 * (1 + 0.5 * SIN(TIME * 0.5))",
+      "position": {
+        "x": 260,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-runoff-coefficient",
+      "name": "Runoff_Coefficient",
+      "equation": "0.3",
+      "position": {
+        "x": 440,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-evaporation-rate",
+      "name": "Evaporation_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-temperature-factor",
+      "name": "Temperature_Factor",
+      "equation": "1 + 0.02 * TIME",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-infiltration-rate",
+      "name": "Infiltration_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 260,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-surface-allocation",
+      "name": "Surface_Allocation",
+      "equation": "Water_Demand * 0.6",
+      "position": {
+        "x": 420,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-groundwater-allocation",
+      "name": "Groundwater_Allocation",
+      "equation": "Water_Demand * 0.4",
+      "position": {
+        "x": 580,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-population-growth-rate",
+      "name": "Population_Growth_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-economic-growth-effect",
+      "name": "Economic_Growth_Effect",
+      "equation": "0.02",
+      "position": {
+        "x": 280,
+        "y": 440
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T01:22:14.811191+00:00",
+  "updated_at": "2026-01-12T01:22:14.811267+00:00",
+  "source": "https://doi.org/10.1146/annurev-environ-102017-025703",
+  "reference": "Gleick PH. Transitions to Freshwater Sustainability. PNAS. 2018;115(36):8863-8871."
+}

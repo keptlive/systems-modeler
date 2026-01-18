@@ -1,0 +1,142 @@
+{
+  "id": "superspreading-dispersion-k-epi",
+  "name": "Superspreading Dispersion Model",
+  "description": "Model of heterogeneous transmission showing overdispersion parameter k. Source: Lloyd-Smith et al. (2005), Nature.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Susceptible",
+      "initial_value": 9990,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Infected",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Transmission",
+      "equation": "Beta_effective * Susceptible * Infected / Total_Pop",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 225,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Recovery",
+      "equation": "Infected / Infectious_Period",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 375,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "R0",
+      "equation": "2.5",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "k_dispersion",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Infectious_Period",
+      "equation": "5",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Beta_base",
+      "equation": "R0 / Infectious_Period",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Superspreader_Fraction",
+      "equation": "1 / (1 + k_dispersion)",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Beta_effective",
+      "equation": "Beta_base * (1 + Superspreader_Fraction * 5)",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Total_Pop",
+      "equation": "Susceptible + Infected + Recovered",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "k_dispersion",
+      "to_element": "Superspreader_Fraction"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-15T14:39:40.986684+00:00",
+  "updated_at": "2026-01-15T14:39:40.986690+00:00",
+  "source": "https://doi.org/10.1038/nature04153",
+  "reference": "Lloyd-Smith, J.O. et al. (2005). Superspreading and the effect of individual variation on disease emergence. Nature 438:355-359."
+}

@@ -1,0 +1,209 @@
+{
+  "id": "infrastructure-water-system-aging-man",
+  "name": "Water Infrastructure Aging and Investment",
+  "description": "Models the aging of water infrastructure, failure rates, and investment needs. Based on ASCE Infrastructure Report Card and EPA data. Reference: ASCE (2021). Infrastructure Report Card. American Society of Civil Engineers. Source: https://infrastructurereportcard.org/",
+  "category": "management",
+  "stocks": [
+    {
+      "id": "stock-good",
+      "name": "Good_Condition_Miles",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fair",
+      "name": "Fair_Condition_Miles",
+      "initial_value": 300000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-poor",
+      "name": "Poor_Condition_Miles",
+      "initial_value": 200000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-failed",
+      "name": "Failed_Miles",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-degrade-gf",
+      "name": "Degradation_Good_Fair",
+      "equation": "Good_Condition_Miles / Good_To_Fair_Time",
+      "from_stock": "stock-good",
+      "to_stock": "stock-fair",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-degrade-fp",
+      "name": "Degradation_Fair_Poor",
+      "equation": "Fair_Condition_Miles / Fair_To_Poor_Time",
+      "from_stock": "stock-fair",
+      "to_stock": "stock-poor",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-failure",
+      "name": "Failure",
+      "equation": "Poor_Condition_Miles * Failure_Rate",
+      "from_stock": "stock-poor",
+      "to_stock": "stock-failed",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-rehab-p",
+      "name": "Rehabilitation_Poor",
+      "equation": "MIN(Poor_Condition_Miles, Rehab_Investment / Rehab_Cost_Per_Mile)",
+      "from_stock": "stock-poor",
+      "to_stock": "stock-good",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-replace",
+      "name": "Replacement",
+      "equation": "MIN(Failed_Miles, Replace_Investment / Replace_Cost_Per_Mile)",
+      "from_stock": "stock-failed",
+      "to_stock": "stock-good",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-new",
+      "name": "New_Construction",
+      "equation": "New_Investment / New_Cost_Per_Mile",
+      "from_stock": null,
+      "to_stock": "stock-good",
+      "position": {
+        "x": 25,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-g2f",
+      "name": "Good_To_Fair_Time",
+      "equation": "30",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-f2p",
+      "name": "Fair_To_Poor_Time",
+      "equation": "20",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-failure",
+      "name": "Failure_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-rehab-inv",
+      "name": "Rehab_Investment",
+      "equation": "5e9",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-replace-inv",
+      "name": "Replace_Investment",
+      "equation": "2e9",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-new-inv",
+      "name": "New_Investment",
+      "equation": "1e9",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-rehab-cost",
+      "name": "Rehab_Cost_Per_Mile",
+      "equation": "500000",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-replace-cost",
+      "name": "Replace_Cost_Per_Mile",
+      "equation": "1000000",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-new-cost",
+      "name": "New_Cost_Per_Mile",
+      "equation": "1200000",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2050,
+    "dt": 1
+  },
+  "source": "https://infrastructurereportcard.org/",
+  "reference": "ASCE (2021) Infrastructure Report Card. American Society of Civil Engineers.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:15:34.759596+00:00",
+  "updated_at": "2026-01-12T06:15:34.759596+00:00"
+}

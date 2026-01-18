@@ -1,0 +1,194 @@
+{
+  "id": "urban-gentrification-dynamics-soc",
+  "name": "Urban Gentrification Dynamics",
+  "description": "Models neighborhood change through income displacement. Source: Lees et al. (2008), Gentrification. DOI: 10.4324/9781315752532",
+  "stocks": [
+    {
+      "id": "stock-lowinc",
+      "name": "Low_Income_Residents",
+      "initial_value": 8000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-highinc",
+      "name": "High_Income_Residents",
+      "initial_value": 2000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-rent",
+      "name": "Average_Rent",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    },
+    {
+      "id": "stock-amenity",
+      "name": "Neighborhood_Amenities",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-lowout",
+      "name": "Low_Income_Displacement",
+      "equation": "Low_Income_Residents * Displacement_Rate * (Average_Rent / Affordable_Rent)",
+      "from_stock": "stock-lowinc",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-lowin",
+      "name": "Low_Income_Arrival",
+      "equation": "IF(Average_Rent < Affordable_Rent, Low_Income_Inflow, 0)",
+      "from_stock": null,
+      "to_stock": "stock-lowinc",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-highin",
+      "name": "High_Income_Arrival",
+      "equation": "High_Income_Inflow * Neighborhood_Amenities / 100 * Trendiness",
+      "from_stock": null,
+      "to_stock": "stock-highinc",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-rentchg",
+      "name": "Rent_Change",
+      "equation": "(High_Income_Residents * Rent_Premium / 1000 + Neighborhood_Amenities * 10 - Average_Rent + 1000) * Rent_Adjustment",
+      "from_stock": null,
+      "to_stock": "stock-rent",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-amenitychg",
+      "name": "Amenity_Change",
+      "equation": "(High_Income_Residents / 100 - (10000 - Low_Income_Residents - High_Income_Residents) * 0.01 - Neighborhood_Amenities + 30) * 0.05",
+      "from_stock": null,
+      "to_stock": "stock-amenity",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-disprate",
+      "name": "Displacement_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-afford",
+      "name": "Affordable_Rent",
+      "equation": "1200",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-lowin",
+      "name": "Low_Income_Inflow",
+      "equation": "100",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-highin",
+      "name": "High_Income_Inflow",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-trendy",
+      "name": "Trendiness",
+      "equation": "1 + High_Income_Residents / 5000",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-premium",
+      "name": "Rent_Premium",
+      "equation": "1.5",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-rentadj",
+      "name": "Rent_Adjustment",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-gentrify",
+      "name": "Gentrification_Index",
+      "equation": "High_Income_Residents / (Low_Income_Residents + High_Income_Residents) * 100",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Average_Rent",
+      "to_element": "Low_Income_Displacement"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:17:16.214083+00:00",
+  "updated_at": "2026-01-12T02:17:16.214086+00:00",
+  "source": "https://doi.org/10.4324/9781315752532",
+  "reference": "Lees, L. et al. (2008). Gentrification. Routledge."
+}

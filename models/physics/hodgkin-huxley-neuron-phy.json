@@ -1,0 +1,279 @@
+{
+  "id": "hodgkin-huxley-neuron-phy",
+  "name": "Hodgkin-Huxley Neuron Model",
+  "description": "Nobel Prize-winning model of action potential generation in neurons showing voltage-gated ion channels and membrane dynamics. Hodgkin & Huxley (1952). Reference: Hodgkin, A. L., & Huxley, A. F. (1952). A quantitative description of membrane current. Journal of Physiology, 117(4), 500-544. DOI: https://doi.org/10.1113/jphysiol.1952.sp004764",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Membrane Voltage",
+      "initial_value": -65,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "n Gate",
+      "initial_value": 0.317,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "s3",
+      "name": "m Gate",
+      "initial_value": 0.053,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "s4",
+      "name": "h Gate",
+      "initial_value": 0.596,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Voltage Change",
+      "equation": "(I_ext - I_Na - I_K - I_L) / C_m",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "n Rate",
+      "equation": "alpha_n * (1 - n_Gate) - beta_n * n_Gate",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "m Rate",
+      "equation": "alpha_m * (1 - m_Gate) - beta_m * m_Gate",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "h Rate",
+      "equation": "alpha_h * (1 - h_Gate) - beta_h * h_Gate",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "I ext",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "C m",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "g Na",
+      "equation": "120",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "g K",
+      "equation": "36",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "g L",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "E Na",
+      "equation": "50",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "v7",
+      "name": "E K",
+      "equation": "-77",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "v8",
+      "name": "E L",
+      "equation": "-54.4",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "v9",
+      "name": "I Na",
+      "equation": "g_Na * m_Gate**3 * h_Gate * (Membrane_Voltage - E_Na)",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "v10",
+      "name": "I K",
+      "equation": "g_K * n_Gate**4 * (Membrane_Voltage - E_K)",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "v11",
+      "name": "I L",
+      "equation": "g_L * (Membrane_Voltage - E_L)",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "v12",
+      "name": "alpha n",
+      "equation": "0.01 * (Membrane_Voltage + 55) / (1 - EXP(-(Membrane_Voltage + 55) / 10))",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "v13",
+      "name": "beta n",
+      "equation": "0.125 * EXP(-(Membrane_Voltage + 65) / 80)",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "v14",
+      "name": "alpha m",
+      "equation": "0.1 * (Membrane_Voltage + 40) / (1 - EXP(-(Membrane_Voltage + 40) / 10))",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v15",
+      "name": "beta m",
+      "equation": "4 * EXP(-(Membrane_Voltage + 65) / 18)",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "v16",
+      "name": "alpha h",
+      "equation": "0.07 * EXP(-(Membrane_Voltage + 65) / 20)",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    },
+    {
+      "id": "v17",
+      "name": "beta h",
+      "equation": "1 / (1 + EXP(-(Membrane_Voltage + 35) / 10))",
+      "position": {
+        "x": 600,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Membrane Voltage",
+      "to_element": "I Na"
+    },
+    {
+      "id": "c2",
+      "from_element": "m Gate",
+      "to_element": "I Na"
+    },
+    {
+      "id": "c3",
+      "from_element": "h Gate",
+      "to_element": "I Na"
+    },
+    {
+      "id": "c4",
+      "from_element": "n Gate",
+      "to_element": "I K"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-12T01:53:04.261241+00:00",
+  "updated_at": "2026-01-12T01:53:04.261297+00:00",
+  "source": "https://doi.org/10.1113/jphysiol.1952.sp004764",
+  "reference": "Hodgkin AL, Huxley AF. A quantitative description of membrane current and its application to conduction and excitation in nerve. J Physiol. 1952;117(4):500-544. Nobel Prize 1963."
+}

@@ -1,0 +1,203 @@
+{
+  "id": "renewable-energy-transition-cli",
+  "name": "Renewable Energy Transition Model",
+  "description": "A model of the transition from fossil fuels to renewable energy. Based on energy transition research and IPCC scenarios for decarbonization pathways. Reference: IPCC (2021). Climate Change 2021: The Physical Science Basis. Cambridge University Press. Source: https://www.ipcc.ch/",
+  "source": "https://doi.org/10.1038/s41560-019-0509-8",
+  "reference": "IPCC Special Report on Global Warming of 1.5C. Chapter 2: Mitigation Pathways. 2018.",
+  "stocks": [
+    {
+      "id": "stock-fossil",
+      "name": "Fossil Capacity",
+      "initial_value": 800,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-renewable",
+      "name": "Renewable Capacity",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cumulative-emissions",
+      "name": "Cumulative Emissions",
+      "initial_value": 2000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-fossil-retirement",
+      "name": "Fossil Retirement",
+      "equation": "Fossil_Capacity / Fossil_Lifetime + Accelerated_Retirement",
+      "from_stock": "stock-fossil",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fossil-new",
+      "name": "New Fossil",
+      "equation": "MAX(0, Fossil_Investment) * (1 - Policy_Restriction)",
+      "from_stock": null,
+      "to_stock": "stock-fossil",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-renewable-new",
+      "name": "New Renewable",
+      "equation": "Renewable_Investment * Learning_Effect",
+      "from_stock": null,
+      "to_stock": "stock-renewable",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-emissions",
+      "name": "Annual Emissions",
+      "equation": "Fossil_Capacity * Emission_Factor",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-emissions",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-demand",
+      "name": "Total Demand",
+      "equation": "1000 * (1 + Demand_Growth * TIME)",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-fossil-investment",
+      "name": "Fossil Investment",
+      "equation": "(Total_Demand - Fossil_Capacity - Renewable_Capacity) * Fossil_Share",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-renewable-investment",
+      "name": "Renewable Investment",
+      "equation": "(Total_Demand - Fossil_Capacity - Renewable_Capacity) * (1 - Fossil_Share) + Policy_Support",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-learning",
+      "name": "Learning Effect",
+      "equation": "1 + 0.2 * LOG(1 + Renewable_Capacity / 100, 2)",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-fossil-lifetime",
+      "name": "Fossil Lifetime",
+      "equation": "40",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-accelerated",
+      "name": "Accelerated Retirement",
+      "equation": "Fossil_Capacity * Carbon_Price_Effect",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-policy-restriction",
+      "name": "Policy Restriction",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-policy-support",
+      "name": "Policy Support",
+      "equation": "20",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-fossil-share",
+      "name": "Fossil Share",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-carbon-price",
+      "name": "Carbon Price Effect",
+      "equation": "0.01",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-emission-factor",
+      "name": "Emission Factor",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-demand-growth",
+      "name": "Demand Growth",
+      "equation": "0.02",
+      "position": {
+        "x": 650,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 80,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T21:45:15.064356+00:00",
+  "updated_at": "2026-01-11T21:45:15.064356+00:00"
+}

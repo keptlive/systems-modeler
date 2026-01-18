@@ -1,0 +1,441 @@
+{
+  "id": "urban-air-quality-model-cli",
+  "name": "Urban Air Quality Dynamics Model",
+  "description": "A system dynamics model of urban air pollution based on the EPA AERMOD dispersion model concepts and Zhang et al. (2012) 'System dynamics modeling of urban air quality management' (doi:10.1016/j.envsoft.2012.01.011). Models emission sources, atmospheric dispersion, and health impacts. Reference: WHO (2021). Air Quality Guidelines. Source: https://www.who.int/publications/i/item/9789240034228",
+  "stocks": [
+    {
+      "id": "stock-pm25-concentration",
+      "name": "PM2.5 Concentration",
+      "initial_value": 35,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-nox-concentration",
+      "name": "NOx Concentration",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-ozone-concentration",
+      "name": "Ozone Concentration",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-vehicle-fleet",
+      "name": "Vehicle Fleet",
+      "initial_value": 2000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-industrial-output",
+      "name": "Industrial Output",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-respiratory-cases",
+      "name": "Respiratory Health Cases",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-pm25-emissions",
+      "name": "PM2.5 Emissions",
+      "equation": "Vehicle_Emissions_PM25 + Industrial_Emissions_PM25 + Background_PM25",
+      "from_stock": null,
+      "to_stock": "stock-pm25-concentration",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-pm25-dispersion",
+      "name": "PM2.5 Dispersion",
+      "equation": "PM2_5_Concentration * Dispersion_Rate * Wind_Speed_Factor",
+      "from_stock": "stock-pm25-concentration",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-nox-emissions",
+      "name": "NOx Emissions",
+      "equation": "Vehicle_Emissions_NOx + Industrial_Emissions_NOx",
+      "from_stock": null,
+      "to_stock": "stock-nox-concentration",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-nox-dispersion",
+      "name": "NOx Dispersion",
+      "equation": "NOx_Concentration * Dispersion_Rate * Wind_Speed_Factor",
+      "from_stock": "stock-nox-concentration",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-ozone-formation",
+      "name": "Ozone Formation",
+      "equation": "NOx_Concentration * VOC_Level * Solar_Radiation * Ozone_Formation_Rate",
+      "from_stock": null,
+      "to_stock": "stock-ozone-concentration",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-ozone-decay",
+      "name": "Ozone Decay",
+      "equation": "Ozone_Concentration * Ozone_Decay_Rate",
+      "from_stock": "stock-ozone-concentration",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-health-impact",
+      "name": "Health Impact",
+      "equation": "Population * (PM2_5_Concentration / 100 + Ozone_Concentration / 150) * Health_Sensitivity",
+      "from_stock": null,
+      "to_stock": "stock-respiratory-cases",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-health-recovery",
+      "name": "Health Recovery",
+      "equation": "Respiratory_Health_Cases * Recovery_Rate",
+      "from_stock": "stock-respiratory-cases",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-fleet-growth",
+      "name": "Fleet Growth",
+      "equation": "Vehicle_Fleet * Fleet_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-vehicle-fleet",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-industrial-growth",
+      "name": "Industrial Growth",
+      "equation": "Industrial_Output * Industrial_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-industrial-output",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-vehicle-emissions-pm25",
+      "name": "Vehicle Emissions PM25",
+      "equation": "Vehicle_Fleet * Emission_Factor_PM25 * (1 - EV_Fraction)",
+      "position": {
+        "x": 150,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-vehicle-emissions-nox",
+      "name": "Vehicle Emissions NOx",
+      "equation": "Vehicle_Fleet * Emission_Factor_NOx * (1 - EV_Fraction)",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-industrial-emissions-pm25",
+      "name": "Industrial Emissions PM25",
+      "equation": "Industrial_Output * Industrial_Emission_Factor * (1 - Scrubber_Efficiency)",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-industrial-emissions-nox",
+      "name": "Industrial Emissions NOx",
+      "equation": "Industrial_Output * 0.5 * (1 - Scrubber_Efficiency)",
+      "position": {
+        "x": 250,
+        "y": 370
+      }
+    },
+    {
+      "id": "var-emission-factor-pm25",
+      "name": "Emission Factor PM25",
+      "equation": "0.00001",
+      "position": {
+        "x": 50,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-emission-factor-nox",
+      "name": "Emission Factor NOx",
+      "equation": "0.00002",
+      "position": {
+        "x": 50,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-ev-fraction",
+      "name": "EV Fraction",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 220
+      }
+    },
+    {
+      "id": "var-industrial-emission-factor",
+      "name": "Industrial Emission Factor",
+      "equation": "0.02",
+      "position": {
+        "x": 50,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-scrubber-efficiency",
+      "name": "Scrubber Efficiency",
+      "equation": "0.7",
+      "position": {
+        "x": 50,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-dispersion-rate",
+      "name": "Dispersion Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-wind-speed-factor",
+      "name": "Wind Speed Factor",
+      "equation": "1.2",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-background-pm25",
+      "name": "Background PM25",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-voc-level",
+      "name": "VOC Level",
+      "equation": "0.8",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-solar-radiation",
+      "name": "Solar Radiation",
+      "equation": "0.7",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-ozone-formation-rate",
+      "name": "Ozone Formation Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-ozone-decay-rate",
+      "name": "Ozone Decay Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-population",
+      "name": "Population",
+      "equation": "5000000",
+      "position": {
+        "x": 600,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-health-sensitivity",
+      "name": "Health Sensitivity",
+      "equation": "0.0001",
+      "position": {
+        "x": 650,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-recovery-rate",
+      "name": "Recovery Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 650,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-fleet-growth-rate",
+      "name": "Fleet Growth Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-industrial-growth-rate",
+      "name": "Industrial Growth Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 50,
+        "y": 370
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Vehicle Fleet",
+      "to_element": "Vehicle Emissions PM25"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "EV Fraction",
+      "to_element": "Vehicle Emissions PM25"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Industrial Output",
+      "to_element": "Industrial Emissions PM25"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Scrubber Efficiency",
+      "to_element": "Industrial Emissions PM25"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "PM2.5 Concentration",
+      "to_element": "PM2.5 Dispersion"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Wind Speed Factor",
+      "to_element": "PM2.5 Dispersion"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "NOx Concentration",
+      "to_element": "Ozone Formation"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "VOC Level",
+      "to_element": "Ozone Formation"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Solar Radiation",
+      "to_element": "Ozone Formation"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "PM2.5 Concentration",
+      "to_element": "Health Impact"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Ozone Concentration",
+      "to_element": "Health Impact"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Population",
+      "to_element": "Health Impact"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

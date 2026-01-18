@@ -1,0 +1,114 @@
+{
+  "id": "induced-demand-transportation-soc",
+  "name": "Induced Demand in Road Transport",
+  "description": "Road capacity expansions induce additional travel demand, limiting congestion relief. Source: Duranton & Turner (2011), AER. DOI: 10.1257/aer.101.6.2616",
+  "stocks": [
+    {
+      "id": "stock-vkt",
+      "name": "Vehicle_Km_Traveled",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-roadkm",
+      "name": "Road_Kilometers",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-vktgrow",
+      "name": "VKT_Growth",
+      "equation": "Vehicle_Km_Traveled * (Base_Growth + Induced_Rate * Road_Growth_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-vkt",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-roadgrow",
+      "name": "Road_Construction",
+      "equation": "Road_Kilometers * Road_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-roadkm",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-basegrow",
+      "name": "Base_Growth",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-roadgrow",
+      "name": "Road_Growth_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-induced",
+      "name": "Induced_Rate",
+      "equation": "0.9",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-congestion",
+      "name": "Congestion_Index",
+      "equation": "Vehicle_Km_Traveled / Road_Kilometers",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-speed",
+      "name": "Average_Speed",
+      "equation": "60 * (1 - 0.5 * (Congestion_Index - 10) / 10)",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Road_Kilometers",
+      "to_element": "VKT_Growth"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:02:23.929831Z",
+  "updated_at": "2026-01-12T02:02:23.929835Z",
+  "source": "https://doi.org/10.1257/aer.101.6.2616",
+  "reference": "Duranton, G. & Turner, M.A. (2011). The Fundamental Law of Road Congestion. American Economic Review."
+}

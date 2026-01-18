@@ -1,0 +1,199 @@
+{
+  "id": "heat-transfer-conduction-convection-phy",
+  "name": "Heat Transfer with Conduction and Convection",
+  "description": "Model of heat transfer between multiple bodies showing thermal equilibration. Newton's law of cooling with multiple paths. Reference: Incropera, F. P., et al. (2007). Fundamentals of Heat and Mass Transfer. Wiley. Source: https://www.wiley.com/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Hot Body Temp",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Medium Temp",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Cold Body Temp",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Ambient Temp",
+      "initial_value": 25,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Hot to Medium",
+      "equation": "K_Conduction_1 * (Hot_Body_Temp - Medium_Temp) / Hot_Mass",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 175,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Medium to Cold",
+      "equation": "K_Conduction_2 * (Medium_Temp - Cold_Body_Temp) / Medium_Mass",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 325,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Hot Convection Loss",
+      "equation": "H_Convection * (Hot_Body_Temp - Ambient_Temp) / Hot_Mass",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Medium Convection",
+      "equation": "H_Convection * (Medium_Temp - Ambient_Temp) / Medium_Mass",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Cold Convection",
+      "equation": "H_Convection * (Cold_Body_Temp - Ambient_Temp) / Cold_Mass",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "K Conduction 1",
+      "equation": "0.5",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "K Conduction 2",
+      "equation": "0.3",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "H Convection",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Hot Mass",
+      "equation": "10",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Medium Mass",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Cold Mass",
+      "equation": "8",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Total Heat Content",
+      "equation": "Hot_Body_Temp * Hot_Mass + Medium_Temp * Medium_Mass + Cold_Body_Temp * Cold_Mass",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Temperature Range",
+      "equation": "Hot_Body_Temp - Cold_Body_Temp",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Hot Body Temp",
+      "to_element": "Hot to Medium"
+    },
+    {
+      "id": "c2",
+      "from_element": "Medium Temp",
+      "to_element": "Medium to Cold"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T14:20:13.053433",
+  "updated_at": "2026-01-15T14:20:13.053439",
+  "source": "https://en.wikipedia.org/wiki/Heat_transfer",
+  "reference": "Incropera FP, DeWitt DP. Fundamentals of Heat and Mass Transfer. John Wiley & Sons. 2007."
+}

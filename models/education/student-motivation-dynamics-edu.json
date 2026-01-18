@@ -1,0 +1,102 @@
+{
+  "id": "student-motivation-dynamics-edu",
+  "name": "Student Motivation Dynamics",
+  "description": "Model of student motivation and achievement. Source: Deci & Ryan Self-Determination Theory.",
+  "stocks": [
+    {
+      "id": "stock-motiv",
+      "name": "Intrinsic_Motivation",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-achieve",
+      "name": "Achievement_Level",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-motivinc",
+      "name": "Motivation_Building",
+      "equation": "Autonomy_Support * (100 - Intrinsic_Motivation) / 100",
+      "from_stock": null,
+      "to_stock": "stock-motiv",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-motivdec",
+      "name": "Motivation_Decay",
+      "equation": "Intrinsic_Motivation * Pressure_Effect",
+      "from_stock": "stock-motiv",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-achieve",
+      "name": "Learning",
+      "equation": "Intrinsic_Motivation * Effort / 100 * (100 - Achievement_Level) / 100",
+      "from_stock": null,
+      "to_stock": "stock-achieve",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-auton",
+      "name": "Autonomy_Support",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-pressure",
+      "name": "Pressure_Effect",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-effort",
+      "name": "Effort",
+      "equation": "0.5 + 0.5 * Intrinsic_Motivation / 100",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 36,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:53:13.193360+00:00",
+  "updated_at": "2026-01-12T12:53:13.193360+00:00",
+  "source": "https://systemdynamics.org/resources/",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

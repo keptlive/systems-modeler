@@ -1,0 +1,192 @@
+{
+  "id": "ostrom-common-pool-eco",
+  "name": "Ostrom Common Pool Resource",
+  "description": "Elinor Ostrom's 1990 framework for governing commons without tragedy through local institutional arrangements. Nobel Prize 2009. Reference: Ostrom, E. (1990). Governing the Commons: The Evolution of Institutions for Collective Action. Cambridge University Press. Source: https://doi.org/10.1017/CBO9780511807763",
+  "stocks": [
+    {
+      "id": "stock-resource",
+      "name": "Resource_Stock",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-trust",
+      "name": "Community_Trust",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-institutions",
+      "name": "Institution_Strength",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-regen",
+      "name": "Regeneration",
+      "equation": "growth_rate * Resource_Stock * (1 - Resource_Stock / carrying_capacity)",
+      "from_stock": null,
+      "to_stock": "stock-resource",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-harvest",
+      "name": "Harvesting",
+      "equation": "num_users * harvest_per_user * (1 - compliance_rate)",
+      "from_stock": "stock-resource",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-trust-build",
+      "name": "Trust_Building",
+      "equation": "cooperation_rate * 0.1",
+      "from_stock": null,
+      "to_stock": "stock-trust",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-trust-decay",
+      "name": "Trust_Decay",
+      "equation": "Community_Trust * 0.02",
+      "from_stock": "stock-trust",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 280
+      }
+    },
+    {
+      "id": "flow-inst-build",
+      "name": "Institution_Building",
+      "equation": "Community_Trust * 0.02 * (1 - Institution_Strength / 100)",
+      "from_stock": null,
+      "to_stock": "stock-institutions",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-growth",
+      "name": "growth_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-capacity",
+      "name": "carrying_capacity",
+      "equation": "2000",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-users",
+      "name": "num_users",
+      "equation": "20",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-harvest",
+      "name": "harvest_per_user",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-compliance",
+      "name": "compliance_rate",
+      "equation": "Institution_Strength / 100 * Community_Trust / 100",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-coop",
+      "name": "cooperation_rate",
+      "equation": "compliance_rate * num_users",
+      "position": {
+        "x": 500,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-sustainable",
+      "name": "Sustainable_Yield",
+      "equation": "growth_rate * carrying_capacity / 4",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-overuse",
+      "name": "Overuse_Index",
+      "equation": "Harvesting / Sustainable_Yield",
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Resource_Stock",
+      "to_element": "Regeneration"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Institution_Strength",
+      "to_element": "compliance_rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Community_Trust",
+      "to_element": "compliance_rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1017/CBO9780511807763",
+  "reference": "Ostrom E. Governing the Commons: The Evolution of Institutions for Collective Action. Cambridge University Press; 1990. Nobel Prize 2009."
+}

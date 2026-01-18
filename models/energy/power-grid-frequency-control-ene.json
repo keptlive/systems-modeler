@@ -1,0 +1,132 @@
+{
+  "id": "power-grid-frequency-control-ene",
+  "name": "Power Grid Frequency Control Model",
+  "description": "Model of grid frequency regulation with generation-load balance. Source: Kundur (1994), Power System Stability and Control.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Frequency_Deviation",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Generator_Output",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Frequency_Change",
+      "equation": "(Generator_Output - Load - D * Frequency_Deviation) / (2 * H)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Governor_Response",
+      "equation": "-Frequency_Deviation / R / T_g - (Generator_Output - Generator_Setpoint) / T_g",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "H",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "D",
+      "equation": "1",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "R",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "T_g",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Load",
+      "equation": "100 + 5 * SIN(TIME * 0.5)",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Generator_Setpoint",
+      "equation": "100",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Actual_Frequency",
+      "equation": "50 + Frequency_Deviation",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Frequency_Deviation",
+      "to_element": "Governor_Response"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-15T14:44:54.461058+00:00",
+  "updated_at": "2026-01-15T14:44:54.461061+00:00",
+  "source": "https://www.amazon.com/Power-System-Stability-Control-Kundur/dp/007035958X",
+  "reference": "Kundur, P. (1994). Power System Stability and Control. McGraw-Hill."
+}

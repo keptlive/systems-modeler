@@ -1,0 +1,201 @@
+{
+  "id": "dixit-stiglitz-monopolistic-eco",
+  "name": "Dixit-Stiglitz Monopolistic Competition",
+  "description": "Foundation for New Keynesian economics and trade theory. Consumers love variety, firms have pricing power, entry is free. Explains product differentiation, increasing returns, and agglomeration effects. Reference: Keynes, J. M. (1936). The General Theory of Employment, Interest and Money. London: Macmillan.",
+  "stocks": [
+    {
+      "id": "stock-firms",
+      "name": "Number of Firms",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-industry-output",
+      "name": "Industry Output",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-entry",
+      "name": "Net Entry",
+      "equation": "Entry_Rate - Exit_Rate",
+      "from_stock": null,
+      "to_stock": "stock-firms",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-output-change",
+      "name": "Output Change",
+      "equation": "Number_of_Firms * Firm_Output_Change",
+      "from_stock": null,
+      "to_stock": "stock-industry-output",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-elasticity",
+      "name": "Elasticity of Substitution",
+      "equation": "4",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-markup",
+      "name": "Markup",
+      "equation": "Elasticity_of_Substitution / (Elasticity_of_Substitution - 1)",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-price",
+      "name": "Optimal Price",
+      "equation": "Marginal_Cost * Markup",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mc",
+      "name": "Marginal Cost",
+      "equation": "1",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-firm-output",
+      "name": "Firm Output",
+      "equation": "Market_Size / Number_of_Firms * (Price_Index / Optimal_Price)^Elasticity_of_Substitution",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-profit",
+      "name": "Firm Profit",
+      "equation": "Firm_Output * (Optimal_Price - Marginal_Cost) - Fixed_Cost",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-fixed",
+      "name": "Fixed Cost",
+      "equation": "10",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-entry",
+      "name": "Entry Rate",
+      "equation": "MAX(0, Adjustment_Speed * Firm_Profit)",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-exit",
+      "name": "Exit Rate",
+      "equation": "MAX(0, -Adjustment_Speed * Firm_Profit)",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-adjust",
+      "name": "Adjustment Speed",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-market",
+      "name": "Market Size",
+      "equation": "10000",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-price-index",
+      "name": "Price Index",
+      "equation": "1",
+      "position": {
+        "x": 500,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-output-change",
+      "name": "Firm Output Change",
+      "equation": "0.01 * (Market_Size / Number_of_Firms - Firm_Output)",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Elasticity of Substitution",
+      "to_element": "Markup"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Markup",
+      "to_element": "Optimal Price"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Number of Firms",
+      "to_element": "Firm Output"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Firm Profit",
+      "to_element": "Entry Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:39:15.413298+00:00",
+  "updated_at": "2026-01-12T07:39:15.413306+00:00",
+  "source": "https://doi.org/10.1257/aer.67.3.297",
+  "reference": "Dixit AK, Stiglitz JE. Monopolistic Competition and Optimum Product Diversity. American Economic Review. 1977;67(3):297-308."
+}

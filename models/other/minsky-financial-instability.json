@@ -1,0 +1,171 @@
+{
+  "id": "minsky-financial-instability",
+  "name": "Minsky Financial Instability Hypothesis",
+  "description": "Hyman Minsky's model of financial instability showing how periods of stability lead to increasing risk-taking and eventual crisis.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Debt_Level",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Asset_Prices",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Risk_Appetite",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "New_Borrowing",
+      "equation": "Risk_Appetite * Asset_Prices * Lending_Rate",
+      "from_stock": null,
+      "to_stock": "Debt_Level",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Debt_Repayment",
+      "equation": "Debt_Level * Repayment_Rate",
+      "from_stock": "Debt_Level",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Price_Appreciation",
+      "equation": "Asset_Prices * New_Borrowing / 100",
+      "from_stock": null,
+      "to_stock": "Asset_Prices",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Price_Correction",
+      "equation": "MAX(0, Asset_Prices - Fundamental_Value) * Correction_Speed",
+      "from_stock": "Asset_Prices",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Risk_Buildup",
+      "equation": "0.01 * (1 - Debt_Level / Asset_Prices)",
+      "from_stock": null,
+      "to_stock": "Risk_Appetite",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Risk_Reduction",
+      "equation": "Risk_Appetite * Financial_Distress * 0.1",
+      "from_stock": "Risk_Appetite",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Lending_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Repayment_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Fundamental_Value",
+      "equation": "100",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Correction_Speed",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Debt_to_Asset_Ratio",
+      "equation": "Debt_Level / Asset_Prices",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Financial_Distress",
+      "equation": "MAX(0, Debt_to_Asset_Ratio - 0.8) * 10",
+      "position": {
+        "x": 500,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1080/05775132.1977.11470296",
+  "reference": "Minsky, H.P. (1977). The Financial Instability Hypothesis: An Interpretation of Keynes and an Alternative to Standard Theory. Challenge, 20(1), 20-27. DOI: 10.1080/05775132.1977.11470296",
+  "created_at": "2026-01-15T19:20:16.771919+00:00",
+  "updated_at": "2026-01-15T19:20:16.771919+00:00"
+}

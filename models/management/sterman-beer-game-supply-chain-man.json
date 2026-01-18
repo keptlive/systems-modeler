@@ -1,0 +1,228 @@
+{
+  "id": "sterman-beer-game-supply-chain-man",
+  "name": "Sterman Beer Game Supply Chain",
+  "description": "The classic MIT Beer Game supply chain model demonstrating the bullwhip effect. Used in thousands of management education settings. Source: Sterman (1989), Management Science. DOI: 10.1287/mnsc.35.3.321",
+  "stocks": [
+    {
+      "id": "stock-ret-inv",
+      "name": "Retailer_Inventory",
+      "initial_value": 12,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-who-inv",
+      "name": "Wholesaler_Inventory",
+      "initial_value": 12,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-dist-inv",
+      "name": "Distributor_Inventory",
+      "initial_value": 12,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fact-inv",
+      "name": "Factory_Inventory",
+      "initial_value": 12,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-cust",
+      "name": "Customer_Demand",
+      "equation": "4 + IF(TIME > 5, 4, 0)",
+      "from_stock": "stock-ret-inv",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ret-ship",
+      "name": "Retailer_Receipt",
+      "equation": "Wholesaler_Shipment",
+      "from_stock": null,
+      "to_stock": "stock-ret-inv",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-who-ship",
+      "name": "Wholesaler_Shipment",
+      "equation": "MIN(Wholesaler_Inventory, MAX(0, Retailer_Order))",
+      "from_stock": "stock-who-inv",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-who-recv",
+      "name": "Wholesaler_Receipt",
+      "equation": "Distributor_Shipment",
+      "from_stock": null,
+      "to_stock": "stock-who-inv",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-dist-ship",
+      "name": "Distributor_Shipment",
+      "equation": "MIN(Distributor_Inventory, MAX(0, Wholesaler_Order))",
+      "from_stock": "stock-dist-inv",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-dist-recv",
+      "name": "Distributor_Receipt",
+      "equation": "Factory_Shipment",
+      "from_stock": null,
+      "to_stock": "stock-dist-inv",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fact-ship",
+      "name": "Factory_Shipment",
+      "equation": "MIN(Factory_Inventory, MAX(0, Distributor_Order))",
+      "from_stock": "stock-fact-inv",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-prod",
+      "name": "Production",
+      "equation": "Factory_Production_Rate",
+      "from_stock": null,
+      "to_stock": "stock-fact-inv",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-ret-ord",
+      "name": "Retailer_Order",
+      "equation": "MAX(0, Expected_Demand + (Target_Inventory - Retailer_Inventory) / Adjustment_Time)",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-who-ord",
+      "name": "Wholesaler_Order",
+      "equation": "MAX(0, Retailer_Order + (Target_Inventory - Wholesaler_Inventory) / Adjustment_Time)",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-dist-ord",
+      "name": "Distributor_Order",
+      "equation": "MAX(0, Wholesaler_Order + (Target_Inventory - Distributor_Inventory) / Adjustment_Time)",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-fact-prod",
+      "name": "Factory_Production_Rate",
+      "equation": "MAX(0, Distributor_Order + (Target_Inventory - Factory_Inventory) / Adjustment_Time)",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-exp-dem",
+      "name": "Expected_Demand",
+      "equation": "4",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-target",
+      "name": "Target_Inventory",
+      "equation": "12",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-adjust",
+      "name": "Adjustment_Time",
+      "equation": "4",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Retailer_Inventory",
+      "to_element": "Retailer_Order"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Wholesaler_Inventory",
+      "to_element": "Wholesaler_Order"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Distributor_Inventory",
+      "to_element": "Distributor_Order"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T22:11:19.082950Z",
+  "updated_at": "2026-01-11T22:11:19.082959Z",
+  "source": "https://doi.org/10.1287/mnsc.35.3.321",
+  "reference": "Sterman, J.D. (1989). Modeling managerial behavior: Misperceptions of feedback in a dynamic decision making experiment."
+}

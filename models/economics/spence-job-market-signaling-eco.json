@@ -1,0 +1,33 @@
+{
+  "id": "spence-job-market-signaling-eco",
+  "name": "Spence Job Market Signaling Model",
+  "description": "Michael Spence's (1973) job market signaling model showing how education serves as a signal of worker productivity even without increasing it. Demonstrates separating equilibrium where high-ability workers signal through costly education. Spence received the 2001 Nobel Prize.",
+  "stocks": [
+    {"id": "stock-high-ability-educated", "name": "High Ability Educated", "initial_value": 100, "equation": "", "position": {"x": 150, "y": 150}},
+    {"id": "stock-high-ability-uneducated", "name": "High Ability Uneducated", "initial_value": 100, "equation": "", "position": {"x": 150, "y": 300}},
+    {"id": "stock-low-ability-educated", "name": "Low Ability Educated", "initial_value": 50, "equation": "", "position": {"x": 400, "y": 150}},
+    {"id": "stock-low-ability-uneducated", "name": "Low Ability Uneducated", "initial_value": 250, "equation": "", "position": {"x": 400, "y": 300}}
+  ],
+  "flows": [
+    {"id": "flow-ha-education", "name": "HA Education", "equation": "IF Wage_Premium > High_Ability_Education_Cost THEN High_Ability_Uneducated * Education_Rate ELSE 0", "from_stock": "stock-high-ability-uneducated", "to_stock": "stock-high-ability-educated", "position": {"x": 150, "y": 225}},
+    {"id": "flow-la-education", "name": "LA Education", "equation": "IF Wage_Premium > Low_Ability_Education_Cost THEN Low_Ability_Uneducated * Education_Rate ELSE 0", "from_stock": "stock-low-ability-uneducated", "to_stock": "stock-low-ability-educated", "position": {"x": 400, "y": 225}}
+  ],
+  "variables": [
+    {"id": "var-high-productivity", "name": "High Productivity", "equation": "2", "position": {"x": 550, "y": 100}},
+    {"id": "var-low-productivity", "name": "Low Productivity", "equation": "1", "position": {"x": 550, "y": 180}},
+    {"id": "var-high-ability-education-cost", "name": "High Ability Education Cost", "equation": "0.5", "position": {"x": 200, "y": 380}},
+    {"id": "var-low-ability-education-cost", "name": "Low Ability Education Cost", "equation": "1.5", "position": {"x": 450, "y": 380}},
+    {"id": "var-educated-wage", "name": "Educated Wage", "equation": "Educated_Expected_Productivity", "position": {"x": 550, "y": 260}},
+    {"id": "var-uneducated-wage", "name": "Uneducated Wage", "equation": "Uneducated_Expected_Productivity", "position": {"x": 550, "y": 340}},
+    {"id": "var-wage-premium", "name": "Wage Premium", "equation": "Educated_Wage - Uneducated_Wage", "position": {"x": 550, "y": 420}},
+    {"id": "var-total-educated", "name": "Total Educated", "equation": "High_Ability_Educated + Low_Ability_Educated", "position": {"x": 275, "y": 80}},
+    {"id": "var-total-uneducated", "name": "Total Uneducated", "equation": "High_Ability_Uneducated + Low_Ability_Uneducated", "position": {"x": 275, "y": 380}},
+    {"id": "var-educated-expected-productivity", "name": "Educated Expected Productivity", "equation": "IF Total_Educated > 0 THEN (High_Ability_Educated * High_Productivity + Low_Ability_Educated * Low_Productivity) / Total_Educated ELSE High_Productivity", "position": {"x": 275, "y": 450}},
+    {"id": "var-uneducated-expected-productivity", "name": "Uneducated Expected Productivity", "equation": "IF Total_Uneducated > 0 THEN (High_Ability_Uneducated * High_Productivity + Low_Ability_Uneducated * Low_Productivity) / Total_Uneducated ELSE Low_Productivity", "position": {"x": 275, "y": 520}},
+    {"id": "var-education-rate", "name": "Education Rate", "equation": "0.1", "position": {"x": 550, "y": 500}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 50, "dt": 0.5},
+  "source": "https://doi.org/10.2307/1882010",
+  "reference": "Spence M. Job Market Signaling. Quarterly Journal of Economics. 1973;87(3):355-374."
+}

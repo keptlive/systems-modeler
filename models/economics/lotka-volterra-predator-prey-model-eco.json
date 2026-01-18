@@ -1,0 +1,246 @@
+{
+  "id": "lotka-volterra-predator-prey-model-eco",
+  "name": "Lotka-Volterra Predator-Prey Model",
+  "description": "Classic predator-prey dynamics model (foxes and hares). Predator reproduction increases linearly with prey availability, and prey mortality (predation rate) increases linearly with number of predators. Produces characteristic population oscillations. Reference: Lotka, A. J. (1920). Analytical note on certain rhythmic relations in organic systems. PNAS, 6(7), 410-415. DOI: https://doi.org/10.1073/pnas.6.7.410",
+  "stocks": [
+    {
+      "id": "stock-prey",
+      "name": "Prey",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-predators",
+      "name": "Predators",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-prey-births",
+      "name": "Prey Births",
+      "equation": "Prey * Prey_Reproduction_Ratio",
+      "from_stock": null,
+      "to_stock": "stock-prey",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-prey-deaths",
+      "name": "Prey Deaths",
+      "equation": "Prey * Fractional_Predation_Rate",
+      "from_stock": "stock-prey",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-predator-births",
+      "name": "Predator Births",
+      "equation": "Predators * Predator_Reproduction_Ratio",
+      "from_stock": null,
+      "to_stock": "stock-predators",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-predator-deaths",
+      "name": "Predator Deaths",
+      "equation": "Predators / Predator_Lifespan",
+      "from_stock": "stock-predators",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-initial-prey-population",
+      "name": "Initial Prey Population",
+      "equation": "1000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-predator-population",
+      "name": "Initial Predator Population",
+      "equation": "20",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-prey-reproduction-ratio",
+      "name": "Prey Reproduction Ratio",
+      "equation": "3",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-predator-lifespan",
+      "name": "Predator Lifespan",
+      "equation": "10",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fractional-predation-rate",
+      "name": "Fractional Predation Rate",
+      "equation": "Reference_Fractional_Predation_Rate * Predators / Reference_Predators",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-predator-reproduction-ratio",
+      "name": "Predator Reproduction Ratio",
+      "equation": "Reference_Predator_Reproduction_Ratio * Prey / Reference_Prey_Population",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-reference-fractional-predation-rate",
+      "name": "Reference Fractional Predation Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-reference-predator-reproduction-ratio",
+      "name": "Reference Predator Reproduction Ratio",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-reference-predators",
+      "name": "Reference Predators",
+      "equation": "20",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-reference-prey-population",
+      "name": "Reference Prey Population",
+      "equation": "1000",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Prey",
+      "to_element": "Prey Births"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Prey Reproduction Ratio",
+      "to_element": "Prey Births"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Prey",
+      "to_element": "Prey Deaths"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Fractional Predation Rate",
+      "to_element": "Prey Deaths"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Predators",
+      "to_element": "Predator Births"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Predator Reproduction Ratio",
+      "to_element": "Predator Births"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Predators",
+      "to_element": "Predator Deaths"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Predator Lifespan",
+      "to_element": "Predator Deaths"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Predators",
+      "to_element": "Fractional Predation Rate"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Reference Fractional Predation Rate",
+      "to_element": "Fractional Predation Rate"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Reference Predators",
+      "to_element": "Fractional Predation Rate"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Prey",
+      "to_element": "Predator Reproduction Ratio"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Reference Predator Reproduction Ratio",
+      "to_element": "Predator Reproduction Ratio"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Reference Prey Population",
+      "to_element": "Predator Reproduction Ratio"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.0625
+  },
+  "created_at": "2026-01-11T20:04:50.740170Z",
+  "updated_at": "2026-01-11T20:04:50.740170Z",
+  "source": "https://doi.org/10.1073/pnas.6.7.410",
+  "reference": "Lotka AJ. Elements of Physical Biology. Williams & Wilkins, 1925; Volterra V. Variations and fluctuations of the number of individuals in animal species living together. ICES J Mar Sci. 1928."
+}

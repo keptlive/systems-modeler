@@ -1,0 +1,168 @@
+{
+  "id": "hospital-theory-of-constraints-hea",
+  "name": "Hospital Theory of Constraints Model",
+  "description": "System dynamics model implementing Theory of Constraints in healthcare. Simulates medium-sized hospital with limited resources, achieving 6% throughput increase without resource elevation. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-waiting-patients",
+      "name": "Waiting Patients",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-in-treatment",
+      "name": "In Treatment",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-post-treatment",
+      "name": "Post Treatment",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-discharged",
+      "name": "Discharged",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-arrival",
+      "name": "Patient Arrival",
+      "equation": "Arrival_Rate",
+      "from_stock": null,
+      "to_stock": "stock-waiting-patients",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-admission",
+      "name": "Admission Rate",
+      "equation": "MIN(Waiting_Patients / Avg_Wait, Bottleneck_Capacity - In_Treatment)",
+      "from_stock": "stock-waiting-patients",
+      "to_stock": "stock-in-treatment",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-treatment-complete",
+      "name": "Treatment Complete",
+      "equation": "In_Treatment / Treatment_Duration",
+      "from_stock": "stock-in-treatment",
+      "to_stock": "stock-post-treatment",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-discharge",
+      "name": "Discharge Rate",
+      "equation": "Post_Treatment / Discharge_Time",
+      "from_stock": "stock-post-treatment",
+      "to_stock": "stock-discharged",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-arrival-rate",
+      "name": "Arrival Rate",
+      "equation": "20",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-avg-wait",
+      "name": "Avg Wait",
+      "equation": "2",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-bottleneck-cap",
+      "name": "Bottleneck Capacity",
+      "equation": "50",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-treatment-duration",
+      "name": "Treatment Duration",
+      "equation": "3",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-discharge-time",
+      "name": "Discharge Time",
+      "equation": "1",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-throughput",
+      "name": "Throughput",
+      "equation": "Discharge_Rate",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-utilization",
+      "name": "Utilization",
+      "equation": "In_Treatment / Bottleneck_Capacity",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1177/0037549718788953",
+  "reference": "Grida & Zeid. A system dynamics-based model to implement the Theory of Constraints in a healthcare system. Simulation (2019).",
+  "created_at": "2026-01-12T08:08:22.081275Z",
+  "updated_at": "2026-01-12T08:08:22.081275Z"
+}

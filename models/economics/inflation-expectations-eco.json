@@ -1,0 +1,201 @@
+{
+  "id": "inflation-expectations-eco",
+  "name": "Inflation Expectations Model",
+  "description": "Models inflation dynamics with adaptive and rational expectations components. Based on Mankiw & Reis (2002). DOI: 10.1162/003355302760193714",
+  "stocks": [
+    {
+      "id": "stock-inflation",
+      "name": "Actual_Inflation",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-adaptive",
+      "name": "Adaptive_Expectations",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-output",
+      "name": "Output_Gap",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-interest",
+      "name": "Interest_Rate",
+      "initial_value": 3,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-inflchg",
+      "name": "Inflation_Change",
+      "equation": "(Phillips_Effect + Cost_Push + Expectations_Effect - Actual_Inflation) * Inflation_Persistence",
+      "from_stock": null,
+      "to_stock": "stock-inflation",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-adaptchg",
+      "name": "Expectation_Update",
+      "equation": "(Actual_Inflation - Adaptive_Expectations) * Learning_Rate",
+      "from_stock": null,
+      "to_stock": "stock-adaptive",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-outputchg",
+      "name": "Output_Change",
+      "equation": "(-Real_Rate_Effect + Demand_Shock) * Output_Persistence",
+      "from_stock": null,
+      "to_stock": "stock-output",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-interestchg",
+      "name": "Interest_Rate_Change",
+      "equation": "Taylor_Rule_Response",
+      "from_stock": null,
+      "to_stock": "stock-interest",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-phillips",
+      "name": "Phillips_Effect",
+      "equation": "0.5 * Output_Gap",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-costpush",
+      "name": "Cost_Push",
+      "equation": "0.5 * SIN(TIME / 20)",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-expecteff",
+      "name": "Expectations_Effect",
+      "equation": "Adaptive_Expectations * Expectation_Weight",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-expectwt",
+      "name": "Expectation_Weight",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-learnrate",
+      "name": "Learning_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-inflpersist",
+      "name": "Inflation_Persistence",
+      "equation": "0.2",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-realrate",
+      "name": "Real_Rate_Effect",
+      "equation": "(Interest_Rate - Adaptive_Expectations) * 0.3",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-demshock",
+      "name": "Demand_Shock",
+      "equation": "0.3 * COS(TIME / 15)",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-outputpersist",
+      "name": "Output_Persistence",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-taylor",
+      "name": "Taylor_Rule_Response",
+      "equation": "(1.5 * (Actual_Inflation - 2) + 0.5 * Output_Gap - Interest_Rate) * 0.1",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Output_Gap",
+      "to_element": "Phillips_Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:45:00.575048+00:00",
+  "updated_at": "2026-01-12T02:45:00.575051+00:00",
+  "source": "https://doi.org/10.1162/003355302760193714",
+  "reference": "Mankiw NG, Reis R (2002). Sticky Information versus Sticky Prices: A Proposal to Replace the New Keynesian Phillips Curve. QJE."
+}

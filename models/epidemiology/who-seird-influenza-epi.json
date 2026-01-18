@@ -1,0 +1,196 @@
+{
+  "id": "who-seird-influenza-epi",
+  "name": "WHO SEIRD Influenza Pandemic Model",
+  "description": "World Health Organization SEIRD model for pandemic influenza preparedness. Reference: WHO (2009). Pandemic Influenza Preparedness and Response.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Susceptible",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Exposed",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Infectious",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Dead",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Exposure",
+      "equation": "Beta * Susceptible * Infectious / Total_Population",
+      "from_stock": "Susceptible",
+      "to_stock": "Exposed",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Infection",
+      "equation": "Exposed / Latent_Period",
+      "from_stock": "Exposed",
+      "to_stock": "Infectious",
+      "position": {
+        "x": 220,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Recovery",
+      "equation": "Infectious * (1 - CFR) / Infectious_Period",
+      "from_stock": "Infectious",
+      "to_stock": "Recovered",
+      "position": {
+        "x": 340,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Death",
+      "equation": "Infectious * CFR / Infectious_Period",
+      "from_stock": "Infectious",
+      "to_stock": "Dead",
+      "position": {
+        "x": 460,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Total_Population",
+      "equation": "10000000",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "R0",
+      "equation": "1.8",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Latent_Period",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Infectious_Period",
+      "equation": "5",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Beta",
+      "equation": "R0 / Infectious_Period",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "CFR",
+      "equation": "0.01",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Rt",
+      "equation": "R0 * Susceptible / Total_Population",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Attack_Rate",
+      "equation": "(Infectious + Recovered + Dead) / Total_Population",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Daily_Cases",
+      "equation": "Exposed / Latent_Period",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "source": "https://apps.who.int/iris/handle/10665/44123",
+  "reference": "WHO (2009). Pandemic Influenza Preparedness and Response: A WHO Guidance Document. World Health Organization.",
+  "created_at": "2026-01-15T19:57:16.864548+00:00",
+  "updated_at": "2026-01-15T19:57:16.864548+00:00"
+}

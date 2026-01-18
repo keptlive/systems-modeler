@@ -1,0 +1,195 @@
+{
+  "id": "carbon-capture-utilization-cli",
+  "name": "Carbon Capture Utilization and Storage Dynamics",
+  "description": "A model of carbon capture, utilization, and storage (CCUS) deployment, capturing technology learning, cost reduction, infrastructure development, and policy support dynamics. Reference: ASCE (2021). Infrastructure Report Card. American Society of Civil Engineers. Source: https://infrastructurereportcard.org/",
+  "source": "https://doi.org/10.1038/s41558-020-0898-z",
+  "reference": "Global CCS Institute. Global Status of CCS 2023. See also IEA CCUS in Clean Energy Transitions. 2020.",
+  "stocks": [
+    {
+      "id": "stock-captured",
+      "name": "Captured CO2 Annual",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-stored",
+      "name": "Total CO2 Stored",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infrastructure",
+      "name": "Storage Infrastructure",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cost",
+      "name": "Capture Cost",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-capture-growth",
+      "name": "Capture Capacity Growth",
+      "equation": "Investment / Capture_Cost * Learning_Rate * Policy_Support",
+      "from_stock": null,
+      "to_stock": "stock-captured",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-storage-flow",
+      "name": "CO2 Storage Flow",
+      "equation": "Captured_CO2_Annual * Storage_Utilization",
+      "from_stock": null,
+      "to_stock": "stock-stored",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-infrastructure-build",
+      "name": "Infrastructure Building",
+      "equation": "Infrastructure_Investment / Infrastructure_Cost",
+      "from_stock": null,
+      "to_stock": "stock-infrastructure",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-cost-reduction",
+      "name": "Cost Reduction",
+      "equation": "Capture_Cost * Learning_Effect * Cumulative_Experience_Effect",
+      "from_stock": "stock-cost",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-investment",
+      "name": "Investment",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-learning-rate",
+      "name": "Learning Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-policy",
+      "name": "Policy Support",
+      "equation": "1.2",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-utilization",
+      "name": "Storage Utilization",
+      "equation": "MIN(1, Storage_Infrastructure / Captured_CO2_Annual)",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-infra-invest",
+      "name": "Infrastructure Investment",
+      "equation": "5",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-infra-cost",
+      "name": "Infrastructure Cost",
+      "equation": "50",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-learning-effect",
+      "name": "Learning Effect",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-experience",
+      "name": "Cumulative Experience Effect",
+      "equation": "(Total_CO2_Stored / 1000)^0.2",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-carbon-price",
+      "name": "Carbon Price",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-economic-viability",
+      "name": "Economic Viability",
+      "equation": "MAX(0, (Carbon_Price - Capture_Cost) / Carbon_Price)",
+      "position": {
+        "x": 300,
+        "y": 500
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T08:00:00.000000+00:00",
+  "updated_at": "2026-01-12T08:00:00.000000+00:00"
+}

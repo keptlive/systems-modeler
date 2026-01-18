@@ -1,0 +1,144 @@
+{
+  "id": "winner-take-all-market-eco",
+  "name": "Winner Take All Market Dynamics",
+  "description": "Models market concentration through positive feedback. Source: Frank & Cook (1995). DOI: 10.1257/jep.9.3.133",
+  "stocks": [
+    {
+      "id": "stock-leader",
+      "name": "Market_Leader_Share",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-follower",
+      "name": "Follower_Share",
+      "initial_value": 25,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fringe",
+      "name": "Fringe_Share",
+      "initial_value": 45,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-leadgrow",
+      "name": "Leader_Growth",
+      "equation": "Fringe_Share * Switching_Rate * Leader_Attractiveness",
+      "from_stock": "stock-fringe",
+      "to_stock": "stock-leader",
+      "position": {
+        "x": 250,
+        "y": 125
+      }
+    },
+    {
+      "id": "flow-followgrow",
+      "name": "Follower_Growth",
+      "equation": "Fringe_Share * Switching_Rate * Follower_Attractiveness",
+      "from_stock": "stock-fringe",
+      "to_stock": "stock-follower",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-leadtofollow",
+      "name": "Leader_To_Follower",
+      "equation": "Market_Leader_Share * Disruption_Rate",
+      "from_stock": "stock-leader",
+      "to_stock": "stock-follower",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-switch",
+      "name": "Switching_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-leadattr",
+      "name": "Leader_Attractiveness",
+      "equation": "(Market_Leader_Share / 100) ^ Feedback_Strength",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-followattr",
+      "name": "Follower_Attractiveness",
+      "equation": "(Follower_Share / 100) ^ Feedback_Strength",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-feedback",
+      "name": "Feedback_Strength",
+      "equation": "1.5",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-disrupt",
+      "name": "Disruption_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-hhi",
+      "name": "HHI_Concentration",
+      "equation": "(Market_Leader_Share^2 + Follower_Share^2 + Fringe_Share^2) / 100",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Market_Leader_Share",
+      "to_element": "Leader_Attractiveness"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:23:02.238355+00:00",
+  "updated_at": "2026-01-12T02:23:02.238358+00:00",
+  "source": "https://doi.org/10.1257/jep.9.3.133",
+  "reference": "Frank, R.H. & Cook, P.J. (1995). The Winner-Take-All Society. Free Press."
+}

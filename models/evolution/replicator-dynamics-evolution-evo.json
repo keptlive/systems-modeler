@@ -1,0 +1,148 @@
+{
+  "id": "replicator-dynamics-evolution-evo",
+  "name": "Replicator Dynamics",
+  "description": "Evolutionary game theory where successful strategies grow in population. Shows how fitness-proportionate selection leads to evolutionary stable states. Links evolution and game theory. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-strategy-a",
+      "name": "Strategy A Fraction",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-selection",
+      "name": "Selection",
+      "equation": "Strategy_A_Fraction * (Fitness_A - Average_Fitness)",
+      "from_stock": null,
+      "to_stock": "stock-strategy-a",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-strategy-b",
+      "name": "Strategy B Fraction",
+      "equation": "1 - Strategy_A_Fraction",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fitness-a",
+      "name": "Fitness A",
+      "equation": "Payoff_AA * Strategy_A_Fraction + Payoff_AB * Strategy_B_Fraction",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fitness-b",
+      "name": "Fitness B",
+      "equation": "Payoff_BA * Strategy_A_Fraction + Payoff_BB * Strategy_B_Fraction",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-avg-fitness",
+      "name": "Average Fitness",
+      "equation": "Fitness_A * Strategy_A_Fraction + Fitness_B * Strategy_B_Fraction",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-payoff-aa",
+      "name": "Payoff AA",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-payoff-ab",
+      "name": "Payoff AB",
+      "equation": "0",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-payoff-ba",
+      "name": "Payoff BA",
+      "equation": "5",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-payoff-bb",
+      "name": "Payoff BB",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-equilibrium",
+      "name": "Interior Equilibrium",
+      "equation": "(Payoff_BB - Payoff_AB) / (Payoff_AA - Payoff_BA - Payoff_AB + Payoff_BB)",
+      "position": {
+        "x": 300,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-ess",
+      "name": "ESS Condition",
+      "equation": "IF(Payoff_AA > Payoff_BA, 1, IF(Payoff_AA = Payoff_BA AND Payoff_AB > Payoff_BB, 1, 0))",
+      "position": {
+        "x": 550,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Strategy A Fraction",
+      "to_element": "Fitness A"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Strategy B Fraction",
+      "to_element": "Fitness A"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Fitness A",
+      "to_element": "Selection"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T07:43:15.875978+00:00",
+  "updated_at": "2026-01-12T07:43:15.875981+00:00",
+  "source": "https://doi.org/10.1016/0022-5193(78)90141-7",
+  "reference": "Taylor PD, Jonker LB. Evolutionary Stable Strategies and Game Dynamics. Mathematical Biosciences. 1978;40(1-2):145-156."
+}

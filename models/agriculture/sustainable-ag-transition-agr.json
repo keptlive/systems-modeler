@@ -1,0 +1,91 @@
+{
+  "id": "sustainable-ag-transition-agr",
+  "name": "Sustainable Agriculture Transition",
+  "description": "Model of agricultural transition. Source: Foley et al. (2011), Nature.",
+  "stocks": [
+    {
+      "id": "stock-conv",
+      "name": "Conventional",
+      "initial_value": 900,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-sust",
+      "name": "Sustainable",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-trans",
+      "name": "Transition",
+      "equation": "Conventional * Adoption_Rate * Incentive",
+      "from_stock": "stock-conv",
+      "to_stock": "stock-sust",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-revert",
+      "name": "Reversion",
+      "equation": "Sustainable * Reversion_Rate",
+      "from_stock": "stock-sust",
+      "to_stock": "stock-conv",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-adopt",
+      "name": "Adoption_Rate",
+      "equation": "0.02 + 0.01 * Sustainable / (Conventional + Sustainable)",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-incentive",
+      "name": "Incentive",
+      "equation": "1 + 0.01 * TIME",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-revert",
+      "name": "Reversion_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:50:58.059929+00:00",
+  "updated_at": "2026-01-12T12:50:58.059929+00:00",
+  "source": "https://systemdynamics.org/resources/",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

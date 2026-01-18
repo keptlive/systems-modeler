@@ -1,0 +1,151 @@
+{
+  "id": "amoc-tipping-point-cli",
+  "name": "AMOC Atlantic Circulation Tipping Point",
+  "description": "Models the Atlantic Meridional Overturning Circulation collapse risk. Freshwater input from Greenland ice melt can push system past tipping point into weak circulation state. Major climate concern. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "stock-amoc-strength",
+      "name": "AMOC Strength",
+      "initial_value": 18,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-salinity",
+      "name": "North Atlantic Salinity",
+      "initial_value": 35,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-amoc-change",
+      "name": "AMOC Change",
+      "equation": "AMOC_Response * (Equilibrium_AMOC - AMOC_Strength)",
+      "from_stock": null,
+      "to_stock": "stock-amoc-strength",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-salinity-change",
+      "name": "Salinity Change",
+      "equation": "-Freshwater_Flux / Mixed_Layer_Depth",
+      "from_stock": null,
+      "to_stock": "stock-salinity",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-equilibrium",
+      "name": "Equilibrium AMOC",
+      "equation": "MAX(0, 20 * (North_Atlantic_Salinity - 34) / (35 - 34))",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-response",
+      "name": "AMOC Response",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-freshwater",
+      "name": "Freshwater Flux",
+      "equation": "Greenland_Melt + Precipitation_Change",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-greenland",
+      "name": "Greenland Melt",
+      "equation": "0.01 * (Global_Temperature_Anomaly - 1.5)",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-precip",
+      "name": "Precipitation Change",
+      "equation": "0.005 * Global_Temperature_Anomaly",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-temp-anomaly",
+      "name": "Global Temperature Anomaly",
+      "equation": "1.2",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-mixed-layer",
+      "name": "Mixed Layer Depth",
+      "equation": "500",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-tipping-threshold",
+      "name": "Tipping Threshold",
+      "equation": "34.5",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "North Atlantic Salinity",
+      "to_element": "Equilibrium AMOC"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Equilibrium AMOC",
+      "to_element": "AMOC Change"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Freshwater Flux",
+      "to_element": "Salinity Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 500,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T07:39:15.418090+00:00",
+  "updated_at": "2026-01-12T07:39:15.418118+00:00",
+  "source": "https://doi.org/10.1038/s41558-018-0091-3",
+  "reference": "Caesar L, et al. Observed fingerprint of a weakening Atlantic Ocean overturning circulation. Nature. 2018;556:191-196."
+}

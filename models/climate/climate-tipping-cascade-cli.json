@@ -1,0 +1,234 @@
+{
+  "id": "climate-tipping-cascade-cli",
+  "name": "Climate Tipping Points Cascade Model",
+  "description": "System dynamics model of interacting climate tipping points. Captures potential cascade effects between Arctic ice, permafrost, Amazon forest, and thermohaline circulation. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "source": "https://doi.org/10.1038/s41586-019-1857-2",
+  "reference": "Lenton TM et al. (2019). Climate tipping points - too risky to bet against. Nature, 575, 592-595.",
+  "stocks": [
+    {
+      "id": "stock-arctic-ice",
+      "name": "Arctic Sea Ice",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-permafrost",
+      "name": "Permafrost Carbon",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-amazon",
+      "name": "Amazon Forest Cover",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-thc",
+      "name": "Thermohaline Circulation Strength",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-global-temp",
+      "name": "Global Temperature Anomaly",
+      "initial_value": 1.2,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-ice-loss",
+      "name": "Arctic Ice Loss",
+      "equation": "Arctic_Sea_Ice * (Global_Temperature_Anomaly - 0.5) * Ice_Sensitivity / 100",
+      "from_stock": "stock-arctic-ice",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-permafrost-thaw",
+      "name": "Permafrost Thaw",
+      "equation": "Permafrost_Carbon * (Global_Temperature_Anomaly - 1) * Permafrost_Sensitivity / 100 * (1 + Arctic_Amplification)",
+      "from_stock": "stock-permafrost",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-amazon-dieback",
+      "name": "Amazon Dieback",
+      "equation": "Amazon_Forest_Cover * (Global_Temperature_Anomaly - 1.5) * Amazon_Sensitivity / 100 * Deforestation_Pressure",
+      "from_stock": "stock-amazon",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-thc-weakening",
+      "name": "THC Weakening",
+      "equation": "Thermohaline_Circulation_Strength * Freshwater_Forcing * THC_Sensitivity / 100",
+      "from_stock": "stock-thc",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-warming",
+      "name": "Warming Rate",
+      "equation": "(Emissions_Forcing + Permafrost_Feedback + Albedo_Feedback) / Climate_Inertia",
+      "from_stock": null,
+      "to_stock": "stock-global-temp",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-ice-sens",
+      "name": "Ice Sensitivity",
+      "equation": "2",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-arctic-amp",
+      "name": "Arctic Amplification",
+      "equation": "(100 - Arctic_Sea_Ice) / 100 * 2",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-perm-sens",
+      "name": "Permafrost Sensitivity",
+      "equation": "1",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-amazon-sens",
+      "name": "Amazon Sensitivity",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-deforest",
+      "name": "Deforestation Pressure",
+      "equation": "1.2",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-thc-sens",
+      "name": "THC Sensitivity",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-freshwater",
+      "name": "Freshwater Forcing",
+      "equation": "(100 - Arctic_Sea_Ice) / 100 + (100 - Permafrost_Carbon) / 200",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-emissions",
+      "name": "Emissions Forcing",
+      "equation": "0.02",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-perm-feedback",
+      "name": "Permafrost Feedback",
+      "equation": "(100 - Permafrost_Carbon) / 100 * 0.01",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-albedo",
+      "name": "Albedo Feedback",
+      "equation": "(100 - Arctic_Sea_Ice) / 100 * 0.005",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-inertia",
+      "name": "Climate Inertia",
+      "equation": "30",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-tipping-risk",
+      "name": "Tipping Risk Index",
+      "equation": "((100 - Arctic_Sea_Ice) + (100 - Permafrost_Carbon) + (100 - Amazon_Forest_Cover) + (100 - Thermohaline_Circulation_Strength)) / 4",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2150,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T03:15:51.643131+00:00",
+  "updated_at": "2026-01-12T03:15:51.643131+00:00"
+}

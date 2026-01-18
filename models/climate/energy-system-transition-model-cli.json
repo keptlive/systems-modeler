@@ -1,0 +1,459 @@
+{
+  "id": "energy-system-transition-model-cli",
+  "name": "Energy System Transition Model",
+  "description": "Models the transition from fossil fuels to renewable energy, including capacity investment, learning curves, grid integration, and stranded assets. Based on energy transition literature. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "stock-fossil-fuel-capacity",
+      "name": "Fossil Fuel Capacity",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-renewable-energy-capacity",
+      "name": "Renewable Energy Capacity",
+      "initial_value": 1500,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-energy-storage-capacity",
+      "name": "Energy Storage Capacity",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cumulative-renewable-deployment",
+      "name": "Cumulative Renewable Deployment",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-stranded-assets-value",
+      "name": "Stranded Assets Value",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-cumulative-co2-emissions",
+      "name": "Cumulative CO2 Emissions",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-fossil-capacity-investment",
+      "name": "Fossil Capacity Investment",
+      "equation": "MAX(0, (Desired_Fossil_Capacity - Fossil_Capacity) / Fossil_Construction_Time)",
+      "from_stock": null,
+      "to_stock": "stock-fossil-fuel-capacity",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fossil-capacity-retirement",
+      "name": "Fossil Capacity Retirement",
+      "equation": "Fossil_Capacity / Fossil_Lifetime + Early_Retirement",
+      "from_stock": "stock-fossil-fuel-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-renewable-capacity-investment",
+      "name": "Renewable Capacity Investment",
+      "equation": "(Desired_Renewable_Capacity - Renewable_Capacity) / Renewable_Construction_Time",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-renewable-deployment",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-renewable-capacity-retirement",
+      "name": "Renewable Capacity Retirement",
+      "equation": "Renewable_Capacity / Renewable_Lifetime",
+      "from_stock": "stock-renewable-energy-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-storage-capacity-investment",
+      "name": "Storage Capacity Investment",
+      "equation": "(Desired_Storage_Capacity - Storage_Capacity) / Storage_Construction_Time",
+      "from_stock": null,
+      "to_stock": "stock-energy-storage-capacity",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-storage-retirement",
+      "name": "Storage Retirement",
+      "equation": "Storage_Capacity / Storage_Lifetime",
+      "from_stock": "stock-energy-storage-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-asset-stranding-rate",
+      "name": "Asset Stranding Rate",
+      "equation": "Early_Retirement * Fossil_Capital_Cost * Remaining_Lifetime_Fraction",
+      "from_stock": null,
+      "to_stock": "stock-stranded-assets-value",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-asset-writeoff",
+      "name": "Asset Writeoff",
+      "equation": "Stranded_Assets / Writeoff_Period",
+      "from_stock": "stock-stranded-assets-value",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-annual-co2-emissions",
+      "name": "Annual CO2 Emissions",
+      "equation": "Fossil_Generation * Emission_Factor",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-co2-emissions",
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-electricity-demand",
+      "name": "Total Electricity Demand",
+      "equation": "Base_Demand * (1 + Demand_Growth_Rate)^(Time - 2020) * Electrification_Factor",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-base-demand-2020",
+      "name": "Base Demand (2020)",
+      "equation": "25000",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-demand-growth-rate",
+      "name": "Demand Growth Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-electrification-factor",
+      "name": "Electrification Factor",
+      "equation": "1 + 0.5 * (Time - 2020) / 80",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-renewable-lcoe",
+      "name": "Renewable LCOE",
+      "equation": "Initial_Renewable_Cost * (Cumulative_Renewable_Deployment / 5000)^Learning_Rate_Exponent",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-renewable-cost",
+      "name": "Initial Renewable Cost",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-learning-rate-exponent",
+      "name": "Learning Rate Exponent",
+      "equation": "-0.32",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fossil-lcoe",
+      "name": "Fossil LCOE",
+      "equation": "60 + Carbon_Price * Emission_Factor / 1000",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-carbon-price",
+      "name": "Carbon Price",
+      "equation": "50 + 5 * (Time - 2020)",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-cost-parity-index",
+      "name": "Cost Parity Index",
+      "equation": "Fossil_Cost / Renewable_Cost",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-desired-renewable-share",
+      "name": "Desired Renewable Share",
+      "equation": "MIN(0.95, 0.3 + 0.65 * (1 - 1 / (1 + EXP(2 * (Cost_Parity - 1)))))",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-renewable-capacity-factor",
+      "name": "Renewable Capacity Factor",
+      "equation": "0.30",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-fossil-capacity-factor",
+      "name": "Fossil Capacity Factor",
+      "equation": "0.50",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-renewable-generation",
+      "name": "Renewable Generation",
+      "equation": "Renewable_Capacity * Capacity_Factor_Renewable * 8760 / 1000",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-fossil-generation",
+      "name": "Fossil Generation",
+      "equation": "MAX(0, Total_Electricity_Demand - Renewable_Generation)",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-desired-fossil-capacity",
+      "name": "Desired Fossil Capacity",
+      "equation": "MAX(0, (Total_Electricity_Demand * (1 - Desired_Renewable_Share)) / (Capacity_Factor_Fossil * 8.76))",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-desired-renewable-capacity",
+      "name": "Desired Renewable Capacity",
+      "equation": "(Total_Electricity_Demand * Desired_Renewable_Share) / (Capacity_Factor_Renewable * 8.76) * 1.2",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-desired-storage-capacity",
+      "name": "Desired Storage Capacity",
+      "equation": "Renewable_Capacity * Storage_Hours_Per_GW",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-storage-hours-per-gw",
+      "name": "Storage Hours per GW",
+      "equation": "4",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-emission-factor",
+      "name": "Emission Factor",
+      "equation": "0.5",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-fossil-plant-lifetime",
+      "name": "Fossil Plant Lifetime",
+      "equation": "40",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-renewable-plant-lifetime",
+      "name": "Renewable Plant Lifetime",
+      "equation": "25",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-storage-lifetime",
+      "name": "Storage Lifetime",
+      "equation": "15",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-fossil-construction-time",
+      "name": "Fossil Construction Time",
+      "equation": "5",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-renewable-construction-time",
+      "name": "Renewable Construction Time",
+      "equation": "2",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-storage-construction-time",
+      "name": "Storage Construction Time",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-early-retirement-rate",
+      "name": "Early Retirement Rate",
+      "equation": "IF Fossil_Cost > Renewable_Cost * 1.5 THEN Fossil_Capacity * 0.03 ELSE 0",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-fossil-capital-cost",
+      "name": "Fossil Capital Cost",
+      "equation": "0.001",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-remaining-lifetime-fraction",
+      "name": "Remaining Lifetime Fraction",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-writeoff-period",
+      "name": "Writeoff Period",
+      "equation": "20",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-renewable-share",
+      "name": "Renewable Share",
+      "equation": "Renewable_Generation / Total_Electricity_Demand",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.707886Z",
+  "updated_at": "2026-01-11T20:04:50.707886Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

@@ -1,0 +1,115 @@
+{
+  "id": "battery-state-of-charge-ene",
+  "name": "Battery State of Charge Model",
+  "description": "Lithium-ion battery charge/discharge dynamics",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "State_of_Charge",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Cell_Voltage",
+      "initial_value": 3.7,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Capacity",
+      "equation": "100.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Current",
+      "equation": "10.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Internal_Resistance",
+      "equation": "0.02",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Open_Circuit_Voltage",
+      "equation": "3.0+0.7*State_of_Charge",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Voltage_Drop",
+      "equation": "Internal_Resistance*Current",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "SOC_Change",
+      "equation": "-Current/Capacity",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "State_of_Charge",
+      "to_element": "Open_Circuit_Voltage"
+    },
+    {
+      "id": "c2",
+      "from_element": "Current",
+      "to_element": "SOC_Change"
+    },
+    {
+      "id": "c3",
+      "from_element": "Capacity",
+      "to_element": "SOC_Change"
+    },
+    {
+      "id": "c4",
+      "from_element": "Current",
+      "to_element": "Voltage_Drop"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 5.0,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-15T20:50:11.592086+00:00",
+  "updated_at": "2026-01-15T20:50:11.592086+00:00",
+  "source": "https://doi.org/10.1016/j.jpowsour.2006.02.006",
+  "reference": "Chen, M. & Rincon-Mora, G.A. (2006) Accurate electrical battery model. IEEE Trans. Energy Conv. 21:504-511"
+}

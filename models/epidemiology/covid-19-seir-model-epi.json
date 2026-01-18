@@ -1,0 +1,384 @@
+{
+  "id": "covid-19-seir-model-epi",
+  "name": "COVID-19 SEIR Model",
+  "description": "An SEIR compartmental model for COVID-19 transmission dynamics. Includes exposed (latent) period, hospitalization, ICU, and death compartments based on early pandemic parameters. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 67000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exposed",
+      "name": "Exposed",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infectious-mild",
+      "name": "Infectious Mild",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infectious-severe",
+      "name": "Infectious Severe",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-hospitalized",
+      "name": "Hospitalized",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-icu",
+      "name": "ICU",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-deceased",
+      "name": "Deceased",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "Infection",
+      "equation": "Beta * Susceptible * Total_Infectious / Total_Population * (1 - Intervention_Effect)",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-becoming-infectious",
+      "name": "Becoming Infectious",
+      "equation": "Exposed / Latent_Period",
+      "from_stock": "stock-exposed",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-becoming-infectious-mild",
+      "name": "Becoming Infectious Mild",
+      "equation": "Becoming_Infectious * (1 - Fraction_Severe)",
+      "from_stock": null,
+      "to_stock": "stock-infectious-mild",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-becoming-infectious-severe",
+      "name": "Becoming Infectious Severe",
+      "equation": "Becoming_Infectious * Fraction_Severe",
+      "from_stock": null,
+      "to_stock": "stock-infectious-severe",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-hospitalization",
+      "name": "Hospitalization",
+      "equation": "Infectious_Severe / Time_to_Hospital",
+      "from_stock": "stock-infectious-severe",
+      "to_stock": "stock-hospitalized",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-recovery-mild",
+      "name": "Recovery Mild",
+      "equation": "Infectious_Mild / Infectious_Period_Mild",
+      "from_stock": "stock-infectious-mild",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-icu-admission",
+      "name": "ICU Admission",
+      "equation": "Hospitalized * Fraction_ICU / Hospital_Stay",
+      "from_stock": "stock-hospitalized",
+      "to_stock": "stock-icu",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-hospital-recovery",
+      "name": "Hospital Recovery",
+      "equation": "Hospitalized * (1 - Fraction_ICU - Hospital_Death_Rate) / Hospital_Stay",
+      "from_stock": "stock-hospitalized",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-hospital-death",
+      "name": "Hospital Death",
+      "equation": "Hospitalized * Hospital_Death_Rate / Hospital_Stay",
+      "from_stock": "stock-hospitalized",
+      "to_stock": "stock-deceased",
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-icu-recovery",
+      "name": "ICU Recovery",
+      "equation": "ICU * (1 - ICU_Death_Rate) / ICU_Stay",
+      "from_stock": "stock-icu",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-icu-death",
+      "name": "ICU Death",
+      "equation": "ICU * ICU_Death_Rate / ICU_Stay",
+      "from_stock": "stock-icu",
+      "to_stock": "stock-deceased",
+      "position": {
+        "x": 450,
+        "y": 650
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-infectious",
+      "name": "Total Infectious",
+      "equation": "Infectious_Mild + Infectious_Severe",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "67000000",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-beta-transmission-rate",
+      "name": "Beta (Transmission Rate)",
+      "equation": "R0 / Infectious_Period_Average",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-r0-basic-reproduction-number",
+      "name": "R0 (Basic Reproduction Number)",
+      "equation": "2.4",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-latent-period",
+      "name": "Latent Period",
+      "equation": "5.1",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-infectious-period-average",
+      "name": "Infectious Period Average",
+      "equation": "6.5",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-infectious-period-mild",
+      "name": "Infectious Period Mild",
+      "equation": "7",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fraction-severe",
+      "name": "Fraction Severe",
+      "equation": "0.19",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-time-to-hospital",
+      "name": "Time to Hospital",
+      "equation": "5",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-hospital-stay",
+      "name": "Hospital Stay",
+      "equation": "8",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fraction-icu",
+      "name": "Fraction ICU",
+      "equation": "0.30",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-icu-stay",
+      "name": "ICU Stay",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-hospital-death-rate",
+      "name": "Hospital Death Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-icu-death-rate",
+      "name": "ICU Death Rate",
+      "equation": "0.50",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-intervention-effect",
+      "name": "Intervention Effect",
+      "equation": "IF Time > Intervention_Start_Day THEN Intervention_Reduction ELSE 0",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-intervention-start-day",
+      "name": "Intervention Start Day",
+      "equation": "60",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-intervention-reduction",
+      "name": "Intervention Reduction",
+      "equation": "0.75",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-effective-reproduction-number",
+      "name": "Effective Reproduction Number",
+      "equation": "R0 * (Susceptible / Total_Population) * (1 - Intervention_Effect)",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.790377Z",
+  "updated_at": "2026-01-11T20:04:50.790377Z",
+  "source": "https://doi.org/10.1016/S0025-5564(02)00108-6",
+  "reference": "Hethcote HW. The mathematics of infectious diseases. SIAM Review. 2000;42(4):599-653."
+}

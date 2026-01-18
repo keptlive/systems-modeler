@@ -1,0 +1,165 @@
+{
+  "id": "var-risk-management-fin",
+  "name": "Value at Risk (VaR) Model",
+  "description": "Risk management model for measuring portfolio downside risk. Reference: Jorion, P. (2007). Value at Risk.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Portfolio_Value",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Max_Drawdown",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "VaR_Breaches",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Daily_PnL",
+      "equation": "Portfolio_Value * Daily_Return",
+      "from_stock": null,
+      "to_stock": "Portfolio_Value",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Drawdown_Update",
+      "equation": "IF Portfolio_Value < Peak_Value - Max_Drawdown THEN Peak_Value - Portfolio_Value - Max_Drawdown ELSE 0",
+      "from_stock": null,
+      "to_stock": "Max_Drawdown",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "VaR_Breach",
+      "equation": "IF Daily_PnL < -VaR_95 THEN 1 ELSE 0",
+      "from_stock": null,
+      "to_stock": "VaR_Breaches",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Mean_Return",
+      "equation": "0.0004",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Volatility",
+      "equation": "0.015",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Daily_Return",
+      "equation": "Mean_Return + Volatility * (SIN(time * 17) + 0.5 * SIN(time * 31))",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "VaR_95",
+      "equation": "Portfolio_Value * Volatility * 1.645",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "VaR_99",
+      "equation": "Portfolio_Value * Volatility * 2.326",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Expected_Shortfall",
+      "equation": "VaR_95 * 1.25",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Peak_Value",
+      "equation": "1000000",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Current_Drawdown",
+      "equation": "(Peak_Value - Portfolio_Value) / Peak_Value",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "VaR_Utilization",
+      "equation": "ABS(Daily_PnL) / VaR_95",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 252,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1002/9781118267004",
+  "reference": "Jorion, P. (2007). Value at Risk: The New Benchmark for Managing Financial Risk. McGraw-Hill.",
+  "created_at": "2026-01-15T20:01:09.823797+00:00",
+  "updated_at": "2026-01-15T20:01:09.823797+00:00"
+}

@@ -1,0 +1,219 @@
+{
+  "id": "lithium-battery-recycling-ene",
+  "name": "Lithium-Ion Battery Recycling Dynamics",
+  "description": "A model of lithium-ion battery production, use, and end-of-life management for electric vehicles, capturing material flows, recycling rates, and secondary use potential. Reference: IEA Global EV Outlook. Source: https://www.iea.org/reports/global-ev-outlook-2021",
+  "source": "https://doi.org/10.1038/s41560-019-0405-5",
+  "reference": "Harper G, et al. Recycling lithium-ion batteries from electric vehicles. Nature. 2019;575:75-86. See also IEA Global EV Outlook.",
+  "stocks": [
+    {
+      "id": "stock-batteries-in-vehicles",
+      "name": "Batteries in Vehicles",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-secondary-use",
+      "name": "Batteries in Secondary Use",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recycled-material",
+      "name": "Recycled Material",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-virgin-lithium",
+      "name": "Virgin Lithium Demand",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-new-batteries",
+      "name": "New Battery Production",
+      "equation": "EV_Sales * Battery_Per_Vehicle",
+      "from_stock": null,
+      "to_stock": "stock-batteries-in-vehicles",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-end-of-ev-life",
+      "name": "End of EV Life",
+      "equation": "Batteries_in_Vehicles / Average_EV_Life",
+      "from_stock": "stock-batteries-in-vehicles",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-to-secondary",
+      "name": "To Secondary Use",
+      "equation": "(Batteries_in_Vehicles / Average_EV_Life) * Secondary_Use_Rate",
+      "from_stock": null,
+      "to_stock": "stock-secondary-use",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-secondary-end",
+      "name": "Secondary Use End",
+      "equation": "Batteries_in_Secondary_Use / Secondary_Life",
+      "from_stock": "stock-secondary-use",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-recycling",
+      "name": "Recycling Flow",
+      "equation": "((Batteries_in_Vehicles / Average_EV_Life) * (1 - Secondary_Use_Rate) + Batteries_in_Secondary_Use / Secondary_Life) * Recycling_Rate * Material_Recovery_Rate",
+      "from_stock": null,
+      "to_stock": "stock-recycled-material",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recycled-use",
+      "name": "Recycled Material Use",
+      "equation": "MIN(Recycled_Material, EV_Sales * Battery_Per_Vehicle * Recycled_Content_Potential)",
+      "from_stock": "stock-recycled-material",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-virgin-demand",
+      "name": "Virgin Demand Change",
+      "equation": "EV_Sales * Battery_Per_Vehicle * (1 - Recycled_Content_Actual)",
+      "from_stock": null,
+      "to_stock": "stock-virgin-lithium",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-ev-sales",
+      "name": "EV Sales",
+      "equation": "5000000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-battery-per",
+      "name": "Battery Per Vehicle",
+      "equation": "60",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-ev-life",
+      "name": "Average EV Life",
+      "equation": "12",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-secondary-rate",
+      "name": "Secondary Use Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-secondary-life",
+      "name": "Secondary Life",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recycling-rate",
+      "name": "Recycling Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recovery",
+      "name": "Material Recovery Rate",
+      "equation": "0.95",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recycled-potential",
+      "name": "Recycled Content Potential",
+      "equation": "0.3",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recycled-actual",
+      "name": "Recycled Content Actual",
+      "equation": "MIN(Recycled_Content_Potential, Recycled_Material / (EV_Sales * Battery_Per_Vehicle))",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T08:00:00.000000+00:00",
+  "updated_at": "2026-01-12T08:00:00.000000+00:00"
+}

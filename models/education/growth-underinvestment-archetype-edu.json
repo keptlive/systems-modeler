@@ -1,0 +1,173 @@
+{
+  "id": "growth-underinvestment-archetype-edu",
+  "name": "Growth and Underinvestment Archetype",
+  "description": "Growth strains capacity, but investment lags behind. Source: Senge (1990), The Fifth Discipline. DOI: 10.1108/eb025496",
+  "stocks": [
+    {
+      "id": "stock-demand",
+      "name": "Demand",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-capacity",
+      "name": "Capacity",
+      "initial_value": 120,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-quality",
+      "name": "Service_Quality",
+      "initial_value": 90,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-demgrow",
+      "name": "Demand_Growth",
+      "equation": "Demand * Base_Growth * Service_Quality / Standard_Quality",
+      "from_stock": null,
+      "to_stock": "stock-demand",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-invest",
+      "name": "Investment",
+      "equation": "IF(Utilization > Investment_Threshold, Investment_Rate * Demand, 0)",
+      "from_stock": null,
+      "to_stock": "stock-capacity",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-capdepr",
+      "name": "Capacity_Depreciation",
+      "equation": "Capacity * Depreciation_Rate",
+      "from_stock": "stock-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-qualchg",
+      "name": "Quality_Change",
+      "equation": "(Target_Quality - Service_Quality) / Quality_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-quality",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-basegrow",
+      "name": "Base_Growth",
+      "equation": "0.05",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-stdqual",
+      "name": "Standard_Quality",
+      "equation": "100",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-invrate",
+      "name": "Investment_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-invthresh",
+      "name": "Investment_Threshold",
+      "equation": "0.8",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-depr",
+      "name": "Depreciation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-util",
+      "name": "Utilization",
+      "equation": "Demand / Capacity",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-targqual",
+      "name": "Target_Quality",
+      "equation": "100 * (1 - MAX(0, Utilization - 1))",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-adjtime",
+      "name": "Quality_Adjustment_Time",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Demand",
+      "to_element": "Utilization"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:13:18.795758+00:00",
+  "updated_at": "2026-01-12T02:13:18.795761+00:00",
+  "source": "https://doi.org/10.1108/eb025496",
+  "reference": "Senge, P.M. (1990). The Fifth Discipline: The Art and Practice of the Learning Organization."
+}

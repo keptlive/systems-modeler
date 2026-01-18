@@ -1,0 +1,142 @@
+{
+  "id": "wright-learning-curve-eco",
+  "name": "Wright's Law Learning Curve",
+  "description": "Unit costs decline by constant percentage with each doubling of cumulative production. Predicts technology cost trajectories. Key for energy transition planning, especially solar PV. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "stock-cumulative-production",
+      "name": "Cumulative Production",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-unit-cost",
+      "name": "Unit Cost",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-production",
+      "name": "Annual Production",
+      "equation": "Production_Growth_Rate * Cumulative_Production",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-production",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-cost-reduction",
+      "name": "Cost Reduction",
+      "equation": "-Learning_Rate * Unit_Cost * LOG(2) * Annual_Production / Cumulative_Production",
+      "from_stock": null,
+      "to_stock": "stock-unit-cost",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-learning-rate",
+      "name": "Learning Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-growth-rate",
+      "name": "Production Growth Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-progress-ratio",
+      "name": "Progress Ratio",
+      "equation": "1 - Learning_Rate",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-doublings",
+      "name": "Doublings",
+      "equation": "LOG(Cumulative_Production) / LOG(2)",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-predicted-cost",
+      "name": "Predicted Cost",
+      "equation": "100 * Progress_Ratio^Doublings",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-cost-parity",
+      "name": "Grid Parity Cost",
+      "equation": "20",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-years-to-parity",
+      "name": "Years to Parity",
+      "equation": "IF(Unit_Cost > Grid_Parity_Cost, LOG(Unit_Cost / Grid_Parity_Cost) / (Learning_Rate * LOG(2) * Production_Growth_Rate), 0)",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Cumulative Production",
+      "to_element": "Cost Reduction"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Learning Rate",
+      "to_element": "Cost Reduction"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Unit Cost",
+      "to_element": "Cost Reduction"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:48:28.113686+00:00",
+  "updated_at": "2026-01-12T07:48:28.113746+00:00",
+  "source": "https://doi.org/10.1016/j.enpol.2005.08.012",
+  "reference": "Wright TP. Factors Affecting the Cost of Airplanes. Journal of Aeronautical Sciences. 1936;3(4):122-128."
+}

@@ -1,0 +1,161 @@
+{
+  "id": "disinformation-spread-dynamics-soc",
+  "name": "Disinformation Spread Dynamics Model",
+  "description": "Model of online disinformation spread showing how algorithmic amplification, social network structure, and fact-checking interventions affect the spread of false information. Based on computational social science research.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Naive_Population",
+      "initial_value": 80000000,
+      "equation": "",
+      "position": {"x": 150, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "Exposed_to_Disinfo",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {"x": 350, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Believers",
+      "initial_value": 5000000,
+      "equation": "",
+      "position": {"x": 550, "y": 200}
+    },
+    {
+      "id": "s4",
+      "name": "Inoculated",
+      "initial_value": 5000000,
+      "equation": "",
+      "position": {"x": 350, "y": 380}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Exposure",
+      "equation": "Beta * Naive_Population * Believers / Total_Pop * Algorithm_Amplification",
+      "from_stock": "Naive_Population",
+      "to_stock": "Exposed_to_Disinfo",
+      "position": {"x": 250, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Belief_Adoption",
+      "equation": "Exposed_to_Disinfo * Adoption_Rate * (1 - Critical_Thinking)",
+      "from_stock": "Exposed_to_Disinfo",
+      "to_stock": "Believers",
+      "position": {"x": 450, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Fact_Check_Effect",
+      "equation": "Believers * Debunk_Rate * Fact_Check_Coverage",
+      "from_stock": "Believers",
+      "to_stock": "Inoculated",
+      "position": {"x": 450, "y": 290}
+    },
+    {
+      "id": "f4",
+      "name": "Pre_Bunking",
+      "equation": "Naive_Population * Prebunk_Rate * Media_Literacy",
+      "from_stock": "Naive_Population",
+      "to_stock": "Inoculated",
+      "position": {"x": 250, "y": 290}
+    },
+    {
+      "id": "f5",
+      "name": "Skeptic_Rejection",
+      "equation": "Exposed_to_Disinfo * Rejection_Rate * Critical_Thinking",
+      "from_stock": "Exposed_to_Disinfo",
+      "to_stock": "Inoculated",
+      "position": {"x": 350, "y": 290}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Beta",
+      "equation": "0.3",
+      "position": {"x": 100, "y": 80}
+    },
+    {
+      "id": "v2",
+      "name": "Algorithm_Amplification",
+      "equation": "2.5",
+      "position": {"x": 250, "y": 80}
+    },
+    {
+      "id": "v3",
+      "name": "Adoption_Rate",
+      "equation": "0.15",
+      "position": {"x": 400, "y": 80}
+    },
+    {
+      "id": "v4",
+      "name": "Critical_Thinking",
+      "equation": "0.3",
+      "position": {"x": 550, "y": 80}
+    },
+    {
+      "id": "v5",
+      "name": "Total_Pop",
+      "equation": "Naive_Population + Exposed_to_Disinfo + Believers + Inoculated",
+      "position": {"x": 700, "y": 200}
+    },
+    {
+      "id": "v6",
+      "name": "Debunk_Rate",
+      "equation": "0.05",
+      "position": {"x": 550, "y": 290}
+    },
+    {
+      "id": "v7",
+      "name": "Fact_Check_Coverage",
+      "equation": "0.3",
+      "position": {"x": 650, "y": 290}
+    },
+    {
+      "id": "v8",
+      "name": "Prebunk_Rate",
+      "equation": "0.01",
+      "position": {"x": 150, "y": 450}
+    },
+    {
+      "id": "v9",
+      "name": "Media_Literacy",
+      "equation": "0.4",
+      "position": {"x": 250, "y": 450}
+    },
+    {
+      "id": "v10",
+      "name": "Rejection_Rate",
+      "equation": "0.2",
+      "position": {"x": 350, "y": 450}
+    },
+    {
+      "id": "v11",
+      "name": "Disinfo_Prevalence",
+      "equation": "(Exposed_to_Disinfo + Believers) / Total_Pop",
+      "position": {"x": 550, "y": 450}
+    },
+    {
+      "id": "v12",
+      "name": "R_Effective",
+      "equation": "Beta * Naive_Population / Total_Pop * Algorithm_Amplification * Adoption_Rate",
+      "position": {"x": 100, "y": 450}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 180,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1126/science.aap9559",
+  "reference": "Vosoughi S, Roy D, Aral S. (2018). The spread of true and false news online. Science, 359(6380), 1146-1151. DOI: 10.1126/science.aap9559. Also: Lazer DMJ, et al. (2018). The science of fake news. Science, 359(6380), 1094-1096.",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

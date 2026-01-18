@@ -1,0 +1,252 @@
+{
+  "id": "transport-mode-choice-eco",
+  "name": "Transportation Mode Choice Model",
+  "description": "Models commuter choice between transport modes based on utility. Source: McFadden (1974), Nobel Prize work. DOI: 10.1016/S0304-4076(79)80023-X",
+  "stocks": [
+    {
+      "id": "stock-car",
+      "name": "Car_Users",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-transit",
+      "name": "Transit_Users",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-bike",
+      "name": "Bike_Users",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-tocar",
+      "name": "Switch_To_Car",
+      "equation": "Total_Commuters * Choice_Prob_Car - Car_Users",
+      "from_stock": null,
+      "to_stock": "stock-car",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-totransit",
+      "name": "Switch_To_Transit",
+      "equation": "Total_Commuters * Choice_Prob_Transit - Transit_Users",
+      "from_stock": null,
+      "to_stock": "stock-transit",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-tobike",
+      "name": "Switch_To_Bike",
+      "equation": "Total_Commuters * Choice_Prob_Bike - Bike_Users",
+      "from_stock": null,
+      "to_stock": "stock-bike",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total",
+      "name": "Total_Commuters",
+      "equation": "100",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-utilcar",
+      "name": "Utility_Car",
+      "equation": "-Time_Car * VOT - Cost_Car + Comfort_Car",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-utiltrans",
+      "name": "Utility_Transit",
+      "equation": "-Time_Transit * VOT - Cost_Transit + Transit_Quality",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-utilbike",
+      "name": "Utility_Bike",
+      "equation": "-Time_Bike * VOT + Health_Benefit - Weather_Penalty",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-timecar",
+      "name": "Time_Car",
+      "equation": "30 + Car_Users * 0.5",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-timetrans",
+      "name": "Time_Transit",
+      "equation": "45",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-timebike",
+      "name": "Time_Bike",
+      "equation": "40",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-vot",
+      "name": "VOT",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-costcar",
+      "name": "Cost_Car",
+      "equation": "10",
+      "position": {
+        "x": 150,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-costtrans",
+      "name": "Cost_Transit",
+      "equation": "3",
+      "position": {
+        "x": 150,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-comfort",
+      "name": "Comfort_Car",
+      "equation": "5",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-transqual",
+      "name": "Transit_Quality",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-health",
+      "name": "Health_Benefit",
+      "equation": "3",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-weather",
+      "name": "Weather_Penalty",
+      "equation": "1",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-sumexp",
+      "name": "Sum_Exp_Utility",
+      "equation": "EXP(Utility_Car) + EXP(Utility_Transit) + EXP(Utility_Bike)",
+      "position": {
+        "x": 300,
+        "y": 375
+      }
+    },
+    {
+      "id": "var-probcar",
+      "name": "Choice_Prob_Car",
+      "equation": "EXP(Utility_Car) / Sum_Exp_Utility",
+      "position": {
+        "x": 200,
+        "y": 375
+      }
+    },
+    {
+      "id": "var-probtrans",
+      "name": "Choice_Prob_Transit",
+      "equation": "EXP(Utility_Transit) / Sum_Exp_Utility",
+      "position": {
+        "x": 350,
+        "y": 375
+      }
+    },
+    {
+      "id": "var-probbike",
+      "name": "Choice_Prob_Bike",
+      "equation": "EXP(Utility_Bike) / Sum_Exp_Utility",
+      "position": {
+        "x": 450,
+        "y": 375
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Car_Users",
+      "to_element": "Time_Car"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:23:02.238296+00:00",
+  "updated_at": "2026-01-12T02:23:02.238299+00:00",
+  "source": "https://doi.org/10.1016/S0304-4076(79)80023-X",
+  "reference": "McFadden, D. (1974). Conditional Logit Analysis of Qualitative Choice Behavior. Frontiers in Econometrics."
+}

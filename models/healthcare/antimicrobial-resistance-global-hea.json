@@ -1,0 +1,210 @@
+{
+  "id": "antimicrobial-resistance-global-hea",
+  "name": "Global Antimicrobial Resistance Dynamics",
+  "description": "System dynamics model of antimicrobial resistance emergence and spread at global scale. Covers human and agricultural antibiotic use. Source: Laxminarayan et al., Lancet Infectious Diseases. DOI: 10.1016/S1473-3099(13)70318-9",
+  "stocks": [
+    {
+      "id": "stock-sens",
+      "name": "Sensitive_Bacteria_Pop",
+      "initial_value": 900,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-resist",
+      "name": "Resistant_Bacteria_Pop",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-abx",
+      "name": "Antibiotic_Usage",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-sensgrow",
+      "name": "Sensitive_Growth",
+      "equation": "Sensitive_Bacteria_Pop * Growth_Rate * (1 - Total_Bacteria / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-sens",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-sensdie",
+      "name": "Sensitive_Death",
+      "equation": "Sensitive_Bacteria_Pop * (Natural_Death + Kill_Rate * Antibiotic_Usage)",
+      "from_stock": "stock-sens",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mutation",
+      "name": "Resistance_Emergence",
+      "equation": "Sensitive_Bacteria_Pop * Mutation_Rate * Antibiotic_Usage / 50",
+      "from_stock": "stock-sens",
+      "to_stock": "stock-resist",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-resistgrow",
+      "name": "Resistant_Growth",
+      "equation": "Resistant_Bacteria_Pop * Growth_Rate * Fitness_Cost * (1 - Total_Bacteria / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-resist",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-resistdie",
+      "name": "Resistant_Death",
+      "equation": "Resistant_Bacteria_Pop * Natural_Death",
+      "from_stock": "stock-resist",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-abxinc",
+      "name": "Usage_Increase",
+      "equation": "Usage_Growth * Antibiotic_Usage",
+      "from_stock": null,
+      "to_stock": "stock-abx",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-abxdec",
+      "name": "Stewardship",
+      "equation": "Stewardship_Rate * Antibiotic_Usage",
+      "from_stock": "stock-abx",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-growth",
+      "name": "Growth_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-carry",
+      "name": "Carrying_Capacity",
+      "equation": "2000",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-death",
+      "name": "Natural_Death",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-kill",
+      "name": "Kill_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-mut",
+      "name": "Mutation_Rate",
+      "equation": "0.0001",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-fit",
+      "name": "Fitness_Cost",
+      "equation": "0.9",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-usegrow",
+      "name": "Usage_Growth",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-steward",
+      "name": "Stewardship_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Bacteria",
+      "equation": "Sensitive_Bacteria_Pop + Resistant_Bacteria_Pop",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T12:41:31.049275+00:00",
+  "updated_at": "2026-01-12T12:41:31.049275+00:00",
+  "source": "https://systemdynamics.org/resources/",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

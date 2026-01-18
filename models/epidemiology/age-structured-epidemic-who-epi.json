@@ -1,0 +1,212 @@
+{
+  "id": "age-structured-epidemic-who-epi",
+  "name": "Age-Structured Epidemic Model",
+  "description": "Epidemic model with age-stratified contact patterns. Source: Mossong et al. (2008), PLoS Medicine. Reference: WHO Disease Outbreak Information. Source: https://www.who.int/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "S_Children",
+      "initial_value": 2000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "I_Children",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "R_Children",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s4",
+      "name": "S_Adults",
+      "initial_value": 6000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "s5",
+      "name": "I_Adults",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "s6",
+      "name": "R_Adults",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Infection_Children",
+      "equation": "Lambda_Children * S_Children",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 175,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Recovery_Children",
+      "equation": "I_Children / Gamma",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 325,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Infection_Adults",
+      "equation": "Lambda_Adults * S_Adults",
+      "from_stock": "s4",
+      "to_stock": "s5",
+      "position": {
+        "x": 175,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Recovery_Adults",
+      "equation": "I_Adults / Gamma",
+      "from_stock": "s5",
+      "to_stock": "s6",
+      "position": {
+        "x": 325,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Beta",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Gamma",
+      "equation": "7",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "C_CC",
+      "equation": "15",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "v4",
+      "name": "C_CA",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "v5",
+      "name": "C_AA",
+      "equation": "10",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v6",
+      "name": "N_Children",
+      "equation": "S_Children + I_Children + R_Children",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "v7",
+      "name": "N_Adults",
+      "equation": "S_Adults + I_Adults + R_Adults",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Lambda_Children",
+      "equation": "Beta * (C_CC * I_Children / N_Children + C_CA * I_Adults / N_Adults)",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Lambda_Adults",
+      "equation": "Beta * (C_CA * I_Children / N_Children + C_AA * I_Adults / N_Adults)",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "I_Children",
+      "to_element": "Lambda_Children"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 180,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:39:40.986721+00:00",
+  "updated_at": "2026-01-15T14:39:40.986724+00:00",
+  "source": "https://doi.org/10.1371/journal.pmed.0050074",
+  "reference": "Mossong, J. et al. (2008). Social contacts and mixing patterns relevant to the spread of infectious diseases. PLoS Med 5:e74."
+}

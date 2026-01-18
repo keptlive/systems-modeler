@@ -1,0 +1,135 @@
+{
+  "id": "lloyd-may-network-epidemic-epi",
+  "name": "Lloyd-May Network Epidemic Model",
+  "description": "Epidemic spread on heterogeneous contact networks",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Infected_Low_Degree",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Infected_High_Degree",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Susceptible_Low",
+      "initial_value": 490.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Susceptible_High",
+      "initial_value": 490.0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "k_low",
+      "equation": "3.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "k_high",
+      "equation": "20.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "mean_k",
+      "equation": "11.5",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "beta",
+      "equation": "0.3",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "gamma",
+      "equation": "0.1",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Theta",
+      "equation": "(k_low*Infected_Low_Degree+k_high*Infected_High_Degree)/(mean_k*1000)",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Infected_Low_Degree",
+      "to_element": "Theta"
+    },
+    {
+      "id": "c2",
+      "from_element": "Infected_High_Degree",
+      "to_element": "Theta"
+    },
+    {
+      "id": "c3",
+      "from_element": "Theta",
+      "to_element": "Susceptible_Low"
+    },
+    {
+      "id": "c4",
+      "from_element": "Theta",
+      "to_element": "Susceptible_High"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 100.0,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T20:45:21.050045+00:00",
+  "updated_at": "2026-01-15T20:45:21.050045+00:00",
+  "source": "https://doi.org/10.1126/science.1061076",
+  "reference": "Lloyd, A.L. & May, R.M. (2001) How viruses spread among computers and people. Science 292:1316-1317"
+}

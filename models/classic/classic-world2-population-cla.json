@@ -1,0 +1,170 @@
+{
+  "id": "classic-world2-population-cla",
+  "name": "World2 Population Sector",
+  "description": "Population sector from Forrester's World2 model (1971), one of the first global system dynamics models. Shows population growth constrained by resources and pollution. Reference: Forrester, J. W. (1961). Industrial Dynamics. MIT Press. Source: https://systemdynamics.org/",
+  "category": "classic",
+  "stocks": [
+    {
+      "id": "stock-pop",
+      "name": "Population",
+      "initial_value": 1650,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-resources",
+      "name": "Natural_Resources",
+      "initial_value": 900,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-pollution",
+      "name": "Pollution",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-births",
+      "name": "Births",
+      "equation": "Population * Birth_Rate * Food_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-pop",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-deaths",
+      "name": "Deaths",
+      "equation": "Population * Death_Rate * Pollution_Multiplier",
+      "from_stock": "stock-pop",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-usage",
+      "name": "Resource_Usage",
+      "equation": "Population * Usage_Rate",
+      "from_stock": "stock-resources",
+      "to_stock": null,
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-pollution-gen",
+      "name": "Pollution_Generation",
+      "equation": "Population * Pollution_Rate",
+      "from_stock": null,
+      "to_stock": "stock-pollution",
+      "position": {
+        "x": 525,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-pollution-absorb",
+      "name": "Pollution_Absorption",
+      "equation": "Pollution / Absorption_Time",
+      "from_stock": "stock-pollution",
+      "to_stock": null,
+      "position": {
+        "x": 675,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-br",
+      "name": "Birth_Rate",
+      "equation": "0.04",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-dr",
+      "name": "Death_Rate",
+      "equation": "0.028",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-usage",
+      "name": "Usage_Rate",
+      "equation": "0.003",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-poll-rate",
+      "name": "Pollution_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-absorb",
+      "name": "Absorption_Time",
+      "equation": "20",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-food-mult",
+      "name": "Food_Multiplier",
+      "equation": "Natural_Resources / 900",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-poll-mult",
+      "name": "Pollution_Multiplier",
+      "equation": "1 + Pollution",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 1900,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1016/0016-0032(71)90006-8",
+  "reference": "Forrester JW (1971) World Dynamics. Wright-Allen Press.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:12:55.720200+00:00",
+  "updated_at": "2026-01-12T06:12:55.720200+00:00"
+}

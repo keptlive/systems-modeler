@@ -1,0 +1,138 @@
+{
+  "id": "representative-emission-pathways-cli",
+  "name": "Representative Emission Pathways (REPs)",
+  "description": "Next generation Earth system model scenarios framework. Provides perspective on transition from concentration-driven to emission-driven pathways for better representing climate-carbon cycle uncertainty. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "stock-cumulative-emissions",
+      "name": "Cumulative Emissions",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-carbon-budget",
+      "name": "Remaining Carbon Budget",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-temp-target-gap",
+      "name": "Temperature Gap",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-annual-emission",
+      "name": "Annual Emissions",
+      "equation": "Emission_Pathway",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-emissions",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-budget-use",
+      "name": "Budget Usage",
+      "equation": "Annual_Emissions",
+      "from_stock": "stock-carbon-budget",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-warming",
+      "name": "Warming Progress",
+      "equation": "Annual_Emissions * TCRE / 1000",
+      "from_stock": null,
+      "to_stock": "stock-temp-target-gap",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-pathway",
+      "name": "Emission Pathway",
+      "equation": "IF Time < Peak_Year THEN 40 ELSE MAX(0, 40 - Reduction_Rate * (Time - Peak_Year))",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-peak-year",
+      "name": "Peak Year",
+      "equation": "5",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-reduction",
+      "name": "Reduction Rate",
+      "equation": "3",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-tcre",
+      "name": "TCRE",
+      "equation": "1.65",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-budget-years",
+      "name": "Budget Years Left",
+      "equation": "IF Emission_Pathway > 0 THEN Remaining_Carbon_Budget / Emission_Pathway ELSE 999",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-net-zero-year",
+      "name": "Net Zero Year",
+      "equation": "Peak_Year + 40 / Reduction_Rate",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 80,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.5194/gmd-17-4533-2024",
+  "reference": "Meinshausen et al. A perspective on the next generation of Earth system model scenarios: towards REPs. GMD (2024).",
+  "created_at": "2026-01-12T08:08:22.081275Z",
+  "updated_at": "2026-01-12T08:08:22.081275Z"
+}

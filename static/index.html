@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Systems Modeler</title>
+    <link rel="stylesheet" href="/static/css/style.css?v=1768099092">
+    <link rel="stylesheet" href="/static/css/analytics.css?v=1768013149">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+                                                <header class="header glass-header-v5">
+            <div class="header-title">SYSTEMS MODELER</div>
+            <div class="header-icons">
+                <button id="btn-new" class="btn-icon" title="New">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                </button>
+                <button id="btn-save" class="btn-icon btn-accent" title="Save">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+                </button>
+                <input type="file" id="xmile-file-input" accept=".xmile,.xml,.stmx" style="display:none">
+                <button id="btn-import" class="btn-icon" title="Import">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </button>
+                <button id="btn-download" class="btn-icon" title="Export">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </button>
+                <select id="model-select" class="model-dropdown">
+                    <option value="">Load...</option>
+                </select>
+                <button id="btn-faq" class="btn-icon" title="Help">
+                    <span class="help-icon">?</span>
+                </button>
+            </div>
+            <input type="hidden" id="model-name" value="Untitled Model">
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Left Panel: LLM Chat (Desktop only) -->
+            <aside class="panel panel-left">
+                <div class="panel-header">
+                    <h2>AI Assistant</h2>
+                    <span id="llm-status" class="llm-status">Checking...</span>
+                </div>
+                <div class="chat-container" id="chat-container-desktop">
+                    <div class="chat-messages" id="chat-messages-desktop">
+                        <div class="chat-message assistant">
+                            <p>Describe the system you want to model, or ask me to modify the current model.</p>
+                            <p class="examples">Examples:</p>
+                            <ul class="examples-list">
+                                <li>"Create a population model"</li>
+                                <li>"Add immigration to the model"</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <textarea id="chat-input-desktop" class="chat-input" placeholder="Describe what you want..." rows="2"></textarea>
+                        <button id="btn-send-desktop" class="btn btn-primary btn-send">Send</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center: Canvas Area -->
+            <section class="canvas-area">
+                <!-- Mode indicator -->
+                <div class="mode-indicator" id="mode-indicator">Select Mode</div>
+
+                <!-- Canvas -->
+                <div class="canvas-container" id="canvas-container">
+                    <!-- Floating Model Title -->
+                    <div class="floating-title">
+                        <input type="text" id="floating-model-name" class="floating-title-input" value="Untitled Model" placeholder="Model Name">
+                    </div>
+                    <svg id="canvas" class="canvas"></svg>
+                    <div class="zoom-indicator" id="zoom-indicator">100%</div>
+                </div>
+
+                <!-- Desktop Toolbar (hidden on mobile) -->
+                <div class="canvas-toolbar desktop-toolbar">
+                    <button id="btn-add-stock" class="btn btn-tool" title="Add Stock">
+                        <span class="icon-stock"></span>
+                        <span>Stock</span>
+                    </button>
+                    <button id="btn-add-flow" class="btn btn-tool" title="Add Flow">
+                        <span class="icon-flow"></span>
+                        <span>Flow</span>
+                    </button>
+                    <button id="btn-add-variable" class="btn btn-tool" title="Add Variable">
+                        <span class="icon-variable"></span>
+                        <span>Var</span>
+                    </button>
+                    <button id="btn-connect" class="btn btn-tool" title="Connect">
+                        <span class="icon-connect"></span>
+                        <span>Link</span>
+                    </button>
+                    <span class="toolbar-separator"></span>
+                    <button id="btn-delete" class="btn btn-tool btn-danger" title="Delete">
+                        <span class="icon-delete">X</span>
+                        <span>Del</span>
+                    </button>
+                    <button id="btn-sim-settings" class="btn btn-tool" title="Simulation Settings">
+                        <span class="icon-settings">&#9881;</span>
+                        <span>Settings</span>
+                    </button>
+                    <button id="btn-simulate" class="btn btn-primary" title="Run Simulation">
+                        <span class="icon-simulate">Run</span>
+                    </button>
+                </div>
+
+                <!-- Mobile FAB (Floating Action Button) -->
+                <div class="fab-container" id="fab-container">
+                    <button class="fab" id="fab-main" title="Add Elements">
+                        <span class="fab-icon">+</span>
+                    </button>
+                    <div class="fab-menu" id="fab-menu">
+                        <button class="fab-item" data-action="add-stock" title="Add Stock">
+                            <span class="icon-stock"></span>
+                            <span>Stock</span>
+                        </button>
+                        <button class="fab-item" data-action="add-flow" title="Add Flow">
+                            <span class="icon-flow"></span>
+                            <span>Flow</span>
+                        </button>
+                        <button class="fab-item" data-action="add-variable" title="Add Variable">
+                            <span class="icon-variable"></span>
+                            <span>Var</span>
+                        </button>
+                        <button class="fab-item" data-action="connect" title="Connect">
+                            <span class="icon-connect"></span>
+                            <span>Link</span>
+                        </button>
+                        <button class="fab-item fab-danger" data-action="delete" title="Delete Selected">
+                            <span class="fab-delete-icon">×</span>
+                            <span>Del</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile Simulate Button -->
+                <button class="mobile-simulate-btn" id="mobile-simulate-btn" title="Run Simulation">
+                    ▶ Run
+                </button>
+
+                <!-- Mobile Tab Bar -->
+                <nav class="tab-bar" id="tab-bar">
+                    <button class="tab-btn" data-panel="chat" title="AI Chat">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <span>AI</span>
+                    </button>
+                    <button class="tab-btn" data-panel="properties" title="Properties">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                        </svg>
+                        <span>Edit</span>
+                    </button>
+                    <button class="tab-btn" data-panel="results" title="Results">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 20V10M12 20V4M6 20v-6"></path>
+                        </svg>
+                        <span>Results</span>
+                    </button>
+                </nav>
+
+                <!-- Overlay for mobile panels -->
+                <div class="overlay" id="overlay"></div>
+
+                <!-- Slide-up Panel for Mobile -->
+                <div class="slide-panel" id="slide-panel">
+                    <div class="slide-panel-header">
+                        <h2 id="slide-panel-title">Panel</h2>
+                        <button class="slide-panel-close" id="slide-panel-close">&times;</button>
+                    </div>
+                    <div class="slide-panel-content" id="slide-panel-content">
+                        <!-- Dynamic content injected here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Properties & Results (Desktop only) -->
+            <aside class="panel panel-right">
+                <!-- Properties Panel -->
+                <div class="properties-panel" id="properties-panel">
+                    <h2>Properties</h2>
+                    <div class="properties-content" id="properties-content">
+                        <p class="no-selection">Select an element to edit its properties</p>
+                    </div>
+                </div>
+
+                <!-- Simulation Results -->
+                <div class="results-panel" id="results-panel">
+                    <h2>Simulation Results</h2>
+                    <button class="analytics-fullscreen-btn" id="btn-fullscreen" title="Fullscreen Analytics">&#x26F6;</button>
+
+                    <!-- Results Tabs -->
+                    <div class="results-tabs" id="results-tabs">
+                        <button class="results-tab active" data-tab="chart">Chart</button>
+                        <button class="results-tab" data-tab="analytics">Analytics</button>
+                        <button class="results-tab" data-tab="ai">AI Insights</button>
+                    </div>
+
+                    <!-- Chart Tab -->
+                    <div class="results-tab-content active" id="tab-chart">
+                        <div class="chart-options" id="chart-options">
+                            <div class="chart-option-group">
+                                <span class="chart-option-label">Type:</span>
+                                <button class="chart-option-btn active" data-chart-type="line">Line</button>
+                                <button class="chart-option-btn" data-chart-type="area">Area</button>
+                                <button class="chart-option-btn" data-chart-type="stacked">Stacked</button>
+                                <button class="chart-option-btn" data-chart-type="phase">Phase</button>
+                            </div>
+                            <div class="chart-option-group">
+                                <span class="chart-option-label">Scale:</span>
+                                <button class="chart-option-btn active" data-scale="linear">Linear</button>
+                                <button class="chart-option-btn" data-scale="log">Log</button>
+                            </div>
+                            <div class="chart-option-group">
+                                <button class="chart-option-btn" id="btn-animate" title="Animate simulation">
+                                    &#9658; Play
+                                </button>
+                                <button class="chart-option-btn" id="btn-compare" title="Compare with previous runs">
+                                    Compare
+                                </button>
+                                <button class="chart-option-btn" id="btn-save-run" title="Save current run for comparison">
+                                    Save Run
+                                </button>
+                            </div>
+                            <button class="chart-export-btn" id="btn-export-chart" title="Export chart">
+                                &#128190; Export
+                            </button>
+                        </div>
+                        <!-- Variable toggles -->
+                        <div class="chart-variables" id="chart-variables">
+                            <!-- Dynamically populated with variable toggles -->
+                        </div>
+                        <div class="chart-container" id="chart-container"></div>
+                        <div class="results-content" id="results-content">
+                            <p class="no-results">Run a simulation to see results</p>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Tab -->
+                    <div class="results-tab-content" id="tab-analytics">
+                        <div id="analytics-container"></div>
+                    </div>
+
+                    <!-- AI Insights Tab -->
+                    <div class="results-tab-content" id="tab-ai">
+                        <div id="ai-agent-container"></div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- Fullscreen Analytics Overlay -->
+    <div class="analytics-fullscreen-overlay" id="fullscreen-overlay">
+        <div class="fullscreen-header">
+            <h2>Analytics Dashboard</h2>
+            <button class="fullscreen-close-btn" id="fullscreen-close">&times;</button>
+        </div>
+        <div class="fullscreen-tabs" id="fullscreen-tabs">
+            <button class="fullscreen-tab active" data-tab="combined">Chart + Stats</button>
+            <button class="fullscreen-tab" data-tab="chart-only">Chart Only</button>
+            <button class="fullscreen-tab" data-tab="analytics-only">Analytics</button>
+            <button class="fullscreen-tab" data-tab="ai-only">AI Insights</button>
+        </div>
+        <div class="fullscreen-content">
+            <!-- Combined View (default) -->
+            <div class="fullscreen-tab-content active" id="fs-tab-combined">
+                <div class="fullscreen-chart-section">
+                    <div class="chart-container" id="chart-container-fullscreen"></div>
+                </div>
+                <div class="fullscreen-analytics-section" id="analytics-section-fullscreen"></div>
+            </div>
+            <!-- Chart Only -->
+            <div class="fullscreen-tab-content chart-only" id="fs-tab-chart-only">
+                <div class="chart-container" id="chart-container-fullscreen-2"></div>
+            </div>
+            <!-- Analytics Only -->
+            <div class="fullscreen-tab-content" id="fs-tab-analytics-only">
+                <div id="analytics-container-fullscreen" style="overflow-y: auto; height: 100%;"></div>
+            </div>
+            <!-- AI Only -->
+            <div class="fullscreen-tab-content" id="fs-tab-ai-only">
+                <div id="ai-container-fullscreen" style="overflow-y: auto; height: 100%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Chat Panel Content Template (hidden) -->
+    <template id="chat-panel-template">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h3>AI Assistant</h3>
+                <span id="llm-status-mobile" class="llm-status">Checking...</span>
+            </div>
+            <div class="chat-messages" id="chat-messages-mobile">
+                <div class="chat-message assistant">
+                    <p>Describe the system you want to model.</p>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <textarea id="chat-input-mobile" class="chat-input" placeholder="Describe what you want..." rows="2"></textarea>
+                <button id="btn-send-mobile" class="btn btn-primary btn-send">Send</button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Simulation Settings Modal -->
+    <div class="modal-overlay" id="sim-settings-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Simulation Settings</h3>
+                <button class="modal-close" id="sim-settings-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-group">
+                    <label for="sim-start">Start Time</label>
+                    <input type="number" id="sim-start" value="0" step="any">
+                </div>
+                <div class="settings-group">
+                    <label for="sim-end">End Time</label>
+                    <input type="number" id="sim-end" value="100" step="any">
+                </div>
+                <div class="settings-group">
+                    <label for="sim-dt">Time Step (dt)</label>
+                    <input type="number" id="sim-dt" value="0.25" step="any" min="0.001">
+                </div>
+                <div class="settings-info">
+                    <span id="sim-steps-info">Steps: 400</span>
+                </div>
+                <div class="settings-presets">
+                    <span class="presets-label">Presets:</span>
+                    <button class="preset-btn" data-preset="quick">Quick (100)</button>
+                    <button class="preset-btn" data-preset="normal">Normal (400)</button>
+                    <button class="preset-btn" data-preset="detailed">Detailed (1000)</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="sim-settings-cancel">Cancel</button>
+                <button class="btn btn-primary" id="sim-settings-apply">Apply & Run</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/canvas.js"></script>
+    <script src="/static/js/simulation.js"></script>
+    <script src="/static/js/llm-interface.js"></script>
+    <script src="/static/js/charts.js"></script>
+    <script src="/static/js/analytics.js"></script>
+    <script src="/static/js/ai-agent.js"></script>
+    <script>
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            App.init();
+
+            // Initialize advanced modules
+            Charts.init('chart-container');
+            Analytics.init('analytics-container');
+            AIAgent.init('ai-agent-container');
+
+            // Set up results tabs
+            const tabs = document.querySelectorAll('.results-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.dataset.tab;
+
+                    // Update tab buttons
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    // Update tab content
+                    document.querySelectorAll('.results-tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(`tab-${tabId}`).classList.add('active');
+                });
+            });
+
+            // Set up chart options
+            document.querySelectorAll('[data-chart-type]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('[data-chart-type]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    Charts.setOptions({ type: btn.dataset.chartType });
+                });
+            });
+
+            document.querySelectorAll('[data-scale]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('[data-scale]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    Charts.setOptions({ scale: btn.dataset.scale });
+                });
+            });
+
+            // Export button
+            document.getElementById('btn-export-chart')?.addEventListener('click', () => {
+                Charts.exportAs('png');
+            });
+
+            // Animation button
+            document.getElementById('btn-animate')?.addEventListener('click', (e) => {
+                const isPlaying = Charts.toggleAnimation();
+                e.target.innerHTML = isPlaying ? '&#10074;&#10074; Pause' : '&#9658; Play';
+                e.target.classList.toggle('active', isPlaying);
+            });
+
+            // Compare button
+            document.getElementById('btn-compare')?.addEventListener('click', (e) => {
+                const isComparing = Charts.toggleComparison();
+                e.target.classList.toggle('active', isComparing);
+            });
+
+            // Save run button
+            document.getElementById('btn-save-run')?.addEventListener('click', () => {
+                if (Charts.results) {
+                    Charts.saveRun();
+                    const count = Charts.previousRuns.length;
+                    const indicator = document.getElementById('mode-indicator');
+                    if (indicator) {
+                        indicator.textContent = `Run ${count} saved for comparison`;
+                        indicator.classList.add('visible');
+                        setTimeout(() => indicator.classList.remove('visible'), 2000);
+                    }
+                }
+            });
+
+            // Fullscreen analytics
+            initFullscreenAnalytics();
+        });
+
+        // Fullscreen Analytics initialization
+        function initFullscreenAnalytics() {
+            const overlay = document.getElementById('fullscreen-overlay');
+            const openBtn = document.getElementById('btn-fullscreen');
+            const closeBtn = document.getElementById('fullscreen-close');
+            const tabs = document.querySelectorAll('#fullscreen-tabs .fullscreen-tab');
+
+            if (!overlay || !openBtn) return;
+
+            // Open fullscreen
+            openBtn.addEventListener('click', () => {
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                renderFullscreenContent('combined');
+            });
+
+            // Close fullscreen
+            closeBtn?.addEventListener('click', closeFullscreen);
+
+            // Close with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                    closeFullscreen();
+                }
+            });
+
+            // Swipe down to close on mobile
+            let touchStartY = 0;
+            overlay.addEventListener('touchstart', (e) => {
+                touchStartY = e.touches[0].clientY;
+            });
+            overlay.addEventListener('touchend', (e) => {
+                const touchEndY = e.changedTouches[0].clientY;
+                if (touchEndY - touchStartY > 100) {
+                    closeFullscreen();
+                }
+            });
+
+            // Tab switching
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.dataset.tab;
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    document.querySelectorAll('.fullscreen-tab-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(`fs-tab-${tabId}`)?.classList.add('active');
+
+                    renderFullscreenContent(tabId);
+                });
+            });
+
+            function closeFullscreen() {
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            function renderFullscreenContent(tabId) {
+                setTimeout(() => {
+                    const originalContainer = Charts.container;
+
+                    if (tabId === 'combined' || tabId === 'chart-only') {
+                        const chartContainerId = tabId === 'combined' ? 'chart-container-fullscreen' : 'chart-container-fullscreen-2';
+                        const chartContainer = document.getElementById(chartContainerId);
+                        if (chartContainer && Charts.results) {
+                            Charts.container = chartContainer;
+                            Charts.render();
+                            Charts.container = originalContainer;
+                        }
+                    }
+
+                    if (tabId === 'combined' || tabId === 'analytics-only') {
+                        const analyticsContainer = tabId === 'combined'
+                            ? document.getElementById('analytics-section-fullscreen')
+                            : document.getElementById('analytics-container-fullscreen');
+                        const sourceAnalytics = document.getElementById('analytics-container');
+                        if (analyticsContainer && sourceAnalytics) {
+                            analyticsContainer.innerHTML = sourceAnalytics.innerHTML;
+                        }
+                    }
+
+                    if (tabId === 'ai-only') {
+                        const aiContainer = document.getElementById('ai-container-fullscreen');
+                        const sourceAI = document.getElementById('ai-agent-container');
+                        if (aiContainer && sourceAI) {
+                            aiContainer.innerHTML = sourceAI.innerHTML;
+                        }
+                    }
+                }, 50);
+            }
+        }
+
+        // Function to update variable toggles after simulation
+        function updateVariableToggles() {
+            const container = document.getElementById('chart-variables');
+            if (!container || !Charts.results) return;
+
+            const varNames = Object.keys(Charts.results.values);
+            let html = '<div class="variable-toggles">';
+
+            varNames.forEach(name => {
+                const opt = Charts.options.variables[name] || { visible: true, color: '#4CAF50' };
+                html += `
+                    <div class="variable-toggle">
+                        <input type="checkbox"
+                               id="var-toggle-${name.replace(/\s+/g, '-')}"
+                               ${opt.visible ? 'checked' : ''}
+                               onchange="Charts.toggleVariable('${name}')">
+                        <input type="color"
+                               class="color-picker"
+                               value="${opt.color}"
+                               onchange="Charts.setVariableColor('${name}', this.value)">
+                        <label for="var-toggle-${name.replace(/\s+/g, '-')}">${name}</label>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Override the simulation run to update toggles
+        const originalSimRun = Simulation.run;
+        Simulation.run = async function() {
+            await originalSimRun.call(this);
+            updateVariableToggles();
+        };
+    </script>
+    <!-- Mobile Panel Expand/Collapse -->
+    <script src="/static/js/mobile-expand.js"></script>
+    <script src="/static/js/xmile-import.js"></script>
+    <script src="/static/js/xmile-download.js"></script>
+    <script src="/static/js/faq.js"></script>
+    <script src="/static/js/floating-title.js"></script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+{
+  "id": "climate-refugee-migration-soc",
+  "name": "Climate-Induced Migration and Displacement",
+  "description": "Model of climate-induced migration showing how environmental degradation, extreme events, and economic impacts drive population displacement. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "source": "https://doi.org/10.1038/s41558-019-0510-8",
+  "reference": "Rigaud KK, et al. Groundswell: Preparing for Internal Climate Migration. World Bank. 2018.",
+  "stocks": [
+    {
+      "id": "stock-home",
+      "name": "Population_at_Home",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-displaced",
+      "name": "Internally_Displaced",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-resettled",
+      "name": "Resettled_Population",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-env",
+      "name": "Environmental_Quality",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-displace",
+      "name": "Displacement",
+      "equation": "Population_at_Home * displacement_rate * (100 - Environmental_Quality) / 100 * vulnerability",
+      "from_stock": "stock-home",
+      "to_stock": "stock-displaced",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-resettle",
+      "name": "Resettlement",
+      "equation": "Internally_Displaced * resettlement_rate * host_capacity",
+      "from_stock": "stock-displaced",
+      "to_stock": "stock-resettled",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-return",
+      "name": "Return_Migration",
+      "equation": "Internally_Displaced * return_rate * Environmental_Quality / 100",
+      "from_stock": "stock-displaced",
+      "to_stock": "stock-home",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-degrade",
+      "name": "Environmental_Degradation",
+      "equation": "Environmental_Quality * degradation_rate * climate_stress",
+      "from_stock": "stock-env",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-restore",
+      "name": "Environmental_Restoration",
+      "equation": "adaptation_investment * (100 - Environmental_Quality) / 100",
+      "from_stock": null,
+      "to_stock": "stock-env",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-displace",
+      "name": "displacement_rate",
+      "equation": "0.001",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-vuln",
+      "name": "vulnerability",
+      "equation": "0.7",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-resettle",
+      "name": "resettlement_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-host",
+      "name": "host_capacity",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-return",
+      "name": "return_rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-degrade",
+      "name": "degradation_rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-climate",
+      "name": "climate_stress",
+      "equation": "1.5",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-adapt",
+      "name": "adaptation_investment",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-total-disp",
+      "name": "Total_Displaced",
+      "equation": "Internally_Displaced + Resettled_Population",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

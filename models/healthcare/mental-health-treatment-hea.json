@@ -1,0 +1,215 @@
+{
+  "id": "mental-health-treatment-hea",
+  "name": "Mental Health Treatment Model",
+  "description": "A model of mental health conditions progression and treatment pathways. Shows the dynamics of diagnosis, treatment, recovery, and relapse. Reference: WHO (2022). Mental Health Action Plan. Source: https://www.who.int/publications/i/item/9789241506021",
+  "source": "https://doi.org/10.1016/S0140-6736(07)61238-0",
+  "reference": "Prince M, et al. No health without mental health. Lancet. 2007;370(9590):859-877.",
+  "stocks": [
+    {
+      "id": "stock-undiagnosed",
+      "name": "Undiagnosed",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-diagnosed",
+      "name": "Diagnosed Untreated",
+      "initial_value": 30000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-treatment",
+      "name": "In Treatment",
+      "initial_value": 15000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-remission",
+      "name": "In Remission",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-diagnosis",
+      "name": "Diagnosis",
+      "equation": "Undiagnosed * Diagnosis_Rate * Healthcare_Access",
+      "from_stock": "stock-undiagnosed",
+      "to_stock": "stock-diagnosed",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-treatment-start",
+      "name": "Treatment Start",
+      "equation": "Diagnosed_Untreated * Treatment_Initiation * Treatment_Availability",
+      "from_stock": "stock-diagnosed",
+      "to_stock": "stock-treatment",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "In_Treatment * Recovery_Rate * Treatment_Adherence",
+      "from_stock": "stock-treatment",
+      "to_stock": "stock-remission",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-relapse",
+      "name": "Relapse",
+      "equation": "In_Remission * Relapse_Rate * (1 - Ongoing_Support)",
+      "from_stock": "stock-remission",
+      "to_stock": "stock-diagnosed",
+      "position": {
+        "x": 400,
+        "y": 280
+      }
+    },
+    {
+      "id": "flow-treatment-dropout",
+      "name": "Treatment Dropout",
+      "equation": "In_Treatment * Dropout_Rate",
+      "from_stock": "stock-treatment",
+      "to_stock": "stock-diagnosed",
+      "position": {
+        "x": 325,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total",
+      "name": "Total Population",
+      "equation": "Undiagnosed + Diagnosed_Untreated + In_Treatment + In_Remission",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-treatment-gap",
+      "name": "Treatment Gap",
+      "equation": "(Undiagnosed + Diagnosed_Untreated) / Total_Population",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-diagnosis-rate",
+      "name": "Diagnosis Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-healthcare",
+      "name": "Healthcare Access",
+      "equation": "0.7",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-treatment-init",
+      "name": "Treatment Initiation",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-treatment-avail",
+      "name": "Treatment Availability",
+      "equation": "0.6",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-recovery-rate",
+      "name": "Recovery Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-adherence",
+      "name": "Treatment Adherence",
+      "equation": "0.7",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-relapse-rate",
+      "name": "Relapse Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-support",
+      "name": "Ongoing Support",
+      "equation": "0.4",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-dropout",
+      "name": "Dropout Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:51:23.904386+00:00",
+  "updated_at": "2026-01-11T21:51:23.904386+00:00"
+}

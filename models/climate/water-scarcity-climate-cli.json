@@ -1,0 +1,40 @@
+{
+  "id": "water-scarcity-climate-cli",
+  "name": "Water Scarcity and Climate Change Model",
+  "description": "Models the dynamics of water scarcity under climate change including aquifer depletion, precipitation changes, agricultural demand, and urban water stress. Based on IPCC water resources chapter and World Resources Institute Aqueduct data.",
+  "source": "https://doi.org/10.1038/s41545-019-0039-9",
+  "reference": "IPCC AR6 Working Group II, Chapter 4: Water. 2022. Mekonnen MM, Hoekstra AY. Four billion people facing severe water scarcity. Science Advances. 2016.",
+  "stocks": [
+    {"id": "stock-aquifer", "name": "Aquifer Storage", "initial_value": 10000, "equation": "", "position": {"x": 100, "y": 150}},
+    {"id": "stock-reservoir", "name": "Reservoir Storage", "initial_value": 5000, "equation": "", "position": {"x": 250, "y": 150}},
+    {"id": "stock-population", "name": "Population", "initial_value": 10000000, "equation": "", "position": {"x": 400, "y": 100}},
+    {"id": "stock-ag-land", "name": "Irrigated Agricultural Land", "initial_value": 1000000, "equation": "", "position": {"x": 400, "y": 250}},
+    {"id": "stock-water-stress", "name": "Water Stress Index", "initial_value": 0.3, "equation": "", "position": {"x": 550, "y": 175}}
+  ],
+  "flows": [
+    {"id": "flow-recharge", "name": "Aquifer Recharge", "equation": "Precipitation * Recharge_Rate * (1 - Climate_Change_Impact)", "from_stock": null, "to_stock": "stock-aquifer", "position": {"x": 100, "y": 100}},
+    {"id": "flow-pumping", "name": "Groundwater Pumping", "equation": "Agricultural_Demand + Urban_Demand", "from_stock": "stock-aquifer", "to_stock": null, "position": {"x": 100, "y": 200}},
+    {"id": "flow-inflow", "name": "Reservoir Inflow", "equation": "Precipitation * Catchment_Area * Runoff_Coefficient", "from_stock": null, "to_stock": "stock-reservoir", "position": {"x": 250, "y": 100}},
+    {"id": "flow-release", "name": "Reservoir Release", "equation": "MIN(Reservoir_Storage / Release_Time, Total_Demand)", "from_stock": "stock-reservoir", "to_stock": null, "position": {"x": 250, "y": 200}},
+    {"id": "flow-pop-growth", "name": "Population Growth", "equation": "Population * Population_Growth_Rate", "from_stock": null, "to_stock": "stock-population", "position": {"x": 400, "y": 50}},
+    {"id": "flow-stress-change", "name": "Stress Change", "equation": "(Total_Demand / Total_Supply - Water_Stress_Index) / Stress_Adjustment_Time", "from_stock": null, "to_stock": "stock-water-stress", "position": {"x": 550, "y": 125}}
+  ],
+  "variables": [
+    {"id": "var-precipitation", "name": "Precipitation", "equation": "1000", "position": {"x": 175, "y": 50}},
+    {"id": "var-recharge", "name": "Recharge_Rate", "equation": "0.1", "position": {"x": 100, "y": 50}},
+    {"id": "var-climate-impact", "name": "Climate_Change_Impact", "equation": "0.1 + 0.01 * TIME", "position": {"x": 50, "y": 100}},
+    {"id": "var-ag-demand", "name": "Agricultural_Demand", "equation": "Irrigated_Agricultural_Land * 0.005", "position": {"x": 250, "y": 250}},
+    {"id": "var-urban-demand", "name": "Urban_Demand", "equation": "Population * 0.0001", "position": {"x": 325, "y": 150}},
+    {"id": "var-total-demand", "name": "Total_Demand", "equation": "Agricultural_Demand + Urban_Demand", "position": {"x": 475, "y": 200}},
+    {"id": "var-total-supply", "name": "Total_Supply", "equation": "Aquifer_Storage + Reservoir_Storage", "position": {"x": 475, "y": 150}},
+    {"id": "var-catchment", "name": "Catchment_Area", "equation": "10000", "position": {"x": 175, "y": 100}},
+    {"id": "var-runoff", "name": "Runoff_Coefficient", "equation": "0.3", "position": {"x": 325, "y": 100}},
+    {"id": "var-release-time", "name": "Release_Time", "equation": "12", "position": {"x": 325, "y": 200}},
+    {"id": "var-pop-growth", "name": "Population_Growth_Rate", "equation": "0.02", "position": {"x": 475, "y": 50}},
+    {"id": "var-stress-adj", "name": "Stress_Adjustment_Time", "equation": "12", "position": {"x": 625, "y": 125}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 600, "dt": 1},
+  "created_at": "2026-01-15T21:00:00.000000+00:00",
+  "updated_at": "2026-01-15T21:00:00.000000+00:00"
+}

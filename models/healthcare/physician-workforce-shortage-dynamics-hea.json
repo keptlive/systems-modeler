@@ -1,0 +1,178 @@
+{
+  "id": "physician-workforce-shortage-dynamics-hea",
+  "name": "Physician Workforce Shortage Dynamics Model",
+  "description": "System dynamics model of physician supply and demand showing projected 141,160 shortage by 2038 with 58% shortage in nonmetro areas. Based on NCHWA/HRSA workforce projections. Reference: HRSA Bureau of Health Workforce. Health Workforce Projections 2024. Source: https://bhw.hrsa.gov/data-research/projecting-health-workforce-supply-demand",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Medical Students",
+      "initial_value": 95000,
+      "equation": "",
+      "position": {"x": 100, "y": 150}
+    },
+    {
+      "id": "s2",
+      "name": "Residents",
+      "initial_value": 140000,
+      "equation": "",
+      "position": {"x": 250, "y": 150}
+    },
+    {
+      "id": "s3",
+      "name": "Active Physicians",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {"x": 400, "y": 150}
+    },
+    {
+      "id": "s4",
+      "name": "Physician Demand",
+      "initial_value": 1050000,
+      "equation": "",
+      "position": {"x": 400, "y": 300}
+    },
+    {
+      "id": "s5",
+      "name": "Rural Physician Supply",
+      "initial_value": 80000,
+      "equation": "",
+      "position": {"x": 550, "y": 150}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Medical School Enrollment",
+      "equation": "Enrollment_Rate * Med_School_Capacity",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {"x": 50, "y": 150}
+    },
+    {
+      "id": "f2",
+      "name": "Graduation to Residency",
+      "equation": "Medical_Students / Training_Years_Med",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {"x": 175, "y": 150}
+    },
+    {
+      "id": "f3",
+      "name": "Residency Completion",
+      "equation": "Residents / Training_Years_Residency * Match_Rate",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {"x": 325, "y": 150}
+    },
+    {
+      "id": "f4",
+      "name": "Physician Retirement",
+      "equation": "Active_Physicians * Retirement_Rate",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {"x": 450, "y": 200}
+    },
+    {
+      "id": "f5",
+      "name": "Demand Growth",
+      "equation": "Population_Growth_Effect + Aging_Effect + Insurance_Expansion",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {"x": 400, "y": 350}
+    },
+    {
+      "id": "f6",
+      "name": "Rural Migration",
+      "equation": "(Active_Physicians * Rural_Preference - Rural_Physician_Supply) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {"x": 550, "y": 200}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Enrollment Rate",
+      "equation": "1.0",
+      "position": {"x": 50, "y": 100}
+    },
+    {
+      "id": "v2",
+      "name": "Med School Capacity",
+      "equation": "24000",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "v3",
+      "name": "Training Years Med",
+      "equation": "4",
+      "position": {"x": 175, "y": 100}
+    },
+    {
+      "id": "v4",
+      "name": "Training Years Residency",
+      "equation": "4",
+      "position": {"x": 275, "y": 100}
+    },
+    {
+      "id": "v5",
+      "name": "Match Rate",
+      "equation": "0.95",
+      "position": {"x": 350, "y": 100}
+    },
+    {
+      "id": "v6",
+      "name": "Retirement Rate",
+      "equation": "0.025",
+      "position": {"x": 500, "y": 200}
+    },
+    {
+      "id": "v7",
+      "name": "Population Growth Effect",
+      "equation": "Physician_Demand * 0.007",
+      "position": {"x": 300, "y": 350}
+    },
+    {
+      "id": "v8",
+      "name": "Aging Effect",
+      "equation": "Physician_Demand * 0.012",
+      "position": {"x": 350, "y": 400}
+    },
+    {
+      "id": "v9",
+      "name": "Insurance Expansion",
+      "equation": "500",
+      "position": {"x": 450, "y": 400}
+    },
+    {
+      "id": "v10",
+      "name": "Rural Preference",
+      "equation": "0.08",
+      "position": {"x": 500, "y": 100}
+    },
+    {
+      "id": "v11",
+      "name": "Adjustment Time",
+      "equation": "5",
+      "position": {"x": 600, "y": 200}
+    },
+    {
+      "id": "v12",
+      "name": "National Shortage",
+      "equation": "Physician_Demand - Active_Physicians",
+      "position": {"x": 300, "y": 250}
+    },
+    {
+      "id": "v13",
+      "name": "Rural Shortage Fraction",
+      "equation": "1 - Rural_Physician_Supply / (Physician_Demand * 0.15)",
+      "position": {"x": 550, "y": 300}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 20, "dt": 1},
+  "created_at": "2026-01-15T16:00:00.000000",
+  "updated_at": "2026-01-15T16:00:00.000000",
+  "source": "https://bhw.hrsa.gov/data-research/projecting-health-workforce-supply-demand",
+  "reference": "HRSA Bureau of Health Workforce (2024). Health Workforce Projections. National Center for Health Workforce Analysis."
+}

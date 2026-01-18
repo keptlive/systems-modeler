@@ -1,0 +1,216 @@
+{
+  "id": "daisyworld-gaia-hypothesis-cli",
+  "name": "Daisyworld Model",
+  "description": "Model demonstrating self-regulation of planetary temperature via biosphere feedback. Source: Watson & Lovelock (1983), Tellus.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "White_Daisies",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Black_Daisies",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Temperature",
+      "initial_value": 295,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "White_Change",
+      "equation": "White_Daisies * (Bare_Ground * Beta_White - Death_Rate)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Black_Change",
+      "equation": "Black_Daisies * (Bare_Ground * Beta_Black - Death_Rate)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Temp_Change",
+      "equation": "(Absorbed_Solar - Stefan_Boltzmann * Temperature^4) / Heat_Capacity",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Solar_Luminosity",
+      "equation": "1.0",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Death_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Albedo_White",
+      "equation": "0.75",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Albedo_Black",
+      "equation": "0.25",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Albedo_Bare",
+      "equation": "0.5",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "T_optimal",
+      "equation": "295",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "T_width",
+      "equation": "17.5",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Heat_Capacity",
+      "equation": "1e7",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Stefan_Boltzmann",
+      "equation": "5.67e-8",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Bare_Ground",
+      "equation": "MAX(0, 1 - White_Daisies - Black_Daisies)",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Planet_Albedo",
+      "equation": "White_Daisies * Albedo_White + Black_Daisies * Albedo_Black + Bare_Ground * Albedo_Bare",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Absorbed_Solar",
+      "equation": "Solar_Luminosity * 917 * (1 - Planet_Albedo)",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Beta_White",
+      "equation": "MAX(0, 1 - ((Temperature - 5 - T_optimal) / T_width)^2)",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Beta_Black",
+      "equation": "MAX(0, 1 - ((Temperature + 5 - T_optimal) / T_width)^2)",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Temperature",
+      "to_element": "Beta_White"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 500,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-15T14:38:02.261998+00:00",
+  "updated_at": "2026-01-15T14:38:02.262006+00:00",
+  "source": "https://doi.org/10.1111/j.1600-0889.1983.tb00031.x",
+  "reference": "Watson, A.J. & Lovelock, J.E. (1983). Biological homeostasis of the global environment: the parable of Daisyworld. Tellus B 35:284-289."
+}

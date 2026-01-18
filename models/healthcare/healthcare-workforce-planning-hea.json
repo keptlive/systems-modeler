@@ -1,0 +1,470 @@
+{
+  "id": "healthcare-workforce-planning-hea",
+  "name": "Healthcare Workforce Planning Model",
+  "description": "A system dynamics model for healthcare workforce planning. Models the aging chain of healthcare workers from training through retirement, with feedback from workload and burnout affecting retention and recruitment. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-students",
+      "name": "Medical Students",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-residents",
+      "name": "Residents",
+      "initial_value": 8000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-junior-physicians",
+      "name": "Junior Physicians",
+      "initial_value": 15000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-senior-physicians",
+      "name": "Senior Physicians",
+      "initial_value": 25000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-nurses-training",
+      "name": "Nurses in Training",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-nurses-active",
+      "name": "Active Nurses",
+      "initial_value": 80000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-burnout",
+      "name": "Accumulated Burnout",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-med-enrollment",
+      "name": "Medical Enrollment",
+      "equation": "Desired_Medical_Students / Training_Time * Recruitment_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-students",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-graduation",
+      "name": "Medical Graduation",
+      "equation": "Medical_Students / Medical_School_Duration",
+      "from_stock": "stock-students",
+      "to_stock": "stock-residents",
+      "position": {
+        "x": 175,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-residency-completion",
+      "name": "Residency Completion",
+      "equation": "Residents / Residency_Duration * (1 - Residency_Dropout)",
+      "from_stock": "stock-residents",
+      "to_stock": "stock-junior-physicians",
+      "position": {
+        "x": 325,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-seniority",
+      "name": "Becoming Senior",
+      "equation": "Junior_Physicians / Junior_Period",
+      "from_stock": "stock-junior-physicians",
+      "to_stock": "stock-senior-physicians",
+      "position": {
+        "x": 475,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-retirement",
+      "name": "Physician Retirement",
+      "equation": "Senior_Physicians / Years_To_Retirement",
+      "from_stock": "stock-senior-physicians",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-physician-attrition",
+      "name": "Physician Attrition",
+      "equation": "(Junior_Physicians + Senior_Physicians) * Burnout_Attrition_Rate",
+      "from_stock": "stock-junior-physicians",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-nurse-enrollment",
+      "name": "Nurse Enrollment",
+      "equation": "Desired_Nurses / Nurse_Training_Time * Nurse_Recruitment_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-nurses-training",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-nurse-graduation",
+      "name": "Nurse Graduation",
+      "equation": "Nurses_in_Training / Nurse_Training_Time",
+      "from_stock": "stock-nurses-training",
+      "to_stock": "stock-nurses-active",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-nurse-leaving",
+      "name": "Nurses Leaving",
+      "equation": "Active_Nurses * (Base_Nurse_Turnover + Burnout_Attrition_Rate)",
+      "from_stock": "stock-nurses-active",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-burnout-accumulation",
+      "name": "Burnout Increase",
+      "equation": "(Workload_Ratio - 1) * Burnout_Sensitivity",
+      "from_stock": null,
+      "to_stock": "stock-burnout",
+      "position": {
+        "x": 500,
+        "y": 280
+      }
+    },
+    {
+      "id": "flow-burnout-recovery",
+      "name": "Burnout Recovery",
+      "equation": "Accumulated_Burnout / Burnout_Recovery_Time",
+      "from_stock": "stock-burnout",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-physicians",
+      "name": "Total Physicians",
+      "equation": "Junior_Physicians + Senior_Physicians",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-total-staff",
+      "name": "Total Clinical Staff",
+      "equation": "Total_Physicians + Active_Nurses",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-patient-demand",
+      "name": "Patient Demand",
+      "equation": "Base_Demand * (1 + Demand_Growth_Rate) ^ TIME",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-base-demand",
+      "name": "Base Demand",
+      "equation": "200000",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-demand-growth",
+      "name": "Demand Growth Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 700,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-workload-ratio",
+      "name": "Workload Ratio",
+      "equation": "Patient_Demand / (Total_Clinical_Staff * Patients_Per_Staff)",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-patients-per-staff",
+      "name": "Patients Per Staff",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-burnout-attrition",
+      "name": "Burnout Attrition Rate",
+      "equation": "MAX(0, (Accumulated_Burnout / 100) * 0.05)",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-burnout-sensitivity",
+      "name": "Burnout Sensitivity",
+      "equation": "5",
+      "position": {
+        "x": 550,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-burnout-recovery-time",
+      "name": "Burnout Recovery Time",
+      "equation": "12",
+      "position": {
+        "x": 700,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-medical-school-duration",
+      "name": "Medical School Duration",
+      "equation": "4",
+      "position": {
+        "x": 100,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-residency-duration",
+      "name": "Residency Duration",
+      "equation": "5",
+      "position": {
+        "x": 250,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-residency-dropout",
+      "name": "Residency Dropout",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-junior-period",
+      "name": "Junior Period",
+      "equation": "10",
+      "position": {
+        "x": 550,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-years-to-retirement",
+      "name": "Years To Retirement",
+      "equation": "15",
+      "position": {
+        "x": 700,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-desired-med-students",
+      "name": "Desired Medical Students",
+      "equation": "5000",
+      "position": {
+        "x": 100,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-training-time",
+      "name": "Training Time",
+      "equation": "1",
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-recruitment-multiplier",
+      "name": "Recruitment Multiplier",
+      "equation": "1 + (Workload_Ratio - 1) * Recruitment_Sensitivity",
+      "position": {
+        "x": 400,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-recruitment-sensitivity",
+      "name": "Recruitment Sensitivity",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-desired-nurses",
+      "name": "Desired Nurses",
+      "equation": "80000",
+      "position": {
+        "x": 100,
+        "y": 750
+      }
+    },
+    {
+      "id": "var-nurse-training-time",
+      "name": "Nurse Training Time",
+      "equation": "3",
+      "position": {
+        "x": 250,
+        "y": 750
+      }
+    },
+    {
+      "id": "var-nurse-recruitment-mult",
+      "name": "Nurse Recruitment Multiplier",
+      "equation": "Recruitment_Multiplier",
+      "position": {
+        "x": 400,
+        "y": 750
+      }
+    },
+    {
+      "id": "var-base-nurse-turnover",
+      "name": "Base Nurse Turnover",
+      "equation": "0.08",
+      "position": {
+        "x": 550,
+        "y": 750
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Medical Students",
+      "to_element": "Medical Graduation"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Residents",
+      "to_element": "Residency Completion"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Junior Physicians",
+      "to_element": "Becoming Senior"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Senior Physicians",
+      "to_element": "Physician Retirement"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Workload Ratio",
+      "to_element": "Burnout Increase"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Accumulated Burnout",
+      "to_element": "Burnout Attrition Rate"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Burnout Attrition Rate",
+      "to_element": "Physician Attrition"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Burnout Attrition Rate",
+      "to_element": "Nurses Leaving"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Patient Demand",
+      "to_element": "Workload Ratio"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Total Clinical Staff",
+      "to_element": "Workload Ratio"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://doi.org/10.1287/mnsc.35.3.321",
+  "reference": "Sterman JD. Business Dynamics - Workforce Management Model"
+}

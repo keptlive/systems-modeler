@@ -1,0 +1,162 @@
+{
+  "id": "5g-network-deployment-diffusion-tec",
+  "name": "5G Network Deployment Model",
+  "description": "Model of 5G network rollout with infrastructure and adoption dynamics. Source: GSMA (2023).",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Base_Stations",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Subscribers",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Data_Traffic",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Network_Expansion",
+      "equation": "Investment_Rate * ROI_Factor",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Subscriber_Growth",
+      "equation": "Adoption_Rate * (Potential_Market - Subscribers) * Coverage_Factor",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Traffic_Growth",
+      "equation": "Subscribers * Data_per_User_Growth",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Investment_Rate",
+      "equation": "50",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Potential_Market",
+      "equation": "1000",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Adoption_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Data_per_User_Growth",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Coverage_Factor",
+      "equation": "MIN(1, Base_Stations / 10000)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "ARPU",
+      "equation": "30 + 20 * Coverage_Factor",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "ROI_Factor",
+      "equation": "MAX(0.5, Subscribers * ARPU / (Base_Stations * 100))",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Capacity_Utilization",
+      "equation": "Data_Traffic / (Base_Stations * 10)",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Subscribers",
+      "to_element": "ROI_Factor"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 10,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-15T14:44:54.461134+00:00",
+  "updated_at": "2026-01-15T14:44:54.461137+00:00",
+  "source": "https://www.gsma.com/mobileeconomy/",
+  "reference": "GSMA (2023). The Mobile Economy 2023. GSM Association."
+}

@@ -1,0 +1,322 @@
+{
+  "id": "ocean-plastic-pollution-model-cli",
+  "name": "Ocean Plastic Pollution Model",
+  "description": "A system dynamics model of plastic accumulation in oceans based on Jambeck et al. (2015) 'Plastic waste inputs from land into the ocean' (doi:10.1126/science.1260352) and Lebreton et al. (2017) modeling of the Great Pacific Garbage Patch. Tracks plastic flows from production through waste, ocean entry, and accumulation. Reference: NOAA Ocean Climate. Source: https://www.climate.gov/news-features/understanding-climate/climate-change-ocean-heat-content",
+  "stocks": [
+    {
+      "id": "stock-plastic-production",
+      "name": "Annual Plastic Production",
+      "initial_value": 350000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-plastic-in-use",
+      "name": "Plastic In Use",
+      "initial_value": 2500000000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-managed-waste",
+      "name": "Managed Waste",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-mismanaged-waste",
+      "name": "Mismanaged Waste",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-coastal-plastic",
+      "name": "Coastal Plastic",
+      "initial_value": 5000000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ocean-surface-plastic",
+      "name": "Ocean Surface Plastic",
+      "initial_value": 250000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-deep-ocean-plastic",
+      "name": "Deep Ocean Plastic",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-microplastics",
+      "name": "Microplastics",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-production",
+      "name": "Production",
+      "equation": "Annual_Plastic_Production * Production_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-plastic-in-use",
+      "position": {
+        "x": 175,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-proper-disposal",
+      "name": "Proper Disposal",
+      "equation": "Plastic_In_Use * Discard_Rate * Waste_Management_Fraction",
+      "from_stock": "stock-plastic-in-use",
+      "to_stock": "stock-managed-waste",
+      "position": {
+        "x": 325,
+        "y": 125
+      }
+    },
+    {
+      "id": "flow-improper-disposal",
+      "name": "Improper Disposal",
+      "equation": "Plastic_In_Use * Discard_Rate * (1 - Waste_Management_Fraction)",
+      "from_stock": "stock-plastic-in-use",
+      "to_stock": "stock-mismanaged-waste",
+      "position": {
+        "x": 325,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-coastal-leakage",
+      "name": "Coastal Leakage",
+      "equation": "Mismanaged_Waste * Coastal_Leakage_Rate",
+      "from_stock": "stock-mismanaged-waste",
+      "to_stock": "stock-coastal-plastic",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ocean-entry",
+      "name": "Ocean Entry",
+      "equation": "Coastal_Plastic * Ocean_Entry_Rate",
+      "from_stock": "stock-coastal-plastic",
+      "to_stock": "stock-ocean-surface-plastic",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-sinking",
+      "name": "Sinking",
+      "equation": "Ocean_Surface_Plastic * Sinking_Rate",
+      "from_stock": "stock-ocean-surface-plastic",
+      "to_stock": "stock-deep-ocean-plastic",
+      "position": {
+        "x": 625,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-fragmentation",
+      "name": "Fragmentation",
+      "equation": "Ocean_Surface_Plastic * Fragmentation_Rate",
+      "from_stock": "stock-ocean-surface-plastic",
+      "to_stock": "stock-microplastics",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-cleanup",
+      "name": "Cleanup Removal",
+      "equation": "Ocean_Surface_Plastic * Cleanup_Rate",
+      "from_stock": "stock-ocean-surface-plastic",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-production-growth-rate",
+      "name": "Production Growth Rate",
+      "equation": "1.04",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-discard-rate",
+      "name": "Discard Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-waste-management-fraction",
+      "name": "Waste Management Fraction",
+      "equation": "0.75",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-coastal-leakage-rate",
+      "name": "Coastal Leakage Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-ocean-entry-rate",
+      "name": "Ocean Entry Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-sinking-rate",
+      "name": "Sinking Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 700,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-fragmentation-rate",
+      "name": "Fragmentation Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 450,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-cleanup-rate",
+      "name": "Cleanup Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Annual Plastic Production",
+      "to_element": "Production"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Production Growth Rate",
+      "to_element": "Production"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Plastic In Use",
+      "to_element": "Proper Disposal"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Discard Rate",
+      "to_element": "Proper Disposal"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Waste Management Fraction",
+      "to_element": "Proper Disposal"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Plastic In Use",
+      "to_element": "Improper Disposal"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Mismanaged Waste",
+      "to_element": "Coastal Leakage"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Coastal Leakage Rate",
+      "to_element": "Coastal Leakage"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Coastal Plastic",
+      "to_element": "Ocean Entry"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Ocean Surface Plastic",
+      "to_element": "Sinking"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Ocean Surface Plastic",
+      "to_element": "Fragmentation"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Cleanup Rate",
+      "to_element": "Cleanup Removal"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

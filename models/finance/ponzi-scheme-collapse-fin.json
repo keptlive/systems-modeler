@@ -1,0 +1,150 @@
+{
+  "id": "ponzi-scheme-collapse-fin",
+  "name": "Ponzi Scheme Growth and Collapse",
+  "description": "Models the dynamics of Ponzi schemes including growth phase and inevitable collapse. Based on Artzrouni (2009) Mathematics of Ponzi schemes, Mathematical Social Sciences. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "category": "finance",
+  "stocks": [
+    {
+      "id": "stock-investors",
+      "name": "Active_Investors",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-funds",
+      "name": "Fund_Balance",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-payouts",
+      "name": "Cumulative_Payouts",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-recruit",
+      "name": "New_Investors",
+      "equation": "Active_Investors * Recruitment_Rate * Trust_Factor",
+      "from_stock": null,
+      "to_stock": "stock-investors",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-exit",
+      "name": "Investor_Exits",
+      "equation": "Active_Investors * Exit_Rate * (1 - Trust_Factor)",
+      "from_stock": "stock-investors",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-inflow",
+      "name": "Fund_Inflows",
+      "equation": "New_Investors * Average_Investment",
+      "from_stock": null,
+      "to_stock": "stock-funds",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-payout",
+      "name": "Promised_Returns",
+      "equation": "Active_Investors * Average_Investment * Promised_Rate",
+      "from_stock": "stock-funds",
+      "to_stock": "stock-payouts",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-recruit",
+      "name": "Recruitment_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-trust",
+      "name": "Trust_Factor",
+      "equation": "MIN(1, Fund_Balance / (Active_Investors * Average_Investment * 0.5))",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-exit",
+      "name": "Exit_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-avg-inv",
+      "name": "Average_Investment",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-promised",
+      "name": "Promised_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-collapse",
+      "name": "Collapse_Indicator",
+      "equation": "IF(Fund_Balance < 0, 1, 0)",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1016/j.mathsocsci.2008.12.004",
+  "reference": "Artzrouni M (2009) The mathematics of Ponzi schemes. Mathematical Social Sciences 58(2):190-201.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:27:18.295470+00:00",
+  "updated_at": "2026-01-12T06:27:18.295470+00:00"
+}

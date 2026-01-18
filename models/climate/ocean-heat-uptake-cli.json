@@ -1,0 +1,174 @@
+{
+  "id": "ocean-heat-uptake-cli",
+  "name": "Ocean Heat Uptake Model",
+  "description": "Models ocean heat content changes and thermal expansion contributing to sea level rise. Based on Cheng et al. (2019). DOI: 10.1126/science.aav7619",
+  "stocks": [
+    {
+      "id": "stock-surfheat",
+      "name": "Surface_Ocean_Heat",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-deepheat",
+      "name": "Deep_Ocean_Heat",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-sealevel",
+      "name": "Sea_Level",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-atmostemp",
+      "name": "Atmospheric_Temp",
+      "initial_value": 1.1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-heatuptake",
+      "name": "Heat_Uptake",
+      "equation": "Radiative_Forcing - Lambda * Atmospheric_Temp",
+      "from_stock": null,
+      "to_stock": "stock-surfheat",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-deepmix",
+      "name": "Deep_Mixing",
+      "equation": "(Surface_Ocean_Heat - Deep_Ocean_Heat) * Mixing_Rate",
+      "from_stock": "stock-surfheat",
+      "to_stock": "stock-deepheat",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-thermexp",
+      "name": "Thermal_Expansion",
+      "equation": "(Surface_Ocean_Heat + Deep_Ocean_Heat) * Expansion_Coefficient",
+      "from_stock": null,
+      "to_stock": "stock-sealevel",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-warming",
+      "name": "Atmospheric_Warming",
+      "equation": "Surface_Ocean_Heat * Heat_Transfer - Outgoing_Radiation",
+      "from_stock": null,
+      "to_stock": "stock-atmostemp",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-radforce",
+      "name": "Radiative_Forcing",
+      "equation": "3.7 * LN((CO2_Concentration + TIME * 2.5) / 280) / LN(2)",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-co2",
+      "name": "CO2_Concentration",
+      "equation": "410",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-lambda",
+      "name": "Lambda",
+      "equation": "1.2",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-mixrate",
+      "name": "Mixing_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-expcoef",
+      "name": "Expansion_Coefficient",
+      "equation": "0.0001",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-heattransfer",
+      "name": "Heat_Transfer",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-outrad",
+      "name": "Outgoing_Radiation",
+      "equation": "Atmospheric_Temp * Lambda",
+      "position": {
+        "x": 150,
+        "y": 175
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Surface_Ocean_Heat",
+      "to_element": "Thermal_Expansion"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:45:00.574902+00:00",
+  "updated_at": "2026-01-12T02:45:00.574912+00:00",
+  "source": "https://doi.org/10.1126/science.aav7619",
+  "reference": "Cheng L, et al. (2019). How fast are the oceans warming? Science."
+}

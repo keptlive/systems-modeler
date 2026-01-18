@@ -1,0 +1,186 @@
+{
+  "id": "hiv-viral-dynamics-epi",
+  "name": "HIV Viral Dynamics Model",
+  "description": "Models HIV infection kinetics and CD4 cell dynamics. Source: Perelson et al. (1996), Science. DOI: 10.1126/science.271.5255.1582",
+  "stocks": [
+    {
+      "id": "stock-t",
+      "name": "CD4_Cells",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-tinf",
+      "name": "Infected_CD4",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-v",
+      "name": "Viral_Load",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-tprod",
+      "name": "CD4_Production",
+      "equation": "Lambda",
+      "from_stock": null,
+      "to_stock": "stock-t",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-tdeath",
+      "name": "CD4_Death",
+      "equation": "CD4_Cells * Death_Rate_T",
+      "from_stock": "stock-t",
+      "to_stock": null,
+      "position": {
+        "x": 225,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-infect",
+      "name": "Infection",
+      "equation": "Beta * CD4_Cells * Viral_Load",
+      "from_stock": "stock-t",
+      "to_stock": "stock-tinf",
+      "position": {
+        "x": 225,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-tinfdeath",
+      "name": "Infected_Death",
+      "equation": "Infected_CD4 * Death_Rate_Infected",
+      "from_stock": "stock-tinf",
+      "to_stock": null,
+      "position": {
+        "x": 375,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-vprod",
+      "name": "Viral_Production",
+      "equation": "Infected_CD4 * Viral_Burst",
+      "from_stock": null,
+      "to_stock": "stock-v",
+      "position": {
+        "x": 375,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-vclear",
+      "name": "Viral_Clearance",
+      "equation": "Viral_Load * Clearance_Rate",
+      "from_stock": "stock-v",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-lambda",
+      "name": "Lambda",
+      "equation": "10",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-deatht",
+      "name": "Death_Rate_T",
+      "equation": "0.01",
+      "position": {
+        "x": 150,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.0001",
+      "position": {
+        "x": 225,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-deathi",
+      "name": "Death_Rate_Infected",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-burst",
+      "name": "Viral_Burst",
+      "equation": "100",
+      "position": {
+        "x": 375,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-clear",
+      "name": "Clearance_Rate",
+      "equation": "3",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-r0",
+      "name": "Basic_R0",
+      "equation": "Beta * Lambda / Death_Rate_T * Viral_Burst / (Clearance_Rate * Death_Rate_Infected)",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Viral_Load",
+      "to_element": "Infection"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:23:02.238243+00:00",
+  "updated_at": "2026-01-12T02:23:02.238246+00:00",
+  "source": "https://doi.org/10.1126/science.271.5255.1582",
+  "reference": "Perelson, A.S. et al. (1996). HIV-1 Dynamics in Vivo: Virion Clearance Rate. Science."
+}

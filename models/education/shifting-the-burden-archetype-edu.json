@@ -1,0 +1,244 @@
+{
+  "id": "shifting-the-burden-archetype-edu",
+  "name": "Shifting the Burden Archetype",
+  "description": "The 'Shifting the Burden' archetype shows how symptomatic solutions provide short-term relief but undermine long-term capacity to address root causes. The quick fix becomes addictive as fundamental solutions atrophy. Classic examples: using painkillers instead of physical therapy, debt financing instead of cost reduction, heroic management instead of good processes. Reference: Cachon, G., & Terwiesch, C. (2012). Matching Supply with Demand. McGraw-Hill. Source: https://www.mheducation.com/",
+  "stocks": [
+    {
+      "id": "stock-problem-symptom",
+      "name": "Problem Symptom",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-symptomatic-solution-use",
+      "name": "Symptomatic Solution Use",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fundamental-capacity",
+      "name": "Fundamental Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-problem-generation",
+      "name": "Problem Generation",
+      "equation": "Base_Problem_Rate",
+      "from_stock": null,
+      "to_stock": "stock-problem-symptom",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-symptomatic-relief",
+      "name": "Symptomatic Relief",
+      "equation": "Symptomatic_Effectiveness * Symptomatic_Solution_Use",
+      "from_stock": "stock-problem-symptom",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fundamental-relief",
+      "name": "Fundamental Relief",
+      "equation": "Fundamental_Effectiveness * Fundamental_Capacity * Fundamental_Effort",
+      "from_stock": "stock-problem-symptom",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-applying-symptomatic",
+      "name": "Applying Symptomatic",
+      "equation": "Problem_Symptom * Symptomatic_Tendency / Symptomatic_Delay",
+      "from_stock": null,
+      "to_stock": "stock-symptomatic-solution-use",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-symptomatic-wearing-off",
+      "name": "Symptomatic Wearing Off",
+      "equation": "Symptomatic_Solution_Use / Symptomatic_Duration",
+      "from_stock": "stock-symptomatic-solution-use",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-capacity-building",
+      "name": "Capacity Building",
+      "equation": "Base_Capacity_Building * Fundamental_Effort",
+      "from_stock": null,
+      "to_stock": "stock-fundamental-capacity",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-capacity-erosion",
+      "name": "Capacity Erosion",
+      "equation": "Fundamental_Capacity * Side_Effect_Rate * Symptomatic_Solution_Use / 100",
+      "from_stock": "stock-fundamental-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-base-problem-rate",
+      "name": "Base Problem Rate",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-symptomatic-effectiveness",
+      "name": "Symptomatic Effectiveness",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-symptomatic-tendency",
+      "name": "Symptomatic Tendency",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-symptomatic-delay",
+      "name": "Symptomatic Delay",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-symptomatic-duration",
+      "name": "Symptomatic Duration",
+      "equation": "4",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fundamental-effectiveness",
+      "name": "Fundamental Effectiveness",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fundamental-effort",
+      "name": "Fundamental Effort",
+      "equation": "MAX(0.1, 1 - Symptomatic_Solution_Use / 50)",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-base-capacity-building",
+      "name": "Base Capacity Building",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-side-effect-rate",
+      "name": "Side Effect Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-addiction-level",
+      "name": "Addiction Level",
+      "equation": "Symptomatic_Solution_Use / (Symptomatic_Solution_Use + Fundamental_Capacity * Fundamental_Effort + 1)",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Problem Symptom",
+      "to_element": "Applying Symptomatic"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Symptomatic Solution Use",
+      "to_element": "Symptomatic Relief"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Fundamental Capacity",
+      "to_element": "Fundamental Relief"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Symptomatic Solution Use",
+      "to_element": "Fundamental Effort"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Symptomatic Solution Use",
+      "to_element": "Capacity Erosion"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T20:04:50.786685Z",
+  "updated_at": "2026-01-11T20:04:50.786685Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "System Dynamics Educational Models - PySD Cookbook"
+}

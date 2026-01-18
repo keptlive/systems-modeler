@@ -1,0 +1,167 @@
+{
+  "id": "resource-acquisition-coflow-eco",
+  "name": "Resource Acquisition Coflow",
+  "description": "Resource acquisition coflow model from Sterman's Business Dynamics (2000), Chapter 11. Shows how organizations build resources through investment with delays, and how resource quality depends on acquisition rate. Source: Sterman, J.D. (2000), Business Dynamics, McGraw-Hill. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-resources",
+      "name": "Resources",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-experience",
+      "name": "Cumulative_Experience",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-acquisition",
+      "name": "Resource_Acquisition",
+      "equation": "Desired_Acquisition * Resource_Availability",
+      "from_stock": null,
+      "to_stock": "stock-resources",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-attrition",
+      "name": "Resource_Attrition",
+      "equation": "Resources / Average_Resource_Lifetime",
+      "from_stock": "stock-resources",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-experience-gain",
+      "name": "Experience_Gain",
+      "equation": "Resources * Learning_Rate",
+      "from_stock": null,
+      "to_stock": "stock-experience",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-desired-resources",
+      "name": "Desired_Resources",
+      "equation": "150",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-resource-gap",
+      "name": "Resource_Gap",
+      "equation": "Desired_Resources - Resources",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-desired-acquisition",
+      "name": "Desired_Acquisition",
+      "equation": "MAX(0, Resource_Gap / Time_to_Acquire_Resources + Resources / Average_Resource_Lifetime)",
+      "position": {
+        "x": 100,
+        "y": 220
+      }
+    },
+    {
+      "id": "var-resource-availability",
+      "name": "Resource_Availability",
+      "equation": "1.0",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-avg-lifetime",
+      "name": "Average_Resource_Lifetime",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-time-to-acquire",
+      "name": "Time_to_Acquire_Resources",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-learning-rate",
+      "name": "Learning_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-productivity",
+      "name": "Productivity",
+      "equation": "1 + (Cumulative_Experience / 5000)",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Resources",
+      "to_element": "Resource_Gap"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Resource_Gap",
+      "to_element": "Desired_Acquisition"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Resources",
+      "to_element": "Resource_Attrition"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Resources",
+      "to_element": "Experience_Gain"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T20:52:52.274626+00:00",
+  "updated_at": "2026-01-11T20:52:52.274626+00:00",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

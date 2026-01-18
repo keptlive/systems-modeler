@@ -1,0 +1,186 @@
+{
+  "id": "ocean-acidification-model-cli",
+  "name": "Ocean Acidification Model",
+  "description": "Models the decrease in ocean pH due to absorption of atmospheric CO2. When CO2 dissolves in seawater, it forms carbonic acid, lowering pH. Ocean pH has already dropped from 8.2 to 8.1 since pre-industrial times (30% increase in acidity). This threatens marine organisms that build calcium carbonate shells. Reference: IPCC (2021). Climate Change 2021: The Physical Science Basis. Source: https://www.ipcc.ch/report/ar6/wg1/",
+  "stocks": [
+    {
+      "id": "stock-atmospheric-co2",
+      "name": "Atmospheric CO2",
+      "initial_value": 280,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ocean-dic",
+      "name": "Ocean DIC",
+      "initial_value": 2000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-emissions",
+      "name": "Emissions",
+      "equation": "IF Time < 1850 THEN 0 ELSE IF Time < 2020 THEN 2 * EXP(0.02 * (Time - 1850)) ELSE Baseline_Emissions",
+      "from_stock": null,
+      "to_stock": "stock-atmospheric-co2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ocean-uptake",
+      "name": "Ocean Uptake",
+      "equation": "Uptake_Coefficient * (Atmospheric_CO2 - Equilibrium_CO2)",
+      "from_stock": "stock-atmospheric-co2",
+      "to_stock": "stock-ocean-dic",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-land-uptake",
+      "name": "Land Uptake",
+      "equation": "Land_Uptake_Fraction * (Atmospheric_CO2 - 280)",
+      "from_stock": "stock-atmospheric-co2",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-baseline-emissions",
+      "name": "Baseline Emissions",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-uptake-coefficient",
+      "name": "Uptake Coefficient",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-equilibrium-co2",
+      "name": "Equilibrium CO2",
+      "equation": "280",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-land-uptake-fraction",
+      "name": "Land Uptake Fraction",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-ocean-ph",
+      "name": "Ocean pH",
+      "equation": "8.2 - 0.0009 * (Atmospheric_CO2 - 280)",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-hydrogen-ion-increase",
+      "name": "Hydrogen Ion Increase",
+      "equation": "10^(8.2 - Ocean_pH) / 10^0 - 1",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-aragonite-saturation",
+      "name": "Aragonite Saturation",
+      "equation": "MAX(0, 3.5 - 0.006 * (Atmospheric_CO2 - 280))",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-calcite-saturation",
+      "name": "Calcite Saturation",
+      "equation": "MAX(0, 5.5 - 0.008 * (Atmospheric_CO2 - 280))",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-coral-reef-viability",
+      "name": "Coral Reef Viability",
+      "equation": "IF Aragonite_Saturation > 3.25 THEN 1 ELSE IF Aragonite_Saturation > 2.5 THEN 0.5 ELSE 0",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Atmospheric CO2",
+      "to_element": "Ocean Uptake"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Uptake Coefficient",
+      "to_element": "Ocean Uptake"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Atmospheric CO2",
+      "to_element": "Ocean pH"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Atmospheric CO2",
+      "to_element": "Aragonite Saturation"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Atmospheric CO2",
+      "to_element": "Calcite Saturation"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Aragonite Saturation",
+      "to_element": "Coral Reef Viability"
+    }
+  ],
+  "time_settings": {
+    "start": 1800,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.714516Z",
+  "updated_at": "2026-01-11T20:04:50.714516Z",
+  "source": "https://doi.org/10.1016/j.gca.2005.04.003",
+  "reference": "Zeebe RE, Wolf-Gladrow D. CO2 in Seawater: Equilibrium, Kinetics, Isotopes. Elsevier, 2001."
+}

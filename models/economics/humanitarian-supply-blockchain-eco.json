@@ -1,0 +1,219 @@
+{
+  "id": "humanitarian-supply-blockchain-eco",
+  "name": "Humanitarian Supply Chain with Blockchain Model",
+  "description": "System dynamics model of humanitarian supply chain incorporating blockchain technology for transparency and efficiency. Source: Izadi et al. (2023), IJDRR. Reference: Based on System Dynamics supply chain models (Sterman, 2000). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-donated",
+      "name": "Donated_Goods",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-warehouse",
+      "name": "Warehouse_Stock",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-transit",
+      "name": "In_Transit",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-delivered",
+      "name": "Delivered_Aid",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-trust",
+      "name": "Donor_Trust",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-donate",
+      "name": "Donations",
+      "equation": "Base_Donation * (1 + Trust_Effect * Donor_Trust / 100)",
+      "from_stock": null,
+      "to_stock": "stock-donated",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-intake",
+      "name": "Warehouse_Intake",
+      "equation": "Donated_Goods / Intake_Time",
+      "from_stock": "stock-donated",
+      "to_stock": "stock-warehouse",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ship",
+      "name": "Shipment",
+      "equation": "MIN(Warehouse_Stock, Logistics_Capacity) / Ship_Time",
+      "from_stock": "stock-warehouse",
+      "to_stock": "stock-transit",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-deliver",
+      "name": "Delivery",
+      "equation": "In_Transit / Delivery_Time * Blockchain_Efficiency",
+      "from_stock": "stock-transit",
+      "to_stock": "stock-delivered",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-trustinc",
+      "name": "Trust_Building",
+      "equation": "Transparency_Score * Delivered_Aid * 0.001",
+      "from_stock": null,
+      "to_stock": "stock-trust",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-trustdec",
+      "name": "Trust_Decay",
+      "equation": "Donor_Trust * Trust_Decay_Rate",
+      "from_stock": "stock-trust",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-basedonate",
+      "name": "Base_Donation",
+      "equation": "50",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-trusteff",
+      "name": "Trust_Effect",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-intake",
+      "name": "Intake_Time",
+      "equation": "2",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-logcap",
+      "name": "Logistics_Capacity",
+      "equation": "100",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-shiptime",
+      "name": "Ship_Time",
+      "equation": "3",
+      "position": {
+        "x": 325,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-deltime",
+      "name": "Delivery_Time",
+      "equation": "5",
+      "position": {
+        "x": 475,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-blockchain",
+      "name": "Blockchain_Efficiency",
+      "equation": "1.2",
+      "position": {
+        "x": 475,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-transp",
+      "name": "Transparency_Score",
+      "equation": "80",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-trustdecay",
+      "name": "Trust_Decay_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T12:41:31.049237+00:00",
+  "updated_at": "2026-01-12T12:41:31.049237+00:00",
+  "source": "https://doi.org/10.1016/j.ijdrr.2023.103654",
+  "reference": "Behl A, Dutta P. Humanitarian supply chain management: a thematic literature review and future directions of research. Annals of Operations Research. 2019;283:1001-1044."
+}

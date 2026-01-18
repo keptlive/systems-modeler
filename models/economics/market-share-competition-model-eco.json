@@ -1,0 +1,417 @@
+{
+  "id": "market-share-competition-model-eco",
+  "name": "Market Share Competition Model",
+  "description": "Models competitive dynamics between firms, including market share battles, advertising warfare, and price competition feedback loops. Reference: Lilien, G. L., & Rangaswamy, A. (2003). Marketing Engineering. Trafford Publishing. Source: https://www.msi.org/",
+  "stocks": [
+    {
+      "id": "stock-market-share-firm-a",
+      "name": "Market Share Firm A",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-customer-base-firm-a",
+      "name": "Customer Base Firm A",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-brand-equity-firm-a",
+      "name": "Brand Equity Firm A",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cumulative-experience-firm-a",
+      "name": "Cumulative Experience Firm A",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-share-gain-firm-a",
+      "name": "Share Gain Firm A",
+      "equation": "(1 - Market_Share_A) * Switching_to_A_Rate",
+      "from_stock": null,
+      "to_stock": "stock-market-share-firm-a",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-share-loss-firm-a",
+      "name": "Share Loss Firm A",
+      "equation": "Market_Share_A * Switching_from_A_Rate",
+      "from_stock": "stock-market-share-firm-a",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-customer-acquisition-firm-a",
+      "name": "Customer Acquisition Firm A",
+      "equation": "Market_Growth * Market_Share_A + (Total_Market - Customer_Base_A - Customer_Base_B) * Switching_to_A_Rate",
+      "from_stock": null,
+      "to_stock": "stock-customer-base-firm-a",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-customer-loss-firm-a",
+      "name": "Customer Loss Firm A",
+      "equation": "Customer_Base_A * (Churn_Rate + Switching_from_A_Rate)",
+      "from_stock": "stock-customer-base-firm-a",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-brand-building-firm-a",
+      "name": "Brand Building Firm A",
+      "equation": "Advertising_A * Advertising_Effectiveness + Customer_Satisfaction_A * WOM_Effect",
+      "from_stock": null,
+      "to_stock": "stock-brand-equity-firm-a",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-brand-decay-firm-a",
+      "name": "Brand Decay Firm A",
+      "equation": "Brand_Equity_A * Brand_Decay_Rate",
+      "from_stock": "stock-brand-equity-firm-a",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-production-firm-a",
+      "name": "Production Firm A",
+      "equation": "Customer_Base_A * Purchase_Rate",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-experience-firm-a",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-market",
+      "name": "Total Market",
+      "equation": "1000000 * (1 + Market_Growth_Rate)^Time",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-market-growth-rate",
+      "name": "Market Growth Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-market-growth",
+      "name": "Market Growth",
+      "equation": "Total_Market * Market_Growth_Rate",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-market-share-firm-b",
+      "name": "Market Share Firm B",
+      "equation": "1 - Market_Share_A",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-customer-base-firm-b",
+      "name": "Customer Base Firm B",
+      "equation": "Total_Market - Customer_Base_A",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-relative-attractiveness-firm-a",
+      "name": "Relative Attractiveness Firm A",
+      "equation": "Price_Competitiveness_A * Quality_Competitiveness_A * Brand_Competitiveness_A",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-price-firm-a",
+      "name": "Price Firm A",
+      "equation": "Base_Price * (Unit_Cost_A / Base_Cost) * (1 + Margin_A)",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-price-firm-b",
+      "name": "Price Firm B",
+      "equation": "Base_Price * 1.1",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-base-price",
+      "name": "Base Price",
+      "equation": "100",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-unit-cost-firm-a",
+      "name": "Unit Cost Firm A",
+      "equation": "Base_Cost * (Cumulative_Experience_A / 1000000)^Learning_Exponent",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-base-cost",
+      "name": "Base Cost",
+      "equation": "60",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-learning-exponent",
+      "name": "Learning Exponent",
+      "equation": "-0.15",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-margin-firm-a",
+      "name": "Margin Firm A",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-price-competitiveness-firm-a",
+      "name": "Price Competitiveness Firm A",
+      "equation": "Price_B / Price_A",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-quality-firm-a",
+      "name": "Quality Firm A",
+      "equation": "100 + Quality_Investment_A * 0.1",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-quality-firm-b",
+      "name": "Quality Firm B",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-quality-investment-firm-a",
+      "name": "Quality Investment Firm A",
+      "equation": "10000000",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-quality-competitiveness-firm-a",
+      "name": "Quality Competitiveness Firm A",
+      "equation": "Quality_A / Quality_B",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-brand-competitiveness-firm-a",
+      "name": "Brand Competitiveness Firm A",
+      "equation": "Brand_Equity_A / 100",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-advertising-firm-a",
+      "name": "Advertising Firm A",
+      "equation": "5000000",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-advertising-effectiveness",
+      "name": "Advertising Effectiveness",
+      "equation": "0.000001",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-customer-satisfaction-firm-a",
+      "name": "Customer Satisfaction Firm A",
+      "equation": "Quality_A / Price_A * 100",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-word-of-mouth-effect",
+      "name": "Word of Mouth Effect",
+      "equation": "0.005",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-brand-decay-rate",
+      "name": "Brand Decay Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-switching-to-a-rate",
+      "name": "Switching to A Rate",
+      "equation": "Base_Switching_Rate * Relative_Attractiveness_A",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-switching-from-a-rate",
+      "name": "Switching from A Rate",
+      "equation": "Base_Switching_Rate / Relative_Attractiveness_A",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-base-switching-rate",
+      "name": "Base Switching Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-churn-rate",
+      "name": "Churn Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-purchase-rate",
+      "name": "Purchase Rate",
+      "equation": "2",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-revenue-firm-a",
+      "name": "Revenue Firm A",
+      "equation": "Production_A * Price_A",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-profit-firm-a",
+      "name": "Profit Firm A",
+      "equation": "Production_A * (Price_A - Unit_Cost_A) - Advertising_A - Quality_Investment_A",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.761781Z",
+  "updated_at": "2026-01-11T20:04:50.761781Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

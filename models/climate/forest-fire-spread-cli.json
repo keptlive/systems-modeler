@@ -1,0 +1,314 @@
+{
+  "id": "forest-fire-spread-cli",
+  "name": "Humidity",
+  "description": "Model of wildfire spread through forest landscape. Shows fuel load, fire intensity, and spread rate dynamics. Based on Rothermel fire spread model and fire ecology research. Reference: NIFC National Interagency Fire Center. Source: https://www.nifc.gov/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Unburned_Forest_Ha",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Active_Fire_Ha",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Burned_Forest_Ha",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Fuel_Load",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Fire_Spread",
+      "equation": "Spread_Rate * Perimeter_Length",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Burnout",
+      "equation": "Active_Fire_Ha / Residence_Time",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Fuel_Consumption",
+      "equation": "Active_Fire_Ha * Consumption_Rate",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Fuel_Accumulation",
+      "equation": "Burned_Forest_Ha * Regrowth_Rate",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Wind_Speed",
+      "equation": "10 + 5 * SIN(TIME / 24)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Humidity",
+      "equation": "30 - 10 * SIN(TIME / 24)",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Spread_Rate",
+      "equation": "Base_Spread * Wind_Factor * Fuel_Factor * Humidity_Factor",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Base_Spread",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Wind_Factor",
+      "equation": "1 + Wind_Speed / 20",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Fuel_Factor",
+      "equation": "Fuel_Load / 20",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Humidity_Factor",
+      "equation": "MAX(0.1, 1 - Humidity / 100)",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Perimeter_Length",
+      "equation": "2 * 3.14159 * SQRT(Active_Fire_Ha / 3.14159)",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Residence_Time",
+      "equation": "2 / Spread_Rate",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Consumption_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Regrowth_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Fire_Intensity",
+      "equation": "Spread_Rate * Fuel_Load * 300",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Perimeter_Length",
+      "to_element": "Fire_Spread"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Spread_Rate",
+      "to_element": "Fire_Spread"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Active_Fire_Ha",
+      "to_element": "Burnout"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Residence_Time",
+      "to_element": "Burnout"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Consumption_Rate",
+      "to_element": "Fuel_Consumption"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Active_Fire_Ha",
+      "to_element": "Fuel_Consumption"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Burned_Forest_Ha",
+      "to_element": "Fuel_Accumulation"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Regrowth_Rate",
+      "to_element": "Fuel_Accumulation"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Base_Spread",
+      "to_element": "Spread_Rate"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Humidity_Factor",
+      "to_element": "Spread_Rate"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Wind_Factor",
+      "to_element": "Spread_Rate"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Fuel_Factor",
+      "to_element": "Spread_Rate"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Humidity",
+      "to_element": "Spread_Rate"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Wind_Speed",
+      "to_element": "Wind_Factor"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Fuel_Load",
+      "to_element": "Fuel_Factor"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Humidity",
+      "to_element": "Humidity_Factor"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Active_Fire_Ha",
+      "to_element": "Perimeter_Length"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Spread_Rate",
+      "to_element": "Residence_Time"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Spread_Rate",
+      "to_element": "Fire_Intensity"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Fuel_Load",
+      "to_element": "Fire_Intensity"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 72,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:26:33.407363+00:00",
+  "updated_at": "2026-01-12T07:26:33.407363+00:00",
+  "source": "https://doi.org/10.1071/WF9930001",
+  "reference": "Rothermel, R.C. (1972). A mathematical model for predicting fire spread in wildland fuels. USDA Forest Service."
+}

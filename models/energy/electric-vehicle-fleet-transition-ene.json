@@ -1,0 +1,193 @@
+{
+  "id": "electric-vehicle-fleet-transition-ene",
+  "name": "Electric Vehicle Fleet Transition Model",
+  "description": "Model of vehicle fleet electrification showing how charging infrastructure, purchase costs, and policy incentives drive EV adoption. Includes battery technology learning curves and grid capacity constraints.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "ICE_Vehicles",
+      "initial_value": 280000000,
+      "equation": "",
+      "position": {"x": 150, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "EV_Vehicles",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {"x": 450, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Charging_Infrastructure",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {"x": 300, "y": 380}
+    },
+    {
+      "id": "s4",
+      "name": "Battery_Cost",
+      "initial_value": 150,
+      "equation": "",
+      "position": {"x": 550, "y": 380}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "ICE_Retirement",
+      "equation": "ICE_Vehicles * Retirement_Rate",
+      "from_stock": "ICE_Vehicles",
+      "to_stock": null,
+      "position": {"x": 50, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "ICE_Sales",
+      "equation": "Total_New_Sales * (1 - EV_Market_Share)",
+      "from_stock": null,
+      "to_stock": "ICE_Vehicles",
+      "position": {"x": 250, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "EV_Sales",
+      "equation": "Total_New_Sales * EV_Market_Share",
+      "from_stock": null,
+      "to_stock": "EV_Vehicles",
+      "position": {"x": 350, "y": 200}
+    },
+    {
+      "id": "f4",
+      "name": "EV_Retirement",
+      "equation": "EV_Vehicles * EV_Retirement_Rate",
+      "from_stock": "EV_Vehicles",
+      "to_stock": null,
+      "position": {"x": 550, "y": 200}
+    },
+    {
+      "id": "f5",
+      "name": "Infrastructure_Build",
+      "equation": "(Target_Infrastructure - Charging_Infrastructure) / Build_Time * Investment_Rate",
+      "from_stock": null,
+      "to_stock": "Charging_Infrastructure",
+      "position": {"x": 200, "y": 380}
+    },
+    {
+      "id": "f6",
+      "name": "Cost_Reduction",
+      "equation": "Battery_Cost * Learning_Rate * (EV_Cumulative_Production / Initial_Production) ^ (-Learning_Factor)",
+      "from_stock": "Battery_Cost",
+      "to_stock": null,
+      "position": {"x": 650, "y": 380}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Retirement_Rate",
+      "equation": "0.06",
+      "position": {"x": 50, "y": 80}
+    },
+    {
+      "id": "v2",
+      "name": "Total_New_Sales",
+      "equation": "17000000",
+      "position": {"x": 200, "y": 80}
+    },
+    {
+      "id": "v3",
+      "name": "EV_Market_Share",
+      "equation": "MIN(0.95, Base_Share * Cost_Effect * Infrastructure_Effect * Policy_Effect)",
+      "position": {"x": 350, "y": 80}
+    },
+    {
+      "id": "v4",
+      "name": "Base_Share",
+      "equation": "0.1",
+      "position": {"x": 100, "y": 130}
+    },
+    {
+      "id": "v5",
+      "name": "Cost_Effect",
+      "equation": "200 / Battery_Cost",
+      "position": {"x": 200, "y": 130}
+    },
+    {
+      "id": "v6",
+      "name": "Infrastructure_Effect",
+      "equation": "MIN(2, Charging_Infrastructure / (EV_Vehicles / 100))",
+      "position": {"x": 350, "y": 130}
+    },
+    {
+      "id": "v7",
+      "name": "Policy_Effect",
+      "equation": "1.5",
+      "position": {"x": 500, "y": 80}
+    },
+    {
+      "id": "v8",
+      "name": "EV_Retirement_Rate",
+      "equation": "0.04",
+      "position": {"x": 600, "y": 80}
+    },
+    {
+      "id": "v9",
+      "name": "Target_Infrastructure",
+      "equation": "EV_Vehicles / 10",
+      "position": {"x": 100, "y": 450}
+    },
+    {
+      "id": "v10",
+      "name": "Build_Time",
+      "equation": "5",
+      "position": {"x": 200, "y": 450}
+    },
+    {
+      "id": "v11",
+      "name": "Investment_Rate",
+      "equation": "1",
+      "position": {"x": 300, "y": 450}
+    },
+    {
+      "id": "v12",
+      "name": "Learning_Rate",
+      "equation": "0.05",
+      "position": {"x": 500, "y": 450}
+    },
+    {
+      "id": "v13",
+      "name": "EV_Cumulative_Production",
+      "equation": "EV_Vehicles * 1.5",
+      "position": {"x": 600, "y": 450}
+    },
+    {
+      "id": "v14",
+      "name": "Initial_Production",
+      "equation": "15000000",
+      "position": {"x": 700, "y": 450}
+    },
+    {
+      "id": "v15",
+      "name": "Learning_Factor",
+      "equation": "0.15",
+      "position": {"x": 450, "y": 450}
+    },
+    {
+      "id": "v16",
+      "name": "EV_Share_of_Fleet",
+      "equation": "EV_Vehicles / (ICE_Vehicles + EV_Vehicles)",
+      "position": {"x": 300, "y": 280}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2023,
+    "end": 2050,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1038/s41560-021-00842-5",
+  "reference": "IEA (2023). Global EV Outlook 2023. International Energy Agency. Also: Knobloch F, et al. (2020). Net emission reductions from electric cars and heat pumps in 59 world regions. Nature Sustainability, 3, 437-447. DOI: 10.1038/s41893-020-0488-7",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "schwarzschild-black-hole-phy",
+  "name": "Schwarzschild Black Hole Dynamics",
+  "description": "Simplified model of particle dynamics near a Schwarzschild (non-rotating) black hole. Shows how objects approach the event horizon, experiencing time dilation and gravitational redshift. Based on general relativity.",
+  "stocks": [
+    {"id": "stock-radial-position", "name": "Radial Position", "initial_value": 100, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-radial-velocity", "name": "Radial Velocity", "initial_value": 0, "equation": "", "position": {"x": 450, "y": 200}},
+    {"id": "stock-proper-time", "name": "Proper Time", "initial_value": 0, "equation": "", "position": {"x": 325, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-radial-motion", "name": "Radial Motion", "equation": "Radial_Velocity", "from_stock": null, "to_stock": "stock-radial-position", "position": {"x": 100, "y": 200}},
+    {"id": "flow-acceleration", "name": "Acceleration", "equation": "-Schwarzschild_Radius / (2 * Radial_Position ^ 2) * (1 - Schwarzschild_Radius / Radial_Position)", "from_stock": null, "to_stock": "stock-radial-velocity", "position": {"x": 350, "y": 200}},
+    {"id": "flow-proper-time-flow", "name": "Proper Time Flow", "equation": "Time_Dilation_Factor", "from_stock": null, "to_stock": "stock-proper-time", "position": {"x": 225, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-black-hole-mass", "name": "Black Hole Mass", "equation": "10", "position": {"x": 200, "y": 100}},
+    {"id": "var-schwarzschild-radius", "name": "Schwarzschild Radius", "equation": "2 * 6.674e-11 * Black_Hole_Mass * 1.989e30 / (299792458 ^ 2)", "position": {"x": 450, "y": 100}},
+    {"id": "var-time-dilation-factor", "name": "Time Dilation Factor", "equation": "SQRT(1 - Schwarzschild_Radius / MAX(Schwarzschild_Radius * 1.001, Radial_Position))", "position": {"x": 200, "y": 280}},
+    {"id": "var-gravitational-redshift", "name": "Gravitational Redshift", "equation": "1 / Time_Dilation_Factor - 1", "position": {"x": 450, "y": 280}},
+    {"id": "var-escape-velocity", "name": "Escape Velocity", "equation": "SQRT(Schwarzschild_Radius / Radial_Position)", "position": {"x": 200, "y": 420}},
+    {"id": "var-orbital-period", "name": "Orbital Period", "equation": "2 * 3.14159 * SQRT(Radial_Position ^ 3 / (6.674e-11 * Black_Hole_Mass * 1.989e30))", "position": {"x": 450, "y": 420}},
+    {"id": "var-distance-to-horizon", "name": "Distance to Horizon", "equation": "Radial_Position - Schwarzschild_Radius", "position": {"x": 325, "y": 490}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 1000, "dt": 1},
+  "source": "https://doi.org/10.1007/BF01328398",
+  "reference": "Schwarzschild K. Über das Gravitationsfeld eines Massenpunktes nach der Einsteinschen Theorie. Sitzungsberichte der Königlich Preußischen Akademie der Wissenschaften. 1916;189-196."
+}

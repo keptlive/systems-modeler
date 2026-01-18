@@ -1,0 +1,184 @@
+{
+  "id": "migrant-housing-policy-china-soc",
+  "name": "Migrant Housing Policy Model (China RPP Framework)",
+  "description": "System dynamics model of migrant housing choices under the Rent-and-Purchase Policy (RPP) framework in China. Evaluates affordable housing expansion and rights-based policy coordination. Reference: Zhang, Y., et al. (2025). Evaluating Housing Policies for Migrants: A System Dynamics Approach to Rental and Purchase Decisions in China. Systems, 13(7), 589. Source: https://doi.org/10.3390/systems13070589",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Migrants Renting",
+      "initial_value": 0.6,
+      "equation": "",
+      "position": {"x": 100, "y": 150}
+    },
+    {
+      "id": "s2",
+      "name": "Migrants Purchasing",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {"x": 300, "y": 150}
+    },
+    {
+      "id": "s3",
+      "name": "Affordable Housing Stock",
+      "initial_value": 0.15,
+      "equation": "",
+      "position": {"x": 500, "y": 150}
+    },
+    {
+      "id": "s4",
+      "name": "Housing Quality Index",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {"x": 200, "y": 300}
+    },
+    {
+      "id": "s5",
+      "name": "Institutional Parity Index",
+      "initial_value": 0.4,
+      "equation": "",
+      "position": {"x": 400, "y": 300}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Rental to Purchase Transition",
+      "equation": "Migrants_Renting * Purchase_Transition_Rate * Income_Growth_Factor * Affordability_Factor",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {"x": 200, "y": 150}
+    },
+    {
+      "id": "f2",
+      "name": "New Migrant Renters",
+      "equation": "Migration_Rate * (1 - Initial_Purchase_Fraction)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {"x": 50, "y": 150}
+    },
+    {
+      "id": "f3",
+      "name": "New Migrant Buyers",
+      "equation": "Migration_Rate * Initial_Purchase_Fraction * Affordable_Housing_Stock",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {"x": 350, "y": 100}
+    },
+    {
+      "id": "f4",
+      "name": "Affordable Housing Supply",
+      "equation": "Policy_Investment * Supply_Expansion_Rate * (1 + Expansion_Intensity)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {"x": 500, "y": 100}
+    },
+    {
+      "id": "f5",
+      "name": "Quality Improvement",
+      "equation": "(Policy_Quality_Effect + Market_Quality_Effect) * (1 - Housing_Quality_Index) * Quality_Adjustment_Rate",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {"x": 200, "y": 350}
+    },
+    {
+      "id": "f6",
+      "name": "Parity Improvement",
+      "equation": "Rights_Based_Policy_Strength * (1 - Institutional_Parity_Index) * Parity_Adjustment_Rate",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {"x": 400, "y": 350}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Purchase Transition Rate",
+      "equation": "0.05",
+      "position": {"x": 150, "y": 100}
+    },
+    {
+      "id": "v2",
+      "name": "Income Growth Factor",
+      "equation": "1.03",
+      "position": {"x": 250, "y": 100}
+    },
+    {
+      "id": "v3",
+      "name": "Affordability Factor",
+      "equation": "Affordable_Housing_Stock + Institutional_Parity_Index * 0.5",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "v4",
+      "name": "Migration Rate",
+      "equation": "0.02",
+      "position": {"x": 50, "y": 100}
+    },
+    {
+      "id": "v5",
+      "name": "Initial Purchase Fraction",
+      "equation": "0.1",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "v6",
+      "name": "Policy Investment",
+      "equation": "0.03",
+      "position": {"x": 450, "y": 50}
+    },
+    {
+      "id": "v7",
+      "name": "Supply Expansion Rate",
+      "equation": "1.0",
+      "position": {"x": 550, "y": 50}
+    },
+    {
+      "id": "v8",
+      "name": "Expansion Intensity",
+      "equation": "0.5",
+      "position": {"x": 550, "y": 100}
+    },
+    {
+      "id": "v9",
+      "name": "Policy Quality Effect",
+      "equation": "Policy_Investment * 2",
+      "position": {"x": 100, "y": 350}
+    },
+    {
+      "id": "v10",
+      "name": "Market Quality Effect",
+      "equation": "Migrants_Purchasing * 0.3",
+      "position": {"x": 300, "y": 350}
+    },
+    {
+      "id": "v11",
+      "name": "Quality Adjustment Rate",
+      "equation": "0.1",
+      "position": {"x": 200, "y": 400}
+    },
+    {
+      "id": "v12",
+      "name": "Rights Based Policy Strength",
+      "equation": "0.4",
+      "position": {"x": 350, "y": 400}
+    },
+    {
+      "id": "v13",
+      "name": "Parity Adjustment Rate",
+      "equation": "0.05",
+      "position": {"x": 450, "y": 400}
+    },
+    {
+      "id": "v14",
+      "name": "Housing Cost Ratio",
+      "equation": "1 - Affordable_Housing_Stock * 0.3 - Institutional_Parity_Index * 0.2",
+      "position": {"x": 400, "y": 200}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 120, "dt": 1},
+  "created_at": "2026-01-15T16:00:00.000000",
+  "updated_at": "2026-01-15T16:00:00.000000",
+  "source": "https://doi.org/10.3390/systems13070589",
+  "reference": "Zhang, Y., et al. (2025). Evaluating Housing Policies for Migrants: A System Dynamics Approach to Rental and Purchase Decisions in China. Systems, 13(7), 589."
+}

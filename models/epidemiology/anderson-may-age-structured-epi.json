@@ -1,0 +1,144 @@
+{
+  "id": "anderson-may-age-structured-epi",
+  "name": "Anderson-May Age-Structured Model",
+  "description": "Epidemic model with realistic age structure and heterogeneous mixing",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "S_Children",
+      "initial_value": 800.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "S_Adults",
+      "initial_value": 4000.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "I_Children",
+      "initial_value": 10.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "I_Adults",
+      "initial_value": 5.0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "beta_cc",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "beta_ca",
+      "equation": "0.2",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "beta_ac",
+      "equation": "0.2",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "beta_aa",
+      "equation": "0.3",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "gamma",
+      "equation": "0.1",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Force_Children",
+      "equation": "beta_cc*I_Children+beta_ca*I_Adults",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Force_Adults",
+      "equation": "beta_ac*I_Children+beta_aa*I_Adults",
+      "position": {
+        "x": 300,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "I_Children",
+      "to_element": "Force_Children"
+    },
+    {
+      "id": "c2",
+      "from_element": "I_Adults",
+      "to_element": "Force_Children"
+    },
+    {
+      "id": "c3",
+      "from_element": "I_Children",
+      "to_element": "Force_Adults"
+    },
+    {
+      "id": "c4",
+      "from_element": "I_Adults",
+      "to_element": "Force_Adults"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 100.0,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-15T20:45:21.049635+00:00",
+  "updated_at": "2026-01-15T20:45:21.049635+00:00",
+  "source": "https://doi.org/10.1093/oso/9780198540472.001.0001",
+  "reference": "Anderson, R.M. & May, R.M. (1991) Infectious Diseases of Humans: Dynamics and Control. Oxford University Press"
+}

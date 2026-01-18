@@ -1,0 +1,215 @@
+{
+  "id": "cholera-sirw-model-epi",
+  "name": "Cholera SIRW Model",
+  "description": "SIR model with waterborne transmission pathway (W compartment). Models Vibrio cholerae dynamics in water sources and human population. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 9990,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Infected",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-water-bacteria",
+      "name": "Water_Bacteria",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "infection",
+      "equation": "beta_direct * S * I / N + beta_water * S * W / (K + W)",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "recovery",
+      "equation": "gamma * I",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-waning-immunity",
+      "name": "waning_immunity",
+      "equation": "omega * R",
+      "from_stock": "stock-recovered",
+      "to_stock": "stock-susceptible",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-shedding",
+      "name": "shedding",
+      "equation": "xi * I",
+      "from_stock": null,
+      "to_stock": "stock-water-bacteria",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-bacterial-decay",
+      "name": "bacterial_decay",
+      "equation": "delta * W",
+      "from_stock": "stock-water-bacteria",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta-direct",
+      "name": "beta_direct",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-beta-water",
+      "name": "beta_water",
+      "equation": "1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-k",
+      "name": "K",
+      "equation": "1000000.0",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "gamma",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-omega",
+      "name": "omega",
+      "equation": "0.003",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-xi",
+      "name": "xi",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-delta",
+      "name": "delta",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "beta_direct",
+      "to_element": "infection"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "beta_water",
+      "to_element": "infection"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "K",
+      "to_element": "infection"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "gamma",
+      "to_element": "recovery"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "omega",
+      "to_element": "waning_immunity"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "xi",
+      "to_element": "shedding"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "delta",
+      "to_element": "bacterial_decay"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T20:04:50.789362Z",
+  "updated_at": "2026-01-11T20:04:50.789362Z",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

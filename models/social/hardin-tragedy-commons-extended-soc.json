@@ -1,0 +1,36 @@
+{
+  "id": "hardin-tragedy-commons-extended-soc",
+  "name": "Hardin Tragedy of the Commons Extended Model",
+  "description": "Extended version of Garrett Hardin's classic model with institutional responses (taxes, quotas, privatization). Shows how different governance mechanisms affect commons depletion. Source: Hardin (1968). Science. DOI: 10.1126/science.162.3859.1243",
+  "stocks": [
+    {"id": "stock-resource", "name": "Common_Resource", "initial_value": 1000, "equation": "", "position": {"x": 300, "y": 200}},
+    {"id": "stock-users", "name": "Number_of_Users", "initial_value": 10, "equation": "", "position": {"x": 100, "y": 200}},
+    {"id": "stock-extraction-tech", "name": "Extraction_Technology", "initial_value": 1, "equation": "", "position": {"x": 500, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-regeneration", "name": "Regeneration", "equation": "Regeneration_Rate * Common_Resource * (1 - Common_Resource / Carrying_Capacity)", "from_stock": null, "to_stock": "stock-resource", "position": {"x": 200, "y": 200}},
+    {"id": "flow-harvest", "name": "Total_Harvest", "equation": "Number_of_Users * Individual_Harvest * Extraction_Technology * Policy_Effect", "from_stock": "stock-resource", "to_stock": null, "position": {"x": 400, "y": 200}},
+    {"id": "flow-entry", "name": "User_Entry", "equation": "IF(Profit_Per_User > Entry_Threshold, Entry_Rate, -Exit_Rate)", "from_stock": null, "to_stock": "stock-users", "position": {"x": 50, "y": 200}},
+    {"id": "flow-tech", "name": "Tech_Improvement", "equation": "Tech_Growth_Rate * Extraction_Technology", "from_stock": null, "to_stock": "stock-extraction-tech", "position": {"x": 500, "y": 100}}
+  ],
+  "variables": [
+    {"id": "var-regen-rate", "name": "Regeneration_Rate", "equation": "0.1", "position": {"x": 200, "y": 100}},
+    {"id": "var-carrying", "name": "Carrying_Capacity", "equation": "1200", "position": {"x": 300, "y": 100}},
+    {"id": "var-ind-harvest", "name": "Individual_Harvest", "equation": "10", "position": {"x": 400, "y": 100}},
+    {"id": "var-price", "name": "Resource_Price", "equation": "5", "position": {"x": 100, "y": 350}},
+    {"id": "var-cost", "name": "Extraction_Cost", "equation": "20", "position": {"x": 200, "y": 350}},
+    {"id": "var-profit", "name": "Profit_Per_User", "equation": "Individual_Harvest * Resource_Price - Extraction_Cost - Pigouvian_Tax", "position": {"x": 300, "y": 350}},
+    {"id": "var-entry-thresh", "name": "Entry_Threshold", "equation": "10", "position": {"x": 50, "y": 100}},
+    {"id": "var-entry-rate", "name": "Entry_Rate", "equation": "1", "position": {"x": 50, "y": 300}},
+    {"id": "var-exit-rate", "name": "Exit_Rate", "equation": "0.5", "position": {"x": 150, "y": 300}},
+    {"id": "var-tax", "name": "Pigouvian_Tax", "equation": "0", "position": {"x": 400, "y": 350}},
+    {"id": "var-policy", "name": "Policy_Effect", "equation": "1", "position": {"x": 500, "y": 350}},
+    {"id": "var-tech-growth", "name": "Tech_Growth_Rate", "equation": "0.01", "position": {"x": 550, "y": 100}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.25},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1126/science.162.3859.1243",
+  "reference": "Hardin, G. (1968). The tragedy of the commons. Science, 162(3859), 1243-1248."
+}

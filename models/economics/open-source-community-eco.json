@@ -1,0 +1,194 @@
+{
+  "id": "open-source-community-eco",
+  "name": "Open Source Community Dynamics",
+  "description": "Models contributor engagement and project sustainability. Source: Raymond (1999) and Lerner & Tirole (2002). DOI: 10.1257/089533002760278676",
+  "stocks": [
+    {
+      "id": "stock-contrib",
+      "name": "Active_Contributors",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-users",
+      "name": "Users",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-code",
+      "name": "Codebase_Size",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-quality",
+      "name": "Code_Quality",
+      "initial_value": 70,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-contjoin",
+      "name": "Contributor_Join",
+      "equation": "Users * Conversion_Rate * Project_Attractiveness",
+      "from_stock": null,
+      "to_stock": "stock-contrib",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-contleave",
+      "name": "Contributor_Leave",
+      "equation": "Active_Contributors * Burnout_Rate",
+      "from_stock": "stock-contrib",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-usergrow",
+      "name": "User_Growth",
+      "equation": "Users * User_Growth_Rate * Network_Effect",
+      "from_stock": null,
+      "to_stock": "stock-users",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-codegrow",
+      "name": "Code_Growth",
+      "equation": "Active_Contributors * Code_Output",
+      "from_stock": null,
+      "to_stock": "stock-code",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-qualchange",
+      "name": "Quality_Change",
+      "equation": "(Active_Contributors * Review_Effect - Codebase_Size * Tech_Debt_Rate / 1000 - (Code_Quality - 50)) * 0.1",
+      "from_stock": null,
+      "to_stock": "stock-quality",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-convrate",
+      "name": "Conversion_Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-attract",
+      "name": "Project_Attractiveness",
+      "equation": "Code_Quality / 100 * (1 + LN(Active_Contributors + 1) / 5)",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-burnout",
+      "name": "Burnout_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-usergrow",
+      "name": "User_Growth_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-network",
+      "name": "Network_Effect",
+      "equation": "1 + LN(Users + 1) / 10",
+      "position": {
+        "x": 200,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-codeout",
+      "name": "Code_Output",
+      "equation": "100",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-review",
+      "name": "Review_Effect",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-techdebt",
+      "name": "Tech_Debt_Rate",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Active_Contributors",
+      "to_element": "Code_Growth"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:13:18.795914+00:00",
+  "updated_at": "2026-01-12T02:13:18.795917+00:00",
+  "source": "https://doi.org/10.1257/089533002760278676",
+  "reference": "Lerner, J. & Tirole, J. (2002). Some Simple Economics of Open Source. Journal of Industrial Economics."
+}

@@ -1,0 +1,193 @@
+{
+  "id": "dopamine-reward-prediction-phy",
+  "name": "Dopamine Reward Prediction Error Model",
+  "description": "Models the temporal difference learning theory of dopamine signaling. Based on Schultz et al. (1997). DOI: 10.1126/science.275.5306.1593",
+  "stocks": [
+    {
+      "id": "stock-value",
+      "name": "Value_Estimate",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-dopamine",
+      "name": "Dopamine_Level",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-eligibility",
+      "name": "Eligibility_Trace",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-valuechg",
+      "name": "Value_Update",
+      "equation": "Learning_Rate * Reward_Prediction_Error * Eligibility_Trace",
+      "from_stock": null,
+      "to_stock": "stock-value",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-dopburst",
+      "name": "Dopamine_Response",
+      "equation": "Reward_Prediction_Error * Dopamine_Gain",
+      "from_stock": null,
+      "to_stock": "stock-dopamine",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-dopdecay",
+      "name": "Dopamine_Decay",
+      "equation": "Dopamine_Level / Dopamine_Time_Constant",
+      "from_stock": "stock-dopamine",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-eligrise",
+      "name": "Eligibility_Rise",
+      "equation": "Stimulus_Present * (1 - Eligibility_Trace)",
+      "from_stock": null,
+      "to_stock": "stock-eligibility",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-eligdecay",
+      "name": "Eligibility_Decay",
+      "equation": "Eligibility_Trace / Eligibility_Time_Constant",
+      "from_stock": "stock-eligibility",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-rpe",
+      "name": "Reward_Prediction_Error",
+      "equation": "Actual_Reward + Discount_Factor * Value_Estimate - Previous_Value",
+      "position": {
+        "x": 150,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-reward",
+      "name": "Actual_Reward",
+      "equation": "IF(MOD(TIME, 10) < 0.5, 1, 0)",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-discount",
+      "name": "Discount_Factor",
+      "equation": "0.95",
+      "position": {
+        "x": 50,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-prevval",
+      "name": "Previous_Value",
+      "equation": "DELAY(Value_Estimate, 1)",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-learnrate",
+      "name": "Learning_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-dopgain",
+      "name": "Dopamine_Gain",
+      "equation": "1",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-doptau",
+      "name": "Dopamine_Time_Constant",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-stim",
+      "name": "Stimulus_Present",
+      "equation": "IF(MOD(TIME, 10) < 2, 1, 0)",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-eligtau",
+      "name": "Eligibility_Time_Constant",
+      "equation": "2",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Value_Estimate",
+      "to_element": "Reward_Prediction_Error"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T02:49:51.599733+00:00",
+  "updated_at": "2026-01-12T02:49:51.599743+00:00",
+  "source": "https://doi.org/10.1126/science.275.5306.1593",
+  "reference": "Schultz W, Dayan P, Montague PR (1997). A Neural Substrate of Prediction and Reward. Science."
+}

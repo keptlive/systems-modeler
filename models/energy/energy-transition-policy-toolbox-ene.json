@@ -1,0 +1,197 @@
+{
+  "id": "energy-transition-policy-toolbox-ene",
+  "name": "Energy Transition Policy Toolbox Model",
+  "description": "System dynamics model operationalizing energy transition with multi-level perspective (MLP) framework representation. Evaluates carbon tax, fossil fuel retirement incentives, and renewable technology support policies. Reference: Moallemi, E.A., et al. (2024). Building the Bridge: How System Dynamics Models Operationalise Energy Transitions. Sustainability, 16(19), 8326. Source: https://doi.org/10.3390/su16198326",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Fossil Capacity",
+      "initial_value": 0.7,
+      "equation": "",
+      "position": {"x": 100, "y": 150}
+    },
+    {
+      "id": "s2",
+      "name": "Renewable Capacity",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {"x": 300, "y": 150}
+    },
+    {
+      "id": "s3",
+      "name": "Grid Infrastructure",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {"x": 500, "y": 150}
+    },
+    {
+      "id": "s4",
+      "name": "Carbon Price",
+      "initial_value": 30,
+      "equation": "",
+      "position": {"x": 150, "y": 300}
+    },
+    {
+      "id": "s5",
+      "name": "Technology Learning",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {"x": 350, "y": 300}
+    },
+    {
+      "id": "s6",
+      "name": "Social Acceptance",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {"x": 500, "y": 300}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Fossil Retirement",
+      "equation": "Fossil_Capacity * (Retirement_Incentive + Carbon_Cost_Pressure + Natural_Depreciation)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Renewable Build",
+      "equation": "Investment_Rate * Renewable_Attractiveness * Grid_Infrastructure",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {"x": 300, "y": 100}
+    },
+    {
+      "id": "f3",
+      "name": "Grid Upgrade",
+      "equation": "Grid_Investment * (Renewable_Capacity - Grid_Infrastructure * 0.8)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {"x": 500, "y": 100}
+    },
+    {
+      "id": "f4",
+      "name": "Carbon Price Increase",
+      "equation": "Policy_Ratchet * (Target_Carbon_Price - Carbon_Price) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {"x": 100, "y": 300}
+    },
+    {
+      "id": "f5",
+      "name": "Learning Progress",
+      "equation": "Learning_Rate * Renewable_Capacity * (1 - Technology_Learning)",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {"x": 300, "y": 350}
+    },
+    {
+      "id": "f6",
+      "name": "Acceptance Change",
+      "equation": "(Renewable_Success_Signal - Fossil_Lock_In_Effect) * Acceptance_Sensitivity",
+      "from_stock": null,
+      "to_stock": "s6",
+      "position": {"x": 500, "y": 350}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Retirement Incentive",
+      "equation": "0.02",
+      "position": {"x": 50, "y": 100}
+    },
+    {
+      "id": "v2",
+      "name": "Carbon Cost Pressure",
+      "equation": "Carbon_Price / 500",
+      "position": {"x": 100, "y": 250}
+    },
+    {
+      "id": "v3",
+      "name": "Natural Depreciation",
+      "equation": "0.025",
+      "position": {"x": 150, "y": 100}
+    },
+    {
+      "id": "v4",
+      "name": "Investment Rate",
+      "equation": "0.05",
+      "position": {"x": 250, "y": 50}
+    },
+    {
+      "id": "v5",
+      "name": "Renewable Attractiveness",
+      "equation": "(1 + Technology_Learning) * (1 + Carbon_Price / 100) * Social_Acceptance",
+      "position": {"x": 350, "y": 50}
+    },
+    {
+      "id": "v6",
+      "name": "Grid Investment",
+      "equation": "0.03",
+      "position": {"x": 450, "y": 50}
+    },
+    {
+      "id": "v7",
+      "name": "Policy Ratchet",
+      "equation": "1",
+      "position": {"x": 50, "y": 350}
+    },
+    {
+      "id": "v8",
+      "name": "Target Carbon Price",
+      "equation": "150",
+      "position": {"x": 150, "y": 400}
+    },
+    {
+      "id": "v9",
+      "name": "Adjustment Time",
+      "equation": "20",
+      "position": {"x": 200, "y": 350}
+    },
+    {
+      "id": "v10",
+      "name": "Learning Rate",
+      "equation": "0.1",
+      "position": {"x": 250, "y": 400}
+    },
+    {
+      "id": "v11",
+      "name": "Renewable Success Signal",
+      "equation": "Renewable_Capacity * 0.3",
+      "position": {"x": 400, "y": 400}
+    },
+    {
+      "id": "v12",
+      "name": "Fossil Lock In Effect",
+      "equation": "Fossil_Capacity * 0.1",
+      "position": {"x": 550, "y": 400}
+    },
+    {
+      "id": "v13",
+      "name": "Acceptance Sensitivity",
+      "equation": "0.02",
+      "position": {"x": 600, "y": 350}
+    },
+    {
+      "id": "v14",
+      "name": "Total Capacity",
+      "equation": "Fossil_Capacity + Renewable_Capacity",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "v15",
+      "name": "Renewable Share",
+      "equation": "Renewable_Capacity / MAX(0.01, Total_Capacity)",
+      "position": {"x": 400, "y": 200}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 80, "dt": 1},
+  "created_at": "2026-01-15T16:00:00.000000",
+  "updated_at": "2026-01-15T16:00:00.000000",
+  "source": "https://doi.org/10.3390/su16198326",
+  "reference": "Moallemi, E.A., et al. (2024). Building the Bridge: How System Dynamics Models Operationalise Energy Transitions and Contribute towards Creating an Energy Policy Toolbox. Sustainability, 16(19), 8326."
+}

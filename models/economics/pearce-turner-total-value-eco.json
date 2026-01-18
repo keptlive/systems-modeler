@@ -1,0 +1,160 @@
+{
+  "id": "pearce-turner-total-value-eco",
+  "name": "Pearce-Turner Total Economic Value",
+  "description": "Pearce and Turner's 1990 framework decomposing total economic value of environment into use values, option values, and existence values. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-ecosystem",
+      "name": "Ecosystem_Quality",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-value",
+      "name": "Perceived_Total_Value",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-degrade",
+      "name": "Degradation",
+      "equation": "Ecosystem_Quality * degradation_pressure",
+      "from_stock": "stock-ecosystem",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-restore",
+      "name": "Restoration",
+      "equation": "restoration_effort * (1 - Ecosystem_Quality / 100)",
+      "from_stock": null,
+      "to_stock": "stock-ecosystem",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-value-change",
+      "name": "Value_Adjustment",
+      "equation": "(Total_Economic_Value - Perceived_Total_Value) * 0.2",
+      "from_stock": null,
+      "to_stock": "stock-value",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-direct",
+      "name": "Direct_Use_Value",
+      "equation": "Ecosystem_Quality * 2",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-indirect",
+      "name": "Indirect_Use_Value",
+      "equation": "Ecosystem_Quality * 1.5",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-option",
+      "name": "Option_Value",
+      "equation": "Ecosystem_Quality * 0.5",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-bequest",
+      "name": "Bequest_Value",
+      "equation": "Ecosystem_Quality * 0.8",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-existence",
+      "name": "Existence_Value",
+      "equation": "Ecosystem_Quality * 1.2",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Economic_Value",
+      "equation": "Direct_Use_Value + Indirect_Use_Value + Option_Value + Bequest_Value + Existence_Value",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-pressure",
+      "name": "degradation_pressure",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-restore-effort",
+      "name": "restoration_effort",
+      "equation": "5",
+      "position": {
+        "x": 250,
+        "y": 380
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Ecosystem_Quality",
+      "to_element": "Direct_Use_Value"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Ecosystem_Quality",
+      "to_element": "Indirect_Use_Value"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Total_Economic_Value",
+      "to_element": "Value_Adjustment"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.2307/2234864",
+  "reference": "Pearce DW, Turner RK. Economics of Natural Resources and the Environment. Johns Hopkins University Press; 1990."
+}

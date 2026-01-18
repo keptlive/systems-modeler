@@ -1,0 +1,201 @@
+{
+  "id": "atmospheric-methane-cycle-model-cli",
+  "name": "Atmospheric Methane Cycle Model",
+  "description": "Models the dynamics of atmospheric methane (CH4), a potent greenhouse gas with a global warming potential 80x that of CO2 over 20 years. Includes natural and anthropogenic sources, and oxidation by hydroxyl radicals. Methane concentrations have more than doubled since pre-industrial times. Reference: NOAA Global Monitoring Laboratory. Source: https://gml.noaa.gov/ccgg/trends/",
+  "stocks": [
+    {
+      "id": "stock-atmospheric-methane",
+      "name": "Atmospheric Methane",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-total-emissions",
+      "name": "Total Emissions",
+      "equation": "Natural_Emissions + Anthropogenic_Emissions",
+      "from_stock": null,
+      "to_stock": "stock-atmospheric-methane",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-methane-destruction",
+      "name": "Methane Destruction",
+      "equation": "Atmospheric_Methane / Methane_Lifetime",
+      "from_stock": "stock-atmospheric-methane",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-natural-emissions",
+      "name": "Natural Emissions",
+      "equation": "Wetland_Emissions + Other_Natural",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-wetland-emissions",
+      "name": "Wetland Emissions",
+      "equation": "180 * (1 + Temperature_Effect)",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-other-natural",
+      "name": "Other Natural",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-temperature-effect",
+      "name": "Temperature Effect",
+      "equation": "0.05 * Global_Warming",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-global-warming",
+      "name": "Global Warming",
+      "equation": "1.1 + 0.03 * (Time - 2000)",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-anthropogenic-emissions",
+      "name": "Anthropogenic Emissions",
+      "equation": "Fossil_Fuel + Agriculture + Waste",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fossil-fuel",
+      "name": "Fossil Fuel",
+      "equation": "130 * Fossil_Trajectory",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-agriculture",
+      "name": "Agriculture",
+      "equation": "200 * (1 + 0.005 * (Time - 2000))",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-waste",
+      "name": "Waste",
+      "equation": "80",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fossil-trajectory",
+      "name": "Fossil Trajectory",
+      "equation": "IF Time < 2030 THEN 1.05 ELSE MAX(0.3, 1.05 - 0.02 * (Time - 2030))",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-methane-lifetime",
+      "name": "Methane Lifetime",
+      "equation": "9.1",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-methane-concentration",
+      "name": "Methane Concentration",
+      "equation": "Atmospheric_Methane * 0.357",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-methane-radiative-forcing",
+      "name": "Methane Radiative Forcing",
+      "equation": "0.036 * (SQRT(Methane_Concentration) - SQRT(722))",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Natural Emissions",
+      "to_element": "Total Emissions"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Anthropogenic Emissions",
+      "to_element": "Total Emissions"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Atmospheric Methane",
+      "to_element": "Methane Destruction"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Methane Lifetime",
+      "to_element": "Methane Destruction"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Temperature Effect",
+      "to_element": "Wetland Emissions"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Atmospheric Methane",
+      "to_element": "Methane Concentration"
+    }
+  ],
+  "time_settings": {
+    "start": 2000,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.712910Z",
+  "updated_at": "2026-01-11T20:04:50.712910Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

@@ -1,0 +1,125 @@
+{
+  "id": "merton-jump-diffusion-eco",
+  "name": "Merton Jump-Diffusion Asset Model",
+  "description": "Extends Black-Scholes with discontinuous jumps in asset prices. Captures market crashes and discontinuities. Source: Merton (1976), JFE. DOI: 10.1016/0304-405X(76)90022-2",
+  "stocks": [
+    {
+      "id": "stock-price",
+      "name": "Asset_Price",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-jumps",
+      "name": "Cumulative_Jumps",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-cont",
+      "name": "Continuous_Return",
+      "equation": "Asset_Price * (Drift - Jump_Intensity * Mean_Jump)",
+      "from_stock": null,
+      "to_stock": "stock-price",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-jump",
+      "name": "Jump_Component",
+      "equation": "Asset_Price * Mean_Jump * Jump_Indicator",
+      "from_stock": null,
+      "to_stock": "stock-price",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-jumpcount",
+      "name": "Jump_Rate",
+      "equation": "Jump_Indicator",
+      "from_stock": null,
+      "to_stock": "stock-jumps",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-drift",
+      "name": "Drift",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-jumpint",
+      "name": "Jump_Intensity",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-meanjump",
+      "name": "Mean_Jump",
+      "equation": "-0.1",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-jumpind",
+      "name": "Jump_Indicator",
+      "equation": "IF(MOD(TIME, 20) < 1, 1, 0)",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-vol",
+      "name": "Volatility",
+      "equation": "0.2",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Asset_Price",
+      "to_element": "Continuous_Return"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T02:02:23.927348Z",
+  "updated_at": "2026-01-12T02:02:23.927352Z",
+  "source": "https://doi.org/10.1016/0304-405X(76)90022-2",
+  "reference": "Merton, R.C. (1976). Option pricing when underlying stock returns are discontinuous. Journal of Financial Economics."
+}

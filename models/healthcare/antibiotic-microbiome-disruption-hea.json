@@ -1,0 +1,35 @@
+{
+  "id": "antibiotic-microbiome-disruption-hea",
+  "name": "Antibiotic-Induced Microbiome Disruption Model",
+  "description": "Model of gut microbiome disruption by antibiotics and subsequent recovery. Broad-spectrum antibiotics cause dysbiosis that can persist for months. Source: Dethlefsen & Relman (2011). PNAS. DOI: 10.1073/pnas.1000087107",
+  "stocks": [
+    {"id": "stock-beneficial", "name": "Beneficial_Bacteria", "initial_value": 80, "equation": "", "position": {"x": 150, "y": 200}},
+    {"id": "stock-pathogenic", "name": "Pathogenic_Bacteria", "initial_value": 5, "equation": "", "position": {"x": 350, "y": 200}},
+    {"id": "stock-diversity", "name": "Microbial_Diversity", "initial_value": 100, "equation": "", "position": {"x": 250, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-beneficial-growth", "name": "Beneficial_Growth", "equation": "Beneficial_Bacteria * Growth_Rate_Beneficial * (1 - Total_Bacteria / Carrying_Capacity) * (1 - Antibiotic_Effect)", "from_stock": null, "to_stock": "stock-beneficial", "position": {"x": 100, "y": 200}},
+    {"id": "flow-beneficial-death", "name": "Beneficial_Death", "equation": "Beneficial_Bacteria * (Natural_Death + Antibiotic_Kill_Rate * Antibiotic_Concentration)", "from_stock": "stock-beneficial", "to_stock": null, "position": {"x": 200, "y": 200}},
+    {"id": "flow-pathogenic-growth", "name": "Pathogenic_Growth", "equation": "Pathogenic_Bacteria * Growth_Rate_Pathogenic * (1 - Total_Bacteria / Carrying_Capacity)", "from_stock": null, "to_stock": "stock-pathogenic", "position": {"x": 300, "y": 200}},
+    {"id": "flow-diversity-change", "name": "Diversity_Change", "equation": "(Equilibrium_Diversity - Microbial_Diversity) / Diversity_Recovery_Time", "from_stock": null, "to_stock": "stock-diversity", "position": {"x": 150, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-growth-ben", "name": "Growth_Rate_Beneficial", "equation": "0.5", "position": {"x": 100, "y": 100}},
+    {"id": "var-growth-path", "name": "Growth_Rate_Pathogenic", "equation": "0.7", "position": {"x": 350, "y": 100}},
+    {"id": "var-carrying", "name": "Carrying_Capacity", "equation": "100", "position": {"x": 250, "y": 100}},
+    {"id": "var-total", "name": "Total_Bacteria", "equation": "Beneficial_Bacteria + Pathogenic_Bacteria", "position": {"x": 450, "y": 200}},
+    {"id": "var-antibiotic-conc", "name": "Antibiotic_Concentration", "equation": "IF(TIME > 5 AND TIME < 12, 1, 0)", "position": {"x": 100, "y": 300}},
+    {"id": "var-kill-rate", "name": "Antibiotic_Kill_Rate", "equation": "0.8", "position": {"x": 200, "y": 300}},
+    {"id": "var-antibiotic-effect", "name": "Antibiotic_Effect", "equation": "Antibiotic_Concentration * 0.9", "position": {"x": 50, "y": 250}},
+    {"id": "var-natural-death", "name": "Natural_Death", "equation": "0.1", "position": {"x": 250, "y": 300}},
+    {"id": "var-equil-div", "name": "Equilibrium_Diversity", "equation": "100 * Beneficial_Bacteria / 80", "position": {"x": 350, "y": 350}},
+    {"id": "var-recovery-time", "name": "Diversity_Recovery_Time", "equation": "30", "position": {"x": 150, "y": 400}},
+    {"id": "var-dysbiosis", "name": "Dysbiosis_Index", "equation": "Pathogenic_Bacteria / (Beneficial_Bacteria + 0.1)", "position": {"x": 450, "y": 350}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.5},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1073/pnas.1000087107",
+  "reference": "Dethlefsen, L. & Relman, D.A. (2011). Incomplete recovery and individualized responses of the human distal gut microbiota to repeated antibiotic perturbation. PNAS, 108(S1), 4554-4561."
+}

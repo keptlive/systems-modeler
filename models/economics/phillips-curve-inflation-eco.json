@@ -1,0 +1,153 @@
+{
+  "id": "phillips-curve-inflation-eco",
+  "name": "Phillips Curve Inflation-Unemployment Dynamics",
+  "description": "Classic inverse relationship between inflation and unemployment with expectations. Source: Phillips (1958) and Friedman (1968). DOI: 10.2307/2550759",
+  "stocks": [
+    {
+      "id": "stock-inflation",
+      "name": "Inflation_Rate",
+      "initial_value": 3,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-unemp",
+      "name": "Unemployment_Rate",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-expect",
+      "name": "Inflation_Expectations",
+      "initial_value": 3,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-inflchg",
+      "name": "Inflation_Change",
+      "equation": "(Expected_Inflation + Phillips_Effect - Inflation_Rate) * Adjustment_Speed",
+      "from_stock": null,
+      "to_stock": "stock-inflation",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-unempchg",
+      "name": "Unemployment_Change",
+      "equation": "(Natural_Rate - Unemployment_Rate + Policy_Shock) * 0.1",
+      "from_stock": null,
+      "to_stock": "stock-unemp",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-expectchg",
+      "name": "Expectation_Update",
+      "equation": "(Inflation_Rate - Inflation_Expectations) * Adaptive_Rate",
+      "from_stock": null,
+      "to_stock": "stock-expect",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-phillipseff",
+      "name": "Phillips_Effect",
+      "equation": "-Phillips_Slope * (Unemployment_Rate - Natural_Rate)",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-phillipsslope",
+      "name": "Phillips_Slope",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-natrate",
+      "name": "Natural_Rate",
+      "equation": "5",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-adjspeed",
+      "name": "Adjustment_Speed",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-adaptive",
+      "name": "Adaptive_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-policy",
+      "name": "Policy_Shock",
+      "equation": "0.5 * SIN(TIME / 10)",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-expected",
+      "name": "Expected_Inflation",
+      "equation": "Inflation_Expectations",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Unemployment_Rate",
+      "to_element": "Inflation_Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:23:02.238084+00:00",
+  "updated_at": "2026-01-12T02:23:02.238151+00:00",
+  "source": "https://doi.org/10.2307/2550759",
+  "reference": "Phillips, A.W. (1958). The Relation between Unemployment and the Rate of Change of Money Wage Rates. Economica."
+}

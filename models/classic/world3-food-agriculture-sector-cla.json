@@ -1,0 +1,347 @@
+{
+  "id": "world3-food-agriculture-sector-cla",
+  "name": "Arable_Land",
+  "description": "Food and agriculture sector from World3/Limits to Growth model. Models arable land, agricultural inputs, land fertility, and food production dynamics. Based on Meadows et al. (1972, 2004). Reference: Meadows, D. H., et al. (1972). The Limits to Growth. Universe Books. Source: https://www.clubofrome.org/publication/the-limits-to-growth/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Arable_Land",
+      "initial_value": 900,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Land_Fertility",
+      "initial_value": 600,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Agricultural_Input",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Land_Development",
+      "equation": "Development_Rate * Potential_Arable_Land / Land_Development_Time",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Land_Erosion",
+      "equation": "Arable_Land * Land_Erosion_Rate",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Land_Urbanization",
+      "equation": "Urban_Land_Needed",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Fertility_Regeneration",
+      "equation": "(Inherent_Fertility - Land_Fertility) / Fertility_Regeneration_Time",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Fertility_Degradation",
+      "equation": "Land_Fertility * Pollution_Effect * 0.01",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Input_Investment",
+      "equation": "Investment_in_Agriculture",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Input_Depreciation",
+      "equation": "Agricultural_Input / Input_Lifetime",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Potential_Arable_Land",
+      "equation": "3200 - Arable_Land",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Development_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Land_Development_Time",
+      "equation": "20",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Land_Erosion_Rate",
+      "equation": "0.001 + 0.003 * (1 - Land_Fertility / Inherent_Fertility)",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Urban_Land_Needed",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Inherent_Fertility",
+      "equation": "600",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Fertility_Regeneration_Time",
+      "equation": "30",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Pollution_Effect",
+      "equation": "1.2",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Investment_in_Agriculture",
+      "equation": "10",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Input_Lifetime",
+      "equation": "10",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Food_Production",
+      "equation": "Arable_Land * Land_Fertility * Land_Yield_Multiplier",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Land_Yield_Multiplier",
+      "equation": "1 + Agricultural_Input / 100",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Development_Rate",
+      "to_element": "Land_Development"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Potential_Arable_Land",
+      "to_element": "Land_Development"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Land_Development_Time",
+      "to_element": "Land_Development"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Arable_Land",
+      "to_element": "Land_Development"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Land_Erosion_Rate",
+      "to_element": "Land_Erosion"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Arable_Land",
+      "to_element": "Land_Erosion"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Urban_Land_Needed",
+      "to_element": "Land_Urbanization"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Land_Fertility",
+      "to_element": "Fertility_Regeneration"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Fertility_Regeneration_Time",
+      "to_element": "Fertility_Regeneration"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Inherent_Fertility",
+      "to_element": "Fertility_Regeneration"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Land_Fertility",
+      "to_element": "Fertility_Degradation"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Pollution_Effect",
+      "to_element": "Fertility_Degradation"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Investment_in_Agriculture",
+      "to_element": "Input_Investment"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Input_Lifetime",
+      "to_element": "Input_Depreciation"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Agricultural_Input",
+      "to_element": "Input_Depreciation"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Arable_Land",
+      "to_element": "Potential_Arable_Land"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Land_Fertility",
+      "to_element": "Land_Erosion_Rate"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Inherent_Fertility",
+      "to_element": "Land_Erosion_Rate"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Land_Fertility",
+      "to_element": "Food_Production"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Land_Yield_Multiplier",
+      "to_element": "Food_Production"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Arable_Land",
+      "to_element": "Food_Production"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Agricultural_Input",
+      "to_element": "Land_Yield_Multiplier"
+    }
+  ],
+  "time_settings": {
+    "start": 1900,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T07:23:15.854319+00:00",
+  "updated_at": "2026-01-12T07:23:15.854319+00:00",
+  "source": "https://doi.org/10.1016/j.ecolecon.2021.107019",
+  "reference": "Meadows et al. (2004). Limits to Growth: 30-Year Update. Chelsea Green. Original: Meadows et al. (1972)."
+}

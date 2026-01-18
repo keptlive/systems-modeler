@@ -1,0 +1,180 @@
+{
+  "id": "gross-emotion-regulation-process-psy",
+  "name": "Gross Emotion Regulation Process Model",
+  "description": "Temporal dynamics of emotion regulation. Source: Gross (1998), Review of General Psychology.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Emotional_Response",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Regulation_Effort",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Emotional_Experience",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Response_Change",
+      "equation": "Emotion_Generation - Natural_Decay - Regulation_Effect",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Effort_Change",
+      "equation": "Regulation_Initiation - Effort_Fatigue",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Experience_Update",
+      "equation": "(Emotional_Response - Emotional_Experience) / Experience_Lag",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Stimulus_Intensity",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Appraisal",
+      "equation": "0.8",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Regulation_Strategy",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Emotion_Generation",
+      "equation": "Stimulus_Intensity * Appraisal * (1 - Antecedent_Regulation)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Natural_Decay",
+      "equation": "0.1 * Emotional_Response",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Antecedent_Regulation",
+      "equation": "Regulation_Strategy * 0.3",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Regulation_Effect",
+      "equation": "Regulation_Effort * Regulation_Strategy * Emotional_Response",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Regulation_Initiation",
+      "equation": "MAX(0, Emotional_Response - 3) * 0.5",
+      "position": {
+        "x": 200,
+        "y": 480
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Effort_Fatigue",
+      "equation": "0.2 * Regulation_Effort",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Experience_Lag",
+      "equation": "2",
+      "position": {
+        "x": 300,
+        "y": 540
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Emotional_Response",
+      "to_element": "Regulation_Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-15T14:54:39.083621+00:00",
+  "updated_at": "2026-01-15T14:54:39.083624+00:00",
+  "source": "https://doi.org/10.1037/1089-2680.2.3.271",
+  "reference": "Gross, J.J. (1998). The emerging field of emotion regulation: An integrative review. Review of General Psychology 2:271-299."
+}

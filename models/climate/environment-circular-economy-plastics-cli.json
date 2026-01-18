@@ -1,0 +1,213 @@
+{
+  "id": "environment-circular-economy-plastics-cli",
+  "name": "Circular Economy for Plastics",
+  "description": "Models plastic production, use, recycling, and environmental leakage. Based on Ellen MacArthur Foundation and Geyer et al. (2017) Science paper. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "category": "climate",
+  "stocks": [
+    {
+      "id": "stock-virgin",
+      "name": "Virgin_Production_Mt",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-inuse",
+      "name": "Plastics_In_Use_Mt",
+      "initial_value": 2500,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-collected",
+      "name": "Collected_Waste_Mt",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recycled",
+      "name": "Recycled_Stock_Mt",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-landfill",
+      "name": "Landfilled_Mt",
+      "initial_value": 4000,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ocean",
+      "name": "Ocean_Plastics_Mt",
+      "initial_value": 150,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-production",
+      "name": "Virgin_Production",
+      "equation": "Base_Demand * (1 - Recycled_Content_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-virgin",
+      "position": {
+        "x": 25,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-to-use",
+      "name": "To_Use",
+      "equation": "Virgin_Production + Recycled_to_Use",
+      "from_stock": "stock-virgin",
+      "to_stock": "stock-inuse",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-discard",
+      "name": "Discard",
+      "equation": "Plastics_In_Use_Mt / Product_Lifetime",
+      "from_stock": "stock-inuse",
+      "to_stock": "stock-collected",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recycle",
+      "name": "Recycling",
+      "equation": "Collected_Waste_Mt * Recycling_Rate",
+      "from_stock": "stock-collected",
+      "to_stock": "stock-recycled",
+      "position": {
+        "x": 500,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-landfill",
+      "name": "To_Landfill",
+      "equation": "Collected_Waste_Mt * (1 - Recycling_Rate - Leakage_Rate)",
+      "from_stock": "stock-collected",
+      "to_stock": "stock-landfill",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-leakage",
+      "name": "Environmental_Leakage",
+      "equation": "Collected_Waste_Mt * Leakage_Rate",
+      "from_stock": "stock-collected",
+      "to_stock": "stock-ocean",
+      "position": {
+        "x": 600,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-recycled-use",
+      "name": "Recycled_to_Use",
+      "equation": "Recycled_Stock_Mt * Recycled_Use_Rate",
+      "from_stock": "stock-recycled",
+      "to_stock": "stock-inuse",
+      "position": {
+        "x": 400,
+        "y": 275
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-demand",
+      "name": "Base_Demand",
+      "equation": "400",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-recycled-content",
+      "name": "Recycled_Content_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-lifetime",
+      "name": "Product_Lifetime",
+      "equation": "5",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-recycling",
+      "name": "Recycling_Rate",
+      "equation": "0.09",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-leakage",
+      "name": "Leakage_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-recycled-use",
+      "name": "Recycled_Use_Rate",
+      "equation": "0.8",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2050,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1126/sciadv.1700782",
+  "reference": "Geyer R et al. (2017) Production, use, and fate of all plastics ever made. Science Advances.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:15:34.761713+00:00",
+  "updated_at": "2026-01-12T06:15:34.761713+00:00"
+}

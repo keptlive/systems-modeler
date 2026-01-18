@@ -1,0 +1,185 @@
+{
+  "id": "prescott-kydland-rbc-eco",
+  "name": "Kydland-Prescott Real Business Cycle Model",
+  "description": "Nobel Prize RBC model showing how technology shocks drive business cycles. Reference: Kydland, F.E. & Prescott, E.C. (1982). Time to Build and Aggregate Fluctuations.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Capital",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Technology",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Consumption",
+      "initial_value": 70,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Investment",
+      "equation": "Output - Consumption",
+      "from_stock": null,
+      "to_stock": "Capital",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Depreciation",
+      "equation": "Capital * Delta",
+      "from_stock": "Capital",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Tech_Shock",
+      "equation": "Technology * Rho * (Shock - 1)",
+      "from_stock": null,
+      "to_stock": "Technology",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Consumption_Change",
+      "equation": "(Optimal_Consumption - Consumption) * Adjustment_Speed",
+      "from_stock": null,
+      "to_stock": "Consumption",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Alpha",
+      "equation": "0.36",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Delta",
+      "equation": "0.025",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Rho",
+      "equation": "0.95",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Shock",
+      "equation": "1 + 0.02 * SIN(time / 8)",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Labor",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Output",
+      "equation": "Technology * Capital^Alpha * Labor^(1 - Alpha)",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "MPK",
+      "equation": "Alpha * Output / Capital",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Optimal_Consumption",
+      "equation": "Output * (1 - Alpha * Delta / MPK)",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Adjustment_Speed",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Output_Growth",
+      "equation": "(Output - 100) / 100",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.2307/1913386",
+  "reference": "Kydland, F.E. & Prescott, E.C. (1982). Time to Build and Aggregate Fluctuations. Econometrica, 50(6), 1345-1370.",
+  "created_at": "2026-01-15T19:55:24.277727+00:00",
+  "updated_at": "2026-01-15T19:55:24.277727+00:00"
+}

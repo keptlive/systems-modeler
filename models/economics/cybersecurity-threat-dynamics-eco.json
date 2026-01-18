@@ -1,0 +1,299 @@
+{
+  "id": "cybersecurity-threat-dynamics-eco",
+  "name": "Cybersecurity Threat Dynamics Model",
+  "description": "A system dynamics model of cyber attack and defense dynamics based on Huang et al. (2014) 'Modeling the competitive diffusion of malware and security patches' (doi:10.1016/j.telpol.2014.03.004) and the SIR-based cyber epidemic models. Tracks vulnerable systems, infected systems, and patched systems with attacker-defender dynamics. Reference: WHO Disease Outbreak Information. Source: https://www.who.int/",
+  "stocks": [
+    {
+      "id": "stock-vulnerable-systems",
+      "name": "Vulnerable Systems",
+      "initial_value": 900000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected-systems",
+      "name": "Infected Systems",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-patched-systems",
+      "name": "Patched Systems",
+      "initial_value": 99000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-known-vulnerabilities",
+      "name": "Known Vulnerabilities",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-security-budget",
+      "name": "Security Budget",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "Infection",
+      "equation": "Vulnerable_Systems * Infected_Systems / Total_Systems * Attack_Rate * Known_Vulnerabilities / 100",
+      "from_stock": "stock-vulnerable-systems",
+      "to_stock": "stock-infected-systems",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-remediation",
+      "name": "Remediation",
+      "equation": "Infected_Systems * Remediation_Rate * Security_Effectiveness",
+      "from_stock": "stock-infected-systems",
+      "to_stock": "stock-patched-systems",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-patching",
+      "name": "Proactive Patching",
+      "equation": "Vulnerable_Systems * Patching_Rate * Security_Effectiveness",
+      "from_stock": "stock-vulnerable-systems",
+      "to_stock": "stock-patched-systems",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-new-vulnerabilities",
+      "name": "New Vulnerabilities",
+      "equation": "Vulnerability_Discovery_Rate",
+      "from_stock": null,
+      "to_stock": "stock-known-vulnerabilities",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-vulnerability-patching",
+      "name": "Vulnerability Patching",
+      "equation": "Known_Vulnerabilities * Patch_Development_Rate",
+      "from_stock": "stock-known-vulnerabilities",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-security-investment",
+      "name": "Security Investment",
+      "equation": "Base_Investment + Infected_Systems * Incident_Response_Cost",
+      "from_stock": null,
+      "to_stock": "stock-security-budget",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-security-spending",
+      "name": "Security Spending",
+      "equation": "Security_Budget * Spending_Rate",
+      "from_stock": "stock-security-budget",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-systems",
+      "name": "Total Systems",
+      "equation": "Vulnerable_Systems + Infected_Systems + Patched_Systems",
+      "position": {
+        "x": 150,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-attack-rate",
+      "name": "Attack Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-remediation-rate",
+      "name": "Remediation Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-patching-rate",
+      "name": "Patching Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-security-effectiveness",
+      "name": "Security Effectiveness",
+      "equation": "MIN(1, Security_Budget / 1000000)",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-vulnerability-discovery-rate",
+      "name": "Vulnerability Discovery Rate",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-patch-development-rate",
+      "name": "Patch Development Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-base-investment",
+      "name": "Base Investment",
+      "equation": "100000",
+      "position": {
+        "x": 350,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-incident-response-cost",
+      "name": "Incident Response Cost",
+      "equation": "100",
+      "position": {
+        "x": 200,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-spending-rate",
+      "name": "Spending Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Vulnerable Systems",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Infected Systems",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Attack Rate",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Known Vulnerabilities",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Infected Systems",
+      "to_element": "Remediation"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Remediation Rate",
+      "to_element": "Remediation"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Security Effectiveness",
+      "to_element": "Remediation"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Vulnerable Systems",
+      "to_element": "Proactive Patching"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Patching Rate",
+      "to_element": "Proactive Patching"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Security Effectiveness",
+      "to_element": "Proactive Patching"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Security Budget",
+      "to_element": "Security Effectiveness"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Known Vulnerabilities",
+      "to_element": "Vulnerability Patching"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.0625
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

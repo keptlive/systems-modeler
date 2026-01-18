@@ -1,0 +1,38 @@
+{
+  "id": "generative-ai-market-dynamics-tec",
+  "name": "Generative AI Market Dynamics Model",
+  "description": "Models the dynamics of the generative AI market including compute scaling, model capabilities, enterprise adoption, workforce displacement concerns, and competitive dynamics between AI labs.",
+  "source": "https://doi.org/10.48550/arXiv.2001.08361",
+  "reference": "Kaplan J, et al. Scaling Laws for Neural Language Models. arXiv:2001.08361. 2020. McKinsey Global Institute: The Economic Potential of Generative AI. 2023.",
+  "stocks": [
+    {"id": "stock-model-capability", "name": "Model Capability", "initial_value": 100, "equation": "", "position": {"x": 100, "y": 100}},
+    {"id": "stock-compute-investment", "name": "Compute Investment", "initial_value": 10000000000, "equation": "", "position": {"x": 100, "y": 250}},
+    {"id": "stock-enterprise-adoption", "name": "Enterprise Adoption", "initial_value": 100000, "equation": "", "position": {"x": 350, "y": 175}},
+    {"id": "stock-market-revenue", "name": "Market Revenue", "initial_value": 10000000000, "equation": "", "position": {"x": 550, "y": 175}},
+    {"id": "stock-displaced-jobs", "name": "Displaced Jobs", "initial_value": 0, "equation": "", "position": {"x": 350, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-capability-growth", "name": "Capability Growth", "equation": "Model_Capability * Capability_Growth_Rate * Compute_Scaling_Factor", "from_stock": null, "to_stock": "stock-model-capability", "position": {"x": 100, "y": 50}},
+    {"id": "flow-compute-increase", "name": "Compute Investment Growth", "equation": "Compute_Investment * Compute_Growth_Rate * Profit_Reinvestment", "from_stock": null, "to_stock": "stock-compute-investment", "position": {"x": 100, "y": 300}},
+    {"id": "flow-adoption-growth", "name": "Adoption Growth", "equation": "Potential_Adopters * Adoption_Rate * Capability_Attractiveness", "from_stock": null, "to_stock": "stock-enterprise-adoption", "position": {"x": 250, "y": 175}},
+    {"id": "flow-revenue-growth", "name": "Revenue Growth", "equation": "Enterprise_Adoption * Revenue_Per_Enterprise * Annual_Growth", "from_stock": null, "to_stock": "stock-market-revenue", "position": {"x": 450, "y": 175}},
+    {"id": "flow-job-displacement", "name": "Job Displacement", "equation": "Enterprise_Adoption * Displacement_Rate * Automation_Potential", "from_stock": null, "to_stock": "stock-displaced-jobs", "position": {"x": 350, "y": 262}}
+  ],
+  "variables": [
+    {"id": "var-cap-growth", "name": "Capability_Growth_Rate", "equation": "0.05", "position": {"x": 50, "y": 50}},
+    {"id": "var-compute-scaling", "name": "Compute_Scaling_Factor", "equation": "LN(Compute_Investment / 1000000000) / 10", "position": {"x": 175, "y": 50}},
+    {"id": "var-compute-growth", "name": "Compute_Growth_Rate", "equation": "0.3", "position": {"x": 50, "y": 300}},
+    {"id": "var-profit-reinvest", "name": "Profit_Reinvestment", "equation": "0.5", "position": {"x": 175, "y": 300}},
+    {"id": "var-potential", "name": "Potential_Adopters", "equation": "10000000 - Enterprise_Adoption", "position": {"x": 250, "y": 125}},
+    {"id": "var-adoption-rate", "name": "Adoption_Rate", "equation": "0.001", "position": {"x": 350, "y": 125}},
+    {"id": "var-attractiveness", "name": "Capability_Attractiveness", "equation": "Model_Capability / 100", "position": {"x": 250, "y": 225}},
+    {"id": "var-revenue-per", "name": "Revenue_Per_Enterprise", "equation": "50000", "position": {"x": 450, "y": 125}},
+    {"id": "var-annual-growth", "name": "Annual_Growth", "equation": "1.2", "position": {"x": 550, "y": 125}},
+    {"id": "var-displacement", "name": "Displacement_Rate", "equation": "0.1", "position": {"x": 450, "y": 350}},
+    {"id": "var-automation", "name": "Automation_Potential", "equation": "Model_Capability / 500", "position": {"x": 250, "y": 350}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 120, "dt": 1},
+  "created_at": "2026-01-15T21:00:00.000000+00:00",
+  "updated_at": "2026-01-15T21:00:00.000000+00:00"
+}

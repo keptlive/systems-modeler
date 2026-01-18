@@ -1,0 +1,197 @@
+{
+  "id": "remote-work-adoption-soc",
+  "name": "Remote Work Adoption Model",
+  "description": "Models transition to remote/hybrid work arrangements. Based on post-COVID workplace research (Barrero et al., 2021). Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "stock-office-workers",
+      "name": "Office_Workers",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-hybrid-workers",
+      "name": "Hybrid_Workers",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-remote-workers",
+      "name": "Remote_Workers",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-office-space",
+      "name": "Office_Space_Demand",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-to-hybrid",
+      "name": "Office_to_Hybrid",
+      "equation": "Office_Workers * Hybrid_Adoption_Rate * Policy_Support",
+      "from_stock": "stock-office-workers",
+      "to_stock": "stock-hybrid-workers",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-to-remote",
+      "name": "Hybrid_to_Remote",
+      "equation": "Hybrid_Workers * Remote_Adoption_Rate * Tech_Readiness",
+      "from_stock": "stock-hybrid-workers",
+      "to_stock": "stock-remote-workers",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-back-to-office",
+      "name": "Back_to_Office",
+      "equation": "Hybrid_Workers * Return_Rate * (1 - Employee_Preference)",
+      "from_stock": "stock-hybrid-workers",
+      "to_stock": "stock-office-workers",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-back-to-hybrid",
+      "name": "Back_to_Hybrid",
+      "equation": "Remote_Workers * Hybrid_Return_Rate",
+      "from_stock": "stock-remote-workers",
+      "to_stock": "stock-hybrid-workers",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-space-adjustment",
+      "name": "Space_Adjustment",
+      "equation": "(Office_Workers + Hybrid_Workers * 0.5 - Office_Space_Demand) / Space_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-office-space",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-hybrid-adoption-rate",
+      "name": "Hybrid_Adoption_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-policy-support",
+      "name": "Policy_Support",
+      "equation": "0.8",
+      "position": {
+        "x": 240,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-remote-adoption-rate",
+      "name": "Remote_Adoption_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 380,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-tech-readiness",
+      "name": "Tech_Readiness",
+      "equation": "0.7 + 0.01 * TIME",
+      "position": {
+        "x": 540,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-return-rate",
+      "name": "Return_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-employee-preference",
+      "name": "Employee_Preference",
+      "equation": "0.6",
+      "position": {
+        "x": 260,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-hybrid-return-rate",
+      "name": "Hybrid_Return_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 420,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-space-adjustment-time",
+      "name": "Space_Adjustment_Time",
+      "equation": "4",
+      "position": {
+        "x": 580,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-remote-work-share",
+      "name": "Remote_Work_Share",
+      "equation": "(Hybrid_Workers * 0.5 + Remote_Workers) / (Office_Workers + Hybrid_Workers + Remote_Workers + 1)",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:22:14.816297+00:00",
+  "updated_at": "2026-01-12T01:22:14.816307+00:00",
+  "source": "https://doi.org/10.3386/w28731",
+  "reference": "Barrero JM, Bloom N, Davis SJ. Why Working from Home Will Stick. NBER Working Paper 28731. 2021."
+}

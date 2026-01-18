@@ -1,0 +1,132 @@
+{
+  "id": "replicator-dynamics-evolutionary-game-evo",
+  "name": "Replicator Dynamics Evolutionary Game",
+  "description": "Evolutionary game theory model showing strategy evolution based on relative fitness. Source: Taylor & Jonker (1978), Math Biosci.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Cooperator_Fraction",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Defector_Fraction",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Cooperator_Change",
+      "equation": "Cooperator_Fraction * (Cooperator_Fitness - Average_Fitness)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Defector_Change",
+      "equation": "Defector_Fraction * (Defector_Fitness - Average_Fitness)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "R_reward",
+      "equation": "3",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "S_sucker",
+      "equation": "0",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "T_temptation",
+      "equation": "5",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "P_punishment",
+      "equation": "1",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Cooperator_Fitness",
+      "equation": "R_reward * Cooperator_Fraction + S_sucker * Defector_Fraction",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Defector_Fitness",
+      "equation": "T_temptation * Cooperator_Fraction + P_punishment * Defector_Fraction",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Average_Fitness",
+      "equation": "Cooperator_Fraction * Cooperator_Fitness + Defector_Fraction * Defector_Fitness",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Cooperator_Fraction",
+      "to_element": "Cooperator_Fitness"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T14:36:21.172686+00:00",
+  "updated_at": "2026-01-15T14:36:21.172690+00:00",
+  "source": "https://doi.org/10.1016/0025-5564(78)90077-9",
+  "reference": "Taylor, P.D. & Jonker, L.B. (1978). Evolutionary stable strategies and game dynamics. Math Biosci 40:145-156."
+}

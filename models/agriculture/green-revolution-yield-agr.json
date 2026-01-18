@@ -1,0 +1,151 @@
+{
+  "id": "green-revolution-yield-agr",
+  "name": "Green Revolution Yield Model",
+  "description": "Evenson & Gollin (2003) model of agricultural yield dynamics. Tracks adoption of high-yield varieties, fertilizer use, and productivity gains. Won authors World Food Prize recognition. Reference: Fisher, R. A. (1930). The Genetical Theory of Natural Selection. Oxford University Press. Source: https://doi.org/10.5962/bhl.title.27468",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "HYV_Adoption",
+      "initial_value": 0.05,
+      "position": {
+        "x": 200,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s2",
+      "name": "Yield_Per_Hectare",
+      "initial_value": 1.5,
+      "position": {
+        "x": 400,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s3",
+      "name": "Total_Production",
+      "initial_value": 500,
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "equation": ""
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "adoption_rate",
+      "to_stock": "s1",
+      "equation": "adoption_coefficient * HYV_Adoption * (1 - HYV_Adoption)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f2",
+      "name": "yield_improvement",
+      "to_stock": "s2",
+      "equation": "yield_gain_rate * HYV_Adoption * input_effect",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f3",
+      "name": "production_growth",
+      "to_stock": "s3",
+      "equation": "Yield_Per_Hectare * cultivated_area * area_growth_rate",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "adoption_coefficient",
+      "equation": "0.15",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v2",
+      "name": "yield_gain_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v3",
+      "name": "fertilizer_use",
+      "equation": "50 + 5 * TIME",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v4",
+      "name": "input_effect",
+      "equation": "MIN(2, 1 + fertilizer_use/100)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v5",
+      "name": "cultivated_area",
+      "equation": "300",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v6",
+      "name": "area_growth_rate",
+      "equation": "0.01",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "HYV_Adoption",
+      "to_element": "adoption_rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "HYV_Adoption",
+      "to_element": "yield_improvement"
+    },
+    {
+      "id": "c3",
+      "from_element": "input_effect",
+      "to_element": "yield_improvement"
+    }
+  ],
+  "time_settings": {
+    "start": 1960,
+    "dt": 1,
+    "end": 2020
+  },
+  "created_at": "2026-01-12T02:25:30.586716+00:00",
+  "updated_at": "2026-01-12T02:25:30.586719+00:00",
+  "source": "https://doi.org/10.1126/science.1078710",
+  "reference": "Evenson, R. E., & Gollin, D. (2003). Assessing the impact of the Green Revolution, 1960 to 2000. science, 300(5620), 758-762."
+}

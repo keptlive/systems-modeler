@@ -1,0 +1,206 @@
+{
+  "id": "flash-crash-liquidity-fin",
+  "name": "Flash Crash Liquidity Dynamics",
+  "description": "Model of market liquidity evaporation during flash crashes. Captures the feedback between price volatility, market maker withdrawal, and algorithmic trading. Based on analysis of 2010 Flash Crash and subsequent events. Reference: Hendershott, T., et al. (2011). Does Algorithmic Trading Improve Liquidity? Journal of Finance. Source: https://doi.org/10.1111/j.1540-6261.2010.01624.x",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Market_Liquidity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Price_Level",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Volatility",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Order_Imbalance",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Liquidity_Provision",
+      "equation": "Normal_Liquidity * Market_Maker_Willingness / Liquidity_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Liquidity_Withdrawal",
+      "equation": "Market_Liquidity * Withdrawal_Rate * Volatility / Normal_Volatility",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Price_Change",
+      "equation": "Order_Imbalance / MAX(Market_Liquidity, 1) * Price_Impact",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Volatility_Update",
+      "equation": "(ABS(Price_Change) - Volatility) / Volatility_Memory",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 250,
+        "y": 430
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Order_Flow",
+      "equation": "Exogenous_Shock - Algo_Response * Volatility",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 450,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Normal_Liquidity",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Normal_Volatility",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Withdrawal_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Price_Impact",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Liquidity_Adjustment_Time",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Volatility_Memory",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Market_Maker_Willingness",
+      "equation": "MAX(0.1, 1 - Volatility / 50)",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Exogenous_Shock",
+      "equation": "IF Time > 30 AND Time < 35 THEN -50 ELSE 0",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Algo_Response",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Liquidity_Crisis",
+      "equation": "IF Market_Liquidity < 20 THEN 1 ELSE 0",
+      "position": {
+        "x": 400,
+        "y": 180
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "source": "https://doi.org/10.1111/jofi.12498",
+  "reference": "Kirilenko A, Kyle AS, Samadi M, Tuzun T (2017) The Flash Crash: High-Frequency Trading in an Electronic Market. Journal of Finance.",
+  "created_at": "2026-01-12T06:55:23.193507+00:00",
+  "updated_at": "2026-01-12T06:55:23.193507+00:00"
+}

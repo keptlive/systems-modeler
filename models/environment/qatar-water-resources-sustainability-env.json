@@ -1,0 +1,196 @@
+{
+  "id": "qatar-water-resources-sustainability-env",
+  "name": "Qatar Water Resources Sustainability Model",
+  "description": "System dynamics decision support system for national-scale water resource management in arid regions. Simulates Qatar's water system 2021-2070 showing business-as-usual can only balance supply/demand for 32 years. Reference: Al-Ansari, T., et al. (2024). A system dynamics approach to management of water resources in Qatar. Sustainable Production and Consumption, 48, 225-240. Source: https://doi.org/10.1016/j.spc.2024.04.013",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Groundwater Reserve",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 100, "y": 150}
+    },
+    {
+      "id": "s2",
+      "name": "Desalinated Water Capacity",
+      "initial_value": 60,
+      "equation": "",
+      "position": {"x": 300, "y": 150}
+    },
+    {
+      "id": "s3",
+      "name": "Treated Wastewater",
+      "initial_value": 20,
+      "equation": "",
+      "position": {"x": 500, "y": 150}
+    },
+    {
+      "id": "s4",
+      "name": "Total Water Demand",
+      "initial_value": 80,
+      "equation": "",
+      "position": {"x": 300, "y": 300}
+    },
+    {
+      "id": "s5",
+      "name": "Population",
+      "initial_value": 2.8,
+      "equation": "",
+      "position": {"x": 100, "y": 300}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Groundwater Extraction",
+      "equation": "MIN(Groundwater_Reserve * Max_Extraction_Rate, Agricultural_Demand)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Groundwater Recharge",
+      "equation": "Rainfall_Recharge + Treated_Wastewater * Recharge_Fraction",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {"x": 50, "y": 150}
+    },
+    {
+      "id": "f3",
+      "name": "Desalination Expansion",
+      "equation": "Investment_Rate * (Desalination_Target - Desalinated_Water_Capacity) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {"x": 300, "y": 100}
+    },
+    {
+      "id": "f4",
+      "name": "Wastewater Treatment Increase",
+      "equation": "Municipal_Demand * Treatment_Rate * (1 - Treated_Wastewater / Max_Treatment)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {"x": 500, "y": 100}
+    },
+    {
+      "id": "f5",
+      "name": "Demand Growth",
+      "equation": "Population * Per_Capita_Growth - Conservation_Effect * Total_Water_Demand",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {"x": 300, "y": 350}
+    },
+    {
+      "id": "f6",
+      "name": "Population Growth",
+      "equation": "Population * Population_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {"x": 50, "y": 300}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Max Extraction Rate",
+      "equation": "0.03",
+      "position": {"x": 50, "y": 200}
+    },
+    {
+      "id": "v2",
+      "name": "Agricultural Demand",
+      "equation": "Total_Water_Demand * 0.35",
+      "position": {"x": 150, "y": 250}
+    },
+    {
+      "id": "v3",
+      "name": "Rainfall Recharge",
+      "equation": "0.5",
+      "position": {"x": 50, "y": 100}
+    },
+    {
+      "id": "v4",
+      "name": "Recharge Fraction",
+      "equation": "0.3",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "v5",
+      "name": "Investment Rate",
+      "equation": "1.0",
+      "position": {"x": 250, "y": 50}
+    },
+    {
+      "id": "v6",
+      "name": "Desalination Target",
+      "equation": "Total_Water_Demand * 0.8",
+      "position": {"x": 350, "y": 50}
+    },
+    {
+      "id": "v7",
+      "name": "Adjustment Time",
+      "equation": "10",
+      "position": {"x": 400, "y": 100}
+    },
+    {
+      "id": "v8",
+      "name": "Municipal Demand",
+      "equation": "Total_Water_Demand * 0.5",
+      "position": {"x": 450, "y": 50}
+    },
+    {
+      "id": "v9",
+      "name": "Treatment Rate",
+      "equation": "0.9",
+      "position": {"x": 550, "y": 50}
+    },
+    {
+      "id": "v10",
+      "name": "Max Treatment",
+      "equation": "100",
+      "position": {"x": 550, "y": 100}
+    },
+    {
+      "id": "v11",
+      "name": "Per Capita Growth",
+      "equation": "0.5",
+      "position": {"x": 200, "y": 350}
+    },
+    {
+      "id": "v12",
+      "name": "Conservation Effect",
+      "equation": "0.01",
+      "position": {"x": 400, "y": 350}
+    },
+    {
+      "id": "v13",
+      "name": "Population Growth Rate",
+      "equation": "0.02",
+      "position": {"x": 100, "y": 350}
+    },
+    {
+      "id": "v14",
+      "name": "Total Supply",
+      "equation": "Desalinated_Water_Capacity + Treated_Wastewater * 0.5 + MIN(Groundwater_Reserve * 0.02, 10)",
+      "position": {"x": 400, "y": 200}
+    },
+    {
+      "id": "v15",
+      "name": "Supply Demand Balance",
+      "equation": "Total_Supply - Total_Water_Demand",
+      "position": {"x": 450, "y": 300}
+    },
+    {
+      "id": "v16",
+      "name": "Years to Shortage",
+      "equation": "IF(Supply_Demand_Balance < 0, 0, Groundwater_Reserve / MAX(0.1, Groundwater_Extraction))",
+      "position": {"x": 200, "y": 400}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 50, "dt": 1},
+  "created_at": "2026-01-15T16:00:00.000000",
+  "updated_at": "2026-01-15T16:00:00.000000",
+  "source": "https://doi.org/10.1016/j.spc.2024.04.013",
+  "reference": "Al-Ansari, T., et al. (2024). A system dynamics approach to management of water resources in Qatar. Sustainable Production and Consumption, 48, 225-240."
+}

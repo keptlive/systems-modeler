@@ -1,0 +1,521 @@
+{
+  "id": "hospital-capacity-and-patient-flow-model-hea",
+  "name": "Hospital Capacity and Patient Flow Model",
+  "description": "Models hospital operations including patient arrivals, bed capacity, staffing, length of stay, and quality of care. Demonstrates healthcare system dynamics and capacity constraints. Reference: Juran, J. M. (1999). Juran's Quality Handbook. McGraw-Hill. Source: https://www.mheducation.com/",
+  "stocks": [
+    {
+      "id": "stock-patients-waiting-for-admission",
+      "name": "Patients Waiting for Admission",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-inpatients",
+      "name": "Inpatients",
+      "initial_value": 180,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-icu-patients",
+      "name": "ICU Patients",
+      "initial_value": 25,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-nursing-staff",
+      "name": "Nursing Staff",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-staff-fatigue-level",
+      "name": "Staff Fatigue Level",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-hospital-reputation",
+      "name": "Hospital Reputation",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-patient-arrivals",
+      "name": "Patient Arrivals",
+      "equation": "Base_Arrival_Rate * Seasonality_Factor * (1 + Hospital_Reputation / 200)",
+      "from_stock": null,
+      "to_stock": "stock-patients-waiting-for-admission",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-admissions",
+      "name": "Admissions",
+      "equation": "MIN(Patients_Waiting / Wait_Time_Target, Available_Beds / Admission_Processing_Time)",
+      "from_stock": "stock-patients-waiting-for-admission",
+      "to_stock": "stock-inpatients",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-discharges",
+      "name": "Discharges",
+      "equation": "Inpatients / Actual_Length_of_Stay * (1 - Mortality_Rate)",
+      "from_stock": "stock-inpatients",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-in-hospital-deaths",
+      "name": "In-Hospital Deaths",
+      "equation": "Inpatients / Actual_Length_of_Stay * Mortality_Rate",
+      "from_stock": "stock-inpatients",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-icu-admissions",
+      "name": "ICU Admissions",
+      "equation": "Admissions * ICU_Fraction",
+      "from_stock": null,
+      "to_stock": "stock-icu-patients",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-icu-discharges",
+      "name": "ICU Discharges",
+      "equation": "ICU_Patients / ICU_Length_of_Stay * (1 - ICU_Mortality_Rate)",
+      "from_stock": "stock-icu-patients",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-icu-deaths",
+      "name": "ICU Deaths",
+      "equation": "ICU_Patients / ICU_Length_of_Stay * ICU_Mortality_Rate",
+      "from_stock": "stock-icu-patients",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-nurse-hiring",
+      "name": "Nurse Hiring",
+      "equation": "MAX(0, (Desired_Nursing_Staff - Nursing_Staff) / Hiring_Delay)",
+      "from_stock": null,
+      "to_stock": "stock-nursing-staff",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-nurse-turnover",
+      "name": "Nurse Turnover",
+      "equation": "Nursing_Staff * (Base_Turnover_Rate + Fatigue_Induced_Turnover)",
+      "from_stock": "stock-nursing-staff",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-fatigue-accumulation",
+      "name": "Fatigue Accumulation",
+      "equation": "(Workload_Intensity - Recovery_Threshold) * Fatigue_Accumulation_Rate",
+      "from_stock": null,
+      "to_stock": "stock-staff-fatigue-level",
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-fatigue-recovery",
+      "name": "Fatigue Recovery",
+      "equation": "Staff_Fatigue * Recovery_Rate * Staffing_Adequacy",
+      "from_stock": "stock-staff-fatigue-level",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-reputation-gain",
+      "name": "Reputation Gain",
+      "equation": "(Quality_of_Care - 50) * Reputation_Adjustment_Rate * IF Quality_of_Care > 50 THEN 1 ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-hospital-reputation",
+      "position": {
+        "x": 650,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-reputation-loss",
+      "name": "Reputation Loss",
+      "equation": "(50 - Quality_of_Care) * Reputation_Adjustment_Rate * IF Quality_of_Care < 50 THEN 1 ELSE 0",
+      "from_stock": "stock-hospital-reputation",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 800
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-beds",
+      "name": "Total Beds",
+      "equation": "250",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-icu-beds",
+      "name": "ICU Beds",
+      "equation": "30",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-available-beds",
+      "name": "Available Beds",
+      "equation": "MAX(0, Total_Beds - Inpatients)",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-available-icu-beds",
+      "name": "Available ICU Beds",
+      "equation": "MAX(0, ICU_Beds - ICU_Patients)",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-bed-occupancy-rate",
+      "name": "Bed Occupancy Rate",
+      "equation": "Inpatients / Total_Beds",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-icu-occupancy-rate",
+      "name": "ICU Occupancy Rate",
+      "equation": "ICU_Patients / ICU_Beds",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-base-arrival-rate",
+      "name": "Base Arrival Rate",
+      "equation": "50",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-seasonality-factor",
+      "name": "Seasonality Factor",
+      "equation": "1 + 0.2 * SIN(2 * PI * Time / 365)",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-target-length-of-stay",
+      "name": "Target Length of Stay",
+      "equation": "4",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-actual-length-of-stay",
+      "name": "Actual Length of Stay",
+      "equation": "Target_Length_of_Stay * (1 + Capacity_Pressure_Effect + Quality_LOS_Effect)",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-capacity-pressure-effect",
+      "name": "Capacity Pressure Effect",
+      "equation": "IF Bed_Occupancy > 0.85 THEN -0.1 * (Bed_Occupancy - 0.85) / 0.15 ELSE 0",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-quality-los-effect",
+      "name": "Quality LOS Effect",
+      "equation": "(100 - Quality_of_Care) / 500",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-icu-length-of-stay",
+      "name": "ICU Length of Stay",
+      "equation": "6",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-icu-fraction",
+      "name": "ICU Fraction",
+      "equation": "0.15",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-base-mortality-rate",
+      "name": "Base Mortality Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-mortality-rate",
+      "name": "Mortality Rate",
+      "equation": "Base_Mortality_Rate * (2 - Quality_of_Care / 100)",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-icu-mortality-rate",
+      "name": "ICU Mortality Rate",
+      "equation": "0.15 * (2 - Quality_of_Care / 100)",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-nurse-to-patient-ratio",
+      "name": "Nurse to Patient Ratio",
+      "equation": "Nursing_Staff / MAX(1, Inpatients + ICU_Patients * 2)",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-target-nurse-to-patient-ratio",
+      "name": "Target Nurse to Patient Ratio",
+      "equation": "0.8",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-staffing-adequacy",
+      "name": "Staffing Adequacy",
+      "equation": "MIN(1, Nurse_to_Patient_Ratio / Target_Nurse_Ratio)",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-desired-nursing-staff",
+      "name": "Desired Nursing Staff",
+      "equation": "(Inpatients + ICU_Patients * 2) * Target_Nurse_Ratio",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-hiring-delay",
+      "name": "Hiring Delay",
+      "equation": "60",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-base-turnover-rate",
+      "name": "Base Turnover Rate",
+      "equation": "0.0003",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-fatigue-induced-turnover",
+      "name": "Fatigue Induced Turnover",
+      "equation": "Staff_Fatigue / 100 * 0.001",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-workload-intensity",
+      "name": "Workload Intensity",
+      "equation": "(Inpatients + ICU_Patients * 2) / Nursing_Staff * 100",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-recovery-threshold",
+      "name": "Recovery Threshold",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-fatigue-accumulation-rate",
+      "name": "Fatigue Accumulation Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-recovery-rate",
+      "name": "Recovery Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-quality-of-care",
+      "name": "Quality of Care",
+      "equation": "100 * Staffing_Adequacy * (1 - Staff_Fatigue / 200) * (1 - MAX(0, Bed_Occupancy - 0.85) / 0.15)",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-wait-time-target",
+      "name": "Wait Time Target",
+      "equation": "0.5",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-admission-processing-time",
+      "name": "Admission Processing Time",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-average-wait-time",
+      "name": "Average Wait Time",
+      "equation": "Patients_Waiting / MAX(1, Admissions)",
+      "position": {
+        "x": 250,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-reputation-adjustment-rate",
+      "name": "Reputation Adjustment Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 560
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.814139Z",
+  "updated_at": "2026-01-11T20:04:50.814139Z",
+  "source": "https://doi.org/10.1016/j.socscimed.2013.03.004",
+  "reference": "Healthcare System Dynamics Models"
+}

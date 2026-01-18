@@ -1,0 +1,151 @@
+{
+  "id": "lucas-human-capital-eco",
+  "name": "Lucas Human Capital Growth Model",
+  "description": "Human capital accumulation drives sustained growth through both private returns and external spillovers. Workers allocate time between production and skill acquisition. Nobel Prize 1995. Reference: Lucas, R. E. (1988). On the mechanics of economic development. Journal of Monetary Economics, 22(1), 3-42. DOI: https://doi.org/10.1016/0304-3932(88)90168-7",
+  "stocks": [
+    {
+      "id": "stock-human-capital",
+      "name": "Human Capital",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-physical-capital",
+      "name": "Physical Capital",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-hc-accumulation",
+      "name": "HC Accumulation",
+      "equation": "Human_Capital * Time_Learning * Learning_Efficiency",
+      "from_stock": null,
+      "to_stock": "stock-human-capital",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-investment",
+      "name": "Investment",
+      "equation": "Savings_Rate * Output - Depreciation * Physical_Capital",
+      "from_stock": null,
+      "to_stock": "stock-physical-capital",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-time-learning",
+      "name": "Time Learning",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-learning-eff",
+      "name": "Learning Efficiency",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-output",
+      "name": "Output",
+      "equation": "Physical_Capital^Alpha * (Human_Capital * Labor * (1 - Time_Learning))^(1 - Alpha) * Human_Capital^Gamma",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-alpha",
+      "name": "Alpha",
+      "equation": "0.3",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "Gamma (Spillover)",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-labor",
+      "name": "Labor",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-savings",
+      "name": "Savings Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-depreciation",
+      "name": "Depreciation",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Human Capital",
+      "to_element": "HC Accumulation"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Human Capital",
+      "to_element": "Output"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Physical Capital",
+      "to_element": "Output"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:39:15.413258+00:00",
+  "updated_at": "2026-01-12T07:39:15.413266+00:00",
+  "source": "https://doi.org/10.1016/0304-3932(88)90168-7",
+  "reference": "Lucas RE. On the Mechanics of Economic Development. Journal of Monetary Economics. 1988;22(1):3-42. Nobel Prize 1995."
+}

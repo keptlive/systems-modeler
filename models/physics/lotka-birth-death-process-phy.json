@@ -1,0 +1,104 @@
+{
+  "id": "lotka-birth-death-process-phy",
+  "name": "Lotka Stochastic Birth-Death Process",
+  "description": "Foundation of population dynamics with random birth/death events. Source: Lotka (1939) and Bartlett (1966). DOI: 10.1137/1.9780898719574",
+  "stocks": [
+    {
+      "id": "stock-pop",
+      "name": "Population",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-birth",
+      "name": "Birth_Rate",
+      "equation": "Population * Lambda",
+      "from_stock": null,
+      "to_stock": "stock-pop",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-death",
+      "name": "Death_Rate",
+      "equation": "Population * Mu",
+      "from_stock": "stock-pop",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-lambda",
+      "name": "Lambda",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-mu",
+      "name": "Mu",
+      "equation": "0.08",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-netrate",
+      "name": "Net_Growth_Rate",
+      "equation": "Lambda - Mu",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-variance",
+      "name": "Population_Variance",
+      "equation": "Population * (Lambda + Mu) * TIME",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-extinctprob",
+      "name": "Extinction_Probability",
+      "equation": "IF(Lambda < Mu, 1, (Mu / Lambda) ^ Population)",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Population",
+      "to_element": "Birth_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T02:09:47.460685+00:00",
+  "updated_at": "2026-01-12T02:09:47.460688+00:00",
+  "source": "https://doi.org/10.1137/1.9780898719574",
+  "reference": "Bartlett, M.S. (1966). An Introduction to Stochastic Processes. Cambridge University Press."
+}

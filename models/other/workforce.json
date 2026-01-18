@@ -1,0 +1,241 @@
+{
+  "id": "workforce",
+  "name": "Workforce",
+  "description": "Model from workforce.mdl",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Experts",
+      "initial_value": 50.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Rookies",
+      "initial_value": 5.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Task_Backlog",
+      "initial_value": 500.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Departure",
+      "equation": "Experts / Average Tenure",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Expert_Task_Completion",
+      "equation": "\"Expert-Hours on Task per Week\"/Expert_Time_per_Task",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Expert_Time_per_Task",
+      "equation": "10.0",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Expert_Workweek",
+      "equation": "40.0",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Hiring",
+      "equation": "Effect of Pressure on Hiring(Pressure_to_Hire)",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Hours_of_Supervision_Required_per_Rookie_Per_Week",
+      "equation": "20.0",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Maturation",
+      "equation": "Rookies/Maturation_Time",
+      "position": {
+        "x": 230,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Maturation_Time",
+      "equation": "15.0",
+      "position": {
+        "x": 360,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Pressure_to_Hire",
+      "equation": "(Task_Backlog-Target_Backlog)/Target_Backlog",
+      "position": {
+        "x": 490,
+        "y": 130
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Rookie_Task_Completion",
+      "equation": "\"Rookie-Hours on Task per Week\"/Rookie_Time_per_Task",
+      "position": {
+        "x": 620,
+        "y": 130
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Rookie_Time_per_Task",
+      "equation": "30.0",
+      "position": {
+        "x": 100,
+        "y": 210
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Rookie_Workweek",
+      "equation": "40.0",
+      "position": {
+        "x": 230,
+        "y": 210
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Target_Backlog",
+      "equation": "500.0",
+      "position": {
+        "x": 360,
+        "y": 210
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Task_Arrival",
+      "equation": "230.0",
+      "position": {
+        "x": 490,
+        "y": 210
+      }
+    },
+    {
+      "id": "v15",
+      "name": "Task_Completion",
+      "equation": "MIN(Expert_Task_Completion+Rookie_Task_Completion, Task_Backlog)",
+      "position": {
+        "x": 620,
+        "y": 210
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Experts",
+      "to_element": "Departure"
+    },
+    {
+      "id": "c2",
+      "from_element": "Expert_Time_per_Task",
+      "to_element": "Expert_Task_Completion"
+    },
+    {
+      "id": "c3",
+      "from_element": "Pressure_to_Hire",
+      "to_element": "Hiring"
+    },
+    {
+      "id": "c4",
+      "from_element": "Rookies",
+      "to_element": "Maturation"
+    },
+    {
+      "id": "c5",
+      "from_element": "Maturation_Time",
+      "to_element": "Maturation"
+    },
+    {
+      "id": "c6",
+      "from_element": "Target_Backlog",
+      "to_element": "Pressure_to_Hire"
+    },
+    {
+      "id": "c7",
+      "from_element": "Task_Backlog",
+      "to_element": "Pressure_to_Hire"
+    },
+    {
+      "id": "c8",
+      "from_element": "Rookie_Time_per_Task",
+      "to_element": "Rookie_Task_Completion"
+    },
+    {
+      "id": "c9",
+      "from_element": "Rookie_Task_Completion",
+      "to_element": "Task_Completion"
+    },
+    {
+      "id": "c10",
+      "from_element": "Expert_Task_Completion",
+      "to_element": "Task_Completion"
+    },
+    {
+      "id": "c11",
+      "from_element": "Task_Backlog",
+      "to_element": "Task_Completion"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 150.0,
+    "dt": 0.03125
+  },
+  "created_at": "2026-01-15T19:13:16.379029+00:00",
+  "updated_at": "2026-01-15T19:13:16.379029+00:00",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository - Standard System Dynamics Test Cases"
+}

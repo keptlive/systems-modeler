@@ -1,0 +1,506 @@
+{
+  "id": "antibiotic-cycling-hospital-hea",
+  "name": "Carrying_Capacity",
+  "description": "Model of antibiotic resistance in hospital settings with cycling strategies. Shows how rotating antibiotic use can slow resistance development. Based on Bergstrom et al. and CDC guidelines. Reference: Andersson, D. I., & Hughes, D. (2014). Microbiological effects of sublethal antibiotic concentrations. Nature Reviews Microbiology. Source: https://doi.org/10.1038/nrmicro3270",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Sensitive_Bacteria",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Resistant_to_A",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Resistant_to_B",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Multi_Resistant",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Sensitive_Growth",
+      "equation": "Sensitive_Bacteria * Growth_Rate * (1 - Total_Bacteria / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Kill_Sensitive",
+      "equation": "Sensitive_Bacteria * Kill_Rate_Sensitive",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Mutation_to_A",
+      "equation": "Sensitive_Bacteria * Mutation_Rate * Antibiotic_A_Use",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Mutation_to_B",
+      "equation": "Sensitive_Bacteria * Mutation_Rate * Antibiotic_B_Use",
+      "from_stock": "s1",
+      "to_stock": "s3",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Resistant_A_Growth",
+      "equation": "Resistant_to_A * Growth_Rate * (1 - Total_Bacteria / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Kill_Resistant_A",
+      "equation": "Resistant_to_A * Kill_Rate_A_Resistant",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Resistant_B_Growth",
+      "equation": "Resistant_to_B * Growth_Rate * (1 - Total_Bacteria / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "f8",
+      "name": "Kill_Resistant_B",
+      "equation": "Resistant_to_B * Kill_Rate_B_Resistant",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "f9",
+      "name": "Double_Mutation",
+      "equation": "(Resistant_to_A + Resistant_to_B) * Mutation_Rate * 0.1",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f10",
+      "name": "Multi_Resistant_Growth",
+      "equation": "Multi_Resistant * Growth_Rate * 0.8 * (1 - Total_Bacteria / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Growth_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Carrying_Capacity",
+      "equation": "1000",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Mutation_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Cycling_Period",
+      "equation": "30",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Antibiotic_A_Use",
+      "equation": "IF(MOD(TIME, Cycling_Period * 2) < Cycling_Period, 1, 0)",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Antibiotic_B_Use",
+      "equation": "1 - Antibiotic_A_Use",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Kill_Rate_Sensitive",
+      "equation": "0.8 * (Antibiotic_A_Use + Antibiotic_B_Use)",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Kill_Rate_A_Resistant",
+      "equation": "0.8 * Antibiotic_B_Use + 0.1 * Antibiotic_A_Use",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Kill_Rate_B_Resistant",
+      "equation": "0.8 * Antibiotic_A_Use + 0.1 * Antibiotic_B_Use",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Total_Bacteria",
+      "equation": "Sensitive_Bacteria + Resistant_to_A + Resistant_to_B + Multi_Resistant",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Resistance_Fraction",
+      "equation": "(Resistant_to_A + Resistant_to_B + Multi_Resistant) / MAX(1, Total_Bacteria)",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Sensitive_Bacteria",
+      "to_element": "Sensitive_Growth"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Growth_Rate",
+      "to_element": "Sensitive_Growth"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Total_Bacteria",
+      "to_element": "Sensitive_Growth"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Carrying_Capacity",
+      "to_element": "Sensitive_Growth"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Kill_Rate_Sensitive",
+      "to_element": "Kill_Sensitive"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Sensitive_Bacteria",
+      "to_element": "Kill_Sensitive"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Mutation_Rate",
+      "to_element": "Mutation_to_A"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Sensitive_Bacteria",
+      "to_element": "Mutation_to_A"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Antibiotic_A_Use",
+      "to_element": "Mutation_to_A"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Mutation_Rate",
+      "to_element": "Mutation_to_B"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Sensitive_Bacteria",
+      "to_element": "Mutation_to_B"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Antibiotic_B_Use",
+      "to_element": "Mutation_to_B"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Resistant_to_A",
+      "to_element": "Resistant_A_Growth"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Growth_Rate",
+      "to_element": "Resistant_A_Growth"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Total_Bacteria",
+      "to_element": "Resistant_A_Growth"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Carrying_Capacity",
+      "to_element": "Resistant_A_Growth"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Resistant_to_A",
+      "to_element": "Kill_Resistant_A"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Kill_Rate_A_Resistant",
+      "to_element": "Kill_Resistant_A"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Growth_Rate",
+      "to_element": "Resistant_B_Growth"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Total_Bacteria",
+      "to_element": "Resistant_B_Growth"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Resistant_to_B",
+      "to_element": "Resistant_B_Growth"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Carrying_Capacity",
+      "to_element": "Resistant_B_Growth"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "Kill_Rate_B_Resistant",
+      "to_element": "Kill_Resistant_B"
+    },
+    {
+      "id": "conn-24",
+      "from_element": "Resistant_to_B",
+      "to_element": "Kill_Resistant_B"
+    },
+    {
+      "id": "conn-25",
+      "from_element": "Mutation_Rate",
+      "to_element": "Double_Mutation"
+    },
+    {
+      "id": "conn-26",
+      "from_element": "Resistant_to_A",
+      "to_element": "Double_Mutation"
+    },
+    {
+      "id": "conn-27",
+      "from_element": "Resistant_to_B",
+      "to_element": "Double_Mutation"
+    },
+    {
+      "id": "conn-28",
+      "from_element": "Multi_Resistant",
+      "to_element": "Multi_Resistant_Growth"
+    },
+    {
+      "id": "conn-29",
+      "from_element": "Growth_Rate",
+      "to_element": "Multi_Resistant_Growth"
+    },
+    {
+      "id": "conn-30",
+      "from_element": "Total_Bacteria",
+      "to_element": "Multi_Resistant_Growth"
+    },
+    {
+      "id": "conn-31",
+      "from_element": "Carrying_Capacity",
+      "to_element": "Multi_Resistant_Growth"
+    },
+    {
+      "id": "conn-32",
+      "from_element": "Cycling_Period",
+      "to_element": "Antibiotic_A_Use"
+    },
+    {
+      "id": "conn-33",
+      "from_element": "Antibiotic_A_Use",
+      "to_element": "Antibiotic_B_Use"
+    },
+    {
+      "id": "conn-34",
+      "from_element": "Antibiotic_B_Use",
+      "to_element": "Kill_Rate_Sensitive"
+    },
+    {
+      "id": "conn-35",
+      "from_element": "Antibiotic_A_Use",
+      "to_element": "Kill_Rate_Sensitive"
+    },
+    {
+      "id": "conn-36",
+      "from_element": "Antibiotic_B_Use",
+      "to_element": "Kill_Rate_A_Resistant"
+    },
+    {
+      "id": "conn-37",
+      "from_element": "Antibiotic_A_Use",
+      "to_element": "Kill_Rate_A_Resistant"
+    },
+    {
+      "id": "conn-38",
+      "from_element": "Antibiotic_B_Use",
+      "to_element": "Kill_Rate_B_Resistant"
+    },
+    {
+      "id": "conn-39",
+      "from_element": "Antibiotic_A_Use",
+      "to_element": "Kill_Rate_B_Resistant"
+    },
+    {
+      "id": "conn-40",
+      "from_element": "Multi_Resistant",
+      "to_element": "Total_Bacteria"
+    },
+    {
+      "id": "conn-41",
+      "from_element": "Resistant_to_A",
+      "to_element": "Total_Bacteria"
+    },
+    {
+      "id": "conn-42",
+      "from_element": "Sensitive_Bacteria",
+      "to_element": "Total_Bacteria"
+    },
+    {
+      "id": "conn-43",
+      "from_element": "Resistant_to_B",
+      "to_element": "Total_Bacteria"
+    },
+    {
+      "id": "conn-44",
+      "from_element": "Multi_Resistant",
+      "to_element": "Resistance_Fraction"
+    },
+    {
+      "id": "conn-45",
+      "from_element": "Resistant_to_A",
+      "to_element": "Resistance_Fraction"
+    },
+    {
+      "id": "conn-46",
+      "from_element": "Total_Bacteria",
+      "to_element": "Resistance_Fraction"
+    },
+    {
+      "id": "conn-47",
+      "from_element": "Resistant_to_B",
+      "to_element": "Resistance_Fraction"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T07:26:33.407427+00:00",
+  "updated_at": "2026-01-12T07:26:33.407427+00:00",
+  "source": "https://doi.org/10.1073/pnas.101126098",
+  "reference": "Bergstrom et al. (2004). Ecological theory suggests that antimicrobial cycling will not reduce resistance. PNAS. CDC Antibiotic Stewardship."
+}

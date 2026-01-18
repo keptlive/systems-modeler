@@ -1,0 +1,385 @@
+{
+  "id": "sterman-project-management-man",
+  "name": "Hiring_Time",
+  "description": "Project management model from Sterman (2000) Business Dynamics Chapter 2. Shows how initial conditions, feedback, and delays affect project completion. Demonstrates rework, schedule pressure, and quality-speed tradeoffs. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Tasks_To_Do",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Tasks_Completed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Known_Rework",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Undiscovered_Rework",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Staff",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Task_Completion",
+      "equation": "Productivity * Staff * (1 - Time_on_Rework)",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Error_Generation",
+      "equation": "Task_Completion * Error_Rate",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Error_Discovery",
+      "equation": "Undiscovered_Rework / Discovery_Time",
+      "from_stock": "s4",
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 280
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Rework_Completion",
+      "equation": "Productivity * Staff * Time_on_Rework",
+      "from_stock": "s3",
+      "to_stock": "s2",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Hiring",
+      "equation": "(Desired_Staff - Staff) / Hiring_Time",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Productivity",
+      "equation": "Normal_Productivity * Effect_of_Schedule_Pressure",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Normal_Productivity",
+      "equation": "1",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Effect_of_Schedule_Pressure",
+      "equation": "1 + 0.3 * Schedule_Pressure",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Schedule_Pressure",
+      "equation": "MAX(0, (Time_Remaining - Work_Remaining / (Staff * Productivity)) / Time_Remaining)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Time_Remaining",
+      "equation": "MAX(1, Deadline - TIME)",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Deadline",
+      "equation": "100",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Work_Remaining",
+      "equation": "Tasks_To_Do + Known_Rework + Undiscovered_Rework",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Error_Rate",
+      "equation": "0.1 + 0.2 * Schedule_Pressure",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Discovery_Time",
+      "equation": "20",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Time_on_Rework",
+      "equation": "MIN(0.9, Known_Rework / MAX(1, Tasks_To_Do + Known_Rework))",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Desired_Staff",
+      "equation": "Work_Remaining / Time_Remaining",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Hiring_Time",
+      "equation": "10",
+      "position": {
+        "x": 750,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Staff",
+      "to_element": "Task_Completion"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Productivity",
+      "to_element": "Task_Completion"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Time_on_Rework",
+      "to_element": "Task_Completion"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Task_Completion",
+      "to_element": "Error_Generation"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Error_Rate",
+      "to_element": "Error_Generation"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Discovery_Time",
+      "to_element": "Error_Discovery"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Undiscovered_Rework",
+      "to_element": "Error_Discovery"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Staff",
+      "to_element": "Rework_Completion"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Productivity",
+      "to_element": "Rework_Completion"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Time_on_Rework",
+      "to_element": "Rework_Completion"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Desired_Staff",
+      "to_element": "Hiring"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Staff",
+      "to_element": "Hiring"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Hiring_Time",
+      "to_element": "Hiring"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Effect_of_Schedule_Pressure",
+      "to_element": "Productivity"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Normal_Productivity",
+      "to_element": "Productivity"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Schedule_Pressure",
+      "to_element": "Productivity"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Schedule_Pressure",
+      "to_element": "Effect_of_Schedule_Pressure"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Staff",
+      "to_element": "Schedule_Pressure"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Time_Remaining",
+      "to_element": "Schedule_Pressure"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Productivity",
+      "to_element": "Schedule_Pressure"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Work_Remaining",
+      "to_element": "Schedule_Pressure"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Deadline",
+      "to_element": "Time_Remaining"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "Undiscovered_Rework",
+      "to_element": "Work_Remaining"
+    },
+    {
+      "id": "conn-24",
+      "from_element": "Tasks_To_Do",
+      "to_element": "Work_Remaining"
+    },
+    {
+      "id": "conn-25",
+      "from_element": "Known_Rework",
+      "to_element": "Work_Remaining"
+    },
+    {
+      "id": "conn-26",
+      "from_element": "Schedule_Pressure",
+      "to_element": "Error_Rate"
+    },
+    {
+      "id": "conn-27",
+      "from_element": "Tasks_To_Do",
+      "to_element": "Time_on_Rework"
+    },
+    {
+      "id": "conn-28",
+      "from_element": "Known_Rework",
+      "to_element": "Time_on_Rework"
+    },
+    {
+      "id": "conn-29",
+      "from_element": "Time_Remaining",
+      "to_element": "Desired_Staff"
+    },
+    {
+      "id": "conn-30",
+      "from_element": "Work_Remaining",
+      "to_element": "Desired_Staff"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 150,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T07:19:37.013890+00:00",
+  "updated_at": "2026-01-12T07:19:37.013890+00:00",
+  "source": "https://web.mit.edu/jsterman/www/BusDyn2.html",
+  "reference": "Sterman, J.D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. Chapter 2: Project Management."
+}

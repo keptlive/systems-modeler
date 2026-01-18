@@ -1,0 +1,123 @@
+{
+  "id": "samuelson-multiplier-accelerator-eco",
+  "name": "Samuelson Multiplier-Accelerator Model",
+  "description": "Classic Keynesian business cycle model showing interaction of multiplier and accelerator. Source: Samuelson (1939), REStat. Nobel Prize 1970. Reference: Keynes, J. M. (1936). The General Theory of Employment, Interest and Money. London: Macmillan.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Income",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Lagged_Income",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Income_Change",
+      "equation": "(Government + Consumption + Induced_Investment - Income) / tau",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Lag_Update",
+      "equation": "(Income - Lagged_Income) / tau",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Government",
+      "equation": "20",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "MPC",
+      "equation": "0.8",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Accelerator",
+      "equation": "1.5",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "tau",
+      "equation": "1",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Consumption",
+      "equation": "MPC * Lagged_Income",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Induced_Investment",
+      "equation": "Accelerator * (Income - Lagged_Income)",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Lagged_Income",
+      "to_element": "Consumption"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:41:20.230088+00:00",
+  "updated_at": "2026-01-15T14:41:20.230096+00:00",
+  "source": "https://doi.org/10.2307/1927758",
+  "reference": "Samuelson, P.A. (1939). Interactions between the Multiplier Analysis and the Principle of Acceleration. REStat 21:75-78. Nobel Prize 1970."
+}

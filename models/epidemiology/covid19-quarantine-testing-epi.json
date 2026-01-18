@@ -1,0 +1,204 @@
+{
+  "id": "covid19-quarantine-testing-epi",
+  "name": "COVID-19 Quarantine and Testing Strategy",
+  "description": "Models test-trace-isolate strategy effectiveness with quarantine dynamics. Source: Kucharski et al. (2020), Lancet Infectious Diseases. DOI: 10.1016/S1473-3099(20)30457-6",
+  "stocks": [
+    {
+      "id": "stock-s",
+      "name": "Susceptible",
+      "initial_value": 99000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-e",
+      "name": "Exposed",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-i",
+      "name": "Infectious_Undetected",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-iq",
+      "name": "Infectious_Quarantined",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-r",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-exp",
+      "name": "Exposure",
+      "equation": "Beta * Susceptible * Infectious_Undetected / N",
+      "from_stock": "stock-s",
+      "to_stock": "stock-e",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-inf",
+      "name": "Infection",
+      "equation": "Exposed / Latent_Period",
+      "from_stock": "stock-e",
+      "to_stock": "stock-i",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-detect",
+      "name": "Detection",
+      "equation": "Infectious_Undetected * Testing_Rate * Sensitivity",
+      "from_stock": "stock-i",
+      "to_stock": "stock-iq",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-rec1",
+      "name": "Recovery_Undetected",
+      "equation": "Infectious_Undetected * (1 - Testing_Rate * Sensitivity) / Infectious_Period",
+      "from_stock": "stock-i",
+      "to_stock": "stock-r",
+      "position": {
+        "x": 375,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-rec2",
+      "name": "Recovery_Quarantined",
+      "equation": "Infectious_Quarantined / Quarantine_Duration",
+      "from_stock": "stock-iq",
+      "to_stock": "stock-r",
+      "position": {
+        "x": 375,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.4",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-n",
+      "name": "N",
+      "equation": "100000",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-latent",
+      "name": "Latent_Period",
+      "equation": "5",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-infper",
+      "name": "Infectious_Period",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-testrate",
+      "name": "Testing_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-sens",
+      "name": "Sensitivity",
+      "equation": "0.8",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-quarantine",
+      "name": "Quarantine_Duration",
+      "equation": "14",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-reff",
+      "name": "R_Effective",
+      "equation": "Beta * Infectious_Period * Susceptible / N * (1 - Testing_Rate * Sensitivity)",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Testing_Rate",
+      "to_element": "Detection"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:06:16.307920+00:00",
+  "updated_at": "2026-01-12T02:06:16.307924+00:00",
+  "source": "https://doi.org/10.1016/S1473-3099(20)30457-6",
+  "reference": "Kucharski, A.J. et al. (2020). Effectiveness of isolation, testing, contact tracing. Lancet Infectious Diseases."
+}

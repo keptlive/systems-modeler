@@ -1,0 +1,106 @@
+{
+  "id": "nutrient-uptake-kinetics-agr",
+  "name": "Nutrient Uptake Kinetics Model",
+  "description": "Michaelis-Menten nutrient uptake by plant roots",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Soil_Nutrient",
+      "initial_value": 50.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Plant_Nutrient",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Vmax",
+      "equation": "10.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Km",
+      "equation": "5.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Root_Length",
+      "equation": "100.0",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Uptake_Rate",
+      "equation": "Vmax*Soil_Nutrient/(Km+Soil_Nutrient)",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Total_Uptake",
+      "equation": "Uptake_Rate*Root_Length/1000",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Soil_Nutrient",
+      "to_element": "Uptake_Rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "Vmax",
+      "to_element": "Uptake_Rate"
+    },
+    {
+      "id": "c3",
+      "from_element": "Km",
+      "to_element": "Uptake_Rate"
+    },
+    {
+      "id": "c4",
+      "from_element": "Root_Length",
+      "to_element": "Total_Uptake"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 100.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:51:57.247210+00:00",
+  "updated_at": "2026-01-15T20:51:57.247210+00:00",
+  "source": "https://doi.org/10.1007/BF02374516",
+  "reference": "Barber, S.A. (1995) Soil Nutrient Bioavailability: A Mechanistic Approach. Wiley"
+}

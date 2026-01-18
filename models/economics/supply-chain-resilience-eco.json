@@ -1,0 +1,253 @@
+{
+  "id": "supply-chain-resilience-eco",
+  "name": "Supply Chain Resilience and Disruption",
+  "description": "Model of supply chain disruption and recovery dynamics. Captures inventory buffering, supplier diversification, and cascading effects. Based on operations research and COVID-19 supply chain disruption studies. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Inventory",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Backlog",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Supplier_Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Resilience_Investment",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Deliveries",
+      "equation": "MIN(Orders_Placed, Supplier_Capacity * Disruption_Effect)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Shipments",
+      "equation": "MIN(Inventory, Demand + Backlog / Backlog_Recovery_Time)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Backlog_Accumulation",
+      "equation": "MAX(0, Demand - Shipments)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Backlog_Clearing",
+      "equation": "MIN(Backlog, Shipments - Demand)",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Capacity_Recovery",
+      "equation": "(Normal_Capacity * Resilience_Effect - Supplier_Capacity) / Recovery_Time",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Investment_Rate",
+      "equation": "Learning_From_Disruption * Investment_Fraction * Revenue",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 250,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Demand",
+      "equation": "80",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Normal_Capacity",
+      "equation": "100",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Desired_Inventory",
+      "equation": "120",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Recovery_Time",
+      "equation": "12",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Disruption_Event",
+      "equation": "IF Time > 20 AND Time < 30 THEN 0.5 ELSE 1",
+      "position": {
+        "x": 150,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Disruption_Effect",
+      "equation": "Disruption_Event * (1 + Resilience_Investment * 0.01)",
+      "position": {
+        "x": 350,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Inventory_Gap",
+      "equation": "Desired_Inventory - Inventory",
+      "position": {
+        "x": 500,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Orders_Placed",
+      "equation": "Demand + Inventory_Gap / Adjustment_Time",
+      "position": {
+        "x": 150,
+        "y": 180
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Adjustment_Time",
+      "equation": "4",
+      "position": {
+        "x": 350,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Backlog_Recovery_Time",
+      "equation": "4",
+      "position": {
+        "x": 500,
+        "y": 180
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Resilience_Effect",
+      "equation": "1 + 0.1 * Resilience_Investment",
+      "position": {
+        "x": 150,
+        "y": 230
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Learning_From_Disruption",
+      "equation": "IF Disruption_Event < 1 THEN 1 ELSE 0",
+      "position": {
+        "x": 350,
+        "y": 230
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Investment_Fraction",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 230
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Revenue",
+      "equation": "Shipments * 10",
+      "position": {
+        "x": 300,
+        "y": 280
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1016/j.tre.2020.101922",
+  "reference": "Ivanov D (2020) Predicting the impacts of epidemic outbreaks on global supply chains: A simulation-based analysis. Transportation Research Part E.",
+  "created_at": "2026-01-12T06:57:53.545407+00:00",
+  "updated_at": "2026-01-12T06:57:53.545407+00:00"
+}

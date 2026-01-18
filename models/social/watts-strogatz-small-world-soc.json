@@ -1,0 +1,26 @@
+{
+  "id": "watts-strogatz-small-world-soc",
+  "name": "Watts-Strogatz Small World Network Model",
+  "description": "Duncan Watts and Steven Strogatz's (1998) small-world network model showing how random rewiring of regular lattices creates networks with high clustering (like lattices) and short path lengths (like random graphs). Explains 'six degrees of separation' phenomenon.",
+  "stocks": [
+    {"id": "stock-regular-edges", "name": "Regular Edges", "initial_value": 1000, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-shortcut-edges", "name": "Shortcut Edges", "initial_value": 0, "equation": "", "position": {"x": 450, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-rewiring", "name": "Rewiring", "equation": "Rewiring_Rate * Regular_Edges", "from_stock": "stock-regular-edges", "to_stock": "stock-shortcut-edges", "position": {"x": 325, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-nodes", "name": "Nodes", "equation": "100", "position": {"x": 150, "y": 100}},
+    {"id": "var-neighbors", "name": "Neighbors", "equation": "10", "position": {"x": 300, "y": 100}},
+    {"id": "var-rewiring-rate", "name": "Rewiring Rate", "equation": "0.01", "position": {"x": 450, "y": 100}},
+    {"id": "var-total-edges", "name": "Total Edges", "equation": "Regular_Edges + Shortcut_Edges", "position": {"x": 600, "y": 100}},
+    {"id": "var-rewiring-probability", "name": "Rewiring Probability", "equation": "Shortcut_Edges / (Regular_Edges + Shortcut_Edges)", "position": {"x": 200, "y": 300}},
+    {"id": "var-clustering-coefficient", "name": "Clustering Coefficient", "equation": "0.75 * (1 - Rewiring_Probability) ^ 3", "position": {"x": 450, "y": 300}},
+    {"id": "var-path-length", "name": "Path Length", "equation": "IF Rewiring_Probability > 0 THEN Nodes / (Neighbors * Rewiring_Probability * Nodes) ELSE Nodes / (2 * Neighbors)", "position": {"x": 200, "y": 400}},
+    {"id": "var-small-world-coefficient", "name": "Small World Coefficient", "equation": "(Clustering_Coefficient / 0.75) / (Path_Length / (Nodes / (2 * Neighbors)))", "position": {"x": 450, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 1},
+  "source": "https://doi.org/10.1038/30918",
+  "reference": "Watts DJ, Strogatz SH. Collective dynamics of 'small-world' networks. Nature. 1998;393(6684):440-442."
+}

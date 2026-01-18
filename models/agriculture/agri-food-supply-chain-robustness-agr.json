@@ -1,0 +1,332 @@
+{
+  "id": "agri-food-supply-chain-robustness-agr",
+  "name": "Consumer_Demand",
+  "description": "System dynamics model for determining robustness of fresh agri-food supply chains to disruptions. Models demand disruptions, supply disruptions, transport disruptions, and node operability. Based on 2023 Operational Research paper. Reference: Based on System Dynamics supply chain models (Sterman, 2000). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Farm_Production",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Processing_Inventory",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Distribution_Center",
+      "initial_value": 3000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Retail_Inventory",
+      "initial_value": 2000,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Supply_Chain_Robustness",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Harvest_Rate",
+      "equation": "Planting_Plan * Yield_Factor * (1 - Supply_Disruption)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Processing_Rate",
+      "equation": "Farm_Production * Processing_Efficiency * (1 - Node_Disruption)",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Distribution_Shipment",
+      "equation": "Processing_Inventory * Transport_Capacity * (1 - Transport_Disruption)",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Retail_Delivery",
+      "equation": "Distribution_Center * 0.3",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Consumer_Sales",
+      "equation": "MIN(Retail_Inventory * 0.4, Consumer_Demand * (1 - Demand_Disruption))",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 800,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Robustness_Change",
+      "equation": "(Target_Robustness - Supply_Chain_Robustness) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Planting_Plan",
+      "equation": "1000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Yield_Factor",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Processing_Efficiency",
+      "equation": "0.15",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Transport_Capacity",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Consumer_Demand",
+      "equation": "800",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Supply_Disruption",
+      "equation": "0.1 * PULSE(100, 30)",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Demand_Disruption",
+      "equation": "0.15 * PULSE(150, 20)",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Transport_Disruption",
+      "equation": "0.2 * PULSE(120, 40)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Node_Disruption",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Target_Robustness",
+      "equation": "1 - (Supply_Disruption + Demand_Disruption + Transport_Disruption) / 3",
+      "position": {
+        "x": 400,
+        "y": 500
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Adjustment_Time",
+      "equation": "10",
+      "position": {
+        "x": 500,
+        "y": 500
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Supply_Disruption",
+      "to_element": "Harvest_Rate"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Planting_Plan",
+      "to_element": "Harvest_Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Yield_Factor",
+      "to_element": "Harvest_Rate"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Processing_Efficiency",
+      "to_element": "Processing_Rate"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Node_Disruption",
+      "to_element": "Processing_Rate"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Farm_Production",
+      "to_element": "Processing_Rate"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Transport_Capacity",
+      "to_element": "Distribution_Shipment"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Transport_Disruption",
+      "to_element": "Distribution_Shipment"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Processing_Inventory",
+      "to_element": "Distribution_Shipment"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Distribution_Center",
+      "to_element": "Retail_Delivery"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Demand_Disruption",
+      "to_element": "Consumer_Sales"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Retail_Inventory",
+      "to_element": "Consumer_Sales"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Consumer_Demand",
+      "to_element": "Consumer_Sales"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Adjustment_Time",
+      "to_element": "Robustness_Change"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Supply_Chain_Robustness",
+      "to_element": "Robustness_Change"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Target_Robustness",
+      "to_element": "Robustness_Change"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Demand_Disruption",
+      "to_element": "Target_Robustness"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Transport_Disruption",
+      "to_element": "Target_Robustness"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Supply_Disruption",
+      "to_element": "Target_Robustness"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T07:15:44.245814+00:00",
+  "updated_at": "2026-01-12T07:15:44.245814+00:00",
+  "source": "https://doi.org/10.1007/s12351-023-00769-7",
+  "reference": "Martinez et al. (2023). System dynamics model for improving the robustness of a fresh agri-food supply chain to disruptions. Operational Research."
+}

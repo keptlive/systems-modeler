@@ -1,0 +1,175 @@
+{
+  "id": "soil-degradation-agriculture-cli",
+  "name": "Soil Degradation and Agricultural Productivity",
+  "description": "Models soil quality decline under intensive agriculture. Source: FAO (2015), Status of World Soil Resources. DOI: 10.1038/s41598-019-45743-y",
+  "stocks": [
+    {
+      "id": "stock-soil",
+      "name": "Soil_Quality",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-organic",
+      "name": "Organic_Matter",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-yield",
+      "name": "Crop_Yield",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-degrade",
+      "name": "Degradation",
+      "equation": "Soil_Quality * (Tillage_Intensity + Chemical_Input_Effect) * 0.01",
+      "from_stock": "stock-soil",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-restore",
+      "name": "Restoration",
+      "equation": "Organic_Matter * Cover_Crop_Effect * 0.02",
+      "from_stock": null,
+      "to_stock": "stock-soil",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-omdecay",
+      "name": "OM_Decay",
+      "equation": "Organic_Matter * Decay_Rate * Tillage_Intensity",
+      "from_stock": "stock-organic",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-omadd",
+      "name": "OM_Addition",
+      "equation": "Residue_Return * Compost_Application",
+      "from_stock": null,
+      "to_stock": "stock-organic",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-yieldchg",
+      "name": "Yield_Change",
+      "equation": "(Soil_Quality * 1.2 + Organic_Matter * 0.3 - Crop_Yield) * 0.1",
+      "from_stock": null,
+      "to_stock": "stock-yield",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-tillage",
+      "name": "Tillage_Intensity",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-chem",
+      "name": "Chemical_Input_Effect",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-cover",
+      "name": "Cover_Crop_Effect",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-decay",
+      "name": "Decay_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-residue",
+      "name": "Residue_Return",
+      "equation": "5",
+      "position": {
+        "x": 350,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-compost",
+      "name": "Compost_Application",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-sustain",
+      "name": "Sustainability_Index",
+      "equation": "(Soil_Quality + Organic_Matter) / 2",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Organic_Matter",
+      "to_element": "Restoration"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:17:16.214028+00:00",
+  "updated_at": "2026-01-12T02:17:16.214031+00:00",
+  "source": "https://doi.org/10.1038/s41598-019-45743-y",
+  "reference": "FAO (2015). Status of the World's Soil Resources. Food and Agriculture Organization."
+}

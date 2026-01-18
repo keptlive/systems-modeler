@@ -1,0 +1,91 @@
+{
+  "id": "vasicek-interest-rate-fin",
+  "name": "Vasicek Interest Rate Model",
+  "description": "Original mean-reverting interest rate model",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Short_Rate",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "kappa",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "theta",
+      "equation": "0.06",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "sigma",
+      "equation": "0.02",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Drift",
+      "equation": "kappa*(theta-Short_Rate)",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Bond_Price_Change",
+      "equation": "-Short_Rate",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Short_Rate",
+      "to_element": "Drift"
+    },
+    {
+      "id": "c2",
+      "from_element": "theta",
+      "to_element": "Drift"
+    },
+    {
+      "id": "c3",
+      "from_element": "kappa",
+      "to_element": "Drift"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 30.0,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-15T20:46:18.596082+00:00",
+  "updated_at": "2026-01-15T20:46:18.596082+00:00",
+  "source": "https://doi.org/10.1016/0304-405X(77)90016-2",
+  "reference": "Vasicek, O. (1977) An equilibrium characterization of the term structure. J. Fin. Econ. 5:177-188"
+}

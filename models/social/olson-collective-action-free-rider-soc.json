@@ -1,0 +1,171 @@
+{
+  "id": "olson-collective-action-free-rider-soc",
+  "name": "Olson Collective Action Model",
+  "description": "Model of collective action problems and free-riding. Source: Olson (1965), Logic of Collective Action.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Contributors",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Free_Riders",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Public_Good",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Join_Contribution",
+      "equation": "Recruitment_Rate * Free_Riders * Benefit_Cost_Ratio",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Defect",
+      "equation": "Defection_Rate * Contributors * (1 - Reciprocity)",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Good_Production",
+      "equation": "Contribution_Rate * Contributors - Depreciation * Public_Good",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Benefit_per_Unit",
+      "equation": "1.5",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Cost_per_Unit",
+      "equation": "1",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Group_Size",
+      "equation": "Contributors + Free_Riders",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Benefit_Cost_Ratio",
+      "equation": "(Benefit_per_Unit * Group_Size / (Contributors + 1) - Cost_per_Unit) / Cost_per_Unit",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Recruitment_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Defection_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 420
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Reciprocity",
+      "equation": "Contributors / Group_Size",
+      "position": {
+        "x": 350,
+        "y": 420
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Contribution_Rate",
+      "equation": "1",
+      "position": {
+        "x": 500,
+        "y": 420
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Depreciation",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 480
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Contributors",
+      "to_element": "Benefit_Cost_Ratio"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-15T14:43:05.813160+00:00",
+  "updated_at": "2026-01-15T14:43:05.813163+00:00",
+  "source": "https://www.hup.harvard.edu/catalog.php?isbn=9780674537514",
+  "reference": "Olson, M. (1965). The Logic of Collective Action: Public Goods and the Theory of Groups. Harvard UP."
+}

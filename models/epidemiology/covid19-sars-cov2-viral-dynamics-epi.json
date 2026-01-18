@@ -1,0 +1,171 @@
+{
+  "id": "covid19-sars-cov2-viral-dynamics-epi",
+  "name": "SARS-CoV-2 Viral Load Dynamics",
+  "description": "Within-host viral dynamics model for SARS-CoV-2 infection tracking viral load, target cells, and immune response over time. Based on work by Ke et al. (2020) modeling viral shedding patterns. DOI: 10.1126/science.abc5809",
+  "category": "epidemiology",
+  "stocks": [
+    {
+      "id": "stock-target-cells",
+      "name": "Target_Cells",
+      "initial_value": 80000000.0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected-cells",
+      "name": "Infected_Cells",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-virus",
+      "name": "Free_Virus",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-immune",
+      "name": "Immune_Response",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "Cell_Infection",
+      "equation": "Beta_v * Target_Cells * Free_Virus",
+      "from_stock": "stock-target-cells",
+      "to_stock": "stock-infected-cells",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-cell-death",
+      "name": "Cell_Death",
+      "equation": "Delta * Infected_Cells + Kappa * Immune_Response * Infected_Cells",
+      "from_stock": "stock-infected-cells",
+      "to_stock": null,
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-virus-prod",
+      "name": "Virus_Production",
+      "equation": "Pi * Infected_Cells",
+      "from_stock": null,
+      "to_stock": "stock-virus",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-virus-clear",
+      "name": "Virus_Clearance",
+      "equation": "Gamma * Free_Virus",
+      "from_stock": "stock-virus",
+      "to_stock": null,
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-immune-activation",
+      "name": "Immune_Activation",
+      "equation": "Rho * Infected_Cells",
+      "from_stock": null,
+      "to_stock": "stock-immune",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta-v",
+      "name": "Beta_v",
+      "equation": "1e-8",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-delta",
+      "name": "Delta",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-pi",
+      "name": "Pi",
+      "equation": "100",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "Gamma",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-kappa",
+      "name": "Kappa",
+      "equation": "0.01",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-rho",
+      "name": "Rho",
+      "equation": "0.001",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.1
+  },
+  "source": "https://doi.org/10.1126/science.abc5809",
+  "reference": "Ke R et al. (2020) In-host dynamics of SARS-CoV-2. Science.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:07:51.679436Z",
+  "updated_at": "2026-01-12T06:07:51.679436Z"
+}

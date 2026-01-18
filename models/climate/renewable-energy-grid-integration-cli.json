@@ -1,0 +1,514 @@
+{
+  "id": "renewable-energy-grid-integration-cli",
+  "name": "Renewable Energy Grid Integration Advanced",
+  "description": "An advanced system dynamics model for renewable energy integration into electrical grids. Models the dynamics of solar and wind capacity additions, grid stability, storage requirements, and the feedback between electricity prices and investment. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "stock-solar-capacity",
+      "name": "Solar Capacity",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-wind-capacity",
+      "name": "Wind Capacity",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-fossil-capacity",
+      "name": "Fossil Capacity",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "stock-storage-capacity",
+      "name": "Storage Capacity",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "stock-grid-investment-fund",
+      "name": "Grid Investment Fund",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "stock-stored-energy",
+      "name": "Stored Energy",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-solar-installation",
+      "name": "Solar Installation",
+      "equation": "Solar_Investment_Rate / Solar_Cost_Per_GW",
+      "from_stock": null,
+      "to_stock": "stock-solar-capacity",
+      "position": {
+        "x": 75,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-solar-retirement",
+      "name": "Solar Retirement",
+      "equation": "Solar_Capacity / Solar_Lifetime",
+      "from_stock": "stock-solar-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-wind-installation",
+      "name": "Wind Installation",
+      "equation": "Wind_Investment_Rate / Wind_Cost_Per_GW",
+      "from_stock": null,
+      "to_stock": "stock-wind-capacity",
+      "position": {
+        "x": 75,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-wind-retirement",
+      "name": "Wind Retirement",
+      "equation": "Wind_Capacity / Wind_Lifetime",
+      "from_stock": "stock-wind-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-fossil-retirement",
+      "name": "Fossil Retirement",
+      "equation": "Fossil_Capacity * (Base_Fossil_Retirement + Policy_Retirement_Pressure)",
+      "from_stock": "stock-fossil-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-storage-installation",
+      "name": "Storage Installation",
+      "equation": "Storage_Investment_Rate / Storage_Cost_Per_GWh",
+      "from_stock": null,
+      "to_stock": "stock-storage-capacity",
+      "position": {
+        "x": 325,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-storage-retirement",
+      "name": "Storage Retirement",
+      "equation": "Storage_Capacity / Storage_Lifetime",
+      "from_stock": "stock-storage-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 475,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-charging",
+      "name": "Energy Charging",
+      "equation": "MIN(Excess_Generation, (Storage_Capacity - Stored_Energy)) * Charging_Efficiency",
+      "from_stock": null,
+      "to_stock": "stock-stored-energy",
+      "position": {
+        "x": 525,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-discharging",
+      "name": "Energy Discharging",
+      "equation": "MIN(Stored_Energy, Generation_Deficit) * Discharging_Efficiency",
+      "from_stock": "stock-stored-energy",
+      "to_stock": null,
+      "position": {
+        "x": 675,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-fund-inflow",
+      "name": "Revenue Inflow",
+      "equation": "Total_Generation * Electricity_Price",
+      "from_stock": null,
+      "to_stock": "stock-grid-investment-fund",
+      "position": {
+        "x": 325,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-fund-outflow",
+      "name": "Investment Outflow",
+      "equation": "Solar_Investment_Rate + Wind_Investment_Rate + Storage_Investment_Rate",
+      "from_stock": "stock-grid-investment-fund",
+      "to_stock": null,
+      "position": {
+        "x": 475,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-solar-generation",
+      "name": "Solar Generation",
+      "equation": "Solar_Capacity * Solar_Capacity_Factor",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-solar-cf",
+      "name": "Solar Capacity Factor",
+      "equation": "0.25",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-wind-generation",
+      "name": "Wind Generation",
+      "equation": "Wind_Capacity * Wind_Capacity_Factor",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-wind-cf",
+      "name": "Wind Capacity Factor",
+      "equation": "0.35",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-fossil-generation",
+      "name": "Fossil Generation",
+      "equation": "MAX(0, Electricity_Demand - Solar_Generation - Wind_Generation - Energy_Discharging)",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-total-generation",
+      "name": "Total Generation",
+      "equation": "Solar_Generation + Wind_Generation + Fossil_Generation + Energy_Discharging",
+      "position": {
+        "x": 650,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-electricity-demand",
+      "name": "Electricity Demand",
+      "equation": "300 * (1 + 0.02) ^ TIME",
+      "position": {
+        "x": 100,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-renewable-share",
+      "name": "Renewable Share",
+      "equation": "(Solar_Generation + Wind_Generation) / Total_Generation",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-excess-generation",
+      "name": "Excess Generation",
+      "equation": "MAX(0, Solar_Generation + Wind_Generation - Electricity_Demand)",
+      "position": {
+        "x": 400,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-generation-deficit",
+      "name": "Generation Deficit",
+      "equation": "MAX(0, Electricity_Demand - Solar_Generation - Wind_Generation)",
+      "position": {
+        "x": 550,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-electricity-price",
+      "name": "Electricity Price",
+      "equation": "Base_Price * (1 + Supply_Demand_Ratio)",
+      "position": {
+        "x": 700,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-base-price",
+      "name": "Base Price",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-supply-demand-ratio",
+      "name": "Supply Demand Ratio",
+      "equation": "(Electricity_Demand - Total_Generation) / Electricity_Demand",
+      "position": {
+        "x": 250,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-solar-investment",
+      "name": "Solar Investment Rate",
+      "equation": "Grid_Investment_Fund * Solar_Investment_Share",
+      "position": {
+        "x": 400,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-solar-share",
+      "name": "Solar Investment Share",
+      "equation": "0.4",
+      "position": {
+        "x": 550,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-wind-investment",
+      "name": "Wind Investment Rate",
+      "equation": "Grid_Investment_Fund * Wind_Investment_Share",
+      "position": {
+        "x": 700,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-wind-share",
+      "name": "Wind Investment Share",
+      "equation": "0.35",
+      "position": {
+        "x": 100,
+        "y": 700
+      }
+    },
+    {
+      "id": "var-storage-investment",
+      "name": "Storage Investment Rate",
+      "equation": "Grid_Investment_Fund * Storage_Investment_Share",
+      "position": {
+        "x": 250,
+        "y": 700
+      }
+    },
+    {
+      "id": "var-storage-share",
+      "name": "Storage Investment Share",
+      "equation": "0.25",
+      "position": {
+        "x": 400,
+        "y": 700
+      }
+    },
+    {
+      "id": "var-solar-cost",
+      "name": "Solar Cost Per GW",
+      "equation": "1000 * (0.9 ^ (TIME / 5))",
+      "position": {
+        "x": 550,
+        "y": 700
+      }
+    },
+    {
+      "id": "var-wind-cost",
+      "name": "Wind Cost Per GW",
+      "equation": "1500 * (0.95 ^ (TIME / 5))",
+      "position": {
+        "x": 700,
+        "y": 700
+      }
+    },
+    {
+      "id": "var-storage-cost",
+      "name": "Storage Cost Per GWh",
+      "equation": "300 * (0.85 ^ (TIME / 5))",
+      "position": {
+        "x": 100,
+        "y": 800
+      }
+    },
+    {
+      "id": "var-solar-lifetime",
+      "name": "Solar Lifetime",
+      "equation": "25",
+      "position": {
+        "x": 250,
+        "y": 800
+      }
+    },
+    {
+      "id": "var-wind-lifetime",
+      "name": "Wind Lifetime",
+      "equation": "20",
+      "position": {
+        "x": 400,
+        "y": 800
+      }
+    },
+    {
+      "id": "var-storage-lifetime",
+      "name": "Storage Lifetime",
+      "equation": "15",
+      "position": {
+        "x": 550,
+        "y": 800
+      }
+    },
+    {
+      "id": "var-charging-efficiency",
+      "name": "Charging Efficiency",
+      "equation": "0.9",
+      "position": {
+        "x": 700,
+        "y": 800
+      }
+    },
+    {
+      "id": "var-discharging-efficiency",
+      "name": "Discharging Efficiency",
+      "equation": "0.9",
+      "position": {
+        "x": 100,
+        "y": 900
+      }
+    },
+    {
+      "id": "var-base-fossil-retirement",
+      "name": "Base Fossil Retirement",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 900
+      }
+    },
+    {
+      "id": "var-policy-retirement",
+      "name": "Policy Retirement Pressure",
+      "equation": "0.01 * (TIME / 10)",
+      "position": {
+        "x": 400,
+        "y": 900
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Solar Capacity",
+      "to_element": "Solar Generation"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Wind Capacity",
+      "to_element": "Wind Generation"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Electricity Demand",
+      "to_element": "Fossil Generation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Storage Capacity",
+      "to_element": "Energy Charging"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Stored Energy",
+      "to_element": "Energy Discharging"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Electricity Price",
+      "to_element": "Revenue Inflow"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Grid Investment Fund",
+      "to_element": "Solar Investment Rate"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Grid Investment Fund",
+      "to_element": "Wind Investment Rate"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Grid Investment Fund",
+      "to_element": "Storage Investment Rate"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Renewable Share",
+      "to_element": "Policy Retirement Pressure"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

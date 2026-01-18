@@ -1,0 +1,145 @@
+{
+  "id": "sir-simple",
+  "name": "Sir Simple",
+  "description": "Model from SIR_Simple.mdl",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "infectious",
+      "initial_value": 5.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "recovered",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "susceptible",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "report_case",
+      "equation": "infect",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "infect",
+      "equation": "susceptible*(infectious/total_population) * contact_infectivity",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "contact_infectivity",
+      "equation": "0.7",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "recovery_period",
+      "equation": "5.0",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "recover",
+      "equation": "infectious/recovery_period",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "total_population",
+      "equation": "1000.0",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "infect",
+      "to_element": "report_case"
+    },
+    {
+      "id": "c2",
+      "from_element": "infectious",
+      "to_element": "infect"
+    },
+    {
+      "id": "c3",
+      "from_element": "total_population",
+      "to_element": "infect"
+    },
+    {
+      "id": "c4",
+      "from_element": "susceptible",
+      "to_element": "infect"
+    },
+    {
+      "id": "c5",
+      "from_element": "contact_infectivity",
+      "to_element": "infect"
+    },
+    {
+      "id": "c6",
+      "from_element": "infectious",
+      "to_element": "recover"
+    },
+    {
+      "id": "c7",
+      "from_element": "recovery_period",
+      "to_element": "recover"
+    },
+    {
+      "id": "c8",
+      "from_element": "infect",
+      "to_element": "recover"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 100.0,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-15T19:13:16.518224+00:00",
+  "updated_at": "2026-01-15T19:13:16.518224+00:00",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "PySD Cookbook - Educational System Dynamics Models"
+}

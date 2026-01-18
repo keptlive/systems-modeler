@@ -1,0 +1,229 @@
+{
+  "id": "space-debris-kessler-syndrome-tec",
+  "name": "Space Debris Kessler Syndrome",
+  "description": "Models the accumulation of space debris and potential cascade effect. Based on Kessler & Cour-Palais (1978) and ESA debris models. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "category": "technology",
+  "stocks": [
+    {
+      "id": "stock-active",
+      "name": "Active_Satellites",
+      "initial_value": 4000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-defunct",
+      "name": "Defunct_Satellites",
+      "initial_value": 3000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-debris",
+      "name": "Trackable_Debris",
+      "initial_value": 30000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-small-debris",
+      "name": "Small_Debris_Millions",
+      "initial_value": 130,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-launch",
+      "name": "New_Launches",
+      "equation": "Annual_Launch_Rate",
+      "from_stock": null,
+      "to_stock": "stock-active",
+      "position": {
+        "x": 25,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-failure",
+      "name": "Satellite_Failure",
+      "equation": "Active_Satellites * Failure_Rate + Collision_Rate * Active_Satellites",
+      "from_stock": "stock-active",
+      "to_stock": "stock-defunct",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-deorbit",
+      "name": "Natural_Deorbit",
+      "equation": "Defunct_Satellites / Deorbit_Time",
+      "from_stock": "stock-defunct",
+      "to_stock": null,
+      "position": {
+        "x": 375,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fragmentation",
+      "name": "Fragmentation",
+      "equation": "Defunct_Satellites * Fragmentation_Rate + Collision_Events * Fragments_Per_Collision",
+      "from_stock": "stock-defunct",
+      "to_stock": "stock-debris",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-debris-decay",
+      "name": "Debris_Decay",
+      "equation": "Trackable_Debris / Debris_Lifetime",
+      "from_stock": "stock-debris",
+      "to_stock": null,
+      "position": {
+        "x": 575,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-small-gen",
+      "name": "Small_Debris_Generation",
+      "equation": "Fragmentation * 100 + Trackable_Debris * Weathering_Rate",
+      "from_stock": null,
+      "to_stock": "stock-small-debris",
+      "position": {
+        "x": 425,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-active-removal",
+      "name": "Active_Debris_Removal",
+      "equation": "ADR_Capacity",
+      "from_stock": "stock-debris",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-launch-rate",
+      "name": "Annual_Launch_Rate",
+      "equation": "1500",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-failure",
+      "name": "Failure_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-deorbit",
+      "name": "Deorbit_Time",
+      "equation": "25",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-frag-rate",
+      "name": "Fragmentation_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-debris-life",
+      "name": "Debris_Lifetime",
+      "equation": "50",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-collision-rate",
+      "name": "Collision_Rate",
+      "equation": "Trackable_Debris / 1e6",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-collision-events",
+      "name": "Collision_Events",
+      "equation": "Collision_Rate * (Active_Satellites + Defunct_Satellites)",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-frags-per",
+      "name": "Fragments_Per_Collision",
+      "equation": "1000",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-weathering",
+      "name": "Weathering_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-adr",
+      "name": "ADR_Capacity",
+      "equation": "0",
+      "position": {
+        "x": 700,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1029/JA083iA06p02637",
+  "reference": "Kessler DJ & Cour-Palais BG (1978) Collision frequency of artificial satellites. JGR.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:15:34.767641+00:00",
+  "updated_at": "2026-01-12T06:15:34.767641+00:00"
+}

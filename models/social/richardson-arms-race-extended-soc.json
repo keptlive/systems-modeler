@@ -1,0 +1,159 @@
+{
+  "id": "richardson-arms-race-extended-soc",
+  "name": "Richardson Arms Race Extended Model",
+  "description": "Extended Lewis Fry Richardson arms race model with economic constraints and war risk. Shows how mutual threat perception creates escalation spirals, moderated by economic limits and deterrence effects. One of the earliest mathematical models of international conflict.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Arms_Nation_A",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "Arms_Nation_B",
+      "initial_value": 80,
+      "equation": "",
+      "position": {"x": 400, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Economic_Capacity_A",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {"x": 200, "y": 350}
+    },
+    {
+      "id": "s4",
+      "name": "Economic_Capacity_B",
+      "initial_value": 900,
+      "equation": "",
+      "position": {"x": 400, "y": 350}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Arming_A",
+      "equation": "MAX(0, (k_A * Arms_Nation_B - a_A * Arms_Nation_A + g_A) * Economic_Effect_A)",
+      "from_stock": null,
+      "to_stock": "Arms_Nation_A",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Arming_B",
+      "equation": "MAX(0, (k_B * Arms_Nation_A - a_B * Arms_Nation_B + g_B) * Economic_Effect_B)",
+      "from_stock": null,
+      "to_stock": "Arms_Nation_B",
+      "position": {"x": 500, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Economic_Growth_A",
+      "equation": "Economic_Capacity_A * Base_Growth - Arms_Cost_A",
+      "from_stock": null,
+      "to_stock": "Economic_Capacity_A",
+      "position": {"x": 100, "y": 350}
+    },
+    {
+      "id": "f4",
+      "name": "Economic_Growth_B",
+      "equation": "Economic_Capacity_B * Base_Growth - Arms_Cost_B",
+      "from_stock": null,
+      "to_stock": "Economic_Capacity_B",
+      "position": {"x": 500, "y": 350}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "k_A",
+      "equation": "0.3",
+      "position": {"x": 100, "y": 80}
+    },
+    {
+      "id": "v2",
+      "name": "k_B",
+      "equation": "0.3",
+      "position": {"x": 200, "y": 80}
+    },
+    {
+      "id": "v3",
+      "name": "a_A",
+      "equation": "0.1",
+      "position": {"x": 300, "y": 80}
+    },
+    {
+      "id": "v4",
+      "name": "a_B",
+      "equation": "0.1",
+      "position": {"x": 400, "y": 80}
+    },
+    {
+      "id": "v5",
+      "name": "g_A",
+      "equation": "10",
+      "position": {"x": 500, "y": 80}
+    },
+    {
+      "id": "v6",
+      "name": "g_B",
+      "equation": "8",
+      "position": {"x": 600, "y": 80}
+    },
+    {
+      "id": "v7",
+      "name": "Economic_Effect_A",
+      "equation": "MIN(1, Economic_Capacity_A / (Arms_Nation_A * 10))",
+      "position": {"x": 100, "y": 450}
+    },
+    {
+      "id": "v8",
+      "name": "Economic_Effect_B",
+      "equation": "MIN(1, Economic_Capacity_B / (Arms_Nation_B * 10))",
+      "position": {"x": 500, "y": 450}
+    },
+    {
+      "id": "v9",
+      "name": "Base_Growth",
+      "equation": "0.03",
+      "position": {"x": 300, "y": 450}
+    },
+    {
+      "id": "v10",
+      "name": "Arms_Cost_A",
+      "equation": "Arms_Nation_A * Cost_Per_Arms",
+      "position": {"x": 200, "y": 450}
+    },
+    {
+      "id": "v11",
+      "name": "Arms_Cost_B",
+      "equation": "Arms_Nation_B * Cost_Per_Arms",
+      "position": {"x": 400, "y": 450}
+    },
+    {
+      "id": "v12",
+      "name": "Cost_Per_Arms",
+      "equation": "0.5",
+      "position": {"x": 300, "y": 500}
+    },
+    {
+      "id": "v13",
+      "name": "Arms_Balance",
+      "equation": "Arms_Nation_A / MAX(1, Arms_Nation_B)",
+      "position": {"x": 300, "y": 280}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1038/136505a0",
+  "reference": "Richardson LF. (1935). Mathematical psychology of war. Nature, 135, 830-831. Also: Richardson LF. (1960). Arms and Insecurity: A Mathematical Study of the Causes and Origins of War. Boxwood Press. ISBN: 978-0910286-05-4",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

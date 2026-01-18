@@ -1,0 +1,221 @@
+{
+  "id": "seir-vaccination-campaign-epi",
+  "name": "SEIR with Vaccination Campaign",
+  "description": "Epidemic model with exposed class and active vaccination campaign. Shows how vaccination rate needed depends on R0 to achieve herd immunity. Critical for pandemic response planning. Reference: WHO Disease Outbreak Information. Source: https://www.who.int/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 990000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exposed",
+      "name": "Exposed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Infected",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-vaccinated",
+      "name": "Vaccinated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-exposure",
+      "name": "Exposure",
+      "equation": "Beta * Susceptible * Infected / Total_Population",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-infection",
+      "name": "Infection",
+      "equation": "Exposed / Latent_Period",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "Infected / Infectious_Period",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-vaccination",
+      "name": "Vaccination",
+      "equation": "MIN(Vaccination_Rate, Susceptible)",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-vaccinated",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "R0 / Infectious_Period",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-r0",
+      "name": "R0",
+      "equation": "2.5",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-latent",
+      "name": "Latent Period",
+      "equation": "5",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-infectious",
+      "name": "Infectious Period",
+      "equation": "7",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-vax-rate",
+      "name": "Vaccination Rate",
+      "equation": "5000",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total Population",
+      "equation": "Susceptible + Exposed + Infected + Recovered + Vaccinated",
+      "position": {
+        "x": 650,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-herd",
+      "name": "Herd Immunity Threshold",
+      "equation": "1 - 1 / R0",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-immune-frac",
+      "name": "Immune Fraction",
+      "equation": "(Recovered + Vaccinated * Vaccine_Efficacy) / Total_Population",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-efficacy",
+      "name": "Vaccine Efficacy",
+      "equation": "0.9",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-rt",
+      "name": "Effective Rt",
+      "equation": "R0 * Susceptible / Total_Population",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Infected",
+      "to_element": "Exposure"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Susceptible",
+      "to_element": "Exposure"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Exposed",
+      "to_element": "Infection"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:43:15.875883+00:00",
+  "updated_at": "2026-01-12T07:43:15.875886+00:00",
+  "source": "https://doi.org/10.1126/science.abg8985",
+  "reference": "Bubar KM, et al. Model-informed COVID-19 vaccine prioritization strategies by age and serostatus. Science. 2021;371(6532):916-921."
+}

@@ -1,0 +1,159 @@
+{
+  "id": "renewable-energy-transition-barriers-ene",
+  "name": "Renewable Energy Transition Barriers Model",
+  "description": "Model of barriers and dynamics in renewable energy transition. Shows how policy support, technology learning, grid integration challenges, and incumbent resistance affect the pace of energy transition. Based on energy transition research.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Fossil_Capacity",
+      "initial_value": 4000,
+      "equation": "",
+      "position": {"x": 150, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "Renewable_Capacity",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {"x": 400, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Grid_Integration",
+      "initial_value": 50,
+      "equation": "",
+      "position": {"x": 275, "y": 380}
+    },
+    {
+      "id": "s4",
+      "name": "Policy_Support",
+      "initial_value": 40,
+      "equation": "",
+      "position": {"x": 500, "y": 380}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Fossil_Retirement",
+      "equation": "Fossil_Capacity * (Retirement_Rate + Economic_Pressure)",
+      "from_stock": "Fossil_Capacity",
+      "to_stock": null,
+      "position": {"x": 50, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Renewable_Addition",
+      "equation": "Investment_Rate * Policy_Support / 50 * Learning_Effect * Grid_Effect",
+      "from_stock": null,
+      "to_stock": "Renewable_Capacity",
+      "position": {"x": 500, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Integration_Improvement",
+      "equation": "(Target_Integration - Grid_Integration) / Integration_Time",
+      "from_stock": null,
+      "to_stock": "Grid_Integration",
+      "position": {"x": 175, "y": 380}
+    },
+    {
+      "id": "f4",
+      "name": "Policy_Change",
+      "equation": "(Public_Pressure * Climate_Urgency - Incumbent_Resistance) / Policy_Lag",
+      "from_stock": null,
+      "to_stock": "Policy_Support",
+      "position": {"x": 600, "y": 380}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Retirement_Rate",
+      "equation": "0.02",
+      "position": {"x": 50, "y": 80}
+    },
+    {
+      "id": "v2",
+      "name": "Economic_Pressure",
+      "equation": "MAX(0, (Renewable_Cost_Advantage) * 0.01)",
+      "position": {"x": 150, "y": 80}
+    },
+    {
+      "id": "v3",
+      "name": "Investment_Rate",
+      "equation": "200",
+      "position": {"x": 300, "y": 80}
+    },
+    {
+      "id": "v4",
+      "name": "Learning_Effect",
+      "equation": "1 + LN(Renewable_Capacity / 1000) * 0.2",
+      "position": {"x": 450, "y": 80}
+    },
+    {
+      "id": "v5",
+      "name": "Grid_Effect",
+      "equation": "Grid_Integration / 100",
+      "position": {"x": 600, "y": 80}
+    },
+    {
+      "id": "v6",
+      "name": "Target_Integration",
+      "equation": "MIN(100, 50 + Policy_Support * 0.5)",
+      "position": {"x": 100, "y": 450}
+    },
+    {
+      "id": "v7",
+      "name": "Integration_Time",
+      "equation": "10",
+      "position": {"x": 200, "y": 450}
+    },
+    {
+      "id": "v8",
+      "name": "Public_Pressure",
+      "equation": "50",
+      "position": {"x": 400, "y": 450}
+    },
+    {
+      "id": "v9",
+      "name": "Climate_Urgency",
+      "equation": "1.5",
+      "position": {"x": 500, "y": 450}
+    },
+    {
+      "id": "v10",
+      "name": "Incumbent_Resistance",
+      "equation": "30 * Fossil_Capacity / (Fossil_Capacity + Renewable_Capacity)",
+      "position": {"x": 600, "y": 450}
+    },
+    {
+      "id": "v11",
+      "name": "Policy_Lag",
+      "equation": "5",
+      "position": {"x": 700, "y": 380}
+    },
+    {
+      "id": "v12",
+      "name": "Renewable_Cost_Advantage",
+      "equation": "Learning_Effect - 0.8",
+      "position": {"x": 300, "y": 450}
+    },
+    {
+      "id": "v13",
+      "name": "Renewable_Share",
+      "equation": "Renewable_Capacity / (Fossil_Capacity + Renewable_Capacity)",
+      "position": {"x": 275, "y": 280}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2060,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1038/s41560-019-0512-7",
+  "reference": "Creutzig F, et al. (2017). The underestimated potential of solar energy to mitigate climate change. Nature Energy, 2, 17140. Also: Geels FW, et al. (2017). Sociotechnical transitions for deep decarbonization. Science, 357(6357), 1242-1244. DOI: 10.1126/science.aao3760",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

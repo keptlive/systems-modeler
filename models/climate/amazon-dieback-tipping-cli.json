@@ -1,0 +1,32 @@
+{
+  "id": "amazon-dieback-tipping-cli",
+  "name": "Amazon Forest Dieback Tipping Point Model",
+  "description": "Model of the Amazon forest-rainfall feedback that could trigger irreversible dieback. Deforestation reduces recycled rainfall, potentially crossing a tipping point. Source: Lovejoy & Nobre (2018). Science Advances. DOI: 10.1126/sciadv.aat2340",
+  "stocks": [
+    {"id": "stock-forest", "name": "Forest_Cover", "initial_value": 5500000, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-rainfall", "name": "Regional_Rainfall", "initial_value": 2000, "equation": "", "position": {"x": 400, "y": 200}},
+    {"id": "stock-degraded", "name": "Degraded_Land", "initial_value": 500000, "equation": "", "position": {"x": 200, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-deforestation", "name": "Deforestation", "equation": "Deforestation_Rate * Forest_Cover", "from_stock": "stock-forest", "to_stock": "stock-degraded", "position": {"x": 150, "y": 275}},
+    {"id": "flow-dieback", "name": "Climate_Dieback", "equation": "IF(Regional_Rainfall < Rainfall_Threshold, Dieback_Rate * Forest_Cover, 0)", "from_stock": "stock-forest", "to_stock": "stock-degraded", "position": {"x": 250, "y": 275}},
+    {"id": "flow-rainfall-change", "name": "Rainfall_Change", "equation": "(Equilibrium_Rainfall - Regional_Rainfall) / Rainfall_Response_Time", "from_stock": null, "to_stock": "stock-rainfall", "position": {"x": 500, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-defor-rate", "name": "Deforestation_Rate", "equation": "0.01", "position": {"x": 100, "y": 150}},
+    {"id": "var-forest-frac", "name": "Forest_Fraction", "equation": "Forest_Cover / Original_Forest", "position": {"x": 300, "y": 100}},
+    {"id": "var-original", "name": "Original_Forest", "equation": "6000000", "position": {"x": 400, "y": 100}},
+    {"id": "var-equil-rain", "name": "Equilibrium_Rainfall", "equation": "1000 + 1000 * Forest_Fraction + 200 * Forest_Fraction^2", "position": {"x": 500, "y": 100}},
+    {"id": "var-rain-thresh", "name": "Rainfall_Threshold", "equation": "1500", "position": {"x": 350, "y": 350}},
+    {"id": "var-dieback-rate", "name": "Dieback_Rate", "equation": "0.05", "position": {"x": 200, "y": 400}},
+    {"id": "var-rain-time", "name": "Rainfall_Response_Time", "equation": "10", "position": {"x": 550, "y": 250}},
+    {"id": "var-tipping", "name": "Tipping_Point_Fraction", "equation": "0.2", "position": {"x": 100, "y": 100}},
+    {"id": "var-near-tipping", "name": "Near_Tipping_Point", "equation": "IF(Forest_Fraction < Tipping_Point_Fraction + 0.05, 1, 0)", "position": {"x": 300, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.5},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1126/sciadv.aat2340",
+  "reference": "Lovejoy, T.E. & Nobre, C. (2018). Amazon tipping point. Science Advances, 4(2), eaat2340."
+}

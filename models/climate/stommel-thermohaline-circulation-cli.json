@@ -1,0 +1,141 @@
+{
+  "id": "stommel-thermohaline-circulation-cli",
+  "name": "Stommel Thermohaline Circulation Box Model",
+  "description": "Classic two-box model of ocean thermohaline circulation with multiple equilibria. Source: Stommel (1961), Tellus.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Temperature_Diff",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Salinity_Diff",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Temp_Change",
+      "equation": "(T_forcing - Temperature_Diff) / tau_T - Circulation_Strength * Temperature_Diff",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Salt_Change",
+      "equation": "(S_forcing - Salinity_Diff) / tau_S - Circulation_Strength * Salinity_Diff",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "T_forcing",
+      "equation": "2.0",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "S_forcing",
+      "equation": "1.0",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "tau_T",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "tau_S",
+      "equation": "100",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "k",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "alpha",
+      "equation": "0.2",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "beta",
+      "equation": "0.8",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Circulation_Strength",
+      "equation": "k * ABS(alpha * Temperature_Diff - beta * Salinity_Diff)",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Temperature_Diff",
+      "to_element": "Circulation_Strength"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 500,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:38:02.261915+00:00",
+  "updated_at": "2026-01-15T14:38:02.261919+00:00",
+  "source": "https://doi.org/10.1111/j.2153-3490.1961.tb00079.x",
+  "reference": "Stommel, H. (1961). Thermohaline convection with two stable regimes of flow. Tellus 13:224-230."
+}

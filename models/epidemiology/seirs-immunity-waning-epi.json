@@ -1,0 +1,168 @@
+{
+  "id": "seirs-immunity-waning-epi",
+  "name": "SEIRS Model with Immunity Waning",
+  "description": "SEIRS epidemic model where recovered individuals gradually lose immunity and return to susceptible state. Exhibits endemic equilibrium when R0 > 1. Reference: WHO Disease Outbreak Information. Source: https://www.who.int/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 999000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exposed",
+      "name": "Exposed",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infectious",
+      "name": "Infectious",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-exposure",
+      "name": "Exposure",
+      "equation": "Beta * Susceptible * Infectious / Total_Population",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-infection",
+      "name": "Becoming Infectious",
+      "equation": "Sigma * Exposed",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-infectious",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "Gamma * Infectious",
+      "from_stock": "stock-infectious",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-waning",
+      "name": "Immunity Waning",
+      "equation": "Omega * Recovered",
+      "from_stock": "stock-recovered",
+      "to_stock": "stock-susceptible",
+      "position": {
+        "x": 325,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.4",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-sigma",
+      "name": "Sigma",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "Gamma",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-omega",
+      "name": "Omega",
+      "equation": "0.003",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-total-pop",
+      "name": "Total Population",
+      "equation": "1000000",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-r0",
+      "name": "R0",
+      "equation": "Beta / Gamma",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-immunity-duration",
+      "name": "Immunity Duration",
+      "equation": "1 / Omega",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 1000,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1038/s41592-020-0856-2",
+  "reference": "Bjornstad et al. The SEIRS model for infectious disease dynamics. Nature Methods (2020).",
+  "created_at": "2026-01-12T08:11:11.789037+00:00",
+  "updated_at": "2026-01-12T08:11:11.789037+00:00"
+}

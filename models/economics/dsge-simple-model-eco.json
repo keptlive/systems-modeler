@@ -1,0 +1,217 @@
+{
+  "id": "dsge-simple-model-eco",
+  "name": "Simple DSGE Model",
+  "description": "Dynamic stochastic general equilibrium model with households, firms, and central bank. Workhorse of modern macroeconomics. Used by central banks for policy analysis. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-output-gap",
+      "name": "Output Gap",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-inflation",
+      "name": "Inflation",
+      "initial_value": 0.02,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-interest",
+      "name": "Nominal Interest Rate",
+      "initial_value": 0.04,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-output-change",
+      "name": "Output Change",
+      "equation": "(Expected_Output_Gap - Output_Gap - Sigma * (Nominal_Interest_Rate - Inflation - Natural_Rate)) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-output-gap",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-inflation-change",
+      "name": "Inflation Change",
+      "equation": "(Beta * Expected_Inflation + Kappa * Output_Gap - Inflation) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-inflation",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-interest-change",
+      "name": "Interest Change",
+      "equation": "(Taylor_Rate - Nominal_Interest_Rate) / Interest_Smoothing",
+      "from_stock": null,
+      "to_stock": "stock-interest",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-taylor",
+      "name": "Taylor Rate",
+      "equation": "Natural_Rate + Target_Inflation + Phi_Pi * (Inflation - Target_Inflation) + Phi_Y * Output_Gap",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-natural",
+      "name": "Natural Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-target",
+      "name": "Target Inflation",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-expected-y",
+      "name": "Expected Output Gap",
+      "equation": "0",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-expected-pi",
+      "name": "Expected Inflation",
+      "equation": "Target_Inflation",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-sigma",
+      "name": "Sigma (Intertemporal Sub)",
+      "equation": "1",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-beta",
+      "name": "Beta (Discount)",
+      "equation": "0.99",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-kappa",
+      "name": "Kappa (Phillips Slope)",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-phi-pi",
+      "name": "Phi Pi",
+      "equation": "1.5",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-phi-y",
+      "name": "Phi Y",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-smoothing",
+      "name": "Interest Smoothing",
+      "equation": "0.25",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-adjust-time",
+      "name": "Adjustment Time",
+      "equation": "0.25",
+      "position": {
+        "x": 550,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-real-rate",
+      "name": "Real Interest Rate",
+      "equation": "Nominal_Interest_Rate - Inflation",
+      "position": {
+        "x": 350,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Inflation",
+      "to_element": "Taylor Rate"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Output Gap",
+      "to_element": "Taylor Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Output Gap",
+      "to_element": "Inflation Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 40,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:45:54.017307+00:00",
+  "updated_at": "2026-01-12T07:45:54.017314+00:00",
+  "source": "https://doi.org/10.1111/j.1467-9442.2010.01618.x",
+  "reference": "Smets F, Wouters R. Shocks and Frictions in US Business Cycles: A Bayesian DSGE Approach. American Economic Review. 2007;97(3):586-606."
+}

@@ -1,0 +1,188 @@
+{
+  "id": "water-scarcity-allocation-env",
+  "name": "Water Scarcity and Allocation Model",
+  "description": "Model of water resources showing supply, demand allocation, and scarcity dynamics. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Reservoir_Storage",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Groundwater",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Water_Demand",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Precipitation",
+      "equation": "Annual_Rainfall * Catchment_Area * Runoff_Coefficient",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Surface_Withdrawal",
+      "equation": "MIN(Surface_Allocation, Reservoir_Storage * 0.1)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Groundwater_Recharge",
+      "equation": "Recharge_Rate * Reservoir_Storage",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Groundwater_Pumping",
+      "equation": "MIN(Groundwater_Allocation, Groundwater * 0.02)",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Demand_Growth",
+      "equation": "Water_Demand * Demand_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Annual_Rainfall",
+      "equation": "0.8",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Catchment_Area",
+      "equation": "500",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Runoff_Coefficient",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Recharge_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Surface_Allocation",
+      "equation": "Water_Demand * 0.4",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Groundwater_Allocation",
+      "equation": "Water_Demand * 0.6",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Demand_Growth_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Total_Supply",
+      "equation": "Surface_Withdrawal + Groundwater_Pumping",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Scarcity_Index",
+      "equation": "Water_Demand / (Total_Supply + 0.01)",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:32:16.976772+00:00",
+  "updated_at": "2026-01-12T11:32:16.976772+00:00",
+  "source": "https://doi.org/10.1038/s41545-019-0039-9",
+  "reference": "Mekonnen MM, Hoekstra AY. Four billion people facing severe water scarcity. Science Advances. 2016;2(2):e1500323."
+}

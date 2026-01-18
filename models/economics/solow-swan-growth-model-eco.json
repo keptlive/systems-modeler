@@ -1,0 +1,233 @@
+{
+  "id": "solow-swan-growth-model-eco",
+  "name": "Solow-Swan Growth Model",
+  "description": "Foundational neoclassical model of long-term economic growth. Capital accumulation drives growth in output per worker, but diminishing returns to capital mean the economy converges to a steady state. Long-run growth requires technological progress. Reference: Solow, R. M. (1956). A contribution to the theory of economic growth. Quarterly Journal of Economics, 70(1), 65-94. DOI: https://doi.org/10.2307/1884513",
+  "stocks": [
+    {
+      "id": "stock-capital-stock",
+      "name": "Capital Stock",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-labor-force",
+      "name": "Labor Force",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-investment",
+      "name": "Investment",
+      "equation": "Savings_Rate * Output",
+      "from_stock": null,
+      "to_stock": "stock-capital-stock",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-depreciation",
+      "name": "Depreciation",
+      "equation": "Depreciation_Rate * Capital",
+      "from_stock": "stock-capital-stock",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-labor-force-growth",
+      "name": "Labor Force Growth",
+      "equation": "Labor_Growth_Rate * Labor",
+      "from_stock": null,
+      "to_stock": "stock-labor-force",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-initial-capital",
+      "name": "Initial Capital",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-labor",
+      "name": "Initial Labor",
+      "equation": "100",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-factor-productivity",
+      "name": "Total Factor Productivity",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-capital-share-alpha",
+      "name": "Capital Share (alpha)",
+      "equation": "0.33",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-savings-rate",
+      "name": "Savings Rate",
+      "equation": "0.20",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-depreciation-rate",
+      "name": "Depreciation Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-labor-growth-rate",
+      "name": "Labor Growth Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-output",
+      "name": "Output",
+      "equation": "TFP * Capital^Capital_Share * Labor^(1-Capital_Share)",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-output-per-worker",
+      "name": "Output per Worker",
+      "equation": "Output / Labor",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-capital-per-worker",
+      "name": "Capital per Worker",
+      "equation": "Capital / Labor",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-steady-state-capital-per-worker",
+      "name": "Steady State Capital per Worker",
+      "equation": "(Savings_Rate * TFP / (Depreciation_Rate + Labor_Growth_Rate))^(1/(1-Capital_Share))",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-marginal-product-of-capital",
+      "name": "Marginal Product of Capital",
+      "equation": "Capital_Share * Output / Capital",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Savings Rate",
+      "to_element": "Investment"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Output",
+      "to_element": "Investment"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Depreciation Rate",
+      "to_element": "Depreciation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Capital Stock",
+      "to_element": "Depreciation"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Labor Growth Rate",
+      "to_element": "Labor Force Growth"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Labor Force",
+      "to_element": "Labor Force Growth"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Total Factor Productivity",
+      "to_element": "Output"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Capital Stock",
+      "to_element": "Output"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Labor Force",
+      "to_element": "Output"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Capital Share (alpha)",
+      "to_element": "Output"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.774749Z",
+  "updated_at": "2026-01-11T20:04:50.774749Z",
+  "source": "https://doi.org/10.2307/1884513",
+  "reference": "Solow RM. A Contribution to the Theory of Economic Growth. Quarterly Journal of Economics. 1956;70(1):65-94."
+}

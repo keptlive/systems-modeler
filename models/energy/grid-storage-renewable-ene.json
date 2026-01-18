@@ -1,0 +1,265 @@
+{
+  "id": "grid-storage-renewable-ene",
+  "name": "Grid Storage and Renewable Integration Model",
+  "description": "System dynamics model of renewable energy integration with grid-scale storage. Source: Denholm et al. (2010), NREL. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "stock-renew",
+      "name": "Renewable_Capacity",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-storage",
+      "name": "Storage_Capacity",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-stored",
+      "name": "Energy_Stored",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-fossil",
+      "name": "Fossil_Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-renewbuild",
+      "name": "Renewable_Addition",
+      "equation": "Renewable_Investment / Renewable_Cost",
+      "from_stock": null,
+      "to_stock": "stock-renew",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-renewretire",
+      "name": "Renewable_Retirement",
+      "equation": "Renewable_Capacity / Renewable_Life",
+      "from_stock": "stock-renew",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-storebuild",
+      "name": "Storage_Addition",
+      "equation": "Storage_Investment / Storage_Cost",
+      "from_stock": null,
+      "to_stock": "stock-storage",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-storeretire",
+      "name": "Storage_Retirement",
+      "equation": "Storage_Capacity / Storage_Life",
+      "from_stock": "stock-storage",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-charge",
+      "name": "Charging",
+      "equation": "MIN(Surplus_Renewable, (Storage_Capacity - Energy_Stored) / Charge_Time)",
+      "from_stock": null,
+      "to_stock": "stock-stored",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-discharge",
+      "name": "Discharging",
+      "equation": "MIN(Energy_Stored / Discharge_Time, Shortfall)",
+      "from_stock": "stock-stored",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-fossilretire",
+      "name": "Fossil_Retirement",
+      "equation": "MAX(0, (Renewable_Capacity + Storage_Capacity - Demand) / Retirement_Time)",
+      "from_stock": "stock-fossil",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-renewinv",
+      "name": "Renewable_Investment",
+      "equation": "10 + 0.5 * TIME",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-renewcost",
+      "name": "Renewable_Cost",
+      "equation": "1.0 - 0.01 * TIME",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-renewlife",
+      "name": "Renewable_Life",
+      "equation": "25",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-storeinv",
+      "name": "Storage_Investment",
+      "equation": "3 + 0.2 * TIME",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-storecost",
+      "name": "Storage_Cost",
+      "equation": "0.5 - 0.005 * TIME",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-storelife",
+      "name": "Storage_Life",
+      "equation": "15",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-gen",
+      "name": "Renewable_Generation",
+      "equation": "Renewable_Capacity * Capacity_Factor",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-cf",
+      "name": "Capacity_Factor",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Demand",
+      "equation": "120",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-surplus",
+      "name": "Surplus_Renewable",
+      "equation": "MAX(0, Renewable_Generation - Demand)",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-shortfall",
+      "name": "Shortfall",
+      "equation": "MAX(0, Demand - Renewable_Generation - Fossil_Capacity)",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-chargetime",
+      "name": "Charge_Time",
+      "equation": "4",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-dischtime",
+      "name": "Discharge_Time",
+      "equation": "4",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-retiretime",
+      "name": "Retirement_Time",
+      "equation": "10",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T12:45:39.561779+00:00",
+  "updated_at": "2026-01-12T12:45:39.561779+00:00",
+  "source": "https://doi.org/10.1038/s41560-021-00885-y",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

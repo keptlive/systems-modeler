@@ -1,0 +1,195 @@
+{
+  "id": "mental-health-crisis-youth-hea",
+  "name": "Youth Mental Health Crisis Model",
+  "description": "Models the dynamics of youth mental health including social media effects, treatment capacity constraints, stigma reduction, and the interaction between anxiety, depression, and help-seeking behavior. Based on CDC MMWR data and WHO mental health reports showing increased youth mental health issues since 2012.",
+  "source": "https://doi.org/10.1001/jamapediatrics.2022.0056",
+  "reference": "Twenge JM. Increases in depression, self-harm, and suicide among U.S. adolescents after 2012. Clinical Psychological Science. 2020. CDC MMWR: Mental Health Among Adolescents.",
+  "stocks": [
+    {
+      "id": "stock-healthy",
+      "name": "Healthy Youth",
+      "initial_value": 8000000,
+      "equation": "",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "stock-at-risk",
+      "name": "At Risk Youth",
+      "initial_value": 1500000,
+      "equation": "",
+      "position": {"x": 250, "y": 200}
+    },
+    {
+      "id": "stock-symptomatic",
+      "name": "Symptomatic Untreated",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {"x": 400, "y": 200}
+    },
+    {
+      "id": "stock-in-treatment",
+      "name": "In Treatment",
+      "initial_value": 200000,
+      "equation": "",
+      "position": {"x": 550, "y": 200}
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {"x": 700, "y": 200}
+    },
+    {
+      "id": "stock-treatment-capacity",
+      "name": "Treatment Capacity",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {"x": 550, "y": 350}
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-risk-onset",
+      "name": "Risk Development",
+      "equation": "Healthy_Youth * (Base_Risk_Rate + Social_Media_Effect + Academic_Pressure)",
+      "from_stock": "stock-healthy",
+      "to_stock": "stock-at-risk",
+      "position": {"x": 175, "y": 200}
+    },
+    {
+      "id": "flow-symptom-onset",
+      "name": "Symptom Onset",
+      "equation": "At_Risk_Youth * Progression_Rate * (1 - Protective_Factors)",
+      "from_stock": "stock-at-risk",
+      "to_stock": "stock-symptomatic",
+      "position": {"x": 325, "y": 200}
+    },
+    {
+      "id": "flow-help-seeking",
+      "name": "Help Seeking",
+      "equation": "MIN(Symptomatic_Untreated * Help_Seeking_Rate * (1 - Stigma), Available_Capacity)",
+      "from_stock": "stock-symptomatic",
+      "to_stock": "stock-in-treatment",
+      "position": {"x": 475, "y": 200}
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "In_Treatment / Treatment_Duration * Treatment_Effectiveness",
+      "from_stock": "stock-in-treatment",
+      "to_stock": "stock-recovered",
+      "position": {"x": 625, "y": 200}
+    },
+    {
+      "id": "flow-relapse",
+      "name": "Relapse",
+      "equation": "Recovered * Relapse_Rate",
+      "from_stock": "stock-recovered",
+      "to_stock": "stock-at-risk",
+      "position": {"x": 475, "y": 100}
+    },
+    {
+      "id": "flow-capacity-increase",
+      "name": "Capacity Increase",
+      "equation": "Capacity_Investment_Rate * Gap_Indicator",
+      "from_stock": null,
+      "to_stock": "stock-treatment-capacity",
+      "position": {"x": 550, "y": 400}
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-base-risk",
+      "name": "Base_Risk_Rate",
+      "equation": "0.02",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "var-social-media",
+      "name": "Social_Media_Effect",
+      "equation": "0.015 * Social_Media_Usage",
+      "position": {"x": 175, "y": 100}
+    },
+    {
+      "id": "var-usage",
+      "name": "Social_Media_Usage",
+      "equation": "0.8",
+      "position": {"x": 175, "y": 50}
+    },
+    {
+      "id": "var-academic",
+      "name": "Academic_Pressure",
+      "equation": "0.01",
+      "position": {"x": 250, "y": 100}
+    },
+    {
+      "id": "var-progression",
+      "name": "Progression_Rate",
+      "equation": "0.1",
+      "position": {"x": 325, "y": 100}
+    },
+    {
+      "id": "var-protective",
+      "name": "Protective_Factors",
+      "equation": "0.3",
+      "position": {"x": 325, "y": 150}
+    },
+    {
+      "id": "var-help-seeking",
+      "name": "Help_Seeking_Rate",
+      "equation": "0.05",
+      "position": {"x": 475, "y": 100}
+    },
+    {
+      "id": "var-stigma",
+      "name": "Stigma",
+      "equation": "0.4",
+      "position": {"x": 475, "y": 150}
+    },
+    {
+      "id": "var-available",
+      "name": "Available_Capacity",
+      "equation": "MAX(0, Treatment_Capacity - In_Treatment)",
+      "position": {"x": 550, "y": 150}
+    },
+    {
+      "id": "var-duration",
+      "name": "Treatment_Duration",
+      "equation": "26",
+      "position": {"x": 625, "y": 100}
+    },
+    {
+      "id": "var-effectiveness",
+      "name": "Treatment_Effectiveness",
+      "equation": "0.7",
+      "position": {"x": 625, "y": 150}
+    },
+    {
+      "id": "var-relapse",
+      "name": "Relapse_Rate",
+      "equation": "0.02",
+      "position": {"x": 700, "y": 100}
+    },
+    {
+      "id": "var-investment",
+      "name": "Capacity_Investment_Rate",
+      "equation": "1000",
+      "position": {"x": 475, "y": 350}
+    },
+    {
+      "id": "var-gap",
+      "name": "Gap_Indicator",
+      "equation": "MAX(0, (Symptomatic_Untreated - Treatment_Capacity) / 1000000)",
+      "position": {"x": 475, "y": 400}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 520,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T21:00:00.000000+00:00",
+  "updated_at": "2026-01-15T21:00:00.000000+00:00"
+}

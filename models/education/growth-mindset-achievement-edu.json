@@ -1,0 +1,183 @@
+{
+  "id": "growth-mindset-achievement-edu",
+  "name": "Growth Mindset and Achievement Model",
+  "description": "Model of how growth vs fixed mindset affects learning and achievement. Based on Dweck (2006) mindset theory and Yeager & Dweck (2012) intervention research. Reference: Hattie, J. (2008). Visible Learning. Routledge. Source: https://www.routledge.com/",
+  "stocks": [
+    {
+      "id": "stock-achievement",
+      "name": "Achievement Level",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-growth-mindset",
+      "name": "Growth Mindset",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-effort",
+      "name": "Effort Investment",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-achievement-gain",
+      "name": "Achievement Gain",
+      "equation": "Effort_Investment * Effort_Effectiveness * (1 - Achievement_Level / Max_Achievement)",
+      "from_stock": null,
+      "to_stock": "stock-achievement",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mindset-shift",
+      "name": "Mindset Shift",
+      "equation": "(Mindset_Influence - Growth_Mindset) * Mindset_Plasticity",
+      "from_stock": null,
+      "to_stock": "stock-growth-mindset",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-effort-change",
+      "name": "Effort Change",
+      "equation": "(Desired_Effort - Effort_Investment) * Effort_Adjustment_Speed",
+      "from_stock": null,
+      "to_stock": "stock-effort",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-challenge-level",
+      "name": "Challenge Level",
+      "equation": "60 + 10 * SIN(2 * 3.14159 * Time / 20)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-failure-experience",
+      "name": "Failure Experience",
+      "equation": "MAX(0, Challenge_Level - Achievement_Level) / Challenge_Level",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-success-experience",
+      "name": "Success Experience",
+      "equation": "1 - Failure_Experience",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-attribution-effort",
+      "name": "Attribution to Effort",
+      "equation": "Growth_Mindset * Success_Experience",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-attribution-ability",
+      "name": "Attribution to Ability",
+      "equation": "(1 - Growth_Mindset) * Failure_Experience",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-effort-effectiveness",
+      "name": "Effort Effectiveness",
+      "equation": "0.02 * Growth_Mindset + 0.01",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-desired-effort",
+      "name": "Desired Effort",
+      "equation": "50 + 30 * Growth_Mindset - 20 * Attribution_to_Ability",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-mindset-influence",
+      "name": "Mindset Influence",
+      "equation": "0.5 + 0.3 * Attribution_to_Effort - 0.3 * Attribution_to_Ability",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-mindset-plasticity",
+      "name": "Mindset Plasticity",
+      "equation": "0.1",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-effort-adjustment-speed",
+      "name": "Effort Adjustment Speed",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 370
+      }
+    },
+    {
+      "id": "var-max-achievement",
+      "name": "Max Achievement",
+      "equation": "100",
+      "position": {
+        "x": 250,
+        "y": 370
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T21:16:29.727643+00:00",
+  "updated_at": "2026-01-11T21:16:29.727643+00:00",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "System Dynamics Educational Models - PySD Cookbook"
+}

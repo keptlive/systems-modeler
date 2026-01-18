@@ -1,0 +1,502 @@
+{
+  "id": "startup-growth-and-funding-model-eco",
+  "name": "Startup Growth and Funding Model",
+  "description": "Models tech startup dynamics including user growth, revenue, funding rounds, burn rate, runway, and the path to profitability or failure. Reference: Blank, S. (2013). The Four Steps to the Epiphany. K&S Ranch. Source: https://steveblank.com/",
+  "stocks": [
+    {
+      "id": "stock-active-users",
+      "name": "Active Users",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cash-balance",
+      "name": "Cash Balance",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-employees",
+      "name": "Employees",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-product-quality",
+      "name": "Product Quality",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-user-acquisition",
+      "name": "User Acquisition",
+      "equation": "Organic_Growth + Paid_Acquisition + Viral_Growth",
+      "from_stock": null,
+      "to_stock": "stock-active-users",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-user-churn",
+      "name": "User Churn",
+      "equation": "Users * Churn_Rate",
+      "from_stock": "stock-active-users",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-funding-received",
+      "name": "Funding Received",
+      "equation": "IF Funding_Round_Active THEN Funding_Amount ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-cash-balance",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-monthly-revenue",
+      "name": "Monthly Revenue",
+      "equation": "Paying_Users * ARPU",
+      "from_stock": null,
+      "to_stock": "stock-cash-balance",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-monthly-expenses",
+      "name": "Monthly Expenses",
+      "equation": "Payroll + Marketing_Spend + Infrastructure + Other_Costs",
+      "from_stock": "stock-cash-balance",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-hiring-rate",
+      "name": "Hiring Rate",
+      "equation": "MAX(0, (Target_Employees - Employees) / Hiring_Time)",
+      "from_stock": null,
+      "to_stock": "stock-employees",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-employee-attrition",
+      "name": "Employee Attrition",
+      "equation": "Employees * Attrition_Rate",
+      "from_stock": "stock-employees",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-product-development",
+      "name": "Product Development",
+      "equation": "Engineers * Engineering_Productivity * Focus_Factor",
+      "from_stock": null,
+      "to_stock": "stock-product-quality",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-quality-decay",
+      "name": "Quality Decay",
+      "equation": "Product_Quality * Tech_Debt_Rate",
+      "from_stock": "stock-product-quality",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-organic-growth",
+      "name": "Organic Growth",
+      "equation": "Users * Organic_Growth_Rate * Product_Quality / 100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-organic-growth-rate",
+      "name": "Organic Growth Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-paid-user-acquisition",
+      "name": "Paid User Acquisition",
+      "equation": "Marketing_Spend / CAC",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-viral-growth",
+      "name": "Viral Growth",
+      "equation": "Users * Viral_Coefficient * Product_Quality / 100",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-viral-coefficient",
+      "name": "Viral Coefficient",
+      "equation": "0.05",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-monthly-churn-rate",
+      "name": "Monthly Churn Rate",
+      "equation": "Base_Churn * (2 - Product_Quality / 100)",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-base-churn-rate",
+      "name": "Base Churn Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-paying-users",
+      "name": "Paying Users",
+      "equation": "Users * Conversion_Rate",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-conversion-rate",
+      "name": "Conversion Rate",
+      "equation": "0.05 * (Product_Quality / 50)",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-arpu",
+      "name": "ARPU",
+      "equation": "50",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-monthly-recurring-revenue",
+      "name": "Monthly Recurring Revenue",
+      "equation": "Paying_Users * ARPU",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-annual-recurring-revenue",
+      "name": "Annual Recurring Revenue",
+      "equation": "MRR * 12",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-customer-acquisition-cost",
+      "name": "Customer Acquisition Cost",
+      "equation": "200",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-lifetime-value",
+      "name": "Lifetime Value",
+      "equation": "ARPU / Churn_Rate",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-ltvcac-ratio",
+      "name": "LTV/CAC Ratio",
+      "equation": "LTV / CAC",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-payroll",
+      "name": "Payroll",
+      "equation": "Employees * Average_Salary",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-average-monthly-salary",
+      "name": "Average Monthly Salary",
+      "equation": "10000",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-marketing-spend",
+      "name": "Marketing Spend",
+      "equation": "MIN(Marketing_Budget, Cash * 0.1)",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-marketing-budget",
+      "name": "Marketing Budget",
+      "equation": "50000",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-infrastructure-costs",
+      "name": "Infrastructure Costs",
+      "equation": "Users * 0.5 + 5000",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-other-costs",
+      "name": "Other Costs",
+      "equation": "20000",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-burn-rate",
+      "name": "Burn Rate",
+      "equation": "Expenses - Revenue",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-runway",
+      "name": "Runway",
+      "equation": "IF Burn_Rate > 0 THEN Cash / Burn_Rate ELSE 999",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-target-employees",
+      "name": "Target Employees",
+      "equation": "MIN(Max_Employees, Cash / (Average_Salary * 6))",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-max-employees",
+      "name": "Max Employees",
+      "equation": "50",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-hiring-time",
+      "name": "Hiring Time",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-attrition-rate",
+      "name": "Attrition Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-engineers",
+      "name": "Engineers",
+      "equation": "Employees * 0.6",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-engineering-productivity",
+      "name": "Engineering Productivity",
+      "equation": "5",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-focus-factor",
+      "name": "Focus Factor",
+      "equation": "0.8",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-tech-debt-rate",
+      "name": "Tech Debt Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-funding-round-active",
+      "name": "Funding Round Active",
+      "equation": "IF Time == Funding_Month THEN 1 ELSE 0",
+      "position": {
+        "x": 250,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-funding-month",
+      "name": "Funding Month",
+      "equation": "12",
+      "position": {
+        "x": 400,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-funding-amount",
+      "name": "Funding Amount",
+      "equation": "2000000",
+      "position": {
+        "x": 550,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-company-valuation",
+      "name": "Company Valuation",
+      "equation": "ARR * Revenue_Multiple + Users * 50",
+      "position": {
+        "x": 700,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-revenue-multiple",
+      "name": "Revenue Multiple",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-profitable",
+      "name": "Profitable",
+      "equation": "IF Revenue > Expenses THEN 1 ELSE 0",
+      "position": {
+        "x": 250,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-company-dead",
+      "name": "Company Dead",
+      "equation": "IF Cash < 0 THEN 1 ELSE 0",
+      "position": {
+        "x": 400,
+        "y": 640
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.775899Z",
+  "updated_at": "2026-01-11T20:04:50.775899Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

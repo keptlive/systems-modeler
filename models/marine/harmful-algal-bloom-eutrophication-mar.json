@@ -1,0 +1,198 @@
+{
+  "id": "harmful-algal-bloom-eutrophication-mar",
+  "name": "Harmful Algal Bloom Model",
+  "description": "Nutrient-driven algal bloom dynamics. Source: Anderson et al. (2002), Annual Review of Ecology. Reference: Anderson, R. M., & May, R. M. (1991). Infectious Diseases of Humans. Oxford University Press.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Algal_Biomass",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Dissolved_Nitrogen",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Toxin_Concentration",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Algal_Growth",
+      "equation": "mu_max * Algal_Biomass * N_Limitation * Light_Factor - Grazing - Mortality",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Nutrient_Flux",
+      "equation": "Loading_Rate - Uptake - Denitrification",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Toxin_Production",
+      "equation": "Toxin_Rate * Algal_Biomass * Stress_Factor - Toxin_Decay",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "mu_max",
+      "equation": "2",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "K_N",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "N_Limitation",
+      "equation": "Dissolved_Nitrogen / (K_N + Dissolved_Nitrogen)",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Light_Factor",
+      "equation": "0.8",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Grazing",
+      "equation": "0.1 * Algal_Biomass",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Mortality",
+      "equation": "0.05 * Algal_Biomass",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Loading_Rate",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Uptake",
+      "equation": "0.5 * Algal_Growth",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Denitrification",
+      "equation": "0.01 * Dissolved_Nitrogen",
+      "position": {
+        "x": 200,
+        "y": 480
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Toxin_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 350,
+        "y": 480
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Stress_Factor",
+      "equation": "MAX(1, 2 - N_Limitation)",
+      "position": {
+        "x": 500,
+        "y": 480
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Toxin_Decay",
+      "equation": "0.1 * Toxin_Concentration",
+      "position": {
+        "x": 300,
+        "y": 540
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Dissolved_Nitrogen",
+      "to_element": "N_Limitation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:52:39.346888+00:00",
+  "updated_at": "2026-01-15T14:52:39.346892+00:00",
+  "source": "https://doi.org/10.1146/annurev.ecolsys.33.010802.150513",
+  "reference": "Anderson, D.M. et al. (2002). Harmful algal blooms and eutrophication. Annual Review of Ecology and Systematics 33:261-303."
+}

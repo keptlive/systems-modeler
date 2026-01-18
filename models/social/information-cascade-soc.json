@@ -1,0 +1,133 @@
+{
+  "id": "information-cascade-soc",
+  "name": "Information Cascade in Decision Making",
+  "description": "Models herding behavior where individuals follow others despite private signals. Source: Bikhchandani et al. (1992), JPE. DOI: 10.1086/261849",
+  "stocks": [
+    {
+      "id": "stock-adopters",
+      "name": "Cascade_Adopters",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-nonadopt",
+      "name": "Non_Adopters",
+      "initial_value": 95,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-info",
+      "name": "Public_Information",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adopt",
+      "name": "Adoption",
+      "equation": "Non_Adopters * Adoption_Rate * (Public_Information / 100 + Social_Influence)",
+      "from_stock": "stock-nonadopt",
+      "to_stock": "stock-adopters",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-infoupdate",
+      "name": "Info_Update",
+      "equation": "(Cascade_Adopters / (Cascade_Adopters + Non_Adopters) * 100 - Public_Information) * Info_Speed",
+      "from_stock": null,
+      "to_stock": "stock-info",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-adoptrate",
+      "name": "Adoption_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-socialinf",
+      "name": "Social_Influence",
+      "equation": "Cascade_Adopters / (Cascade_Adopters + Non_Adopters) * Herding_Parameter",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-herd",
+      "name": "Herding_Parameter",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-infospeed",
+      "name": "Info_Speed",
+      "equation": "0.1",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-cascadethresh",
+      "name": "Cascade_Threshold",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-incascade",
+      "name": "In_Cascade",
+      "equation": "IF(Cascade_Adopters / (Cascade_Adopters + Non_Adopters) > Cascade_Threshold, 1, 0)",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Cascade_Adopters",
+      "to_element": "Social_Influence"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:17:16.214172+00:00",
+  "updated_at": "2026-01-12T02:17:16.214175+00:00",
+  "source": "https://doi.org/10.1086/261849",
+  "reference": "Bikhchandani, S. et al. (1992). A Theory of Fads, Fashion, Custom, and Cultural Change as Informational Cascades. JPE."
+}

@@ -1,0 +1,225 @@
+{
+  "id": "prem-pandem-vaccination-epi",
+  "name": "Pandemic Vaccination Campaign Model",
+  "description": "Model of pandemic vaccination campaign dynamics based on COVID-19 rollout experiences. Shows vaccine supply chains, hesitancy dynamics, coverage targets, and immunity waning. Informed by Prem et al. (2021) and global vaccination data. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "stock-unvaccinated",
+      "name": "Unvaccinated Population",
+      "initial_value": 95000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-one-dose",
+      "name": "One Dose Vaccinated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fully-vaccinated",
+      "name": "Fully Vaccinated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-immunity-waned",
+      "name": "Immunity Waned",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-vaccine-supply",
+      "name": "Vaccine Supply",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-first-dose",
+      "name": "First Dose Administration",
+      "equation": "MIN(Vaccination_Capacity * Willingness_to_Vaccinate, Vaccine_Supply / 2, Unvaccinated_Population / 7)",
+      "from_stock": "stock-unvaccinated",
+      "to_stock": "stock-one-dose",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-second-dose",
+      "name": "Second Dose Administration",
+      "equation": "DELAY(First_Dose_Administration, Dose_Interval)",
+      "from_stock": "stock-one-dose",
+      "to_stock": "stock-fully-vaccinated",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-immunity-waning",
+      "name": "Immunity Waning",
+      "equation": "Fully_Vaccinated / Immunity_Duration",
+      "from_stock": "stock-fully-vaccinated",
+      "to_stock": "stock-immunity-waned",
+      "position": {
+        "x": 450,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-booster",
+      "name": "Booster Administration",
+      "equation": "MIN(Immunity_Waned * Booster_Uptake_Rate, Vaccine_Supply / 4)",
+      "from_stock": "stock-immunity-waned",
+      "to_stock": "stock-fully-vaccinated",
+      "position": {
+        "x": 550,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-supply-arrival",
+      "name": "Vaccine Supply Arrival",
+      "equation": "Weekly_Vaccine_Delivery",
+      "from_stock": null,
+      "to_stock": "stock-vaccine-supply",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "flow-supply-use",
+      "name": "Vaccine Supply Use",
+      "equation": "First_Dose_Administration + Second_Dose_Administration + Booster_Administration",
+      "from_stock": "stock-vaccine-supply",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-pop",
+      "name": "Total Population",
+      "equation": "100000000",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-vaccination-capacity",
+      "name": "Vaccination Capacity",
+      "equation": "500000",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-willingness",
+      "name": "Willingness to Vaccinate",
+      "equation": "0.85 - 0.3 * (1 - Unvaccinated_Population / Total_Population)",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-dose-interval",
+      "name": "Dose Interval",
+      "equation": "3",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-immunity-duration",
+      "name": "Immunity Duration",
+      "equation": "26",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-booster-uptake",
+      "name": "Booster Uptake Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 650,
+        "y": 275
+      }
+    },
+    {
+      "id": "var-weekly-delivery",
+      "name": "Weekly Vaccine Delivery",
+      "equation": "2000000",
+      "position": {
+        "x": 100,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-coverage-rate",
+      "name": "Vaccination Coverage",
+      "equation": "(One_Dose_Vaccinated + Fully_Vaccinated) / Total_Population",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Vaccine Supply",
+      "to_element": "First Dose Administration"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Willingness to Vaccinate",
+      "to_element": "First Dose Administration"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Fully Vaccinated",
+      "to_element": "Immunity Waning"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 104,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:30:00.000Z",
+  "updated_at": "2026-01-12T01:30:00.000Z",
+  "source": "https://doi.org/10.1038/s41591-021-01322-9",
+  "reference": "Prem K, et al. The effect of control strategies to reduce social mixing on outcomes of the COVID-19 epidemic in Wuhan, China. The Lancet Public Health. 2020;5(5):e261-e270."
+}

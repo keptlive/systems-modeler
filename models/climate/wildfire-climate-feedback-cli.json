@@ -1,0 +1,232 @@
+{
+  "id": "wildfire-climate-feedback-cli",
+  "name": "Wildfire-Climate Feedback Model",
+  "description": "Model of wildfire dynamics showing how climate change increases fire risk, and how fires release carbon creating feedback. Based on Abatzoglou & Williams (2016). Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Forest Biomass",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Burned Area",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Atmospheric CO2 Pulse",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Forest Growth",
+      "equation": "Forest_Biomass * Growth_Rate * (1 - Forest_Biomass / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Fire Combustion",
+      "equation": "Fire_Ignition_Rate * Fire_Spread_Factor * Forest_Biomass",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "New Fires",
+      "equation": "Fire_Ignition_Rate * Fire_Weather_Index",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Fire Suppression",
+      "equation": "Burned_Area * Suppression_Rate",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Carbon Release",
+      "equation": "Fire_Combustion * Carbon_Content",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "CO2 Decay",
+      "equation": "Atmospheric_CO2_Pulse / CO2_Residence_Time",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Growth Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Carrying Capacity",
+      "equation": "150",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Fire Ignition Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Fire Weather Index",
+      "equation": "1 + Temperature_Anomaly * 0.2 - Precipitation_Anomaly * 0.1",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Temperature Anomaly",
+      "equation": "1.5 + 0.03 * TIME",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Precipitation Anomaly",
+      "equation": "-0.1",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Fire Spread Factor",
+      "equation": "Burned_Area * 0.1",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Suppression Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Carbon Content",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "CO2 Residence Time",
+      "equation": "100",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Climate Feedback Strength",
+      "equation": "Atmospheric_CO2_Pulse * 0.001",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Forest Biomass",
+      "to_element": "Fire Combustion"
+    },
+    {
+      "id": "c2",
+      "from_element": "Burned Area",
+      "to_element": "Fire Spread Factor"
+    },
+    {
+      "id": "c3",
+      "from_element": "Fire Weather Index",
+      "to_element": "New Fires"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:53:04.263237+00:00",
+  "updated_at": "2026-01-12T01:53:04.263240+00:00",
+  "source": "https://doi.org/10.1073/pnas.1607171113",
+  "reference": "Abatzoglou JT, Williams AP. Impact of anthropogenic climate change on wildfire across western US forests. PNAS. 2016;113(42):11770-11775."
+}

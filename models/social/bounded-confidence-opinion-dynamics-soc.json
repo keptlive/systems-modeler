@@ -1,0 +1,123 @@
+{
+  "id": "bounded-confidence-opinion-dynamics-soc",
+  "name": "Bounded Confidence Opinion Dynamics",
+  "description": "Model of opinion dynamics where agents only interact within confidence bounds. Source: Deffuant et al. (2000), Advances in Complex Systems.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Mean_Opinion",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Opinion_Variance",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Mean_Drift",
+      "equation": "convergence_rate * (Social_Influence - Mean_Opinion)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Variance_Change",
+      "equation": "-convergence_rate * Opinion_Variance * (1 - Fragmentation)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "epsilon",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "mu",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "convergence_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Interaction_Prob",
+      "equation": "1 - MIN(1, Opinion_Variance / epsilon)",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Social_Influence",
+      "equation": "Mean_Opinion + mu * (0.5 - Mean_Opinion) * Interaction_Prob",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Fragmentation",
+      "equation": "IF(Opinion_Variance > epsilon, 0.5, 0)",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Opinion_Variance",
+      "to_element": "Interaction_Prob"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-15T14:43:05.812988+00:00",
+  "updated_at": "2026-01-15T14:43:05.813085+00:00",
+  "source": "https://doi.org/10.1142/S0219525900000078",
+  "reference": "Deffuant, G. et al. (2000). Mixing beliefs among interacting agents. Advances in Complex Systems 3:87-98."
+}

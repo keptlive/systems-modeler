@@ -1,0 +1,32 @@
+{
+  "id": "deming-pdca-quality-man",
+  "name": "Deming PDCA Quality Improvement Model",
+  "description": "W. Edwards Deming's Plan-Do-Check-Act cycle for continuous quality improvement. Shows how iterative cycles of planning, implementing, measuring, and adjusting drive cumulative improvement in process capability and defect reduction.",
+  "stocks": [
+    {"id": "stock-process-capability", "name": "Process Capability", "initial_value": 0.9, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-knowledge-base", "name": "Knowledge Base", "initial_value": 50, "equation": "", "position": {"x": 450, "y": 200}},
+    {"id": "stock-defect-rate", "name": "Defect Rate", "initial_value": 0.1, "equation": "", "position": {"x": 325, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-capability-improvement", "name": "Capability Improvement", "equation": "(Target_Capability - Process_Capability) * Improvement_Rate * PDCA_Effectiveness", "from_stock": null, "to_stock": "stock-process-capability", "position": {"x": 100, "y": 200}},
+    {"id": "flow-learning", "name": "Learning", "equation": "Cycle_Learning * PDCA_Cycles_Per_Period", "from_stock": null, "to_stock": "stock-knowledge-base", "position": {"x": 350, "y": 200}},
+    {"id": "flow-defect-reduction", "name": "Defect Reduction", "equation": "Defect_Rate * Defect_Reduction_Rate * Process_Capability", "from_stock": "stock-defect-rate", "to_stock": null, "position": {"x": 225, "y": 350}},
+    {"id": "flow-new-defects", "name": "New Defects", "equation": "New_Product_Defect_Rate * New_Product_Introduction", "from_stock": null, "to_stock": "stock-defect-rate", "position": {"x": 425, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-target-capability", "name": "Target Capability", "equation": "0.9999", "position": {"x": 150, "y": 100}},
+    {"id": "var-improvement-rate", "name": "Improvement Rate", "equation": "0.1", "position": {"x": 350, "y": 100}},
+    {"id": "var-pdca-effectiveness", "name": "PDCA Effectiveness", "equation": "Knowledge_Base / 100", "position": {"x": 550, "y": 100}},
+    {"id": "var-pdca-cycles-per-period", "name": "PDCA Cycles Per Period", "equation": "4", "position": {"x": 200, "y": 280}},
+    {"id": "var-cycle-learning", "name": "Cycle Learning", "equation": "2 * (1 - Knowledge_Base / 100)", "position": {"x": 450, "y": 280}},
+    {"id": "var-defect-reduction-rate", "name": "Defect Reduction Rate", "equation": "0.2", "position": {"x": 150, "y": 420}},
+    {"id": "var-new-product-defect-rate", "name": "New Product Defect Rate", "equation": "0.05", "position": {"x": 400, "y": 420}},
+    {"id": "var-new-product-introduction", "name": "New Product Introduction", "equation": "0.1", "position": {"x": 600, "y": 420}},
+    {"id": "var-sigma-level", "name": "Sigma Level", "equation": "-0.8416 * LN(Defect_Rate) + 0.5", "position": {"x": 325, "y": 490}},
+    {"id": "var-quality-cost", "name": "Quality Cost", "equation": "Defect_Rate * 1000", "position": {"x": 550, "y": 490}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 50, "dt": 0.25},
+  "source": "https://deming.org/explore/pdsa/",
+  "reference": "Deming WE. Out of the Crisis. MIT Press. 1986."
+}

@@ -1,0 +1,151 @@
+{
+  "id": "price-equation-evolution-evo",
+  "name": "Price Equation Selection",
+  "description": "General equation for evolutionary change. Partitions change into selection and transmission components. Unifies population genetics, multilevel selection, and cultural evolution. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-mean-trait",
+      "name": "Mean Trait Value",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-variance",
+      "name": "Trait Variance",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-trait-change",
+      "name": "Trait Change",
+      "equation": "Selection_Differential + Transmission_Bias",
+      "from_stock": null,
+      "to_stock": "stock-mean-trait",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-variance-change",
+      "name": "Variance Change",
+      "equation": "-Variance_Loss + Mutation_Variance",
+      "from_stock": null,
+      "to_stock": "stock-variance",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-selection",
+      "name": "Selection Differential",
+      "equation": "Trait_Variance * Selection_Gradient",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gradient",
+      "name": "Selection Gradient",
+      "equation": "Fitness_Slope",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fitness-slope",
+      "name": "Fitness Slope",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-transmission",
+      "name": "Transmission Bias",
+      "equation": "0",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-heritability",
+      "name": "Heritability",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-response",
+      "name": "Response to Selection",
+      "equation": "Heritability * Selection_Differential",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-variance-loss",
+      "name": "Variance Loss",
+      "equation": "Selection_Gradient^2 * Trait_Variance",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-mutation",
+      "name": "Mutation Variance",
+      "equation": "0.001",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Trait Variance",
+      "to_element": "Selection Differential"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Selection Differential",
+      "to_element": "Trait Change"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Trait Variance",
+      "to_element": "Variance Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T07:39:15.418054+00:00",
+  "updated_at": "2026-01-12T07:39:15.418061+00:00",
+  "source": "https://doi.org/10.1038/227520a0",
+  "reference": "Price GR. Selection and Covariance. Nature. 1970;227:520-521."
+}

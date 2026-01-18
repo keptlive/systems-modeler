@@ -1,0 +1,149 @@
+{
+  "id": "simple-global-climate-model-cli",
+  "name": "Simple Global Climate Model",
+  "description": "A simplified global energy balance model for understanding basic climate dynamics. Based on radiative forcing and climate sensitivity parameters. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "stock-surface-temperature",
+      "name": "Surface_Temperature",
+      "initial_value": 288,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ocean-heat",
+      "name": "Ocean_Heat",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-radiative-forcing",
+      "name": "radiative_forcing",
+      "equation": "(1-alpha) * S0 / 4 + RF_co2",
+      "from_stock": null,
+      "to_stock": "stock-surface-temperature",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-outgoing-radiation",
+      "name": "outgoing_radiation",
+      "equation": "epsilon * sigma * T^4",
+      "from_stock": "stock-surface-temperature",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ocean-uptake",
+      "name": "ocean_uptake",
+      "equation": "gamma * (T_surface - T_ocean)",
+      "from_stock": "stock-surface-temperature",
+      "to_stock": "stock-ocean-heat",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-s0",
+      "name": "S0",
+      "equation": "1361",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-alpha",
+      "name": "alpha",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-epsilon",
+      "name": "epsilon",
+      "equation": "0.62",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-sigma",
+      "name": "sigma",
+      "equation": "5.67e-08",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-lambda-climate",
+      "name": "lambda_climate",
+      "equation": "1.0",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-c-mixed",
+      "name": "C_mixed",
+      "equation": "7",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "S0",
+      "to_element": "radiative_forcing"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "alpha",
+      "to_element": "radiative_forcing"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "epsilon",
+      "to_element": "outgoing_radiation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "sigma",
+      "to_element": "outgoing_radiation"
+    }
+  ],
+  "time_settings": {
+    "start": 1850,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.719789Z",
+  "updated_at": "2026-01-11T20:04:50.719789Z",
+  "source": "https://doi.org/10.1038/nature14240",
+  "reference": "IPCC Climate Models and Reports"
+}

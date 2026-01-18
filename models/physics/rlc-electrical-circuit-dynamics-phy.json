@@ -1,0 +1,146 @@
+{
+  "id": "rlc-electrical-circuit-dynamics-phy",
+  "name": "RLC Electrical Circuit Dynamics Model",
+  "description": "Second-order electrical circuit with resistor, inductor, and capacitor showing resonance and damping. Fundamental EE model. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Capacitor Charge",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Current",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "dQ dt",
+      "equation": "Current",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "dI dt",
+      "equation": "(Voltage_Source - Capacitor_Charge / Capacitance - Current * Resistance) / Inductance",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Resistance",
+      "equation": "1",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Inductance",
+      "equation": "1",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Capacitance",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Voltage Source",
+      "equation": "0",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Capacitor Voltage",
+      "equation": "Capacitor_Charge / Capacitance",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Resonant Frequency",
+      "equation": "1 / SQRT(Inductance * Capacitance)",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Damping Ratio",
+      "equation": "Resistance / (2 * SQRT(Inductance / Capacitance))",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Energy Stored",
+      "equation": "0.5 * Inductance * Current^2 + 0.5 * Capacitor_Charge^2 / Capacitance",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Current",
+      "to_element": "dQ dt"
+    },
+    {
+      "id": "c2",
+      "from_element": "Capacitor Charge",
+      "to_element": "dI dt"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-15T14:20:13.052986",
+  "updated_at": "2026-01-15T14:20:13.052995",
+  "source": "https://en.wikipedia.org/wiki/RLC_circuit",
+  "reference": "Fundamentals of Electric Circuits. Alexander CK, Sadiku MNO. McGraw-Hill. 2012."
+}

@@ -1,0 +1,150 @@
+{
+  "id": "gig-worker-welfare-eco",
+  "name": "Gig Economy Worker Welfare",
+  "description": "Model of gig economy worker dynamics. Source: Katz & Krueger (2019), ILR Review.",
+  "stocks": [
+    {
+      "id": "stock-gig",
+      "name": "Gig_Workers",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-trad",
+      "name": "Traditional_Workers",
+      "initial_value": 800,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-income",
+      "name": "Average_Gig_Income",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-shift-gig",
+      "name": "Shift_To_Gig",
+      "equation": "Traditional_Workers * Gig_Pull * Flexibility_Value",
+      "from_stock": "stock-trad",
+      "to_stock": "stock-gig",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-shift-trad",
+      "name": "Shift_To_Traditional",
+      "equation": "Gig_Workers * Traditional_Pull * (1 - Average_Gig_Income / 50)",
+      "from_stock": "stock-gig",
+      "to_stock": "stock-trad",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-income-inc",
+      "name": "Income_Increase",
+      "equation": "(Platform_Take - Average_Gig_Income) * Market_Demand / 100",
+      "from_stock": null,
+      "to_stock": "stock-income",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-income-dec",
+      "name": "Income_Pressure",
+      "equation": "Average_Gig_Income * Competition_Effect * Gig_Workers / 100",
+      "from_stock": "stock-income",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-pull-gig",
+      "name": "Gig_Pull",
+      "equation": "0.02",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-flex",
+      "name": "Flexibility_Value",
+      "equation": "1.5",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-pull-trad",
+      "name": "Traditional_Pull",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-platform",
+      "name": "Platform_Take",
+      "equation": "40",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Market_Demand",
+      "equation": "50 + 0.5 * TIME",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-compete",
+      "name": "Competition_Effect",
+      "equation": "0.001",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T12:55:38.760970+00:00",
+  "updated_at": "2026-01-12T12:55:38.760970+00:00",
+  "source": "https://doi.org/10.1086/705716",
+  "reference": "Katz LF, Krueger AB. The rise and nature of alternative work arrangements in the US, 1995-2015. ILR Review. 2019;72(2):382-416."
+}

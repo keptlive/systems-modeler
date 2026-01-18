@@ -1,0 +1,137 @@
+{
+  "id": "bass-competition-diffusion-eco",
+  "name": "Bass Diffusion Model with Competition",
+  "description": "Extension of Bass model for multiple competing products, showing how innovation spreads when substitutes exist. Reference: Bass, F. M. (1969). A new product growth for model consumer durables. Management Science, 15(5), 215-227. DOI: https://doi.org/10.1287/mnsc.15.5.215",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Product1_Adopters",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Product2_Adopters",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Potential_Adopters",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 225
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "P1_Adoption",
+      "equation": "(P1_Innovation + P1_Imitation * Product1_Adopters / Total_Market) * Potential_Adopters * P1_Share",
+      "from_stock": "s3",
+      "to_stock": "s1",
+      "position": {
+        "x": 275,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "P2_Adoption",
+      "equation": "(P2_Innovation + P2_Imitation * Product2_Adopters / Total_Market) * Potential_Adopters * P2_Share",
+      "from_stock": "s3",
+      "to_stock": "s2",
+      "position": {
+        "x": 275,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "P1_Innovation",
+      "equation": "0.03",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "P1_Imitation",
+      "equation": "0.38",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "P2_Innovation",
+      "equation": "0.02",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "v4",
+      "name": "P2_Imitation",
+      "equation": "0.35",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Total_Market",
+      "equation": "Potential_Adopters + Product1_Adopters + Product2_Adopters",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "P1_Share",
+      "equation": "0.6",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "P2_Share",
+      "equation": "0.4",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:20:56.316234+00:00",
+  "updated_at": "2026-01-12T11:20:56.316234+00:00",
+  "source": "https://doi.org/10.1287/mnsc.33.8.1069",
+  "reference": "Norton JA, Bass FM. A diffusion theory model of adoption and substitution for successive generations of high-technology products. Management Science. 1987;33(8):1069-1086."
+}

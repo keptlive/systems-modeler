@@ -1,0 +1,203 @@
+{
+  "id": "coral-reef-decline-model",
+  "name": "Coral Reef Decline Model",
+  "description": "Model of coral reef ecosystem collapse due to ocean warming and acidification.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Live_Coral_Cover",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Algae_Cover",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Dead_Coral",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Coral_Growth",
+      "equation": "Live_Coral_Cover * Growth_Rate * (1 - Live_Coral_Cover - Algae_Cover) * Temperature_Stress",
+      "from_stock": null,
+      "to_stock": "Live_Coral_Cover",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Coral_Mortality",
+      "equation": "Live_Coral_Cover * (Base_Mortality + Bleaching_Mortality + Acidification_Mortality)",
+      "from_stock": "Live_Coral_Cover",
+      "to_stock": "Dead_Coral",
+      "position": {
+        "x": 275,
+        "y": 275
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Algae_Growth",
+      "equation": "Algae_Cover * Algae_Growth_Rate * Dead_Coral",
+      "from_stock": null,
+      "to_stock": "Algae_Cover",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Algae_Grazing",
+      "equation": "Algae_Cover * Grazing_Rate * Herbivore_Population",
+      "from_stock": "Algae_Cover",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Growth_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Base_Mortality",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Ocean_Temperature",
+      "equation": "26 + 0.02 * time",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Bleaching_Threshold",
+      "equation": "28",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Bleaching_Mortality",
+      "equation": "MAX(0, 0.1 * (Ocean_Temperature - Bleaching_Threshold))",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Ocean_pH",
+      "equation": "8.1 - 0.003 * time",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Acidification_Mortality",
+      "equation": "MAX(0, 0.05 * (8.1 - Ocean_pH))",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Temperature_Stress",
+      "equation": "MAX(0, 1 - MAX(0, Ocean_Temperature - Bleaching_Threshold) / 2)",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Algae_Growth_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Grazing_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Herbivore_Population",
+      "equation": "0.5",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Reef_Health_Index",
+      "equation": "Live_Coral_Cover / (Live_Coral_Cover + Algae_Cover + Dead_Coral)",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1038/s41586-018-0041-2",
+  "reference": "Hughes, T.P., et al. (2018). Global warming transforms coral reef assemblages. Nature, 556, 492-496. DOI: 10.1038/s41586-018-0041-2",
+  "created_at": "2026-01-15T19:26:14.001716+00:00",
+  "updated_at": "2026-01-15T19:26:14.001716+00:00"
+}

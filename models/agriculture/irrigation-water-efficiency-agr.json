@@ -1,0 +1,179 @@
+{
+  "id": "irrigation-water-efficiency-agr",
+  "name": "Irrigation Water Use Efficiency",
+  "description": "Models agricultural water use, efficiency improvements, and groundwater depletion. Based on Gleick (2003) Water use, Annual Review of Environment and Resources. Reference: FAO (2017). Water for Sustainable Food and Agriculture. Source: https://www.fao.org/",
+  "category": "agriculture",
+  "stocks": [
+    {
+      "id": "stock-aquifer",
+      "name": "Aquifer_Volume",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-irrigated",
+      "name": "Irrigated_Area",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-efficiency",
+      "name": "System_Efficiency",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-recharge",
+      "name": "Aquifer_Recharge",
+      "equation": "Precipitation * Recharge_Fraction",
+      "from_stock": null,
+      "to_stock": "stock-aquifer",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-pump",
+      "name": "Water_Pumped",
+      "equation": "Irrigated_Area * Water_Per_Ha / System_Efficiency",
+      "from_stock": "stock-aquifer",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-expand",
+      "name": "Area_Expansion",
+      "equation": "IF(Aquifer_Volume > Min_Aquifer, Expansion_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-irrigated",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-contract",
+      "name": "Area_Contraction",
+      "equation": "IF(Aquifer_Volume < Min_Aquifer, Contraction_Rate * Irrigated_Area, 0)",
+      "from_stock": "stock-irrigated",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-tech",
+      "name": "Efficiency_Improvement",
+      "equation": "(Target_Efficiency - System_Efficiency) * Investment_Rate",
+      "from_stock": null,
+      "to_stock": "stock-efficiency",
+      "position": {
+        "x": 300,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-precip",
+      "name": "Precipitation",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recharge",
+      "name": "Recharge_Fraction",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-water-ha",
+      "name": "Water_Per_Ha",
+      "equation": "5",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-min",
+      "name": "Min_Aquifer",
+      "equation": "200",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-expand",
+      "name": "Expansion_Rate",
+      "equation": "2",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-contract",
+      "name": "Contraction_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-target",
+      "name": "Target_Efficiency",
+      "equation": "0.9",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-invest",
+      "name": "Investment_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1146/annurev.energy.28.040202.122849",
+  "reference": "Gleick PH (2003) Water use. Annual Review of Environment and Resources 28:275-314.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:26:04.512256+00:00",
+  "updated_at": "2026-01-12T06:26:04.512256+00:00"
+}

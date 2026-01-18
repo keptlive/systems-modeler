@@ -1,0 +1,132 @@
+{
+  "id": "median-voter-theorem-soc",
+  "name": "Median Voter Theorem Dynamics",
+  "description": "Models political convergence to median voter preferences. Source: Downs (1957) and Black (1948). DOI: 10.1086/256633",
+  "stocks": [
+    {
+      "id": "stock-left",
+      "name": "Left_Party_Position",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-right",
+      "name": "Right_Party_Position",
+      "initial_value": 70,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-leftmove",
+      "name": "Left_Movement",
+      "equation": "(Median_Position - Left_Party_Position) * Convergence_Rate * Electoral_Pressure",
+      "from_stock": null,
+      "to_stock": "stock-left",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-rightmove",
+      "name": "Right_Movement",
+      "equation": "(Median_Position - Right_Party_Position) * Convergence_Rate * Electoral_Pressure",
+      "from_stock": null,
+      "to_stock": "stock-right",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-median",
+      "name": "Median_Position",
+      "equation": "50 + 5 * SIN(TIME / 20)",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-convrate",
+      "name": "Convergence_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-electpress",
+      "name": "Electoral_Pressure",
+      "equation": "IF(ABS(Election_Date - TIME) < 5, 2, 1)",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-electdate",
+      "name": "Election_Date",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-polarization",
+      "name": "Polarization",
+      "equation": "Right_Party_Position - Left_Party_Position",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-leftvotes",
+      "name": "Left_Vote_Share",
+      "equation": "50 * (1 + (Median_Position - Left_Party_Position) / 100)",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-rightvotes",
+      "name": "Right_Vote_Share",
+      "equation": "50 * (1 + (Median_Position - Right_Party_Position) / 100)",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Median_Position",
+      "to_element": "Left_Movement"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:23:02.238311+00:00",
+  "updated_at": "2026-01-12T02:23:02.238313+00:00",
+  "source": "https://doi.org/10.1086/256633",
+  "reference": "Downs, A. (1957). An Economic Theory of Democracy. Harper & Row."
+}

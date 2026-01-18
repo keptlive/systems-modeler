@@ -1,0 +1,247 @@
+{
+  "id": "phillips-curve-with-expectations-eco",
+  "name": "Phillips Curve with Expectations",
+  "description": "Models the dynamic relationship between unemployment and inflation with adaptive expectations. The original Phillips curve showed a stable tradeoff, but incorporating expectations reveals that the tradeoff is temporary. In the long run, attempts to exploit the tradeoff lead to accelerating inflation with no reduction in unemployment. Reference: Phillips, A. W. (1958). The relation between unemployment and the rate of change of money wage rates. Economica, 25(100), 283-299. DOI: https://doi.org/10.1111/j.1468-0335.1958.tb00003.x",
+  "stocks": [
+    {
+      "id": "stock-inflation",
+      "name": "Inflation",
+      "initial_value": 0.02,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-expected-inflation",
+      "name": "Expected Inflation",
+      "initial_value": 0.02,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-unemployment",
+      "name": "Unemployment",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-inflation-change",
+      "name": "Inflation Change",
+      "equation": "(Phillips_Curve_Inflation - Inflation) / Inflation_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-inflation",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-expectation-adjustment",
+      "name": "Expectation Adjustment",
+      "equation": "(Inflation - Expected_Inflation) / Expectation_Lag",
+      "from_stock": null,
+      "to_stock": "stock-expected-inflation",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-unemployment-change",
+      "name": "Unemployment Change",
+      "equation": "(Policy_Target_Unemployment - Unemployment) / Policy_Response_Time",
+      "from_stock": null,
+      "to_stock": "stock-unemployment",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-natural-rate",
+      "name": "Natural Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-phillips-curve-inflation",
+      "name": "Phillips Curve Inflation",
+      "equation": "Expected_Inflation - Phillips_Slope * (Unemployment - Natural_Rate) + Supply_Shock",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-phillips-slope",
+      "name": "Phillips Slope",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-supply-shock",
+      "name": "Supply Shock",
+      "equation": "0",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-expectation-lag",
+      "name": "Expectation Lag",
+      "equation": "4",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-inflation-adjustment-time",
+      "name": "Inflation Adjustment Time",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-policy-target-unemployment",
+      "name": "Policy Target Unemployment",
+      "equation": "IF Policy_Active THEN Target_Unemployment ELSE Natural_Rate",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-target-unemployment",
+      "name": "Target Unemployment",
+      "equation": "0.04",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-policy-active",
+      "name": "Policy Active",
+      "equation": "IF Time > 4 AND Time < 24 THEN 1 ELSE 0",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-policy-response-time",
+      "name": "Policy Response Time",
+      "equation": "2",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-unemployment-gap",
+      "name": "Unemployment Gap",
+      "equation": "Unemployment - Natural_Rate",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-inflation-gap",
+      "name": "Inflation Gap",
+      "equation": "Inflation - Expected_Inflation",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-misery-index",
+      "name": "Misery Index",
+      "equation": "Unemployment + Inflation",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Expected Inflation",
+      "to_element": "Phillips Curve Inflation"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Unemployment",
+      "to_element": "Phillips Curve Inflation"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Natural Rate",
+      "to_element": "Phillips Curve Inflation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Phillips Curve Inflation",
+      "to_element": "Inflation Change"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Inflation",
+      "to_element": "Inflation Change"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Inflation",
+      "to_element": "Expectation Adjustment"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Expected Inflation",
+      "to_element": "Expectation Adjustment"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Policy Target Unemployment",
+      "to_element": "Unemployment Change"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Unemployment",
+      "to_element": "Unemployment Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 40,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.766032Z",
+  "updated_at": "2026-01-11T20:04:50.766032Z",
+  "source": "https://doi.org/10.1111/j.1468-0335.1958.tb00003.x",
+  "reference": "Phillips AW. The Relation Between Unemployment and the Rate of Change of Money Wage Rates. Economica. 1958."
+}

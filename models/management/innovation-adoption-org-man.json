@@ -1,0 +1,139 @@
+{
+  "id": "innovation-adoption-org-man",
+  "name": "Organizational Innovation Adoption",
+  "description": "Model of innovation diffusion within organizations. Source: Rogers Diffusion of Innovation. Reference: Rogers, E. M. (2003). Diffusion of Innovations (5th ed.). Free Press.",
+  "stocks": [
+    {
+      "id": "stock-resist",
+      "name": "Resisters",
+      "initial_value": 700,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-adopt",
+      "name": "Adopters",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-champion",
+      "name": "Champions",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adopt",
+      "name": "Adoption",
+      "equation": "Resisters * (Champion_Influence + Peer_Influence) * Innovation_Quality",
+      "from_stock": "stock-resist",
+      "to_stock": "stock-adopt",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-champion",
+      "name": "Becoming_Champion",
+      "equation": "Adopters * Champion_Rate * Satisfaction",
+      "from_stock": "stock-adopt",
+      "to_stock": "stock-champion",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-revert",
+      "name": "Reversion",
+      "equation": "Adopters * Reversion_Rate * (1 - Satisfaction)",
+      "from_stock": "stock-adopt",
+      "to_stock": "stock-resist",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-champ-inf",
+      "name": "Champion_Influence",
+      "equation": "Champions / 1000",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-peer",
+      "name": "Peer_Influence",
+      "equation": "Adopters / 10000",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-quality",
+      "name": "Innovation_Quality",
+      "equation": "0.8",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-champrate",
+      "name": "Champion_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-satisfy",
+      "name": "Satisfaction",
+      "equation": "0.7",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-revert",
+      "name": "Reversion_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:53:13.193402+00:00",
+  "updated_at": "2026-01-12T12:53:13.193402+00:00",
+  "source": "https://doi.org/10.1002/hrm.21899",
+  "reference": "Hom PW, et al. One hundred years of employee turnover theory and research. Journal of Applied Psychology. 2017;102(3):530-545."
+}

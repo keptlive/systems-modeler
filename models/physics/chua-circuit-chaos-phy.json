@@ -1,0 +1,162 @@
+{
+  "id": "chua-circuit-chaos-phy",
+  "name": "Chua's Circuit Chaotic Oscillator",
+  "description": "Simplest electronic circuit exhibiting chaos with double scroll attractor. Source: Chua (1992), IEEE.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "V1",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "V2",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "IL",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "dV1dt",
+      "equation": "(G * (V2 - V1) - g_chua) / C1",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "dV2dt",
+      "equation": "(G * (V1 - V2) + IL) / C2",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "dILdt",
+      "equation": "-V2 / L",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "C1",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "C2",
+      "equation": "100",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "L",
+      "equation": "18",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "G",
+      "equation": "0.7",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "m0",
+      "equation": "-0.5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "m1",
+      "equation": "-0.8",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Bp",
+      "equation": "1.0",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "g_chua",
+      "equation": "m1 * V1 + 0.5 * (m0 - m1) * (ABS(V1 + Bp) - ABS(V1 - Bp))",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "V1",
+      "to_element": "g_chua"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-15T14:36:21.172830+00:00",
+  "updated_at": "2026-01-15T14:36:21.172835+00:00",
+  "source": "https://doi.org/10.1109/81.340866",
+  "reference": "Chua, L.O. (1992). The Genesis of Chua's Circuit. IEEE Trans Circuits and Systems."
+}

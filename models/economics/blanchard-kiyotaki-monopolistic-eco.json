@@ -1,0 +1,29 @@
+{
+  "id": "blanchard-kiyotaki-monopolistic-eco",
+  "name": "Blanchard-Kiyotaki Monopolistic Competition Model",
+  "description": "Foundational New Keynesian model with monopolistic competition and aggregate demand externalities. Shows why sticky prices can lead to inefficient output fluctuations. Source: Blanchard & Kiyotaki (1987). American Economic Review. DOI: 10.1257/aer.102.7.i",
+  "stocks": [
+    {"id": "stock-output", "name": "Aggregate_Output", "initial_value": 100, "equation": "", "position": {"x": 300, "y": 200}},
+    {"id": "stock-price", "name": "Price_Level", "initial_value": 1, "equation": "", "position": {"x": 300, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-output-change", "name": "Output_Change", "equation": "(Desired_Output - Aggregate_Output) / Adjustment_Speed", "from_stock": null, "to_stock": "stock-output", "position": {"x": 150, "y": 200}},
+    {"id": "flow-price-adjust", "name": "Price_Adjustment", "equation": "Price_Flexibility * (Aggregate_Output - Potential_Output) / Potential_Output * Price_Level", "from_stock": null, "to_stock": "stock-price", "position": {"x": 150, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-potential", "name": "Potential_Output", "equation": "100", "position": {"x": 450, "y": 200}},
+    {"id": "var-money", "name": "Money_Supply", "equation": "100 + 10 * SIN(TIME / 10)", "position": {"x": 150, "y": 100}},
+    {"id": "var-desired", "name": "Desired_Output", "equation": "Money_Supply / Price_Level", "position": {"x": 300, "y": 100}},
+    {"id": "var-adjust", "name": "Adjustment_Speed", "equation": "4", "position": {"x": 100, "y": 200}},
+    {"id": "var-flex", "name": "Price_Flexibility", "equation": "0.1", "position": {"x": 100, "y": 350}},
+    {"id": "var-markup", "name": "Monopoly_Markup", "equation": "1 / (Elasticity - 1)", "position": {"x": 450, "y": 100}},
+    {"id": "var-elasticity", "name": "Elasticity", "equation": "6", "position": {"x": 500, "y": 150}},
+    {"id": "var-output-gap", "name": "Output_Gap", "equation": "(Aggregate_Output - Potential_Output) / Potential_Output", "position": {"x": 450, "y": 350}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.25},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1257/aer.102.7.i",
+  "reference": "Blanchard, O.J. & Kiyotaki, N. (1987). Monopolistic competition and the effects of aggregate demand. American Economic Review, 77(4), 647-666."
+}

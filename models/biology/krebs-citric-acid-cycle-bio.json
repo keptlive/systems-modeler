@@ -1,0 +1,42 @@
+{
+  "id": "krebs-citric-acid-cycle-bio",
+  "name": "Krebs Citric Acid Cycle Model",
+  "description": "Hans Krebs' (1937) citric acid cycle (TCA/Krebs cycle) model showing the central metabolic pathway for aerobic respiration. Acetyl-CoA is oxidized to CO2, generating NADH and FADH2 for ATP production. Krebs received the 1953 Nobel Prize.",
+  "stocks": [
+    {"id": "stock-acetyl-coa", "name": "Acetyl CoA", "initial_value": 100, "equation": "", "position": {"x": 100, "y": 200}},
+    {"id": "stock-citrate", "name": "Citrate", "initial_value": 50, "equation": "", "position": {"x": 300, "y": 200}},
+    {"id": "stock-alpha-ketoglutarate", "name": "Alpha Ketoglutarate", "initial_value": 30, "equation": "", "position": {"x": 500, "y": 200}},
+    {"id": "stock-succinate", "name": "Succinate", "initial_value": 40, "equation": "", "position": {"x": 500, "y": 350}},
+    {"id": "stock-oxaloacetate", "name": "Oxaloacetate", "initial_value": 50, "equation": "", "position": {"x": 300, "y": 350}},
+    {"id": "stock-nadh", "name": "NADH", "initial_value": 0, "equation": "", "position": {"x": 700, "y": 275}}
+  ],
+  "flows": [
+    {"id": "flow-acetyl-input", "name": "Acetyl Input", "equation": "Glycolysis_Rate", "from_stock": null, "to_stock": "stock-acetyl-coa", "position": {"x": 50, "y": 200}},
+    {"id": "flow-citrate-synthase", "name": "Citrate Synthase", "equation": "Vmax_CS * Acetyl_CoA * Oxaloacetate / ((Km_AcCoA + Acetyl_CoA) * (Km_OAA + Oxaloacetate))", "from_stock": "stock-acetyl-coa", "to_stock": "stock-citrate", "position": {"x": 200, "y": 200}},
+    {"id": "flow-isocitrate-dh", "name": "Isocitrate DH", "equation": "Vmax_IDH * Citrate / (Km_Cit + Citrate)", "from_stock": "stock-citrate", "to_stock": "stock-alpha-ketoglutarate", "position": {"x": 400, "y": 200}},
+    {"id": "flow-alpha-kg-dh", "name": "Alpha KG DH", "equation": "Vmax_AKGDH * Alpha_Ketoglutarate / (Km_AKG + Alpha_Ketoglutarate)", "from_stock": "stock-alpha-ketoglutarate", "to_stock": "stock-succinate", "position": {"x": 500, "y": 275}},
+    {"id": "flow-succinate-dh", "name": "Succinate DH", "equation": "Vmax_SDH * Succinate / (Km_Suc + Succinate)", "from_stock": "stock-succinate", "to_stock": "stock-oxaloacetate", "position": {"x": 400, "y": 350}},
+    {"id": "flow-oaa-consumption", "name": "OAA Consumption", "equation": "Citrate_Synthase", "from_stock": "stock-oxaloacetate", "to_stock": null, "position": {"x": 200, "y": 350}},
+    {"id": "flow-nadh-production", "name": "NADH Production", "equation": "Isocitrate_DH + Alpha_KG_DH + Succinate_DH", "from_stock": null, "to_stock": "stock-nadh", "position": {"x": 600, "y": 275}},
+    {"id": "flow-nadh-oxidation", "name": "NADH Oxidation", "equation": "NADH * ETC_Rate", "from_stock": "stock-nadh", "to_stock": null, "position": {"x": 700, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-glycolysis-rate", "name": "Glycolysis Rate", "equation": "10", "position": {"x": 100, "y": 100}},
+    {"id": "var-vmax-cs", "name": "Vmax CS", "equation": "100", "position": {"x": 250, "y": 100}},
+    {"id": "var-vmax-idh", "name": "Vmax IDH", "equation": "50", "position": {"x": 400, "y": 100}},
+    {"id": "var-vmax-akgdh", "name": "Vmax AKGDH", "equation": "40", "position": {"x": 550, "y": 100}},
+    {"id": "var-vmax-sdh", "name": "Vmax SDH", "equation": "60", "position": {"x": 700, "y": 100}},
+    {"id": "var-km-accoa", "name": "Km AcCoA", "equation": "10", "position": {"x": 100, "y": 420}},
+    {"id": "var-km-oaa", "name": "Km OAA", "equation": "5", "position": {"x": 250, "y": 420}},
+    {"id": "var-km-cit", "name": "Km Cit", "equation": "20", "position": {"x": 400, "y": 420}},
+    {"id": "var-km-akg", "name": "Km AKG", "equation": "15", "position": {"x": 550, "y": 420}},
+    {"id": "var-km-suc", "name": "Km Suc", "equation": "10", "position": {"x": 700, "y": 420}},
+    {"id": "var-etc-rate", "name": "ETC Rate", "equation": "0.5", "position": {"x": 600, "y": 480}},
+    {"id": "var-cycle-flux", "name": "Cycle Flux", "equation": "Citrate_Synthase", "position": {"x": 400, "y": 480}},
+    {"id": "var-atp-production", "name": "ATP Production", "equation": "NADH_Oxidation * 2.5 + Succinate_DH * 1.5", "position": {"x": 250, "y": 480}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.1},
+  "source": "https://doi.org/10.1042/bj0310655",
+  "reference": "Krebs HA, Johnson WA. The role of citric acid in intermediate metabolism in animal tissues. Enzymologia. 1937;4:148-156."
+}

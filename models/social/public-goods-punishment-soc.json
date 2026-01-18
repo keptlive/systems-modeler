@@ -1,0 +1,169 @@
+{
+  "id": "public-goods-punishment-soc",
+  "name": "Public Goods Game with Punishment",
+  "description": "Voluntary contributions to public good with costly punishment of free riders. Shows how altruistic punishment sustains cooperation. Important for understanding social norms enforcement. Reference: Fehr, E., & G\u00e4chter, S. (2000). Cooperation and Punishment in Public Goods Experiments. American Economic Review, 90(4), 980-994. Source: https://doi.org/10.1257/aer.90.4.980",
+  "stocks": [
+    {
+      "id": "stock-cooperators",
+      "name": "Cooperator Fraction",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-punishers",
+      "name": "Punisher Fraction",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-coop-change",
+      "name": "Cooperator Change",
+      "equation": "Cooperator_Fraction * (Cooperator_Payoff - Average_Payoff)",
+      "from_stock": null,
+      "to_stock": "stock-cooperators",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-punish-change",
+      "name": "Punisher Change",
+      "equation": "Punisher_Fraction * (Punisher_Payoff - Average_Payoff)",
+      "from_stock": null,
+      "to_stock": "stock-punishers",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-defector-frac",
+      "name": "Defector Fraction",
+      "equation": "MAX(0, 1 - Cooperator_Fraction - Punisher_Fraction)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-public-good",
+      "name": "Public Good",
+      "equation": "Multiplier * Cost * (Cooperator_Fraction + Punisher_Fraction)",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-coop-payoff",
+      "name": "Cooperator Payoff",
+      "equation": "Public_Good - Cost",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-defector-payoff",
+      "name": "Defector Payoff",
+      "equation": "Public_Good - Punishment_Received * Punisher_Fraction",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-punisher-payoff",
+      "name": "Punisher Payoff",
+      "equation": "Public_Good - Cost - Punishment_Cost * Defector_Fraction",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-avg-payoff",
+      "name": "Average Payoff",
+      "equation": "Cooperator_Fraction * Cooperator_Payoff + Punisher_Fraction * Punisher_Payoff + Defector_Fraction * Defector_Payoff",
+      "position": {
+        "x": 250,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-cost",
+      "name": "Cost",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-multiplier",
+      "name": "Multiplier",
+      "equation": "2",
+      "position": {
+        "x": 200,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-punishment",
+      "name": "Punishment Received",
+      "equation": "3",
+      "position": {
+        "x": 350,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-punishment-cost",
+      "name": "Punishment Cost",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Cooperator Fraction",
+      "to_element": "Public Good"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Punisher Fraction",
+      "to_element": "Public Good"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Defector Fraction",
+      "to_element": "Defector Payoff"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:43:15.875993+00:00",
+  "updated_at": "2026-01-12T07:43:15.875996+00:00",
+  "source": "https://doi.org/10.1038/415137a",
+  "reference": "Fehr E, G\u00e4chter S. Altruistic Punishment in Humans. Nature. 2002;415:137-140."
+}

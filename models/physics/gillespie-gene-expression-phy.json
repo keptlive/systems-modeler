@@ -1,0 +1,173 @@
+{
+  "id": "gillespie-gene-expression-phy",
+  "name": "Stochastic Gene Expression Model",
+  "description": "Central dogma of molecular biology with stochastic transcription and translation. mRNA is transcribed from DNA, proteins are translated from mRNA. Shows how noise propagates through gene expression. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-mrna",
+      "name": "mRNA Molecules",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-protein",
+      "name": "Protein Molecules",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-transcription",
+      "name": "Transcription",
+      "equation": "Transcription_Rate",
+      "from_stock": null,
+      "to_stock": "stock-mrna",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mrna-decay",
+      "name": "mRNA Decay",
+      "equation": "mRNA_Molecules / mRNA_Halflife * 0.693",
+      "from_stock": "stock-mrna",
+      "to_stock": null,
+      "position": {
+        "x": 80,
+        "y": 280
+      }
+    },
+    {
+      "id": "flow-translation",
+      "name": "Translation",
+      "equation": "Translation_Rate * mRNA_Molecules",
+      "from_stock": null,
+      "to_stock": "stock-protein",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-protein-decay",
+      "name": "Protein Decay",
+      "equation": "Protein_Molecules / Protein_Halflife * 0.693",
+      "from_stock": "stock-protein",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-transcription",
+      "name": "Transcription Rate",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-translation",
+      "name": "Translation Rate",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mrna-half",
+      "name": "mRNA Halflife",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-protein-half",
+      "name": "Protein Halflife",
+      "equation": "20",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-burst-size",
+      "name": "Burst Size",
+      "equation": "Translation_Rate * mRNA_Halflife / 0.693",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-mean-protein",
+      "name": "Mean Protein",
+      "equation": "Transcription_Rate * Translation_Rate * Protein_Halflife / 0.693",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-noise-mrna",
+      "name": "mRNA Noise (CV)",
+      "equation": "1 / SQRT(mRNA_Molecules)",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-noise-protein",
+      "name": "Protein Noise (CV)",
+      "equation": "SQRT(1 / Protein_Molecules + 1 / (mRNA_Molecules * Burst_Size))",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "mRNA Molecules",
+      "to_element": "Translation"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "mRNA Molecules",
+      "to_element": "mRNA Decay"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Protein Molecules",
+      "to_element": "Protein Decay"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T07:39:15.413736+00:00",
+  "updated_at": "2026-01-12T07:39:15.413740+00:00",
+  "source": "https://doi.org/10.1038/nature01546",
+  "reference": "Elowitz MB, Levine AJ, Siggia ED, Swain PS. Stochastic Gene Expression in a Single Cell. Science. 2002;297(5584):1183-1186."
+}

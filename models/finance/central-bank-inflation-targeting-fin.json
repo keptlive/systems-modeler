@@ -1,0 +1,240 @@
+{
+  "id": "central-bank-inflation-targeting-fin",
+  "name": "Central Bank Inflation Targeting",
+  "description": "Model of central bank monetary policy under inflation targeting. Captures the Taylor rule, expectations formation, and transmission mechanism. Based on New Keynesian monetary economics. Reference: Keynes, J. M. (1936). The General Theory of Employment, Interest and Money. London: Macmillan.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Inflation",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Output_Gap",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Policy_Rate",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Inflation_Expectations",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Inflation_Change",
+      "equation": "Phillips_Curve_Effect + Expectations_Effect + Shock",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Output_Change",
+      "equation": "(-Real_Rate_Gap + Demand_Shock) / Output_Adjustment",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Rate_Adjustment",
+      "equation": "(Taylor_Rule_Rate - Policy_Rate) / Rate_Smoothing",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Expectations_Update",
+      "equation": "(Adaptive_Weight * Inflation + (1 - Adaptive_Weight) * Inflation_Target - Inflation_Expectations) / Expectations_Adjustment",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 250,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Inflation_Target",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Natural_Rate",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Phillips_Coefficient",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Taylor_Inflation_Weight",
+      "equation": "1.5",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Taylor_Output_Weight",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Phillips_Curve_Effect",
+      "equation": "Phillips_Coefficient * Output_Gap",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Expectations_Effect",
+      "equation": "0.3 * (Inflation_Expectations - Inflation)",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Taylor_Rule_Rate",
+      "equation": "Natural_Rate + Inflation + Taylor_Inflation_Weight * (Inflation - Inflation_Target) + Taylor_Output_Weight * Output_Gap",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Real_Rate_Gap",
+      "equation": "Policy_Rate - Inflation_Expectations - Natural_Rate",
+      "position": {
+        "x": 200,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Rate_Smoothing",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 180
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Output_Adjustment",
+      "equation": "4",
+      "position": {
+        "x": 550,
+        "y": 180
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Adaptive_Weight",
+      "equation": "0.7",
+      "position": {
+        "x": 150,
+        "y": 230
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Expectations_Adjustment",
+      "equation": "4",
+      "position": {
+        "x": 350,
+        "y": 230
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Shock",
+      "equation": "IF Time > 10 AND Time < 12 THEN 2 ELSE 0",
+      "position": {
+        "x": 500,
+        "y": 230
+      }
+    },
+    {
+      "id": "v15",
+      "name": "Demand_Shock",
+      "equation": "0",
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 40,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1016/S1574-0048(99)01005-8",
+  "reference": "Taylor JB (1993) Discretion versus policy rules in practice. Carnegie-Rochester Conference Series. Clarida R, Gal\u00ed J, Gertler M (1999) The Science of Monetary Policy.",
+  "created_at": "2026-01-12T06:56:34.378848+00:00",
+  "updated_at": "2026-01-12T06:56:34.378848+00:00"
+}

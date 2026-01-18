@@ -1,0 +1,200 @@
+{
+  "id": "climate-tipping-interactions-destabilizing-cli",
+  "name": "Climate Tipping Element Interactions Model",
+  "description": "Model of interactions between major climate tipping elements showing destabilizing feedbacks and potential cascade dynamics. Based on Wunderling et al. (2024) review in Earth System Dynamics showing most interactions are destabilizing. Reference: Wunderling, N., et al. (2024). Climate tipping point interactions and cascades: a review. Earth System Dynamics, 15, 41-66. Source: https://doi.org/10.5194/esd-15-41-2024",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Greenland Ice Sheet Stability",
+      "initial_value": 0.9,
+      "equation": "",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "s2",
+      "name": "West Antarctic Ice Sheet Stability",
+      "initial_value": 0.85,
+      "equation": "",
+      "position": {"x": 300, "y": 100}
+    },
+    {
+      "id": "s3",
+      "name": "AMOC Strength",
+      "initial_value": 0.95,
+      "equation": "",
+      "position": {"x": 500, "y": 100}
+    },
+    {
+      "id": "s4",
+      "name": "Amazon Rainforest Health",
+      "initial_value": 0.8,
+      "equation": "",
+      "position": {"x": 100, "y": 250}
+    },
+    {
+      "id": "s5",
+      "name": "Permafrost Carbon Stock",
+      "initial_value": 0.9,
+      "equation": "",
+      "position": {"x": 300, "y": 250}
+    },
+    {
+      "id": "s6",
+      "name": "Coral Reef Ecosystem",
+      "initial_value": 0.6,
+      "equation": "",
+      "position": {"x": 500, "y": 250}
+    },
+    {
+      "id": "s7",
+      "name": "Global Temperature Anomaly",
+      "initial_value": 1.2,
+      "equation": "",
+      "position": {"x": 300, "y": 400}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Greenland Melt",
+      "equation": "Greenland_Ice_Sheet_Stability * Temperature_Melt_Effect * (1 + AMOC_Feedback)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {"x": 100, "y": 150}
+    },
+    {
+      "id": "f2",
+      "name": "WAIS Collapse",
+      "equation": "West_Antarctic_Ice_Sheet_Stability * Temperature_Melt_Effect * Marine_Instability_Factor",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {"x": 300, "y": 150}
+    },
+    {
+      "id": "f3",
+      "name": "AMOC Weakening",
+      "equation": "AMOC_Strength * Freshwater_Input * 0.01",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {"x": 500, "y": 150}
+    },
+    {
+      "id": "f4",
+      "name": "Amazon Dieback",
+      "equation": "Amazon_Rainforest_Health * (Temperature_Stress + Drought_Stress) * 0.01",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {"x": 100, "y": 300}
+    },
+    {
+      "id": "f5",
+      "name": "Permafrost Thaw",
+      "equation": "Permafrost_Carbon_Stock * Thaw_Rate * Global_Temperature_Anomaly",
+      "from_stock": "s5",
+      "to_stock": null,
+      "position": {"x": 300, "y": 300}
+    },
+    {
+      "id": "f6",
+      "name": "Coral Bleaching",
+      "equation": "Coral_Reef_Ecosystem * Thermal_Stress * Ocean_Acidification_Effect",
+      "from_stock": "s6",
+      "to_stock": null,
+      "position": {"x": 500, "y": 300}
+    },
+    {
+      "id": "f7",
+      "name": "Warming Rate",
+      "equation": "Emission_Rate + Permafrost_Feedback + Amazon_Carbon_Feedback - Natural_Cooling",
+      "from_stock": null,
+      "to_stock": "s7",
+      "position": {"x": 300, "y": 450}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Temperature Melt Effect",
+      "equation": "MAX(0, (Global_Temperature_Anomaly - 1.0) * 0.02)",
+      "position": {"x": 200, "y": 50}
+    },
+    {
+      "id": "v2",
+      "name": "AMOC Feedback",
+      "equation": "(1 - AMOC_Strength) * 0.5",
+      "position": {"x": 150, "y": 175}
+    },
+    {
+      "id": "v3",
+      "name": "Marine Instability Factor",
+      "equation": "1.2",
+      "position": {"x": 400, "y": 50}
+    },
+    {
+      "id": "v4",
+      "name": "Freshwater Input",
+      "equation": "(1 - Greenland_Ice_Sheet_Stability) * 5",
+      "position": {"x": 500, "y": 175}
+    },
+    {
+      "id": "v5",
+      "name": "Temperature Stress",
+      "equation": "MAX(0, Global_Temperature_Anomaly - 1.5) * 0.1",
+      "position": {"x": 50, "y": 350}
+    },
+    {
+      "id": "v6",
+      "name": "Drought Stress",
+      "equation": "(1 - AMOC_Strength) * 0.3",
+      "position": {"x": 150, "y": 350}
+    },
+    {
+      "id": "v7",
+      "name": "Thaw Rate",
+      "equation": "0.005",
+      "position": {"x": 350, "y": 350}
+    },
+    {
+      "id": "v8",
+      "name": "Thermal Stress",
+      "equation": "MAX(0, Global_Temperature_Anomaly - 1.2) * 0.15",
+      "position": {"x": 450, "y": 350}
+    },
+    {
+      "id": "v9",
+      "name": "Ocean Acidification Effect",
+      "equation": "1.1",
+      "position": {"x": 550, "y": 350}
+    },
+    {
+      "id": "v10",
+      "name": "Emission Rate",
+      "equation": "0.02",
+      "position": {"x": 200, "y": 450}
+    },
+    {
+      "id": "v11",
+      "name": "Permafrost Feedback",
+      "equation": "(1 - Permafrost_Carbon_Stock) * 0.01",
+      "position": {"x": 400, "y": 450}
+    },
+    {
+      "id": "v12",
+      "name": "Amazon Carbon Feedback",
+      "equation": "(1 - Amazon_Rainforest_Health) * 0.008",
+      "position": {"x": 150, "y": 500}
+    },
+    {
+      "id": "v13",
+      "name": "Natural Cooling",
+      "equation": "0.005",
+      "position": {"x": 450, "y": 500}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 200, "dt": 1},
+  "created_at": "2026-01-15T16:00:00.000000",
+  "updated_at": "2026-01-15T16:00:00.000000",
+  "source": "https://doi.org/10.5194/esd-15-41-2024",
+  "reference": "Wunderling, N., et al. (2024). Climate tipping point interactions and cascades: a review. Earth System Dynamics, 15, 41-66."
+}

@@ -1,0 +1,146 @@
+{
+  "id": "hospital-readmission-dynamics-hea",
+  "name": "Hospital Readmission Dynamics",
+  "description": "Models patient flow through hospitalization with readmission risk. Key healthcare quality metric. Source: Jencks et al. (2009), NEJM. DOI: 10.1056/NEJMsa0803563",
+  "stocks": [
+    {
+      "id": "stock-hosp",
+      "name": "Hospitalized",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-discharged",
+      "name": "Discharged",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-readmit",
+      "name": "Readmitted",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-admit",
+      "name": "New_Admissions",
+      "equation": "Admission_Rate",
+      "from_stock": null,
+      "to_stock": "stock-hosp",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-discharge",
+      "name": "Discharge_Rate",
+      "equation": "Hospitalized / Avg_LOS",
+      "from_stock": "stock-hosp",
+      "to_stock": "stock-discharged",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-readmit",
+      "name": "Readmission_Rate",
+      "equation": "Discharged * Readmission_Prob / Days_To_Readmit",
+      "from_stock": "stock-discharged",
+      "to_stock": "stock-readmit",
+      "position": {
+        "x": 350,
+        "y": 225
+      }
+    },
+    {
+      "id": "flow-readmit-hosp",
+      "name": "Readmit_To_Hospital",
+      "equation": "Readmitted / 1",
+      "from_stock": "stock-readmit",
+      "to_stock": "stock-hosp",
+      "position": {
+        "x": 200,
+        "y": 225
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-admitrate",
+      "name": "Admission_Rate",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-los",
+      "name": "Avg_LOS",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-readmitprob",
+      "name": "Readmission_Prob",
+      "equation": "0.2 * (1 - Transition_Care_Quality)",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-daystoread",
+      "name": "Days_To_Readmit",
+      "equation": "15",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-transcare",
+      "name": "Transition_Care_Quality",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Discharged",
+      "to_element": "Readmission_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:02:23.929774Z",
+  "updated_at": "2026-01-12T02:02:23.929779Z",
+  "source": "https://doi.org/10.1056/NEJMsa0803563",
+  "reference": "Jencks, S.F. et al. (2009). Rehospitalizations among Patients in the Medicare Fee-for-Service Program. NEJM."
+}

@@ -1,0 +1,174 @@
+{
+  "id": "heat-exchanger-dynamics-phy",
+  "name": "Heat Exchanger Dynamics",
+  "description": "Counterflow heat exchanger model showing thermal dynamics between hot and cold fluid streams. Based on first principles heat transfer. Source: Standard chemical engineering heat transfer analysis.",
+  "stocks": [
+    {
+      "id": "stock-hot-temp",
+      "name": "Hot_Outlet_Temperature",
+      "initial_value": 350,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-cold-temp",
+      "name": "Cold_Outlet_Temperature",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-hot-change",
+      "name": "Hot_Temp_Change",
+      "equation": "(Hot_Inlet_Temp - Hot_Outlet_Temperature - Heat_Transfer / (Hot_Flow_Rate * Hot_Cp)) / Residence_Time",
+      "from_stock": null,
+      "to_stock": "stock-hot-temp",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-cold-change",
+      "name": "Cold_Temp_Change",
+      "equation": "(Cold_Inlet_Temp - Cold_Outlet_Temperature + Heat_Transfer / (Cold_Flow_Rate * Cold_Cp)) / Residence_Time",
+      "from_stock": null,
+      "to_stock": "stock-cold-temp",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-hot-inlet",
+      "name": "Hot_Inlet_Temp",
+      "equation": "400",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cold-inlet",
+      "name": "Cold_Inlet_Temp",
+      "equation": "25",
+      "position": {
+        "x": 100,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-hot-flow",
+      "name": "Hot_Flow_Rate",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cold-flow",
+      "name": "Cold_Flow_Rate",
+      "equation": "15",
+      "position": {
+        "x": 250,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-hot-cp",
+      "name": "Hot_Cp",
+      "equation": "4.2",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cold-cp",
+      "name": "Cold_Cp",
+      "equation": "4.2",
+      "position": {
+        "x": 350,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-ua",
+      "name": "UA",
+      "equation": "100",
+      "position": {
+        "x": 400,
+        "y": 225
+      }
+    },
+    {
+      "id": "var-lmtd",
+      "name": "LMTD",
+      "equation": "((Hot_Inlet_Temp - Cold_Outlet_Temperature) - (Hot_Outlet_Temperature - Cold_Inlet_Temp)) / LN((Hot_Inlet_Temp - Cold_Outlet_Temperature) / (Hot_Outlet_Temperature - Cold_Inlet_Temp + 0.1) + 0.01)",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-heat-transfer",
+      "name": "Heat_Transfer",
+      "equation": "UA * LMTD",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-residence-time",
+      "name": "Residence_Time",
+      "equation": "5",
+      "position": {
+        "x": 50,
+        "y": 225
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Hot_Outlet_Temperature",
+      "to_element": "Hot_Temp_Change"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Cold_Outlet_Temperature",
+      "to_element": "Cold_Temp_Change"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Heat_Transfer",
+      "to_element": "Hot_Temp_Change"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Heat_Transfer",
+      "to_element": "Cold_Temp_Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T20:52:52.274753+00:00",
+  "updated_at": "2026-01-11T20:52:52.274753+00:00",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg System Dynamics Test Models"
+}

@@ -1,0 +1,251 @@
+{
+  "id": "teacher-retention-model-edu",
+  "name": "Teacher Retention Model",
+  "description": "Model of teacher workforce dynamics showing how working conditions, compensation, and support affect retention. Reference: Darling-Hammond, L. (2017). Teacher education around the world. European Journal of Teacher Education. Source: https://doi.org/10.1080/02619768.2017.1315399",
+  "stocks": [
+    {
+      "id": "stock-new",
+      "name": "New_Teachers",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-experienced",
+      "name": "Experienced_Teachers",
+      "initial_value": 600,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-veteran",
+      "name": "Veteran_Teachers",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-hiring",
+      "name": "Hiring_Rate",
+      "equation": "Vacancies * Fill_Rate",
+      "from_stock": null,
+      "to_stock": "stock-new",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-experience",
+      "name": "Gaining_Experience",
+      "equation": "New_Teachers / Years_to_Experience * New_Retention",
+      "from_stock": "stock-new",
+      "to_stock": "stock-experienced",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-veteran",
+      "name": "Becoming_Veteran",
+      "equation": "Experienced_Teachers / Years_to_Veteran * Exp_Retention",
+      "from_stock": "stock-experienced",
+      "to_stock": "stock-veteran",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-new-leave",
+      "name": "New_Leaving",
+      "equation": "New_Teachers * (1 - New_Retention) / Years_to_Experience",
+      "from_stock": "stock-new",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-exp-leave",
+      "name": "Experienced_Leaving",
+      "equation": "Experienced_Teachers * (1 - Exp_Retention) / Years_to_Veteran",
+      "from_stock": "stock-experienced",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-retire",
+      "name": "Retirement",
+      "equation": "Veteran_Teachers / Years_to_Retire",
+      "from_stock": "stock-veteran",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-vacancies",
+      "name": "Vacancies",
+      "equation": "50",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-fill",
+      "name": "Fill_Rate",
+      "equation": "0.9",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-exp-years",
+      "name": "Years_to_Experience",
+      "equation": "5",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-vet-years",
+      "name": "Years_to_Veteran",
+      "equation": "10",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-ret-years",
+      "name": "Years_to_Retire",
+      "equation": "15",
+      "position": {
+        "x": 650,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-new-ret",
+      "name": "New_Retention",
+      "equation": "0.7",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-exp-ret",
+      "name": "Exp_Retention",
+      "equation": "0.9",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Vacancies",
+      "to_element": "Hiring_Rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "Fill_Rate",
+      "to_element": "Hiring_Rate"
+    },
+    {
+      "id": "c3",
+      "from_element": "New_Teachers",
+      "to_element": "Gaining_Experience"
+    },
+    {
+      "id": "c4",
+      "from_element": "Years_to_Experience",
+      "to_element": "Gaining_Experience"
+    },
+    {
+      "id": "c5",
+      "from_element": "New_Retention",
+      "to_element": "Gaining_Experience"
+    },
+    {
+      "id": "c6",
+      "from_element": "Experienced_Teachers",
+      "to_element": "Becoming_Veteran"
+    },
+    {
+      "id": "c7",
+      "from_element": "Years_to_Veteran",
+      "to_element": "Becoming_Veteran"
+    },
+    {
+      "id": "c8",
+      "from_element": "Exp_Retention",
+      "to_element": "Becoming_Veteran"
+    },
+    {
+      "id": "c9",
+      "from_element": "New_Teachers",
+      "to_element": "New_Leaving"
+    },
+    {
+      "id": "c10",
+      "from_element": "New_Retention",
+      "to_element": "New_Leaving"
+    },
+    {
+      "id": "c11",
+      "from_element": "Experienced_Teachers",
+      "to_element": "Experienced_Leaving"
+    },
+    {
+      "id": "c12",
+      "from_element": "Exp_Retention",
+      "to_element": "Experienced_Leaving"
+    },
+    {
+      "id": "c13",
+      "from_element": "Veteran_Teachers",
+      "to_element": "Retirement"
+    },
+    {
+      "id": "c14",
+      "from_element": "Years_to_Retire",
+      "to_element": "Retirement"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T11:47:36.907846Z",
+  "updated_at": "2026-01-12T11:47:36.907850Z",
+  "source": "https://doi.org/10.3102/00028312038003499",
+  "reference": "Ingersoll RM. Teacher Turnover and Teacher Shortages: An Organizational Analysis. American Educational Research Journal. 2001;38(3):499-534."
+}

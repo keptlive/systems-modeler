@@ -1,0 +1,40 @@
+{
+  "id": "liebig-law-of-minimum-agr",
+  "name": "Liebig Law of the Minimum Model",
+  "description": "Justus von Liebig's (1840) law stating that plant growth is limited by the scarcest nutrient, not the total nutrients available. Foundation of modern agricultural science and fertilizer application. Shows how multiple limiting factors interact.",
+  "stocks": [
+    {"id": "stock-plant-biomass", "name": "Plant Biomass", "initial_value": 10, "equation": "", "position": {"x": 300, "y": 200}},
+    {"id": "stock-nitrogen", "name": "Nitrogen", "initial_value": 100, "equation": "", "position": {"x": 100, "y": 350}},
+    {"id": "stock-phosphorus", "name": "Phosphorus", "initial_value": 50, "equation": "", "position": {"x": 300, "y": 350}},
+    {"id": "stock-potassium", "name": "Potassium", "initial_value": 80, "equation": "", "position": {"x": 500, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-growth", "name": "Growth", "equation": "Plant_Biomass * Growth_Rate * Limiting_Factor", "from_stock": null, "to_stock": "stock-plant-biomass", "position": {"x": 200, "y": 200}},
+    {"id": "flow-n-uptake", "name": "N Uptake", "equation": "Growth * N_Content", "from_stock": "stock-nitrogen", "to_stock": null, "position": {"x": 100, "y": 280}},
+    {"id": "flow-p-uptake", "name": "P Uptake", "equation": "Growth * P_Content", "from_stock": "stock-phosphorus", "to_stock": null, "position": {"x": 300, "y": 280}},
+    {"id": "flow-k-uptake", "name": "K Uptake", "equation": "Growth * K_Content", "from_stock": "stock-potassium", "to_stock": null, "position": {"x": 500, "y": 280}},
+    {"id": "flow-n-fertilizer", "name": "N Fertilizer", "equation": "N_Application_Rate", "from_stock": null, "to_stock": "stock-nitrogen", "position": {"x": 100, "y": 420}},
+    {"id": "flow-p-fertilizer", "name": "P Fertilizer", "equation": "P_Application_Rate", "from_stock": null, "to_stock": "stock-phosphorus", "position": {"x": 300, "y": 420}},
+    {"id": "flow-k-fertilizer", "name": "K Fertilizer", "equation": "K_Application_Rate", "from_stock": null, "to_stock": "stock-potassium", "position": {"x": 500, "y": 420}}
+  ],
+  "variables": [
+    {"id": "var-growth-rate", "name": "Growth Rate", "equation": "0.3", "position": {"x": 400, "y": 100}},
+    {"id": "var-n-availability", "name": "N Availability", "equation": "Nitrogen / N_Requirement", "position": {"x": 100, "y": 100}},
+    {"id": "var-p-availability", "name": "P Availability", "equation": "Phosphorus / P_Requirement", "position": {"x": 300, "y": 100}},
+    {"id": "var-k-availability", "name": "K Availability", "equation": "Potassium / K_Requirement", "position": {"x": 500, "y": 100}},
+    {"id": "var-limiting-factor", "name": "Limiting Factor", "equation": "MIN(N_Availability, P_Availability, K_Availability, 1)", "position": {"x": 200, "y": 160}},
+    {"id": "var-n-requirement", "name": "N Requirement", "equation": "100", "position": {"x": 100, "y": 490}},
+    {"id": "var-p-requirement", "name": "P Requirement", "equation": "50", "position": {"x": 300, "y": 490}},
+    {"id": "var-k-requirement", "name": "K Requirement", "equation": "80", "position": {"x": 500, "y": 490}},
+    {"id": "var-n-content", "name": "N Content", "equation": "0.03", "position": {"x": 150, "y": 550}},
+    {"id": "var-p-content", "name": "P Content", "equation": "0.005", "position": {"x": 350, "y": 550}},
+    {"id": "var-k-content", "name": "K Content", "equation": "0.02", "position": {"x": 550, "y": 550}},
+    {"id": "var-n-application-rate", "name": "N Application Rate", "equation": "5", "position": {"x": 100, "y": 620}},
+    {"id": "var-p-application-rate", "name": "P Application Rate", "equation": "2", "position": {"x": 300, "y": 620}},
+    {"id": "var-k-application-rate", "name": "K Application Rate", "equation": "3", "position": {"x": 500, "y": 620}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 1},
+  "source": "https://doi.org/10.1038/npre.2007.1318",
+  "reference": "Liebig J. Organic Chemistry in its Application to Agriculture and Physiology. Taylor and Walton. 1840."
+}

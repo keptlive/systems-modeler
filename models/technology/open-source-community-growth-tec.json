@@ -1,0 +1,229 @@
+{
+  "id": "open-source-community-growth-tec",
+  "name": "Open Source Software Community Dynamics",
+  "description": "Models the growth dynamics of open source software communities. Based on Lerner & Tirole (2002) Some Simple Economics of Open Source, Journal of Industrial Economics. Reference: Tirole, J. (1988). The Theory of Industrial Organization. MIT Press. DOI: https://doi.org/10.2307/2555496",
+  "category": "technology",
+  "stocks": [
+    {
+      "id": "stock-contrib",
+      "name": "Contributors",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-code",
+      "name": "Codebase_Lines_K",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-users",
+      "name": "Users_Thousands",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-quality",
+      "name": "Code_Quality",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-join",
+      "name": "New_Contributors",
+      "equation": "Users_Thousands * Conversion_Rate * Reputation_Effect",
+      "from_stock": null,
+      "to_stock": "stock-contrib",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-leave",
+      "name": "Contributors_Leaving",
+      "equation": "Contributors * Departure_Rate",
+      "from_stock": "stock-contrib",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-commit",
+      "name": "Code_Commits",
+      "equation": "Contributors * Productivity * (1 - Codebase_Lines_K/Max_Codebase)",
+      "from_stock": null,
+      "to_stock": "stock-code",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-adopt",
+      "name": "User_Adoption",
+      "equation": "Potential_Users * Adoption_Rate * Code_Quality/100",
+      "from_stock": null,
+      "to_stock": "stock-users",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-churn",
+      "name": "User_Churn",
+      "equation": "Users_Thousands * Churn_Rate",
+      "from_stock": "stock-users",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-quality-up",
+      "name": "Quality_Improvement",
+      "equation": "Contributors * Review_Effectiveness",
+      "from_stock": null,
+      "to_stock": "stock-quality",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-tech-debt",
+      "name": "Technical_Debt",
+      "equation": "Codebase_Lines_K * Debt_Rate",
+      "from_stock": "stock-quality",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-conv",
+      "name": "Conversion_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-rep",
+      "name": "Reputation_Effect",
+      "equation": "1 + Contributors * 0.01",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-depart",
+      "name": "Departure_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-prod",
+      "name": "Productivity",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-max",
+      "name": "Max_Codebase",
+      "equation": "500",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-potential",
+      "name": "Potential_Users",
+      "equation": "10000",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-adopt",
+      "name": "Adoption_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-churn",
+      "name": "Churn_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-review",
+      "name": "Review_Effectiveness",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-debt",
+      "name": "Debt_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 650,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1111/1467-6451.00174",
+  "reference": "Lerner J, Tirole J (2002) Some Simple Economics of Open Source. Journal of Industrial Economics 50(2):197-234.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:29:57.474786+00:00",
+  "updated_at": "2026-01-12T06:29:57.474786+00:00"
+}

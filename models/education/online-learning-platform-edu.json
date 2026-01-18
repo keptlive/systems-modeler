@@ -1,0 +1,254 @@
+{
+  "id": "online-learning-platform-edu",
+  "name": "Online Learning Platform Model",
+  "description": "Models online education platform dynamics with learner engagement. Based on MOOCs completion rate research (Kizilcec et al., 2013). Reference: Parker, G. G., et al. (2016). Platform Revolution. Norton. Source: https://www.wwnorton.com/",
+  "stocks": [
+    {
+      "id": "stock-enrolled",
+      "name": "Enrolled_Learners",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-active",
+      "name": "Active_Learners",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-completed",
+      "name": "Completed_Learners",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-dropped",
+      "name": "Dropped_Out",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-content-quality",
+      "name": "Content_Quality",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-enrollment",
+      "name": "New_Enrollments",
+      "equation": "Marketing_Reach * Conversion_Rate * (1 + Word_of_Mouth * Completed_Learners / Reference_Completions)",
+      "from_stock": null,
+      "to_stock": "stock-enrolled",
+      "position": {
+        "x": 75,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-activation",
+      "name": "Learner_Activation",
+      "equation": "Enrolled_Learners * Activation_Rate * Content_Quality / Reference_Quality",
+      "from_stock": "stock-enrolled",
+      "to_stock": "stock-active",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-completion",
+      "name": "Course_Completion",
+      "equation": "Active_Learners * Completion_Rate * (1 + Support_Effect)",
+      "from_stock": "stock-active",
+      "to_stock": "stock-completed",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-early-dropout",
+      "name": "Early_Dropout",
+      "equation": "Enrolled_Learners * Early_Dropout_Rate",
+      "from_stock": "stock-enrolled",
+      "to_stock": "stock-dropped",
+      "position": {
+        "x": 200,
+        "y": 230
+      }
+    },
+    {
+      "id": "flow-late-dropout",
+      "name": "Late_Dropout",
+      "equation": "Active_Learners * Late_Dropout_Rate * (1 - Content_Quality / Reference_Quality)",
+      "from_stock": "stock-active",
+      "to_stock": "stock-dropped",
+      "position": {
+        "x": 350,
+        "y": 230
+      }
+    },
+    {
+      "id": "flow-content-improvement",
+      "name": "Content_Improvement",
+      "equation": "Content_Investment * Improvement_Efficiency + Feedback_Effect * Completed_Learners",
+      "from_stock": null,
+      "to_stock": "stock-content-quality",
+      "position": {
+        "x": 75,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-marketing-reach",
+      "name": "Marketing_Reach",
+      "equation": "10000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-conversion-rate",
+      "name": "Conversion_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 240,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-word-of-mouth",
+      "name": "Word_of_Mouth",
+      "equation": "0.3",
+      "position": {
+        "x": 380,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-reference-completions",
+      "name": "Reference_Completions",
+      "equation": "1000",
+      "position": {
+        "x": 540,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-activation-rate",
+      "name": "Activation_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-reference-quality",
+      "name": "Reference_Quality",
+      "equation": "100",
+      "position": {
+        "x": 240,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-completion-rate",
+      "name": "Completion_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 380,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-support-effect",
+      "name": "Support_Effect",
+      "equation": "0.2",
+      "position": {
+        "x": 520,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-early-dropout-rate",
+      "name": "Early_Dropout_Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-late-dropout-rate",
+      "name": "Late_Dropout_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 240,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-content-investment",
+      "name": "Content_Investment",
+      "equation": "10",
+      "position": {
+        "x": 380,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-improvement-efficiency",
+      "name": "Improvement_Efficiency",
+      "equation": "0.5",
+      "position": {
+        "x": 520,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-feedback-effect",
+      "name": "Feedback_Effect",
+      "equation": "0.01",
+      "position": {
+        "x": 660,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:19:34.568830+00:00",
+  "updated_at": "2026-01-12T01:19:34.568839+00:00",
+  "source": "https://doi.org/10.1145/2460296.2460330",
+  "reference": "Kizilcec RF, Piech C, Schneider E. Deconstructing Disengagement: Analyzing Learner Subpopulations in MOOCs. LAK'13. 2013:170-179."
+}

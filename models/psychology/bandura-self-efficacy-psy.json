@@ -1,0 +1,34 @@
+{
+  "id": "bandura-self-efficacy-psy",
+  "name": "Bandura Self-Efficacy Model",
+  "description": "Albert Bandura's social cognitive theory model of self-efficacy. Shows how mastery experiences, vicarious learning, verbal persuasion, and physiological states affect beliefs about capability, which influence behavior and outcomes.",
+  "stocks": [
+    {"id": "stock-self-efficacy", "name": "Self Efficacy", "initial_value": 50, "equation": "", "position": {"x": 300, "y": 200}},
+    {"id": "stock-skill-level", "name": "Skill Level", "initial_value": 30, "equation": "", "position": {"x": 550, "y": 200}},
+    {"id": "stock-performance-history", "name": "Performance History", "initial_value": 50, "equation": "", "position": {"x": 300, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-efficacy-change", "name": "Efficacy Change", "equation": "(Sources_of_Efficacy - Self_Efficacy) / Efficacy_Adjustment_Time", "from_stock": null, "to_stock": "stock-self-efficacy", "position": {"x": 200, "y": 200}},
+    {"id": "flow-skill-development", "name": "Skill Development", "equation": "Effort * Learning_Rate", "from_stock": null, "to_stock": "stock-skill-level", "position": {"x": 450, "y": 200}},
+    {"id": "flow-performance-update", "name": "Performance Update", "equation": "(Recent_Performance - Performance_History) / History_Decay_Time", "from_stock": null, "to_stock": "stock-performance-history", "position": {"x": 200, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-mastery-experience", "name": "Mastery Experience", "equation": "Performance_History", "position": {"x": 100, "y": 100}},
+    {"id": "var-vicarious-learning", "name": "Vicarious Learning", "equation": "30", "position": {"x": 250, "y": 100}},
+    {"id": "var-verbal-persuasion", "name": "Verbal Persuasion", "equation": "20", "position": {"x": 400, "y": 100}},
+    {"id": "var-physiological-state", "name": "Physiological State", "equation": "60", "position": {"x": 550, "y": 100}},
+    {"id": "var-sources-of-efficacy", "name": "Sources of Efficacy", "equation": "0.4 * Mastery_Experience + 0.25 * Vicarious_Learning + 0.15 * Verbal_Persuasion + 0.2 * Physiological_State", "position": {"x": 200, "y": 280}},
+    {"id": "var-effort", "name": "Effort", "equation": "Self_Efficacy * Motivation / 100", "position": {"x": 450, "y": 280}},
+    {"id": "var-motivation", "name": "Motivation", "equation": "70", "position": {"x": 600, "y": 280}},
+    {"id": "var-recent-performance", "name": "Recent Performance", "equation": "Skill_Level * Self_Efficacy / 100 + Random_Factor", "position": {"x": 450, "y": 350}},
+    {"id": "var-random-factor", "name": "Random Factor", "equation": "0", "position": {"x": 600, "y": 350}},
+    {"id": "var-efficacy-adjustment-time", "name": "Efficacy Adjustment Time", "equation": "5", "position": {"x": 150, "y": 420}},
+    {"id": "var-learning-rate", "name": "Learning Rate", "equation": "0.1", "position": {"x": 350, "y": 420}},
+    {"id": "var-history-decay-time", "name": "History Decay Time", "equation": "10", "position": {"x": 550, "y": 420}},
+    {"id": "var-behavior-persistence", "name": "Behavior Persistence", "equation": "Self_Efficacy * 0.8 + Skill_Level * 0.2", "position": {"x": 350, "y": 490}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.5},
+  "source": "https://doi.org/10.1037/0033-295X.84.2.191",
+  "reference": "Bandura A. Self-efficacy: Toward a unifying theory of behavioral change. Psychological Review. 1977;84(2):191-215."
+}

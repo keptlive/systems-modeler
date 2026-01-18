@@ -1,0 +1,391 @@
+{
+  "id": "student-loan-debt-dynamics-eco",
+  "name": "Student Loan Debt Dynamics Model",
+  "description": "A system dynamics model of education debt accumulation based on Looney & Yannelis (2015) 'A Crisis in Student Loans?' Brookings Papers on Economic Activity (doi:10.1353/eca.2015.0003) and the Federal Reserve studies on student debt. Models enrollment, borrowing, repayment, and default dynamics. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-enrolled-students",
+      "name": "Enrolled Students",
+      "initial_value": 20000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-graduates-with-debt",
+      "name": "Graduates with Debt",
+      "initial_value": 45000000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-total-outstanding-debt",
+      "name": "Total Outstanding Debt",
+      "initial_value": 1700000000000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-debt-in-repayment",
+      "name": "Debt in Repayment",
+      "initial_value": 800000000000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-debt-in-default",
+      "name": "Debt in Default",
+      "initial_value": 150000000000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    },
+    {
+      "id": "stock-debt-paid-off",
+      "name": "Debt Paid Off",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 650,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-enrollment",
+      "name": "New Enrollment",
+      "equation": "Enrollment_Rate * College_Age_Population * College_Going_Rate",
+      "from_stock": null,
+      "to_stock": "stock-enrolled-students",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-graduation",
+      "name": "Graduation",
+      "equation": "Enrolled_Students / Average_Time_to_Degree * Graduation_Rate",
+      "from_stock": "stock-enrolled-students",
+      "to_stock": "stock-graduates-with-debt",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-dropout",
+      "name": "Dropout",
+      "equation": "Enrolled_Students * Dropout_Rate",
+      "from_stock": "stock-enrolled-students",
+      "to_stock": "stock-graduates-with-debt",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-new-borrowing",
+      "name": "New Borrowing",
+      "equation": "Enrolled_Students * Borrowing_Rate * Average_Annual_Borrowing",
+      "from_stock": null,
+      "to_stock": "stock-total-outstanding-debt",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-interest-accrual",
+      "name": "Interest Accrual",
+      "equation": "Total_Outstanding_Debt * Interest_Rate",
+      "from_stock": null,
+      "to_stock": "stock-total-outstanding-debt",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-entering-repayment",
+      "name": "Entering Repayment",
+      "equation": "Graduation * Average_Debt_at_Graduation",
+      "from_stock": "stock-total-outstanding-debt",
+      "to_stock": "stock-debt-in-repayment",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-payments",
+      "name": "Payments",
+      "equation": "Debt_in_Repayment * Repayment_Rate",
+      "from_stock": "stock-debt-in-repayment",
+      "to_stock": "stock-debt-paid-off",
+      "position": {
+        "x": 575,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-default",
+      "name": "Default",
+      "equation": "Debt_in_Repayment * Default_Rate * Economic_Stress_Factor",
+      "from_stock": "stock-debt-in-repayment",
+      "to_stock": "stock-debt-in-default",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-default-recovery",
+      "name": "Default Recovery",
+      "equation": "Debt_in_Default * Recovery_Rate",
+      "from_stock": "stock-debt-in-default",
+      "to_stock": "stock-debt-in-repayment",
+      "position": {
+        "x": 450,
+        "y": 380
+      }
+    },
+    {
+      "id": "flow-forgiveness",
+      "name": "Loan Forgiveness",
+      "equation": "Debt_in_Repayment * Forgiveness_Rate",
+      "from_stock": "stock-debt-in-repayment",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-enrollment-rate",
+      "name": "Enrollment Rate",
+      "equation": "1",
+      "position": {
+        "x": 50,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-college-age-population",
+      "name": "College Age Population",
+      "equation": "4000000",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-college-going-rate",
+      "name": "College Going Rate",
+      "equation": "0.65",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-average-time-to-degree",
+      "name": "Average Time to Degree",
+      "equation": "5",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-graduation-rate",
+      "name": "Graduation Rate",
+      "equation": "0.6",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-dropout-rate",
+      "name": "Dropout Rate",
+      "equation": "0.08",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-borrowing-rate",
+      "name": "Borrowing Rate",
+      "equation": "0.65",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-average-annual-borrowing",
+      "name": "Average Annual Borrowing",
+      "equation": "7500",
+      "position": {
+        "x": 200,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-interest-rate",
+      "name": "Interest Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 230
+      }
+    },
+    {
+      "id": "var-average-debt-at-graduation",
+      "name": "Average Debt at Graduation",
+      "equation": "30000",
+      "position": {
+        "x": 350,
+        "y": 180
+      }
+    },
+    {
+      "id": "var-repayment-rate",
+      "name": "Repayment Rate",
+      "equation": "0.08",
+      "position": {
+        "x": 600,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-default-rate",
+      "name": "Default Rate",
+      "equation": "0.11",
+      "position": {
+        "x": 450,
+        "y": 430
+      }
+    },
+    {
+      "id": "var-economic-stress-factor",
+      "name": "Economic Stress Factor",
+      "equation": "1.0",
+      "position": {
+        "x": 550,
+        "y": 430
+      }
+    },
+    {
+      "id": "var-recovery-rate",
+      "name": "Recovery Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 400,
+        "y": 430
+      }
+    },
+    {
+      "id": "var-forgiveness-rate",
+      "name": "Forgiveness Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-debt-to-income-ratio",
+      "name": "Debt to Income Ratio",
+      "equation": "Total_Outstanding_Debt / (Graduates_with_Debt * 45000)",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "College Age Population",
+      "to_element": "New Enrollment"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "College Going Rate",
+      "to_element": "New Enrollment"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Enrolled Students",
+      "to_element": "Graduation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Graduation Rate",
+      "to_element": "Graduation"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Enrolled Students",
+      "to_element": "New Borrowing"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Borrowing Rate",
+      "to_element": "New Borrowing"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Total Outstanding Debt",
+      "to_element": "Interest Accrual"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Interest Rate",
+      "to_element": "Interest Accrual"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Debt in Repayment",
+      "to_element": "Default"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Default Rate",
+      "to_element": "Default"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Economic Stress Factor",
+      "to_element": "Default"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2050,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

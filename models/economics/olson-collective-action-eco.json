@@ -1,0 +1,178 @@
+{
+  "id": "olson-collective-action-eco",
+  "name": "Olson Collective Action",
+  "description": "Mancur Olson's 1965 logic of collective action showing why rational individuals may not act to achieve common interests without selective incentives. Reference: May, R. M. (1976). Simple mathematical models with very complicated dynamics. Nature, 261(5560), 459-467. DOI: https://doi.org/10.1038/261459a0",
+  "stocks": [
+    {
+      "id": "stock-contrib",
+      "name": "Total_Contributions",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-public",
+      "name": "Public_Good",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-contrib",
+      "name": "Contributing",
+      "equation": "group_size * individual_contribution * contribution_rate",
+      "from_stock": null,
+      "to_stock": "stock-contrib",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-production",
+      "name": "Good_Production",
+      "equation": "production_function * Total_Contributions",
+      "from_stock": null,
+      "to_stock": "stock-public",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-deprec",
+      "name": "Depreciation",
+      "equation": "Public_Good * depreciation_rate",
+      "from_stock": "stock-public",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-size",
+      "name": "group_size",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-indiv-contrib",
+      "name": "individual_contribution",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cost",
+      "name": "contribution_cost",
+      "equation": "5",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-share",
+      "name": "individual_share",
+      "equation": "Public_Good / group_size",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-benefit",
+      "name": "marginal_benefit",
+      "equation": "production_function / group_size",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-contrib-rate",
+      "name": "contribution_rate",
+      "equation": "MAX(0, (individual_share - contribution_cost) / individual_share) * (selective_incentive / contribution_cost)",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-selective",
+      "name": "selective_incentive",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-prod",
+      "name": "production_function",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-deprec",
+      "name": "depreciation_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-free-rider",
+      "name": "Free_Rider_Fraction",
+      "equation": "1 - contribution_rate",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "group_size",
+      "to_element": "individual_share"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Public_Good",
+      "to_element": "individual_share"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "individual_share",
+      "to_element": "contribution_rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "source": "https://www.hup.harvard.edu/catalog.php?isbn=9780674537514",
+  "reference": "Olson M. The Logic of Collective Action: Public Goods and the Theory of Groups. Harvard University Press; 1965."
+}

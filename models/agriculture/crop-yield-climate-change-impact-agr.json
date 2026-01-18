@@ -1,0 +1,304 @@
+{
+  "id": "crop-yield-climate-change-impact-agr",
+  "name": "Crop Yield Under Climate Change Impact",
+  "description": "Model of agricultural productivity changes due to temperature, precipitation, and CO2 effects. Based on IPCC AR6 WGII agricultural impacts. Reference: IPCC (2021). Climate Change 2021: The Physical Science Basis. Cambridge University Press. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Soil Fertility",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Soil Moisture",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Crop Biomass",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Pest Pressure",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Fertility Depletion",
+      "equation": "Crop_Growth * Nutrient_Uptake_Rate",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Fertilizer Application",
+      "equation": "Fertilizer_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Precipitation",
+      "equation": "Base_Precipitation * (1 + Climate_Precip_Change)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Evapotranspiration",
+      "equation": "Soil_Moisture * ET_Rate * Temperature_Effect",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Crop Growth",
+      "equation": "Growth_Rate * Soil_Fertility / 100 * Water_Stress_Effect * Temperature_Growth_Effect * CO2_Fertilization",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Pest Damage",
+      "equation": "Crop_Biomass * Pest_Pressure / 100 * Pest_Damage_Rate",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Pest Increase",
+      "equation": "Pest_Pressure * Pest_Growth_Rate * Temperature_Pest_Effect",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "f8",
+      "name": "Natural Pest Control",
+      "equation": "Pest_Pressure * Natural_Control_Rate",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Temperature Anomaly",
+      "equation": "1.5 + 0.03 * TIME",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Climate Precip Change",
+      "equation": "-0.1 + 0.2 * SIN(TIME / 10)",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Temperature Effect",
+      "equation": "1 + 0.1 * Temperature_Anomaly",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Temperature Growth Effect",
+      "equation": "IF(Temperature_Anomaly < 2, 1 + 0.05 * Temperature_Anomaly, 1.1 - 0.1 * (Temperature_Anomaly - 2))",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Water Stress Effect",
+      "equation": "MIN(1, Soil_Moisture / 30)",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "v6",
+      "name": "CO2 Fertilization",
+      "equation": "1 + 0.3 * LOG(1 + 0.01 * TIME)",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Temperature Pest Effect",
+      "equation": "1 + 0.15 * Temperature_Anomaly",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Growth Rate",
+      "equation": "5",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Base Precipitation",
+      "equation": "10",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v10",
+      "name": "ET Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Nutrient Uptake Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Fertilizer Rate",
+      "equation": "1",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Pest Damage Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Pest Growth Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "v15",
+      "name": "Natural Control Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "v16",
+      "name": "Yield Index",
+      "equation": "Crop_Biomass / (100 + TIME)",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Soil Fertility",
+      "to_element": "Crop Growth"
+    },
+    {
+      "id": "c2",
+      "from_element": "Soil Moisture",
+      "to_element": "Water Stress Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:24:00.388717",
+  "updated_at": "2026-01-15T14:24:00.388802",
+  "source": "https://doi.org/10.1017/9781009325844",
+  "reference": "IPCC. Climate Change 2022: Impacts, Adaptation and Vulnerability. Working Group II Contribution to AR6. Cambridge University Press. 2022."
+}

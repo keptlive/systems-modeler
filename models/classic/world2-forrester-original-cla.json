@@ -1,0 +1,411 @@
+{
+  "id": "world2-forrester-original-cla",
+  "name": "World2 Forrester Original Model",
+  "description": "Jay Forrester's original WORLD2 model from 1971. A five-sector global model examining interactions between population, capital investment, natural resources, pollution, and quality of life. Reference: Forrester, J. W. (1961). Industrial Dynamics. MIT Press. Source: https://systemdynamics.org/",
+  "source": "https://mitpress.mit.edu/9780262560047/world-dynamics/",
+  "reference": "Forrester, J.W. (1971). World Dynamics. Wright-Allen Press/MIT Press. Cambridge, MA.",
+  "stocks": [
+    {
+      "id": "stock-pop",
+      "name": "Population",
+      "initial_value": 1650000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-capital",
+      "name": "Capital Investment",
+      "initial_value": 400000000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-resources",
+      "name": "Natural Resources",
+      "initial_value": 900000000000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-pollution",
+      "name": "Pollution",
+      "initial_value": 200000000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-agric-frac",
+      "name": "Capital in Agriculture Fraction",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-births",
+      "name": "Birth Rate",
+      "equation": "Population * Birth_Rate_Normal * Birth_Rate_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-pop",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-deaths",
+      "name": "Death Rate",
+      "equation": "Population * Death_Rate_Normal * Death_Rate_Multiplier",
+      "from_stock": "stock-pop",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-capital-gen",
+      "name": "Capital Generation",
+      "equation": "Population * Capital_Generation_Normal * Capital_Generation_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-capital",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-depreciation",
+      "name": "Capital Depreciation",
+      "equation": "Capital_Investment / Capital_Normal_Lifetime",
+      "from_stock": "stock-capital",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-resource-use",
+      "name": "Resource Usage",
+      "equation": "Population * Resource_Usage_Normal * Resource_Usage_Multiplier",
+      "from_stock": "stock-resources",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-pollution-gen",
+      "name": "Pollution Generation",
+      "equation": "Population * Pollution_Normal * Pollution_Generation_Multiplier",
+      "from_stock": null,
+      "to_stock": "stock-pollution",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-pollution-absorb",
+      "name": "Pollution Absorption",
+      "equation": "Pollution / Pollution_Absorption_Time",
+      "from_stock": "stock-pollution",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-agric-adjust",
+      "name": "Agriculture Adjustment",
+      "equation": "(Desired_Agric_Fraction - Capital_in_Agriculture_Fraction) / Agric_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-agric-frac",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-brn",
+      "name": "Birth Rate Normal",
+      "equation": "0.04",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-brm",
+      "name": "Birth Rate Multiplier",
+      "equation": "BRM_Material * BRM_Crowding * BRM_Food * BRM_Pollution",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-brm-mat",
+      "name": "BRM Material",
+      "equation": "1.2 - 0.8 * Material_Standard_of_Living / 5",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-brm-crowd",
+      "name": "BRM Crowding",
+      "equation": "1 - 0.5 * Crowding_Ratio",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-brm-food",
+      "name": "BRM Food",
+      "equation": "1 + 0.2 * (Food_Ratio - 1)",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-brm-poll",
+      "name": "BRM Pollution",
+      "equation": "1 - 0.3 * Pollution_Ratio",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-drn",
+      "name": "Death Rate Normal",
+      "equation": "0.028",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-drm",
+      "name": "Death Rate Multiplier",
+      "equation": "DRM_Material * DRM_Crowding * DRM_Food * DRM_Pollution",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-drm-mat",
+      "name": "DRM Material",
+      "equation": "0.6 + 0.4 / (Material_Standard_of_Living + 0.1)",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-drm-crowd",
+      "name": "DRM Crowding",
+      "equation": "1 + 0.5 * Crowding_Ratio",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-drm-food",
+      "name": "DRM Food",
+      "equation": "1 / (Food_Ratio + 0.1)",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-drm-poll",
+      "name": "DRM Pollution",
+      "equation": "1 + 0.5 * Pollution_Ratio",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-cgn",
+      "name": "Capital Generation Normal",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-cgm",
+      "name": "Capital Generation Multiplier",
+      "equation": "1",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cnl",
+      "name": "Capital Normal Lifetime",
+      "equation": "40",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-run",
+      "name": "Resource Usage Normal",
+      "equation": "1",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-rum",
+      "name": "Resource Usage Multiplier",
+      "equation": "Material_Standard_of_Living",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-pn",
+      "name": "Pollution Normal",
+      "equation": "1",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-pgm",
+      "name": "Pollution Generation Multiplier",
+      "equation": "Material_Standard_of_Living",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-pat",
+      "name": "Pollution Absorption Time",
+      "equation": "100",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-msol",
+      "name": "Material Standard of Living",
+      "equation": "Capital_Investment / Population / 0.2",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-food-ratio",
+      "name": "Food Ratio",
+      "equation": "Capital_Investment * Capital_in_Agriculture_Fraction / Population / 0.1",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-crowd",
+      "name": "Crowding Ratio",
+      "equation": "Population / 3700000000",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-poll-ratio",
+      "name": "Pollution Ratio",
+      "equation": "Pollution / 350000000",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-res-ratio",
+      "name": "Resource Ratio",
+      "equation": "Natural_Resources / 900000000000",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-qol",
+      "name": "Quality of Life",
+      "equation": "(Material_Standard_of_Living * Food_Ratio) / ((Crowding_Ratio + 0.1) * (Pollution_Ratio + 0.1))",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-desired-agric",
+      "name": "Desired Agric Fraction",
+      "equation": "0.3 - 0.1 * Food_Ratio",
+      "position": {
+        "x": 50,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-agric-adj-time",
+      "name": "Agric Adjustment Time",
+      "equation": "15",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 1900,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T03:11:09.889436+00:00",
+  "updated_at": "2026-01-12T03:11:09.889436+00:00"
+}

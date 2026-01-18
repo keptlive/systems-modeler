@@ -1,0 +1,192 @@
+{
+  "id": "olson-collective-action-soc",
+  "name": "Olson Collective Action Model",
+  "description": "Mancur Olson's (1965) logic of collective action. Models free-rider problem and why large groups struggle to organize for common interests despite shared benefits. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Participants",
+      "initial_value": 10,
+      "position": {
+        "x": 200,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s2",
+      "name": "Public_Good_Level",
+      "initial_value": 5,
+      "position": {
+        "x": 400,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s3",
+      "name": "Organization_Strength",
+      "initial_value": 1,
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "equation": ""
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "joining",
+      "to_stock": "s1",
+      "equation": "potential_members * join_probability",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f2",
+      "name": "leaving",
+      "from_stock": "s1",
+      "equation": "Participants * exit_rate",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f3",
+      "name": "provision",
+      "to_stock": "s2",
+      "equation": "Participants * contribution_per_member",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f4",
+      "name": "depreciation",
+      "from_stock": "s2",
+      "equation": "Public_Good_Level * decay_rate",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "group_size",
+      "equation": "1000",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v2",
+      "name": "potential_members",
+      "equation": "group_size - Participants",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v3",
+      "name": "individual_benefit",
+      "equation": "Public_Good_Level / group_size",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v4",
+      "name": "participation_cost",
+      "equation": "1",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v5",
+      "name": "net_benefit",
+      "equation": "individual_benefit - participation_cost",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v6",
+      "name": "join_probability",
+      "equation": "MAX(0, selective_incentives + net_benefit) * 0.1",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v7",
+      "name": "selective_incentives",
+      "equation": "Organization_Strength * 0.5",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v8",
+      "name": "exit_rate",
+      "equation": "0.1 * (1 - MIN(1, net_benefit))",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v9",
+      "name": "contribution_per_member",
+      "equation": "0.5",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v10",
+      "name": "decay_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "join_probability",
+      "to_element": "joining"
+    },
+    {
+      "id": "c2",
+      "from_element": "exit_rate",
+      "to_element": "leaving"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "dt": 1,
+    "end": 100
+  },
+  "created_at": "2026-01-12T02:25:30.586819+00:00",
+  "updated_at": "2026-01-12T02:25:30.586822+00:00",
+  "source": "https://www.hup.harvard.edu/catalog.php?isbn=9780674537514",
+  "reference": "Olson, M. (1965). The Logic of Collective Action: Public Goods and the Theory of Groups. Harvard University Press."
+}

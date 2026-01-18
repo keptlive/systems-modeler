@@ -1,0 +1,135 @@
+{
+  "id": "success-to-successful-archetype-edu",
+  "name": "Success to the Successful Archetype",
+  "description": "Initial advantages lead to cumulative advantage over competitors. Matthew effect in systems. Source: Senge (1990), The Fifth Discipline. DOI: 10.1108/eb025496",
+  "stocks": [
+    {
+      "id": "stock-a",
+      "name": "Actor_A_Resources",
+      "initial_value": 55,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-b",
+      "name": "Actor_B_Resources",
+      "initial_value": 45,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-pool",
+      "name": "Resource_Pool",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-agrow",
+      "name": "A_Resource_Gain",
+      "equation": "Resource_Pool * Allocation_Rate * A_Share",
+      "from_stock": "stock-pool",
+      "to_stock": "stock-a",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-bgrow",
+      "name": "B_Resource_Gain",
+      "equation": "Resource_Pool * Allocation_Rate * B_Share",
+      "from_stock": "stock-pool",
+      "to_stock": "stock-b",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-poolregen",
+      "name": "Pool_Regeneration",
+      "equation": "Pool_Regen_Rate",
+      "from_stock": null,
+      "to_stock": "stock-pool",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-alloc",
+      "name": "Allocation_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-ashare",
+      "name": "A_Share",
+      "equation": "Actor_A_Resources / (Actor_A_Resources + Actor_B_Resources)",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-bshare",
+      "name": "B_Share",
+      "equation": "Actor_B_Resources / (Actor_A_Resources + Actor_B_Resources)",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-poolregen",
+      "name": "Pool_Regen_Rate",
+      "equation": "10",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-inequality",
+      "name": "Inequality_Index",
+      "equation": "ABS(Actor_A_Resources - Actor_B_Resources) / (Actor_A_Resources + Actor_B_Resources)",
+      "position": {
+        "x": 300,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Actor_A_Resources",
+      "to_element": "A_Share"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:13:18.795741+00:00",
+  "updated_at": "2026-01-12T02:13:18.795744+00:00",
+  "source": "https://doi.org/10.1108/eb025496",
+  "reference": "Senge, P.M. (1990). The Fifth Discipline: The Art and Practice of the Learning Organization."
+}

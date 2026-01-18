@@ -1,0 +1,177 @@
+{
+  "id": "ai-labor-market-disruption-eco",
+  "name": "AI Labor Market Disruption Model",
+  "description": "Model of AI and automation impact on employment, wages, and skill requirements. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Routine_Jobs",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Non_Routine_Jobs",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "AI_Capability",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Routine_Automation",
+      "equation": "Automation_Rate * Routine_Jobs * AI_Capability",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "f2",
+      "name": "New_Routine_Jobs",
+      "equation": "Job_Creation_Rate * (1 - AI_Capability)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Non_Routine_Growth",
+      "equation": "Non_Routine_Creation_Rate * AI_Complementarity",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "AI_Progress",
+      "equation": "AI_Development_Rate * (1 - AI_Capability) * R_D_Investment",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Automation_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Job_Creation_Rate",
+      "equation": "1",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Non_Routine_Creation_Rate",
+      "equation": "1.5",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "AI_Complementarity",
+      "equation": "0.5 + 0.5 * AI_Capability",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "AI_Development_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "R_D_Investment",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Total_Employment",
+      "equation": "Routine_Jobs + Non_Routine_Jobs",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Wage_Premium_NonRoutine",
+      "equation": "1 + 0.5 * AI_Capability",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Skill_Gap",
+      "equation": "AI_Capability - 0.5 * (Non_Routine_Jobs / Total_Employment)",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.5,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:29:23.539634+00:00",
+  "updated_at": "2026-01-12T11:29:23.539634+00:00",
+  "source": "https://doi.org/10.1257/jel.20191679",
+  "reference": "Acemoglu D, Restrepo P. Artificial intelligence, automation, and work. In: The Economics of Artificial Intelligence. NBER; 2019."
+}

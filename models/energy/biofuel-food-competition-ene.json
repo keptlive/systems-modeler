@@ -1,0 +1,148 @@
+{
+  "id": "biofuel-food-competition-ene",
+  "name": "Biofuel Production and Food Competition",
+  "description": "Models the competition between biofuel production and food crops for agricultural land. Based on Searchinger et al. (2008) Use of U.S. Croplands for Biofuels, Science. Reference: FAO Crop Production Statistics. Source: https://www.fao.org/faostat/",
+  "category": "energy",
+  "stocks": [
+    {
+      "id": "stock-food",
+      "name": "Food_Crop_Area_Mha",
+      "initial_value": 150,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-biofuel",
+      "name": "Biofuel_Crop_Area_Mha",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-price",
+      "name": "Food_Price_Index",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-convert",
+      "name": "Land_Conversion",
+      "equation": "IF(Biofuel_Price > Break_Even, Conversion_Rate * Food_Crop_Area_Mha, 0)",
+      "from_stock": "stock-food",
+      "to_stock": "stock-biofuel",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-revert",
+      "name": "Land_Reversion",
+      "equation": "IF(Food_Price_Index > 150, Biofuel_Crop_Area_Mha * Reversion_Rate, 0)",
+      "from_stock": "stock-biofuel",
+      "to_stock": "stock-food",
+      "position": {
+        "x": 300,
+        "y": 280
+      }
+    },
+    {
+      "id": "flow-price-up",
+      "name": "Price_Increase",
+      "equation": "(Demand_Pressure - Food_Price_Index) / Price_Adjust_Time",
+      "from_stock": null,
+      "to_stock": "stock-price",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-biofuel-price",
+      "name": "Biofuel_Price",
+      "equation": "50 + Mandate_Support",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-mandate",
+      "name": "Mandate_Support",
+      "equation": "30",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-break",
+      "name": "Break_Even",
+      "equation": "60",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-conv-rate",
+      "name": "Conversion_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-revert-rate",
+      "name": "Reversion_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Demand_Pressure",
+      "equation": "100 * (160 / Food_Crop_Area_Mha)^0.5",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-adj-time",
+      "name": "Price_Adjust_Time",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1126/science.1151861",
+  "reference": "Searchinger T et al. (2008) Use of U.S. Croplands for Biofuels Increases Greenhouse Gases Through Emissions from Land-Use Change. Science 319(5867):1238-1240.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:28:32.560951+00:00",
+  "updated_at": "2026-01-12T06:28:32.560951+00:00"
+}

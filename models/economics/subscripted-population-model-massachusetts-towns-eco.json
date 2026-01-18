@@ -1,0 +1,80 @@
+{
+  "id": "subscripted-population-model-massachusetts-towns-eco",
+  "name": "Subscripted Population Model (Massachusetts Towns)",
+  "description": "A multi-region population model demonstrating array/subscript capabilities using Massachusetts town data. Models birth and death dynamics across 351 towns with individual initial populations. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-population",
+      "name": "Population",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-births",
+      "name": "Births",
+      "equation": "Birthrate[Towns] * Population[Towns]",
+      "from_stock": null,
+      "to_stock": "stock-population",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-deaths",
+      "name": "Deaths",
+      "equation": "DELAY(Births[Towns], Lifespan, Population[Towns]/Lifespan, 8)",
+      "from_stock": "stock-population",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-birthrate",
+      "name": "Birthrate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-lifespan",
+      "name": "Lifespan",
+      "equation": "70",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-population",
+      "name": "Initial Population",
+      "equation": "[15985, 21924, 10303, ...]",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.745066Z",
+  "updated_at": "2026-01-11T20:04:50.745066Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

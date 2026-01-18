@@ -1,0 +1,401 @@
+{
+  "id": "social-media-viral-spread-soc",
+  "name": "Social Media Viral Spread Model",
+  "description": "A system dynamics model of viral content spread on social media platforms. Based on epidemic-like diffusion models, it captures how content spreads through shares, engagement decay, and platform algorithm effects. Reference: WHO Disease Outbreak Information. Source: https://www.who.int/",
+  "stocks": [
+    {
+      "id": "stock-unaware",
+      "name": "Unaware Users",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-exposed",
+      "name": "Exposed Users",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-engaged",
+      "name": "Engaged Users",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-sharers",
+      "name": "Active Sharers",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-disengaged",
+      "name": "Disengaged Users",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 225
+      }
+    },
+    {
+      "id": "stock-content-quality",
+      "name": "Perceived Content Quality",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "stock-algorithm-boost",
+      "name": "Algorithm Boost",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-exposure",
+      "name": "Exposure Rate",
+      "equation": "Unaware_Users * (Share_Exposure_Rate + Algorithm_Exposure) * Algorithm_Boost",
+      "from_stock": "stock-unaware",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-engagement",
+      "name": "Engagement Rate",
+      "equation": "Exposed_Users * Engagement_Probability * Quality_Effect",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-engaged",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-sharing",
+      "name": "Sharing Rate",
+      "equation": "Engaged_Users * Share_Probability * Virality_Factor",
+      "from_stock": "stock-engaged",
+      "to_stock": "stock-sharers",
+      "position": {
+        "x": 500,
+        "y": 225
+      }
+    },
+    {
+      "id": "flow-share-decay",
+      "name": "Share Decay",
+      "equation": "Active_Sharers / Sharing_Duration",
+      "from_stock": "stock-sharers",
+      "to_stock": "stock-disengaged",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-engagement-decay",
+      "name": "Engagement Decay",
+      "equation": "Engaged_Users / Engagement_Half_Life",
+      "from_stock": "stock-engaged",
+      "to_stock": "stock-disengaged",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-exposure-skip",
+      "name": "Exposure Skip",
+      "equation": "Exposed_Users * (1 - Engagement_Probability)",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-disengaged",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-quality-decay",
+      "name": "Quality Decay",
+      "equation": "Perceived_Content_Quality * Novelty_Decay_Rate",
+      "from_stock": "stock-content-quality",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-algorithm-update",
+      "name": "Algorithm Update",
+      "equation": "(Target_Boost - Algorithm_Boost) / Algorithm_Response_Time",
+      "from_stock": null,
+      "to_stock": "stock-algorithm-boost",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-users",
+      "name": "Total Platform Users",
+      "equation": "Unaware_Users + Exposed_Users + Engaged_Users + Active_Sharers + Disengaged_Users",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-share-exposure",
+      "name": "Share Exposure Rate",
+      "equation": "Active_Sharers / Total_Platform_Users * Network_Reach",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-network-reach",
+      "name": "Network Reach",
+      "equation": "500",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-algorithm-exposure",
+      "name": "Algorithm Exposure",
+      "equation": "Base_Organic_Reach * (Engaged_Users + Active_Sharers) / 1000",
+      "position": {
+        "x": 600,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-base-organic",
+      "name": "Base Organic Reach",
+      "equation": "0.001",
+      "position": {
+        "x": 750,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-engagement-prob",
+      "name": "Engagement Probability",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-quality-effect",
+      "name": "Quality Effect",
+      "equation": "Perceived_Content_Quality / 80",
+      "position": {
+        "x": 200,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-share-prob",
+      "name": "Share Probability",
+      "equation": "0.2",
+      "position": {
+        "x": 300,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-virality-factor",
+      "name": "Virality Factor",
+      "equation": "1 + Emotional_Intensity * 0.5 + Controversy_Level * 0.3",
+      "position": {
+        "x": 400,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-emotional-intensity",
+      "name": "Emotional Intensity",
+      "equation": "0.7",
+      "position": {
+        "x": 500,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-controversy",
+      "name": "Controversy Level",
+      "equation": "0.3",
+      "position": {
+        "x": 600,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-sharing-duration",
+      "name": "Sharing Duration",
+      "equation": "1",
+      "position": {
+        "x": 700,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-engagement-halflife",
+      "name": "Engagement Half Life",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-novelty-decay",
+      "name": "Novelty Decay Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-target-boost",
+      "name": "Target Boost",
+      "equation": "1 + (Engagement_Velocity / 1000) * 2",
+      "position": {
+        "x": 300,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-engagement-velocity",
+      "name": "Engagement Velocity",
+      "equation": "Engagement_Rate + Sharing_Rate",
+      "position": {
+        "x": 400,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-algorithm-response",
+      "name": "Algorithm Response Time",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-reach-percentage",
+      "name": "Reach Percentage",
+      "equation": "(Exposed_Users + Engaged_Users + Active_Sharers + Disengaged_Users) / Total_Platform_Users * 100",
+      "position": {
+        "x": 600,
+        "y": 600
+      }
+    },
+    {
+      "id": "var-viral-coefficient",
+      "name": "Viral Coefficient",
+      "equation": "Share_Exposure_Rate * Engagement_Probability * Share_Probability * Sharing_Duration",
+      "position": {
+        "x": 700,
+        "y": 600
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Unaware Users",
+      "to_element": "Exposure Rate"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Active Sharers",
+      "to_element": "Share Exposure Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Algorithm Boost",
+      "to_element": "Exposure Rate"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Exposed Users",
+      "to_element": "Engagement Rate"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Quality Effect",
+      "to_element": "Engagement Rate"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Engaged Users",
+      "to_element": "Sharing Rate"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Virality Factor",
+      "to_element": "Sharing Rate"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Perceived Content Quality",
+      "to_element": "Quality Effect"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Engagement Velocity",
+      "to_element": "Target Boost"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Target Boost",
+      "to_element": "Algorithm Update"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 14,
+    "dt": 0.0625
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

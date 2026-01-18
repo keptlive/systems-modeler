@@ -1,0 +1,188 @@
+{
+  "id": "space-debris-cascade-phy",
+  "name": "Space Debris Cascade (Kessler Syndrome) Model",
+  "description": "Model of orbital debris accumulation showing collision cascades and mitigation strategies. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Active_Satellites",
+      "initial_value": 3000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Debris_Objects",
+      "initial_value": 30000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Debris_Removed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Launches",
+      "equation": "Launch_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Satellite_Destruction",
+      "equation": "Collision_Rate * Active_Satellites",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Debris_Creation",
+      "equation": "Collision_Fragments + Explosion_Debris",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Natural_Decay",
+      "equation": "Debris_Objects * Decay_Rate",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Active_Removal",
+      "equation": "Removal_Capacity * Removal_Efficiency",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 425,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Launch_Rate",
+      "equation": "200",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Collision_Rate",
+      "equation": "0.0001 * Debris_Objects / 10000",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Collision_Fragments",
+      "equation": "Satellite_Destruction * 500",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Explosion_Debris",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Decay_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Removal_Capacity",
+      "equation": "10",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Removal_Efficiency",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Collision_Risk",
+      "equation": "Debris_Objects / Active_Satellites",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Kessler_Threshold",
+      "equation": "100000",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:34:23.558588+00:00",
+  "updated_at": "2026-01-12T11:34:23.558588+00:00",
+  "source": "https://doi.org/10.1016/j.asr.2012.01.001",
+  "reference": "Kessler DJ, Cour-Palais BG. Collision frequency of artificial satellites: The creation of a debris belt. Journal of Geophysical Research. 1978;83(A6):2637-2646."
+}

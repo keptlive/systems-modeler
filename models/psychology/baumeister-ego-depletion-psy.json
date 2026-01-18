@@ -1,0 +1,34 @@
+{
+  "id": "baumeister-ego-depletion-psy",
+  "name": "Baumeister Ego Depletion Model",
+  "description": "Roy Baumeister's model of self-control as a limited resource that depletes with use and recovers over time. High self-control demands drain willpower, reducing subsequent self-control capacity until restored through rest or positive affect.",
+  "stocks": [
+    {"id": "stock-self-control-resource", "name": "Self Control Resource", "initial_value": 100, "equation": "", "position": {"x": 300, "y": 200}},
+    {"id": "stock-accumulated-fatigue", "name": "Accumulated Fatigue", "initial_value": 0, "equation": "", "position": {"x": 550, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-resource-depletion", "name": "Resource Depletion", "equation": "Self_Control_Demand * Depletion_Rate", "from_stock": "stock-self-control-resource", "to_stock": null, "position": {"x": 200, "y": 200}},
+    {"id": "flow-resource-recovery", "name": "Resource Recovery", "equation": "(Max_Resource - Self_Control_Resource) * Recovery_Rate * Recovery_Multiplier", "from_stock": null, "to_stock": "stock-self-control-resource", "position": {"x": 400, "y": 200}},
+    {"id": "flow-fatigue-accumulation", "name": "Fatigue Accumulation", "equation": "Self_Control_Demand * Fatigue_Rate", "from_stock": null, "to_stock": "stock-accumulated-fatigue", "position": {"x": 450, "y": 200}},
+    {"id": "flow-fatigue-decay", "name": "Fatigue Decay", "equation": "Accumulated_Fatigue * Fatigue_Decay_Rate", "from_stock": "stock-accumulated-fatigue", "to_stock": null, "position": {"x": 650, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-task-demands", "name": "Task Demands", "equation": "50", "position": {"x": 200, "y": 100}},
+    {"id": "var-temptation-level", "name": "Temptation Level", "equation": "30", "position": {"x": 400, "y": 100}},
+    {"id": "var-self-control-demand", "name": "Self Control Demand", "equation": "Task_Demands + Temptation_Level", "position": {"x": 600, "y": 100}},
+    {"id": "var-available-self-control", "name": "Available Self Control", "equation": "Self_Control_Resource * (1 - Accumulated_Fatigue / 100)", "position": {"x": 200, "y": 300}},
+    {"id": "var-self-control-success", "name": "Self Control Success", "equation": "MIN(1, Available_Self_Control / Self_Control_Demand)", "position": {"x": 450, "y": 300}},
+    {"id": "var-depletion-rate", "name": "Depletion Rate", "equation": "0.02", "position": {"x": 150, "y": 380}},
+    {"id": "var-recovery-rate", "name": "Recovery Rate", "equation": "0.01", "position": {"x": 300, "y": 380}},
+    {"id": "var-max-resource", "name": "Max Resource", "equation": "100", "position": {"x": 450, "y": 380}},
+    {"id": "var-positive-affect", "name": "Positive Affect", "equation": "50", "position": {"x": 600, "y": 380}},
+    {"id": "var-recovery-multiplier", "name": "Recovery Multiplier", "equation": "1 + Positive_Affect / 100", "position": {"x": 200, "y": 450}},
+    {"id": "var-fatigue-rate", "name": "Fatigue Rate", "equation": "0.01", "position": {"x": 400, "y": 450}},
+    {"id": "var-fatigue-decay-rate", "name": "Fatigue Decay Rate", "equation": "0.02", "position": {"x": 600, "y": 450}},
+    {"id": "var-impulsive-behavior-risk", "name": "Impulsive Behavior Risk", "equation": "100 * (1 - Self_Control_Success)", "position": {"x": 350, "y": 520}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.5},
+  "source": "https://doi.org/10.1037/0033-2909.126.2.247",
+  "reference": "Baumeister RF et al. Ego Depletion: Is the Active Self a Limited Resource? Journal of Personality and Social Psychology. 1998;74(5):1252-1265."
+}

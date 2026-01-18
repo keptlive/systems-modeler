@@ -1,0 +1,123 @@
+{
+  "id": "solar-pv-experience-curve-ene",
+  "name": "Solar PV Learning Curve Model",
+  "description": "Model of solar PV cost reduction through learning-by-doing. Source: Rubin et al. (2015), Energy Policy. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Cumulative_Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Cost_Per_Watt",
+      "initial_value": 3,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Capacity_Addition",
+      "equation": "Annual_Installation",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Cost_Reduction",
+      "equation": "-Learning_Effect * Cost_Per_Watt",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Growth_Rate",
+      "equation": "0.25",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Learning_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "b",
+      "equation": "-LN(1 - Learning_Rate) / LN(2)",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Annual_Installation",
+      "equation": "Growth_Rate * Cumulative_Capacity",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Learning_Effect",
+      "equation": "b * Annual_Installation / Cumulative_Capacity",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "LCOE",
+      "equation": "Cost_Per_Watt * 0.1 + 0.01",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Cumulative_Capacity",
+      "to_element": "Learning_Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:44:54.461028+00:00",
+  "updated_at": "2026-01-15T14:44:54.461032+00:00",
+  "source": "https://doi.org/10.1016/j.enpol.2015.01.011",
+  "reference": "Rubin, E.S. et al. (2015). A review of learning rates for electricity supply technologies. Energy Policy 86:198-218."
+}

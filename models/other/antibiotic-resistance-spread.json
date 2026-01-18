@@ -1,0 +1,208 @@
+{
+  "id": "antibiotic-resistance-spread",
+  "name": "Antibiotic Resistance Spread Model",
+  "description": "Model of antibiotic resistance evolution and spread in bacterial populations.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Susceptible_Bacteria",
+      "initial_value": 900000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Resistant_Bacteria",
+      "initial_value": 100000000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Infected_Susceptible",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Infected_Resistant",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Susceptible_Growth",
+      "equation": "Susceptible_Bacteria * Growth_Rate * (1 - Total_Bacteria / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "Susceptible_Bacteria",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Susceptible_Death",
+      "equation": "Susceptible_Bacteria * (Natural_Death + Antibiotic_Kill_Rate * Antibiotic_Use)",
+      "from_stock": "Susceptible_Bacteria",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Resistance_Evolution",
+      "equation": "Susceptible_Bacteria * Mutation_Rate * Antibiotic_Use",
+      "from_stock": "Susceptible_Bacteria",
+      "to_stock": "Resistant_Bacteria",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Resistant_Growth",
+      "equation": "Resistant_Bacteria * Growth_Rate * (1 - Total_Bacteria / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "Resistant_Bacteria",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Resistant_Death",
+      "equation": "Resistant_Bacteria * Natural_Death",
+      "from_stock": "Resistant_Bacteria",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Horizontal_Transfer",
+      "equation": "Susceptible_Bacteria * Resistant_Bacteria * Transfer_Rate / Total_Bacteria",
+      "from_stock": "Susceptible_Bacteria",
+      "to_stock": "Resistant_Bacteria",
+      "position": {
+        "x": 300,
+        "y": 275
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Growth_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Carrying_Capacity",
+      "equation": "2000000000",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Natural_Death",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Antibiotic_Use",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Antibiotic_Kill_Rate",
+      "equation": "0.8",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Mutation_Rate",
+      "equation": "0.00001",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Transfer_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Total_Bacteria",
+      "equation": "Susceptible_Bacteria + Resistant_Bacteria",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Resistance_Fraction",
+      "equation": "Resistant_Bacteria / Total_Bacteria",
+      "position": {
+        "x": 450,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "source": "https://doi.org/10.1016/S0140-6736(21)02724-0",
+  "reference": "Murray, C.J.L., et al. (2022). Global burden of bacterial antimicrobial resistance. Lancet, 399(10325), 629-655. DOI: 10.1016/S0140-6736(21)02724-0",
+  "created_at": "2026-01-15T19:26:14.001716+00:00",
+  "updated_at": "2026-01-15T19:26:14.001716+00:00"
+}

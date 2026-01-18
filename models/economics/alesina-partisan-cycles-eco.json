@@ -1,0 +1,160 @@
+{
+  "id": "alesina-partisan-cycles-eco",
+  "name": "Alesina Partisan Business Cycles",
+  "description": "Left and right parties have different Phillips curve preferences. Uncertainty about election outcomes creates cycles. More ideological polarization means larger cycles. Reference: Phillips, A. W. (1958). The relation between unemployment and the rate of change of money wage rates. Economica, 25(100), 283-299. DOI: https://doi.org/10.1111/j.1468-0335.1958.tb00003.x",
+  "stocks": [
+    {
+      "id": "stock-output-gap",
+      "name": "Output Gap",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-inflation",
+      "name": "Inflation",
+      "initial_value": 0.02,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-output-change",
+      "name": "Output Change",
+      "equation": "Policy_Surprise - Output_Gap / Persistence",
+      "from_stock": null,
+      "to_stock": "stock-output-gap",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-inflation-change",
+      "name": "Inflation Change",
+      "equation": "(Actual_Policy - Expected_Inflation) / 2",
+      "from_stock": null,
+      "to_stock": "stock-inflation",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-party-in-power",
+      "name": "Party in Power",
+      "equation": "IF(MOD(FLOOR(TIME / 4), 2) = 0, 1, -1)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-left-inflation",
+      "name": "Left Preferred Inflation",
+      "equation": "0.04",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-right-inflation",
+      "name": "Right Preferred Inflation",
+      "equation": "0.01",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-actual-policy",
+      "name": "Actual Policy",
+      "equation": "IF(Party_in_Power = 1, Left_Preferred_Inflation, Right_Preferred_Inflation)",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-expected-inflation",
+      "name": "Expected Inflation",
+      "equation": "0.5 * Left_Preferred_Inflation + 0.5 * Right_Preferred_Inflation",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-policy-surprise",
+      "name": "Policy Surprise",
+      "equation": "Actual_Policy - Expected_Inflation",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-persistence",
+      "name": "Persistence",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-polarization",
+      "name": "Polarization",
+      "equation": "Left_Preferred_Inflation - Right_Preferred_Inflation",
+      "position": {
+        "x": 350,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-cycle-amplitude",
+      "name": "Cycle Amplitude",
+      "equation": "ABS(Policy_Surprise) * Persistence",
+      "position": {
+        "x": 550,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Party in Power",
+      "to_element": "Actual Policy"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Policy Surprise",
+      "to_element": "Output Change"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Actual Policy",
+      "to_element": "Inflation Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:51:43.478366+00:00",
+  "updated_at": "2026-01-12T07:51:43.478370+00:00",
+  "source": "https://doi.org/10.1162/003355387X00065",
+  "reference": "Alesina A. Macroeconomic Policy in a Two-Party System as a Repeated Game. Quarterly Journal of Economics. 1987;102(3):651-678."
+}

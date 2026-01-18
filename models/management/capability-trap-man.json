@@ -1,0 +1,363 @@
+{
+  "id": "capability-trap-man",
+  "name": "Capability Trap",
+  "description": "A model demonstrating the 'capability trap' - a common management archetype where organizations sacrifice long-term capability for short-term performance. When faced with pressure, managers often 'work harder' rather than 'work smarter', reducing time spent on improvement activities. This creates a reinforcing feedback loop: reduced capability leads to lower performance, which increases pressure, further reducing improvement time. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "stock-capability",
+      "name": "Capability",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-pressure-to-do-work",
+      "name": "Pressure to Do Work",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-pressure-to-improve-capability",
+      "name": "Pressure to Improve Capability",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-investment-in-capability",
+      "name": "Investment in Capability",
+      "equation": "time_spent_on_improvement * capability_improvement_per_investment",
+      "from_stock": null,
+      "to_stock": "stock-capability",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-capability-erosion",
+      "name": "Capability Erosion",
+      "equation": "capability / erosion_timescale",
+      "from_stock": "stock-capability",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-change-in-pressure-to-do-work",
+      "name": "Change in Pressure to Do Work",
+      "equation": "(stretch - pressure_to_do_work) / work_harder_adjustment_time",
+      "from_stock": null,
+      "to_stock": "stock-pressure-to-do-work",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-change-in-pressure-to-improve-capability",
+      "name": "Change in Pressure to Improve Capability",
+      "equation": "(stretch - pressure_to_improve_capability) / improve_capability_adjustment_time + exogenous_capability_pressure",
+      "from_stock": null,
+      "to_stock": "stock-pressure-to-improve-capability",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-actual-performance",
+      "name": "Actual Performance",
+      "equation": "capability * time_spent_working",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-desired-performance",
+      "name": "Desired Performance",
+      "equation": "3000 + STEP(performance_step, 10)",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-stretch",
+      "name": "Stretch",
+      "equation": "desired_performance / actual_performance",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-time-spent-working",
+      "name": "Time Spent Working",
+      "equation": "MIN(normal_time_spent_working * LOOKUP(pressure_to_do_work, influence_of_pressure_on_work_time_table), maximum_work_time - time_spent_on_improvement)",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-time-spent-on-improvement",
+      "name": "Time Spent on Improvement",
+      "equation": "normal_time_spent_on_improvement * LOOKUP(pressure_to_improve_capability, influence_of_capability_pressure_table) * LOOKUP(pressure_to_do_work, influence_of_work_pressure_on_improvement_table)",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-normal-time-spent-working",
+      "name": "Normal Time Spent Working",
+      "equation": "30",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-normal-time-spent-on-improvement",
+      "name": "Normal Time Spent on Improvement",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-maximum-work-time",
+      "name": "Maximum Work Time",
+      "equation": "40",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-capability-improvement-per-investment",
+      "name": "Capability Improvement per Investment",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-erosion-timescale",
+      "name": "Erosion Timescale",
+      "equation": "20",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-work-harder-adjustment-time",
+      "name": "Work Harder Adjustment Time",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-improve-capability-adjustment-time",
+      "name": "Improve Capability Adjustment Time",
+      "equation": "9",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-performance-step",
+      "name": "Performance Step",
+      "equation": "0",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-exogenous-capability-pressure",
+      "name": "Exogenous Capability Pressure",
+      "equation": "STEP(pressure_step, 10)",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-pressure-step",
+      "name": "Pressure Step",
+      "equation": "0",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-influence-of-pressure-on-work-time-table",
+      "name": "Influence of Pressure on Work Time (Table)",
+      "equation": "0",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-influence-of-capability-pressure-on-improvement-time-table",
+      "name": "Influence of Capability Pressure on Improvement Time (Table)",
+      "equation": "0",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-influence-of-work-pressure-on-improvement-time-table",
+      "name": "Influence of Work Pressure on Improvement Time (Table)",
+      "equation": "0",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Capability",
+      "to_element": "Capability Erosion"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Erosion Timescale",
+      "to_element": "Capability Erosion"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Time Spent on Improvement",
+      "to_element": "Investment in Capability"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Capability Improvement per Investment",
+      "to_element": "Investment in Capability"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Capability",
+      "to_element": "Actual Performance"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Time Spent Working",
+      "to_element": "Actual Performance"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Actual Performance",
+      "to_element": "Stretch"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Desired Performance",
+      "to_element": "Stretch"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Stretch",
+      "to_element": "Change in Pressure to Do Work"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Pressure to Do Work",
+      "to_element": "Change in Pressure to Do Work"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Work Harder Adjustment Time",
+      "to_element": "Change in Pressure to Do Work"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Stretch",
+      "to_element": "Change in Pressure to Improve Capability"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Pressure to Improve Capability",
+      "to_element": "Change in Pressure to Improve Capability"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Improve Capability Adjustment Time",
+      "to_element": "Change in Pressure to Improve Capability"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Pressure to Do Work",
+      "to_element": "Time Spent Working"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Normal Time Spent Working",
+      "to_element": "Time Spent Working"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Maximum Work Time",
+      "to_element": "Time Spent Working"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Time Spent on Improvement",
+      "to_element": "Time Spent Working"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Pressure to Do Work",
+      "to_element": "Time Spent on Improvement"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Pressure to Improve Capability",
+      "to_element": "Time Spent on Improvement"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Normal Time Spent on Improvement",
+      "to_element": "Time Spent on Improvement"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.0625
+  },
+  "created_at": "2026-01-11T20:04:50.822835Z",
+  "updated_at": "2026-01-11T20:04:50.822835Z",
+  "source": "https://doi.org/10.1287/orsc.12.5.582.10167",
+  "reference": "Repenning NP, Sterman JD. Nobody Ever Gets Credit for Fixing Problems that Never Happened: Creating and Sustaining Process Improvement. California Management Review. 2001."
+}

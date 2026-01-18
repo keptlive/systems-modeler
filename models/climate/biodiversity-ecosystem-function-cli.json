@@ -1,0 +1,207 @@
+{
+  "id": "biodiversity-ecosystem-function-cli",
+  "name": "Biodiversity-Ecosystem Function Model",
+  "description": "Model linking species diversity to ecosystem productivity and stability. Based on Tilman et al. (2006) and the biodiversity-ecosystem function (BEF) hypothesis. Shows how species loss affects ecosystem services. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "stock-species-richness",
+      "name": "Species Richness",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ecosystem-biomass",
+      "name": "Ecosystem Biomass",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-soil-nutrients",
+      "name": "Soil Nutrients",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-extinction",
+      "name": "Extinction",
+      "equation": "Species_Richness * (Habitat_Loss_Rate + Climate_Stress)",
+      "from_stock": "stock-species-richness",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-speciation",
+      "name": "Speciation",
+      "equation": "Speciation_Rate * Species_Richness * (1 - Species_Richness / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-species-richness",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-productivity",
+      "name": "Primary Productivity",
+      "equation": "Productivity_Coefficient * Species_Richness * Soil_Nutrients / (Soil_Nutrients + Half_Saturation)",
+      "from_stock": null,
+      "to_stock": "stock-ecosystem-biomass",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-decomposition",
+      "name": "Decomposition",
+      "equation": "Decomposition_Rate * Ecosystem_Biomass",
+      "from_stock": "stock-ecosystem-biomass",
+      "to_stock": "stock-soil-nutrients",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-nutrient-uptake",
+      "name": "Nutrient Uptake",
+      "equation": "Uptake_Rate * Primary_Productivity",
+      "from_stock": "stock-soil-nutrients",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-nutrient-input",
+      "name": "Nutrient Input",
+      "equation": "External_Nutrient_Input",
+      "from_stock": null,
+      "to_stock": "stock-soil-nutrients",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-habitat-loss-rate",
+      "name": "Habitat Loss Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-climate-stress",
+      "name": "Climate Stress",
+      "equation": "0.005",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-speciation-rate",
+      "name": "Speciation Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-carrying-capacity",
+      "name": "Carrying Capacity",
+      "equation": "200",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-productivity-coefficient",
+      "name": "Productivity Coefficient",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-half-saturation",
+      "name": "Half Saturation",
+      "equation": "50",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-decomposition-rate",
+      "name": "Decomposition Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-uptake-rate",
+      "name": "Uptake Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-external-nutrient-input",
+      "name": "External Nutrient Input",
+      "equation": "1",
+      "position": {
+        "x": 300,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-ecosystem-stability",
+      "name": "Ecosystem Stability",
+      "equation": "Species_Richness / (Ecosystem_Biomass * 0.1 + 1)",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T21:11:32.978738+00:00",
+  "updated_at": "2026-01-11T21:11:32.978738+00:00",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

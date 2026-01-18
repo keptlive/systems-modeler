@@ -1,0 +1,27 @@
+{
+  "id": "sterman-expectation-formation-cla",
+  "name": "Sterman Expectation Formation Model",
+  "description": "John Sterman's model of expectation formation and adjustment from Business Dynamics (2000). Shows how people form expectations through adaptive learning, with implications for price bubbles, inventory oscillations, and forecasting errors.",
+  "stocks": [
+    {"id": "stock-expected-value", "name": "Expected Value", "initial_value": 100, "equation": "", "position": {"x": 300, "y": 200}},
+    {"id": "stock-expected-trend", "name": "Expected Trend", "initial_value": 0, "equation": "", "position": {"x": 500, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-expected-change", "name": "Expected Change", "equation": "(Actual_Value - Expected_Value) / Perception_Delay + Expected_Trend", "from_stock": null, "to_stock": "stock-expected-value", "position": {"x": 200, "y": 200}},
+    {"id": "flow-trend-adjustment", "name": "Trend Adjustment", "equation": "(Perceived_Trend - Expected_Trend) / Trend_Adjustment_Time", "from_stock": null, "to_stock": "stock-expected-trend", "position": {"x": 400, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-actual-value", "name": "Actual Value", "equation": "100 + 20 * SIN(2 * 3.14159 * Time / 20)", "position": {"x": 200, "y": 100}},
+    {"id": "var-perception-delay", "name": "Perception Delay", "equation": "4", "position": {"x": 400, "y": 100}},
+    {"id": "var-perceived-trend", "name": "Perceived Trend", "equation": "(Actual_Value - DELAY1(Actual_Value, Trend_Observation_Time)) / Trend_Observation_Time", "position": {"x": 600, "y": 100}},
+    {"id": "var-trend-observation-time", "name": "Trend Observation Time", "equation": "4", "position": {"x": 200, "y": 300}},
+    {"id": "var-trend-adjustment-time", "name": "Trend Adjustment Time", "equation": "8", "position": {"x": 400, "y": 300}},
+    {"id": "var-forecast-error", "name": "Forecast Error", "equation": "Actual_Value - Expected_Value", "position": {"x": 600, "y": 300}},
+    {"id": "var-forecast-horizon", "name": "Forecast Horizon", "equation": "4", "position": {"x": 300, "y": 400}},
+    {"id": "var-forecasted-value", "name": "Forecasted Value", "equation": "Expected_Value + Expected_Trend * Forecast_Horizon", "position": {"x": 500, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.25},
+  "source": "https://www.mheducation.com/highered/product/business-dynamics-sterman/M9780072311358.html",
+  "reference": "Sterman JD. Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. 2000."
+}

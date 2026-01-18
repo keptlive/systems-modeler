@@ -1,0 +1,35 @@
+{
+  "id": "insulin-glucose-diabetes-hea",
+  "name": "Insulin-Glucose Homeostasis and Type 2 Diabetes Model",
+  "description": "Model of glucose-insulin dynamics and progression to Type 2 diabetes. Beta-cell dysfunction and insulin resistance lead to hyperglycemia. Source: Topp et al. (2000). Journal of Theoretical Biology. DOI: 10.1006/jtbi.2000.2150",
+  "stocks": [
+    {"id": "stock-glucose", "name": "Blood_Glucose", "initial_value": 90, "equation": "", "position": {"x": 200, "y": 150}},
+    {"id": "stock-insulin", "name": "Blood_Insulin", "initial_value": 10, "equation": "", "position": {"x": 400, "y": 150}},
+    {"id": "stock-beta", "name": "Beta_Cell_Mass", "initial_value": 100, "equation": "", "position": {"x": 300, "y": 300}}
+  ],
+  "flows": [
+    {"id": "flow-glucose-input", "name": "Glucose_Input", "equation": "Meal_Glucose + Hepatic_Output", "from_stock": null, "to_stock": "stock-glucose", "position": {"x": 100, "y": 150}},
+    {"id": "flow-glucose-uptake", "name": "Glucose_Uptake", "equation": "Insulin_Sensitivity * Blood_Insulin * Blood_Glucose / (100 + Blood_Glucose)", "from_stock": "stock-glucose", "to_stock": null, "position": {"x": 250, "y": 100}},
+    {"id": "flow-insulin-secretion", "name": "Insulin_Secretion", "equation": "Beta_Cell_Mass * Secretion_Rate * MAX(0, Blood_Glucose - Glucose_Threshold)", "from_stock": null, "to_stock": "stock-insulin", "position": {"x": 350, "y": 100}},
+    {"id": "flow-insulin-clearance", "name": "Insulin_Clearance", "equation": "Blood_Insulin / Insulin_Half_Life", "from_stock": "stock-insulin", "to_stock": null, "position": {"x": 450, "y": 200}},
+    {"id": "flow-beta-dynamics", "name": "Beta_Cell_Change", "equation": "Beta_Replication - Beta_Apoptosis", "from_stock": null, "to_stock": "stock-beta", "position": {"x": 200, "y": 300}}
+  ],
+  "variables": [
+    {"id": "var-meal", "name": "Meal_Glucose", "equation": "10 * IF(MOD(TIME, 6) < 1, 1, 0)", "position": {"x": 100, "y": 100}},
+    {"id": "var-hepatic", "name": "Hepatic_Output", "equation": "2 * MAX(0, 1 - Blood_Insulin / 20)", "position": {"x": 50, "y": 200}},
+    {"id": "var-sensitivity", "name": "Insulin_Sensitivity", "equation": "0.5", "position": {"x": 300, "y": 50}},
+    {"id": "var-secretion", "name": "Secretion_Rate", "equation": "0.02", "position": {"x": 400, "y": 50}},
+    {"id": "var-threshold", "name": "Glucose_Threshold", "equation": "70", "position": {"x": 350, "y": 200}},
+    {"id": "var-halflife", "name": "Insulin_Half_Life", "equation": "0.1", "position": {"x": 500, "y": 100}},
+    {"id": "var-replication", "name": "Beta_Replication", "equation": "Beta_Cell_Mass * 0.01 * Blood_Glucose / 100", "position": {"x": 150, "y": 350}},
+    {"id": "var-apoptosis", "name": "Beta_Apoptosis", "equation": "Beta_Cell_Mass * (0.02 + 0.001 * MAX(0, Blood_Glucose - 150))", "position": {"x": 350, "y": 350}},
+    {"id": "var-hba1c", "name": "Estimated_HbA1c", "equation": "(Blood_Glucose + 77.3) / 35.6", "position": {"x": 200, "y": 400}},
+    {"id": "var-diabetic", "name": "Diabetic_State", "equation": "IF(Blood_Glucose > 126, 1, IF(Blood_Glucose > 100, 0.5, 0))", "position": {"x": 400, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.1},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1006/jtbi.2000.2150",
+  "reference": "Topp, B. et al. (2000). A model of β-cell mass, insulin, and glucose kinetics: Pathways to diabetes. Journal of Theoretical Biology, 206(4), 605-619."
+}

@@ -1,0 +1,198 @@
+{
+  "id": "aquaculture-fish-growth-model-agr",
+  "name": "Aquaculture Fish Growth Model",
+  "description": "Model of fish biomass growth with feeding and environmental factors. Source: Summerfelt et al. (2001), Aquaculture.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Fish_Biomass",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Feed_Consumed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Water_Quality",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Growth",
+      "equation": "SGR * Fish_Biomass * Environmental_Factor",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Feeding",
+      "equation": "Feed_Rate * Fish_Biomass",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Quality_Degradation",
+      "equation": "-0.1 * (Stocking_Density / 50 - 1) * Water_Quality + Water_Exchange * (1 - Water_Quality)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Temperature",
+      "equation": "25",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Dissolved_Oxygen",
+      "equation": "7",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Feed_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Tank_Volume",
+      "equation": "1000",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Water_Exchange",
+      "equation": "0.2",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Optimal_Temp",
+      "equation": "28",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Temp_Factor",
+      "equation": "EXP(-((Temperature - Optimal_Temp) / 5)^2)",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "DO_Factor",
+      "equation": "MIN(1, Dissolved_Oxygen / 5)",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Environmental_Factor",
+      "equation": "Temp_Factor * DO_Factor * Water_Quality",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "v10",
+      "name": "SGR",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 480
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Stocking_Density",
+      "equation": "Fish_Biomass / Tank_Volume * 1000",
+      "position": {
+        "x": 500,
+        "y": 480
+      }
+    },
+    {
+      "id": "v12",
+      "name": "FCR",
+      "equation": "Feed_Consumed / Fish_Biomass",
+      "position": {
+        "x": 200,
+        "y": 540
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Temperature",
+      "to_element": "Temp_Factor"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 180,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:47:15.681886+00:00",
+  "updated_at": "2026-01-15T14:47:15.681889+00:00",
+  "source": "https://doi.org/10.1016/S0044-8486(01)00499-8",
+  "reference": "Summerfelt, S.T. et al. (2001). Review of two high-intensity recirculating aquaculture technologies. Aquaculture 195:177-188."
+}

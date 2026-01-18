@@ -1,0 +1,128 @@
+{
+  "id": "wind-turbine-power-curve-ene",
+  "name": "Wind Turbine Power Curve",
+  "description": "Power generation as function of wind speed",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Power_Generated",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Rotor_Speed",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Wind_Speed",
+      "equation": "10.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Air_Density",
+      "equation": "1.225",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Rotor_Radius",
+      "equation": "40.0",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Power_Coefficient",
+      "equation": "0.4",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Cut_In_Speed",
+      "equation": "3.0",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Rated_Speed",
+      "equation": "12.0",
+      "position": {
+        "x": 750,
+        "y": 50
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Swept_Area",
+      "equation": "3.14159*Rotor_Radius*Rotor_Radius",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Available_Power",
+      "equation": "0.5*Air_Density*Swept_Area*Wind_Speed*Wind_Speed*Wind_Speed",
+      "position": {
+        "x": 300,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Rotor_Radius",
+      "to_element": "Swept_Area"
+    },
+    {
+      "id": "c2",
+      "from_element": "Wind_Speed",
+      "to_element": "Available_Power"
+    },
+    {
+      "id": "c3",
+      "from_element": "Swept_Area",
+      "to_element": "Available_Power"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 24.0,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T20:50:11.591702+00:00",
+  "updated_at": "2026-01-15T20:50:11.591702+00:00",
+  "source": "https://doi.org/10.1002/we.414",
+  "reference": "Burton, T. et al. (2011) Wind Energy Handbook. Wiley"
+}

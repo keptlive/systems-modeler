@@ -1,0 +1,253 @@
+{
+  "id": "digital-platform-network-effects-eco",
+  "name": "Digital Platform Network Effects Model",
+  "description": "Models two-sided platform dynamics with network effects. Based on Rochet & Tirole (2003) theory of two-sided markets. Reference: Tirole, J. (1988). The Theory of Industrial Organization. MIT Press. DOI: https://doi.org/10.2307/2555496",
+  "stocks": [
+    {
+      "id": "stock-users",
+      "name": "Platform_Users",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-providers",
+      "name": "Service_Providers",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-transactions",
+      "name": "Total_Transactions",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-platform-value",
+      "name": "Platform_Value",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-user-acquisition",
+      "name": "User_Acquisition",
+      "equation": "Marketing_Spend * User_Conversion_Rate * (1 + Network_Effect_Users * Service_Providers / Reference_Providers)",
+      "from_stock": null,
+      "to_stock": "stock-users",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-user-churn",
+      "name": "User_Churn",
+      "equation": "Platform_Users * User_Churn_Rate / (1 + Service_Providers / Reference_Providers)",
+      "from_stock": "stock-users",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-provider-acquisition",
+      "name": "Provider_Acquisition",
+      "equation": "Provider_Incentives * Provider_Conversion_Rate * (1 + Network_Effect_Providers * Platform_Users / Reference_Users)",
+      "from_stock": null,
+      "to_stock": "stock-providers",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-provider-churn",
+      "name": "Provider_Churn",
+      "equation": "Service_Providers * Provider_Churn_Rate / (1 + Platform_Users / Reference_Users)",
+      "from_stock": "stock-providers",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-transaction-rate",
+      "name": "Transaction_Generation",
+      "equation": "Platform_Users * Service_Providers * Transaction_Rate / (Platform_Users + Service_Providers + 1)",
+      "from_stock": null,
+      "to_stock": "stock-transactions",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-value-creation",
+      "name": "Value_Creation",
+      "equation": "Total_Transactions * Transaction_Value + Platform_Users * User_Value + Service_Providers * Provider_Value",
+      "from_stock": null,
+      "to_stock": "stock-platform-value",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-marketing-spend",
+      "name": "Marketing_Spend",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-user-conversion-rate",
+      "name": "User_Conversion_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-network-effect-users",
+      "name": "Network_Effect_Users",
+      "equation": "0.5",
+      "position": {
+        "x": 340,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-user-churn-rate",
+      "name": "User_Churn_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-provider-incentives",
+      "name": "Provider_Incentives",
+      "equation": "50",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-provider-conversion-rate",
+      "name": "Provider_Conversion_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-network-effect-providers",
+      "name": "Network_Effect_Providers",
+      "equation": "0.3",
+      "position": {
+        "x": 220,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-provider-churn-rate",
+      "name": "Provider_Churn_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 340,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-reference-users",
+      "name": "Reference_Users",
+      "equation": "1000",
+      "position": {
+        "x": 460,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-reference-providers",
+      "name": "Reference_Providers",
+      "equation": "100",
+      "position": {
+        "x": 580,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-transaction-rate",
+      "name": "Transaction_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-transaction-value",
+      "name": "Transaction_Value",
+      "equation": "10",
+      "position": {
+        "x": 220,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-user-value",
+      "name": "User_Value",
+      "equation": "5",
+      "position": {
+        "x": 340,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-provider-value",
+      "name": "Provider_Value",
+      "equation": "20",
+      "position": {
+        "x": 460,
+        "y": 440
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:15:55.422922+00:00",
+  "updated_at": "2026-01-12T01:15:55.422930+00:00",
+  "source": "https://doi.org/10.1111/j.1756-2171.2003.tb00032.x",
+  "reference": "Rochet JC, Tirole J. Platform Competition in Two-Sided Markets. Journal of the European Economic Association. 2003;1(4):990-1029."
+}

@@ -1,0 +1,306 @@
+{
+  "id": "brooks-law-software-project-dynamics-man",
+  "name": "Brooks' Law - Software Project Dynamics",
+  "description": "Models the counterintuitive dynamics of adding people to a late software project. Adding manpower to a late project makes it later due to: (1) ramp-up time for new workers, (2) increased communication overhead, and (3) task fragmentation. This demonstrates how good intentions can backfire when feedback delays and nonlinear effects are ignored. Reference: Based on project dynamics models (Lyneis & Ford, 2007). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-work-remaining",
+      "name": "Work Remaining",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-experienced-workers",
+      "name": "Experienced Workers",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-new-workers",
+      "name": "New Workers",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-work-done",
+      "name": "Work Done",
+      "equation": "Effective_Productivity",
+      "from_stock": "stock-work-remaining",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-rework",
+      "name": "Rework",
+      "equation": "Work_Done * Error_Rate",
+      "from_stock": null,
+      "to_stock": "stock-work-remaining",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-hiring",
+      "name": "Hiring",
+      "equation": "IF Schedule_Pressure > 1.2 THEN Hiring_Rate ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-new-workers",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-gaining-experience",
+      "name": "Gaining Experience",
+      "equation": "New_Workers / Ramp_Up_Time",
+      "from_stock": "stock-new-workers",
+      "to_stock": "stock-experienced-workers",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-turnover",
+      "name": "Turnover",
+      "equation": "Experienced_Workers * Turnover_Rate",
+      "from_stock": "stock-experienced-workers",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-new-turnover",
+      "name": "New Turnover",
+      "equation": "New_Workers * Turnover_Rate * 1.5",
+      "from_stock": "stock-new-workers",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-base-productivity",
+      "name": "Base Productivity",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-new-worker-productivity",
+      "name": "New Worker Productivity",
+      "equation": "Base_Productivity * 0.3",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gross-productivity",
+      "name": "Gross Productivity",
+      "equation": "Experienced_Workers * Base_Productivity + New_Workers * New_Worker_Productivity",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-workers",
+      "name": "Total Workers",
+      "equation": "Experienced_Workers + New_Workers",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-communication-overhead",
+      "name": "Communication Overhead",
+      "equation": "Communication_Factor * Total_Workers * (Total_Workers - 1) / 2",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-communication-factor",
+      "name": "Communication Factor",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-training-overhead",
+      "name": "Training Overhead",
+      "equation": "New_Workers * Training_Burden",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-training-burden",
+      "name": "Training Burden",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-effective-productivity",
+      "name": "Effective Productivity",
+      "equation": "MAX(0, Gross_Productivity - Communication_Overhead - Training_Overhead)",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-error-rate",
+      "name": "Error Rate",
+      "equation": "Base_Error_Rate * (1 + Schedule_Pressure - 1)",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-base-error-rate",
+      "name": "Base Error Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-ramp-up-time",
+      "name": "Ramp Up Time",
+      "equation": "8",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-hiring-rate",
+      "name": "Hiring Rate",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-turnover-rate",
+      "name": "Turnover Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-planned-duration",
+      "name": "Planned Duration",
+      "equation": "20",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-expected-completion",
+      "name": "Expected Completion",
+      "equation": "Time + Work_Remaining / MAX(1, Effective_Productivity)",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-schedule-pressure",
+      "name": "Schedule Pressure",
+      "equation": "Expected_Completion / Planned_Duration",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Effective Productivity",
+      "to_element": "Work Done"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Work Done",
+      "to_element": "Rework"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Error Rate",
+      "to_element": "Rework"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Schedule Pressure",
+      "to_element": "Hiring"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Total Workers",
+      "to_element": "Communication Overhead"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "New Workers",
+      "to_element": "Training Overhead"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Schedule Pressure",
+      "to_element": "Error Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.821654Z",
+  "updated_at": "2026-01-11T20:04:50.821654Z",
+  "source": "https://doi.org/10.1287/mnsc.35.3.321",
+  "reference": "Sterman JD. Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill, 2000."
+}

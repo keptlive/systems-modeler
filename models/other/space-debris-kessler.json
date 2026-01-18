@@ -1,0 +1,180 @@
+{
+  "id": "space-debris-kessler",
+  "name": "Kessler Syndrome Space Debris Model",
+  "description": "Model of orbital debris accumulation and collision cascade (Kessler syndrome).",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Active_Satellites",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Debris_Objects",
+      "initial_value": 30000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Collision_Fragments",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Launches",
+      "equation": "Launch_Rate",
+      "from_stock": null,
+      "to_stock": "Active_Satellites",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Satellite_Decay",
+      "equation": "Active_Satellites / Satellite_Lifetime",
+      "from_stock": "Active_Satellites",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Collision_Rate",
+      "equation": "Collision_Probability * Active_Satellites * Debris_Objects",
+      "from_stock": "Active_Satellites",
+      "to_stock": "Debris_Objects",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Cascade_Collisions",
+      "equation": "Cascade_Factor * Debris_Objects * Debris_Objects / 1000000",
+      "from_stock": null,
+      "to_stock": "Collision_Fragments",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Fragment_Integration",
+      "equation": "Collision_Fragments",
+      "from_stock": "Collision_Fragments",
+      "to_stock": "Debris_Objects",
+      "position": {
+        "x": 450,
+        "y": 275
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Debris_Decay",
+      "equation": "Debris_Objects * Decay_Rate",
+      "from_stock": "Debris_Objects",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Launch_Rate",
+      "equation": "2000",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Satellite_Lifetime",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Collision_Probability",
+      "equation": "0.000001",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Cascade_Factor",
+      "equation": "100",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Decay_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Total_Objects",
+      "equation": "Active_Satellites + Debris_Objects",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Collision_Risk_Index",
+      "equation": "Collision_Probability * Total_Objects * 1000000",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1016/j.asr.2020.07.033",
+  "reference": "Kessler, D.J. & Cour-Palais, B.G. (1978). Collision frequency of artificial satellites. Journal of Geophysical Research, 83(A6), 2637-2646. DOI: 10.1016/j.asr.2020.07.033",
+  "created_at": "2026-01-15T19:28:04.273639+00:00",
+  "updated_at": "2026-01-15T19:28:04.273639+00:00"
+}

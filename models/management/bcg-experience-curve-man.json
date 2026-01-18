@@ -1,0 +1,163 @@
+{
+  "id": "bcg-experience-curve-man",
+  "name": "BCG Experience Curve",
+  "description": "Total cost per unit declines 20-30% with each doubling of cumulative experience. Broader than learning curve, includes all cost reductions. Foundation of cost leadership strategy. Reference: Hattie, J. (2008). Visible Learning. Routledge. Source: https://www.routledge.com/",
+  "stocks": [
+    {
+      "id": "stock-market-share",
+      "name": "Market Share",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cumulative-volume",
+      "name": "Cumulative Volume",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-relative-cost",
+      "name": "Relative Cost",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-share-change",
+      "name": "Share Change",
+      "equation": "Market_Share * Cost_Advantage_Effect * (1 - Market_Share)",
+      "from_stock": null,
+      "to_stock": "stock-market-share",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-volume-growth",
+      "name": "Volume Growth",
+      "equation": "Market_Share * Market_Growth_Rate * Total_Market",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-volume",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-cost-decline",
+      "name": "Cost Decline",
+      "equation": "-Experience_Rate * Relative_Cost * Volume_Growth / Cumulative_Volume",
+      "from_stock": null,
+      "to_stock": "stock-relative-cost",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-experience-rate",
+      "name": "Experience Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-market-growth",
+      "name": "Market Growth Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-market",
+      "name": "Total Market",
+      "equation": "10000",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cost-advantage",
+      "name": "Cost Advantage Effect",
+      "equation": "(1 - Relative_Cost) * 0.5",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-experience-doublings",
+      "name": "Experience Doublings",
+      "equation": "LOG(Cumulative_Volume / 1000) / LOG(2)",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-margin",
+      "name": "Profit Margin",
+      "equation": "MAX(0, Industry_Price - Relative_Cost)",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-industry-price",
+      "name": "Industry Price",
+      "equation": "1",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Cumulative Volume",
+      "to_element": "Cost Decline"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Relative Cost",
+      "to_element": "Cost Advantage Effect"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Cost Advantage Effect",
+      "to_element": "Share Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:48:28.113768+00:00",
+  "updated_at": "2026-01-12T07:48:28.113772+00:00",
+  "source": "https://www.bcg.com/publications/1968/business-unit-strategy-growth-experience-curve",
+  "reference": "Boston Consulting Group. Perspectives on Experience. BCG. 1968."
+}

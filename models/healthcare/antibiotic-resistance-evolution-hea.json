@@ -1,0 +1,257 @@
+{
+  "id": "antibiotic-resistance-evolution-hea",
+  "name": "Antibiotic Resistance Evolution Model",
+  "description": "Model of antibiotic resistance evolution including selection pressure, fitness costs, and compensatory mutations. Source: Andersson & Hughes (2010), Nature Reviews Microbiology. DOI: 10.1038/nrmicro2319",
+  "stocks": [
+    {
+      "id": "stock-sens",
+      "name": "Sensitive_Bacteria",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-resist",
+      "name": "Resistant_Bacteria",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-comp",
+      "name": "Compensated_Resistant",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-abx",
+      "name": "Antibiotic_Concentration",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-sens-grow",
+      "name": "Sensitive_Growth",
+      "equation": "Sensitive_Bacteria * Growth_Rate * (1 - Total_Bacteria / Carrying_Capacity) * (1 - Kill_Rate_Sensitive)",
+      "from_stock": null,
+      "to_stock": "stock-sens",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-sens-die",
+      "name": "Sensitive_Death",
+      "equation": "Sensitive_Bacteria * (Death_Rate + Kill_Rate_Sensitive)",
+      "from_stock": "stock-sens",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-resist-grow",
+      "name": "Resistant_Growth",
+      "equation": "Resistant_Bacteria * Growth_Rate * (1 - Fitness_Cost) * (1 - Total_Bacteria / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-resist",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mutation",
+      "name": "Mutation_To_Resistance",
+      "equation": "Sensitive_Bacteria * Mutation_Rate",
+      "from_stock": "stock-sens",
+      "to_stock": "stock-resist",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-compensate",
+      "name": "Compensatory_Mutation",
+      "equation": "Resistant_Bacteria * Compensation_Rate",
+      "from_stock": "stock-resist",
+      "to_stock": "stock-comp",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-abx-admin",
+      "name": "Antibiotic_Administration",
+      "equation": "IF(TIME > Treatment_Start AND TIME < Treatment_End, Dose_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-abx",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-abx-clear",
+      "name": "Antibiotic_Clearance",
+      "equation": "Antibiotic_Concentration * Clearance_Rate",
+      "from_stock": "stock-abx",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-growth",
+      "name": "Growth_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-death",
+      "name": "Death_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-carry",
+      "name": "Carrying_Capacity",
+      "equation": "10000000",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-fitness",
+      "name": "Fitness_Cost",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-mut",
+      "name": "Mutation_Rate",
+      "equation": "0.000001",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-comp-rate",
+      "name": "Compensation_Rate",
+      "equation": "0.00001",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-kill-s",
+      "name": "Kill_Rate_Sensitive",
+      "equation": "Antibiotic_Concentration * 0.1",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Bacteria",
+      "equation": "Sensitive_Bacteria + Resistant_Bacteria + Compensated_Resistant",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-treat-start",
+      "name": "Treatment_Start",
+      "equation": "10",
+      "position": {
+        "x": 150,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-treat-end",
+      "name": "Treatment_End",
+      "equation": "20",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-dose",
+      "name": "Dose_Rate",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-clear",
+      "name": "Clearance_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 450,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Antibiotic_Concentration",
+      "to_element": "Kill_Rate_Sensitive"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Sensitive_Bacteria",
+      "to_element": "Mutation_To_Resistance"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T22:11:19.083123Z",
+  "updated_at": "2026-01-11T22:11:19.083132Z",
+  "source": "https://doi.org/10.1038/nrmicro2319",
+  "reference": "Andersson, D.I. & Hughes, D. (2010). Antibiotic resistance and its cost."
+}

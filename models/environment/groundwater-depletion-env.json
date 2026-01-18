@@ -1,0 +1,81 @@
+{
+  "id": "groundwater-depletion-env",
+  "name": "Groundwater Aquifer Model",
+  "description": "Model of groundwater dynamics. Source: Famiglietti (2014); Wada et al. (2010).",
+  "stocks": [
+    {
+      "id": "stock-aquifer",
+      "name": "Aquifer",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-recharge",
+      "name": "Recharge",
+      "equation": "Precipitation * Recharge_Rate",
+      "from_stock": null,
+      "to_stock": "stock-aquifer",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-extract",
+      "name": "Extraction",
+      "equation": "Extraction_Demand * MIN(1, Aquifer / 2000)",
+      "from_stock": "stock-aquifer",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-precip",
+      "name": "Precipitation",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-rech",
+      "name": "Recharge_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Extraction_Demand",
+      "equation": "100 * (1 + 0.02 * TIME)",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T12:50:58.059870+00:00",
+  "updated_at": "2026-01-12T12:50:58.059870+00:00",
+  "source": "https://doi.org/10.1038/nclimate2425",
+  "reference": "Famiglietti JS. The global groundwater crisis. Nature Climate Change. 2014;4(11):945-948."
+}

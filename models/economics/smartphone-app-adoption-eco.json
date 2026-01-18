@@ -1,0 +1,461 @@
+{
+  "id": "smartphone-app-adoption-eco",
+  "name": "Smartphone App Adoption Model",
+  "description": "A system dynamics model of mobile app diffusion based on the Bass diffusion model extended by Garg & Telang (2013) 'Inferring App Demand from Publicly Available Data' (doi:10.2139/ssrn.1924044) and app store dynamics research. Models downloads, retention, virality, and monetization. Reference: Bass, F. M. (1969). A new product growth for model consumer durables. Management Science, 15(5), 215-227. DOI: https://doi.org/10.1287/mnsc.15.5.215",
+  "stocks": [
+    {
+      "id": "stock-potential-users",
+      "name": "Potential Users",
+      "initial_value": 100000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-new-users",
+      "name": "New Users",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-active-users",
+      "name": "Daily Active Users",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-churned-users",
+      "name": "Churned Users",
+      "initial_value": 20000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-app-rating",
+      "name": "App Rating",
+      "initial_value": 4.0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-revenue",
+      "name": "Cumulative Revenue",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 650,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-organic-downloads",
+      "name": "Organic Downloads",
+      "equation": "Potential_Users * Organic_Discovery_Rate * Store_Visibility * Rating_Effect",
+      "from_stock": "stock-potential-users",
+      "to_stock": "stock-new-users",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-viral-downloads",
+      "name": "Viral Downloads",
+      "equation": "Daily_Active_Users * Viral_Coefficient * Potential_Users / Total_Market",
+      "from_stock": "stock-potential-users",
+      "to_stock": "stock-new-users",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-paid-acquisition",
+      "name": "Paid Acquisition",
+      "equation": "Marketing_Spend / Cost_per_Install",
+      "from_stock": "stock-potential-users",
+      "to_stock": "stock-new-users",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-activation",
+      "name": "Activation",
+      "equation": "New_Users * Activation_Rate / Activation_Period",
+      "from_stock": "stock-new-users",
+      "to_stock": "stock-active-users",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-early-churn",
+      "name": "Early Churn",
+      "equation": "New_Users * Early_Churn_Rate / Activation_Period",
+      "from_stock": "stock-new-users",
+      "to_stock": "stock-churned-users",
+      "position": {
+        "x": 400,
+        "y": 225
+      }
+    },
+    {
+      "id": "flow-active-churn",
+      "name": "Active User Churn",
+      "equation": "Daily_Active_Users * Monthly_Churn_Rate / 30",
+      "from_stock": "stock-active-users",
+      "to_stock": "stock-churned-users",
+      "position": {
+        "x": 500,
+        "y": 225
+      }
+    },
+    {
+      "id": "flow-reactivation",
+      "name": "Reactivation",
+      "equation": "Churned_Users * Reactivation_Rate",
+      "from_stock": "stock-churned-users",
+      "to_stock": "stock-active-users",
+      "position": {
+        "x": 550,
+        "y": 225
+      }
+    },
+    {
+      "id": "flow-rating-improvement",
+      "name": "Rating Improvement",
+      "equation": "(Target_Rating - App_Rating) * Rating_Change_Rate * User_Satisfaction",
+      "from_stock": null,
+      "to_stock": "stock-app-rating",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-rating-decline",
+      "name": "Rating Decline",
+      "equation": "App_Rating * Bug_Impact * 0.01",
+      "from_stock": "stock-app-rating",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-iap-revenue",
+      "name": "IAP Revenue",
+      "equation": "Daily_Active_Users * Paying_User_Fraction * ARPU",
+      "from_stock": null,
+      "to_stock": "stock-revenue",
+      "position": {
+        "x": 575,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-ad-revenue",
+      "name": "Ad Revenue",
+      "equation": "Daily_Active_Users * Sessions_per_DAU * Ads_per_Session * CPM / 1000",
+      "from_stock": null,
+      "to_stock": "stock-revenue",
+      "position": {
+        "x": 575,
+        "y": 100
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-organic-discovery-rate",
+      "name": "Organic Discovery Rate",
+      "equation": "0.0001",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-store-visibility",
+      "name": "Store Visibility",
+      "equation": "1 + SQRT(Daily_Active_Users / 10000)",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-rating-effect",
+      "name": "Rating Effect",
+      "equation": "(App_Rating / 5) ^ 2",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-viral-coefficient",
+      "name": "Viral Coefficient",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-total-market",
+      "name": "Total Market",
+      "equation": "100000000",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-marketing-spend",
+      "name": "Marketing Spend",
+      "equation": "10000",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-cost-per-install",
+      "name": "Cost per Install",
+      "equation": "2",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-activation-rate",
+      "name": "Activation Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-activation-period",
+      "name": "Activation Period",
+      "equation": "7",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-early-churn-rate",
+      "name": "Early Churn Rate",
+      "equation": "0.6",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-monthly-churn-rate",
+      "name": "Monthly Churn Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-reactivation-rate",
+      "name": "Reactivation Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 600,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-target-rating",
+      "name": "Target Rating",
+      "equation": "4.5",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-rating-change-rate",
+      "name": "Rating Change Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-user-satisfaction",
+      "name": "User Satisfaction",
+      "equation": "0.7",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-bug-impact",
+      "name": "Bug Impact",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-paying-user-fraction",
+      "name": "Paying User Fraction",
+      "equation": "0.03",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-arpu",
+      "name": "ARPU",
+      "equation": "5",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-sessions-per-dau",
+      "name": "Sessions per DAU",
+      "equation": "3",
+      "position": {
+        "x": 650,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-ads-per-session",
+      "name": "Ads per Session",
+      "equation": "2",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cpm",
+      "name": "CPM",
+      "equation": "10",
+      "position": {
+        "x": 700,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-ltv",
+      "name": "LTV",
+      "equation": "Cumulative_Revenue / (Daily_Active_Users + Churned_Users + 1)",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Potential Users",
+      "to_element": "Organic Downloads"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Store Visibility",
+      "to_element": "Organic Downloads"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Rating Effect",
+      "to_element": "Organic Downloads"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "App Rating",
+      "to_element": "Rating Effect"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Daily Active Users",
+      "to_element": "Store Visibility"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Daily Active Users",
+      "to_element": "Viral Downloads"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "New Users",
+      "to_element": "Activation"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Activation Rate",
+      "to_element": "Activation"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Daily Active Users",
+      "to_element": "Active User Churn"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Churned Users",
+      "to_element": "Reactivation"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Daily Active Users",
+      "to_element": "IAP Revenue"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Daily Active Users",
+      "to_element": "Ad Revenue"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

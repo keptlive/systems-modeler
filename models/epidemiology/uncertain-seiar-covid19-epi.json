@@ -1,0 +1,189 @@
+{
+  "id": "uncertain-seiar-covid19-epi",
+  "name": "Uncertain SEIAR COVID-19 Model",
+  "description": "System dynamics model integrating uncertain SEIAR compartments for respiratory virus management. Uses Ensemble Kalman Filter and Metropolis-Hastings for parameter uncertainty. Based on COVID-19 outbreaks in Iran. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 80000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exposed",
+      "name": "Exposed",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infectious",
+      "name": "Infectious",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-asymptomatic",
+      "name": "Asymptomatic",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-exposure",
+      "name": "Exposure Rate",
+      "equation": "Beta * Susceptible * (Infectious + Eta * Asymptomatic) / Total_Population",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-symptomatic",
+      "name": "Symptomatic Development",
+      "equation": "Sigma * Exposed * P_Symptomatic",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-infectious",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-asymptomatic",
+      "name": "Asymptomatic Development",
+      "equation": "Sigma * Exposed * (1 - P_Symptomatic)",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-asymptomatic",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery-i",
+      "name": "Recovery from Infectious",
+      "equation": "Gamma * Infectious",
+      "from_stock": "stock-infectious",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-recovery-a",
+      "name": "Recovery from Asymptomatic",
+      "equation": "Gamma_A * Asymptomatic",
+      "from_stock": "stock-asymptomatic",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 625,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.35 + RANDOM(-0.05, 0.05)",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-sigma",
+      "name": "Sigma",
+      "equation": "0.2",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "Gamma",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-gamma-a",
+      "name": "Gamma A",
+      "equation": "0.14",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-eta",
+      "name": "Eta",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-p-symptomatic",
+      "name": "P Symptomatic",
+      "equation": "0.7",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-total-pop",
+      "name": "Total Population",
+      "equation": "Susceptible + Exposed + Infectious + Asymptomatic + Recovered",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1016/j.heliyon.2024.e24711",
+  "reference": "Uncertain SEIAR system dynamics modeling for improved community health management of respiratory virus diseases. Heliyon (2024).",
+  "created_at": "2026-01-12T08:08:22.081275Z",
+  "updated_at": "2026-01-12T08:08:22.081275Z"
+}

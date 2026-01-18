@@ -1,0 +1,207 @@
+{
+  "id": "antimicrobial-one-health-hea",
+  "name": "Antimicrobial Resistance One Health Model",
+  "description": "Model of antimicrobial resistance spread across human, animal, and environmental compartments. Captures the One Health approach to AMR control including antibiotic use in agriculture and healthcare. Reference: Andersson, D. I., & Hughes, D. (2014). Microbiological effects of sublethal antibiotic concentrations. Nature Reviews Microbiology. Source: https://doi.org/10.1038/nrmicro3270",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Human_Resistant_Infections",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Animal_Resistant_Bacteria",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Environmental_Resistance",
+      "initial_value": 2000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Human_Antibiotic_Use",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Agricultural_Antibiotic_Use",
+      "initial_value": 300,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Human_Resistance_Emergence",
+      "equation": "Human_Antibiotic_Use * Selection_Pressure + Transfer_From_Animals",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Human_Resistance_Decline",
+      "equation": "Human_Resistant_Infections * Fitness_Cost",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Animal_Resistance_Emergence",
+      "equation": "Agricultural_Antibiotic_Use * Animal_Selection_Pressure",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Environmental_Contamination",
+      "equation": "(Human_Resistant_Infections + Animal_Resistant_Bacteria) * Shedding_Rate",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Stewardship_Effect",
+      "equation": "Human_Antibiotic_Use * Stewardship_Intensity / Adjustment_Time",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Selection_Pressure",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Animal_Selection_Pressure",
+      "equation": "0.03",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Fitness_Cost",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Shedding_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Transfer_From_Animals",
+      "equation": "Animal_Resistant_Bacteria * Food_Chain_Transfer",
+      "position": {
+        "x": 150,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Food_Chain_Transfer",
+      "equation": "0.001",
+      "position": {
+        "x": 350,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Stewardship_Intensity",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Adjustment_Time",
+      "equation": "5",
+      "position": {
+        "x": 150,
+        "y": 180
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Total_Resistance_Burden",
+      "equation": "Human_Resistant_Infections + Animal_Resistant_Bacteria + Environmental_Resistance",
+      "position": {
+        "x": 350,
+        "y": 180
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2050,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1016/S0140-6736(15)00473-0",
+  "reference": "O'Neill Review on Antimicrobial Resistance (2016). Laxminarayan R et al. (2013) Lancet Infectious Diseases. WHO One Health Initiative.",
+  "created_at": "2026-01-12T06:55:23.193507+00:00",
+  "updated_at": "2026-01-12T06:55:23.193507+00:00"
+}

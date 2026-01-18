@@ -1,0 +1,170 @@
+{
+  "id": "renewable-energy-investment-ene",
+  "name": "Renewable Energy Investment Model",
+  "description": "Model of renewable energy capacity growth driven by investment, learning curves, and policy support. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "stock-fossil",
+      "name": "Fossil_Capacity",
+      "initial_value": 800,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-renewable",
+      "name": "Renewable_Capacity",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cumulative",
+      "name": "Cumulative_Experience",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-fossil-retire",
+      "name": "Fossil_Retirement",
+      "equation": "Fossil_Capacity * Retirement_Rate",
+      "from_stock": "stock-fossil",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-renewable-build",
+      "name": "Renewable_Build",
+      "equation": "Investment / (Base_Cost * Learning_Effect)",
+      "from_stock": null,
+      "to_stock": "stock-renewable",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-experience",
+      "name": "Experience_Gain",
+      "equation": "Renewable_Capacity * Capacity_Factor",
+      "from_stock": null,
+      "to_stock": "stock-cumulative",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-retire-rate",
+      "name": "Retirement_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-investment",
+      "name": "Investment",
+      "equation": "50",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-base-cost",
+      "name": "Base_Cost",
+      "equation": "2.0",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-learning",
+      "name": "Learning_Effect",
+      "equation": "(Cumulative_Experience / 100) ** (-0.2)",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-capacity-factor",
+      "name": "Capacity_Factor",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Fossil_Capacity",
+      "to_element": "Fossil_Retirement"
+    },
+    {
+      "id": "c2",
+      "from_element": "Retirement_Rate",
+      "to_element": "Fossil_Retirement"
+    },
+    {
+      "id": "c3",
+      "from_element": "Investment",
+      "to_element": "Renewable_Build"
+    },
+    {
+      "id": "c4",
+      "from_element": "Base_Cost",
+      "to_element": "Renewable_Build"
+    },
+    {
+      "id": "c5",
+      "from_element": "Learning_Effect",
+      "to_element": "Renewable_Build"
+    },
+    {
+      "id": "c6",
+      "from_element": "Renewable_Capacity",
+      "to_element": "Experience_Gain"
+    },
+    {
+      "id": "c7",
+      "from_element": "Capacity_Factor",
+      "to_element": "Experience_Gain"
+    },
+    {
+      "id": "c8",
+      "from_element": "Cumulative_Experience",
+      "to_element": "Learning_Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T11:47:36.905428Z",
+  "updated_at": "2026-01-12T11:47:36.905431Z",
+  "source": "https://doi.org/10.1038/s41560-019-0405-4",
+  "reference": "Way R, et al. Empirically grounded technology forecasts and the energy transition. Joule. 2022;6(9):2057-2082."
+}

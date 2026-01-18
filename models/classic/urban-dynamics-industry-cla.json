@@ -1,0 +1,170 @@
+{
+  "id": "urban-dynamics-industry-cla",
+  "name": "Urban Dynamics Industry Sector",
+  "description": "Industry sector from Forrester's Urban Dynamics (1969). Models business aging from new enterprise through mature to declining business, with job creation varying by business age. Source: Forrester, J.W. (1969), Urban Dynamics, MIT Press. Reference: Forrester, J. W. (1961). Industrial Dynamics. MIT Press. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-new-enterprise",
+      "name": "New_Enterprise",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-mature-business",
+      "name": "Mature_Business",
+      "initial_value": 300,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-declining-industry",
+      "name": "Declining_Industry",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-ne-creation",
+      "name": "NE_Creation",
+      "equation": "Enterprise_Creation_Rate * Labor_Availability",
+      "from_stock": null,
+      "to_stock": "stock-new-enterprise",
+      "position": {
+        "x": 75,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ne-maturation",
+      "name": "NE_Maturation",
+      "equation": "New_Enterprise / Enterprise_Growth_Time",
+      "from_stock": "stock-new-enterprise",
+      "to_stock": "stock-mature-business",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mb-decline",
+      "name": "MB_Decline",
+      "equation": "Mature_Business / Mature_Business_Lifetime",
+      "from_stock": "stock-mature-business",
+      "to_stock": "stock-declining-industry",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-di-closure",
+      "name": "DI_Closure",
+      "equation": "Declining_Industry / Declining_Industry_Lifetime",
+      "from_stock": "stock-declining-industry",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-creation-rate",
+      "name": "Enterprise_Creation_Rate",
+      "equation": "20",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-labor-availability",
+      "name": "Labor_Availability",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-growth-time",
+      "name": "Enterprise_Growth_Time",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-mb-lifetime",
+      "name": "Mature_Business_Lifetime",
+      "equation": "20",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-di-lifetime",
+      "name": "Declining_Industry_Lifetime",
+      "equation": "15",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-total-jobs",
+      "name": "Total_Jobs",
+      "equation": "New_Enterprise * 20 + Mature_Business * 15 + Declining_Industry * 5",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Enterprise_Creation_Rate",
+      "to_element": "NE_Creation"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Labor_Availability",
+      "to_element": "NE_Creation"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "New_Enterprise",
+      "to_element": "NE_Maturation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Enterprise_Growth_Time",
+      "to_element": "NE_Maturation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T20:47:58.493326Z",
+  "updated_at": "2026-01-11T20:47:58.493326Z",
+  "source": "https://doi.org/10.1287/mnsc.35.3.321",
+  "reference": "Sterman JD. Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill, 2000."
+}

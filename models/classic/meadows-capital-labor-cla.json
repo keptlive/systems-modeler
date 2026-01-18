@@ -1,0 +1,34 @@
+{
+  "id": "meadows-capital-labor-cla",
+  "name": "Meadows Capital-Labor Substitution Model",
+  "description": "Dennis Meadows' model of capital-labor substitution from Limits to Growth team work. Shows how rising labor costs drive automation and capital deepening, with feedbacks affecting employment and productivity growth.",
+  "stocks": [
+    {"id": "stock-capital", "name": "Capital", "initial_value": 1000, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-labor", "name": "Labor", "initial_value": 500, "equation": "", "position": {"x": 450, "y": 200}},
+    {"id": "stock-productivity", "name": "Productivity", "initial_value": 1, "equation": "", "position": {"x": 325, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-investment", "name": "Investment", "equation": "Investment_Rate * Output", "from_stock": null, "to_stock": "stock-capital", "position": {"x": 100, "y": 200}},
+    {"id": "flow-depreciation", "name": "Depreciation", "equation": "Capital / Capital_Lifetime", "from_stock": "stock-capital", "to_stock": null, "position": {"x": 300, "y": 200}},
+    {"id": "flow-hiring", "name": "Hiring", "equation": "(Desired_Labor - Labor) / Hiring_Time", "from_stock": null, "to_stock": "stock-labor", "position": {"x": 350, "y": 200}},
+    {"id": "flow-attrition", "name": "Attrition", "equation": "Labor * Attrition_Rate", "from_stock": "stock-labor", "to_stock": null, "position": {"x": 550, "y": 200}},
+    {"id": "flow-productivity-growth", "name": "Productivity Growth", "equation": "Productivity * (Learning_Rate + Capital_Deepening_Effect)", "from_stock": null, "to_stock": "stock-productivity", "position": {"x": 225, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-output", "name": "Output", "equation": "Productivity * MIN(Capital / Capital_Output_Ratio, Labor / Labor_Output_Ratio)", "position": {"x": 200, "y": 100}},
+    {"id": "var-capital-output-ratio", "name": "Capital Output Ratio", "equation": "3", "position": {"x": 400, "y": 100}},
+    {"id": "var-labor-output-ratio", "name": "Labor Output Ratio", "equation": "2", "position": {"x": 550, "y": 100}},
+    {"id": "var-investment-rate", "name": "Investment Rate", "equation": "0.2", "position": {"x": 100, "y": 280}},
+    {"id": "var-capital-lifetime", "name": "Capital Lifetime", "equation": "20", "position": {"x": 250, "y": 280}},
+    {"id": "var-desired-labor", "name": "Desired Labor", "equation": "Output * Labor_Output_Ratio / Productivity", "position": {"x": 400, "y": 280}},
+    {"id": "var-hiring-time", "name": "Hiring Time", "equation": "2", "position": {"x": 550, "y": 280}},
+    {"id": "var-attrition-rate", "name": "Attrition Rate", "equation": "0.05", "position": {"x": 150, "y": 430}},
+    {"id": "var-learning-rate", "name": "Learning Rate", "equation": "0.02", "position": {"x": 350, "y": 430}},
+    {"id": "var-capital-labor-ratio", "name": "Capital Labor Ratio", "equation": "Capital / Labor", "position": {"x": 550, "y": 430}},
+    {"id": "var-capital-deepening-effect", "name": "Capital Deepening Effect", "equation": "0.01 * LN(Capital_Labor_Ratio / 2)", "position": {"x": 350, "y": 500}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.25},
+  "source": "https://www.clubofrome.org/publication/the-limits-to-growth/",
+  "reference": "Meadows DH, Meadows DL, Randers J, Behrens WW. The Limits to Growth. Universe Books. 1972."
+}

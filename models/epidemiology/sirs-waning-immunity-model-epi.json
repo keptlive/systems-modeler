@@ -1,0 +1,170 @@
+{
+  "id": "sirs-waning-immunity-model-epi",
+  "name": "SIRS Waning Immunity Model",
+  "description": "A Susceptible-Infected-Recovered-Susceptible model where immunity wanes over time. After recovery, individuals retain temporary immunity before becoming susceptible again. Models diseases like pertussis, influenza, and coronaviruses where immunity is not permanent. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 9990,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Infected",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "Infection",
+      "equation": "Beta * Susceptible * Infected / Total_Population",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "Gamma * Infected",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-waning-immunity",
+      "name": "Waning Immunity",
+      "equation": "Xi * Recovered",
+      "from_stock": "stock-recovered",
+      "to_stock": "stock-susceptible",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "Gamma",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-xi",
+      "name": "Xi",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "Susceptible + Infected + Recovered",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-immunity-duration",
+      "name": "Immunity Duration",
+      "equation": "1 / Xi",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Susceptible",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Infected",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Beta",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Total Population",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Infected",
+      "to_element": "Recovery"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Gamma",
+      "to_element": "Recovery"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Recovered",
+      "to_element": "Waning Immunity"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Xi",
+      "to_element": "Waning Immunity"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 730,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.806472Z",
+  "updated_at": "2026-01-11T20:04:50.806472Z",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

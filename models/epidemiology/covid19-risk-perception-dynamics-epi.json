@@ -1,0 +1,175 @@
+{
+  "id": "covid19-risk-perception-dynamics-epi",
+  "name": "COVID-19 Risk Perception Dynamics",
+  "description": "System dynamics model examining how risk perception affects disease spread and control measures. Based on case study of Iran with behavioral feedback loops. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 80000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Infected",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-perceived-risk",
+      "name": "Perceived Risk",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "Infection Rate",
+      "equation": "Contact_Rate * Infectivity * Susceptible * Infected / Total_Pop * (1 - Risk_Reduction)",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery Rate",
+      "equation": "Infected / Recovery_Time",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-risk-increase",
+      "name": "Risk Perception Increase",
+      "equation": "Risk_Sensitivity * (Actual_Risk - Perceived_Risk) / Risk_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-perceived-risk",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-contact-rate",
+      "name": "Contact Rate",
+      "equation": "15",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-infectivity",
+      "name": "Infectivity",
+      "equation": "0.05",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recovery-time",
+      "name": "Recovery Time",
+      "equation": "14",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-total-pop",
+      "name": "Total Pop",
+      "equation": "80000000",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-actual-risk",
+      "name": "Actual Risk",
+      "equation": "Infected / Total_Pop",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-risk-sensitivity",
+      "name": "Risk Sensitivity",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-risk-adj-time",
+      "name": "Risk Adjustment Time",
+      "equation": "7",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-risk-reduction",
+      "name": "Risk Reduction",
+      "equation": "MIN(0.8, Perceived_Risk * Risk_Response_Strength)",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-risk-response",
+      "name": "Risk Response Strength",
+      "equation": "5",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1111/risa.14115",
+  "reference": "Korzebor et al. A system dynamics model of the COVID-19 pandemic considering risk perception. Risk Analysis (2024).",
+  "created_at": "2026-01-12T08:08:22.081275Z",
+  "updated_at": "2026-01-12T08:08:22.081275Z"
+}

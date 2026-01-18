@@ -1,0 +1,231 @@
+{
+  "id": "sales-agent-motivation-dynamics-eco",
+  "name": "Sales Agent Motivation Dynamics",
+  "description": "Models the dynamics of sales agent motivation, effort, income, and employment status. The model explores how motivation drives effort which leads to sales and income, creating a feedback loop that can lead to either success or failure. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-motivation",
+      "name": "Motivation",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-tenure",
+      "name": "Tenure",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-total-cumulative-sales",
+      "name": "Total Cumulative Sales",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-total-cumulative-income",
+      "name": "Total Cumulative Income",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-motivation-adjustment",
+      "name": "Motivation Adjustment",
+      "equation": "(Income - Motivation) / Motivation_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-motivation",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-accumulating-tenure",
+      "name": "Accumulating Tenure",
+      "equation": "Still_Employed",
+      "from_stock": null,
+      "to_stock": "stock-tenure",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-accumulating-sales",
+      "name": "Accumulating Sales",
+      "equation": "Sales",
+      "from_stock": null,
+      "to_stock": "stock-total-cumulative-sales",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-accumulating-income",
+      "name": "Accumulating Income",
+      "equation": "Income",
+      "from_stock": null,
+      "to_stock": "stock-total-cumulative-income",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-still-employed",
+      "name": "Still Employed",
+      "equation": "IF Motivation > Motivation_Threshold THEN 1 ELSE 0",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-motivation-threshold",
+      "name": "Motivation Threshold",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-sales-effort-available",
+      "name": "Sales Effort Available",
+      "equation": "IF Still_Employed > 0 THEN Total_Effort_Available * Fraction_of_Effort_for_Sales ELSE 0",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-effort-available",
+      "name": "Total Effort Available",
+      "equation": "200",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fraction-of-effort-for-sales",
+      "name": "Fraction of Effort for Sales",
+      "equation": "0.25",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-effort",
+      "name": "Effort",
+      "equation": "Sales_Effort_Available * Impact_of_Motivation_on_Effort(Motivation)",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-effort-required-to-make-a-sale",
+      "name": "Effort Required to Make a Sale",
+      "equation": "4",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-sales",
+      "name": "Sales",
+      "equation": "(Effort / Effort_Required_to_Make_a_Sale) * Success_Rate",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-success-rate",
+      "name": "Success Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-income",
+      "name": "Income",
+      "equation": "Months_of_Expenses_per_Sale * Sales + IF Time < Startup_Subsidy_Length THEN Startup_Subsidy ELSE 0",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-months-of-expenses-per-sale",
+      "name": "Months of Expenses per Sale",
+      "equation": "12/50",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-startup-subsidy",
+      "name": "Startup Subsidy",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-startup-subsidy-length",
+      "name": "Startup Subsidy Length",
+      "equation": "6",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-motivation-adjustment-time",
+      "name": "Motivation Adjustment Time",
+      "equation": "3",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.0625
+  },
+  "created_at": "2026-01-11T20:04:50.772999Z",
+  "updated_at": "2026-01-11T20:04:50.772999Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

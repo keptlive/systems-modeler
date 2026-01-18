@@ -1,0 +1,285 @@
+{
+  "id": "huisman-weissing-plankton-paradox-eco",
+  "name": "Huisman-Weissing Plankton Paradox Model",
+  "description": "Model explaining the paradox of plankton: how many species coexist on few resources through oscillatory dynamics. Reference: Huisman, J. & Weissing, F.J. (1999). Biodiversity of plankton.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Phytoplankton_1",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Phytoplankton_2",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Phytoplankton_3",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Nutrient_1",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Nutrient_2",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 950,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "P1_Growth",
+      "equation": "Phytoplankton_1 * Min_Growth_1",
+      "from_stock": null,
+      "to_stock": "Phytoplankton_1",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "P1_Loss",
+      "equation": "Phytoplankton_1 * Loss_Rate",
+      "from_stock": "Phytoplankton_1",
+      "to_stock": null,
+      "position": {
+        "x": 220,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "P2_Growth",
+      "equation": "Phytoplankton_2 * Min_Growth_2",
+      "from_stock": null,
+      "to_stock": "Phytoplankton_2",
+      "position": {
+        "x": 340,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "P2_Loss",
+      "equation": "Phytoplankton_2 * Loss_Rate",
+      "from_stock": "Phytoplankton_2",
+      "to_stock": null,
+      "position": {
+        "x": 460,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "P3_Growth",
+      "equation": "Phytoplankton_3 * Min_Growth_3",
+      "from_stock": null,
+      "to_stock": "Phytoplankton_3",
+      "position": {
+        "x": 580,
+        "y": 300
+      }
+    },
+    {
+      "id": "f6",
+      "name": "P3_Loss",
+      "equation": "Phytoplankton_3 * Loss_Rate",
+      "from_stock": "Phytoplankton_3",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "f7",
+      "name": "N1_Supply",
+      "equation": "Dilution * (N1_Input - Nutrient_1)",
+      "from_stock": null,
+      "to_stock": "Nutrient_1",
+      "position": {
+        "x": 820,
+        "y": 300
+      }
+    },
+    {
+      "id": "f8",
+      "name": "N2_Supply",
+      "equation": "Dilution * (N2_Input - Nutrient_2)",
+      "from_stock": null,
+      "to_stock": "Nutrient_2",
+      "position": {
+        "x": 940,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Max_Growth",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "K11",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "K12",
+      "equation": "15",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "K21",
+      "equation": "10",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "K22",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "K31",
+      "equation": "8",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "K32",
+      "equation": "8",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Min_Growth_1",
+      "equation": "Max_Growth * MIN(Nutrient_1 / (K11 + Nutrient_1), Nutrient_2 / (K12 + Nutrient_2))",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Min_Growth_2",
+      "equation": "Max_Growth * MIN(Nutrient_1 / (K21 + Nutrient_1), Nutrient_2 / (K22 + Nutrient_2))",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Min_Growth_3",
+      "equation": "Max_Growth * MIN(Nutrient_1 / (K31 + Nutrient_1), Nutrient_2 / (K32 + Nutrient_2))",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Loss_Rate",
+      "equation": "0.25",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Dilution",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "v13",
+      "name": "N1_Input",
+      "equation": "80",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "v14",
+      "name": "N2_Input",
+      "equation": "80",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 500,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1038/46540",
+  "reference": "Huisman, J. & Weissing, F.J. (1999). Biodiversity of plankton by species oscillations and chaos. Nature, 402, 407-410.",
+  "created_at": "2026-01-15T19:54:27.819554+00:00",
+  "updated_at": "2026-01-15T19:54:27.819554+00:00"
+}

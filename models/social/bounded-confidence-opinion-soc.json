@@ -1,0 +1,213 @@
+{
+  "id": "bounded-confidence-opinion-soc",
+  "name": "Bounded Confidence Opinion Dynamics",
+  "description": "Hegselmann-Krause bounded confidence model (2002) where agents only interact with others whose opinions are within a confidence bound. Shows how polarization or consensus emerges from local interactions. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-group1",
+      "name": "Moderate Left Opinion",
+      "initial_value": -0.3,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-group2",
+      "name": "Centrist Opinion",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-group3",
+      "name": "Moderate Right Opinion",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-polarization",
+      "name": "Polarization Index",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-group1-change",
+      "name": "Group 1 Opinion Change",
+      "equation": "Influence_Rate * (Weighted_Avg_1 - Moderate_Left_Opinion)",
+      "from_stock": null,
+      "to_stock": "stock-group1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-group2-change",
+      "name": "Group 2 Opinion Change",
+      "equation": "Influence_Rate * (Weighted_Avg_2 - Centrist_Opinion)",
+      "from_stock": null,
+      "to_stock": "stock-group2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-group3-change",
+      "name": "Group 3 Opinion Change",
+      "equation": "Influence_Rate * (Weighted_Avg_3 - Moderate_Right_Opinion)",
+      "from_stock": null,
+      "to_stock": "stock-group3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-polarization-update",
+      "name": "Polarization Update",
+      "equation": "(Current_Polarization - Polarization_Index) * 0.5",
+      "from_stock": null,
+      "to_stock": "stock-polarization",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-confidence-bound",
+      "name": "Confidence Bound",
+      "equation": "0.4",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-influence-rate",
+      "name": "Influence Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-distance-12",
+      "name": "Distance 1-2",
+      "equation": "ABS(Moderate_Left_Opinion - Centrist_Opinion)",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-distance-23",
+      "name": "Distance 2-3",
+      "equation": "ABS(Centrist_Opinion - Moderate_Right_Opinion)",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-distance-13",
+      "name": "Distance 1-3",
+      "equation": "ABS(Moderate_Left_Opinion - Moderate_Right_Opinion)",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-interact-12",
+      "name": "Interact 1-2",
+      "equation": "IF Distance_12 < Confidence_Bound THEN 1 ELSE 0",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-interact-23",
+      "name": "Interact 2-3",
+      "equation": "IF Distance_23 < Confidence_Bound THEN 1 ELSE 0",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-interact-13",
+      "name": "Interact 1-3",
+      "equation": "IF Distance_13 < Confidence_Bound THEN 1 ELSE 0",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-weighted-avg-1",
+      "name": "Weighted Avg 1",
+      "equation": "(Moderate_Left_Opinion + Interact_12 * Centrist_Opinion + Interact_13 * Moderate_Right_Opinion) / (1 + Interact_12 + Interact_13)",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-weighted-avg-2",
+      "name": "Weighted Avg 2",
+      "equation": "(Centrist_Opinion + Interact_12 * Moderate_Left_Opinion + Interact_23 * Moderate_Right_Opinion) / (1 + Interact_12 + Interact_23)",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-weighted-avg-3",
+      "name": "Weighted Avg 3",
+      "equation": "(Moderate_Right_Opinion + Interact_23 * Centrist_Opinion + Interact_13 * Moderate_Left_Opinion) / (1 + Interact_23 + Interact_13)",
+      "position": {
+        "x": 350,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-current-polarization",
+      "name": "Current Polarization",
+      "equation": "SQRT((Moderate_Left_Opinion^2 + Centrist_Opinion^2 + Moderate_Right_Opinion^2) / 3)",
+      "position": {
+        "x": 600,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T21:11:32.978770+00:00",
+  "updated_at": "2026-01-11T21:11:32.978770+00:00",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

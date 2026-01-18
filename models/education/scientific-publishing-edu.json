@@ -1,0 +1,216 @@
+{
+  "id": "scientific-publishing-edu",
+  "name": "Scientific Publishing Dynamics Model",
+  "description": "Model of academic publishing showing manuscript flow through peer review. Reference: Edwards, M. A., & Roy, S. (2017). Academic Research in the 21st Century. Frontiers in Psychology. Source: https://doi.org/10.3389/fpsyg.2016.01442",
+  "stocks": [
+    {
+      "id": "stock-submitted",
+      "name": "Submitted_Manuscripts",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-review",
+      "name": "In_Review",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-published",
+      "name": "Published_Papers",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-submit",
+      "name": "Submission_Rate",
+      "equation": "Research_Output * Submission_Probability",
+      "from_stock": null,
+      "to_stock": "stock-submitted",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-to-review",
+      "name": "Desk_Accept",
+      "equation": "Submitted_Manuscripts * Desk_Accept_Rate / Desk_Review_Time",
+      "from_stock": "stock-submitted",
+      "to_stock": "stock-review",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-reject-desk",
+      "name": "Desk_Reject",
+      "equation": "Submitted_Manuscripts * (1 - Desk_Accept_Rate) / Desk_Review_Time",
+      "from_stock": "stock-submitted",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-accept",
+      "name": "Acceptance",
+      "equation": "In_Review * Acceptance_Rate / Review_Time",
+      "from_stock": "stock-review",
+      "to_stock": "stock-published",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-reject",
+      "name": "Rejection",
+      "equation": "In_Review * (1 - Acceptance_Rate) / Review_Time",
+      "from_stock": "stock-review",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-output",
+      "name": "Research_Output",
+      "equation": "50",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-sub-prob",
+      "name": "Submission_Probability",
+      "equation": "0.8",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-desk-rate",
+      "name": "Desk_Accept_Rate",
+      "equation": "0.6",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-desk-time",
+      "name": "Desk_Review_Time",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-accept",
+      "name": "Acceptance_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-review-time",
+      "name": "Review_Time",
+      "equation": "12",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Research_Output",
+      "to_element": "Submission_Rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "Submission_Probability",
+      "to_element": "Submission_Rate"
+    },
+    {
+      "id": "c3",
+      "from_element": "Submitted_Manuscripts",
+      "to_element": "Desk_Accept"
+    },
+    {
+      "id": "c4",
+      "from_element": "Desk_Accept_Rate",
+      "to_element": "Desk_Accept"
+    },
+    {
+      "id": "c5",
+      "from_element": "Desk_Review_Time",
+      "to_element": "Desk_Accept"
+    },
+    {
+      "id": "c6",
+      "from_element": "Submitted_Manuscripts",
+      "to_element": "Desk_Reject"
+    },
+    {
+      "id": "c7",
+      "from_element": "In_Review",
+      "to_element": "Acceptance"
+    },
+    {
+      "id": "c8",
+      "from_element": "Acceptance_Rate",
+      "to_element": "Acceptance"
+    },
+    {
+      "id": "c9",
+      "from_element": "Review_Time",
+      "to_element": "Acceptance"
+    },
+    {
+      "id": "c10",
+      "from_element": "In_Review",
+      "to_element": "Rejection"
+    },
+    {
+      "id": "c11",
+      "from_element": "Review_Time",
+      "to_element": "Rejection"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T11:49:16.387861+00:00",
+  "updated_at": "2026-01-12T11:49:16.387864+00:00",
+  "source": "https://doi.org/10.1371/journal.pone.0127502",
+  "reference": "Bj\u00f6rk BC, Solomon D. The publishing delay in scholarly peer-reviewed journals. Journal of Informetrics. 2013;7(4):914-923."
+}

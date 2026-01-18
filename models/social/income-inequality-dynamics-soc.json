@@ -1,0 +1,212 @@
+{
+  "id": "income-inequality-dynamics-soc",
+  "name": "Income Inequality Dynamics Model",
+  "description": "Models wealth concentration and redistribution mechanisms. Based on Piketty (2014). DOI: 10.1257/jep.29.1.29",
+  "stocks": [
+    {
+      "id": "stock-bottomwlth",
+      "name": "Bottom_50_Wealth",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-middlewlth",
+      "name": "Middle_40_Wealth",
+      "initial_value": 300,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-topwlth",
+      "name": "Top_10_Wealth",
+      "initial_value": 600,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-gini",
+      "name": "Gini_Coefficient",
+      "initial_value": 0.4,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-bottomgrow",
+      "name": "Bottom_Growth",
+      "equation": "Bottom_50_Wealth * (Labor_Income_Growth - Inflation)",
+      "from_stock": null,
+      "to_stock": "stock-bottomwlth",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-middlegrow",
+      "name": "Middle_Growth",
+      "equation": "Middle_40_Wealth * (Labor_Income_Growth + Modest_Returns - Inflation)",
+      "from_stock": null,
+      "to_stock": "stock-middlewlth",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-topgrow",
+      "name": "Top_Growth",
+      "equation": "Top_10_Wealth * (Capital_Returns - Inflation)",
+      "from_stock": null,
+      "to_stock": "stock-topwlth",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-redist",
+      "name": "Redistribution",
+      "equation": "Top_10_Wealth * Tax_Rate * Redistribution_Efficiency",
+      "from_stock": "stock-topwlth",
+      "to_stock": "stock-bottomwlth",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-giniupdate",
+      "name": "Gini_Update",
+      "equation": "(Calculated_Gini - Gini_Coefficient) * Adjustment_Speed",
+      "from_stock": null,
+      "to_stock": "stock-gini",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-laborgrow",
+      "name": "Labor_Income_Growth",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-inflation",
+      "name": "Inflation",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-modreturn",
+      "name": "Modest_Returns",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-capreturn",
+      "name": "Capital_Returns",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-taxrate",
+      "name": "Tax_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-redisteff",
+      "name": "Redistribution_Efficiency",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-calcgini",
+      "name": "Calculated_Gini",
+      "equation": "(Top_10_Wealth - Bottom_50_Wealth) / (Top_10_Wealth + Middle_40_Wealth + Bottom_50_Wealth)",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-adjspeed",
+      "name": "Adjustment_Speed",
+      "equation": "0.1",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-rgdiff",
+      "name": "r_minus_g",
+      "equation": "Capital_Returns - Labor_Income_Growth",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-topratio",
+      "name": "Top_10_Share",
+      "equation": "Top_10_Wealth / (Top_10_Wealth + Middle_40_Wealth + Bottom_50_Wealth)",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Top_10_Wealth",
+      "to_element": "Top_Growth"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:55:29.074380+00:00",
+  "updated_at": "2026-01-12T02:55:29.074387+00:00",
+  "source": "https://doi.org/10.1257/jep.29.1.29",
+  "reference": "Piketty T (2014). Capital in the Twenty-First Century. Also: Piketty & Saez (2014), JEP."
+}

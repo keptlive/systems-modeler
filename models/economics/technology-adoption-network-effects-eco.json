@@ -1,0 +1,147 @@
+{
+  "id": "technology-adoption-network-effects-eco",
+  "name": "Technology Adoption with Network Effects",
+  "description": "Technology adoption model with network externalities showing how adoption accelerates as installed base grows. Based on network economics literature. Source: Shapiro & Varian (1999), Information Rules, Harvard Business School Press. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-non-adopters",
+      "name": "Non_Adopters",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-adopters",
+      "name": "Adopters",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adoption",
+      "name": "New_Adoptions",
+      "equation": "Non_Adopters * (Intrinsic_Adoption_Rate + Network_Effect * (Adopters / Total_Population))",
+      "from_stock": "stock-non-adopters",
+      "to_stock": "stock-adopters",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-abandonment",
+      "name": "Abandonment",
+      "equation": "Adopters * Abandonment_Rate",
+      "from_stock": "stock-adopters",
+      "to_stock": "stock-non-adopters",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-intrinsic-rate",
+      "name": "Intrinsic_Adoption_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-network-effect",
+      "name": "Network_Effect",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-abandonment-rate",
+      "name": "Abandonment_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-pop",
+      "name": "Total_Population",
+      "equation": "Non_Adopters + Adopters",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-adoption-fraction",
+      "name": "Adoption_Fraction",
+      "equation": "Adopters / Total_Population",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-effective-value",
+      "name": "Effective_Value",
+      "equation": "Base_Value * (1 + Network_Effect * Adoption_Fraction)",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-base-value",
+      "name": "Base_Value",
+      "equation": "1",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Non_Adopters",
+      "to_element": "New_Adoptions"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Adopters",
+      "to_element": "New_Adoptions"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Network_Effect",
+      "to_element": "New_Adoptions"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Adopters",
+      "to_element": "Abandonment"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:47:58.495590Z",
+  "updated_at": "2026-01-11T20:47:58.495590Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

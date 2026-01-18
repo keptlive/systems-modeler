@@ -1,0 +1,227 @@
+{
+  "id": "electricity-grid-storage-cli",
+  "name": "Electricity Grid with Storage Model",
+  "description": "Model of electricity grid balancing with renewable generation and battery storage. Shows how storage helps integrate variable renewable energy. Based on Denholm et al. (2010) NREL studies. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "stock-battery-charge",
+      "name": "Battery Charge Level",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-grid-frequency",
+      "name": "Grid Frequency Deviation",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-charging",
+      "name": "Battery Charging",
+      "equation": "MAX(0, MIN(Excess_Generation, Max_Charge_Rate, Battery_Capacity - Battery_Charge_Level))",
+      "from_stock": null,
+      "to_stock": "stock-battery-charge",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-discharging",
+      "name": "Battery Discharging",
+      "equation": "MAX(0, MIN(Generation_Shortfall, Max_Discharge_Rate, Battery_Charge_Level))",
+      "from_stock": "stock-battery-charge",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-frequency-change",
+      "name": "Frequency Change",
+      "equation": "(Power_Imbalance / System_Inertia) - Frequency_Restoration",
+      "from_stock": null,
+      "to_stock": "stock-grid-frequency",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-solar-generation",
+      "name": "Solar Generation",
+      "equation": "Solar_Capacity * MAX(0, SIN(2 * 3.14159 * (Time - 6) / 24)) * Solar_Availability",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-wind-generation",
+      "name": "Wind Generation",
+      "equation": "Wind_Capacity * Wind_Availability",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-base-load-generation",
+      "name": "Base Load Generation",
+      "equation": "500",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-generation",
+      "name": "Total Generation",
+      "equation": "Solar_Generation + Wind_Generation + Base_Load_Generation + Battery_Discharging - Battery_Charging",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Electricity Demand",
+      "equation": "800 + 200 * SIN(2 * 3.14159 * (Time - 14) / 24)",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-excess-generation",
+      "name": "Excess Generation",
+      "equation": "MAX(0, Solar_Generation + Wind_Generation + Base_Load_Generation - Demand)",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-generation-shortfall",
+      "name": "Generation Shortfall",
+      "equation": "MAX(0, Demand - Solar_Generation - Wind_Generation - Base_Load_Generation)",
+      "position": {
+        "x": 300,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-power-imbalance",
+      "name": "Power Imbalance",
+      "equation": "Total_Generation - Demand",
+      "position": {
+        "x": 500,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-solar-capacity",
+      "name": "Solar Capacity",
+      "equation": "400",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-wind-capacity",
+      "name": "Wind Capacity",
+      "equation": "300",
+      "position": {
+        "x": 200,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-solar-availability",
+      "name": "Solar Availability",
+      "equation": "0.85",
+      "position": {
+        "x": 300,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-wind-availability",
+      "name": "Wind Availability",
+      "equation": "0.35 + 0.2 * SIN(2 * 3.14159 * Time / 6)",
+      "position": {
+        "x": 450,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-battery-capacity",
+      "name": "Battery Capacity",
+      "equation": "1000",
+      "position": {
+        "x": 600,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-max-charge-rate",
+      "name": "Max Charge Rate",
+      "equation": "200",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-max-discharge-rate",
+      "name": "Max Discharge Rate",
+      "equation": "200",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-system-inertia",
+      "name": "System Inertia",
+      "equation": "100",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-frequency-restoration",
+      "name": "Frequency Restoration",
+      "equation": "Grid_Frequency_Deviation * 0.5",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 72,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:16:29.727365+00:00",
+  "updated_at": "2026-01-11T21:16:29.727365+00:00",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

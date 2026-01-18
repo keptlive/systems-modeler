@@ -1,0 +1,133 @@
+{
+  "id": "braess-paradox-traffic-soc",
+  "name": "Braess Paradox Traffic Network",
+  "description": "Adding road capacity can worsen traffic due to selfish routing. Counterintuitive network phenomenon. Source: Braess (1968) and Roughgarden (2005). DOI: 10.1287/opre.53.3.498",
+  "stocks": [
+    {
+      "id": "stock-route1",
+      "name": "Route_A_Traffic",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-route2",
+      "name": "Route_B_Traffic",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-shortcut",
+      "name": "Shortcut_Traffic",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-shift1to2",
+      "name": "Shift_A_to_B",
+      "equation": "Route_A_Traffic * Shift_Rate * IF(Travel_Time_A > Travel_Time_B, 1, 0)",
+      "from_stock": "stock-route1",
+      "to_stock": "stock-route2",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-toshortcut",
+      "name": "To_Shortcut",
+      "equation": "IF(Shortcut_Open = 1, (Route_A_Traffic + Route_B_Traffic) * 0.1, 0)",
+      "from_stock": null,
+      "to_stock": "stock-shortcut",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total",
+      "name": "Total_Traffic",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-tta",
+      "name": "Travel_Time_A",
+      "equation": "10 + Route_A_Traffic * 0.1",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-ttb",
+      "name": "Travel_Time_B",
+      "equation": "15 + Route_B_Traffic * 0.05",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-shiftrate",
+      "name": "Shift_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-shortcutopen",
+      "name": "Shortcut_Open",
+      "equation": "IF(TIME > 50, 1, 0)",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-avgtime",
+      "name": "Avg_Travel_Time",
+      "equation": "(Route_A_Traffic * Travel_Time_A + Route_B_Traffic * Travel_Time_B) / Total_Traffic",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Route_A_Traffic",
+      "to_element": "Shift_A_to_B"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:02:23.929807Z",
+  "updated_at": "2026-01-12T02:02:23.929812Z",
+  "source": "https://doi.org/10.1287/opre.53.3.498",
+  "reference": "Roughgarden, T. (2005). Selfish Routing and the Price of Anarchy. MIT Press."
+}

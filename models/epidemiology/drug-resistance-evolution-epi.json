@@ -1,0 +1,244 @@
+{
+  "id": "drug-resistance-evolution-epi",
+  "name": "Drug Resistance Evolution Model",
+  "description": "Model of antimicrobial resistance evolution showing how drug use drives resistance and how stewardship can slow it. Reference: Fisher, R. A. (1930). The Genetical Theory of Natural Selection. Oxford University Press. Source: https://doi.org/10.5962/bhl.title.27468",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible_Bacteria",
+      "initial_value": 900,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-resistant",
+      "name": "Resistant_Bacteria",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-s-growth",
+      "name": "Susceptible_Growth",
+      "equation": "Susceptible_Bacteria * Growth_Rate * (1 - Total_Population / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-susceptible",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-r-growth",
+      "name": "Resistant_Growth",
+      "equation": "Resistant_Bacteria * Growth_Rate * Fitness_Cost * (1 - Total_Population / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-resistant",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-mutation",
+      "name": "Mutation_Rate",
+      "equation": "Susceptible_Bacteria * Mutation_Probability * Drug_Pressure",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-resistant",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-s-death",
+      "name": "Susceptible_Death",
+      "equation": "Susceptible_Bacteria * Death_Rate * (1 + Drug_Pressure * Drug_Efficacy)",
+      "from_stock": "stock-susceptible",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-r-death",
+      "name": "Resistant_Death",
+      "equation": "Resistant_Bacteria * Death_Rate",
+      "from_stock": "stock-resistant",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-growth",
+      "name": "Growth_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-fitness",
+      "name": "Fitness_Cost",
+      "equation": "0.9",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-capacity",
+      "name": "Carrying_Capacity",
+      "equation": "1500",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-mutation",
+      "name": "Mutation_Probability",
+      "equation": "0.0001",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-drug",
+      "name": "Drug_Pressure",
+      "equation": "1.0",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-death",
+      "name": "Death_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-efficacy",
+      "name": "Drug_Efficacy",
+      "equation": "5.0",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Population",
+      "equation": "Susceptible_Bacteria + Resistant_Bacteria",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Susceptible_Bacteria",
+      "to_element": "Susceptible_Growth"
+    },
+    {
+      "id": "c2",
+      "from_element": "Growth_Rate",
+      "to_element": "Susceptible_Growth"
+    },
+    {
+      "id": "c3",
+      "from_element": "Total_Population",
+      "to_element": "Susceptible_Growth"
+    },
+    {
+      "id": "c4",
+      "from_element": "Carrying_Capacity",
+      "to_element": "Susceptible_Growth"
+    },
+    {
+      "id": "c5",
+      "from_element": "Resistant_Bacteria",
+      "to_element": "Resistant_Growth"
+    },
+    {
+      "id": "c6",
+      "from_element": "Fitness_Cost",
+      "to_element": "Resistant_Growth"
+    },
+    {
+      "id": "c7",
+      "from_element": "Susceptible_Bacteria",
+      "to_element": "Mutation_Rate"
+    },
+    {
+      "id": "c8",
+      "from_element": "Mutation_Probability",
+      "to_element": "Mutation_Rate"
+    },
+    {
+      "id": "c9",
+      "from_element": "Drug_Pressure",
+      "to_element": "Mutation_Rate"
+    },
+    {
+      "id": "c10",
+      "from_element": "Susceptible_Bacteria",
+      "to_element": "Susceptible_Death"
+    },
+    {
+      "id": "c11",
+      "from_element": "Death_Rate",
+      "to_element": "Susceptible_Death"
+    },
+    {
+      "id": "c12",
+      "from_element": "Drug_Pressure",
+      "to_element": "Susceptible_Death"
+    },
+    {
+      "id": "c13",
+      "from_element": "Drug_Efficacy",
+      "to_element": "Susceptible_Death"
+    },
+    {
+      "id": "c14",
+      "from_element": "Resistant_Bacteria",
+      "to_element": "Resistant_Death"
+    },
+    {
+      "id": "c15",
+      "from_element": "Death_Rate",
+      "to_element": "Resistant_Death"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T11:47:36.906190Z",
+  "updated_at": "2026-01-12T11:47:36.906194Z",
+  "source": "https://doi.org/10.1038/nrmicro2312",
+  "reference": "Davies J, Davies D. Origins and Evolution of Antibiotic Resistance. Microbiology and Molecular Biology Reviews. 2010;74(3):417-433."
+}

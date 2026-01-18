@@ -1,0 +1,507 @@
+{
+  "id": "sea-level-rise-and-ice-sheet-dynamics-model-cli",
+  "name": "Sea Level Rise and Ice Sheet Dynamics Model",
+  "description": "A system dynamics model of sea level rise incorporating thermal expansion, mountain glacier melt, and ice sheet dynamics from Greenland and Antarctica. Captures key feedback mechanisms including ice-albedo feedback and marine ice sheet instability. Reference: IPCC (2019). Ocean and Cryosphere in a Changing Climate. Source: https://www.ipcc.ch/srocc/",
+  "stocks": [
+    {
+      "id": "stock-global-mean-sea-level-rise",
+      "name": "Global Mean Sea Level Rise",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-greenland-ice-sheet-mass",
+      "name": "Greenland Ice Sheet Mass",
+      "initial_value": 2900000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-antarctic-ice-sheet-mass",
+      "name": "Antarctic Ice Sheet Mass",
+      "initial_value": 26500000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-mountain-glacier-mass",
+      "name": "Mountain Glacier Mass",
+      "initial_value": 170000,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ocean-heat-content-anomaly",
+      "name": "Ocean Heat Content Anomaly",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-global-temperature-anomaly",
+      "name": "Global Temperature Anomaly",
+      "initial_value": 0.8,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-sea-level-rise-rate",
+      "name": "Sea Level Rise Rate",
+      "equation": "Thermal_Expansion_Rate + Greenland_Contribution + Antarctica_Contribution + Glacier_Contribution + Land_Water_Storage",
+      "from_stock": null,
+      "to_stock": "stock-global-mean-sea-level-rise",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-greenland-snow-accumulation",
+      "name": "Greenland Snow Accumulation",
+      "equation": "Greenland_Base_Accumulation * (1 + 0.05 * Global_Temperature)",
+      "from_stock": null,
+      "to_stock": "stock-greenland-ice-sheet-mass",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-greenland-surface-melt",
+      "name": "Greenland Surface Melt",
+      "equation": "Greenland_Base_Melt * Greenland_Melt_Sensitivity^(Global_Temperature - 0.8) * Ice_Albedo_Feedback_Greenland",
+      "from_stock": "stock-greenland-ice-sheet-mass",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-greenland-calving",
+      "name": "Greenland Calving",
+      "equation": "Greenland_Base_Calving * (1 + Greenland_Dynamic_Sensitivity * (Global_Temperature - 0.8))",
+      "from_stock": "stock-greenland-ice-sheet-mass",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-antarctic-snow-accumulation",
+      "name": "Antarctic Snow Accumulation",
+      "equation": "Antarctica_Base_Accumulation * (1 + 0.06 * Global_Temperature)",
+      "from_stock": null,
+      "to_stock": "stock-antarctic-ice-sheet-mass",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-antarctic-melt",
+      "name": "Antarctic Melt",
+      "equation": "Antarctica_Base_Melt * (1 + Antarctica_Melt_Sensitivity * MAX(0, Global_Temperature - 1.5))",
+      "from_stock": "stock-antarctic-ice-sheet-mass",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-antarctic-calving-and-discharge",
+      "name": "Antarctic Calving and Discharge",
+      "equation": "Antarctica_Base_Calving * Marine_Ice_Sheet_Instability_Factor",
+      "from_stock": "stock-antarctic-ice-sheet-mass",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-glacier-accumulation",
+      "name": "Glacier Accumulation",
+      "equation": "Mountain_Glacier_Mass * Glacier_Accumulation_Rate",
+      "from_stock": null,
+      "to_stock": "stock-mountain-glacier-mass",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-glacier-melt",
+      "name": "Glacier Melt",
+      "equation": "Mountain_Glacier_Mass * Glacier_Melt_Rate",
+      "from_stock": "stock-mountain-glacier-mass",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-ocean-heat-uptake",
+      "name": "Ocean Heat Uptake",
+      "equation": "Radiative_Imbalance * Ocean_Heat_Fraction * 3.15e7",
+      "from_stock": null,
+      "to_stock": "stock-ocean-heat-content-anomaly",
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-global-warming-rate",
+      "name": "Global Warming Rate",
+      "equation": "(Equilibrium_Temperature - Global_Temperature) / Climate_Response_Time",
+      "from_stock": null,
+      "to_stock": "stock-global-temperature-anomaly",
+      "position": {
+        "x": 450,
+        "y": 650
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-co2-concentration",
+      "name": "CO2 Concentration",
+      "equation": "CO2_Scenario(Time)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-radiative-forcing",
+      "name": "Radiative Forcing",
+      "equation": "5.35 * LOG(CO2_Concentration / 280)",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-equilibrium-temperature",
+      "name": "Equilibrium Temperature",
+      "equation": "Climate_Sensitivity * LOG(CO2_Concentration / 280) / LOG(2)",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-climate-sensitivity",
+      "name": "Climate Sensitivity",
+      "equation": "3.0",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-climate-response-time",
+      "name": "Climate Response Time",
+      "equation": "30",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-radiative-imbalance",
+      "name": "Radiative Imbalance",
+      "equation": "Radiative_Forcing - Global_Temperature / Climate_Sensitivity * 3.7",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-ocean-heat-fraction",
+      "name": "Ocean Heat Fraction",
+      "equation": "0.93",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-thermal-expansion-coefficient",
+      "name": "Thermal Expansion Coefficient",
+      "equation": "0.0004",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-thermal-expansion-rate",
+      "name": "Thermal Expansion Rate",
+      "equation": "Ocean_Heat_Uptake * Thermal_Expansion_Coefficient",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-greenland-base-accumulation",
+      "name": "Greenland Base Accumulation",
+      "equation": "500",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-greenland-base-melt",
+      "name": "Greenland Base Melt",
+      "equation": "200",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-greenland-base-calving",
+      "name": "Greenland Base Calving",
+      "equation": "300",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-greenland-melt-sensitivity",
+      "name": "Greenland Melt Sensitivity",
+      "equation": "1.8",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-greenland-dynamic-sensitivity",
+      "name": "Greenland Dynamic Sensitivity",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-ice-albedo-feedback-greenland",
+      "name": "Ice-Albedo Feedback (Greenland)",
+      "equation": "1 + 0.1 * (1 - Greenland_Ice_Mass / 2900000)",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-greenland-sea-level-contribution",
+      "name": "Greenland Sea Level Contribution",
+      "equation": "(Greenland_Melt + Greenland_Calving - Greenland_Accumulation) / 361",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-antarctica-base-accumulation",
+      "name": "Antarctica Base Accumulation",
+      "equation": "2200",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-antarctica-base-melt",
+      "name": "Antarctica Base Melt",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-antarctica-base-calving",
+      "name": "Antarctica Base Calving",
+      "equation": "2100",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-antarctica-melt-sensitivity",
+      "name": "Antarctica Melt Sensitivity",
+      "equation": "5",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-marine-ice-sheet-instability-factor",
+      "name": "Marine Ice Sheet Instability Factor",
+      "equation": "1 + MISI_Sensitivity * MAX(0, Global_Temperature - MISI_Threshold)^2",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-misi-threshold-temperature",
+      "name": "MISI Threshold Temperature",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-misi-sensitivity",
+      "name": "MISI Sensitivity",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-antarctic-sea-level-contribution",
+      "name": "Antarctic Sea Level Contribution",
+      "equation": "(Antarctica_Melt + Antarctica_Calving - Antarctica_Accumulation) / 361",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-glacier-accumulation-rate",
+      "name": "Glacier Accumulation Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-glacier-melt-rate",
+      "name": "Glacier Melt Rate",
+      "equation": "0.01 * (1 + 0.5 * (Global_Temperature - 0.8))",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-glacier-sea-level-contribution",
+      "name": "Glacier Sea Level Contribution",
+      "equation": "(Glacier_Melt - Glacier_Accumulation) / 361",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-land-water-storage-change",
+      "name": "Land Water Storage Change",
+      "equation": "0.0003",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-total-ice-mass-loss-rate",
+      "name": "Total Ice Mass Loss Rate",
+      "equation": "(Greenland_Melt + Greenland_Calving - Greenland_Accumulation) + (Antarctica_Melt + Antarctica_Calving - Antarctica_Accumulation) + (Glacier_Melt - Glacier_Accumulation)",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-projected-sea-level-2100",
+      "name": "Projected Sea Level 2100",
+      "equation": "IF Time >= 2100 THEN Global_Sea_Level ELSE 0",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-committed-sea-level-rise",
+      "name": "Committed Sea Level Rise",
+      "equation": "0.4 * Global_Temperature",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Global Temperature Anomaly",
+      "to_element": "Greenland Surface Melt"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Global Temperature Anomaly",
+      "to_element": "Antarctic Melt"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Global Temperature Anomaly",
+      "to_element": "Glacier Melt Rate"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Ocean Heat Content Anomaly",
+      "to_element": "Thermal Expansion Rate"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Greenland Ice Sheet Mass",
+      "to_element": "Ice-Albedo Feedback (Greenland)"
+    }
+  ],
+  "time_settings": {
+    "start": 2000,
+    "end": 2200,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.718425Z",
+  "updated_at": "2026-01-11T20:04:50.718425Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

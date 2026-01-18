@@ -1,0 +1,33 @@
+{
+  "id": "kahneman-tversky-prospect-theory-psy",
+  "name": "Kahneman-Tversky Prospect Theory Model",
+  "description": "Nobel Prize-winning model of decision-making under risk. People evaluate outcomes relative to a reference point, are loss averse, and distort probabilities. Source: Kahneman & Tversky (1979). Econometrica. DOI: 10.2307/1914185",
+  "stocks": [
+    {"id": "stock-wealth", "name": "Current_Wealth", "initial_value": 1000, "equation": "", "position": {"x": 300, "y": 200}},
+    {"id": "stock-reference", "name": "Reference_Point", "initial_value": 1000, "equation": "", "position": {"x": 300, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-outcome", "name": "Outcome", "equation": "Expected_Gamble_Outcome", "from_stock": null, "to_stock": "stock-wealth", "position": {"x": 150, "y": 200}},
+    {"id": "flow-ref-adapt", "name": "Reference_Adaptation", "equation": "(Current_Wealth - Reference_Point) / Adaptation_Speed", "from_stock": null, "to_stock": "stock-reference", "position": {"x": 150, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-gain", "name": "Potential_Gain", "equation": "200", "position": {"x": 100, "y": 100}},
+    {"id": "var-loss", "name": "Potential_Loss", "equation": "100", "position": {"x": 200, "y": 100}},
+    {"id": "var-prob-gain", "name": "Prob_Gain", "equation": "0.5", "position": {"x": 350, "y": 100}},
+    {"id": "var-prob-loss", "name": "Prob_Loss", "equation": "0.5", "position": {"x": 450, "y": 100}},
+    {"id": "var-lambda", "name": "Loss_Aversion", "equation": "2.25", "position": {"x": 100, "y": 250}},
+    {"id": "var-alpha", "name": "Diminishing_Sensitivity", "equation": "0.88", "position": {"x": 200, "y": 250}},
+    {"id": "var-value-gain", "name": "Value_of_Gain", "equation": "Potential_Gain^Diminishing_Sensitivity", "position": {"x": 350, "y": 250}},
+    {"id": "var-value-loss", "name": "Value_of_Loss", "equation": "-Loss_Aversion * Potential_Loss^Diminishing_Sensitivity", "position": {"x": 450, "y": 250}},
+    {"id": "var-weighted-prob-g", "name": "Weighted_Prob_Gain", "equation": "Prob_Gain^0.61 / (Prob_Gain^0.61 + (1-Prob_Gain)^0.61)^(1/0.61)", "position": {"x": 150, "y": 300}},
+    {"id": "var-prospect-value", "name": "Prospect_Value", "equation": "Weighted_Prob_Gain * Value_of_Gain + (1 - Weighted_Prob_Gain) * Value_of_Loss", "position": {"x": 400, "y": 300}},
+    {"id": "var-expected", "name": "Expected_Gamble_Outcome", "equation": "IF(Prospect_Value > 0, Potential_Gain * Prob_Gain - Potential_Loss * Prob_Loss, 0)", "position": {"x": 100, "y": 350}},
+    {"id": "var-adapt-speed", "name": "Adaptation_Speed", "equation": "20", "position": {"x": 200, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 1},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.2307/1914185",
+  "reference": "Kahneman, D. & Tversky, A. (1979). Prospect theory: An analysis of decision under risk. Econometrica, 47(2), 263-291."
+}

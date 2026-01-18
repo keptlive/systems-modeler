@@ -1,0 +1,211 @@
+{
+  "id": "r0-dynamics-control-epi",
+  "name": "R0 Dynamics and Control Model",
+  "description": "Model showing how basic reproduction number R0 changes with interventions and behavioral response. Based on epidemic control theory. Reference: WHO Disease Outbreak Information. Source: https://www.who.int/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Susceptible",
+      "initial_value": 999000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Infected",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Intervention Level",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Infection",
+      "equation": "Effective_Beta * Susceptible * Infected / Total_Population",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Recovery",
+      "equation": "Infected / Infectious_Period",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Intervention Increase",
+      "equation": "IF(Infected > Threshold, Intervention_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Intervention Relaxation",
+      "equation": "IF(Infected < Threshold * 0.1, Intervention_Level * Relaxation_Rate, 0)",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Total Population",
+      "equation": "1000000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Base Beta",
+      "equation": "0.4",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Infectious Period",
+      "equation": "10",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Intervention Effectiveness",
+      "equation": "0.7",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Effective Beta",
+      "equation": "Base_Beta * (1 - Intervention_Level * Intervention_Effectiveness)",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Threshold",
+      "equation": "10000",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Intervention Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Relaxation Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Basic R0",
+      "equation": "Base_Beta * Infectious_Period",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Effective Rt",
+      "equation": "Effective_Beta * Infectious_Period * Susceptible / Total_Population",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Susceptible",
+      "to_element": "Infection"
+    },
+    {
+      "id": "c2",
+      "from_element": "Infected",
+      "to_element": "Infection"
+    },
+    {
+      "id": "c3",
+      "from_element": "Intervention Level",
+      "to_element": "Effective Beta"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:53:04.261361+00:00",
+  "updated_at": "2026-01-12T01:53:04.261364+00:00",
+  "source": "https://doi.org/10.1016/S1473-3099(20)30120-1",
+  "reference": "Anderson RM, Heesterbeek H, Klinkenberg D, Hollingsworth TD. How will country-based mitigation measures influence the course of the COVID-19 epidemic? Lancet. 2020;395(10228):931-934."
+}

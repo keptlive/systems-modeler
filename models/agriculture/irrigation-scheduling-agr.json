@@ -1,0 +1,101 @@
+{
+  "id": "irrigation-scheduling-agr",
+  "name": "Irrigation Scheduling Model",
+  "description": "Soil water balance for irrigation management",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Soil_Water_Content",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Cumulative_Irrigation",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Field_Capacity",
+      "equation": "0.35",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Wilting_Point",
+      "equation": "0.15",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "ET_Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Irrigation_Trigger",
+      "equation": "0.5*(Field_Capacity+Wilting_Point)",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Irrigation_Amount",
+      "equation": "Field_Capacity-Soil_Water_Content",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Field_Capacity",
+      "to_element": "Irrigation_Trigger"
+    },
+    {
+      "id": "c2",
+      "from_element": "Wilting_Point",
+      "to_element": "Irrigation_Trigger"
+    },
+    {
+      "id": "c3",
+      "from_element": "Soil_Water_Content",
+      "to_element": "Irrigation_Amount"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 120.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:51:57.256890+00:00",
+  "updated_at": "2026-01-15T20:51:57.256890+00:00",
+  "source": "https://doi.org/10.13031/2013.23686",
+  "reference": "Allen, R.G. et al. (1998) Crop evapotranspiration. FAO Irrigation and Drainage Paper 56"
+}

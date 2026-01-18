@@ -1,0 +1,149 @@
+{
+  "id": "simple-carbon-cycle-climate",
+  "name": "Simple Carbon Cycle Model",
+  "description": "Basic carbon cycle model showing flows between atmosphere, ocean, and terrestrial biosphere. Foundation for understanding climate change.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Atmospheric_Carbon",
+      "initial_value": 850,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Ocean_Carbon",
+      "initial_value": 38000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Terrestrial_Carbon",
+      "initial_value": 2000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Ocean_Uptake",
+      "equation": "Atmospheric_Carbon * Ocean_Exchange_Rate - Ocean_Carbon * Ocean_Outgassing_Rate",
+      "from_stock": "Atmospheric_Carbon",
+      "to_stock": "Ocean_Carbon",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Terrestrial_Uptake",
+      "equation": "Atmospheric_Carbon * Photosynthesis_Rate",
+      "from_stock": "Atmospheric_Carbon",
+      "to_stock": "Terrestrial_Carbon",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Respiration",
+      "equation": "Terrestrial_Carbon * Respiration_Rate",
+      "from_stock": "Terrestrial_Carbon",
+      "to_stock": "Atmospheric_Carbon",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Fossil_Emissions",
+      "equation": "Emission_Rate",
+      "from_stock": null,
+      "to_stock": "Atmospheric_Carbon",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Ocean_Exchange_Rate",
+      "equation": "0.002",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Ocean_Outgassing_Rate",
+      "equation": "0.00005",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Photosynthesis_Rate",
+      "equation": "0.12",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Respiration_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Emission_Rate",
+      "equation": "10",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v6",
+      "name": "CO2_Concentration_ppm",
+      "equation": "Atmospheric_Carbon * 0.47",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2000,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1038/nature10915",
+  "reference": "Le Quere, C., et al. (2012). The global carbon budget 1959-2011. Earth System Science Data, 5, 165-185. DOI: 10.1038/nature10915",
+  "created_at": "2026-01-15T19:20:16.771919+00:00",
+  "updated_at": "2026-01-15T19:20:16.771919+00:00"
+}

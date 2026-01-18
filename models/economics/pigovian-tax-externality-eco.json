@@ -1,0 +1,189 @@
+{
+  "id": "pigovian-tax-externality-eco",
+  "name": "Pigovian Tax for Externalities",
+  "description": "Tax equal to marginal external cost corrects market failure from negative externalities. Foundation for carbon taxes and pollution pricing. Achieves socially optimal outcome. Reference: IPCC (2021). Climate Change 2021: The Physical Science Basis. Source: https://www.ipcc.ch/report/ar6/wg1/",
+  "stocks": [
+    {
+      "id": "stock-pollution",
+      "name": "Pollution Stock",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-production",
+      "name": "Production Level",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-emissions",
+      "name": "Emissions",
+      "equation": "Production_Level * Emission_Intensity",
+      "from_stock": null,
+      "to_stock": "stock-pollution",
+      "position": {
+        "x": 80,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-natural-decay",
+      "name": "Natural Decay",
+      "equation": "Pollution_Stock * Decay_Rate",
+      "from_stock": "stock-pollution",
+      "to_stock": null,
+      "position": {
+        "x": 80,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-production-change",
+      "name": "Production Change",
+      "equation": "Adjustment_Speed * (Profit_Maximizing_Output - Production_Level)",
+      "from_stock": null,
+      "to_stock": "stock-production",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-private-mc",
+      "name": "Private Marginal Cost",
+      "equation": "10 + 0.1 * Production_Level",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-external-mc",
+      "name": "External Marginal Cost",
+      "equation": "Emission_Intensity * Marginal_Damage",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-social-mc",
+      "name": "Social Marginal Cost",
+      "equation": "Private_Marginal_Cost + External_Marginal_Cost",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-price",
+      "name": "Market Price",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-pigovian-tax",
+      "name": "Pigovian Tax",
+      "equation": "External_Marginal_Cost",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-profit-max",
+      "name": "Profit Maximizing Output",
+      "equation": "(Market_Price - Pigovian_Tax - 10) / 0.1",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-emission-intensity",
+      "name": "Emission Intensity",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-marginal-damage",
+      "name": "Marginal Damage",
+      "equation": "5",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-decay-rate",
+      "name": "Decay Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-adjust",
+      "name": "Adjustment Speed",
+      "equation": "0.2",
+      "position": {
+        "x": 300,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-welfare",
+      "name": "Social Welfare",
+      "equation": "Production_Level * (Market_Price - Private_Marginal_Cost) - Pollution_Stock * Marginal_Damage",
+      "position": {
+        "x": 550,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Production Level",
+      "to_element": "Emissions"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Pigovian Tax",
+      "to_element": "Profit Maximizing Output"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "External Marginal Cost",
+      "to_element": "Pigovian Tax"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:51:43.478040+00:00",
+  "updated_at": "2026-01-12T07:51:43.478096+00:00",
+  "source": "https://doi.org/10.1111/j.1468-0297.2010.02387.x",
+  "reference": "Pigou AC. The Economics of Welfare. Macmillan. 1920."
+}

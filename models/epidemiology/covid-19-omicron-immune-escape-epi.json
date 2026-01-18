@@ -1,0 +1,34 @@
+{
+  "id": "covid-19-omicron-immune-escape-epi",
+  "name": "COVID-19 Omicron Immune Escape Model",
+  "description": "Model of SARS-CoV-2 Omicron variant dynamics with immune escape capabilities. Incorporates waning immunity, breakthrough infections, and reinfections. Based on Imperial College and WHO models of variant-specific transmission.",
+  "stocks": [
+    {"id": "stock-naive-susceptible", "name": "Naive Susceptible", "initial_value": 20000000, "equation": "", "position": {"x": 100, "y": 150}},
+    {"id": "stock-vaccinated", "name": "Vaccinated", "initial_value": 60000000, "equation": "", "position": {"x": 100, "y": 300}},
+    {"id": "stock-recovered", "name": "Recovered", "initial_value": 10000000, "equation": "", "position": {"x": 100, "y": 450}},
+    {"id": "stock-infected", "name": "Infected", "initial_value": 100000, "equation": "", "position": {"x": 350, "y": 300}},
+    {"id": "stock-immune", "name": "Immune", "initial_value": 5000000, "equation": "", "position": {"x": 600, "y": 300}}
+  ],
+  "flows": [
+    {"id": "flow-naive-infection", "name": "Naive Infection", "equation": "Force_of_Infection * Naive_Susceptible", "from_stock": "stock-naive-susceptible", "to_stock": "stock-infected", "position": {"x": 225, "y": 150}},
+    {"id": "flow-breakthrough-infection", "name": "Breakthrough Infection", "equation": "Force_of_Infection * Vaccinated * (1 - VE_Infection_Omicron)", "from_stock": "stock-vaccinated", "to_stock": "stock-infected", "position": {"x": 225, "y": 300}},
+    {"id": "flow-reinfection", "name": "Reinfection", "equation": "Force_of_Infection * Recovered * Reinfection_Susceptibility", "from_stock": "stock-recovered", "to_stock": "stock-infected", "position": {"x": 225, "y": 450}},
+    {"id": "flow-recovery", "name": "Recovery", "equation": "Infected / Infectious_Period", "from_stock": "stock-infected", "to_stock": "stock-immune", "position": {"x": 475, "y": 300}},
+    {"id": "flow-waning", "name": "Waning", "equation": "Immune / Immunity_Duration", "from_stock": "stock-immune", "to_stock": "stock-recovered", "position": {"x": 600, "y": 400}}
+  ],
+  "variables": [
+    {"id": "var-r0-omicron", "name": "R0 Omicron", "equation": "10", "position": {"x": 200, "y": 80}},
+    {"id": "var-infectious-period", "name": "Infectious Period", "equation": "5", "position": {"x": 400, "y": 80}},
+    {"id": "var-population", "name": "Population", "equation": "100000000", "position": {"x": 550, "y": 80}},
+    {"id": "var-ve-infection-omicron", "name": "VE Infection Omicron", "equation": "0.3", "position": {"x": 200, "y": 530}},
+    {"id": "var-reinfection-susceptibility", "name": "Reinfection Susceptibility", "equation": "0.5", "position": {"x": 400, "y": 530}},
+    {"id": "var-immunity-duration", "name": "Immunity Duration", "equation": "180", "position": {"x": 550, "y": 530}},
+    {"id": "var-beta", "name": "Beta", "equation": "R0_Omicron / Infectious_Period", "position": {"x": 300, "y": 600}},
+    {"id": "var-force-of-infection", "name": "Force of Infection", "equation": "Beta * Infected / Population", "position": {"x": 500, "y": 600}},
+    {"id": "var-effective-r", "name": "Effective R", "equation": "R0_Omicron * (Naive_Susceptible + Vaccinated * (1 - VE_Infection_Omicron) + Recovered * Reinfection_Susceptibility) / Population", "position": {"x": 400, "y": 670}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 365, "dt": 1},
+  "source": "https://doi.org/10.1038/s41586-022-04411-y",
+  "reference": "Altarawneh HN et al. Protection against the Omicron Variant from Previous SARS-CoV-2 Infection. NEJM. 2022;386:1288-1290."
+}

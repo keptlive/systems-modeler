@@ -1,0 +1,170 @@
+{
+  "id": "lithium-ion-battery-discharge-model-phy",
+  "name": "Lithium-Ion Battery Discharge Model",
+  "description": "Equivalent circuit model for Li-ion battery discharge. Shows voltage drop under load and state of charge dynamics. Reference: BloombergNEF Battery Price Survey. Source: https://about.bnef.com/",
+  "stocks": [
+    {
+      "id": "stock-soc",
+      "name": "SOC",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-v-rc1",
+      "name": "V_rc1",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-v-rc2",
+      "name": "V_rc2",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-temperature",
+      "name": "Temperature",
+      "initial_value": 25,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-discharge",
+      "name": "discharge",
+      "equation": "0",
+      "from_stock": "stock-soc",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-rc1-charging",
+      "name": "rc1_charging",
+      "equation": "0",
+      "from_stock": null,
+      "to_stock": "stock-v-rc1",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-rc1-decay",
+      "name": "rc1_decay",
+      "equation": "0",
+      "from_stock": "stock-v-rc1",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-heat-generation",
+      "name": "heat_generation",
+      "equation": "0",
+      "from_stock": null,
+      "to_stock": "stock-temperature",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-cooling",
+      "name": "cooling",
+      "equation": "0",
+      "from_stock": "stock-temperature",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-capacity",
+      "name": "Capacity",
+      "equation": "3.0",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-r0",
+      "name": "R0",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-r1",
+      "name": "R1",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-c1",
+      "name": "C1",
+      "equation": "1000",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-v-oc0",
+      "name": "V_oc0",
+      "equation": "4.2",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-i-load",
+      "name": "I_load",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 10800,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.826755Z",
+  "updated_at": "2026-01-11T20:04:50.826755Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg System Dynamics Test Models"
+}

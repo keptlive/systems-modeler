@@ -1,0 +1,207 @@
+{
+  "id": "gene-therapy-development",
+  "name": "Gene Therapy Development Pipeline Model",
+  "description": "Model of gene therapy drug development and approval dynamics.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Preclinical",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Phase_1",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Phase_2",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Phase_3",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Approved",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Discovery",
+      "equation": "Research_Investment * Discovery_Rate",
+      "from_stock": null,
+      "to_stock": "Preclinical",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "To_Phase1",
+      "equation": "Preclinical * Phase1_Entry * Safety_Success",
+      "from_stock": "Preclinical",
+      "to_stock": "Phase_1",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "To_Phase2",
+      "equation": "Phase_1 * Phase2_Entry",
+      "from_stock": "Phase_1",
+      "to_stock": "Phase_2",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "To_Phase3",
+      "equation": "Phase_2 * Phase3_Entry * Efficacy_Success",
+      "from_stock": "Phase_2",
+      "to_stock": "Phase_3",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Approval",
+      "equation": "Phase_3 * Approval_Rate",
+      "from_stock": "Phase_3",
+      "to_stock": "Approved",
+      "position": {
+        "x": 625,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Research_Investment",
+      "equation": "100",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Discovery_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Phase1_Entry",
+      "equation": "0.1",
+      "position": {
+        "x": 175,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Safety_Success",
+      "equation": "0.7",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Phase2_Entry",
+      "equation": "0.3",
+      "position": {
+        "x": 325,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Phase3_Entry",
+      "equation": "0.2",
+      "position": {
+        "x": 475,
+        "y": 50
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Efficacy_Success",
+      "equation": "0.5",
+      "position": {
+        "x": 475,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Approval_Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 625,
+        "y": 50
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Pipeline_Total",
+      "equation": "Preclinical + Phase_1 + Phase_2 + Phase_3",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2040,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1038/s41573-021-00371-y",
+  "reference": "Bulaklak, K. & Gersbach, C.A. (2020). The once and future gene therapy. Nature Communications, 11, 5820. DOI: 10.1038/s41573-021-00371-y",
+  "created_at": "2026-01-15T19:31:51.617641+00:00",
+  "updated_at": "2026-01-15T19:31:51.617641+00:00"
+}

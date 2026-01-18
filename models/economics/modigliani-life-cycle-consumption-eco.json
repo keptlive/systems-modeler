@@ -1,0 +1,165 @@
+{
+  "id": "modigliani-life-cycle-consumption-eco",
+  "name": "Modigliani Life Cycle Consumption Model",
+  "description": "Nobel Prize model of consumption smoothing over the life cycle with saving for retirement. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Wealth",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Age",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Saving",
+      "equation": "Income - Consumption",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Interest",
+      "equation": "Interest_Rate * Wealth",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Aging",
+      "equation": "1",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Working_Years",
+      "equation": "45",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Retirement_Age",
+      "equation": "65",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Life_Expectancy",
+      "equation": "85",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Remaining_Life",
+      "equation": "MAX(0, Life_Expectancy - Age)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Income",
+      "equation": "IF(Age < Retirement_Age, 50000, 0)",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Human_Wealth",
+      "equation": "IF(Age < Retirement_Age, Income * (Retirement_Age - Age), 0)",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Total_Resources",
+      "equation": "Wealth + Human_Wealth",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Consumption",
+      "equation": "Total_Resources / MAX(1, Remaining_Life)",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Interest_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Marginal_Propensity_Consume",
+      "equation": "1 / Remaining_Life",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 65,
+    "dt": 1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:26:32.202030+00:00",
+  "updated_at": "2026-01-12T11:26:32.202030+00:00",
+  "source": "https://doi.org/10.2307/2296058",
+  "reference": "Modigliani F, Brumberg R. Utility analysis and the consumption function. In: Post-Keynesian Economics. Rutgers University Press; 1954. Nobel Prize 1985."
+}

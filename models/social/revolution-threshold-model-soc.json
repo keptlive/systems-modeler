@@ -1,0 +1,182 @@
+{
+  "id": "revolution-threshold-model-soc",
+  "name": "Revolution Threshold Model",
+  "description": "Models collective action and revolutionary cascade based on thresholds. Source: Kuran (1991), World Politics. DOI: 10.2307/2010372",
+  "stocks": [
+    {
+      "id": "stock-protesters",
+      "name": "Active_Protesters",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-grievance",
+      "name": "Grievance_Level",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-repression",
+      "name": "Repression_Level",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-join",
+      "name": "Join_Protest",
+      "equation": "(Population - Active_Protesters) * Activation_Rate * IF(Active_Protesters / Population > Individual_Threshold, 1, 0)",
+      "from_stock": null,
+      "to_stock": "stock-protesters",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-leave",
+      "name": "Leave_Protest",
+      "equation": "Active_Protesters * Exit_Rate * Repression_Effect",
+      "from_stock": "stock-protesters",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-griev",
+      "name": "Grievance_Change",
+      "equation": "(Economic_Stress + Political_Exclusion - Grievance_Level) * 0.1",
+      "from_stock": null,
+      "to_stock": "stock-grievance",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-repress",
+      "name": "Repression_Change",
+      "equation": "(Regime_Response * Active_Protesters / Population - Repression_Level) * 0.2",
+      "from_stock": null,
+      "to_stock": "stock-repression",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-pop",
+      "name": "Population",
+      "equation": "1000",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-actrate",
+      "name": "Activation_Rate",
+      "equation": "0.1 * Grievance_Level / 50",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-indthresh",
+      "name": "Individual_Threshold",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-exitrate",
+      "name": "Exit_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-repeff",
+      "name": "Repression_Effect",
+      "equation": "1 + Repression_Level / 50",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-econstress",
+      "name": "Economic_Stress",
+      "equation": "40 + 10 * SIN(TIME / 20)",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-politex",
+      "name": "Political_Exclusion",
+      "equation": "30",
+      "position": {
+        "x": 250,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-regime",
+      "name": "Regime_Response",
+      "equation": "50",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-tipping",
+      "name": "Tipping_Point",
+      "equation": "IF(Active_Protesters / Population > 0.2, 1, 0)",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Grievance_Level",
+      "to_element": "Activation_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:23:02.238327+00:00",
+  "updated_at": "2026-01-12T02:23:02.238330+00:00",
+  "source": "https://doi.org/10.2307/2010372",
+  "reference": "Kuran, T. (1991). Now Out of Never: The Element of Surprise in the East European Revolution of 1989. World Politics."
+}

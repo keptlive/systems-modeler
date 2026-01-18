@@ -1,0 +1,365 @@
+{
+  "id": "aluminum-supply-chain-sustainability-eco",
+  "name": "Recycling_Inflow",
+  "description": "System dynamics model of European Aluminum Rolled Product Supply Chain. Models demand/supply evolution, government regulations, sustainable adoption, decarbonization investments, and environmental requirements. Based on MDPI Sustainability 2024. Reference: Based on System Dynamics supply chain models (Sterman, 2000). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Primary_Aluminum_Production",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Recycled_Aluminum",
+      "initial_value": 3000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Carbon_Emissions",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Green_Technology_Investment",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Market_Share_Sustainable",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Primary_Production_Rate",
+      "equation": "Market_Demand * (1 - Recycling_Rate) * Production_Efficiency",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Recycling_Inflow",
+      "equation": "End_of_Life_Scrap * Collection_Rate",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Emission_Rate",
+      "equation": "Primary_Aluminum_Production * Emission_Factor * (1 - Decarbonization_Progress)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Emission_Reduction",
+      "equation": "Carbon_Emissions * Abatement_Rate * Green_Technology_Investment / 10000",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Investment_Rate",
+      "equation": "Revenue * Investment_Fraction * Government_Incentive",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Sustainable_Adoption",
+      "equation": "(Target_Sustainable_Share - Market_Share_Sustainable) / Adoption_Time",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Market_Demand",
+      "equation": "8000 * (1 + 0.02 * TIME / 365)",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Recycling_Rate",
+      "equation": "0.3 + 0.2 * Market_Share_Sustainable",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Production_Efficiency",
+      "equation": "0.9 + 0.05 * Green_Technology_Investment / 10000",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "v4",
+      "name": "End_of_Life_Scrap",
+      "equation": "4000",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Collection_Rate",
+      "equation": "0.7",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Emission_Factor",
+      "equation": "12",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Decarbonization_Progress",
+      "equation": "Green_Technology_Investment / 50000",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Abatement_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Revenue",
+      "equation": "(Primary_Aluminum_Production + Recycled_Aluminum) * 2500",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Investment_Fraction",
+      "equation": "0.05",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Government_Incentive",
+      "equation": "1.2",
+      "position": {
+        "x": 800,
+        "y": 200
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Target_Sustainable_Share",
+      "equation": "0.6",
+      "position": {
+        "x": 400,
+        "y": 500
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Adoption_Time",
+      "equation": "365",
+      "position": {
+        "x": 500,
+        "y": 500
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Production_Efficiency",
+      "to_element": "Primary_Production_Rate"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Market_Demand",
+      "to_element": "Primary_Production_Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Recycling_Rate",
+      "to_element": "Primary_Production_Rate"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Collection_Rate",
+      "to_element": "Recycling_Inflow"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "End_of_Life_Scrap",
+      "to_element": "Recycling_Inflow"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Decarbonization_Progress",
+      "to_element": "Emission_Rate"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Primary_Aluminum_Production",
+      "to_element": "Emission_Rate"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Emission_Factor",
+      "to_element": "Emission_Rate"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Abatement_Rate",
+      "to_element": "Emission_Reduction"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Green_Technology_Investment",
+      "to_element": "Emission_Reduction"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Carbon_Emissions",
+      "to_element": "Emission_Reduction"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Government_Incentive",
+      "to_element": "Investment_Rate"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Investment_Fraction",
+      "to_element": "Investment_Rate"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Revenue",
+      "to_element": "Investment_Rate"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Target_Sustainable_Share",
+      "to_element": "Sustainable_Adoption"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Market_Share_Sustainable",
+      "to_element": "Sustainable_Adoption"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Adoption_Time",
+      "to_element": "Sustainable_Adoption"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Market_Share_Sustainable",
+      "to_element": "Recycling_Rate"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Green_Technology_Investment",
+      "to_element": "Production_Efficiency"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Green_Technology_Investment",
+      "to_element": "Decarbonization_Progress"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Primary_Aluminum_Production",
+      "to_element": "Revenue"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Recycled_Aluminum",
+      "to_element": "Revenue"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 3650,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T07:15:44.245889+00:00",
+  "updated_at": "2026-01-12T07:15:44.245889+00:00",
+  "source": "https://doi.org/10.3390/su16208892",
+  "reference": "MDPI (2024). A System Dynamics Supply Chain Analysis for the Sustainability Transition of European Rolled Aluminum Products. Sustainability 16(20), 8892."
+}

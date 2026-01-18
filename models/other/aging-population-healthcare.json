@@ -1,0 +1,187 @@
+{
+  "id": "aging-population-healthcare",
+  "name": "Aging Population Healthcare Demand Model",
+  "description": "Model of healthcare system strain from demographic aging.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Working_Age",
+      "initial_value": 200000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Elderly",
+      "initial_value": 50000000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Healthcare_Capacity",
+      "initial_value": 5000000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Aging",
+      "equation": "Working_Age * Aging_Rate",
+      "from_stock": "Working_Age",
+      "to_stock": "Elderly",
+      "position": {
+        "x": 225,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Births",
+      "equation": "Working_Age * Birth_Rate * Fertility_Factor",
+      "from_stock": null,
+      "to_stock": "Working_Age",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Mortality",
+      "equation": "Elderly * Mortality_Rate",
+      "from_stock": "Elderly",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Capacity_Growth",
+      "equation": "Investment * Capacity_Factor",
+      "from_stock": null,
+      "to_stock": "Healthcare_Capacity",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Capacity_Depreciation",
+      "equation": "Healthcare_Capacity * Depreciation_Rate",
+      "from_stock": "Healthcare_Capacity",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Aging_Rate",
+      "equation": "0.025",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Birth_Rate",
+      "equation": "0.012",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Fertility_Factor",
+      "equation": "0.9",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Mortality_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Investment",
+      "equation": "100000",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Capacity_Factor",
+      "equation": "1.0",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Depreciation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Dependency_Ratio",
+      "equation": "Elderly / Working_Age",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Capacity_Gap",
+      "equation": "MAX(0, Elderly * 0.15 - Healthcare_Capacity)",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2070,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1016/S0140-6736(17)32152-9",
+  "reference": "GBD 2017 Population and Fertility Collaborators (2018). Population and fertility by age and sex for 195 countries and territories. Lancet, 392(10159), 1995-2051. DOI: 10.1016/S0140-6736(17)32152-9",
+  "created_at": "2026-01-15T19:34:06.223149+00:00",
+  "updated_at": "2026-01-15T19:34:06.223149+00:00"
+}

@@ -1,0 +1,157 @@
+{
+  "id": "bass-diffusion-competition-eco",
+  "name": "Bass Diffusion with Competition",
+  "description": "Extended Bass diffusion model with two competing products. Shows how market competition affects innovation adoption dynamics. Based on Norton & Bass (1987). Reference: Bass, F. M. (1969). A new product growth for model consumer durables. Management Science, 15(5), 215-227. DOI: https://doi.org/10.1287/mnsc.15.5.215",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Adopters Product A",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Adopters Product B",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Potential Market",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 225
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Adoption Rate A",
+      "equation": "(Innovation_p_A + Imitation_q_A * Adopters_Product_A / Market_Size) * Potential_Market * Market_Share_A",
+      "from_stock": "s3",
+      "to_stock": "s1",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Adoption Rate B",
+      "equation": "(Innovation_p_B + Imitation_q_B * Adopters_Product_B / Market_Size) * Potential_Market * Market_Share_B",
+      "from_stock": "s3",
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Innovation p A",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Imitation q A",
+      "equation": "0.38",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Innovation p B",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Imitation q B",
+      "equation": "0.45",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Market Size",
+      "equation": "10000",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Market Share A",
+      "equation": "0.6",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Market Share B",
+      "equation": "0.4",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Adopters Product A",
+      "to_element": "Adoption Rate A"
+    },
+    {
+      "id": "c2",
+      "from_element": "Potential Market",
+      "to_element": "Adoption Rate A"
+    },
+    {
+      "id": "c3",
+      "from_element": "Adopters Product B",
+      "to_element": "Adoption Rate B"
+    },
+    {
+      "id": "c4",
+      "from_element": "Potential Market",
+      "to_element": "Adoption Rate B"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-12T01:41:05.117811Z",
+  "updated_at": "2026-01-12T01:41:05.117814Z",
+  "source": "https://doi.org/10.1287/mnsc.33.9.1069",
+  "reference": "Norton JA, Bass FM. A diffusion theory model of adoption and substitution for successive generations of high-technology products. Management Science. 1987;33(9):1069-1086."
+}

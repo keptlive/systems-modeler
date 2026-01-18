@@ -1,0 +1,243 @@
+{
+  "id": "food-supply-chain-disruption-eco",
+  "name": "Food Supply Chain Disruption Model",
+  "description": "Model of food supply chain vulnerabilities showing production, distribution, retail, and consumer stockpiling. Based on COVID-19 supply chain experiences. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Farm Production",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Processing Inventory",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Distribution Centers",
+      "initial_value": 150,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Retail Inventory",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Consumer Stockpiles",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Harvesting",
+      "equation": "Harvest_Rate * (1 - Labor_Disruption)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "To Processing",
+      "equation": "Farm_Production / Farm_Time * (1 - Transport_Disruption)",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "To Distribution",
+      "equation": "Processing_Inventory / Process_Time * (1 - Processing_Disruption)",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "To Retail",
+      "equation": "Distribution_Centers / Dist_Time",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Consumer Purchase",
+      "equation": "Retail_Inventory / Retail_Time * (1 + Panic_Buying_Factor)",
+      "from_stock": "s4",
+      "to_stock": "s5",
+      "position": {
+        "x": 625,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Consumption",
+      "equation": "Normal_Consumption",
+      "from_stock": "s5",
+      "to_stock": null,
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Harvest Rate",
+      "equation": "100",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Labor Disruption",
+      "equation": "0.1",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Farm Time",
+      "equation": "7",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Transport Disruption",
+      "equation": "0.05",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Process Time",
+      "equation": "3",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Processing Disruption",
+      "equation": "0.15",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Dist Time",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Retail Time",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Panic Buying Factor",
+      "equation": "0.5",
+      "position": {
+        "x": 625,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Normal Consumption",
+      "equation": "100",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Farm Production",
+      "to_element": "To Processing"
+    },
+    {
+      "id": "c2",
+      "from_element": "Processing Inventory",
+      "to_element": "To Distribution"
+    },
+    {
+      "id": "c3",
+      "from_element": "Retail Inventory",
+      "to_element": "Consumer Purchase"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 90,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:45:26.877420+00:00",
+  "updated_at": "2026-01-12T01:45:26.877424+00:00",
+  "source": "https://doi.org/10.1038/s43016-020-0091-3",
+  "reference": "Hobbs JE. Food supply chains during the COVID-19 pandemic. Canadian Journal of Agricultural Economics. 2020;68:171-176."
+}

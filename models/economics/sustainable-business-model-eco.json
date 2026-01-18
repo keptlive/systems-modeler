@@ -1,0 +1,307 @@
+{
+  "id": "sustainable-business-model-eco",
+  "name": "Sustainable Business Model Dynamics",
+  "description": "System dynamics model of sustainable business model strategies integrating economic, environmental, and social performance with circular economy principles. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "source": "https://doi.org/10.1016/j.jclepro.2024.140858",
+  "reference": "Cosenz & Noto (2024). Systematic literature review on system dynamic modeling of sustainable business model strategies. Journal of Cleaner Production.",
+  "stocks": [
+    {
+      "id": "stock-financial",
+      "name": "Financial Capital",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-natural",
+      "name": "Natural Capital",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-social",
+      "name": "Social Capital",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-waste",
+      "name": "Waste Generated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-reputation",
+      "name": "Sustainability Reputation",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-revenue",
+      "name": "Revenue Generation",
+      "equation": "Market_Demand * Price_Premium * (1 + Sustainability_Reputation / 100)",
+      "from_stock": null,
+      "to_stock": "stock-financial",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-costs",
+      "name": "Operating Costs",
+      "equation": "Base_Costs + Sustainability_Investment",
+      "from_stock": "stock-financial",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-resource-use",
+      "name": "Resource Consumption",
+      "equation": "Production_Volume * Resource_Intensity * (1 - Circularity_Rate)",
+      "from_stock": "stock-natural",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-regeneration",
+      "name": "Resource Regeneration",
+      "equation": "Natural_Capital * Regeneration_Rate",
+      "from_stock": null,
+      "to_stock": "stock-natural",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-social-investment",
+      "name": "Social Investment",
+      "equation": "Financial_Capital * Social_Investment_Rate",
+      "from_stock": "stock-financial",
+      "to_stock": "stock-social",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-social-decay",
+      "name": "Social Capital Decay",
+      "equation": "Social_Capital * Social_Decay_Rate",
+      "from_stock": "stock-social",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-waste-gen",
+      "name": "Waste Generation",
+      "equation": "Production_Volume * Waste_Intensity * (1 - Circularity_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-waste",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-waste-recycle",
+      "name": "Waste Recycling",
+      "equation": "Waste_Generated * Recycling_Rate",
+      "from_stock": "stock-waste",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-reputation-build",
+      "name": "Reputation Building",
+      "equation": "(Circularity_Rate + Social_Capital / 100) * Visibility * (100 - Sustainability_Reputation) / 100",
+      "from_stock": null,
+      "to_stock": "stock-reputation",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-reputation-decay",
+      "name": "Reputation Decay",
+      "equation": "Sustainability_Reputation * Reputation_Decay_Rate",
+      "from_stock": "stock-reputation",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-demand",
+      "name": "Market Demand",
+      "equation": "100",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-price-premium",
+      "name": "Price Premium",
+      "equation": "1 + Sustainability_Reputation / 200",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-base-costs",
+      "name": "Base Costs",
+      "equation": "60",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-sust-invest",
+      "name": "Sustainability Investment",
+      "equation": "Financial_Capital * 0.1",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-production",
+      "name": "Production Volume",
+      "equation": "100",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-resource-int",
+      "name": "Resource Intensity",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-circularity",
+      "name": "Circularity Rate",
+      "equation": "Sustainability_Investment / 50",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-regen-rate",
+      "name": "Regeneration Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-social-invest-rate",
+      "name": "Social Investment Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-social-decay",
+      "name": "Social Decay Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-waste-int",
+      "name": "Waste Intensity",
+      "equation": "0.3",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-recycle-rate",
+      "name": "Recycling Rate",
+      "equation": "0.5 * Circularity_Rate",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-visibility",
+      "name": "Visibility",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-rep-decay",
+      "name": "Reputation Decay Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T03:11:09.889410+00:00",
+  "updated_at": "2026-01-12T03:11:09.889410+00:00"
+}

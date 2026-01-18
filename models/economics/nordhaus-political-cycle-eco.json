@@ -1,0 +1,190 @@
+{
+  "id": "nordhaus-political-cycle-eco",
+  "name": "Nordhaus Political Business Cycle",
+  "description": "Incumbent governments stimulate economy before elections, creating cycles. Voters have short memories and myopic expectations. Explains electoral timing of fiscal policy. Reference: Nordhaus, W. D. (2008). A question of balance. Yale University Press. DOI: https://doi.org/10.1093/reep/ren023",
+  "stocks": [
+    {
+      "id": "stock-unemployment",
+      "name": "Unemployment Rate",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-inflation",
+      "name": "Inflation Rate",
+      "initial_value": 0.02,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-approval",
+      "name": "Government Approval",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-unemployment-change",
+      "name": "Unemployment Change",
+      "equation": "-Policy_Stimulus * Phillips_Sensitivity",
+      "from_stock": null,
+      "to_stock": "stock-unemployment",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-inflation-change",
+      "name": "Inflation Change",
+      "equation": "Policy_Stimulus * Inflation_Sensitivity + Inflation_Persistence * (Inflation_Rate - Target_Inflation)",
+      "from_stock": null,
+      "to_stock": "stock-inflation",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-approval-change",
+      "name": "Approval Change",
+      "equation": "Approval_Sensitivity * (-Unemployment_Weight * Unemployment_Rate - Inflation_Weight * Inflation_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-approval",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-election-timing",
+      "name": "Time to Election",
+      "equation": "4 - MOD(TIME, 4)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-policy-stimulus",
+      "name": "Policy Stimulus",
+      "equation": "IF(Time_to_Election < 1, 0.02, IF(Time_to_Election > 3, -0.01, 0))",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-phillips",
+      "name": "Phillips Sensitivity",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-inflation-sens",
+      "name": "Inflation Sensitivity",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-inflation-persist",
+      "name": "Inflation Persistence",
+      "equation": "-0.2",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-target-inflation",
+      "name": "Target Inflation",
+      "equation": "0.02",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-unemployment-weight",
+      "name": "Unemployment Weight",
+      "equation": "0.6",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-inflation-weight",
+      "name": "Inflation Weight",
+      "equation": "0.4",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-approval-sens",
+      "name": "Approval Sensitivity",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-election-outcome",
+      "name": "Reelection Probability",
+      "equation": "Government_Approval",
+      "position": {
+        "x": 350,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Time to Election",
+      "to_element": "Policy Stimulus"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Policy Stimulus",
+      "to_element": "Unemployment Change"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Unemployment Rate",
+      "to_element": "Approval Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:51:43.478341+00:00",
+  "updated_at": "2026-01-12T07:51:43.478349+00:00",
+  "source": "https://doi.org/10.2307/2296528",
+  "reference": "Nordhaus WD. The Political Business Cycle. Review of Economic Studies. 1975;42(2):169-190."
+}

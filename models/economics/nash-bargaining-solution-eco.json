@@ -1,0 +1,159 @@
+{
+  "id": "nash-bargaining-solution-eco",
+  "name": "Nash Bargaining Solution",
+  "description": "John Nash's 1950 axiomatic bargaining solution maximizing product of surplus gains. Foundation of cooperative game theory. Nobel Prize 1994. Reference: Nash, J. F. (1950). The Bargaining Problem. Econometrica, 18(2), 155-162. Source: https://doi.org/10.2307/1907266",
+  "stocks": [
+    {
+      "id": "stock-util1",
+      "name": "Player1_Utility",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-util2",
+      "name": "Player2_Utility",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-surplus",
+      "name": "Total_Surplus",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-alloc1",
+      "name": "Allocation1",
+      "equation": "adjustment_speed * (Nash_Share1 - Player1_Utility)",
+      "from_stock": null,
+      "to_stock": "stock-util1",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-alloc2",
+      "name": "Allocation2",
+      "equation": "adjustment_speed * (Nash_Share2 - Player2_Utility)",
+      "from_stock": null,
+      "to_stock": "stock-util2",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-d1",
+      "name": "disagreement1",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-d2",
+      "name": "disagreement2",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-power1",
+      "name": "bargaining_power1",
+      "equation": "0.5",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-power2",
+      "name": "bargaining_power2",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-share1",
+      "name": "Nash_Share1",
+      "equation": "disagreement1 + bargaining_power1 * (Total_Surplus - disagreement1 - disagreement2)",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-share2",
+      "name": "Nash_Share2",
+      "equation": "disagreement2 + bargaining_power2 * (Total_Surplus - disagreement1 - disagreement2)",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-nash-product",
+      "name": "Nash_Product",
+      "equation": "(Player1_Utility - disagreement1) * (Player2_Utility - disagreement2)",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-speed",
+      "name": "adjustment_speed",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Total_Surplus",
+      "to_element": "Nash_Share1"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Total_Surplus",
+      "to_element": "Nash_Share2"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Nash_Share1",
+      "to_element": "Allocation1"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.2307/1907266",
+  "reference": "Nash JF. The Bargaining Problem. Econometrica. 1950;18(2):155-162. Nobel Prize in Economics 1994."
+}

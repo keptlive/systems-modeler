@@ -1,0 +1,210 @@
+{
+  "id": "healthcare-workforce-shortage-hea",
+  "name": "Healthcare Workforce Shortage Dynamics",
+  "description": "Model of healthcare workforce dynamics showing how training pipelines, burnout, and retirement affect the supply of healthcare workers. Based on AAMC projections. Reference: Based on project dynamics models (Lyneis & Ford, 2007). Source: https://systemdynamics.org/",
+  "source": "https://doi.org/10.1001/jama.2021.1632",
+  "reference": "AAMC. The Complexities of Physician Supply and Demand: Projections From 2018 to 2033. AAMC. 2020.",
+  "stocks": [
+    {
+      "id": "stock-students",
+      "name": "Medical_Students",
+      "initial_value": 25000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-residents",
+      "name": "Residents",
+      "initial_value": 35000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-physicians",
+      "name": "Active_Physicians",
+      "initial_value": 950000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-demand",
+      "name": "Physician_Demand",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-enroll",
+      "name": "Enrollment",
+      "equation": "enrollment_rate * med_school_capacity",
+      "from_stock": null,
+      "to_stock": "stock-students",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-graduate",
+      "name": "Graduation",
+      "equation": "Medical_Students / training_years",
+      "from_stock": "stock-students",
+      "to_stock": "stock-residents",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-complete",
+      "name": "Residency_Completion",
+      "equation": "Residents / residency_years",
+      "from_stock": "stock-residents",
+      "to_stock": "stock-physicians",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-retire",
+      "name": "Retirement",
+      "equation": "Active_Physicians * retirement_rate",
+      "from_stock": "stock-physicians",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-burnout",
+      "name": "Burnout_Exits",
+      "equation": "Active_Physicians * burnout_rate * Shortage_Pressure",
+      "from_stock": "stock-physicians",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-demand-grow",
+      "name": "Demand_Growth",
+      "equation": "Physician_Demand * demand_growth_rate",
+      "from_stock": null,
+      "to_stock": "stock-demand",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-enroll",
+      "name": "enrollment_rate",
+      "equation": "0.95",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cap",
+      "name": "med_school_capacity",
+      "equation": "27000",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-train",
+      "name": "training_years",
+      "equation": "4",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-res",
+      "name": "residency_years",
+      "equation": "4",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-retire",
+      "name": "retirement_rate",
+      "equation": "0.025",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-burn",
+      "name": "burnout_rate",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-demand-gr",
+      "name": "demand_growth_rate",
+      "equation": "0.015",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-shortage",
+      "name": "Shortage",
+      "equation": "max(0, Physician_Demand - Active_Physicians)",
+      "position": {
+        "x": 475,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-pressure",
+      "name": "Shortage_Pressure",
+      "equation": "1 + Shortage / Physician_Demand",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

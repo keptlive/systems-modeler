@@ -1,0 +1,125 @@
+{
+  "id": "minsky-financial-instability-fin",
+  "name": "Minsky Financial Instability Hypothesis",
+  "description": "Endogenous financial crisis model through debt accumulation",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Debt",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Output",
+      "initial_value": 200.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Profit_Rate",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Interest_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Investment_Sensitivity",
+      "equation": "0.5",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Debt_Service",
+      "equation": "Interest_Rate*Debt",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Net_Profit",
+      "equation": "Profit_Rate*Output-Debt_Service",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Investment",
+      "equation": "Investment_Sensitivity*Profit_Rate*Output",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Debt_Accumulation",
+      "equation": "Investment-Net_Profit",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Debt",
+      "to_element": "Debt_Service"
+    },
+    {
+      "id": "c2",
+      "from_element": "Profit_Rate",
+      "to_element": "Net_Profit"
+    },
+    {
+      "id": "c3",
+      "from_element": "Output",
+      "to_element": "Net_Profit"
+    },
+    {
+      "id": "c4",
+      "from_element": "Debt_Service",
+      "to_element": "Net_Profit"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 100.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:46:18.597781+00:00",
+  "updated_at": "2026-01-15T20:46:18.597781+00:00",
+  "source": "https://doi.org/10.1080/08854300.1992.11898114",
+  "reference": "Minsky, H.P. (1992) The financial instability hypothesis. Levy Economics Institute Working Paper 74"
+}

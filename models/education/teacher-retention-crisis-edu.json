@@ -1,0 +1,264 @@
+{
+  "id": "teacher-retention-crisis-edu",
+  "name": "Teacher Retention and Workforce Crisis",
+  "description": "Model of teacher workforce dynamics including recruitment, retention, and burnout. Captures the feedback between workload, job satisfaction, and turnover. Based on education workforce research. Reference: OECD Education at a Glance. Source: https://www.oecd.org/education/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Active_Teachers",
+      "initial_value": 3000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "New_Teachers",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Veteran_Teachers",
+      "initial_value": 800,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Teacher_Morale",
+      "initial_value": 0.7,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Hiring",
+      "equation": "MAX(0, Desired_Teachers - (Active_Teachers + New_Teachers + Veteran_Teachers)) * Hiring_Rate",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "New_Teacher_Attrition",
+      "equation": "New_Teachers * New_Attrition_Rate / Teacher_Morale",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Induction_Completion",
+      "equation": "New_Teachers / Induction_Period",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Mid_Career_Attrition",
+      "equation": "Active_Teachers * Mid_Attrition_Rate / Teacher_Morale",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Veteran_Transition",
+      "equation": "Active_Teachers / Career_Length",
+      "from_stock": "s1",
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Retirement",
+      "equation": "Veteran_Teachers / Years_To_Retirement",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Morale_Change",
+      "equation": "(Base_Morale * Workload_Effect * Salary_Effect - Teacher_Morale) / Morale_Adjustment",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 250,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Desired_Teachers",
+      "equation": "4000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Hiring_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "New_Attrition_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Mid_Attrition_Rate",
+      "equation": "0.08",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Induction_Period",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Career_Length",
+      "equation": "15",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Years_To_Retirement",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Base_Morale",
+      "equation": "0.8",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Class_Size",
+      "equation": "Student_Population / (Active_Teachers + New_Teachers + Veteran_Teachers)",
+      "position": {
+        "x": 150,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Student_Population",
+      "equation": "100000",
+      "position": {
+        "x": 350,
+        "y": 180
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Workload_Effect",
+      "equation": "IF Class_Size > 25 THEN 0.8 ELSE 1",
+      "position": {
+        "x": 500,
+        "y": 180
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Salary_Effect",
+      "equation": "0.9",
+      "position": {
+        "x": 150,
+        "y": 230
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Morale_Adjustment",
+      "equation": "4",
+      "position": {
+        "x": 350,
+        "y": 230
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Teacher_Shortage",
+      "equation": "MAX(0, Desired_Teachers - (Active_Teachers + New_Teachers + Veteran_Teachers))",
+      "position": {
+        "x": 500,
+        "y": 230
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2035,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1177/2332858417751803",
+  "reference": "Carver-Thomas D, Darling-Hammond L (2017) Teacher Turnover: Why It Matters and What We Can Do About It. Learning Policy Institute.",
+  "created_at": "2026-01-12T07:00:37.510230+00:00",
+  "updated_at": "2026-01-12T07:00:37.510230+00:00"
+}

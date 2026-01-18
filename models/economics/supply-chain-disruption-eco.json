@@ -1,0 +1,205 @@
+{
+  "id": "supply-chain-disruption-eco",
+  "name": "Supply Chain Disruption Model",
+  "description": "Models supply chain resilience and recovery from disruptions. Based on Ivanov (2020) COVID-19 supply chain research. DOI: 10.1016/j.tre.2020.101922",
+  "stocks": [
+    {
+      "id": "stock-inventory",
+      "name": "Inventory",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-backlog",
+      "name": "Backlog",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-capacity",
+      "name": "Production_Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-suppliercap",
+      "name": "Supplier_Capacity",
+      "initial_value": 120,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-production",
+      "name": "Production",
+      "equation": "MIN(Production_Capacity, Supplier_Capacity) * Capacity_Utilization",
+      "from_stock": null,
+      "to_stock": "stock-inventory",
+      "position": {
+        "x": 225,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-shipment",
+      "name": "Shipment",
+      "equation": "MIN(Inventory, Demand + Backlog)",
+      "from_stock": "stock-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 375,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-addbacklog",
+      "name": "Backlog_Accumulation",
+      "equation": "MAX(0, Demand - Shipment)",
+      "from_stock": null,
+      "to_stock": "stock-backlog",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-clearbacklog",
+      "name": "Backlog_Clearance",
+      "equation": "MIN(Backlog, Inventory - Demand)",
+      "from_stock": "stock-backlog",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-capdisrupt",
+      "name": "Capacity_Disruption",
+      "equation": "Production_Capacity * Disruption_Severity * IF(TIME > Disruption_Start AND TIME < Disruption_End, 1, 0)",
+      "from_stock": "stock-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-caprecov",
+      "name": "Capacity_Recovery",
+      "equation": "(100 - Production_Capacity) * Recovery_Rate * IF(TIME > Disruption_End, 1, 0)",
+      "from_stock": null,
+      "to_stock": "stock-capacity",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-demand",
+      "name": "Demand",
+      "equation": "80 * (1 + 0.1 * SIN(TIME / 10))",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-caputil",
+      "name": "Capacity_Utilization",
+      "equation": "0.9",
+      "position": {
+        "x": 175,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-disruptstart",
+      "name": "Disruption_Start",
+      "equation": "20",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-disruptend",
+      "name": "Disruption_End",
+      "equation": "35",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-disruptsev",
+      "name": "Disruption_Severity",
+      "equation": "0.5",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-recovrate",
+      "name": "Recovery_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-servicelevel",
+      "name": "Service_Level",
+      "equation": "Shipment / (Demand + 0.001)",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-fillrate",
+      "name": "Fill_Rate",
+      "equation": "1 - Backlog / (Demand * 10 + 0.001)",
+      "position": {
+        "x": 500,
+        "y": 175
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Production_Capacity",
+      "to_element": "Production"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:45:00.575031+00:00",
+  "updated_at": "2026-01-12T02:45:00.575034+00:00",
+  "source": "https://doi.org/10.1016/j.tre.2020.101922",
+  "reference": "Ivanov D (2020). Predicting the impacts of epidemic outbreaks on global supply chains: A simulation-based analysis. Transportation Research Part E."
+}

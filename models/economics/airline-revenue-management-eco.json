@@ -1,0 +1,371 @@
+{
+  "id": "airline-revenue-management-eco",
+  "name": "Airline Revenue Management Model",
+  "description": "A yield management model for airline seat inventory based on Talluri & van Ryzin (2004) 'The Theory and Practice of Revenue Management' (doi:10.1007/b139000) and Belobaba's Expected Marginal Seat Revenue (EMSR) framework. Models booking dynamics across fare classes and overbooking decisions. Reference: Based on Beer Game model (Sterman, 2000). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-available-seats",
+      "name": "Available Seats",
+      "initial_value": 180,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-economy-bookings",
+      "name": "Economy Bookings",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-business-bookings",
+      "name": "Business Bookings",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-first-class-bookings",
+      "name": "First Class Bookings",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-cumulative-revenue",
+      "name": "Cumulative Revenue",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-overbookings",
+      "name": "Overbookings",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-economy-booking",
+      "name": "Economy Booking",
+      "equation": "IF(Days_to_Departure > 7, Economy_Demand * Economy_Acceptance_Rate, Economy_Demand * 0.5)",
+      "from_stock": "stock-available-seats",
+      "to_stock": "stock-economy-bookings",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-business-booking",
+      "name": "Business Booking",
+      "equation": "IF(Days_to_Departure < 14, Business_Demand * Business_Acceptance_Rate, Business_Demand * 0.3)",
+      "from_stock": "stock-available-seats",
+      "to_stock": "stock-business-bookings",
+      "position": {
+        "x": 200,
+        "y": 225
+      }
+    },
+    {
+      "id": "flow-first-class-booking",
+      "name": "First Class Booking",
+      "equation": "First_Class_Demand * First_Class_Acceptance_Rate",
+      "from_stock": "stock-available-seats",
+      "to_stock": "stock-first-class-bookings",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-economy-cancellation",
+      "name": "Economy Cancellation",
+      "equation": "Economy_Bookings * Cancellation_Rate",
+      "from_stock": "stock-economy-bookings",
+      "to_stock": "stock-available-seats",
+      "position": {
+        "x": 200,
+        "y": 125
+      }
+    },
+    {
+      "id": "flow-revenue-economy",
+      "name": "Revenue Economy",
+      "equation": "Economy_Booking * Economy_Fare",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-revenue",
+      "position": {
+        "x": 425,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-revenue-business",
+      "name": "Revenue Business",
+      "equation": "Business_Booking * Business_Fare",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-revenue",
+      "position": {
+        "x": 425,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-revenue-first",
+      "name": "Revenue First Class",
+      "equation": "First_Class_Booking * First_Class_Fare",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-revenue",
+      "position": {
+        "x": 425,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-overbooking-rate",
+      "name": "Overbooking",
+      "equation": "IF(Total_Bookings > Seat_Capacity, (Total_Bookings - Seat_Capacity) * Show_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-overbookings",
+      "position": {
+        "x": 425,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-denied-boarding-cost",
+      "name": "Denied Boarding Cost",
+      "equation": "Overbookings * Denied_Boarding_Compensation",
+      "from_stock": "stock-cumulative-revenue",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-days-to-departure",
+      "name": "Days to Departure",
+      "equation": "MAX(0, 90 - TIME)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-economy-demand",
+      "name": "Economy Demand",
+      "equation": "3",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-business-demand",
+      "name": "Business Demand",
+      "equation": "1.5",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-first-class-demand",
+      "name": "First Class Demand",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-economy-acceptance-rate",
+      "name": "Economy Acceptance Rate",
+      "equation": "IF(Available_Seats > 50, 0.9, 0.3)",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-business-acceptance-rate",
+      "name": "Business Acceptance Rate",
+      "equation": "0.95",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-first-class-acceptance-rate",
+      "name": "First Class Acceptance Rate",
+      "equation": "0.98",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-economy-fare",
+      "name": "Economy Fare",
+      "equation": "250",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-business-fare",
+      "name": "Business Fare",
+      "equation": "800",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-first-class-fare",
+      "name": "First Class Fare",
+      "equation": "2000",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cancellation-rate",
+      "name": "Cancellation Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-seat-capacity",
+      "name": "Seat Capacity",
+      "equation": "180",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-total-bookings",
+      "name": "Total Bookings",
+      "equation": "Economy_Bookings + Business_Bookings + First_Class_Bookings",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-show-rate",
+      "name": "Show Rate",
+      "equation": "0.95",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-denied-boarding-compensation",
+      "name": "Denied Boarding Compensation",
+      "equation": "600",
+      "position": {
+        "x": 650,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Days to Departure",
+      "to_element": "Economy Booking"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Economy Demand",
+      "to_element": "Economy Booking"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Economy Acceptance Rate",
+      "to_element": "Economy Booking"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Available Seats",
+      "to_element": "Economy Acceptance Rate"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Business Demand",
+      "to_element": "Business Booking"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "First Class Demand",
+      "to_element": "First Class Booking"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Economy Bookings",
+      "to_element": "Total Bookings"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Business Bookings",
+      "to_element": "Total Bookings"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "First Class Bookings",
+      "to_element": "Total Bookings"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Total Bookings",
+      "to_element": "Overbooking"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Seat Capacity",
+      "to_element": "Overbooking"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 90,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

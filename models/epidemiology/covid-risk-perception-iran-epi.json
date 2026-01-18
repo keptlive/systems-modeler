@@ -1,0 +1,160 @@
+{
+  "id": "covid-risk-perception-iran-epi",
+  "name": "COVID-19 Risk Perception Dynamics Model",
+  "description": "System dynamics model of COVID-19 pandemic incorporating risk perception effects on behavior. Shows how perceived risk drives compliance with NPIs. Source: Korzebor et al. (2024), Risk Analysis. DOI: 10.1111/risa.14115",
+  "stocks": [
+    {
+      "id": "stock-s",
+      "name": "Susceptible",
+      "initial_value": 800000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-i",
+      "name": "Infected",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-r",
+      "name": "Recovered",
+      "initial_value": 199000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-risk",
+      "name": "Perceived_Risk",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-inf",
+      "name": "Infection",
+      "equation": "Beta * Susceptible * Infected * Risk_Reduction / Total_Pop",
+      "from_stock": "stock-s",
+      "to_stock": "stock-i",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-rec",
+      "name": "Recovery",
+      "equation": "Infected / Recovery_Time",
+      "from_stock": "stock-i",
+      "to_stock": "stock-r",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-riskinc",
+      "name": "Risk_Increase",
+      "equation": "Infected * Risk_Sensitivity / Total_Pop * 100",
+      "from_stock": null,
+      "to_stock": "stock-risk",
+      "position": {
+        "x": 175,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-riskdec",
+      "name": "Risk_Decay",
+      "equation": "Perceived_Risk * Risk_Decay_Rate",
+      "from_stock": "stock-risk",
+      "to_stock": null,
+      "position": {
+        "x": 325,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.35",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-rec",
+      "name": "Recovery_Time",
+      "equation": "14",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-sens",
+      "name": "Risk_Sensitivity",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-decay",
+      "name": "Risk_Decay_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-reduce",
+      "name": "Risk_Reduction",
+      "equation": "1 - 0.5 * Perceived_Risk / 100",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Pop",
+      "equation": "Susceptible + Infected + Recovered",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 500,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:41:31.048857+00:00",
+  "updated_at": "2026-01-12T12:41:31.048857+00:00",
+  "source": "https://doi.org/10.1038/s41586-020-2012-7",
+  "reference": "WHO. COVID-19 Weekly Epidemiological Update. World Health Organization; 2020-2024."
+}

@@ -1,0 +1,197 @@
+{
+  "id": "renewable-grid-integration-advanced-ene",
+  "name": "Renewable Energy Grid Integration Model",
+  "description": "Model of renewable energy integration challenges including intermittency, storage, and grid stability. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Renewable_Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Storage_Capacity",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Grid_Stability_Index",
+      "initial_value": 0.9,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Renewable_Investment",
+      "equation": "Investment_Rate * Carbon_Price_Effect",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Retirement",
+      "equation": "Renewable_Capacity / Asset_Life",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Storage_Investment",
+      "equation": "Storage_Need * Storage_Investment_Rate",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Storage_Degradation",
+      "equation": "Storage_Capacity / Storage_Life",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Stability_Change",
+      "equation": "(Target_Stability - Grid_Stability_Index) / Stability_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Investment_Rate",
+      "equation": "10",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Carbon_Price",
+      "equation": "50",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Carbon_Price_Effect",
+      "equation": "1 + Carbon_Price / 100",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Asset_Life",
+      "equation": "25",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Intermittency_Factor",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Storage_Need",
+      "equation": "Renewable_Capacity * Intermittency_Factor - Storage_Capacity",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Storage_Investment_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Storage_Life",
+      "equation": "15",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Target_Stability",
+      "equation": "MIN(1, 0.7 + 0.3 * Storage_Capacity / (Renewable_Capacity * Intermittency_Factor + 0.01))",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Stability_Adjustment_Time",
+      "equation": "2",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2050,
+    "dt": 1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:29:23.539534+00:00",
+  "updated_at": "2026-01-12T11:29:23.539534+00:00",
+  "source": "https://doi.org/10.1038/s41560-021-00885-y",
+  "reference": "IEA. Net Zero by 2050: A Roadmap for the Global Energy Sector. International Energy Agency; 2021."
+}

@@ -1,0 +1,302 @@
+{
+  "id": "sidarthe-covid-italy-epi",
+  "name": "SIDARTHE COVID-19 Italy Model",
+  "description": "Detailed COVID-19 model distinguishing detected vs undetected cases and severity levels. Used to model Italy's first wave and evaluate interventions. Published in Nature Medicine. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 60000000,
+      "equation": "",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Infected (Undetected)",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 180,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-diagnosed",
+      "name": "Diagnosed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 280,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ailing",
+      "name": "Ailing (Undetected)",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 380,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recognized",
+      "name": "Recognized",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 480,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-threatened",
+      "name": "Threatened",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 580,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-healed",
+      "name": "Healed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 680,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-extinct",
+      "name": "Deceased",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 780,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "New Infections",
+      "equation": "Susceptible * (Alpha * Infected_Undetected + Beta * Diagnosed + Gamma * Ailing_Undetected + Delta * Recognized) / Total",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 130,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-diagnosis",
+      "name": "Diagnosis",
+      "equation": "Epsilon * Infected_Undetected",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-diagnosed",
+      "position": {
+        "x": 230,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-worsening",
+      "name": "Worsening",
+      "equation": "Zeta * Infected_Undetected",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-ailing",
+      "position": {
+        "x": 280,
+        "y": 280
+      }
+    },
+    {
+      "id": "flow-recognition",
+      "name": "Recognition",
+      "equation": "Eta * Ailing_Undetected",
+      "from_stock": "stock-ailing",
+      "to_stock": "stock-recognized",
+      "position": {
+        "x": 430,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-critical",
+      "name": "Critical",
+      "equation": "Mu * Recognized",
+      "from_stock": "stock-recognized",
+      "to_stock": "stock-threatened",
+      "position": {
+        "x": 530,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-healing",
+      "name": "Healing",
+      "equation": "Lambda * (Diagnosed + Ailing_Undetected + Recognized + Threatened)",
+      "from_stock": null,
+      "to_stock": "stock-healed",
+      "position": {
+        "x": 680,
+        "y": 280
+      }
+    },
+    {
+      "id": "flow-death",
+      "name": "Death",
+      "equation": "Tau * Threatened",
+      "from_stock": "stock-threatened",
+      "to_stock": "stock-extinct",
+      "position": {
+        "x": 730,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-alpha",
+      "name": "Alpha",
+      "equation": "0.57",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.011",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "Gamma",
+      "equation": "0.456",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-delta",
+      "name": "Delta",
+      "equation": "0.011",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-epsilon",
+      "name": "Epsilon",
+      "equation": "0.171",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-zeta",
+      "name": "Zeta",
+      "equation": "0.125",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-eta",
+      "name": "Eta",
+      "equation": "0.125",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mu",
+      "name": "Mu",
+      "equation": "0.017",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-lambda",
+      "name": "Lambda",
+      "equation": "0.034",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-tau",
+      "name": "Tau",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total",
+      "equation": "Susceptible + Infected_Undetected + Diagnosed + Ailing_Undetected + Recognized + Threatened + Healed + Deceased",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-cfr",
+      "name": "Case Fatality Rate",
+      "equation": "Deceased / (Healed + Deceased + 0.001)",
+      "position": {
+        "x": 700,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Infected (Undetected)",
+      "to_element": "New Infections"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Diagnosed",
+      "to_element": "New Infections"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Recognized",
+      "to_element": "Critical"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 180,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:43:15.875913+00:00",
+  "updated_at": "2026-01-12T07:43:15.875917+00:00",
+  "source": "https://doi.org/10.1038/s41591-020-0883-7",
+  "reference": "Giordano G, et al. Modelling the COVID-19 epidemic and implementation of population-wide interventions in Italy. Nature Medicine. 2020;26:855-860."
+}

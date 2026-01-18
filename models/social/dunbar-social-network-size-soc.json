@@ -1,0 +1,183 @@
+{
+  "id": "dunbar-social-network-size-soc",
+  "name": "Dunbar Social Network Size Model",
+  "description": "Model of cognitive limits on social network size. Source: Dunbar (1992), J Human Evolution.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Close_Friends",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Good_Friends",
+      "initial_value": 15,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Acquaintances",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Total_Contacts",
+      "initial_value": 150,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Close_Change",
+      "equation": "0.1 * (Optimal_Close - Close_Friends)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Good_Change",
+      "equation": "0.1 * (Optimal_Good - Good_Friends)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Acquaintance_Change",
+      "equation": "0.1 * (Optimal_Acquaintance - Acquaintances)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Contact_Growth",
+      "equation": "New_Contacts - Decay_Rate * Total_Contacts",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Dunbar_Number",
+      "equation": "150",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Grooming_Time",
+      "equation": "0.2",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Optimal_Close",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Optimal_Good",
+      "equation": "15",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Optimal_Acquaintance",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Social_Capacity",
+      "equation": "Dunbar_Number * Grooming_Time / 0.2",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "v7",
+      "name": "New_Contacts",
+      "equation": "2",
+      "position": {
+        "x": 150,
+        "y": 420
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Decay_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 450,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Grooming_Time",
+      "to_element": "Social_Capacity"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:43:05.813143+00:00",
+  "updated_at": "2026-01-15T14:43:05.813146+00:00",
+  "source": "https://doi.org/10.1006/jhev.1992.0081",
+  "reference": "Dunbar, R.I.M. (1992). Neocortex size as a constraint on group size in primates. J Human Evolution 22:469-493."
+}

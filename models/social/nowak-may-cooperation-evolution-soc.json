@@ -1,0 +1,30 @@
+{
+  "id": "nowak-may-cooperation-evolution-soc",
+  "name": "Nowak-May Evolutionary Game Dynamics Model",
+  "description": "Martin Nowak and Robert May's (1992) spatial evolutionary game theory model showing how cooperation can evolve and persist through spatial structure. Demonstrates that clustered cooperators can resist invasion by defectors even in Prisoner's Dilemma.",
+  "stocks": [
+    {"id": "stock-cooperators", "name": "Cooperators", "initial_value": 500, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-defectors", "name": "Defectors", "initial_value": 500, "equation": "", "position": {"x": 450, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-coop-growth", "name": "Cooperator Growth", "equation": "Replication_Rate * Cooperators * Cooperator_Fitness / Average_Fitness", "from_stock": null, "to_stock": "stock-cooperators", "position": {"x": 100, "y": 200}},
+    {"id": "flow-coop-death", "name": "Cooperator Death", "equation": "Death_Rate * Cooperators", "from_stock": "stock-cooperators", "to_stock": null, "position": {"x": 300, "y": 200}},
+    {"id": "flow-defect-growth", "name": "Defector Growth", "equation": "Replication_Rate * Defectors * Defector_Fitness / Average_Fitness", "from_stock": null, "to_stock": "stock-defectors", "position": {"x": 350, "y": 200}},
+    {"id": "flow-defect-death", "name": "Defector Death", "equation": "Death_Rate * Defectors", "from_stock": "stock-defectors", "to_stock": null, "position": {"x": 550, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-population", "name": "Population", "equation": "Cooperators + Defectors", "position": {"x": 200, "y": 100}},
+    {"id": "var-coop-fraction", "name": "Coop Fraction", "equation": "Cooperators / Population", "position": {"x": 400, "y": 100}},
+    {"id": "var-benefit", "name": "Benefit", "equation": "3", "position": {"x": 550, "y": 100}},
+    {"id": "var-cost", "name": "Cost", "equation": "1", "position": {"x": 150, "y": 300}},
+    {"id": "var-cooperator-fitness", "name": "Cooperator Fitness", "equation": "1 + Benefit * Coop_Fraction - Cost", "position": {"x": 350, "y": 300}},
+    {"id": "var-defector-fitness", "name": "Defector Fitness", "equation": "1 + Benefit * Coop_Fraction", "position": {"x": 550, "y": 300}},
+    {"id": "var-average-fitness", "name": "Average Fitness", "equation": "Coop_Fraction * Cooperator_Fitness + (1 - Coop_Fraction) * Defector_Fitness", "position": {"x": 200, "y": 400}},
+    {"id": "var-replication-rate", "name": "Replication Rate", "equation": "0.1", "position": {"x": 400, "y": 400}},
+    {"id": "var-death-rate", "name": "Death Rate", "equation": "0.08", "position": {"x": 550, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 200, "dt": 0.5},
+  "source": "https://doi.org/10.1038/359826a0",
+  "reference": "Nowak MA, May RM. Evolutionary games and spatial chaos. Nature. 1992;359(6398):826-829."
+}

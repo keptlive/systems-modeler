@@ -1,0 +1,291 @@
+{
+  "id": "fdi-supply-chain-covid-impact-eco",
+  "name": "Pandemic_Evolution",
+  "description": "System dynamics model simulating COVID-19 pandemic impact on Foreign Direct Investment and global supply chains. Models force majeure conditions, flexibility, and supply chain recovery. Based on 2022 Future Business Journal paper. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "FDI_Inflows",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Supply_Chain_Capacity",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Economic_Activity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Pandemic_Severity",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "FDI_Change",
+      "equation": "(Target_FDI - FDI_Inflows) / FDI_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Capacity_Change",
+      "equation": "(Target_Capacity - Supply_Chain_Capacity) / Capacity_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Economic_Change",
+      "equation": "(Potential_Output - Economic_Activity) / Economic_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Pandemic_Evolution",
+      "equation": "(Pandemic_Trajectory - Pandemic_Severity) / 30",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Target_FDI",
+      "equation": "100 * (1 - Force_Majeure_Effect) * Investor_Confidence",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "FDI_Adjustment_Time",
+      "equation": "90",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Target_Capacity",
+      "equation": "1.0 - 0.4 * Pandemic_Severity + 0.2 * Supply_Chain_Flexibility",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Capacity_Adjustment_Time",
+      "equation": "60",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Potential_Output",
+      "equation": "100 * Supply_Chain_Capacity * (0.7 + 0.3 * FDI_Inflows / 100)",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Economic_Adjustment_Time",
+      "equation": "30",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Force_Majeure_Effect",
+      "equation": "0.5 * Pandemic_Severity",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Investor_Confidence",
+      "equation": "0.5 + 0.5 * (1 - Pandemic_Severity)",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Supply_Chain_Flexibility",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Pandemic_Trajectory",
+      "equation": "0.8 * (1 - EXP(-TIME / 30)) * EXP(-TIME / 365)",
+      "position": {
+        "x": 400,
+        "y": 500
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "FDI_Inflows",
+      "to_element": "FDI_Change"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "FDI_Adjustment_Time",
+      "to_element": "FDI_Change"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Target_FDI",
+      "to_element": "FDI_Change"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Target_Capacity",
+      "to_element": "Capacity_Change"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Capacity_Adjustment_Time",
+      "to_element": "Capacity_Change"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Supply_Chain_Capacity",
+      "to_element": "Capacity_Change"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Economic_Activity",
+      "to_element": "Economic_Change"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Potential_Output",
+      "to_element": "Economic_Change"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Economic_Adjustment_Time",
+      "to_element": "Economic_Change"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Pandemic_Severity",
+      "to_element": "Pandemic_Evolution"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Pandemic_Trajectory",
+      "to_element": "Pandemic_Evolution"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Force_Majeure_Effect",
+      "to_element": "Target_FDI"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Investor_Confidence",
+      "to_element": "Target_FDI"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Pandemic_Severity",
+      "to_element": "Target_Capacity"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Supply_Chain_Flexibility",
+      "to_element": "Target_Capacity"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "FDI_Inflows",
+      "to_element": "Potential_Output"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Supply_Chain_Capacity",
+      "to_element": "Potential_Output"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Pandemic_Severity",
+      "to_element": "Force_Majeure_Effect"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Pandemic_Severity",
+      "to_element": "Investor_Confidence"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 730,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T07:15:44.246228+00:00",
+  "updated_at": "2026-01-12T07:15:44.246228+00:00",
+  "source": "https://doi.org/10.1186/s43093-022-00155-3",
+  "reference": "Future Business Journal (2022). A system dynamics model of the impact of COVID-19 pandemic and foreign direct investment in the global supply chain."
+}

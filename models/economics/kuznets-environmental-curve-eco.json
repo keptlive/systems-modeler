@@ -1,0 +1,110 @@
+{
+  "id": "kuznets-environmental-curve-eco",
+  "name": "Environmental Kuznets Curve",
+  "description": "Models the inverted-U relationship between economic development and environmental degradation. As income rises, pollution first increases then decreases due to structural change, technology, and environmental regulation. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-gdp",
+      "name": "GDP Per Capita",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-pollution",
+      "name": "Environmental Pollution",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-gdp-growth",
+      "name": "GDP Growth",
+      "equation": "GDP_Per_Capita * Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-gdp",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-pollution-change",
+      "name": "Pollution Change",
+      "equation": "Industrial_Emissions - Environmental_Cleanup",
+      "from_stock": null,
+      "to_stock": "stock-pollution",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-growth-rate",
+      "name": "Growth Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-industrial-emissions",
+      "name": "Industrial Emissions",
+      "equation": "50 * (GDP_Per_Capita / 10000) * (1 - GDP_Per_Capita / 50000)",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cleanup",
+      "name": "Environmental Cleanup",
+      "equation": "IF(GDP_Per_Capita > 15000, 20 * (GDP_Per_Capita / 50000), 5)",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-turning-point",
+      "name": "Turning Point GDP",
+      "equation": "25000",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "GDP Per Capita",
+      "to_element": "Industrial Emissions"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "GDP Per Capita",
+      "to_element": "Environmental Cleanup"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:39:15.413071+00:00",
+  "updated_at": "2026-01-12T07:39:15.413165+00:00",
+  "source": "https://doi.org/10.2307/2118443",
+  "reference": "Grossman GM, Krueger AB. Economic Growth and the Environment. The Quarterly Journal of Economics. 1995;110(2):353-377."
+}

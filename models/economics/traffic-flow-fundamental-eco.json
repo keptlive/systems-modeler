@@ -1,0 +1,132 @@
+{
+  "id": "traffic-flow-fundamental-eco",
+  "name": "Traffic Flow Fundamental Diagram Model",
+  "description": "Relationship between traffic density, flow, and speed. Source: Greenshields (1935) and Lighthill & Whitham (1955). DOI: 10.1098/rspa.1955.0088",
+  "stocks": [
+    {
+      "id": "stock-density",
+      "name": "Traffic_Density",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-cumflow",
+      "name": "Cumulative_Flow",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-densitychg",
+      "name": "Density_Change",
+      "equation": "(Arrival_Rate - Flow_Rate) / Road_Length",
+      "from_stock": null,
+      "to_stock": "stock-density",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-cumulate",
+      "name": "Flow_Accumulation",
+      "equation": "Flow_Rate",
+      "from_stock": null,
+      "to_stock": "stock-cumflow",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-arrival",
+      "name": "Arrival_Rate",
+      "equation": "1000 + 500 * SIN(TIME / 60)",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-roadlen",
+      "name": "Road_Length",
+      "equation": "1",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-speed",
+      "name": "Speed",
+      "equation": "Free_Flow_Speed * (1 - Traffic_Density / Jam_Density)",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-freespeed",
+      "name": "Free_Flow_Speed",
+      "equation": "60",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-jamdensity",
+      "name": "Jam_Density",
+      "equation": "200",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-flow",
+      "name": "Flow_Rate",
+      "equation": "Traffic_Density * Speed",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-capacity",
+      "name": "Road_Capacity",
+      "equation": "Free_Flow_Speed * Jam_Density / 4",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Traffic_Density",
+      "to_element": "Speed"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 240,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:23:02.238274+00:00",
+  "updated_at": "2026-01-12T02:23:02.238279+00:00",
+  "source": "https://doi.org/10.1098/rspa.1955.0088",
+  "reference": "Lighthill, M.J. & Whitham, G.B. (1955). On Kinematic Waves: A Theory of Traffic Flow. Proceedings of the Royal Society A."
+}

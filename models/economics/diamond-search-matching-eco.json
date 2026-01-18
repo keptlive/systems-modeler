@@ -1,0 +1,185 @@
+{
+  "id": "diamond-search-matching-eco",
+  "name": "Diamond-Mortensen-Pissarides Search Model",
+  "description": "Nobel Prize search and matching model of labor market unemployment. Reference: Diamond, P.A. (1982). Aggregate Demand Management in Search Equilibrium.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Unemployed",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Employed",
+      "initial_value": 90,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Vacancies",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Job_Finding",
+      "equation": "Matching_Rate * Unemployed",
+      "from_stock": "Unemployed",
+      "to_stock": "Employed",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Job_Separation",
+      "equation": "Employed * Separation_Rate",
+      "from_stock": "Employed",
+      "to_stock": "Unemployed",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Vacancy_Creation",
+      "equation": "Vacancy_Posting_Rate",
+      "from_stock": null,
+      "to_stock": "Vacancies",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Vacancy_Filling",
+      "equation": "Matching_Rate * Vacancies / MAX(0.1, Unemployed) * Unemployed",
+      "from_stock": "Vacancies",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Labor_Force",
+      "equation": "Unemployed + Employed",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Unemployment_Rate",
+      "equation": "Unemployed / Labor_Force",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Vacancy_Rate",
+      "equation": "Vacancies / Labor_Force",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Tightness",
+      "equation": "Vacancies / MAX(0.1, Unemployed)",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Matching_Efficiency",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Matching_Elasticity",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Matching_Rate",
+      "equation": "Matching_Efficiency * Tightness^Matching_Elasticity",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Separation_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Vacancy_Posting_Rate",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Beveridge_Curve",
+      "equation": "Vacancy_Rate * Unemployment_Rate",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1086/261141",
+  "reference": "Diamond, P.A. (1982). Aggregate Demand Management in Search Equilibrium. Journal of Political Economy, 90(5), 881-894.",
+  "created_at": "2026-01-15T19:55:24.277727+00:00",
+  "updated_at": "2026-01-15T19:55:24.277727+00:00"
+}

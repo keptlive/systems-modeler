@@ -1,0 +1,238 @@
+{
+  "id": "electric-vehicle-adoption-model-eco",
+  "name": "Electric Vehicle Adoption Model",
+  "description": "A technology diffusion model for electric vehicle adoption based on Struben & Sterman (2008) 'Transition challenges for alternative fuel vehicle and transportation systems' (doi:10.1068/b33022t). Incorporates consumer consideration, infrastructure availability, and word-of-mouth effects in the Bass diffusion framework. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-potential-adopters",
+      "name": "Potential Adopters",
+      "initial_value": 100000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-considering",
+      "name": "Considering EV",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ev-owners",
+      "name": "EV Owners",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-charging-stations",
+      "name": "Charging Stations",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-awareness-creation",
+      "name": "Awareness Creation",
+      "equation": "Potential_Adopters * (Advertising_Effect + Word_of_Mouth_Effect)",
+      "from_stock": "stock-potential-adopters",
+      "to_stock": "stock-considering",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-adoption",
+      "name": "Adoption",
+      "equation": "Considering_EV * Adoption_Fraction * Infrastructure_Adequacy * Price_Attractiveness",
+      "from_stock": "stock-considering",
+      "to_stock": "stock-ev-owners",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-disinterest",
+      "name": "Disinterest",
+      "equation": "Considering_EV * Disinterest_Rate * (1 - Infrastructure_Adequacy)",
+      "from_stock": "stock-considering",
+      "to_stock": "stock-potential-adopters",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-station-construction",
+      "name": "Station Construction",
+      "equation": "Investment_Rate * EV_Owners / Target_EVs_per_Station",
+      "from_stock": null,
+      "to_stock": "stock-charging-stations",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-advertising-effect",
+      "name": "Advertising Effect",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-word-of-mouth-effect",
+      "name": "Word of Mouth Effect",
+      "equation": "0.3 * EV_Owners / (Potential_Adopters + Considering_EV + EV_Owners)",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-adoption-fraction",
+      "name": "Adoption Fraction",
+      "equation": "0.2",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-infrastructure-adequacy",
+      "name": "Infrastructure Adequacy",
+      "equation": "MIN(1, Charging_Stations / (EV_Owners / Target_EVs_per_Station))",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-price-attractiveness",
+      "name": "Price Attractiveness",
+      "equation": "0.7",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-disinterest-rate",
+      "name": "Disinterest Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-investment-rate",
+      "name": "Investment Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-target-evs-per-station",
+      "name": "Target EVs per Station",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Potential Adopters",
+      "to_element": "Awareness Creation"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Advertising Effect",
+      "to_element": "Awareness Creation"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Word of Mouth Effect",
+      "to_element": "Awareness Creation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "EV Owners",
+      "to_element": "Word of Mouth Effect"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Considering EV",
+      "to_element": "Adoption"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Adoption Fraction",
+      "to_element": "Adoption"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Infrastructure Adequacy",
+      "to_element": "Adoption"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Price Attractiveness",
+      "to_element": "Adoption"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Considering EV",
+      "to_element": "Disinterest"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Disinterest Rate",
+      "to_element": "Disinterest"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Charging Stations",
+      "to_element": "Infrastructure Adequacy"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "EV Owners",
+      "to_element": "Station Construction"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

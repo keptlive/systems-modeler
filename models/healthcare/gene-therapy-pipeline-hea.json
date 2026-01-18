@@ -1,0 +1,233 @@
+{
+  "id": "gene-therapy-pipeline-hea",
+  "name": "Gene Therapy Development Pipeline Model",
+  "description": "Model of gene therapy drug development from discovery through approval. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-discovery",
+      "name": "Discovery_Stage",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-preclinical",
+      "name": "Preclinical",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-clinical",
+      "name": "Clinical_Trials",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-approved",
+      "name": "Approved_Therapies",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-new",
+      "name": "New_Discoveries",
+      "equation": "Research_Investment * Discovery_Rate",
+      "from_stock": null,
+      "to_stock": "stock-discovery",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-to-pre",
+      "name": "To_Preclinical",
+      "equation": "Discovery_Stage * Preclinical_Success / Discovery_Time",
+      "from_stock": "stock-discovery",
+      "to_stock": "stock-preclinical",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-to-clin",
+      "name": "To_Clinical",
+      "equation": "Preclinical * Clinical_Success / Preclinical_Time",
+      "from_stock": "stock-preclinical",
+      "to_stock": "stock-clinical",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-approve",
+      "name": "Approvals",
+      "equation": "Clinical_Trials * Approval_Rate / Clinical_Time",
+      "from_stock": "stock-clinical",
+      "to_stock": "stock-approved",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-invest",
+      "name": "Research_Investment",
+      "equation": "10",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-disc-rate",
+      "name": "Discovery_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-disc-time",
+      "name": "Discovery_Time",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-pre-succ",
+      "name": "Preclinical_Success",
+      "equation": "0.3",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-pre-time",
+      "name": "Preclinical_Time",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-clin-succ",
+      "name": "Clinical_Success",
+      "equation": "0.2",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-clin-time",
+      "name": "Clinical_Time",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-appr-rate",
+      "name": "Approval_Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 475,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Research_Investment",
+      "to_element": "New_Discoveries"
+    },
+    {
+      "id": "c2",
+      "from_element": "Discovery_Rate",
+      "to_element": "New_Discoveries"
+    },
+    {
+      "id": "c3",
+      "from_element": "Discovery_Stage",
+      "to_element": "To_Preclinical"
+    },
+    {
+      "id": "c4",
+      "from_element": "Preclinical_Success",
+      "to_element": "To_Preclinical"
+    },
+    {
+      "id": "c5",
+      "from_element": "Discovery_Time",
+      "to_element": "To_Preclinical"
+    },
+    {
+      "id": "c6",
+      "from_element": "Preclinical",
+      "to_element": "To_Clinical"
+    },
+    {
+      "id": "c7",
+      "from_element": "Clinical_Success",
+      "to_element": "To_Clinical"
+    },
+    {
+      "id": "c8",
+      "from_element": "Preclinical_Time",
+      "to_element": "To_Clinical"
+    },
+    {
+      "id": "c9",
+      "from_element": "Clinical_Trials",
+      "to_element": "Approvals"
+    },
+    {
+      "id": "c10",
+      "from_element": "Approval_Rate",
+      "to_element": "Approvals"
+    },
+    {
+      "id": "c11",
+      "from_element": "Clinical_Time",
+      "to_element": "Approvals"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T11:49:16.387755+00:00",
+  "updated_at": "2026-01-12T11:49:16.387760+00:00",
+  "source": "https://doi.org/10.1038/nrd.2017.243",
+  "reference": "Dunbar CE, et al. Gene therapy comes of age. Science. 2018;359(6372):eaan4672."
+}

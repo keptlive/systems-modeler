@@ -1,0 +1,192 @@
+{
+  "id": "si-epidemic-model-epi",
+  "name": "SI Epidemic Model",
+  "description": "The simplest compartmental epidemic model with only Susceptible and Infected compartments. Unlike SIR models, individuals remain infected indefinitely (no recovery). Useful for modeling chronic diseases or as an introduction to epidemic modeling. Demonstrates the basic mechanics of disease transmission through contact patterns. Reference: WHO Disease Outbreak Information. Source: https://www.who.int/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Infected",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cumulative-reported-cases",
+      "name": "Cumulative Reported Cases",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection-rate",
+      "name": "Infection Rate",
+      "equation": "contacts_between_infected_and_uninfected * infectivity",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-new-reported-cases",
+      "name": "New Reported Cases",
+      "equation": "infection_rate",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-reported-cases",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "10000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-contact-frequency",
+      "name": "Contact Frequency",
+      "equation": "7",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-infectivity",
+      "name": "Infectivity",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-susceptible-contacts",
+      "name": "Susceptible Contacts",
+      "equation": "contact_frequency * susceptible",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-probability-of-contact-with-infected",
+      "name": "Probability of Contact with Infected",
+      "equation": "infected / total_population",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-contacts-between-infected-and-uninfected",
+      "name": "Contacts Between Infected and Uninfected",
+      "equation": "probability_of_contact_with_infected * susceptible_contacts",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-basic-reproduction-number-r0",
+      "name": "Basic Reproduction Number (R0)",
+      "equation": "contact_frequency * infectivity",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Susceptible",
+      "to_element": "Susceptible Contacts"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Contact Frequency",
+      "to_element": "Susceptible Contacts"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Infected",
+      "to_element": "Probability of Contact with Infected"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Total Population",
+      "to_element": "Probability of Contact with Infected"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Susceptible Contacts",
+      "to_element": "Contacts Between Infected and Uninfected"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Probability of Contact with Infected",
+      "to_element": "Contacts Between Infected and Uninfected"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Contacts Between Infected and Uninfected",
+      "to_element": "Infection Rate"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Infectivity",
+      "to_element": "Infection Rate"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Infection Rate",
+      "to_element": "New Reported Cases"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Contact Frequency",
+      "to_element": "Basic Reproduction Number (R0)"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Infectivity",
+      "to_element": "Basic Reproduction Number (R0)"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 35,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-11T20:04:50.805240Z",
+  "updated_at": "2026-01-11T20:04:50.805240Z",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

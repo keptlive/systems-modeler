@@ -1,0 +1,133 @@
+{
+  "id": "rogers-diffusion-innovation-tec",
+  "name": "Rogers Diffusion of Innovations Model",
+  "description": "Everett Rogers' foundational diffusion model showing S-curve adoption patterns. Reference: Rogers, E.M. (1962). Diffusion of Innovations.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Potential_Adopters",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Adopters",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Adoption",
+      "equation": "Potential_Adopters * (External_Influence + Internal_Influence)",
+      "from_stock": "Potential_Adopters",
+      "to_stock": "Adopters",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Total_Market",
+      "equation": "1010",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "p_Innovation",
+      "equation": "0.03",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "q_Imitation",
+      "equation": "0.38",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "External_Influence",
+      "equation": "p_Innovation",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Internal_Influence",
+      "equation": "q_Imitation * Adopters / Total_Market",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Adoption_Rate",
+      "equation": "External_Influence + Internal_Influence",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Market_Penetration",
+      "equation": "Adopters / Total_Market",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Peak_Time",
+      "equation": "LOG((q_Imitation / p_Innovation)) / (p_Innovation + q_Imitation)",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Saturation",
+      "equation": "IF Adopters > 0.95 * Total_Market THEN 1 ELSE 0",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.4135/9781452229454",
+  "reference": "Rogers, E.M. (1962). Diffusion of Innovations. Free Press of Glencoe.",
+  "created_at": "2026-01-15T19:58:06.712549+00:00",
+  "updated_at": "2026-01-15T19:58:06.712549+00:00"
+}

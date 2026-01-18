@@ -1,0 +1,153 @@
+{
+  "id": "coral-calcification-ocean-acidification-mar",
+  "name": "Coral Calcification Under Ocean Acidification Model",
+  "description": "Impact of ocean pH on coral reef growth. Source: Langdon et al. (2000), Global Biogeochemical Cycles.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Coral_Mass",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Aragonite_Saturation",
+      "initial_value": 4,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Reef_Structure",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Net_Calcification",
+      "equation": "G_max * (Aragonite_Saturation - 1) * Temp_Factor - Dissolution",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Saturation_Change",
+      "equation": "-0.01 * CO2_Increase",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Reef_Growth",
+      "equation": "0.1 * Net_Calcification - Bioerosion",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "G_max",
+      "equation": "10",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Temperature",
+      "equation": "26",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Temp_Factor",
+      "equation": "1 - 0.05 * ABS(Temperature - 27)",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "CO2_Increase",
+      "equation": "2",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Dissolution",
+      "equation": "MAX(0, (2.5 - Aragonite_Saturation) * 5)",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Bioerosion",
+      "equation": "5",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Calcification_Rate",
+      "equation": "Net_Calcification / Coral_Mass * 100",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Aragonite_Saturation",
+      "to_element": "Net_Calcification"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:52:39.346860+00:00",
+  "updated_at": "2026-01-15T14:52:39.346869+00:00",
+  "source": "https://doi.org/10.1029/2000GB001280",
+  "reference": "Langdon, C. et al. (2000). Effect of calcium carbonate saturation on calcification. Global Biogeochemical Cycles 14:639-654."
+}

@@ -1,0 +1,114 @@
+{
+  "id": "rescorla-wagner-conditioning-soc",
+  "name": "Rescorla-Wagner Classical Conditioning",
+  "description": "Mathematical model of associative learning showing prediction error drives learning. Foundation of reinforcement learning. Source: Rescorla & Wagner (1972). DOI: 10.1037/0033-295X.102.3.419",
+  "stocks": [
+    {
+      "id": "stock-v",
+      "name": "Associative_Strength",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-trials",
+      "name": "Trial_Count",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-learn",
+      "name": "Learning_Rate",
+      "equation": "Alpha * Beta * Prediction_Error",
+      "from_stock": null,
+      "to_stock": "stock-v",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-trial",
+      "name": "Trial_Rate",
+      "equation": "1",
+      "from_stock": null,
+      "to_stock": "stock-trials",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-alpha",
+      "name": "Alpha",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-lambda",
+      "name": "Lambda",
+      "equation": "IF(US_Present = 1, 1, 0)",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-us",
+      "name": "US_Present",
+      "equation": "IF(MOD(TIME, 10) < 5, 1, 0)",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-error",
+      "name": "Prediction_Error",
+      "equation": "Lambda - Associative_Strength",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Associative_Strength",
+      "to_element": "Learning_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:02:23.927163Z",
+  "updated_at": "2026-01-12T02:02:23.927166Z",
+  "source": "https://doi.org/10.1037/0033-295X.102.3.419",
+  "reference": "Rescorla, R.A. & Wagner, A.R. (1972). A theory of Pavlovian conditioning. Classical Conditioning II."
+}

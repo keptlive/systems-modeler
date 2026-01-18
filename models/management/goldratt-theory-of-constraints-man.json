@@ -1,0 +1,38 @@
+{
+  "id": "goldratt-theory-of-constraints-man",
+  "name": "Goldratt Theory of Constraints Model",
+  "description": "Eliyahu Goldratt's Theory of Constraints (TOC) model showing how system throughput is limited by bottleneck resources. Demonstrates the Drum-Buffer-Rope scheduling approach and five focusing steps for continuous improvement.",
+  "stocks": [
+    {"id": "stock-raw-material", "name": "Raw Material", "initial_value": 100, "equation": "", "position": {"x": 100, "y": 200}},
+    {"id": "stock-wip-before-bottleneck", "name": "WIP Before Bottleneck", "initial_value": 50, "equation": "", "position": {"x": 300, "y": 200}},
+    {"id": "stock-wip-after-bottleneck", "name": "WIP After Bottleneck", "initial_value": 20, "equation": "", "position": {"x": 500, "y": 200}},
+    {"id": "stock-finished-goods", "name": "Finished Goods", "initial_value": 30, "equation": "", "position": {"x": 700, "y": 200}},
+    {"id": "stock-throughput-dollars", "name": "Throughput Dollars", "initial_value": 0, "equation": "", "position": {"x": 500, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-material-release", "name": "Material Release", "equation": "Rope_Signal", "from_stock": "stock-raw-material", "to_stock": "stock-wip-before-bottleneck", "position": {"x": 200, "y": 200}},
+    {"id": "flow-bottleneck-process", "name": "Bottleneck Process", "equation": "MIN(WIP_Before_Bottleneck, Bottleneck_Capacity) / Bottleneck_Time", "from_stock": "stock-wip-before-bottleneck", "to_stock": "stock-wip-after-bottleneck", "position": {"x": 400, "y": 200}},
+    {"id": "flow-final-process", "name": "Final Process", "equation": "MIN(WIP_After_Bottleneck, Final_Capacity) / Final_Time", "from_stock": "stock-wip-after-bottleneck", "to_stock": "stock-finished-goods", "position": {"x": 600, "y": 200}},
+    {"id": "flow-sales", "name": "Sales", "equation": "MIN(Finished_Goods, Market_Demand) / Delivery_Time", "from_stock": "stock-finished-goods", "to_stock": null, "position": {"x": 750, "y": 200}},
+    {"id": "flow-revenue", "name": "Revenue", "equation": "Sales * Unit_Price", "from_stock": null, "to_stock": "stock-throughput-dollars", "position": {"x": 400, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-bottleneck-capacity", "name": "Bottleneck Capacity", "equation": "20", "position": {"x": 300, "y": 100}},
+    {"id": "var-bottleneck-time", "name": "Bottleneck Time", "equation": "1", "position": {"x": 450, "y": 100}},
+    {"id": "var-final-capacity", "name": "Final Capacity", "equation": "30", "position": {"x": 550, "y": 100}},
+    {"id": "var-final-time", "name": "Final Time", "equation": "0.5", "position": {"x": 700, "y": 100}},
+    {"id": "var-market-demand", "name": "Market Demand", "equation": "25", "position": {"x": 200, "y": 280}},
+    {"id": "var-delivery-time", "name": "Delivery Time", "equation": "1", "position": {"x": 350, "y": 280}},
+    {"id": "var-buffer-target", "name": "Buffer Target", "equation": "Bottleneck_Capacity * Buffer_Days", "position": {"x": 500, "y": 280}},
+    {"id": "var-buffer-days", "name": "Buffer Days", "equation": "2", "position": {"x": 650, "y": 280}},
+    {"id": "var-rope-signal", "name": "Rope Signal", "equation": "MAX(0, MIN(Material_Release_Rate, Buffer_Target - WIP_Before_Bottleneck))", "position": {"x": 200, "y": 350}},
+    {"id": "var-material-release-rate", "name": "Material Release Rate", "equation": "25", "position": {"x": 100, "y": 420}},
+    {"id": "var-unit-price", "name": "Unit Price", "equation": "100", "position": {"x": 300, "y": 420}},
+    {"id": "var-system-throughput", "name": "System Throughput", "equation": "Bottleneck_Process", "position": {"x": 500, "y": 420}},
+    {"id": "var-bottleneck-utilization", "name": "Bottleneck Utilization", "equation": "Bottleneck_Process / (Bottleneck_Capacity / Bottleneck_Time)", "position": {"x": 700, "y": 420}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 50, "dt": 0.5},
+  "source": "https://www.tocico.org/",
+  "reference": "Goldratt EM. The Goal: A Process of Ongoing Improvement. North River Press. 1984."
+}

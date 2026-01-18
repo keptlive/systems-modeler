@@ -1,0 +1,134 @@
+{
+  "id": "grossman-health-capital-hea",
+  "name": "Grossman Health Capital Model",
+  "description": "Models health as depreciating capital stock with investments in medical care. Foundation of health economics. Source: Grossman (1972), JPE. DOI: 10.1086/259880",
+  "stocks": [
+    {
+      "id": "stock-health",
+      "name": "Health_Capital",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-age",
+      "name": "Age",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-invest",
+      "name": "Health_Investment",
+      "equation": "Medical_Care_Input * Investment_Efficiency",
+      "from_stock": null,
+      "to_stock": "stock-health",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-deprec",
+      "name": "Health_Depreciation",
+      "equation": "Health_Capital * Depreciation_Rate",
+      "from_stock": "stock-health",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-aging",
+      "name": "Aging",
+      "equation": "1",
+      "from_stock": null,
+      "to_stock": "stock-age",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-medcare",
+      "name": "Medical_Care_Input",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-efficiency",
+      "name": "Investment_Efficiency",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-deprec",
+      "name": "Depreciation_Rate",
+      "equation": "0.02 + 0.001 * Age",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-healthy",
+      "name": "Healthy_Days",
+      "equation": "365 * (Health_Capital / 100)",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-wage",
+      "name": "Wage_Rate",
+      "equation": "200",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-income",
+      "name": "Healthy_Income",
+      "equation": "Healthy_Days * Wage_Rate / 365",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Health_Capital",
+      "to_element": "Health_Depreciation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:02:23.929711Z",
+  "updated_at": "2026-01-12T02:02:23.929729Z",
+  "source": "https://doi.org/10.1086/259880",
+  "reference": "Grossman, M. (1972). On the Concept of Health Capital and the Demand for Health. Journal of Political Economy."
+}

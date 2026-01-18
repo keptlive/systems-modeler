@@ -1,0 +1,297 @@
+{
+  "id": "hivaids-progression-model-epi",
+  "name": "HIV/AIDS Progression Model",
+  "description": "Multi-stage HIV progression model from infection through AIDS, based on CD4+ T-cell dynamics. Models the natural history of HIV infection including acute, chronic, and AIDS stages. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-susceptible-cd4",
+      "name": "Susceptible_CD4",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected-cd4",
+      "name": "Infected_CD4",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-viral-load",
+      "name": "Viral_Load",
+      "initial_value": 0.001,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-immune-response",
+      "name": "Immune_Response",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-cd4-production",
+      "name": "cd4_production",
+      "equation": "lambda",
+      "from_stock": null,
+      "to_stock": "stock-susceptible-cd4",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-infection",
+      "name": "infection",
+      "equation": "beta * Susceptible_CD4 * Viral_Load",
+      "from_stock": "stock-susceptible-cd4",
+      "to_stock": "stock-infected-cd4",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-cd4-death",
+      "name": "cd4_death",
+      "equation": "d * Susceptible_CD4",
+      "from_stock": "stock-susceptible-cd4",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-infected-death",
+      "name": "infected_death",
+      "equation": "delta * Infected_CD4",
+      "from_stock": "stock-infected-cd4",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-virus-production",
+      "name": "virus_production",
+      "equation": "p * Infected_CD4",
+      "from_stock": null,
+      "to_stock": "stock-viral-load",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-virus-clearance",
+      "name": "virus_clearance",
+      "equation": "c * Viral_Load",
+      "from_stock": "stock-viral-load",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-lambda",
+      "name": "lambda",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-d",
+      "name": "d",
+      "equation": "0.01",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-beta",
+      "name": "beta",
+      "equation": "2.4e-05",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-delta",
+      "name": "delta",
+      "equation": "0.7",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-p",
+      "name": "p",
+      "equation": "900",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-c",
+      "name": "c",
+      "equation": "23",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "lambda",
+      "to_element": "cd4_production"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "d",
+      "to_element": "cd4_production"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Susceptible_CD4",
+      "to_element": "infection"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Viral_Load",
+      "to_element": "infection"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "d",
+      "to_element": "infection"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "beta",
+      "to_element": "infection"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "p",
+      "to_element": "infection"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "c",
+      "to_element": "infection"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Susceptible_CD4",
+      "to_element": "cd4_death"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "d",
+      "to_element": "cd4_death"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "p",
+      "to_element": "cd4_death"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "c",
+      "to_element": "cd4_death"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Infected_CD4",
+      "to_element": "infected_death"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "d",
+      "to_element": "infected_death"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "delta",
+      "to_element": "infected_death"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "c",
+      "to_element": "infected_death"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Infected_CD4",
+      "to_element": "virus_production"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "d",
+      "to_element": "virus_production"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "p",
+      "to_element": "virus_production"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "c",
+      "to_element": "virus_production"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Viral_Load",
+      "to_element": "virus_clearance"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "d",
+      "to_element": "virus_clearance"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "c",
+      "to_element": "virus_clearance"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T20:04:50.796659Z",
+  "updated_at": "2026-01-11T20:04:50.796659Z",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

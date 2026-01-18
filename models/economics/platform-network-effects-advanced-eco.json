@@ -1,0 +1,268 @@
+{
+  "id": "platform-network-effects-advanced-eco",
+  "name": "Two-Sided Platform Network Effects Model",
+  "description": "Advanced system dynamics model of two-sided platform economics capturing network effects between users and providers, with competition and multi-homing dynamics. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "source": "https://doi.org/10.1257/aer.101.3.1642",
+  "reference": "Rysman (2009) based on Rochet & Tirole (2003). The Economics of Two-Sided Markets. Journal of Economic Perspectives, 23(3), 125-143.",
+  "stocks": [
+    {
+      "id": "stock-users",
+      "name": "Platform Users",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-providers",
+      "name": "Service Providers",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-transactions",
+      "name": "Cumulative Transactions",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-user-value",
+      "name": "User Perceived Value",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-provider-value",
+      "name": "Provider Perceived Value",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-competitor-users",
+      "name": "Competitor Users",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-user-acquisition",
+      "name": "User Acquisition",
+      "equation": "Potential_Users * User_Conversion * User_Perceived_Value / (User_Perceived_Value + 10)",
+      "from_stock": null,
+      "to_stock": "stock-users",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-user-churn",
+      "name": "User Churn",
+      "equation": "Platform_Users * Base_User_Churn * (1 - User_Perceived_Value / 50)",
+      "from_stock": "stock-users",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-provider-acquisition",
+      "name": "Provider Acquisition",
+      "equation": "Potential_Providers * Provider_Conversion * Provider_Perceived_Value / (Provider_Perceived_Value + 5)",
+      "from_stock": null,
+      "to_stock": "stock-providers",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-provider-churn",
+      "name": "Provider Churn",
+      "equation": "Service_Providers * Base_Provider_Churn * (1 - Provider_Perceived_Value / 25)",
+      "from_stock": "stock-providers",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-transactions",
+      "name": "Transaction Flow",
+      "equation": "Platform_Users * Service_Providers * Match_Efficiency / 1000",
+      "from_stock": null,
+      "to_stock": "stock-transactions",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-user-value-increase",
+      "name": "User Value Growth",
+      "equation": "(Service_Providers / 10 + Quality_Score - User_Perceived_Value) / Value_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-user-value",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-provider-value-increase",
+      "name": "Provider Value Growth",
+      "equation": "(Platform_Users / 200 + Revenue_Share * Platform_Users / 10000 - Provider_Perceived_Value) / Value_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-provider-value",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-competitor-loss",
+      "name": "Competitor User Loss",
+      "equation": "Competitor_Users * Switching_Rate * (User_Perceived_Value / 20)",
+      "from_stock": "stock-competitor-users",
+      "to_stock": "stock-users",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-potential-users",
+      "name": "Potential Users",
+      "equation": "100000 - Platform_Users - Competitor_Users",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-user-conv",
+      "name": "User Conversion",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-user-churn",
+      "name": "Base User Churn",
+      "equation": "0.05",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-potential-providers",
+      "name": "Potential Providers",
+      "equation": "1000 - Service_Providers",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-provider-conv",
+      "name": "Provider Conversion",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-provider-churn",
+      "name": "Base Provider Churn",
+      "equation": "0.03",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-match-eff",
+      "name": "Match Efficiency",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-quality",
+      "name": "Quality Score",
+      "equation": "Service_Providers / 100",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-revenue-share",
+      "name": "Revenue Share",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-adj-time",
+      "name": "Value Adjustment Time",
+      "equation": "10",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-switching",
+      "name": "Switching Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T03:11:09.889389+00:00",
+  "updated_at": "2026-01-12T03:11:09.889389+00:00"
+}

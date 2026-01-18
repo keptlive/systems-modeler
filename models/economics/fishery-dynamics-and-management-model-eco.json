@@ -1,0 +1,441 @@
+{
+  "id": "fishery-dynamics-and-management-model-eco",
+  "name": "Fishery Dynamics and Management Model",
+  "description": "Models fish population dynamics under harvesting pressure, including stock-recruitment relationships, fishing effort, and management interventions like quotas and marine protected areas. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-fish-stock",
+      "name": "Fish Stock",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fishing-capital-boats",
+      "name": "Fishing Capital (Boats)",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cumulative-harvest",
+      "name": "Cumulative Harvest",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-recruitment",
+      "name": "Recruitment",
+      "equation": "Maximum_Recruitment * Fish_Stock / (Fish_Stock + Half_Saturation_Constant) * Spawning_Success",
+      "from_stock": null,
+      "to_stock": "stock-fish-stock",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-biomass-growth",
+      "name": "Biomass Growth",
+      "equation": "Intrinsic_Growth_Rate * Fish_Stock * (1 - Fish_Stock / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-fish-stock",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-harvest",
+      "name": "Harvest",
+      "equation": "MIN(Potential_Catch, Quota)",
+      "from_stock": "stock-fish-stock",
+      "to_stock": "stock-cumulative-harvest",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-natural-mortality",
+      "name": "Natural Mortality",
+      "equation": "Fish_Stock * Natural_Mortality_Rate",
+      "from_stock": "stock-fish-stock",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-fleet-investment",
+      "name": "Fleet Investment",
+      "equation": "MAX(0, (Desired_Fleet - Fishing_Capital) / Investment_Delay)",
+      "from_stock": null,
+      "to_stock": "stock-fishing-capital-boats",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-fleet-depreciation",
+      "name": "Fleet Depreciation",
+      "equation": "Fishing_Capital / Boat_Lifetime + Exit_Rate",
+      "from_stock": "stock-fishing-capital-boats",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-carrying-capacity",
+      "name": "Carrying Capacity",
+      "equation": "1000000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-intrinsic-growth-rate",
+      "name": "Intrinsic Growth Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-maximum-recruitment",
+      "name": "Maximum Recruitment",
+      "equation": "200000",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-half-saturation-constant",
+      "name": "Half Saturation Constant",
+      "equation": "200000",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-natural-mortality-rate",
+      "name": "Natural Mortality Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-catchability-coefficient",
+      "name": "Catchability Coefficient",
+      "equation": "0.00001",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fishing-effort",
+      "name": "Fishing Effort",
+      "equation": "Fishing_Capital * Days_Fishing * Effort_Multiplier",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-days-fishing-per-year",
+      "name": "Days Fishing per Year",
+      "equation": "200",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-effort-multiplier",
+      "name": "Effort Multiplier",
+      "equation": "IF Season_Open THEN 1 ELSE 0",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-season-open",
+      "name": "Season Open",
+      "equation": "1",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-potential-catch",
+      "name": "Potential Catch",
+      "equation": "Catchability * Fishing_Effort * Fish_Stock",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-annual-quota",
+      "name": "Annual Quota",
+      "equation": "IF Quota_Policy_Active THEN Total_Allowable_Catch ELSE 1e9",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-quota-policy-active",
+      "name": "Quota Policy Active",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-total-allowable-catch-tac",
+      "name": "Total Allowable Catch (TAC)",
+      "equation": "MSY * Harvest_Control_Rule",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-harvest-control-rule",
+      "name": "Harvest Control Rule",
+      "equation": "IF Fish_Stock > Btrigger THEN 1 ELSE Fish_Stock / Btrigger",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-b-trigger-reference-biomass",
+      "name": "B-trigger (Reference Biomass)",
+      "equation": "BMSY * 0.5",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-maximum-sustainable-yield",
+      "name": "Maximum Sustainable Yield",
+      "equation": "Intrinsic_Growth_Rate * Carrying_Capacity / 4",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-biomass-at-msy",
+      "name": "Biomass at MSY",
+      "equation": "Carrying_Capacity / 2",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-stock-status-bbmsy",
+      "name": "Stock Status (B/BMSY)",
+      "equation": "Fish_Stock / BMSY",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-fishing-mortality-rate",
+      "name": "Fishing Mortality Rate",
+      "equation": "Harvest / Fish_Stock",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-fishing-mortality-at-msy",
+      "name": "Fishing Mortality at MSY",
+      "equation": "Intrinsic_Growth_Rate / 2",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-overfishing-indicator",
+      "name": "Overfishing Indicator",
+      "equation": "IF Fishing_Mortality > FMSY THEN 1 ELSE 0",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-fish-price",
+      "name": "Fish Price",
+      "equation": "Base_Price * (Reference_Stock / Fish_Stock)^0.3",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-base-price",
+      "name": "Base Price",
+      "equation": "1000",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-reference-stock",
+      "name": "Reference Stock",
+      "equation": "500000",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-fleet-revenue",
+      "name": "Fleet Revenue",
+      "equation": "Harvest * Fish_Price",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-cost-per-boat",
+      "name": "Cost per Boat",
+      "equation": "500000",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-total-fleet-cost",
+      "name": "Total Fleet Cost",
+      "equation": "Fishing_Capital * Cost_Per_Boat",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-fleet-profit",
+      "name": "Fleet Profit",
+      "equation": "Revenue - Total_Cost",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-profit-per-boat",
+      "name": "Profit per Boat",
+      "equation": "Profit / Fishing_Capital",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-desired-fleet-size",
+      "name": "Desired Fleet Size",
+      "equation": "IF Profit_Per_Boat > 0 THEN Fishing_Capital * (1 + 0.1 * Profit_Per_Boat / 100000) ELSE Fishing_Capital * 0.9",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-investment-delay",
+      "name": "Investment Delay",
+      "equation": "3",
+      "position": {
+        "x": 250,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-boat-lifetime",
+      "name": "Boat Lifetime",
+      "equation": "20",
+      "position": {
+        "x": 400,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-exit-rate",
+      "name": "Exit Rate",
+      "equation": "IF Profit_Per_Boat < -50000 THEN Fishing_Capital * 0.1 ELSE 0",
+      "position": {
+        "x": 550,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-spawning-success",
+      "name": "Spawning Success",
+      "equation": "1 - Climate_Impact",
+      "position": {
+        "x": 700,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-climate-impact",
+      "name": "Climate Impact",
+      "equation": "0.1 * SIN(Time / 10)",
+      "position": {
+        "x": 100,
+        "y": 640
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.729667Z",
+  "updated_at": "2026-01-11T20:04:50.729667Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

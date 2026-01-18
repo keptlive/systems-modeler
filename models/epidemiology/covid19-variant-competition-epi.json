@@ -1,0 +1,174 @@
+{
+  "id": "covid19-variant-competition-epi",
+  "name": "COVID-19 Variant Competition Model",
+  "description": "Models competition between COVID-19 variants (e.g., Delta vs Omicron) based on transmissibility and immune escape. Based on Althaus et al. (2021). DOI: 10.1101/2021.11.26.21266899",
+  "stocks": [
+    {
+      "id": "stock-suscep",
+      "name": "Susceptible",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-delta",
+      "name": "Infected_Delta",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-omicron",
+      "name": "Infected_Omicron",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-deltainf",
+      "name": "Delta_Infection",
+      "equation": "Beta_Delta * Susceptible * Infected_Delta / Total_Pop",
+      "from_stock": "stock-suscep",
+      "to_stock": "stock-delta",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-omicroninf",
+      "name": "Omicron_Infection",
+      "equation": "Beta_Omicron * Susceptible * Infected_Omicron / Total_Pop",
+      "from_stock": "stock-suscep",
+      "to_stock": "stock-omicron",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-deltarecov",
+      "name": "Delta_Recovery",
+      "equation": "Infected_Delta / Recovery_Time",
+      "from_stock": "stock-delta",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-omicronrecov",
+      "name": "Omicron_Recovery",
+      "equation": "Infected_Omicron / Recovery_Time_Omicron",
+      "from_stock": "stock-omicron",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-betadelta",
+      "name": "Beta_Delta",
+      "equation": "0.4",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-betaomicron",
+      "name": "Beta_Omicron",
+      "equation": "0.7",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-rectime",
+      "name": "Recovery_Time",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-rectimeom",
+      "name": "Recovery_Time_Omicron",
+      "equation": "7",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-totpop",
+      "name": "Total_Pop",
+      "equation": "Susceptible + Infected_Delta + Infected_Omicron + Recovered",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-r0delta",
+      "name": "R0_Delta",
+      "equation": "Beta_Delta * Recovery_Time",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-r0omicron",
+      "name": "R0_Omicron",
+      "equation": "Beta_Omicron * Recovery_Time_Omicron",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Susceptible",
+      "to_element": "Delta_Infection"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 180,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T02:45:00.574776+00:00",
+  "updated_at": "2026-01-12T02:45:00.574780+00:00",
+  "source": "https://doi.org/10.1101/2021.11.26.21266899",
+  "reference": "Althaus CL, et al. (2021). A tale of two variants: Spread of SARS-CoV-2 variants Alpha and Delta. medRxiv."
+}

@@ -1,0 +1,232 @@
+{
+  "id": "coral-reef-resilience-model-eco",
+  "name": "Coral Reef Resilience Model",
+  "description": "A model of coral reef ecosystem dynamics including bleaching, recovery, and regime shifts. Based on coral reef ecology research and climate impact studies. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "source": "https://doi.org/10.1126/science.1172133",
+  "reference": "Hughes TP, et al. Climate Change, Human Impacts, and the Resilience of Coral Reefs. Science. 2003;301(5635):929-933.",
+  "stocks": [
+    {
+      "id": "stock-coral",
+      "name": "Coral Cover",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-macroalgae",
+      "name": "Macroalgae Cover",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-turf",
+      "name": "Turf Algae",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-coral-growth",
+      "name": "Coral Growth",
+      "equation": "Coral_Cover * Coral_Growth_Rate * (1 - Total_Cover / 100) * Water_Quality",
+      "from_stock": null,
+      "to_stock": "stock-coral",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-coral-mortality",
+      "name": "Coral Mortality",
+      "equation": "Coral_Cover * (Base_Mortality + Bleaching_Mortality + Disease_Mortality)",
+      "from_stock": "stock-coral",
+      "to_stock": "stock-turf",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-algae-growth",
+      "name": "Algae Growth",
+      "equation": "Turf_Algae * Algae_Growth_Rate * Nutrient_Factor / (1 + Herbivore_Effect)",
+      "from_stock": "stock-turf",
+      "to_stock": "stock-macroalgae",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-algae-mortality",
+      "name": "Algae Grazing",
+      "equation": "Macroalgae_Cover * Grazing_Rate * Herbivore_Abundance",
+      "from_stock": "stock-macroalgae",
+      "to_stock": "stock-turf",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-coral-recruitment",
+      "name": "Coral Recruitment",
+      "equation": "Turf_Algae * Recruitment_Rate * Coral_Cover / 50",
+      "from_stock": "stock-turf",
+      "to_stock": "stock-coral",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-cover",
+      "name": "Total Cover",
+      "equation": "Coral_Cover + Macroalgae_Cover + Turf_Algae",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-coral-growth-rate",
+      "name": "Coral Growth Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-base-mortality",
+      "name": "Base Mortality",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-bleaching",
+      "name": "Bleaching Mortality",
+      "equation": "0.2 * MAX(0, (Temperature - Bleaching_Threshold) / 2)",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-disease",
+      "name": "Disease Mortality",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-temperature",
+      "name": "Temperature",
+      "equation": "27 + 0.03 * TIME + 2 * SIN(2 * 3.14159 * TIME / 5)",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-bleaching-thresh",
+      "name": "Bleaching Threshold",
+      "equation": "29",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-algae-growth",
+      "name": "Algae Growth Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-nutrient",
+      "name": "Nutrient Factor",
+      "equation": "1.5",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-herbivore-effect",
+      "name": "Herbivore Effect",
+      "equation": "0.5 * Herbivore_Abundance",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-herbivore",
+      "name": "Herbivore Abundance",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-grazing",
+      "name": "Grazing Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-recruitment",
+      "name": "Recruitment Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-water-quality",
+      "name": "Water Quality",
+      "equation": "1",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T21:45:15.064967+00:00",
+  "updated_at": "2026-01-11T21:45:15.064967+00:00"
+}

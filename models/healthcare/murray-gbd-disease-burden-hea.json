@@ -1,0 +1,174 @@
+{
+  "id": "murray-gbd-disease-burden-hea",
+  "name": "Murray Global Burden of Disease Model",
+  "description": "Christopher Murray's Global Burden of Disease framework for measuring DALYs. Reference: Murray, C.J.L. & Lopez, A.D. (1996). The Global Burden of Disease.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Years_Life_Lost",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Years_Lived_Disability",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Healthy_Life_Years",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "YLL_Flow",
+      "equation": "Deaths * Life_Expectancy_Remaining",
+      "from_stock": null,
+      "to_stock": "Years_Life_Lost",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "YLD_Flow",
+      "equation": "Incident_Cases * Disability_Weight * Duration",
+      "from_stock": null,
+      "to_stock": "Years_Lived_Disability",
+      "position": {
+        "x": 220,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "HALE_Flow",
+      "equation": "Population * (Life_Expectancy - DALY_Rate)",
+      "from_stock": null,
+      "to_stock": "Healthy_Life_Years",
+      "position": {
+        "x": 340,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Population",
+      "equation": "1000000",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Deaths",
+      "equation": "10000",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Life_Expectancy",
+      "equation": "75",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Average_Age_Death",
+      "equation": "70",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Life_Expectancy_Remaining",
+      "equation": "Life_Expectancy - Average_Age_Death",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Incident_Cases",
+      "equation": "50000",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Disability_Weight",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Duration",
+      "equation": "5",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "DALYs",
+      "equation": "Years_Life_Lost + Years_Lived_Disability",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "DALY_Rate",
+      "equation": "DALYs / MAX(1, Population * time)",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1016/S0140-6736(96)07495-8",
+  "reference": "Murray, C.J.L. & Lopez, A.D. (1996). The Global Burden of Disease. Harvard University Press.",
+  "created_at": "2026-01-15T19:57:16.864548+00:00",
+  "updated_at": "2026-01-15T19:57:16.864548+00:00"
+}

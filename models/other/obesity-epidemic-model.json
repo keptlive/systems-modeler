@@ -1,0 +1,185 @@
+{
+  "id": "obesity-epidemic-model",
+  "name": "Obesity Epidemic Model",
+  "description": "Model of obesity prevalence with food environment, physical activity, and social influence.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Normal_Weight",
+      "initial_value": 100000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Overweight",
+      "initial_value": 70000000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Obese",
+      "initial_value": 40000000,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Weight_Gain_1",
+      "equation": "Normal_Weight * Gain_Rate_1 * (Food_Environment + Sedentary_Factor)",
+      "from_stock": "Normal_Weight",
+      "to_stock": "Overweight",
+      "position": {
+        "x": 225,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Weight_Gain_2",
+      "equation": "Overweight * Gain_Rate_2 * (Food_Environment + Social_Normalization)",
+      "from_stock": "Overweight",
+      "to_stock": "Obese",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Weight_Loss_1",
+      "equation": "Overweight * Loss_Rate * (Exercise_Access + Intervention)",
+      "from_stock": "Overweight",
+      "to_stock": "Normal_Weight",
+      "position": {
+        "x": 225,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Weight_Loss_2",
+      "equation": "Obese * Loss_Rate * 0.5 * (Exercise_Access + Medical_Intervention)",
+      "from_stock": "Obese",
+      "to_stock": "Overweight",
+      "position": {
+        "x": 475,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Gain_Rate_1",
+      "equation": "0.03",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Gain_Rate_2",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Loss_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Food_Environment",
+      "equation": "0.6",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Sedentary_Factor",
+      "equation": "0.4",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Exercise_Access",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Intervention",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Medical_Intervention",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Social_Normalization",
+      "equation": "Obese / (Normal_Weight + Overweight + Obese)",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Obesity_Prevalence",
+      "equation": "Obese / (Normal_Weight + Overweight + Obese)",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2000,
+    "end": 2050,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1016/S0140-6736(17)32129-3",
+  "reference": "NCD Risk Factor Collaboration (2017). Worldwide trends in BMI. Lancet, 390(10113), 2627-2642. DOI: 10.1016/S0140-6736(17)32129-3",
+  "created_at": "2026-01-15T19:28:04.273639+00:00",
+  "updated_at": "2026-01-15T19:28:04.273639+00:00"
+}

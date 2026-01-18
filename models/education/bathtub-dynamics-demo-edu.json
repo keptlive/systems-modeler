@@ -1,0 +1,133 @@
+{
+  "id": "bathtub-dynamics-demo-edu",
+  "name": "Bathtub Dynamics Demo",
+  "description": "The most fundamental system dynamics model - a bathtub with water flowing in and draining out. Demonstrates stock-flow relationships: stocks accumulate flows, and the stock level influences outflow rate. Despite its simplicity, research shows most people fail to correctly predict its behavior, making it valuable for building intuition about accumulation. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-water-in-tub",
+      "name": "Water in Tub",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-inflow",
+      "name": "Inflow",
+      "equation": "Faucet_Rate",
+      "from_stock": null,
+      "to_stock": "stock-water-in-tub",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-outflow",
+      "name": "Outflow",
+      "equation": "Water_in_Tub / Drain_Time",
+      "from_stock": "stock-water-in-tub",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-faucet-rate",
+      "name": "Faucet Rate",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-drain-time",
+      "name": "Drain Time",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-net-flow",
+      "name": "Net Flow",
+      "equation": "Inflow - Outflow",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-equilibrium-level",
+      "name": "Equilibrium Level",
+      "equation": "Faucet_Rate * Drain_Time",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-percent-of-equilibrium",
+      "name": "Percent of Equilibrium",
+      "equation": "Water_in_Tub / Equilibrium_Level * 100",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-time-to-equilibrium",
+      "name": "Time to Equilibrium",
+      "equation": "IF ABS(Net_Flow) > 0.01 THEN ABS((Equilibrium_Level - Water_in_Tub) / Net_Flow) ELSE 0",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Faucet Rate",
+      "to_element": "Inflow"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Water in Tub",
+      "to_element": "Outflow"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Drain Time",
+      "to_element": "Outflow"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Inflow",
+      "to_element": "Net Flow"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Outflow",
+      "to_element": "Net Flow"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-11T20:04:50.783952Z",
+  "updated_at": "2026-01-11T20:04:50.783952Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "System Dynamics Educational Models - PySD Cookbook"
+}

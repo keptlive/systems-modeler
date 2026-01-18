@@ -1,0 +1,293 @@
+{
+  "id": "vaccine-distribution-equity-hea",
+  "name": "Vaccine Distribution Equity Model",
+  "description": "System dynamics model of global vaccine distribution considering equity, logistics, and cold chain constraints. Addresses disparities between high and low-income countries. Reference: Council of Supply Chain Management Professionals. Source: https://cscmp.org/",
+  "source": "https://doi.org/10.1016/j.vaccine.2020.12.048",
+  "reference": "Wouters OJ et al. (2021). Challenges in ensuring global access to COVID-19 vaccines: production, affordability, allocation. Lancet, 397(10278), 1023-1034.",
+  "stocks": [
+    {
+      "id": "stock-global-supply",
+      "name": "Global Vaccine Supply",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-hic-doses",
+      "name": "High Income Country Doses",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-lmic-doses",
+      "name": "Low/Middle Income Doses",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-hic-vaccinated",
+      "name": "HIC Vaccinated Population",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-lmic-vaccinated",
+      "name": "LMIC Vaccinated Population",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-wasted",
+      "name": "Wasted Doses",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-production",
+      "name": "Vaccine Production",
+      "equation": "Production_Capacity * Capacity_Utilization",
+      "from_stock": null,
+      "to_stock": "stock-global-supply",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-hic-allocation",
+      "name": "HIC Allocation",
+      "equation": "Global_Vaccine_Supply * HIC_Allocation_Share / Allocation_Time",
+      "from_stock": "stock-global-supply",
+      "to_stock": "stock-hic-doses",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-lmic-allocation",
+      "name": "LMIC Allocation",
+      "equation": "Global_Vaccine_Supply * (1 - HIC_Allocation_Share) / Allocation_Time",
+      "from_stock": "stock-global-supply",
+      "to_stock": "stock-lmic-doses",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-hic-admin",
+      "name": "HIC Administration",
+      "equation": "MIN(High_Income_Country_Doses / Admin_Time, HIC_Admin_Capacity) * HIC_Uptake",
+      "from_stock": "stock-hic-doses",
+      "to_stock": "stock-hic-vaccinated",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-lmic-admin",
+      "name": "LMIC Administration",
+      "equation": "MIN(Low_Middle_Income_Doses / Admin_Time, LMIC_Admin_Capacity) * LMIC_Uptake * Cold_Chain_Factor",
+      "from_stock": "stock-lmic-doses",
+      "to_stock": "stock-lmic-vaccinated",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-hic-waste",
+      "name": "HIC Wastage",
+      "equation": "High_Income_Country_Doses * HIC_Wastage_Rate",
+      "from_stock": "stock-hic-doses",
+      "to_stock": "stock-wasted",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-lmic-waste",
+      "name": "LMIC Wastage",
+      "equation": "Low_Middle_Income_Doses * LMIC_Wastage_Rate",
+      "from_stock": "stock-lmic-doses",
+      "to_stock": "stock-wasted",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-prod-cap",
+      "name": "Production Capacity",
+      "equation": "15000000",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-utilization",
+      "name": "Capacity Utilization",
+      "equation": "0.8",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-hic-share",
+      "name": "HIC Allocation Share",
+      "equation": "0.7",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-alloc-time",
+      "name": "Allocation Time",
+      "equation": "7",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-admin-time",
+      "name": "Admin Time",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-hic-cap",
+      "name": "HIC Admin Capacity",
+      "equation": "5000000",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-lmic-cap",
+      "name": "LMIC Admin Capacity",
+      "equation": "1000000",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-hic-uptake",
+      "name": "HIC Uptake",
+      "equation": "0.7",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-lmic-uptake",
+      "name": "LMIC Uptake",
+      "equation": "0.8",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-cold-chain",
+      "name": "Cold Chain Factor",
+      "equation": "0.7",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-hic-waste",
+      "name": "HIC Wastage Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-lmic-waste",
+      "name": "LMIC Wastage Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-equity-index",
+      "name": "Equity Index",
+      "equation": "LMIC_Vaccinated_Population / (HIC_Vaccinated_Population + 1) * HIC_Population / LMIC_Population",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-hic-pop",
+      "name": "HIC Population",
+      "equation": "1300000000",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-lmic-pop",
+      "name": "LMIC Population",
+      "equation": "6500000000",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 730,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T03:15:51.643284+00:00",
+  "updated_at": "2026-01-12T03:15:51.643284+00:00"
+}

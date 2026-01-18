@@ -1,0 +1,216 @@
+{
+  "id": "pension-system-sustainability-fin",
+  "name": "Pension System Sustainability Model",
+  "description": "Model of pay-as-you-go pension system dynamics showing demographic pressures and policy options. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-workers",
+      "name": "Working_Age_Population",
+      "initial_value": 60000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-retirees",
+      "name": "Retirees",
+      "initial_value": 20000000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fund",
+      "name": "Pension_Fund",
+      "initial_value": 1000000000000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-entering",
+      "name": "Workforce_Entry",
+      "equation": "Working_Age_Population * Entry_Rate",
+      "from_stock": null,
+      "to_stock": "stock-workers",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-retiring",
+      "name": "Retirement_Flow",
+      "equation": "Working_Age_Population * Retirement_Rate",
+      "from_stock": "stock-workers",
+      "to_stock": "stock-retirees",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mortality",
+      "name": "Retiree_Mortality",
+      "equation": "Retirees * Mortality_Rate",
+      "from_stock": "stock-retirees",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-contributions",
+      "name": "Contributions",
+      "equation": "Working_Age_Population * Average_Wage * Contribution_Rate",
+      "from_stock": null,
+      "to_stock": "stock-fund",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-benefits",
+      "name": "Benefits_Paid",
+      "equation": "Retirees * Average_Benefit",
+      "from_stock": "stock-fund",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-entry",
+      "name": "Entry_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-retire",
+      "name": "Retirement_Rate",
+      "equation": "0.025",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-mort",
+      "name": "Mortality_Rate",
+      "equation": "0.04",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-wage",
+      "name": "Average_Wage",
+      "equation": "50000",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-contrib",
+      "name": "Contribution_Rate",
+      "equation": "0.12",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-benefit",
+      "name": "Average_Benefit",
+      "equation": "20000",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Working_Age_Population",
+      "to_element": "Workforce_Entry"
+    },
+    {
+      "id": "c2",
+      "from_element": "Entry_Rate",
+      "to_element": "Workforce_Entry"
+    },
+    {
+      "id": "c3",
+      "from_element": "Working_Age_Population",
+      "to_element": "Retirement_Flow"
+    },
+    {
+      "id": "c4",
+      "from_element": "Retirement_Rate",
+      "to_element": "Retirement_Flow"
+    },
+    {
+      "id": "c5",
+      "from_element": "Retirees",
+      "to_element": "Retiree_Mortality"
+    },
+    {
+      "id": "c6",
+      "from_element": "Mortality_Rate",
+      "to_element": "Retiree_Mortality"
+    },
+    {
+      "id": "c7",
+      "from_element": "Working_Age_Population",
+      "to_element": "Contributions"
+    },
+    {
+      "id": "c8",
+      "from_element": "Average_Wage",
+      "to_element": "Contributions"
+    },
+    {
+      "id": "c9",
+      "from_element": "Contribution_Rate",
+      "to_element": "Contributions"
+    },
+    {
+      "id": "c10",
+      "from_element": "Retirees",
+      "to_element": "Benefits_Paid"
+    },
+    {
+      "id": "c11",
+      "from_element": "Average_Benefit",
+      "to_element": "Benefits_Paid"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T11:47:36.907901Z",
+  "updated_at": "2026-01-12T11:47:36.907904Z",
+  "source": "https://doi.org/10.1787/pension_glance-2021-en",
+  "reference": "OECD. Pensions at a Glance 2021: OECD and G20 Indicators. OECD Publishing. 2021."
+}

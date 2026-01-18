@@ -1,0 +1,225 @@
+{
+  "id": "anderson-may-herd-immunity-epi",
+  "name": "Anderson-May Herd Immunity Model",
+  "description": "Roy Anderson and Robert May's foundational work on herd immunity thresholds and vaccination programs. Shows how the critical vaccination coverage needed for disease elimination depends on R0, forming the basis for vaccination policy. Reference: Anderson, R. M., & May, R. M. (1991). Infectious Diseases of Humans. Oxford University Press.",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Infected",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-vaccinated",
+      "name": "Vaccinated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "Infection",
+      "equation": "Beta * Susceptible * Infected / Total_Population",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "Gamma * Infected",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-vaccination",
+      "name": "Vaccination",
+      "equation": "Vaccination_Rate * Susceptible * Vaccine_Efficacy",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-vaccinated",
+      "position": {
+        "x": 200,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-births",
+      "name": "Births",
+      "equation": "Birth_Rate * Total_Population",
+      "from_stock": null,
+      "to_stock": "stock-susceptible",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-pop",
+      "name": "Total Population",
+      "equation": "Susceptible + Infected + Recovered + Vaccinated",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "Gamma",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-r0",
+      "name": "Basic R0",
+      "equation": "Beta / Gamma",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-herd-immunity",
+      "name": "Herd Immunity Threshold",
+      "equation": "1 - 1/R0",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-effective-r",
+      "name": "Effective R",
+      "equation": "R0 * Susceptible / Total_Population",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-vaccination-rate",
+      "name": "Vaccination Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-vaccine-efficacy",
+      "name": "Vaccine Efficacy",
+      "equation": "0.9",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-birth-rate",
+      "name": "Birth Rate",
+      "equation": "0.0001",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-immune-fraction",
+      "name": "Immune Fraction",
+      "equation": "(Recovered + Vaccinated) / Total_Population",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-critical-coverage",
+      "name": "Critical Vaccination Coverage",
+      "equation": "Herd_Immunity_Threshold / Vaccine_Efficacy",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Susceptible",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Infected",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "R0",
+      "to_element": "Herd Immunity Threshold"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Immune Fraction",
+      "to_element": "Effective R"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:30:00.000Z",
+  "updated_at": "2026-01-12T01:30:00.000Z",
+  "source": "https://doi.org/10.1038/318323a0",
+  "reference": "Anderson RM, May RM. Vaccination and herd immunity to infectious diseases. Nature. 1985;318:323-329. Also: Infectious Diseases of Humans. Oxford University Press, 1991."
+}

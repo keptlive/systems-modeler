@@ -1,0 +1,178 @@
+{
+  "id": "health-belief-model-hea",
+  "name": "Health Belief Model",
+  "description": "Psychological model explaining health behavior. People act based on perceived susceptibility, severity, benefits, barriers, and self-efficacy. Predicts vaccination, screening, adherence. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-behavioral-intention",
+      "name": "Behavioral Intention",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-behavior-adoption",
+      "name": "Behavior Adoption",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-intention-change",
+      "name": "Intention Change",
+      "equation": "Intention_Formation - Intention_Decay",
+      "from_stock": null,
+      "to_stock": "stock-behavioral-intention",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-adoption",
+      "name": "Adoption Rate",
+      "equation": "Behavioral_Intention * Self_Efficacy * (1 - Behavior_Adoption) - Relapse_Rate * Behavior_Adoption",
+      "from_stock": null,
+      "to_stock": "stock-behavior-adoption",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-perceived-threat",
+      "name": "Perceived Threat",
+      "equation": "Perceived_Susceptibility * Perceived_Severity",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-susceptibility",
+      "name": "Perceived Susceptibility",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-severity",
+      "name": "Perceived Severity",
+      "equation": "0.7",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-net-benefit",
+      "name": "Net Benefit",
+      "equation": "Perceived_Benefits - Perceived_Barriers",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-benefits",
+      "name": "Perceived Benefits",
+      "equation": "0.8",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-barriers",
+      "name": "Perceived Barriers",
+      "equation": "0.4",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-self-efficacy",
+      "name": "Self Efficacy",
+      "equation": "0.6",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-cues",
+      "name": "Cues to Action",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-intention-form",
+      "name": "Intention Formation",
+      "equation": "Cues_to_Action * (Perceived_Threat + Net_Benefit) * (1 - Behavioral_Intention)",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-intention-decay",
+      "name": "Intention Decay",
+      "equation": "0.1 * Behavioral_Intention",
+      "position": {
+        "x": 450,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-relapse",
+      "name": "Relapse Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Perceived Susceptibility",
+      "to_element": "Perceived Threat"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Perceived Severity",
+      "to_element": "Perceived Threat"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Perceived Threat",
+      "to_element": "Intention Formation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T07:45:54.017184+00:00",
+  "updated_at": "2026-01-12T07:45:54.017191+00:00",
+  "source": "https://doi.org/10.1177/109019818401100401",
+  "reference": "Janz NK, Becker MH. The Health Belief Model: A Decade Later. Health Education Quarterly. 1984;11(1):1-47."
+}

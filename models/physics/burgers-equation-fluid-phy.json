@@ -1,0 +1,116 @@
+{
+  "id": "burgers-equation-fluid-phy",
+  "name": "Burgers Equation Fluid Model",
+  "description": "Simplified fluid dynamics equation combining advection and diffusion. Forms shock waves. Used as test case for CFD methods and turbulence modeling. Reference: Crank, J. (1979). The Mathematics of Diffusion. Oxford University Press. Source: https://global.oup.com/",
+  "stocks": [
+    {
+      "id": "stock-velocity",
+      "name": "Velocity",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-velocity-change",
+      "name": "Velocity Change",
+      "equation": "-Velocity * Velocity_Gradient + Viscosity * Velocity_Laplacian",
+      "from_stock": null,
+      "to_stock": "stock-velocity",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-viscosity",
+      "name": "Viscosity",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gradient",
+      "name": "Velocity Gradient",
+      "equation": "0.5 * Velocity",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-laplacian",
+      "name": "Velocity Laplacian",
+      "equation": "0",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-reynolds",
+      "name": "Reynolds Number",
+      "equation": "Velocity * Length_Scale / Viscosity",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-length",
+      "name": "Length Scale",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-advection",
+      "name": "Advection Term",
+      "equation": "Velocity * Velocity_Gradient",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-diffusion",
+      "name": "Diffusion Term",
+      "equation": "Viscosity * Velocity_Laplacian",
+      "position": {
+        "x": 500,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Velocity",
+      "to_element": "Velocity Change"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Velocity Gradient",
+      "to_element": "Velocity Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 10,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-12T07:39:15.417993+00:00",
+  "updated_at": "2026-01-12T07:39:15.418001+00:00",
+  "source": "https://doi.org/10.1016/S0065-2156(08)70100-5",
+  "reference": "Burgers JM. A Mathematical Model Illustrating the Theory of Turbulence. Advances in Applied Mechanics. 1948;1:171-199."
+}

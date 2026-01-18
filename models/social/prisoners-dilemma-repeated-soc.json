@@ -1,0 +1,170 @@
+{
+  "id": "prisoners-dilemma-repeated-soc",
+  "name": "Repeated Prisoner's Dilemma with Learning",
+  "description": "Models cooperation evolution in repeated interactions. Source: Axelrod (1984), The Evolution of Cooperation. DOI: 10.1126/science.7466396",
+  "stocks": [
+    {
+      "id": "stock-coop",
+      "name": "Cooperation_Level",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-rep",
+      "name": "Reputation",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-coopgrow",
+      "name": "Cooperation_Growth",
+      "equation": "(Expected_Payoff_Coop - Expected_Payoff_Defect) * Learning_Rate * (100 - Cooperation_Level) / 100",
+      "from_stock": null,
+      "to_stock": "stock-coop",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-coopdecay",
+      "name": "Cooperation_Decay",
+      "equation": "Cooperation_Level * Defection_Temptation * (1 - Shadow_Of_Future)",
+      "from_stock": "stock-coop",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-repchg",
+      "name": "Reputation_Change",
+      "equation": "(Cooperation_Level - Reputation) * Reputation_Update_Rate",
+      "from_stock": null,
+      "to_stock": "stock-rep",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-payoffcoop",
+      "name": "Expected_Payoff_Coop",
+      "equation": "Cooperation_Level / 100 * Mutual_Coop_Payoff + (1 - Cooperation_Level / 100) * Sucker_Payoff",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-payoffdef",
+      "name": "Expected_Payoff_Defect",
+      "equation": "Cooperation_Level / 100 * Temptation_Payoff + (1 - Cooperation_Level / 100) * Mutual_Defect_Payoff",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-mutcoop",
+      "name": "Mutual_Coop_Payoff",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-tempt",
+      "name": "Temptation_Payoff",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-sucker",
+      "name": "Sucker_Payoff",
+      "equation": "0",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-mutdef",
+      "name": "Mutual_Defect_Payoff",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-learn",
+      "name": "Learning_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-deftemp",
+      "name": "Defection_Temptation",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-shadow",
+      "name": "Shadow_Of_Future",
+      "equation": "0.9",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-repupdate",
+      "name": "Reputation_Update_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Cooperation_Level",
+      "to_element": "Expected_Payoff_Coop"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:17:16.214126+00:00",
+  "updated_at": "2026-01-12T02:17:16.214129+00:00",
+  "source": "https://doi.org/10.1126/science.7466396",
+  "reference": "Axelrod, R. (1984). The Evolution of Cooperation. Basic Books."
+}

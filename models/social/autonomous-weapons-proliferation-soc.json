@@ -1,0 +1,174 @@
+{
+  "id": "autonomous-weapons-proliferation-soc",
+  "name": "Autonomous Weapons Proliferation Model",
+  "description": "Model of autonomous weapons systems development and proliferation showing technology diffusion, arms race dynamics, and regulatory efforts. Based on security studies. Reference: Crank, J. (1979). The Mathematics of Diffusion. Oxford University Press. Source: https://global.oup.com/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Leading Nations Tech",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Proliferation Level",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Regulatory Strength",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Tech Advancement",
+      "equation": "RD_Investment * Learning_Rate * (100 - Leading_Nations_Tech) / 100",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Tech Diffusion",
+      "equation": "Leading_Nations_Tech * Diffusion_Rate * (1 - Regulatory_Strength / 100)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Regulatory Growth",
+      "equation": "(Proliferation_Level + Leading_Nations_Tech) * Public_Concern / 100",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Regulatory Erosion",
+      "equation": "Regulatory_Strength * Security_Competition / 100",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "RD Investment",
+      "equation": "10",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Learning Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Diffusion Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Public Concern",
+      "equation": "30 + Proliferation_Level",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Security Competition",
+      "equation": "20",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Arms Race Index",
+      "equation": "(Leading_Nations_Tech + Proliferation_Level) * (1 - Regulatory_Strength / 100)",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Stability Risk",
+      "equation": "Arms_Race_Index / 50",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Leading Nations Tech",
+      "to_element": "Tech Diffusion"
+    },
+    {
+      "id": "c2",
+      "from_element": "Proliferation Level",
+      "to_element": "Regulatory Growth"
+    },
+    {
+      "id": "c3",
+      "from_element": "Regulatory Strength",
+      "to_element": "Tech Diffusion"
+    }
+  ],
+  "time_settings": {
+    "start": 2024,
+    "end": 2074,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:55:42.037573+00:00",
+  "updated_at": "2026-01-12T01:55:42.037582+00:00",
+  "source": "https://doi.org/10.1162/isec_a_00373",
+  "reference": "Horowitz MC. The Diffusion of Military Power: Causes and Consequences for International Politics. Princeton University Press, 2010."
+}

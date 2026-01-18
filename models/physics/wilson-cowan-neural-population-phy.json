@@ -1,0 +1,141 @@
+{
+  "id": "wilson-cowan-neural-population-phy",
+  "name": "Wilson-Cowan Neural Population Model",
+  "description": "Mean-field model of excitatory and inhibitory neural populations. Shows oscillations and pattern formation in cortex. Source: Wilson & Cowan (1972), Biophysical Journal. DOI: 10.1016/S0006-3495(72)86068-5",
+  "stocks": [
+    {
+      "id": "stock-e",
+      "name": "Excitatory_Activity",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-i",
+      "name": "Inhibitory_Activity",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-de",
+      "name": "Excitatory_Change",
+      "equation": "(-Excitatory_Activity + Sigmoid(W_ee * Excitatory_Activity - W_ei * Inhibitory_Activity + P_ext)) / Tau_e",
+      "from_stock": null,
+      "to_stock": "stock-e",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-di",
+      "name": "Inhibitory_Change",
+      "equation": "(-Inhibitory_Activity + Sigmoid(W_ie * Excitatory_Activity - W_ii * Inhibitory_Activity)) / Tau_i",
+      "from_stock": null,
+      "to_stock": "stock-i",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-wee",
+      "name": "W_ee",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-wei",
+      "name": "W_ei",
+      "equation": "12",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-wie",
+      "name": "W_ie",
+      "equation": "8",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-wii",
+      "name": "W_ii",
+      "equation": "3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-taue",
+      "name": "Tau_e",
+      "equation": "1",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-taui",
+      "name": "Tau_i",
+      "equation": "2",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-pext",
+      "name": "P_ext",
+      "equation": "1.5",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-sigmoid",
+      "name": "Sigmoid",
+      "equation": "1 / (1 + EXP(-X))",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Excitatory_Activity",
+      "to_element": "Inhibitory_Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.05
+  },
+  "created_at": "2026-01-12T02:02:23.927146Z",
+  "updated_at": "2026-01-12T02:02:23.927151Z",
+  "source": "https://doi.org/10.1016/S0006-3495(72)86068-5",
+  "reference": "Wilson, H.R. & Cowan, J.D. (1972). Excitatory and Inhibitory Interactions in Localized Populations of Model Neurons. Biophysical Journal."
+}

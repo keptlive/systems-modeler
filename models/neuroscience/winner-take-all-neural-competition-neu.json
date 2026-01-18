@@ -1,0 +1,28 @@
+{
+  "id": "winner-take-all-neural-competition-neu",
+  "name": "Winner-Take-All Neural Competition Model",
+  "description": "Neural network model where competing populations inhibit each other, leading to winner-take-all dynamics. Used in models of attention, decision-making, and working memory. Source: Wang (2002). Neuron. DOI: 10.1016/S0896-6273(02)01092-9",
+  "stocks": [
+    {"id": "stock-pop1", "name": "Population_1_Activity", "initial_value": 0.3, "equation": "", "position": {"x": 150, "y": 200}},
+    {"id": "stock-pop2", "name": "Population_2_Activity", "initial_value": 0.3, "equation": "", "position": {"x": 450, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-pop1", "name": "Pop1_Dynamics", "equation": "(-Population_1_Activity + Sigmoid(Input_1 + Self_Excitation * Population_1_Activity - Cross_Inhibition * Population_2_Activity)) / Tau", "from_stock": null, "to_stock": "stock-pop1", "position": {"x": 100, "y": 200}},
+    {"id": "flow-pop2", "name": "Pop2_Dynamics", "equation": "(-Population_2_Activity + Sigmoid(Input_2 + Self_Excitation * Population_2_Activity - Cross_Inhibition * Population_1_Activity)) / Tau", "from_stock": null, "to_stock": "stock-pop2", "position": {"x": 400, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-input1", "name": "Input_1", "equation": "1.0", "position": {"x": 150, "y": 100}},
+    {"id": "var-input2", "name": "Input_2", "equation": "0.9", "position": {"x": 450, "y": 100}},
+    {"id": "var-self-exc", "name": "Self_Excitation", "equation": "2.0", "position": {"x": 300, "y": 100}},
+    {"id": "var-cross-inh", "name": "Cross_Inhibition", "equation": "1.5", "position": {"x": 300, "y": 300}},
+    {"id": "var-tau", "name": "Tau", "equation": "10", "position": {"x": 200, "y": 300}},
+    {"id": "var-sigmoid", "name": "Sigmoid", "equation": "1 / (1 + EXP(-x))", "position": {"x": 400, "y": 300}},
+    {"id": "var-winner", "name": "Winner", "equation": "IF(Population_1_Activity > Population_2_Activity, 1, 2)", "position": {"x": 300, "y": 350}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.1},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1016/S0896-6273(02)01092-9",
+  "reference": "Wang, X.J. (2002). Probabilistic decision making by slow reverberation in cortical circuits. Neuron, 36(5), 955-968."
+}

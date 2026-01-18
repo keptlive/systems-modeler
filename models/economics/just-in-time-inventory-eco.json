@@ -1,0 +1,235 @@
+{
+  "id": "just-in-time-inventory-eco",
+  "name": "Just-in-Time Inventory Model",
+  "description": "Model of JIT inventory management showing benefits and vulnerabilities. Based on Toyota Production System principles and Womack & Jones (1996) lean thinking concepts. Reference: Based on Beer Game model (Sterman, 2000). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-raw-materials",
+      "name": "Raw Materials",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-wip",
+      "name": "Work in Process",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-finished-goods",
+      "name": "Finished Goods",
+      "initial_value": 15,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-backlog",
+      "name": "Order Backlog",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-material-delivery",
+      "name": "Material Delivery",
+      "equation": "IF Supplier_Available THEN Material_Order_Rate ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-raw-materials",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-production-start",
+      "name": "Production Start",
+      "equation": "MIN(Raw_Materials / Material_per_Unit, Production_Capacity) * Kanban_Signal",
+      "from_stock": "stock-raw-materials",
+      "to_stock": "stock-wip",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-production-complete",
+      "name": "Production Complete",
+      "equation": "Work_in_Process / Production_Time",
+      "from_stock": "stock-wip",
+      "to_stock": "stock-finished-goods",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-shipments",
+      "name": "Shipments",
+      "equation": "MIN(Finished_Goods, Customer_Demand + Order_Backlog)",
+      "from_stock": "stock-finished-goods",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-backlog-accumulation",
+      "name": "Backlog Accumulation",
+      "equation": "MAX(0, Customer_Demand - Finished_Goods)",
+      "from_stock": null,
+      "to_stock": "stock-backlog",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-backlog-fulfillment",
+      "name": "Backlog Fulfillment",
+      "equation": "MIN(Order_Backlog, MAX(0, Finished_Goods - Customer_Demand))",
+      "from_stock": "stock-backlog",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-customer-demand",
+      "name": "Customer Demand",
+      "equation": "10 + 2 * SIN(2 * 3.14159 * Time / 5)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-target-inventory-days",
+      "name": "Target Inventory Days",
+      "equation": "3",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-target-raw-materials",
+      "name": "Target Raw Materials",
+      "equation": "Customer_Demand * Target_Inventory_Days * Material_per_Unit",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-material-order-rate",
+      "name": "Material Order Rate",
+      "equation": "(Target_Raw_Materials - Raw_Materials) / Reorder_Time + Customer_Demand * Material_per_Unit",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-material-per-unit",
+      "name": "Material per Unit",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-production-capacity",
+      "name": "Production Capacity",
+      "equation": "15",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-production-time",
+      "name": "Production Time",
+      "equation": "1",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-reorder-time",
+      "name": "Reorder Time",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-supplier-available",
+      "name": "Supplier Available",
+      "equation": "IF Supplier_Disruption THEN 0 ELSE 1",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-supplier-disruption",
+      "name": "Supplier Disruption",
+      "equation": "IF Time > 15 AND Time < 20 THEN 1 ELSE 0",
+      "position": {
+        "x": 650,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-kanban-signal",
+      "name": "Kanban Signal",
+      "equation": "IF Finished_Goods < Customer_Demand * 1.5 THEN 1 ELSE 0.5",
+      "position": {
+        "x": 100,
+        "y": 470
+      }
+    },
+    {
+      "id": "var-service-level",
+      "name": "Service Level",
+      "equation": "1 - Order_Backlog / (Customer_Demand + 0.001)",
+      "position": {
+        "x": 300,
+        "y": 470
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 40,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:16:29.727694+00:00",
+  "updated_at": "2026-01-11T21:16:29.727694+00:00",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

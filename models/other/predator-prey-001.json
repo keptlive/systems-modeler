@@ -1,0 +1,179 @@
+{
+  "id": "predator-prey-001",
+  "name": "Predator-Prey Model",
+  "description": "Lotka-Volterra predator-prey ecosystem model Reference: Lotka, A. J. (1920). Analytical note on certain rhythmic relations in organic systems. PNAS, 6(7), 410-415. DOI: https://doi.org/10.1073/pnas.6.7.410",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Rabbits",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 200.0,
+        "y": 200.0
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Foxes",
+      "initial_value": 20.0,
+      "equation": "",
+      "position": {
+        "x": 398.0,
+        "y": 418.6666564941406
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "RabbitBirths",
+      "equation": "Rabbits * RabbitBirthRate",
+      "from_stock": null,
+      "to_stock": "Rabbits",
+      "position": {
+        "x": 200.0,
+        "y": 100.0
+      }
+    },
+    {
+      "id": "f2",
+      "name": "RabbitDeaths",
+      "equation": "Rabbits * Foxes * PredationRate",
+      "from_stock": "Rabbits",
+      "to_stock": null,
+      "position": {
+        "x": 350.0,
+        "y": 200.0
+      }
+    },
+    {
+      "id": "f3",
+      "name": "FoxBirths",
+      "equation": "Foxes * Rabbits * PredationRate * FoxConversionEfficiency",
+      "from_stock": null,
+      "to_stock": "Foxes",
+      "position": {
+        "x": 450.0,
+        "y": 200.0
+      }
+    },
+    {
+      "id": "f4",
+      "name": "FoxDeaths",
+      "equation": "Foxes * FoxDeathRate",
+      "from_stock": "Foxes",
+      "to_stock": null,
+      "position": {
+        "x": 600.0,
+        "y": 300.0
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "RabbitBirthRate",
+      "equation": "0.05",
+      "position": {
+        "x": 100.0,
+        "y": 100.0
+      }
+    },
+    {
+      "id": "v2",
+      "name": "PredationRate",
+      "equation": "0.001",
+      "position": {
+        "x": 400.0,
+        "y": 100.0
+      }
+    },
+    {
+      "id": "v3",
+      "name": "FoxDeathRate",
+      "equation": "0.1",
+      "position": {
+        "x": 700.0,
+        "y": 300.0
+      }
+    },
+    {
+      "id": "v4",
+      "name": "FoxConversionEfficiency",
+      "equation": "0.2",
+      "position": {
+        "x": 221.0,
+        "y": 531.3333129882812
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Rabbits",
+      "to_element": "RabbitBirths"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "RabbitBirthRate",
+      "to_element": "RabbitBirths"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Rabbits",
+      "to_element": "RabbitDeaths"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Foxes",
+      "to_element": "RabbitDeaths"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "PredationRate",
+      "to_element": "RabbitDeaths"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Foxes",
+      "to_element": "FoxBirths"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Rabbits",
+      "to_element": "FoxBirths"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "PredationRate",
+      "to_element": "FoxBirths"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "FoxConversionEfficiency",
+      "to_element": "FoxBirths"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Foxes",
+      "to_element": "FoxDeaths"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "FoxDeathRate",
+      "to_element": "FoxDeaths"
+    }
+  ],
+  "tables": [],
+  "time_settings": {
+    "start": 0.0,
+    "end": 100.0,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-09T00:39:04.692628",
+  "updated_at": "2026-01-11T15:09:15.319544Z",
+  "source": "https://doi.org/10.1073/pnas.6.7.410",
+  "reference": "Lotka AJ. Elements of Physical Biology. Williams & Wilkins, 1925."
+}

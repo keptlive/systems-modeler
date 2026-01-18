@@ -1,0 +1,248 @@
+{
+  "id": "antibiotic-resistance-hospital-hea",
+  "name": "Hospital-Acquired Antibiotic Resistance",
+  "description": "Model of antibiotic-resistant bacteria spread in hospital settings. Captures patient colonization, transmission between patients, and infection control interventions. Based on hospital epidemiology research. Reference: Andersson, D. I., & Hughes, D. (2014). Microbiological effects of sublethal antibiotic concentrations. Nature Reviews Microbiology. Source: https://doi.org/10.1038/nrmicro3270",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Susceptible_Patients",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Colonized_Patients",
+      "initial_value": 15,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Infected_Patients",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Healthcare_Workers_Contaminated",
+      "initial_value": 3,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Admissions",
+      "equation": "Admission_Rate * (1 - Community_Prevalence)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Colonized_Admissions",
+      "equation": "Admission_Rate * Community_Prevalence",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Transmission",
+      "equation": "Susceptible_Patients * (Colonized_Patients + Infected_Patients) * Transmission_Rate * (1 - Hand_Hygiene_Compliance)",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Infection_Onset",
+      "equation": "Colonized_Patients * Infection_Rate * Antibiotic_Pressure",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Susceptible_Discharge",
+      "equation": "Susceptible_Patients / Length_of_Stay",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Colonized_Discharge",
+      "equation": "Colonized_Patients / Length_of_Stay",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Infected_Outcome",
+      "equation": "Infected_Patients / Infection_Duration",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    },
+    {
+      "id": "f8",
+      "name": "HCW_Contamination",
+      "equation": "(Colonized_Patients + Infected_Patients) * HCW_Contact_Rate * (1 - Hand_Hygiene_Compliance) - Healthcare_Workers_Contaminated * Decontamination_Rate",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 350,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Admission_Rate",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Community_Prevalence",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Transmission_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Infection_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Length_of_Stay",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Infection_Duration",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Hand_Hygiene_Compliance",
+      "equation": "0.6",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Antibiotic_Pressure",
+      "equation": "1.5",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "HCW_Contact_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 150,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Decontamination_Rate",
+      "equation": "0.8",
+      "position": {
+        "x": 350,
+        "y": 180
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Resistance_Prevalence",
+      "equation": "(Colonized_Patients + Infected_Patients) / (Susceptible_Patients + Colonized_Patients + Infected_Patients)",
+      "position": {
+        "x": 550,
+        "y": 180
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1073/pnas.96.3.1152",
+  "reference": "Austin DJ et al. (1999) The relationship between the volume of antimicrobial consumption in human communities and the frequency of resistance. PNAS.",
+  "created_at": "2026-01-12T07:01:58.706342+00:00",
+  "updated_at": "2026-01-12T07:01:58.706342+00:00"
+}

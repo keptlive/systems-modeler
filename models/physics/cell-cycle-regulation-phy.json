@@ -1,0 +1,411 @@
+{
+  "id": "cell-cycle-regulation-phy",
+  "name": "APC_Active",
+  "description": "Model of eukaryotic cell cycle control. Shows cyclin-CDK interactions, checkpoints, and cell division control. Based on Tyson & Novak models. Nobel Prize 2001 research (Hartwell, Hunt, Nurse). Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Cyclin_B",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Active_CDK1",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "APC_Active",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Cell_Mass",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Cyclin_Synthesis",
+      "equation": "k1 * Cell_Mass",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Cyclin_Degradation",
+      "equation": "Cyclin_B * (k2 + k2_prime * APC_Active)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "CDK_Activation",
+      "equation": "(Cyclin_B - Active_CDK1) * k3 / (K3 + Cyclin_B - Active_CDK1)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "CDK_Inactivation",
+      "equation": "Active_CDK1 * k4 / (K4 + Active_CDK1)",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "APC_Activation",
+      "equation": "(1 - APC_Active) * k5 * Active_CDK1 / (K5 + 1 - APC_Active)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "APC_Inactivation",
+      "equation": "APC_Active * k6 / (K6 + APC_Active)",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Cell_Growth",
+      "equation": "Cell_Mass * Growth_Rate",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "f8",
+      "name": "Cell_Division",
+      "equation": "Cell_Mass * Division_Rate * APC_Active",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "k1",
+      "equation": "0.04",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "k2",
+      "equation": "0.04",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "k2_prime",
+      "equation": "1.0",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "k3",
+      "equation": "1.0",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "k4",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "k5",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "k6",
+      "equation": "0.1",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "K3",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "v9",
+      "name": "K4",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "v10",
+      "name": "K5",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "v11",
+      "name": "K6",
+      "equation": "0.5",
+      "position": {
+        "x": 650,
+        "y": 300
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Growth_Rate",
+      "equation": "0.015",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Division_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Cell_Cycle_Phase",
+      "equation": "IF(Active_CDK1 > 0.5, IF(APC_Active > 0.5, 3, 2), 1)",
+      "position": {
+        "x": 600,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "k1",
+      "to_element": "Cyclin_Synthesis"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Cell_Mass",
+      "to_element": "Cyclin_Synthesis"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Cyclin_B",
+      "to_element": "Cyclin_Degradation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "k2_prime",
+      "to_element": "Cyclin_Degradation"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "k2",
+      "to_element": "Cyclin_Degradation"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "APC_Active",
+      "to_element": "Cyclin_Degradation"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "K3",
+      "to_element": "CDK_Activation"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Cyclin_B",
+      "to_element": "CDK_Activation"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "k3",
+      "to_element": "CDK_Activation"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Active_CDK1",
+      "to_element": "CDK_Activation"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "K4",
+      "to_element": "CDK_Inactivation"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "k4",
+      "to_element": "CDK_Inactivation"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Active_CDK1",
+      "to_element": "CDK_Inactivation"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "K5",
+      "to_element": "APC_Activation"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Active_CDK1",
+      "to_element": "APC_Activation"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "k5",
+      "to_element": "APC_Activation"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "APC_Active",
+      "to_element": "APC_Activation"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "K6",
+      "to_element": "APC_Inactivation"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "k6",
+      "to_element": "APC_Inactivation"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "APC_Active",
+      "to_element": "APC_Inactivation"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Growth_Rate",
+      "to_element": "Cell_Growth"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Cell_Mass",
+      "to_element": "Cell_Growth"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "Division_Rate",
+      "to_element": "Cell_Division"
+    },
+    {
+      "id": "conn-24",
+      "from_element": "Cell_Mass",
+      "to_element": "Cell_Division"
+    },
+    {
+      "id": "conn-25",
+      "from_element": "APC_Active",
+      "to_element": "Cell_Division"
+    },
+    {
+      "id": "conn-26",
+      "from_element": "Active_CDK1",
+      "to_element": "Cell_Cycle_Phase"
+    },
+    {
+      "id": "conn-27",
+      "from_element": "APC_Active",
+      "to_element": "Cell_Cycle_Phase"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T07:23:15.854770+00:00",
+  "updated_at": "2026-01-12T07:23:15.854770+00:00",
+  "source": "https://doi.org/10.1016/j.cub.2004.11.017",
+  "reference": "Tyson & Novak (2001). Regulation of the eukaryotic cell cycle. Nobel Prize 2001 (Hartwell, Hunt, Nurse)."
+}

@@ -1,0 +1,276 @@
+{
+  "id": "marine-ecosystem-acidification-cli",
+  "name": "Marine Ecosystem Acidification Model",
+  "description": "Models ocean acidification effects on marine ecosystems. Based on Kroeker et al. (2013) meta-analysis of acidification impacts. Reference: NOAA Ocean Climate. Source: https://www.climate.gov/news-features/understanding-climate/climate-change-ocean-heat-content",
+  "stocks": [
+    {
+      "id": "stock-ocean-ph",
+      "name": "Ocean_pH",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-carbonate-saturation",
+      "name": "Carbonate_Saturation",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-coral-population",
+      "name": "Coral_Population",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-shellfish-population",
+      "name": "Shellfish_Population",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-fish-population",
+      "name": "Fish_Population",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-ph-decline",
+      "name": "pH_Decline",
+      "equation": "CO2_Absorption * pH_Sensitivity",
+      "from_stock": "stock-ocean-ph",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-carbonate-decline",
+      "name": "Carbonate_Decline",
+      "equation": "Carbonate_Saturation * (8.1 - Ocean_pH) * Carbonate_Sensitivity",
+      "from_stock": "stock-carbonate-saturation",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-coral-growth",
+      "name": "Coral_Growth",
+      "equation": "Coral_Population * Coral_Growth_Rate * (Carbonate_Saturation / Reference_Carbonate)",
+      "from_stock": null,
+      "to_stock": "stock-coral-population",
+      "position": {
+        "x": 125,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-coral-mortality",
+      "name": "Coral_Mortality",
+      "equation": "Coral_Population * (Base_Mortality + Acidification_Stress * (Reference_pH - Ocean_pH))",
+      "from_stock": "stock-coral-population",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 370
+      }
+    },
+    {
+      "id": "flow-shellfish-growth",
+      "name": "Shellfish_Growth",
+      "equation": "Shellfish_Population * Shellfish_Growth_Rate * (Carbonate_Saturation / Reference_Carbonate)",
+      "from_stock": null,
+      "to_stock": "stock-shellfish-population",
+      "position": {
+        "x": 325,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-shellfish-mortality",
+      "name": "Shellfish_Mortality",
+      "equation": "Shellfish_Population * Base_Mortality * (1 + 2 * (Reference_pH - Ocean_pH))",
+      "from_stock": "stock-shellfish-population",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 370
+      }
+    },
+    {
+      "id": "flow-fish-growth",
+      "name": "Fish_Growth",
+      "equation": "Fish_Population * Fish_Growth_Rate * (Coral_Population / Reference_Coral) * (Shellfish_Population / Reference_Shellfish)",
+      "from_stock": null,
+      "to_stock": "stock-fish-population",
+      "position": {
+        "x": 525,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-fish-mortality",
+      "name": "Fish_Mortality",
+      "equation": "Fish_Population * Fish_Mortality_Rate",
+      "from_stock": "stock-fish-population",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 370
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-co2-absorption",
+      "name": "CO2_Absorption",
+      "equation": "0.003",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-ph-sensitivity",
+      "name": "pH_Sensitivity",
+      "equation": "0.1",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-carbonate-sensitivity",
+      "name": "Carbonate_Sensitivity",
+      "equation": "0.5",
+      "position": {
+        "x": 340,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-reference-ph",
+      "name": "Reference_pH",
+      "equation": "8.1",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-reference-carbonate",
+      "name": "Reference_Carbonate",
+      "equation": "3.5",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-coral-growth-rate",
+      "name": "Coral_Growth_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-shellfish-growth-rate",
+      "name": "Shellfish_Growth_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 220,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-fish-growth-rate",
+      "name": "Fish_Growth_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 340,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-base-mortality",
+      "name": "Base_Mortality",
+      "equation": "0.05",
+      "position": {
+        "x": 460,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-acidification-stress",
+      "name": "Acidification_Stress",
+      "equation": "0.5",
+      "position": {
+        "x": 580,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-fish-mortality-rate",
+      "name": "Fish_Mortality_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 460
+      }
+    },
+    {
+      "id": "var-reference-coral",
+      "name": "Reference_Coral",
+      "equation": "100",
+      "position": {
+        "x": 220,
+        "y": 460
+      }
+    },
+    {
+      "id": "var-reference-shellfish",
+      "name": "Reference_Shellfish",
+      "equation": "100",
+      "position": {
+        "x": 340,
+        "y": 460
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T01:15:55.422349+00:00",
+  "updated_at": "2026-01-12T01:15:55.422357+00:00",
+  "source": "https://doi.org/10.1111/gcb.12179",
+  "reference": "Kroeker KJ, et al. Impacts of ocean acidification on marine organisms: quantifying sensitivities and interaction with warming. Global Change Biology. 2013;19(6):1884-1896."
+}

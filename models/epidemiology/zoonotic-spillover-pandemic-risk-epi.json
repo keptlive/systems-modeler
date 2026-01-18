@@ -1,0 +1,209 @@
+{
+  "id": "zoonotic-spillover-pandemic-risk-epi",
+  "name": "Zoonotic Spillover Pandemic Risk Model",
+  "description": "Model of zoonotic disease spillover risk from wildlife to humans. Explores land use change, wildlife trade, and pandemic emergence. Source: Dobson et al. (2020), Science. DOI: 10.1126/science.abc3189",
+  "stocks": [
+    {
+      "id": "stock-wildlife",
+      "name": "Wildlife_Reservoir",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-interface",
+      "name": "Human_Wildlife_Interface",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-spillover",
+      "name": "Spillover_Events",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-pandemics",
+      "name": "Pandemic_Events",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-forest",
+      "name": "Forest_Cover",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-interface-exp",
+      "name": "Interface_Expansion",
+      "equation": "Deforestation_Rate * Land_Use_Factor",
+      "from_stock": null,
+      "to_stock": "stock-interface",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-spillover",
+      "name": "Spillover_Rate",
+      "equation": "Human_Wildlife_Interface * Wildlife_Reservoir * Contact_Rate * Transmission_Prob / 1000000",
+      "from_stock": null,
+      "to_stock": "stock-spillover",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-pandemic",
+      "name": "Pandemic_Emergence",
+      "equation": "Spillover_Rate * Adaptation_Prob * Spread_Factor",
+      "from_stock": null,
+      "to_stock": "stock-pandemics",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-deforest",
+      "name": "Deforestation",
+      "equation": "Forest_Cover * Deforestation_Rate",
+      "from_stock": "stock-forest",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-habitat-loss",
+      "name": "Habitat_Loss_Effect",
+      "equation": "Deforestation * Displacement_Factor",
+      "from_stock": "stock-wildlife",
+      "to_stock": "stock-interface",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-defor-rate",
+      "name": "Deforestation_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-landuse",
+      "name": "Land_Use_Factor",
+      "equation": "5",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-contact",
+      "name": "Contact_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-trans",
+      "name": "Transmission_Prob",
+      "equation": "0.001",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-adapt",
+      "name": "Adaptation_Prob",
+      "equation": "0.01",
+      "position": {
+        "x": 600,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-spread",
+      "name": "Spread_Factor",
+      "equation": "Global_Connectivity",
+      "position": {
+        "x": 700,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-connect",
+      "name": "Global_Connectivity",
+      "equation": "1 + 0.05 * TIME",
+      "position": {
+        "x": 700,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-displace",
+      "name": "Displacement_Factor",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Human_Wildlife_Interface",
+      "to_element": "Spillover_Rate"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Wildlife_Reservoir",
+      "to_element": "Spillover_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T22:11:19.086232Z",
+  "updated_at": "2026-01-11T22:11:19.086258Z",
+  "source": "https://doi.org/10.1126/science.abc3189",
+  "reference": "Dobson, A.P. et al. (2020). Ecology and economics for pandemic prevention."
+}

@@ -1,0 +1,168 @@
+{
+  "id": "renewable-intermittency-grid-ene",
+  "name": "Renewable Energy Intermittency and Grid Stability",
+  "description": "Model of electric grid stability challenges with high renewable penetration, showing how battery storage and demand response can address intermittency. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "source": "https://doi.org/10.1038/s41560-018-0294-x",
+  "reference": "Denholm P, Mai T, Kenyon RW, et al. Inertia and the Power Grid: A Guide Without the Spin. NREL. 2020.",
+  "stocks": [
+    {
+      "id": "stock-solar",
+      "name": "Solar_Generation",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-wind",
+      "name": "Wind_Generation",
+      "initial_value": 25,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-storage",
+      "name": "Battery_Storage",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-demand",
+      "name": "Grid_Demand",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-charge",
+      "name": "Battery_Charging",
+      "equation": "max(0, renewable_surplus) * charging_efficiency",
+      "from_stock": null,
+      "to_stock": "stock-storage",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-discharge",
+      "name": "Battery_Discharge",
+      "equation": "max(0, generation_deficit) * min(1, Battery_Storage / generation_deficit)",
+      "from_stock": "stock-storage",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-demand-grow",
+      "name": "Demand_Growth",
+      "equation": "Grid_Demand * demand_growth_rate / 365",
+      "from_stock": null,
+      "to_stock": "stock-demand",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-solar-cf",
+      "name": "solar_capacity_factor",
+      "equation": "0.25 * (1 + 0.5 * sin(TIME * 2 * 3.14159 / 365))",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-wind-cf",
+      "name": "wind_capacity_factor",
+      "equation": "0.35 * (1 + 0.3 * cos(TIME * 2 * 3.14159 / 365))",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-total-re",
+      "name": "Total_Renewable",
+      "equation": "Solar_Generation * solar_capacity_factor + Wind_Generation * wind_capacity_factor",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-surplus",
+      "name": "renewable_surplus",
+      "equation": "Total_Renewable - Grid_Demand",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-deficit",
+      "name": "generation_deficit",
+      "equation": "Grid_Demand - Total_Renewable",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-eff",
+      "name": "charging_efficiency",
+      "equation": "0.9",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-demand-gr",
+      "name": "demand_growth_rate",
+      "equation": "0.02",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-balance",
+      "name": "Grid_Balance",
+      "equation": "Total_Renewable + Battery_Storage - Grid_Demand",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

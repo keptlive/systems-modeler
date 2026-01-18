@@ -1,0 +1,203 @@
+{
+  "id": "markowitz-portfolio-fin",
+  "name": "Markowitz Portfolio Optimization Model",
+  "description": "Nobel Prize model of mean-variance portfolio optimization and efficient frontier. Reference: Markowitz, H. (1952). Portfolio Selection.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Portfolio_Value",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Stock_Allocation",
+      "initial_value": 600000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Bond_Allocation",
+      "initial_value": 400000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Stock_Return",
+      "equation": "Stock_Allocation * Stock_Expected_Return / 252 + Stock_Volatility_Shock",
+      "from_stock": null,
+      "to_stock": "Stock_Allocation",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Bond_Return",
+      "equation": "Bond_Allocation * Bond_Expected_Return / 252 + Bond_Volatility_Shock",
+      "from_stock": null,
+      "to_stock": "Bond_Allocation",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Rebalance",
+      "equation": "(Target_Stock_Weight * Portfolio_Value - Stock_Allocation) * Rebalance_Rate",
+      "from_stock": "Bond_Allocation",
+      "to_stock": "Stock_Allocation",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Portfolio_Update",
+      "equation": "Stock_Return + Bond_Return",
+      "from_stock": null,
+      "to_stock": "Portfolio_Value",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Stock_Expected_Return",
+      "equation": "0.10",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Bond_Expected_Return",
+      "equation": "0.04",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Stock_Volatility",
+      "equation": "0.20",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Bond_Volatility",
+      "equation": "0.05",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Correlation",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Stock_Volatility_Shock",
+      "equation": "Stock_Allocation * Stock_Volatility * 0.01 * SIN(time * 13) / 252^0.5",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Bond_Volatility_Shock",
+      "equation": "Bond_Allocation * Bond_Volatility * 0.01 * SIN(time * 7) / 252^0.5",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Target_Stock_Weight",
+      "equation": "0.6",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Actual_Stock_Weight",
+      "equation": "Stock_Allocation / Portfolio_Value",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Rebalance_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Portfolio_Return",
+      "equation": "Actual_Stock_Weight * Stock_Expected_Return + (1 - Actual_Stock_Weight) * Bond_Expected_Return",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Portfolio_Risk",
+      "equation": "(Actual_Stock_Weight^2 * Stock_Volatility^2 + (1-Actual_Stock_Weight)^2 * Bond_Volatility^2)^0.5",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 252,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1111/j.1540-6261.1952.tb01525.x",
+  "reference": "Markowitz, H. (1952). Portfolio Selection. Journal of Finance, 7(1), 77-91.",
+  "created_at": "2026-01-15T20:01:09.823797+00:00",
+  "updated_at": "2026-01-15T20:01:09.823797+00:00"
+}

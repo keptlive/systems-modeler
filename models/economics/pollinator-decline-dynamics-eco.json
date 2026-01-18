@@ -1,0 +1,241 @@
+{
+  "id": "pollinator-decline-dynamics-eco",
+  "name": "Pollinator Decline Dynamics Model",
+  "description": "Models bee colony decline from multiple stressors (pesticides, habitat loss, disease). Based on Potts et al. (2010). DOI: 10.1016/j.tree.2010.01.007",
+  "stocks": [
+    {
+      "id": "stock-colonies",
+      "name": "Bee_Colonies",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-habitat",
+      "name": "Foraging_Habitat",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-disease",
+      "name": "Disease_Prevalence",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-crops",
+      "name": "Crop_Pollination",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-reproduction",
+      "name": "Colony_Reproduction",
+      "equation": "Bee_Colonies * Reproduction_Rate * Habitat_Quality * (1 - Disease_Prevalence / 100)",
+      "from_stock": null,
+      "to_stock": "stock-colonies",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-mortality",
+      "name": "Colony_Mortality",
+      "equation": "Bee_Colonies * (Base_Mortality + Pesticide_Effect + Disease_Effect)",
+      "from_stock": "stock-colonies",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-habitatloss",
+      "name": "Habitat_Loss",
+      "equation": "Foraging_Habitat * Habitat_Loss_Rate",
+      "from_stock": "stock-habitat",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-diseasespread",
+      "name": "Disease_Spread",
+      "equation": "(100 - Disease_Prevalence) * Disease_Transmission * (1 - Immunity)",
+      "from_stock": null,
+      "to_stock": "stock-disease",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-diseaserecov",
+      "name": "Disease_Recovery",
+      "equation": "Disease_Prevalence * Recovery_Rate",
+      "from_stock": "stock-disease",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-pollination",
+      "name": "Pollination_Service",
+      "equation": "Bee_Colonies * Pollination_Efficiency",
+      "from_stock": null,
+      "to_stock": "stock-crops",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-reprodrate",
+      "name": "Reproduction_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-habqual",
+      "name": "Habitat_Quality",
+      "equation": "Foraging_Habitat / 100",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-basemort",
+      "name": "Base_Mortality",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-pesteff",
+      "name": "Pesticide_Effect",
+      "equation": "Pesticide_Exposure * Pesticide_Toxicity",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-pestexp",
+      "name": "Pesticide_Exposure",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-pesttox",
+      "name": "Pesticide_Toxicity",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-diseaseeff",
+      "name": "Disease_Effect",
+      "equation": "Disease_Prevalence / 500",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-hablossrate",
+      "name": "Habitat_Loss_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-distrans",
+      "name": "Disease_Transmission",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-immunity",
+      "name": "Immunity",
+      "equation": "0.2",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-recovrate",
+      "name": "Recovery_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-polleff",
+      "name": "Pollination_Efficiency",
+      "equation": "0.01",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Bee_Colonies",
+      "to_element": "Colony_Reproduction"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T02:55:29.074037+00:00",
+  "updated_at": "2026-01-12T02:55:29.074048+00:00",
+  "source": "https://doi.org/10.1016/j.tree.2010.01.007",
+  "reference": "Potts SG, et al. (2010). Global pollinator declines: trends, impacts and drivers. TREE."
+}

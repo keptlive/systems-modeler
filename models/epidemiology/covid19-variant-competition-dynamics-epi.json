@@ -1,0 +1,210 @@
+{
+  "id": "covid19-variant-competition-dynamics-epi",
+  "name": "COVID-19 Variant Competition with Immune Escape",
+  "description": "Multi-strain SARS-CoV-2 model showing competition between variants with differential transmissibility and immune escape. Based on Althaus et al. 2021 analysis of Alpha, Delta variants. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Susceptible",
+      "initial_value": 0.7,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Infected Alpha",
+      "initial_value": 0.001,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Infected Delta",
+      "initial_value": 0.0001,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Recovered Alpha",
+      "initial_value": 0.15,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Recovered Delta",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Alpha Infection",
+      "equation": "Beta_Alpha * Susceptible * Infected_Alpha",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Delta Infection",
+      "equation": "Beta_Delta * Susceptible * Infected_Delta * (1 + Cross_Immunity_Escape)",
+      "from_stock": "s1",
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Alpha Recovery",
+      "equation": "Infected_Alpha / Infectious_Period",
+      "from_stock": "s2",
+      "to_stock": "s4",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Delta Recovery",
+      "equation": "Infected_Delta / Infectious_Period",
+      "from_stock": "s3",
+      "to_stock": "s5",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Reinfection Alpha to Delta",
+      "equation": "Beta_Delta * Recovered_Alpha * Infected_Delta * Immune_Escape_Delta",
+      "from_stock": "s4",
+      "to_stock": "s3",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Beta Alpha",
+      "equation": "0.3",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Beta Delta",
+      "equation": "0.45",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Infectious Period",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Immune Escape Delta",
+      "equation": "0.15",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Cross Immunity Escape",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Total Infected",
+      "equation": "Infected_Alpha + Infected_Delta",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Delta Fraction",
+      "equation": "Infected_Delta / (Total_Infected + 0.0001)",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Susceptible",
+      "to_element": "Alpha Infection"
+    },
+    {
+      "id": "c2",
+      "from_element": "Susceptible",
+      "to_element": "Delta Infection"
+    },
+    {
+      "id": "c3",
+      "from_element": "Infected Alpha",
+      "to_element": "Alpha Recovery"
+    },
+    {
+      "id": "c4",
+      "from_element": "Infected Delta",
+      "to_element": "Delta Recovery"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:14:19.544854",
+  "updated_at": "2026-01-15T14:14:19.547577",
+  "source": "https://doi.org/10.1038/s41586-021-03426-1",
+  "reference": "Althaus CL, et al. A tale of two variants: Spread of SARS-CoV-2 variants Alpha in Geneva, Switzerland. medRxiv 2021."
+}

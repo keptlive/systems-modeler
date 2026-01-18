@@ -1,0 +1,172 @@
+{
+  "id": "epidemiological-transition-hea",
+  "name": "Epidemiological Transition Model",
+  "description": "Societies progress through disease stages: pestilence/famine, receding pandemics, degenerative diseases, delayed degenerative diseases. Explains global health trends. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-infectious-mortality",
+      "name": "Infectious Disease Mortality",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-chronic-mortality",
+      "name": "Chronic Disease Mortality",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-life-expectancy",
+      "name": "Life Expectancy",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infectious-decline",
+      "name": "Infectious Decline",
+      "equation": "-Development_Effect * Infectious_Disease_Mortality",
+      "from_stock": null,
+      "to_stock": "stock-infectious-mortality",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-chronic-rise",
+      "name": "Chronic Rise",
+      "equation": "Development_Effect * (Chronic_Ceiling - Chronic_Disease_Mortality) * (1 - Chronic_Disease_Mortality / Chronic_Ceiling)",
+      "from_stock": null,
+      "to_stock": "stock-chronic-mortality",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-le-change",
+      "name": "LE Change",
+      "equation": "LE_Improvement_Rate * (LE_Ceiling - Life_Expectancy) * (1 - Infectious_Disease_Mortality / 100)",
+      "from_stock": null,
+      "to_stock": "stock-life-expectancy",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-development",
+      "name": "Development Effect",
+      "equation": "0.03 + 0.02 * Economic_Development",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-econ-dev",
+      "name": "Economic Development",
+      "equation": "1 + 0.02 * TIME",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-chronic-ceiling",
+      "name": "Chronic Ceiling",
+      "equation": "80",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-le-ceiling",
+      "name": "LE Ceiling",
+      "equation": "85",
+      "position": {
+        "x": 650,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-mortality",
+      "name": "Total Mortality",
+      "equation": "Infectious_Disease_Mortality + Chronic_Disease_Mortality",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-le-improve",
+      "name": "LE Improvement Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-stage",
+      "name": "Transition Stage",
+      "equation": "IF(Infectious_Disease_Mortality > 30, 1, IF(Infectious_Disease_Mortality > 10, 2, IF(Chronic_Disease_Mortality > 50, 3, 4)))",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-double-burden",
+      "name": "Double Burden Index",
+      "equation": "Infectious_Disease_Mortality / 50 + Chronic_Disease_Mortality / 80",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Development Effect",
+      "to_element": "Infectious Decline"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Development Effect",
+      "to_element": "Chronic Rise"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Infectious Disease Mortality",
+      "to_element": "LE Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T07:45:54.017103+00:00",
+  "updated_at": "2026-01-12T07:45:54.017109+00:00",
+  "source": "https://doi.org/10.1111/j.1468-0009.2005.00398.x",
+  "reference": "Omran AR. The Epidemiologic Transition: A Theory of the Epidemiology of Population Change. Milbank Memorial Fund Quarterly. 1971;49(4):509-538."
+}

@@ -1,0 +1,184 @@
+{
+  "id": "credit-rating-migration-fin",
+  "name": "Credit Rating Migration Model",
+  "description": "Jarrow et al. (1997) credit rating transition model. Tracks probability of rating upgrades, downgrades, and default. Foundation for credit risk management. Reference: Arrow, K. J. (1962). The economic implications of learning by doing. Review of Economic Studies, 29(3), 155-173. DOI: https://doi.org/10.2307/2295952",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "AAA_Bonds",
+      "initial_value": 100,
+      "position": {
+        "x": 100,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s2",
+      "name": "BBB_Bonds",
+      "initial_value": 200,
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s3",
+      "name": "Junk_Bonds",
+      "initial_value": 100,
+      "position": {
+        "x": 500,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s4",
+      "name": "Defaulted",
+      "initial_value": 0,
+      "position": {
+        "x": 400,
+        "y": 350
+      },
+      "equation": ""
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "aaa_to_bbb",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "equation": "AAA_Bonds * downgrade_rate_aaa * economic_stress",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f2",
+      "name": "bbb_to_aaa",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "equation": "BBB_Bonds * upgrade_rate_bbb / economic_stress",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f3",
+      "name": "bbb_to_junk",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "equation": "BBB_Bonds * downgrade_rate_bbb * economic_stress",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f4",
+      "name": "junk_default",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "equation": "Junk_Bonds * default_rate * economic_stress",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "downgrade_rate_aaa",
+      "equation": "0.02",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v2",
+      "name": "upgrade_rate_bbb",
+      "equation": "0.05",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v3",
+      "name": "downgrade_rate_bbb",
+      "equation": "0.05",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v4",
+      "name": "default_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v5",
+      "name": "economic_stress",
+      "equation": "1 + 0.5 * SIN(TIME/5)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v6",
+      "name": "total_value",
+      "equation": "AAA_Bonds + BBB_Bonds + Junk_Bonds",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v7",
+      "name": "average_quality",
+      "equation": "(3*AAA_Bonds + 2*BBB_Bonds + Junk_Bonds) / total_value",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "economic_stress",
+      "to_element": "aaa_to_bbb"
+    },
+    {
+      "id": "c2",
+      "from_element": "economic_stress",
+      "to_element": "bbb_to_junk"
+    },
+    {
+      "id": "c3",
+      "from_element": "economic_stress",
+      "to_element": "junk_default"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "dt": 0.5,
+    "end": 30
+  },
+  "created_at": "2026-01-12T02:25:30.586779+00:00",
+  "updated_at": "2026-01-12T02:25:30.586783+00:00",
+  "source": "https://doi.org/10.1093/rfs/10.2.481",
+  "reference": "Jarrow, R. A., Lando, D., & Turnbull, S. M. (1997). A Markov model for the term structure of credit risk spreads. The review of financial studies, 10(2), 481-523."
+}

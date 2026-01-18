@@ -1,0 +1,127 @@
+{
+  "id": "gigerenzer-fast-frugal-heuristics-soc",
+  "name": "Gigerenzer Fast and Frugal Heuristics Model",
+  "description": "Model of bounded rationality showing how simple heuristics can outperform complex optimization in uncertain environments. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Information_Collected",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Decision_Quality",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Information_Search",
+      "equation": "Search_Rate * (1 - Stop_Threshold_Reached)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Quality_Update",
+      "equation": "(Heuristic_Accuracy - Decision_Quality) / Update_Time",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Search_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Stop_Threshold",
+      "equation": "3",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Stop_Threshold_Reached",
+      "equation": "IF(Information_Collected > Stop_Threshold, 1, 0)",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Heuristic_Accuracy",
+      "equation": "MIN(0.9, 0.5 + 0.1 * Information_Collected)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Update_Time",
+      "equation": "1",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Search_Cost",
+      "equation": "0.01 * Information_Collected",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Net_Decision_Value",
+      "equation": "Decision_Quality - Search_Cost",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:26:32.201804+00:00",
+  "updated_at": "2026-01-12T11:26:32.201804+00:00",
+  "source": "https://doi.org/10.1037/0033-295X.103.4.650",
+  "reference": "Gigerenzer G, Goldstein DG. Reasoning the fast and frugal way: Models of bounded rationality. Psychological Review. 1996;103(4):650-669."
+}

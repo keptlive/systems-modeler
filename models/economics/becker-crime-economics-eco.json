@@ -1,0 +1,187 @@
+{
+  "id": "becker-crime-economics-eco",
+  "name": "Becker Economics of Crime",
+  "description": "Criminals respond rationally to costs and benefits. Optimal enforcement balances punishment severity and detection probability against enforcement costs. Nobel Prize 1992. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-crime-rate",
+      "name": "Crime Rate",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-enforcement",
+      "name": "Enforcement Level",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-crime-change",
+      "name": "Crime Rate Change",
+      "equation": "Adjustment_Speed * (Equilibrium_Crime - Crime_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-crime-rate",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-enforcement-change",
+      "name": "Enforcement Change",
+      "equation": "Policy_Response * (Crime_Rate - Target_Crime_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-enforcement",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-expected-benefit",
+      "name": "Expected Crime Benefit",
+      "equation": "Crime_Payoff",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-expected-cost",
+      "name": "Expected Cost",
+      "equation": "Detection_Probability * Punishment_Severity",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-detection",
+      "name": "Detection Probability",
+      "equation": "0.3 + 0.5 * Enforcement_Level",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-punishment",
+      "name": "Punishment Severity",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-crime-payoff",
+      "name": "Crime Payoff",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-equilibrium-crime",
+      "name": "Equilibrium Crime",
+      "equation": "MAX(0, 0.3 - 0.5 * Expected_Cost / Expected_Crime_Benefit)",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-enforcement-cost",
+      "name": "Enforcement Cost",
+      "equation": "10 * Enforcement_Level^2",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-crime-cost",
+      "name": "Social Cost of Crime",
+      "equation": "Crime_Rate * 20",
+      "position": {
+        "x": 350,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-total-cost",
+      "name": "Total Social Cost",
+      "equation": "Enforcement_Cost + Social_Cost_of_Crime",
+      "position": {
+        "x": 550,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-target-crime",
+      "name": "Target Crime Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 200,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-adjust",
+      "name": "Adjustment Speed",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-policy",
+      "name": "Policy Response",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Enforcement Level",
+      "to_element": "Detection Probability"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Expected Cost",
+      "to_element": "Equilibrium Crime"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Crime Rate",
+      "to_element": "Enforcement Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:51:43.478171+00:00",
+  "updated_at": "2026-01-12T07:51:43.478182+00:00",
+  "source": "https://doi.org/10.1086/259394",
+  "reference": "Becker GS. Crime and Punishment: An Economic Approach. Journal of Political Economy. 1968;76(2):169-217. Nobel Prize 1992."
+}

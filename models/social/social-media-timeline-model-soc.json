@@ -1,0 +1,73 @@
+{
+  "id": "social-media-timeline-model-soc",
+  "name": "Social Media Timeline Model",
+  "description": "A simple model of social media timeline dynamics showing how posts accumulate and get displaced over time. Posts enter the timeline through tweeting/posting and are displaced (pushed down and eventually removed from view) at a rate proportional to the current number of posts. This is a basic stock-flow model demonstrating first-order decay in a social media context. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-posts-on-timeline",
+      "name": "Posts on Timeline",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-tweeting",
+      "name": "Tweeting",
+      "equation": "4",
+      "from_stock": null,
+      "to_stock": "stock-posts-on-timeline",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-displacement",
+      "name": "Displacement",
+      "equation": "Posts_on_Timeline / Displacement_Timescale",
+      "from_stock": "stock-posts-on-timeline",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-displacement-timescale",
+      "name": "Displacement Timescale",
+      "equation": "3600",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Posts on Timeline",
+      "to_element": "Displacement"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Displacement Timescale",
+      "to_element": "Displacement"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.865977Z",
+  "updated_at": "2026-01-11T20:04:50.865977Z",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

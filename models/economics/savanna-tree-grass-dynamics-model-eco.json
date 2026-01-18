@@ -1,0 +1,263 @@
+{
+  "id": "savanna-tree-grass-dynamics-model-eco",
+  "name": "Savanna Tree-Grass Dynamics Model",
+  "description": "Models the coexistence of trees and grass in savanna ecosystems. Trees and grasses compete for water and light, with fire and herbivory acting as key regulators. The model explains why savannas persist as mixtures rather than becoming forests or grasslands - fire keeps trees in check while rainfall determines the overall productivity. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-tree-cover",
+      "name": "Tree Cover",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-grass-biomass",
+      "name": "Grass Biomass",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-tree-growth",
+      "name": "Tree Growth",
+      "equation": "Tree_Growth_Rate * Tree_Cover * (1 - Tree_Cover / Max_Tree_Cover) * Water_Availability",
+      "from_stock": null,
+      "to_stock": "stock-tree-cover",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-tree-mortality",
+      "name": "Tree Mortality",
+      "equation": "Tree_Cover * (Background_Tree_Mortality + Fire_Tree_Mortality)",
+      "from_stock": "stock-tree-cover",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-grass-growth",
+      "name": "Grass Growth",
+      "equation": "Grass_Growth_Rate * (1 - Tree_Cover) * Water_Availability * (1 - Grass_Biomass / Max_Grass)",
+      "from_stock": null,
+      "to_stock": "stock-grass-biomass",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-grass-consumption",
+      "name": "Grass Consumption",
+      "equation": "Grazing_Pressure * Grass_Biomass",
+      "from_stock": "stock-grass-biomass",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-grass-fire-loss",
+      "name": "Grass Fire Loss",
+      "equation": "Fire_Frequency * Fire_Intensity * Grass_Biomass",
+      "from_stock": "stock-grass-biomass",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-tree-growth-rate",
+      "name": "Tree Growth Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-max-tree-cover",
+      "name": "Max Tree Cover",
+      "equation": "Water_Availability",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-water-availability",
+      "name": "Water Availability",
+      "equation": "MIN(1, Mean_Annual_Rainfall / 1500)",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mean-annual-rainfall",
+      "name": "Mean Annual Rainfall",
+      "equation": "800",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-background-tree-mortality",
+      "name": "Background Tree Mortality",
+      "equation": "0.02",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fire-tree-mortality",
+      "name": "Fire Tree Mortality",
+      "equation": "Fire_Frequency * Fire_Intensity * Fire_Tree_Kill_Rate",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fire-frequency",
+      "name": "Fire Frequency",
+      "equation": "Fire_Probability",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fire-probability",
+      "name": "Fire Probability",
+      "equation": "MIN(1, Grass_Biomass / Fire_Threshold) * (1 - Tree_Cover)",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fire-threshold",
+      "name": "Fire Threshold",
+      "equation": "200",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fire-intensity",
+      "name": "Fire Intensity",
+      "equation": "0.5",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fire-tree-kill-rate",
+      "name": "Fire Tree Kill Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-grass-growth-rate",
+      "name": "Grass Growth Rate",
+      "equation": "2000",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-max-grass",
+      "name": "Max Grass",
+      "equation": "1000",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-grazing-pressure",
+      "name": "Grazing Pressure",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Tree Cover",
+      "to_element": "Tree Growth"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Water Availability",
+      "to_element": "Tree Growth"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Tree Cover",
+      "to_element": "Tree Mortality"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Fire Tree Mortality",
+      "to_element": "Tree Mortality"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Tree Cover",
+      "to_element": "Grass Growth"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Grass Biomass",
+      "to_element": "Grass Growth"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Grass Biomass",
+      "to_element": "Fire Probability"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Tree Cover",
+      "to_element": "Fire Probability"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.744178Z",
+  "updated_at": "2026-01-11T20:04:50.744178Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

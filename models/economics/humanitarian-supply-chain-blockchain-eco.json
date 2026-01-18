@@ -1,0 +1,368 @@
+{
+  "id": "humanitarian-supply-chain-blockchain-eco",
+  "name": "Target_Adoption",
+  "description": "System dynamics model of humanitarian supply chains enhanced with blockchain technology. Models supply chain transparency, trust, donation flow, and aid distribution efficiency. Based on Izadi et al. (2023) IJDRR paper. Reference: Based on System Dynamics supply chain models (Sterman, 2000). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Donations_Received",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Supplies_In_Transit",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Supplies_Delivered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Beneficiaries_Reached",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Trust_Level",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "s6",
+      "name": "Blockchain_Adoption",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "New_Donations",
+      "equation": "Base_Donation_Rate * Trust_Level * Disaster_Urgency",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Procurement_Rate",
+      "equation": "Donations_Received * Procurement_Efficiency * (1 + Blockchain_Adoption * 0.2)",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Delivery_Rate",
+      "equation": "Supplies_In_Transit * Logistics_Efficiency * (1 - Transit_Loss_Rate * (1 - Blockchain_Adoption))",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Distribution_Rate",
+      "equation": "Supplies_Delivered * Distribution_Efficiency",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "People_Helped",
+      "equation": "Distribution_Rate * People_Per_Supply_Unit",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Trust_Building",
+      "equation": "(Target_Trust - Trust_Level) / Trust_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Blockchain_Growth",
+      "equation": "(Target_Adoption - Blockchain_Adoption) / Adoption_Time",
+      "from_stock": null,
+      "to_stock": "s6",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Base_Donation_Rate",
+      "equation": "100000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Disaster_Urgency",
+      "equation": "1 + 0.5 * PULSE(30, 60)",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Procurement_Efficiency",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Logistics_Efficiency",
+      "equation": "0.15",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Transit_Loss_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Distribution_Efficiency",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "People_Per_Supply_Unit",
+      "equation": "5",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Target_Trust",
+      "equation": "0.3 + 0.5 * Blockchain_Adoption + 0.2 * (Beneficiaries_Reached / 100000)",
+      "position": {
+        "x": 400,
+        "y": 500
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Trust_Adjustment_Time",
+      "equation": "30",
+      "position": {
+        "x": 300,
+        "y": 500
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Target_Adoption",
+      "equation": "0.8",
+      "position": {
+        "x": 600,
+        "y": 500
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Adoption_Time",
+      "equation": "180",
+      "position": {
+        "x": 700,
+        "y": 500
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Disaster_Urgency",
+      "to_element": "New_Donations"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Base_Donation_Rate",
+      "to_element": "New_Donations"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Trust_Level",
+      "to_element": "New_Donations"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Donations_Received",
+      "to_element": "Procurement_Rate"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Blockchain_Adoption",
+      "to_element": "Procurement_Rate"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Procurement_Efficiency",
+      "to_element": "Procurement_Rate"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Logistics_Efficiency",
+      "to_element": "Delivery_Rate"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Blockchain_Adoption",
+      "to_element": "Delivery_Rate"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Transit_Loss_Rate",
+      "to_element": "Delivery_Rate"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Supplies_In_Transit",
+      "to_element": "Delivery_Rate"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Supplies_Delivered",
+      "to_element": "Distribution_Rate"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Distribution_Efficiency",
+      "to_element": "Distribution_Rate"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Distribution_Rate",
+      "to_element": "People_Helped"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "People_Per_Supply_Unit",
+      "to_element": "People_Helped"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Trust_Adjustment_Time",
+      "to_element": "Trust_Building"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Target_Trust",
+      "to_element": "Trust_Building"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Trust_Level",
+      "to_element": "Trust_Building"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Blockchain_Adoption",
+      "to_element": "Blockchain_Growth"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Adoption_Time",
+      "to_element": "Blockchain_Growth"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Target_Adoption",
+      "to_element": "Blockchain_Growth"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Blockchain_Adoption",
+      "to_element": "Target_Trust"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Beneficiaries_Reached",
+      "to_element": "Target_Trust"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T07:15:44.246030+00:00",
+  "updated_at": "2026-01-12T07:15:44.246030+00:00",
+  "source": "https://doi.org/10.1016/j.ijdrr.2023.103977",
+  "reference": "Izadi et al. (2023). A system dynamics model in the humanitarian supply chain based on blockchain technology. International Journal of Disaster Risk Reduction 96, 103977."
+}

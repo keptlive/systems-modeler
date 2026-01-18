@@ -1,0 +1,186 @@
+{
+  "id": "herd-immunity-vaccination-epi",
+  "name": "Herd Immunity Vaccination Model",
+  "description": "A model demonstrating herd immunity thresholds in vaccination programs. Shows how vaccination coverage affects disease transmission and elimination prospects. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "source": "https://doi.org/10.1017/S0950268800059926",
+  "reference": "Fine PEM. Herd Immunity: History, Theory, Practice. Epidemiologic Reviews. 1993;15(2):265-302.",
+  "stocks": [
+    {
+      "id": "stock-s",
+      "name": "Susceptible",
+      "initial_value": 990000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-v",
+      "name": "Vaccinated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-i",
+      "name": "Infected",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-r",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-vaccination",
+      "name": "Vaccination",
+      "equation": "Susceptible * Vaccination_Rate * Vaccine_Availability",
+      "from_stock": "stock-s",
+      "to_stock": "stock-v",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-infection",
+      "name": "Infection",
+      "equation": "beta * Susceptible * Infected / N",
+      "from_stock": "stock-s",
+      "to_stock": "stock-i",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-breakthrough",
+      "name": "Breakthrough",
+      "equation": "beta * Vaccinated * Infected / N * (1 - Vaccine_Efficacy)",
+      "from_stock": "stock-v",
+      "to_stock": "stock-i",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "Infected / Recovery_Time",
+      "from_stock": "stock-i",
+      "to_stock": "stock-r",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-n",
+      "name": "N",
+      "equation": "Susceptible + Vaccinated + Infected + Recovered",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-r0",
+      "name": "R0",
+      "equation": "beta * Recovery_Time",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-herd-threshold",
+      "name": "Herd Threshold",
+      "equation": "1 - 1/R0",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-effective-coverage",
+      "name": "Effective Coverage",
+      "equation": "Vaccinated * Vaccine_Efficacy / N",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-beta",
+      "name": "beta",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-recovery",
+      "name": "Recovery Time",
+      "equation": "10",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-vax-rate",
+      "name": "Vaccination Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-vax-avail",
+      "name": "Vaccine Availability",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-vax-eff",
+      "name": "Vaccine Efficacy",
+      "equation": "0.9",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T21:48:31.733422+00:00",
+  "updated_at": "2026-01-11T21:48:31.733422+00:00"
+}

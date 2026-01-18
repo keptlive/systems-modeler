@@ -1,0 +1,278 @@
+{
+  "id": "business-model-innovation-eco",
+  "name": "Business Model Innovation Dynamics",
+  "description": "System dynamics model for corporate business model innovation. Maps system structure to capture performance, relationships between elements, and innovation outcomes over time. Reference: OECD Oslo Manual (2018). Guidelines for Collecting Innovation Data. Source: https://www.oecd.org/",
+  "source": "https://doi.org/10.1016/j.procir.2022.09.047",
+  "reference": "Groesser et al. (2022). System Dynamic and Simulation of Business Model Innovation in Digital Companies. Procedia CIRP, 109, 160-165.",
+  "stocks": [
+    {
+      "id": "stock-current-bm",
+      "name": "Current Business Model Value",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-innovation-portfolio",
+      "name": "Innovation Portfolio",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-new-bm",
+      "name": "New Business Model Value",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-org-capability",
+      "name": "Organizational Capability",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-market-position",
+      "name": "Market Position",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-bm-erosion",
+      "name": "BM Value Erosion",
+      "equation": "Current_Business_Model_Value * Market_Disruption_Rate",
+      "from_stock": "stock-current-bm",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-innovation-gen",
+      "name": "Innovation Generation",
+      "equation": "R_D_Investment * Innovation_Efficiency * Organizational_Capability / 1000",
+      "from_stock": null,
+      "to_stock": "stock-innovation-portfolio",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-innovation-fail",
+      "name": "Innovation Failure",
+      "equation": "Innovation_Portfolio * Failure_Rate",
+      "from_stock": "stock-innovation-portfolio",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-bm-launch",
+      "name": "BM Launch",
+      "equation": "Innovation_Portfolio * Launch_Rate * Market_Fit",
+      "from_stock": "stock-innovation-portfolio",
+      "to_stock": "stock-new-bm",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-new-bm-growth",
+      "name": "New BM Growth",
+      "equation": "New_Business_Model_Value * Growth_Rate * Market_Position / 100",
+      "from_stock": null,
+      "to_stock": "stock-new-bm",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-capability-build",
+      "name": "Capability Building",
+      "equation": "Learning_Investment * (1 - Organizational_Capability / 100)",
+      "from_stock": null,
+      "to_stock": "stock-org-capability",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-capability-decay",
+      "name": "Capability Decay",
+      "equation": "Organizational_Capability * Knowledge_Decay_Rate",
+      "from_stock": "stock-org-capability",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-market-gain",
+      "name": "Market Position Gain",
+      "equation": "(New_Business_Model_Value / 10) * Competitive_Advantage",
+      "from_stock": null,
+      "to_stock": "stock-market-position",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-market-loss",
+      "name": "Market Position Loss",
+      "equation": "Market_Position * Competitive_Erosion",
+      "from_stock": "stock-market-position",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-disruption",
+      "name": "Market Disruption Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-rd",
+      "name": "R D Investment",
+      "equation": "Total_Revenue * 0.15",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-revenue",
+      "name": "Total Revenue",
+      "equation": "Current_Business_Model_Value + New_Business_Model_Value",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-innovation-eff",
+      "name": "Innovation Efficiency",
+      "equation": "0.2",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-failure",
+      "name": "Failure Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-launch",
+      "name": "Launch Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-market-fit",
+      "name": "Market Fit",
+      "equation": "Market_Position / 100",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-growth",
+      "name": "Growth Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-learning",
+      "name": "Learning Investment",
+      "equation": "Total_Revenue * 0.05",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-decay",
+      "name": "Knowledge Decay Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-competitive-adv",
+      "name": "Competitive Advantage",
+      "equation": "Organizational_Capability / 100",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-competitive-erosion",
+      "name": "Competitive Erosion",
+      "equation": "0.03",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T03:11:09.889370+00:00",
+  "updated_at": "2026-01-12T03:11:09.889370+00:00"
+}

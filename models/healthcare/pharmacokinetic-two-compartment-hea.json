@@ -1,0 +1,123 @@
+{
+  "id": "pharmacokinetic-two-compartment-hea",
+  "name": "Pharmacokinetic Two-Compartment Model",
+  "description": "Classic two-compartment pharmacokinetic model for drug distribution and elimination. Source: Gibaldi & Perrier (1982), Pharmacokinetics.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Central_Compartment",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Peripheral_Compartment",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Distribution_to_Peripheral",
+      "equation": "k12 * Central_Compartment - k21 * Peripheral_Compartment",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Elimination",
+      "equation": "k10 * Central_Compartment",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "k12",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "k21",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "k10",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Plasma_Concentration",
+      "equation": "Central_Compartment / Vc",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Vc",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Half_Life",
+      "equation": "0.693 / k10",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Central_Compartment",
+      "to_element": "Distribution_to_Peripheral"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 24,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T14:39:40.984412+00:00",
+  "updated_at": "2026-01-15T14:39:40.984482+00:00",
+  "source": "https://doi.org/10.1002/9781118833889",
+  "reference": "Gibaldi, M. & Perrier, D. (1982). Pharmacokinetics. 2nd ed. Marcel Dekker."
+}

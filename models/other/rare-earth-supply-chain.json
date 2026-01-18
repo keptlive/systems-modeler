@@ -1,0 +1,177 @@
+{
+  "id": "rare-earth-supply-chain",
+  "name": "Rare Earth Elements Supply Chain Model",
+  "description": "Model of critical mineral supply for clean energy technology.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Known_Reserves",
+      "initial_value": 120000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Annual_Production",
+      "initial_value": 280000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Strategic_Stockpile",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Recycled_Supply",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Mining",
+      "equation": "Known_Reserves * Mining_Rate * Price_Signal",
+      "from_stock": "Known_Reserves",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Production_Increase",
+      "equation": "Demand_Growth * Investment_Rate * 1000",
+      "from_stock": null,
+      "to_stock": "Annual_Production",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Stockpile_Buildup",
+      "equation": "Annual_Production * Stockpile_Rate",
+      "from_stock": null,
+      "to_stock": "Strategic_Stockpile",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Recycling_Growth",
+      "equation": "EoL_Products * Recovery_Rate",
+      "from_stock": null,
+      "to_stock": "Recycled_Supply",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Mining_Rate",
+      "equation": "0.002",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Price_Signal",
+      "equation": "1.2",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Demand_Growth",
+      "equation": "1.08",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Investment_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Stockpile_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "v6",
+      "name": "EoL_Products",
+      "equation": "50000",
+      "position": {
+        "x": 600,
+        "y": 50
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Recovery_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Supply_Security",
+      "equation": "(Annual_Production + Strategic_Stockpile + Recycled_Supply) / (Demand_Growth * 300000)",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2050,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1038/s41467-020-18402-y",
+  "reference": "Wang, P., et al. (2020). Critical mineral constraints on 1.5\u00b0C pathways. Nature Communications, 11, 4735. DOI: 10.1038/s41467-020-18402-y",
+  "created_at": "2026-01-15T19:31:51.617641+00:00",
+  "updated_at": "2026-01-15T19:31:51.617641+00:00"
+}

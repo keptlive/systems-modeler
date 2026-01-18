@@ -1,0 +1,170 @@
+{
+  "id": "barabasi-albert-network-tec",
+  "name": "Barab\u00e1si-Albert Scale-Free Network",
+  "description": "Barab\u00e1si and Albert's 1999 preferential attachment model generating scale-free networks with power-law degree distributions. Explains web, social, biological networks. Reference: IEEE Power & Energy Society. Source: https://www.ieee-pes.org/",
+  "stocks": [
+    {
+      "id": "stock-nodes",
+      "name": "Total_Nodes",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-edges",
+      "name": "Total_Edges",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-hubs",
+      "name": "Hub_Count",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-growth",
+      "name": "Node_Addition",
+      "equation": "growth_rate",
+      "from_stock": null,
+      "to_stock": "stock-nodes",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-edges",
+      "name": "Edge_Addition",
+      "equation": "growth_rate * edges_per_node",
+      "from_stock": null,
+      "to_stock": "stock-edges",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-hubs",
+      "name": "Hub_Formation",
+      "equation": "IF(Total_Nodes > hub_threshold, hub_formation_rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-hubs",
+      "position": {
+        "x": 300,
+        "y": 380
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-growth",
+      "name": "growth_rate",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-m",
+      "name": "edges_per_node",
+      "equation": "2",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-avg-degree",
+      "name": "Average_Degree",
+      "equation": "2 * Total_Edges / Total_Nodes",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-clustering",
+      "name": "Clustering_Coefficient",
+      "equation": "(ln(Total_Nodes))^2 / Total_Nodes",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "Power_Law_Exponent",
+      "equation": "3",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-threshold",
+      "name": "hub_threshold",
+      "equation": "50",
+      "position": {
+        "x": 200,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-hub-rate",
+      "name": "hub_formation_rate",
+      "equation": "0.1 * ln(Total_Nodes)",
+      "position": {
+        "x": 400,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-max-degree",
+      "name": "Expected_Max_Degree",
+      "equation": "edges_per_node * sqrt(Total_Nodes)",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Total_Nodes",
+      "to_element": "Average_Degree"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Total_Edges",
+      "to_element": "Average_Degree"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Total_Nodes",
+      "to_element": "Clustering_Coefficient"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1126/science.286.5439.509",
+  "reference": "Barab\u00e1si A-L, Albert R. Emergence of Scaling in Random Networks. Science. 1999;286(5439):509-512."
+}

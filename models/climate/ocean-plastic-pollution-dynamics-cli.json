@@ -1,0 +1,226 @@
+{
+  "id": "ocean-plastic-pollution-dynamics-cli",
+  "name": "Ocean Plastic Pollution Dynamics Model",
+  "description": "Model of plastic pollution accumulation in oceans including river inputs, degradation, and microplastic formation. Source: Jambeck et al. (2015), Science. DOI: 10.1126/science.1260352",
+  "stocks": [
+    {
+      "id": "stock-land",
+      "name": "Land_Plastic_Waste",
+      "initial_value": 300000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-coastal",
+      "name": "Coastal_Accumulation",
+      "initial_value": 50000000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ocean-surf",
+      "name": "Ocean_Surface",
+      "initial_value": 5000000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-deep",
+      "name": "Deep_Ocean",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-micro",
+      "name": "Microplastics",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-produce",
+      "name": "Plastic_Production",
+      "equation": "Production_Rate * (1 + Growth_Rate * TIME / 100)",
+      "from_stock": null,
+      "to_stock": "stock-land",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mismanage",
+      "name": "Mismanagement",
+      "equation": "Land_Plastic_Waste * Mismanagement_Rate",
+      "from_stock": "stock-land",
+      "to_stock": "stock-coastal",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-to-ocean",
+      "name": "Ocean_Entry",
+      "equation": "Coastal_Accumulation * Ocean_Entry_Rate",
+      "from_stock": "stock-coastal",
+      "to_stock": "stock-ocean-surf",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-sink",
+      "name": "Sinking",
+      "equation": "Ocean_Surface * Sinking_Rate",
+      "from_stock": "stock-ocean-surf",
+      "to_stock": "stock-deep",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fragment",
+      "name": "Fragmentation",
+      "equation": "Ocean_Surface * Fragmentation_Rate",
+      "from_stock": "stock-ocean-surf",
+      "to_stock": "stock-micro",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-cleanup",
+      "name": "Cleanup",
+      "equation": "Ocean_Surface * Cleanup_Rate",
+      "from_stock": "stock-ocean-surf",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-recycle",
+      "name": "Recycling",
+      "equation": "Land_Plastic_Waste * Recycling_Rate",
+      "from_stock": "stock-land",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-prod",
+      "name": "Production_Rate",
+      "equation": "300000000",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-growth",
+      "name": "Growth_Rate",
+      "equation": "3",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-mismng",
+      "name": "Mismanagement_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-entry",
+      "name": "Ocean_Entry_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-sink",
+      "name": "Sinking_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 475,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-frag",
+      "name": "Fragmentation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-clean",
+      "name": "Cleanup_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recycle",
+      "name": "Recycling_Rate",
+      "equation": "0.09",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Land_Plastic_Waste",
+      "to_element": "Mismanagement"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T22:15:10.906279+00:00",
+  "updated_at": "2026-01-11T22:15:10.906279+00:00",
+  "source": "https://doi.org/10.1126/science.1260352",
+  "reference": "Jambeck, J.R. et al. (2015). Plastic waste inputs from land into the ocean."
+}

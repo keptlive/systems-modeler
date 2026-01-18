@@ -1,0 +1,170 @@
+{
+  "id": "athlete-performance-curve-soc",
+  "name": "Athlete Performance Lifecycle",
+  "description": "Model of athletic performance over career. Source: Sports science literature.",
+  "stocks": [
+    {
+      "id": "stock-fitness",
+      "name": "Physical_Fitness",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-skill",
+      "name": "Technical_Skill",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fatigue",
+      "name": "Accumulated_Fatigue",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-train",
+      "name": "Training_Gains",
+      "equation": "Training_Intensity * (100 - Physical_Fitness) / 100 * Recovery_Factor",
+      "from_stock": null,
+      "to_stock": "stock-fitness",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-decline",
+      "name": "Age_Decline",
+      "equation": "Physical_Fitness * Age_Factor",
+      "from_stock": "stock-fitness",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-practice",
+      "name": "Skill_Development",
+      "equation": "Practice_Hours * (100 - Technical_Skill) / 100",
+      "from_stock": null,
+      "to_stock": "stock-skill",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fatigue-acc",
+      "name": "Fatigue_Accumulation",
+      "equation": "Training_Intensity * Strain_Factor",
+      "from_stock": null,
+      "to_stock": "stock-fatigue",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-fatigue-rec",
+      "name": "Fatigue_Recovery",
+      "equation": "Accumulated_Fatigue * Recovery_Rate",
+      "from_stock": "stock-fatigue",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-train",
+      "name": "Training_Intensity",
+      "equation": "5",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recfac",
+      "name": "Recovery_Factor",
+      "equation": "MAX(0.5, 1 - Accumulated_Fatigue / 100)",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-age",
+      "name": "Age_Factor",
+      "equation": "0.01 + 0.0005 * TIME",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-practice",
+      "name": "Practice_Hours",
+      "equation": "3",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-strain",
+      "name": "Strain_Factor",
+      "equation": "0.2",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-recrate",
+      "name": "Recovery_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-perf",
+      "name": "Performance",
+      "equation": "Physical_Fitness * 0.5 + Technical_Skill * 0.5 - Accumulated_Fatigue * 0.3",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T12:53:13.195573+00:00",
+  "updated_at": "2026-01-12T12:53:13.195573+00:00",
+  "source": "https://systemdynamics.org/resources/",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

@@ -1,0 +1,160 @@
+{
+  "id": "goodwin-class-struggle-eco",
+  "name": "Goodwin Class Struggle Growth Cycle",
+  "description": "Nonlinear business cycle model based on labor-capital conflict. Employment affects wage bargaining, profits drive investment. Creates endogenous cycles like predator-prey. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-employment",
+      "name": "Employment Rate",
+      "initial_value": 0.9,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-wage-share",
+      "name": "Wage Share",
+      "initial_value": 0.6,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-employment-change",
+      "name": "Employment Change",
+      "equation": "Employment_Rate * (Growth_Rate - Labor_Force_Growth)",
+      "from_stock": null,
+      "to_stock": "stock-employment",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-wage-share-change",
+      "name": "Wage Share Change",
+      "equation": "Wage_Share * (Real_Wage_Growth - Productivity_Growth)",
+      "from_stock": null,
+      "to_stock": "stock-wage-share",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-profit-share",
+      "name": "Profit Share",
+      "equation": "1 - Wage_Share",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-growth",
+      "name": "Growth Rate",
+      "equation": "Profit_Share / Capital_Output_Ratio - Depreciation",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-capital-output",
+      "name": "Capital Output Ratio",
+      "equation": "3",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-depreciation",
+      "name": "Depreciation",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-real-wage-growth",
+      "name": "Real Wage Growth",
+      "equation": "Phillips_Intercept + Phillips_Slope * Employment_Rate",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-phillips-int",
+      "name": "Phillips Intercept",
+      "equation": "-0.04",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-phillips-slope",
+      "name": "Phillips Slope",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-productivity",
+      "name": "Productivity Growth",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-labor-force",
+      "name": "Labor Force Growth",
+      "equation": "0.01",
+      "position": {
+        "x": 500,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Wage Share",
+      "to_element": "Profit Share"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Profit Share",
+      "to_element": "Growth Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Employment Rate",
+      "to_element": "Real Wage Growth"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:43:15.875845+00:00",
+  "updated_at": "2026-01-12T07:43:15.875848+00:00",
+  "source": "https://doi.org/10.1093/cje/bel042",
+  "reference": "Goodwin RM. A Growth Cycle. In: Socialism, Capitalism and Economic Growth. Cambridge University Press. 1967."
+}

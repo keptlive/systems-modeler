@@ -1,0 +1,242 @@
+{
+  "id": "aging-infrastructure-eco",
+  "name": "Aging Infrastructure Maintenance Model",
+  "description": "Model of infrastructure aging showing deterioration, maintenance investment, and failure risk. Based on American Society of Civil Engineers Infrastructure Report. Reference: ASCE (2021). Infrastructure Report Card. American Society of Civil Engineers. Source: https://infrastructurereportcard.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Good Condition",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Fair Condition",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Poor Condition",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Failed",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Good to Fair",
+      "equation": "Good_Condition / Good_Duration * (1 - Maintenance_Effect)",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Fair to Poor",
+      "equation": "Fair_Condition / Fair_Duration * (1 - Maintenance_Effect * 0.5)",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Poor to Failed",
+      "equation": "Poor_Condition / Poor_Duration",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Renewal",
+      "equation": "Investment / Cost_per_Unit",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Repair Fair to Good",
+      "equation": "Fair_Condition * Repair_Rate * Repair_Funding",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Repair Poor to Fair",
+      "equation": "Poor_Condition * Repair_Rate * Repair_Funding * 0.5",
+      "from_stock": "s3",
+      "to_stock": "s2",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Good Duration",
+      "equation": "15",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Fair Duration",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Poor Duration",
+      "equation": "5",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Investment",
+      "equation": "100",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Cost per Unit",
+      "equation": "10",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Maintenance Effect",
+      "equation": "MIN(0.5, Maintenance_Spending / Required_Maintenance)",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Maintenance Spending",
+      "equation": "50",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Required Maintenance",
+      "equation": "100",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Repair Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Repair Funding",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Infrastructure Grade",
+      "equation": "(Good_Condition * 4 + Fair_Condition * 3 + Poor_Condition * 2 + Failed * 1) / (Good_Condition + Fair_Condition + Poor_Condition + Failed)",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Good Condition",
+      "to_element": "Good to Fair"
+    },
+    {
+      "id": "c2",
+      "from_element": "Fair Condition",
+      "to_element": "Fair to Poor"
+    },
+    {
+      "id": "c3",
+      "from_element": "Poor Condition",
+      "to_element": "Poor to Failed"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2070,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:45:26.877649+00:00",
+  "updated_at": "2026-01-12T01:45:26.877652+00:00",
+  "source": "https://infrastructurereportcard.org/",
+  "reference": "American Society of Civil Engineers. 2021 Report Card for America's Infrastructure. ASCE, 2021."
+}

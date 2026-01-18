@@ -1,0 +1,244 @@
+{
+  "id": "academic-publishing-dynamics-edu",
+  "name": "Academic Publishing Dynamics Model",
+  "description": "Model of academic publishing ecosystem showing publication pressure, peer review, and open access transition. Based on publish-or-perish dynamics. Reference: Edwards, M. A., & Roy, S. (2017). Academic Research in the 21st Century. Frontiers in Psychology. Source: https://doi.org/10.3389/fpsyg.2016.01442",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Submitted Manuscripts",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Under Review",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Published Papers",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Researcher Count",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "New Submissions",
+      "equation": "Researcher_Count * Papers_per_Researcher / 12",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Desk Rejection",
+      "equation": "Submitted_Manuscripts * Desk_Rejection_Rate / Desk_Review_Time",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "f3",
+      "name": "To Peer Review",
+      "equation": "Submitted_Manuscripts * (1 - Desk_Rejection_Rate) / Desk_Review_Time",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Acceptance",
+      "equation": "Under_Review * Acceptance_Rate / Review_Time",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Rejection After Review",
+      "equation": "Under_Review * (1 - Acceptance_Rate) / Review_Time",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "f6",
+      "name": "New Researchers",
+      "equation": "PhD_Graduation_Rate",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Researcher Exit",
+      "equation": "Researcher_Count * Exit_Rate",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Papers per Researcher",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Desk Rejection Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Desk Review Time",
+      "equation": "0.5",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Acceptance Rate",
+      "equation": "0.25",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Review Time",
+      "equation": "4",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "PhD Graduation Rate",
+      "equation": "500",
+      "position": {
+        "x": 50,
+        "y": 400
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Exit Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Publication Pressure",
+      "equation": "Researcher_Count / Published_Papers",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Open Access Fraction",
+      "equation": "0.3 + 0.01 * TIME",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Reviewer Burden",
+      "equation": "Under_Review * 3 / Researcher_Count",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Researcher Count",
+      "to_element": "New Submissions"
+    },
+    {
+      "id": "c2",
+      "from_element": "Submitted Manuscripts",
+      "to_element": "To Peer Review"
+    },
+    {
+      "id": "c3",
+      "from_element": "Under Review",
+      "to_element": "Acceptance"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:53:04.261554+00:00",
+  "updated_at": "2026-01-12T01:53:04.261557+00:00",
+  "source": "https://doi.org/10.1371/journal.pone.0127502",
+  "reference": "Bornmann L, Mutz R. Growth rates of modern science: A bibliometric analysis based on the number of publications and cited references. JASIST. 2015;66(11):2215-2222."
+}

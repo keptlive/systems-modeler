@@ -1,0 +1,33 @@
+{
+  "id": "dweck-growth-mindset-psy",
+  "name": "Dweck Growth Mindset Model",
+  "description": "Carol Dweck's model of fixed vs. growth mindsets and their effects on learning behavior. Growth mindset individuals see abilities as malleable and embrace challenges, while fixed mindset individuals avoid failure and learning opportunities.",
+  "stocks": [
+    {"id": "stock-growth-mindset", "name": "Growth Mindset", "initial_value": 50, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-ability-level", "name": "Ability Level", "initial_value": 50, "equation": "", "position": {"x": 500, "y": 200}},
+    {"id": "stock-challenge-seeking", "name": "Challenge Seeking", "initial_value": 50, "equation": "", "position": {"x": 350, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-mindset-change", "name": "Mindset Change", "equation": "(Mindset_Influence - Growth_Mindset) / Mindset_Change_Time", "from_stock": null, "to_stock": "stock-growth-mindset", "position": {"x": 100, "y": 200}},
+    {"id": "flow-ability-growth", "name": "Ability Growth", "equation": "Effort_Investment * Learning_Efficiency", "from_stock": null, "to_stock": "stock-ability-level", "position": {"x": 400, "y": 200}},
+    {"id": "flow-challenge-preference-change", "name": "Challenge Preference Change", "equation": "(Desired_Challenge_Seeking - Challenge_Seeking) / Preference_Adjustment_Time", "from_stock": null, "to_stock": "stock-challenge-seeking", "position": {"x": 250, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-task-difficulty", "name": "Task Difficulty", "equation": "60", "position": {"x": 350, "y": 100}},
+    {"id": "var-success-feedback", "name": "Success Feedback", "equation": "IF Ability_Level > Task_Difficulty THEN 1 ELSE 0", "position": {"x": 550, "y": 100}},
+    {"id": "var-failure-feedback", "name": "Failure Feedback", "equation": "IF Ability_Level < Task_Difficulty THEN 1 ELSE 0", "position": {"x": 550, "y": 180}},
+    {"id": "var-mindset-influence", "name": "Mindset Influence", "equation": "IF Success_Feedback = 1 THEN Growth_Mindset + 5 ELSE IF Failure_Feedback = 1 THEN Growth_Mindset + Growth_Response_to_Failure ELSE Growth_Mindset", "position": {"x": 150, "y": 280}},
+    {"id": "var-growth-response-to-failure", "name": "Growth Response to Failure", "equation": "10 * Growth_Mindset / 100 - 5 * (100 - Growth_Mindset) / 100", "position": {"x": 400, "y": 280}},
+    {"id": "var-effort-investment", "name": "Effort Investment", "equation": "Challenge_Seeking * Growth_Mindset / 100", "position": {"x": 600, "y": 280}},
+    {"id": "var-learning-efficiency", "name": "Learning Efficiency", "equation": "0.05 + 0.05 * Growth_Mindset / 100", "position": {"x": 600, "y": 350}},
+    {"id": "var-desired-challenge-seeking", "name": "Desired Challenge Seeking", "equation": "Growth_Mindset * 0.8 + 20", "position": {"x": 200, "y": 420}},
+    {"id": "var-mindset-change-time", "name": "Mindset Change Time", "equation": "20", "position": {"x": 400, "y": 420}},
+    {"id": "var-preference-adjustment-time", "name": "Preference Adjustment Time", "equation": "5", "position": {"x": 600, "y": 420}},
+    {"id": "var-avoidance-behavior", "name": "Avoidance Behavior", "equation": "100 - Challenge_Seeking", "position": {"x": 350, "y": 490}},
+    {"id": "var-helplessness", "name": "Helplessness", "equation": "MAX(0, (100 - Growth_Mindset) * Failure_Feedback * 0.5)", "position": {"x": 550, "y": 490}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.5},
+  "source": "https://doi.org/10.1037/0003-066X.41.10.1040",
+  "reference": "Dweck CS. Mindset: The New Psychology of Success. Random House. 2006."
+}

@@ -1,0 +1,107 @@
+{
+  "id": "world3-pollution-sector-cla",
+  "name": "World3 Persistent Pollution Sector",
+  "description": "Persistent pollution dynamics from World3 model. Models pollution generation, absorption, and its effects on land fertility and mortality. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-pollution",
+      "name": "Persistent Pollution",
+      "initial_value": 25000000.0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-poll-gen",
+      "name": "Pollution Generation",
+      "equation": "Industrial_Output * Pollution_Per_Unit_Output * (1 - Pollution_Control_Fraction)",
+      "from_stock": null,
+      "to_stock": "stock-pollution",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-poll-absorb",
+      "name": "Pollution Absorption",
+      "equation": "Persistent_Pollution / Assimilation_Half_Life",
+      "from_stock": "stock-pollution",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-ind-output",
+      "name": "Industrial Output",
+      "equation": "1e11 * (1 + 0.03 * Time)",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-ppuo",
+      "name": "Pollution Per Unit Output",
+      "equation": "0.001",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-pcf",
+      "name": "Pollution Control Fraction",
+      "equation": "MIN(0.9, 0.1 + 0.005 * Time)",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-assim-hl",
+      "name": "Assimilation Half Life",
+      "equation": "1.5 + Persistent_Pollution / 2.5e9",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-poll-index",
+      "name": "Pollution Index",
+      "equation": "Persistent_Pollution / 2.5e7",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-poll-mult-fert",
+      "name": "Pollution Mult on Fertility",
+      "equation": "MAX(0.1, 1 - 0.2 * Pollution_Index)",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 1900,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://github.com/cvanwynsberghe/pyworld3",
+  "reference": "Meadows et al. Limits to Growth (1972); PyWorld3 implementation.",
+  "created_at": "2026-01-12T08:11:11.789037+00:00",
+  "updated_at": "2026-01-12T08:11:11.789037+00:00"
+}

@@ -1,0 +1,316 @@
+{
+  "id": "technology-adoption-lifecycle-model-eco",
+  "name": "Technology Adoption Lifecycle Model",
+  "description": "Models the diffusion of new technologies through a market, including innovators, early adopters, early majority, late majority, and laggards. Based on Rogers' diffusion of innovations theory. Reference: Rogers, E. M. (2003). Diffusion of Innovations (5th ed.). Free Press.",
+  "stocks": [
+    {
+      "id": "stock-potential-adopters",
+      "name": "Potential Adopters",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-adopters",
+      "name": "Adopters",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cumulative-adopters",
+      "name": "Cumulative Adopters",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adoption-rate",
+      "name": "Adoption Rate",
+      "equation": "Potential_Adopters * (Innovation_Effect + Imitation_Effect)",
+      "from_stock": "stock-potential-adopters",
+      "to_stock": "stock-cumulative-adopters",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-abandonment-rate",
+      "name": "Abandonment Rate",
+      "equation": "Adopters * Abandonment_Fraction",
+      "from_stock": "stock-adopters",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-market",
+      "name": "Total Market",
+      "equation": "1000000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-adoption-fraction",
+      "name": "Adoption Fraction",
+      "equation": "Cumulative_Adopters / Total_Market",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-innovation-coefficient-p",
+      "name": "Innovation Coefficient (p)",
+      "equation": "0.03",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-imitation-coefficient-q",
+      "name": "Imitation Coefficient (q)",
+      "equation": "0.38",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-innovation-effect",
+      "name": "Innovation Effect",
+      "equation": "Innovation_Coefficient * Advertising_Effectiveness",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-imitation-effect",
+      "name": "Imitation Effect",
+      "equation": "Imitation_Coefficient * Adopters / Total_Market * Word_of_Mouth_Effect",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-advertising-effectiveness",
+      "name": "Advertising Effectiveness",
+      "equation": "1 + Advertising_Spending / Base_Advertising",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-advertising-spending",
+      "name": "Advertising Spending",
+      "equation": "1000000",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-base-advertising",
+      "name": "Base Advertising",
+      "equation": "1000000",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-word-of-mouth-effect",
+      "name": "Word of Mouth Effect",
+      "equation": "Perceived_Value / Reference_Value",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-perceived-value",
+      "name": "Perceived Value",
+      "equation": "Base_Value * (1 + Network_Effect) * Quality_Improvement",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-base-value",
+      "name": "Base Value",
+      "equation": "100",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-reference-value",
+      "name": "Reference Value",
+      "equation": "100",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-network-effect",
+      "name": "Network Effect",
+      "equation": "Network_Effect_Strength * LOG(1 + Adopters / 1000)",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-network-effect-strength",
+      "name": "Network Effect Strength",
+      "equation": "0.3",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-quality-improvement",
+      "name": "Quality Improvement",
+      "equation": "1 + Learning_Rate * LOG(1 + Cumulative_Adopters / 10000)",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-learning-rate",
+      "name": "Learning Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-abandonment-fraction",
+      "name": "Abandonment Fraction",
+      "equation": "Base_Abandonment * Obsolescence_Pressure / Switching_Cost_Effect",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-base-abandonment",
+      "name": "Base Abandonment",
+      "equation": "0.05",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-obsolescence-pressure",
+      "name": "Obsolescence Pressure",
+      "equation": "IF Time > Technology_Lifespan THEN 1 + 0.1 * (Time - Technology_Lifespan) ELSE 1",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-technology-lifespan",
+      "name": "Technology Lifespan",
+      "equation": "20",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-switching-cost-effect",
+      "name": "Switching Cost Effect",
+      "equation": "1 + Switching_Cost / 100",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-switching-cost",
+      "name": "Switching Cost",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-market-growth-rate",
+      "name": "Market Growth Rate",
+      "equation": "Adoption_Rate / MAX(1, Adopters)",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-time-to-peak-adoption",
+      "name": "Time to Peak Adoption",
+      "equation": "(1 / (Innovation_Coefficient + Imitation_Coefficient)) * LOG(Imitation_Coefficient / Innovation_Coefficient)",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-peak-adoption-rate",
+      "name": "Peak Adoption Rate",
+      "equation": "Total_Market * (Innovation_Coefficient + Imitation_Coefficient)^2 / (4 * Imitation_Coefficient)",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-adopter-category",
+      "name": "Adopter Category",
+      "equation": "IF Adoption_Fraction < 0.025 THEN 1 ELSE IF Adoption_Fraction < 0.16 THEN 2 ELSE IF Adoption_Fraction < 0.50 THEN 3 ELSE IF Adoption_Fraction < 0.84 THEN 4 ELSE 5",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.779151Z",
+  "updated_at": "2026-01-11T20:04:50.779151Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

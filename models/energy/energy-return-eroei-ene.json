@@ -1,0 +1,127 @@
+{
+  "id": "energy-return-eroei-ene",
+  "name": "Energy Return on Investment (EROEI) Model",
+  "description": "Hall et al. (2014) EROEI dynamics model. Tracks energy surplus from different sources as extraction becomes more difficult. Fundamental constraint on energy transition economics. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Net_Energy_Surplus",
+      "initial_value": 1000,
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s2",
+      "name": "Infrastructure_Stock",
+      "initial_value": 100,
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "equation": ""
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "energy_production",
+      "to_stock": "s1",
+      "equation": "gross_energy * (1 - 1/EROEI)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f2",
+      "name": "energy_consumption",
+      "from_stock": "s1",
+      "equation": "consumption_rate",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f3",
+      "name": "infrastructure_investment",
+      "to_stock": "s2",
+      "equation": "investment_rate * Net_Energy_Surplus",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "gross_energy",
+      "equation": "100 * Infrastructure_Stock",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v2",
+      "name": "EROEI",
+      "equation": "MAX(1.1, 20 - 0.05 * TIME)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v3",
+      "name": "consumption_rate",
+      "equation": "80 + 2 * TIME",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v4",
+      "name": "investment_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v5",
+      "name": "net_energy_ratio",
+      "equation": "(EROEI - 1) / EROEI",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "EROEI",
+      "to_element": "energy_production"
+    },
+    {
+      "id": "c2",
+      "from_element": "Infrastructure_Stock",
+      "to_element": "gross_energy"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "dt": 1,
+    "end": 100
+  },
+  "created_at": "2026-01-12T02:25:30.586700+00:00",
+  "updated_at": "2026-01-12T02:25:30.586704+00:00",
+  "source": "https://doi.org/10.1016/j.energy.2013.01.059",
+  "reference": "Hall, C. A., Lambert, J. G., & Balogh, S. B. (2014). EROI of different fuels and the implications for society. Energy policy, 64, 141-152."
+}

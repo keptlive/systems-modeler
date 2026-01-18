@@ -1,0 +1,371 @@
+{
+  "id": "rumor-spreading-and-misinformation-model-soc",
+  "name": "Rumor Spreading and Misinformation Model",
+  "description": "Models the spread of rumors and misinformation through a population, including spreaders, skeptics, fact-checkers, and the role of social media. Based on epidemiological approaches to information spreading. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-ignorant-unaware",
+      "name": "Ignorant (Unaware)",
+      "initial_value": 999000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-active-spreaders",
+      "name": "Active Spreaders",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-stiflers-inactive",
+      "name": "Stiflers (Inactive)",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-skeptics-fact-checkers",
+      "name": "Skeptics (Fact-checkers)",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-rumor-virality-index",
+      "name": "Rumor Virality Index",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-hearing-rumor",
+      "name": "Hearing Rumor",
+      "equation": "Contact_Rate * Spreaders * Ignorant / Total_Population * Spread_Probability * Platform_Amplification",
+      "from_stock": "stock-ignorant-unaware",
+      "to_stock": "stock-active-spreaders",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-stopping-spreading",
+      "name": "Stopping Spreading",
+      "equation": "Spreaders * (Spreader_Fatigue_Rate + Encounter_Stifler_Rate)",
+      "from_stock": "stock-active-spreaders",
+      "to_stock": "stock-stiflers-inactive",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-becoming-skeptic",
+      "name": "Becoming Skeptic",
+      "equation": "Spreaders * Skepticism_Rate * (Fact_Check_Exposure + Critical_Thinking_Base)",
+      "from_stock": "stock-active-spreaders",
+      "to_stock": "stock-skeptics-fact-checkers",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fact-check-conversion",
+      "name": "Fact Check Conversion",
+      "equation": "Ignorant * Fact_Check_Encounter_Rate * Skeptics / Total_Population",
+      "from_stock": null,
+      "to_stock": "stock-skeptics-fact-checkers",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-virality-boost",
+      "name": "Virality Boost",
+      "equation": "Emotional_Content * Novelty_Effect * Share_Rate",
+      "from_stock": null,
+      "to_stock": "stock-rumor-virality-index",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-virality-decay",
+      "name": "Virality Decay",
+      "equation": "Rumor_Virality * (Virality_Decay_Rate + Fact_Check_Suppression)",
+      "from_stock": "stock-rumor-virality-index",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "Ignorant + Spreaders + Stiflers + Skeptics",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-contact-rate",
+      "name": "Contact Rate",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-spread-probability",
+      "name": "Spread Probability",
+      "equation": "Base_Spread_Probability * Credibility_Factor * Rumor_Virality / 100",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-base-spread-probability",
+      "name": "Base Spread Probability",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-credibility-factor",
+      "name": "Credibility Factor",
+      "equation": "1 + Source_Authority * 0.5",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-source-authority",
+      "name": "Source Authority",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-platform-amplification",
+      "name": "Platform Amplification",
+      "equation": "1 + Social_Media_Effect * Algorithm_Boost",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-social-media-effect",
+      "name": "Social Media Effect",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-algorithm-boost",
+      "name": "Algorithm Boost",
+      "equation": "1.5 * Engagement_Potential",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-engagement-potential",
+      "name": "Engagement Potential",
+      "equation": "Emotional_Content",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-emotional-content",
+      "name": "Emotional Content",
+      "equation": "0.8",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-novelty-effect",
+      "name": "Novelty Effect",
+      "equation": "EXP(-Time / Novelty_Halflife)",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-novelty-halflife",
+      "name": "Novelty Halflife",
+      "equation": "3",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-share-rate",
+      "name": "Share Rate",
+      "equation": "Spreaders * 0.5",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-spreader-fatigue-rate",
+      "name": "Spreader Fatigue Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-encounter-stifler-rate",
+      "name": "Encounter Stifler Rate",
+      "equation": "Contact_Rate * (Stiflers + Skeptics) / Total_Population * 0.1",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-skepticism-rate",
+      "name": "Skepticism Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-critical-thinking-base",
+      "name": "Critical Thinking Base",
+      "equation": "0.2",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-fact-check-exposure",
+      "name": "Fact Check Exposure",
+      "equation": "Fact_Checker_Activity * Skeptics / Total_Population",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-fact-checker-activity",
+      "name": "Fact Checker Activity",
+      "equation": "10",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-fact-check-encounter-rate",
+      "name": "Fact Check Encounter Rate",
+      "equation": "Contact_Rate * 0.1",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-virality-decay-rate",
+      "name": "Virality Decay Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-fact-check-suppression",
+      "name": "Fact Check Suppression",
+      "equation": "Skeptics / Total_Population * 0.5",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-effective-reproduction-number",
+      "name": "Effective Reproduction Number",
+      "equation": "Contact_Rate * Spread_Probability * Platform_Amplification * Ignorant / Total_Population / (Spreader_Fatigue_Rate + Encounter_Stifler_Rate + Skepticism_Rate)",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-rumor-prevalence",
+      "name": "Rumor Prevalence",
+      "equation": "(Spreaders + Stiflers) / Total_Population",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-misinformation-index",
+      "name": "Misinformation Index",
+      "equation": "(Spreaders + Stiflers) / (Spreaders + Stiflers + Skeptics + 1)",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T20:04:50.861485Z",
+  "updated_at": "2026-01-11T20:04:50.861485Z",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

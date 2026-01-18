@@ -1,0 +1,120 @@
+{
+  "id": "fitzhugh-nagumo-neuron-phy",
+  "name": "FitzHugh-Nagumo Neuron Model",
+  "description": "The FitzHugh-Nagumo model (1961) is a simplified two-variable model of neural excitability, capturing the essential dynamics of the Hodgkin-Huxley model. Shows action potential generation, threshold behavior, and refractory periods. Reference: Hodgkin, A. L., & Huxley, A. F. (1952). A quantitative description of membrane current. Journal of Physiology, 117(4), 500-544. DOI: https://doi.org/10.1113/jphysiol.1952.sp004764",
+  "stocks": [
+    {
+      "id": "stock-voltage",
+      "name": "Membrane Voltage",
+      "initial_value": -1,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovery",
+      "name": "Recovery Variable",
+      "initial_value": -0.5,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-voltage-change",
+      "name": "Voltage Change",
+      "equation": "Membrane_Voltage - (Membrane_Voltage^3)/3 - Recovery_Variable + External_Current",
+      "from_stock": null,
+      "to_stock": "stock-voltage",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-recovery-change",
+      "name": "Recovery Change",
+      "equation": "Epsilon * (Membrane_Voltage + a - b * Recovery_Variable)",
+      "from_stock": null,
+      "to_stock": "stock-recovery",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-epsilon",
+      "name": "Epsilon",
+      "equation": "0.08",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-a",
+      "name": "a",
+      "equation": "0.7",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-b",
+      "name": "b",
+      "equation": "0.8",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-external-current",
+      "name": "External Current",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Membrane Voltage",
+      "to_element": "Voltage Change"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Recovery Variable",
+      "to_element": "Voltage Change"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Membrane Voltage",
+      "to_element": "Recovery Change"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Recovery Variable",
+      "to_element": "Recovery Change"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-12T01:30:00.000Z",
+  "updated_at": "2026-01-12T01:30:00.000Z",
+  "source": "https://doi.org/10.1016/S0006-3495(61)86902-6",
+  "reference": "FitzHugh R. Impulses and Physiological States in Theoretical Models of Nerve Membrane. Biophysical Journal. 1961;1(6):445-466."
+}

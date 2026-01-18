@@ -1,0 +1,184 @@
+{
+  "id": "solow-human-capital-eco",
+  "name": "Augmented Solow Model with Human Capital",
+  "description": "Extends Solow growth model to include human capital accumulation. Source: Mankiw, Romer & Weil (1992), QJE. DOI: 10.2307/2118477",
+  "stocks": [
+    {
+      "id": "stock-k",
+      "name": "Physical_Capital",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-h",
+      "name": "Human_Capital",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-y",
+      "name": "Output",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-kinvest",
+      "name": "K_Investment",
+      "equation": "Output * Savings_Rate_K",
+      "from_stock": null,
+      "to_stock": "stock-k",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-kdep",
+      "name": "K_Depreciation",
+      "equation": "Physical_Capital * (Depreciation + Population_Growth)",
+      "from_stock": "stock-k",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-hinvest",
+      "name": "H_Investment",
+      "equation": "Output * Savings_Rate_H",
+      "from_stock": null,
+      "to_stock": "stock-h",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-hdep",
+      "name": "H_Depreciation",
+      "equation": "Human_Capital * (Depreciation + Population_Growth)",
+      "from_stock": "stock-h",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-output",
+      "name": "Output_Change",
+      "equation": "(Production - Output) * 0.5",
+      "from_stock": null,
+      "to_stock": "stock-y",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-sk",
+      "name": "Savings_Rate_K",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-sh",
+      "name": "Savings_Rate_H",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-dep",
+      "name": "Depreciation",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-popgrow",
+      "name": "Population_Growth",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-alpha",
+      "name": "Capital_Share",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-beta",
+      "name": "Human_Capital_Share",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-production",
+      "name": "Production",
+      "equation": "(Physical_Capital ^ Capital_Share) * (Human_Capital ^ Human_Capital_Share)",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-perworker",
+      "name": "Output_Per_Worker",
+      "equation": "Output / 100",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Physical_Capital",
+      "to_element": "Production"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:09:47.460816+00:00",
+  "updated_at": "2026-01-12T02:09:47.460823+00:00",
+  "source": "https://doi.org/10.2307/2118477",
+  "reference": "Mankiw, N.G., Romer, D. & Weil, D.N. (1992). A Contribution to the Empirics of Economic Growth. QJE."
+}

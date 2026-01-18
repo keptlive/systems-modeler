@@ -1,0 +1,231 @@
+{
+  "id": "carbon-capture-storage-deployment-cli",
+  "name": "Carbon Capture and Storage Deployment Model",
+  "description": "Model of CCS technology deployment including capture capacity, storage, and cost learning curves. Based on IPCC AR6 WGIII scenarios. Reference: IPCC (2021). Climate Change 2021: The Physical Science Basis. Cambridge University Press. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "CCS Capacity Installed",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "CO2 Stored Cumulative",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Storage Sites Developed",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Learning Progress",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Capacity Addition",
+      "equation": "Investment_Rate * Learning_Effect / Unit_Cost",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Capacity Retirement",
+      "equation": "CCS_Capacity_Installed / Plant_Lifetime",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "CO2 Capture",
+      "equation": "CCS_Capacity_Installed * Capacity_Factor",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Site Development",
+      "equation": "Site_Development_Rate * (Storage_Potential - Storage_Sites_Developed) / Storage_Potential",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Learning Accumulation",
+      "equation": "CO2_Capture / 1000",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Investment Rate",
+      "equation": "10",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Base Cost",
+      "equation": "100",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Learning Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Learning Effect",
+      "equation": "1 / (1 - Learning_Rate * LOG(1 + Learning_Progress))",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Unit Cost",
+      "equation": "Base_Cost / Learning_Effect",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Plant Lifetime",
+      "equation": "30",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Capacity Factor",
+      "equation": "0.85",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Storage Potential",
+      "equation": "500",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Site Development Rate",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Storage Utilization",
+      "equation": "CO2_Stored_Cumulative / (Storage_Sites_Developed * 10 + 1)",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Marginal Abatement Cost",
+      "equation": "Unit_Cost / Capacity_Factor",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Learning Progress",
+      "to_element": "Learning Effect"
+    },
+    {
+      "id": "c2",
+      "from_element": "CCS Capacity Installed",
+      "to_element": "CO2 Capture"
+    },
+    {
+      "id": "c3",
+      "from_element": "Storage Sites Developed",
+      "to_element": "Storage Utilization"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 80,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:14:19.554135",
+  "updated_at": "2026-01-15T14:14:19.554144",
+  "source": "https://doi.org/10.1017/9781009157926",
+  "reference": "IPCC. Climate Change 2022: Mitigation of Climate Change. Contribution of Working Group III to the Sixth Assessment Report. Cambridge University Press. 2022."
+}

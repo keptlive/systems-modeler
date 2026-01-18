@@ -1,0 +1,264 @@
+{
+  "id": "simple-global-carbon-cycle-cli",
+  "name": "Simple Global Carbon Cycle Model",
+  "description": "A simplified four-box model of the global carbon cycle showing exchanges between atmosphere, ocean surface, deep ocean, and terrestrial biosphere. Based on Sarmiento & Gruber (2006) and IPCC AR5 carbon cycle. Reference: IPCC (2021). Climate Change 2021: The Physical Science Basis. Cambridge University Press. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "stock-atmosphere",
+      "name": "Atmospheric Carbon",
+      "initial_value": 860,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-surface-ocean",
+      "name": "Surface Ocean Carbon",
+      "initial_value": 900,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-deep-ocean",
+      "name": "Deep Ocean Carbon",
+      "initial_value": 37100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "stock-land-biosphere",
+      "name": "Land Biosphere Carbon",
+      "initial_value": 2300,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-fossil-emissions",
+      "name": "Fossil Emissions",
+      "equation": "Fossil_Fuel_Emissions",
+      "from_stock": null,
+      "to_stock": "stock-atmosphere",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-atm-to-ocean",
+      "name": "Atmosphere to Ocean",
+      "equation": "Gas_Exchange_Rate * (Atmospheric_Carbon - Ocean_Equilibrium)",
+      "from_stock": "stock-atmosphere",
+      "to_stock": "stock-surface-ocean",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-ocean-to-atm",
+      "name": "Ocean to Atmosphere",
+      "equation": "Ocean_Outgassing_Rate * Surface_Ocean_Carbon",
+      "from_stock": "stock-surface-ocean",
+      "to_stock": "stock-atmosphere",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-surface-to-deep",
+      "name": "Surface to Deep Ocean",
+      "equation": "Overturning_Rate * Surface_Ocean_Carbon / Surface_Volume",
+      "from_stock": "stock-surface-ocean",
+      "to_stock": "stock-deep-ocean",
+      "position": {
+        "x": 150,
+        "y": 325
+      }
+    },
+    {
+      "id": "flow-deep-to-surface",
+      "name": "Deep to Surface Ocean",
+      "equation": "Upwelling_Rate * Deep_Ocean_Carbon / Deep_Volume",
+      "from_stock": "stock-deep-ocean",
+      "to_stock": "stock-surface-ocean",
+      "position": {
+        "x": 200,
+        "y": 325
+      }
+    },
+    {
+      "id": "flow-photosynthesis",
+      "name": "Photosynthesis",
+      "equation": "NPP_Rate * (1 + CO2_Fertilization * LOG(Atmospheric_Carbon / Preindustrial_CO2))",
+      "from_stock": "stock-atmosphere",
+      "to_stock": "stock-land-biosphere",
+      "position": {
+        "x": 375,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-respiration",
+      "name": "Respiration and Decomposition",
+      "equation": "Respiration_Rate * Land_Biosphere_Carbon * (1 + Temperature_Sensitivity * Temperature_Anomaly)",
+      "from_stock": "stock-land-biosphere",
+      "to_stock": "stock-atmosphere",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-fossil-fuel-emissions",
+      "name": "Fossil Fuel Emissions",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-gas-exchange-rate",
+      "name": "Gas Exchange Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-ocean-equilibrium",
+      "name": "Ocean Equilibrium",
+      "equation": "Surface_Ocean_Carbon * 1.2",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-ocean-outgassing-rate",
+      "name": "Ocean Outgassing Rate",
+      "equation": "0.08",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-overturning-rate",
+      "name": "Overturning Rate",
+      "equation": "25",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-upwelling-rate",
+      "name": "Upwelling Rate",
+      "equation": "24",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-surface-volume",
+      "name": "Surface Volume",
+      "equation": "900",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-deep-volume",
+      "name": "Deep Volume",
+      "equation": "37100",
+      "position": {
+        "x": 550,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-npp-rate",
+      "name": "NPP Rate",
+      "equation": "60",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-respiration-rate",
+      "name": "Respiration Rate",
+      "equation": "0.025",
+      "position": {
+        "x": 650,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-co2-fertilization",
+      "name": "CO2 Fertilization Factor",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-preindustrial-co2",
+      "name": "Preindustrial CO2",
+      "equation": "590",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-temperature-sensitivity",
+      "name": "Temperature Sensitivity",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-temperature-anomaly",
+      "name": "Temperature Anomaly",
+      "equation": "(Atmospheric_Carbon - Preindustrial_CO2) * 0.003",
+      "position": {
+        "x": 650,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T21:11:32.978710+00:00",
+  "updated_at": "2026-01-11T21:11:32.978710+00:00",
+  "source": "https://doi.org/10.1146/annurev.earth.34.031405.125037",
+  "reference": "Sarmiento JL, Gruber N. Ocean Biogeochemical Dynamics. Princeton University Press, 2006."
+}

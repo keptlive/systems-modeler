@@ -1,0 +1,30 @@
+{
+  "id": "bartlett-measles-fade-out-epi",
+  "name": "Bartlett Measles Fade-Out Model",
+  "description": "M.S. Bartlett's (1957, 1960) stochastic analysis of measles persistence showing the critical community size (~250,000-500,000) needed for endemic persistence. Below this threshold, epidemics fade out between outbreaks. Foundational for understanding disease persistence.",
+  "stocks": [
+    {"id": "stock-susceptible", "name": "Susceptible", "initial_value": 50000, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-exposed", "name": "Exposed", "initial_value": 0, "equation": "", "position": {"x": 350, "y": 200}},
+    {"id": "stock-infected", "name": "Infected", "initial_value": 10, "equation": "", "position": {"x": 500, "y": 200}},
+    {"id": "stock-recovered", "name": "Recovered", "initial_value": 200000, "equation": "", "position": {"x": 650, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-births", "name": "Births", "equation": "Birth_Rate * Population", "from_stock": null, "to_stock": "stock-susceptible", "position": {"x": 100, "y": 200}},
+    {"id": "flow-exposure", "name": "Exposure", "equation": "Beta * Susceptible * Infected / Population", "from_stock": "stock-susceptible", "to_stock": "stock-exposed", "position": {"x": 275, "y": 200}},
+    {"id": "flow-onset", "name": "Onset", "equation": "Exposed / Latent_Period", "from_stock": "stock-exposed", "to_stock": "stock-infected", "position": {"x": 425, "y": 200}},
+    {"id": "flow-recovery", "name": "Recovery", "equation": "Infected / Infectious_Period", "from_stock": "stock-infected", "to_stock": "stock-recovered", "position": {"x": 575, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-beta", "name": "Beta", "equation": "1.5", "position": {"x": 200, "y": 100}},
+    {"id": "var-latent-period", "name": "Latent Period", "equation": "8", "position": {"x": 350, "y": 100}},
+    {"id": "var-infectious-period", "name": "Infectious Period", "equation": "5", "position": {"x": 500, "y": 100}},
+    {"id": "var-population", "name": "Population", "equation": "250000", "position": {"x": 650, "y": 100}},
+    {"id": "var-birth-rate", "name": "Birth Rate", "equation": "Population / (70 * 365)", "position": {"x": 300, "y": 300}},
+    {"id": "var-r0", "name": "R0", "equation": "Beta * Infectious_Period", "position": {"x": 500, "y": 300}},
+    {"id": "var-critical-community-size", "name": "Critical Community Size", "equation": "250000", "position": {"x": 350, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 730, "dt": 1},
+  "source": "https://doi.org/10.1111/j.2517-6161.1957.tb00268.x",
+  "reference": "Bartlett MS. Measles Periodicity and Community Size. Journal of the Royal Statistical Society Series A. 1957;120(1):48-70."
+}

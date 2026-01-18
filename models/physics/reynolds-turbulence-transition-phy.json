@@ -1,0 +1,89 @@
+{
+  "id": "reynolds-turbulence-transition-phy",
+  "name": "Reynolds Turbulence Transition Model",
+  "description": "Model of the transition from laminar to turbulent flow based on Reynolds number. Osborne Reynolds (1883) discovered the critical Reynolds number above which flow becomes turbulent. Source: Reynolds, O. (1883). Phil. Trans. Royal Society. DOI: 10.1098/rstl.1883.0029",
+  "stocks": [
+    {
+      "id": "stock-kinetic-energy",
+      "name": "Turbulent_Kinetic_Energy",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "stock-dissipation",
+      "name": "Dissipation_Rate",
+      "initial_value": 0.001,
+      "equation": "",
+      "position": {"x": 400, "y": 200}
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-production",
+      "name": "TKE_Production",
+      "equation": "IF(Reynolds_Number > Critical_Reynolds, Production_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-kinetic-energy",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "flow-tke-dissipation",
+      "name": "TKE_Dissipation",
+      "equation": "Dissipation_Coefficient * Turbulent_Kinetic_Energy",
+      "from_stock": "stock-kinetic-energy",
+      "to_stock": null,
+      "position": {"x": 300, "y": 200}
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-velocity",
+      "name": "Mean_Velocity",
+      "equation": "2.0",
+      "position": {"x": 150, "y": 100}
+    },
+    {
+      "id": "var-length",
+      "name": "Characteristic_Length",
+      "equation": "0.1",
+      "position": {"x": 250, "y": 100}
+    },
+    {
+      "id": "var-viscosity",
+      "name": "Kinematic_Viscosity",
+      "equation": "0.00001",
+      "position": {"x": 350, "y": 100}
+    },
+    {
+      "id": "var-reynolds",
+      "name": "Reynolds_Number",
+      "equation": "Mean_Velocity * Characteristic_Length / Kinematic_Viscosity",
+      "position": {"x": 200, "y": 50}
+    },
+    {
+      "id": "var-critical",
+      "name": "Critical_Reynolds",
+      "equation": "2300",
+      "position": {"x": 350, "y": 50}
+    },
+    {
+      "id": "var-production",
+      "name": "Production_Rate",
+      "equation": "0.1 * Mean_Velocity * Mean_Velocity",
+      "position": {"x": 100, "y": 300}
+    },
+    {
+      "id": "var-dissipation-coeff",
+      "name": "Dissipation_Coefficient",
+      "equation": "0.09",
+      "position": {"x": 300, "y": 300}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.1},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1098/rstl.1883.0029",
+  "reference": "Reynolds, O. (1883). An experimental investigation of the circumstances which determine whether the motion of water shall be direct or sinuous. Phil. Trans. Royal Society, 174, 935-982."
+}

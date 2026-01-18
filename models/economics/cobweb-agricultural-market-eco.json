@@ -1,0 +1,174 @@
+{
+  "id": "cobweb-agricultural-market-eco",
+  "name": "Cobweb Agricultural Market Model",
+  "description": "Classic cobweb model of agricultural markets showing how production decisions based on past prices can lead to price oscillations. First formalized by Ezekiel (1938). Demonstrates convergent, divergent, and perpetual cycles. Reference: Ezekiel, M. (1938). The Cobweb Theorem. Quarterly Journal of Economics, 52(2), 255-280. Source: https://doi.org/10.2307/1881734",
+  "stocks": [
+    {
+      "id": "stock-price",
+      "name": "Price",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-quantity",
+      "name": "Quantity Supplied",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-expected-price",
+      "name": "Expected Price",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-price-adjustment",
+      "name": "Price Adjustment",
+      "equation": "(Market_Clearing_Price - Price) * Price_Adjustment_Speed",
+      "from_stock": null,
+      "to_stock": "stock-price",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-quantity-adjustment",
+      "name": "Quantity Adjustment",
+      "equation": "(Supply_Function - Quantity_Supplied) / Production_Lag",
+      "from_stock": null,
+      "to_stock": "stock-quantity",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-expectation-update",
+      "name": "Expectation Update",
+      "equation": "(Price - Expected_Price) * Expectation_Adjustment",
+      "from_stock": null,
+      "to_stock": "stock-expected-price",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-demand-intercept",
+      "name": "Demand Intercept",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-demand-slope",
+      "name": "Demand Slope",
+      "equation": "5",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-supply-intercept",
+      "name": "Supply Intercept",
+      "equation": "10",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-supply-slope",
+      "name": "Supply Slope",
+      "equation": "4",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-demand-function",
+      "name": "Demand Function",
+      "equation": "Demand_Intercept - Demand_Slope * Price",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-supply-function",
+      "name": "Supply Function",
+      "equation": "Supply_Intercept + Supply_Slope * Expected_Price",
+      "position": {
+        "x": 650,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-market-clearing-price",
+      "name": "Market Clearing Price",
+      "equation": "(Demand_Intercept - Quantity_Supplied) / Demand_Slope",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-production-lag",
+      "name": "Production Lag",
+      "equation": "1",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-price-adjustment-speed",
+      "name": "Price Adjustment Speed",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-expectation-adjustment",
+      "name": "Expectation Adjustment",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-11T21:11:32.978624+00:00",
+  "updated_at": "2026-01-11T21:11:32.978624+00:00",
+  "source": "https://doi.org/10.2307/1927428",
+  "reference": "Ezekiel M. The Cobweb Theorem. Quarterly Journal of Economics. 1938;52(2):255-280."
+}

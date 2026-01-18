@@ -1,0 +1,190 @@
+{
+  "id": "grocery-supply-chain-resilience-flexibility-eco",
+  "name": "Grocery Supply Chain Resilience Model",
+  "description": "System dynamics simulation of Finnish grocery supply chain resilience, examining how operational tempo affects flexibility vs visibility strategies. Fast-moving chains prioritize capacity flexibility while slower chains need enhanced visibility. Reference: Tuominen, T., et al. (2024). Resilience through appropriate response: a simulation study of disruptions and response strategies. Operations Management Research. Source: https://doi.org/10.1007/s12063-024-00487-z",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Warehouse Inventory",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {"x": 200, "y": 150}
+    },
+    {
+      "id": "s2",
+      "name": "Store Shelf Stock",
+      "initial_value": 200,
+      "equation": "",
+      "position": {"x": 400, "y": 150}
+    },
+    {
+      "id": "s3",
+      "name": "Flexibility Capacity",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {"x": 150, "y": 300}
+    },
+    {
+      "id": "s4",
+      "name": "Visibility Level",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {"x": 350, "y": 300}
+    },
+    {
+      "id": "s5",
+      "name": "Demand Forecast Accuracy",
+      "initial_value": 0.7,
+      "equation": "",
+      "position": {"x": 500, "y": 300}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Supplier Delivery",
+      "equation": "Order_Rate * (1 + Flexibility_Capacity * Ramp_Up_Effect) * Supply_Availability",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {"x": 100, "y": 150}
+    },
+    {
+      "id": "f2",
+      "name": "Store Replenishment",
+      "equation": "MIN(Warehouse_Inventory / Replenish_Time, Target_Replenish_Rate * (1 + Visibility_Correction))",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {"x": 300, "y": 150}
+    },
+    {
+      "id": "f3",
+      "name": "Customer Sales",
+      "equation": "MIN(Store_Shelf_Stock, Customer_Demand * Service_Level_Factor)",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {"x": 500, "y": 150}
+    },
+    {
+      "id": "f4",
+      "name": "Flexibility Investment",
+      "equation": "Investment_Rate * Flexibility_Priority * (1 - Flexibility_Capacity)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {"x": 100, "y": 300}
+    },
+    {
+      "id": "f5",
+      "name": "Visibility Investment",
+      "equation": "Investment_Rate * (1 - Flexibility_Priority) * (1 - Visibility_Level)",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {"x": 300, "y": 350}
+    },
+    {
+      "id": "f6",
+      "name": "Forecast Improvement",
+      "equation": "Visibility_Level * Learning_Rate * (1 - Demand_Forecast_Accuracy)",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {"x": 500, "y": 350}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Order Rate",
+      "equation": "Customer_Demand * Safety_Stock_Factor / Supply_Lead_Time",
+      "position": {"x": 50, "y": 100}
+    },
+    {
+      "id": "v2",
+      "name": "Ramp Up Effect",
+      "equation": "0.5",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "v3",
+      "name": "Supply Availability",
+      "equation": "1 - Disruption_Impact",
+      "position": {"x": 50, "y": 250}
+    },
+    {
+      "id": "v4",
+      "name": "Replenish Time",
+      "equation": "2",
+      "position": {"x": 250, "y": 100}
+    },
+    {
+      "id": "v5",
+      "name": "Target Replenish Rate",
+      "equation": "Customer_Demand * 1.1",
+      "position": {"x": 300, "y": 200}
+    },
+    {
+      "id": "v6",
+      "name": "Visibility Correction",
+      "equation": "Visibility_Level * (Demand_Forecast_Accuracy - 0.5) * 0.3",
+      "position": {"x": 400, "y": 200}
+    },
+    {
+      "id": "v7",
+      "name": "Customer Demand",
+      "equation": "100 + 20 * SIN(TIME / 7)",
+      "position": {"x": 550, "y": 100}
+    },
+    {
+      "id": "v8",
+      "name": "Service Level Factor",
+      "equation": "1.0",
+      "position": {"x": 550, "y": 200}
+    },
+    {
+      "id": "v9",
+      "name": "Investment Rate",
+      "equation": "0.02",
+      "position": {"x": 200, "y": 400}
+    },
+    {
+      "id": "v10",
+      "name": "Flexibility Priority",
+      "equation": "IF(Operational_Tempo > 0.5, 0.7, 0.3)",
+      "position": {"x": 100, "y": 400}
+    },
+    {
+      "id": "v11",
+      "name": "Operational Tempo",
+      "equation": "0.6",
+      "position": {"x": 50, "y": 350}
+    },
+    {
+      "id": "v12",
+      "name": "Learning Rate",
+      "equation": "0.01",
+      "position": {"x": 450, "y": 400}
+    },
+    {
+      "id": "v13",
+      "name": "Disruption Impact",
+      "equation": "IF(TIME > 30, IF(TIME < 50, 0.4, 0), 0)",
+      "position": {"x": 50, "y": 200}
+    },
+    {
+      "id": "v14",
+      "name": "Safety Stock Factor",
+      "equation": "1.5",
+      "position": {"x": 150, "y": 50}
+    },
+    {
+      "id": "v15",
+      "name": "Supply Lead Time",
+      "equation": "5",
+      "position": {"x": 100, "y": 50}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 120, "dt": 1},
+  "created_at": "2026-01-15T16:00:00.000000",
+  "updated_at": "2026-01-15T16:00:00.000000",
+  "source": "https://doi.org/10.1007/s12063-024-00487-z",
+  "reference": "Tuominen, T., et al. (2024). Resilience through appropriate response: a simulation study of disruptions and response strategies. Operations Management Research."
+}

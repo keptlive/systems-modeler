@@ -1,0 +1,229 @@
+{
+  "id": "cybersecurity-defense-dynamics-tec",
+  "name": "Cybersecurity Attack and Defense Dynamics",
+  "description": "Models the arms race between cyber attackers and defenders. Based on Anderson (2001) Why Information Security is Hard, ACSAC. Reference: Anderson, R. M., & May, R. M. (1991). Infectious Diseases of Humans. Oxford University Press.",
+  "category": "technology",
+  "stocks": [
+    {
+      "id": "stock-vuln",
+      "name": "Known_Vulnerabilities",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-patched",
+      "name": "Patched_Systems_Pct",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-attacks",
+      "name": "Active_Attacks",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-breaches",
+      "name": "Cumulative_Breaches",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-discover",
+      "name": "Vulnerability_Discovery",
+      "equation": "Researcher_Effort * Discovery_Rate + Attacker_Discovery",
+      "from_stock": null,
+      "to_stock": "stock-vuln",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-patch-dev",
+      "name": "Patch_Development",
+      "equation": "Known_Vulnerabilities * Patch_Rate",
+      "from_stock": "stock-vuln",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-patch-deploy",
+      "name": "Patch_Deployment",
+      "equation": "(100 - Patched_Systems_Pct) * Deployment_Rate",
+      "from_stock": null,
+      "to_stock": "stock-patched",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-new-vuln",
+      "name": "New_Vulnerabilities",
+      "equation": "Software_Releases * Vuln_Per_Release",
+      "from_stock": "stock-patched",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-attack-start",
+      "name": "Attack_Initiation",
+      "equation": "Known_Vulnerabilities * Attack_Rate * (100 - Patched_Systems_Pct)/100",
+      "from_stock": null,
+      "to_stock": "stock-attacks",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-attack-end",
+      "name": "Attack_Mitigation",
+      "equation": "Active_Attacks * Defense_Effectiveness",
+      "from_stock": "stock-attacks",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-breach",
+      "name": "Successful_Breaches",
+      "equation": "Active_Attacks * Breach_Rate * (100 - Patched_Systems_Pct)/100",
+      "from_stock": null,
+      "to_stock": "stock-breaches",
+      "position": {
+        "x": 400,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-research",
+      "name": "Researcher_Effort",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-disc-rate",
+      "name": "Discovery_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-attacker-disc",
+      "name": "Attacker_Discovery",
+      "equation": "2",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-patch-rate",
+      "name": "Patch_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-deploy-rate",
+      "name": "Deployment_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-releases",
+      "name": "Software_Releases",
+      "equation": "10",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-vuln-per",
+      "name": "Vuln_Per_Release",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-attack-rate",
+      "name": "Attack_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-defense",
+      "name": "Defense_Effectiveness",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-breach-rate",
+      "name": "Breach_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 650,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1109/ACSAC.2001.991558",
+  "reference": "Anderson R (2001) Why Information Security is Hard - An Economic Perspective. ACSAC 2001.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:29:57.474786+00:00",
+  "updated_at": "2026-01-12T06:29:57.474786+00:00"
+}

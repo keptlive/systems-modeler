@@ -1,0 +1,178 @@
+{
+  "id": "calvo-sticky-prices-eco",
+  "name": "Calvo Sticky Prices Model",
+  "description": "Firms randomly get opportunities to adjust prices each period. Creates New Keynesian Phillips Curve linking inflation to expected future inflation and current output gap. Foundation for DSGE models. Reference: Phillips, A. W. (1958). The relation between unemployment and the rate of change of money wage rates. Economica, 25(100), 283-299. DOI: https://doi.org/10.1111/j.1468-0335.1958.tb00003.x",
+  "stocks": [
+    {
+      "id": "stock-price-level",
+      "name": "Price Level",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-output",
+      "name": "Output",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-inflation",
+      "name": "Price Inflation",
+      "equation": "Price_Level * Inflation_Rate",
+      "from_stock": null,
+      "to_stock": "stock-price-level",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-output-change",
+      "name": "Output Growth",
+      "equation": "Output * (Natural_Growth - Real_Interest_Sensitivity * (Nominal_Rate - Expected_Inflation - Natural_Rate))",
+      "from_stock": null,
+      "to_stock": "stock-output",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-theta",
+      "name": "Calvo Parameter",
+      "equation": "0.75",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-lambda",
+      "name": "Slope NKPC",
+      "equation": "(1 - Calvo_Parameter) * (1 - Calvo_Parameter * Discount_Factor) / Calvo_Parameter",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-inflation",
+      "name": "Inflation Rate",
+      "equation": "Discount_Factor * Expected_Inflation + Slope_NKPC * Output_Gap",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-discount",
+      "name": "Discount Factor",
+      "equation": "0.99",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-output-gap",
+      "name": "Output Gap",
+      "equation": "(Output - Potential_Output) / Potential_Output",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-potential",
+      "name": "Potential Output",
+      "equation": "100",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-expected",
+      "name": "Expected Inflation",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-nominal",
+      "name": "Nominal Rate",
+      "equation": "0.04",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-natural",
+      "name": "Natural Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-sensitivity",
+      "name": "Real Interest Sensitivity",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-growth",
+      "name": "Natural Growth",
+      "equation": "0.02",
+      "position": {
+        "x": 500,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Calvo Parameter",
+      "to_element": "Slope NKPC"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Output Gap",
+      "to_element": "Inflation Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Output",
+      "to_element": "Output Gap"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:39:15.413584+00:00",
+  "updated_at": "2026-01-12T07:39:15.413592+00:00",
+  "source": "https://doi.org/10.1016/0304-3932(83)90060-0",
+  "reference": "Calvo GA. Staggered Prices in a Utility-Maximizing Framework. Journal of Monetary Economics. 1983;12(3):383-398."
+}

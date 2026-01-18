@@ -1,0 +1,253 @@
+{
+  "id": "asteroid-mining-economics-eco",
+  "name": "Asteroid Mining Economics Model",
+  "description": "Speculative model of asteroid mining industry development showing technology maturation, mission costs, and resource returns. Based on emerging space economy research. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Technology Readiness",
+      "initial_value": 3,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Mining Missions",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Extracted Resources",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Industry Capital",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Technology Advancement",
+      "equation": "(9 - Technology_Readiness) * RD_Investment / 100",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Mission Launch",
+      "equation": "IF(Technology_Readiness > 6, Industry_Capital / Mission_Cost, 0)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Mission Completion",
+      "equation": "Mining_Missions / Mission_Duration",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Resource Extraction",
+      "equation": "Mission_Completion * Resource_per_Mission * Success_Rate",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Capital Investment",
+      "equation": "VC_Investment + Government_Funding",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Revenue Return",
+      "equation": "Resource_Extraction * Resource_Price",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Operating Costs",
+      "equation": "Mining_Missions * Operating_Cost_Rate + RD_Investment",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "RD Investment",
+      "equation": "5",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Mission Cost",
+      "equation": "50 * (1 - (Technology_Readiness - 3) * 0.1)",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Mission Duration",
+      "equation": "5",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Resource per Mission",
+      "equation": "100",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Success Rate",
+      "equation": "0.5 + Technology_Readiness * 0.05",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Resource Price",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "VC Investment",
+      "equation": "IF(Technology_Readiness > 5, 10, 2)",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Government Funding",
+      "equation": "3",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Operating Cost Rate",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Market Value",
+      "equation": "Extracted_Resources * Resource_Price",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "v11",
+      "name": "ROI",
+      "equation": "Market_Value / MAX(1, Industry_Capital)",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Technology Readiness",
+      "to_element": "Mission Launch"
+    },
+    {
+      "id": "c2",
+      "from_element": "Industry Capital",
+      "to_element": "Mission Launch"
+    },
+    {
+      "id": "c3",
+      "from_element": "Mining Missions",
+      "to_element": "Mission Completion"
+    }
+  ],
+  "time_settings": {
+    "start": 2025,
+    "end": 2075,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:53:04.261595+00:00",
+  "updated_at": "2026-01-12T01:53:04.261598+00:00",
+  "source": "https://doi.org/10.1016/j.pss.2012.06.012",
+  "reference": "Andrews DG, et al. Defining a successful commercial asteroid mining program. Acta Astronautica. 2015;108:106-118."
+}

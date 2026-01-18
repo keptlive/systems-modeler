@@ -1,0 +1,166 @@
+{
+  "id": "corruption-dynamics-model-soc",
+  "name": "Corruption Dynamics Model",
+  "description": "Models spread and persistence of corruption in institutions. Source: Mauro (1995), QJE. DOI: 10.2307/2946696",
+  "stocks": [
+    {
+      "id": "stock-corrupt",
+      "name": "Corruption_Level",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-enforce",
+      "name": "Enforcement_Capacity",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-trust",
+      "name": "Public_Trust",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-spread",
+      "name": "Corruption_Spread",
+      "equation": "Corruption_Level * Spread_Rate * (100 - Corruption_Level) / 100 * (1 - Enforcement_Capacity / 100)",
+      "from_stock": null,
+      "to_stock": "stock-corrupt",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-reduce",
+      "name": "Corruption_Reduction",
+      "equation": "Corruption_Level * Detection_Rate * Enforcement_Capacity / 100",
+      "from_stock": "stock-corrupt",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-enfbuild",
+      "name": "Enforcement_Building",
+      "equation": "Enforcement_Investment * (1 - Corruption_Level / 100)",
+      "from_stock": null,
+      "to_stock": "stock-enforce",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-enfcorrupt",
+      "name": "Enforcement_Corruption",
+      "equation": "Enforcement_Capacity * Corruption_Level / 100 * Capture_Rate",
+      "from_stock": "stock-enforce",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-trustchg",
+      "name": "Trust_Change",
+      "equation": "(Base_Trust - Public_Trust - Corruption_Level * 0.5 + Enforcement_Capacity * 0.3) * Trust_Adjustment",
+      "from_stock": null,
+      "to_stock": "stock-trust",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-spread",
+      "name": "Spread_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-detect",
+      "name": "Detection_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-enfinv",
+      "name": "Enforcement_Investment",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-capture",
+      "name": "Capture_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-basetrust",
+      "name": "Base_Trust",
+      "equation": "70",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-trustadj",
+      "name": "Trust_Adjustment",
+      "equation": "0.1",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Corruption_Level",
+      "to_element": "Corruption_Spread"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:13:18.795845+00:00",
+  "updated_at": "2026-01-12T02:13:18.795848+00:00",
+  "source": "https://doi.org/10.2307/2946696",
+  "reference": "Mauro, P. (1995). Corruption and Growth. Quarterly Journal of Economics."
+}

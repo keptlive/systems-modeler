@@ -1,0 +1,231 @@
+{
+  "id": "capital-constrained-supply-disruption-eco",
+  "name": "Capital-Constrained Supply Chain Disruption Model",
+  "description": "System dynamics model of supply chain disruption under capital constraints. Examines financial amplification of operational shocks. Source: Zhang et al. (2023), IMDS. Reference: Based on System Dynamics supply chain models (Sterman, 2000). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-inv",
+      "name": "Inventory",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-capital",
+      "name": "Working_Capital",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-debt",
+      "name": "Short_Term_Debt",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-backlog",
+      "name": "Order_Backlog",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-order",
+      "name": "Orders_Placed",
+      "equation": "MIN(Order_Rate * (1 + Backlog_Urgency * Order_Backlog / 1000), Working_Capital / Unit_Cost)",
+      "from_stock": null,
+      "to_stock": "stock-inv",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fulfill",
+      "name": "Order_Fulfillment",
+      "equation": "MIN(Inventory, Customer_Demand)",
+      "from_stock": "stock-inv",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-unfilled",
+      "name": "Unfilled_Orders",
+      "equation": "MAX(0, Customer_Demand - Inventory)",
+      "from_stock": null,
+      "to_stock": "stock-backlog",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-backlog-clear",
+      "name": "Backlog_Cleared",
+      "equation": "MIN(Order_Backlog, MAX(0, Inventory - Customer_Demand))",
+      "from_stock": "stock-backlog",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-revenue",
+      "name": "Revenue",
+      "equation": "Order_Fulfillment * Price + Backlog_Cleared * Price",
+      "from_stock": null,
+      "to_stock": "stock-capital",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-costs",
+      "name": "Operating_Costs",
+      "equation": "Orders_Placed * Unit_Cost + Fixed_Costs",
+      "from_stock": "stock-capital",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-borrow",
+      "name": "Borrowing",
+      "equation": "IF(Working_Capital < Min_Capital, Borrow_Amount, 0)",
+      "from_stock": null,
+      "to_stock": "stock-debt",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-repay",
+      "name": "Debt_Repayment",
+      "equation": "Short_Term_Debt * Repayment_Rate",
+      "from_stock": "stock-debt",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-orderrate",
+      "name": "Order_Rate",
+      "equation": "100",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-urgency",
+      "name": "Backlog_Urgency",
+      "equation": "0.5",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-unitcost",
+      "name": "Unit_Cost",
+      "equation": "10",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Customer_Demand",
+      "equation": "80 + 40 * IF(TIME > 50 AND TIME < 70, 1, 0)",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-price",
+      "name": "Price",
+      "equation": "15",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-fixed",
+      "name": "Fixed_Costs",
+      "equation": "200",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-mincap",
+      "name": "Min_Capital",
+      "equation": "1000",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-borrow",
+      "name": "Borrow_Amount",
+      "equation": "500",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-repay",
+      "name": "Repayment_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:41:31.049365+00:00",
+  "updated_at": "2026-01-12T12:41:31.049365+00:00",
+  "source": "https://systemdynamics.org/resources/",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

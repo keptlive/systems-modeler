@@ -1,0 +1,301 @@
+{
+  "id": "antibiotic-resistance-dynamics-epi",
+  "name": "Antibiotic Resistance Dynamics",
+  "description": "Models the evolution and spread of antibiotic resistance in bacterial populations. Antibiotic use creates selection pressure favoring resistant strains. Tracks both susceptible (drug-sensitive) and resistant bacterial populations, showing how overuse accelerates resistance emergence while underuse allows disease persistence. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-susceptible-hosts",
+      "name": "Susceptible Hosts",
+      "initial_value": 9900,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected-with-sensitive-strain",
+      "name": "Infected with Sensitive Strain",
+      "initial_value": 90,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected-with-resistant-strain",
+      "name": "Infected with Resistant Strain",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-births",
+      "name": "Births",
+      "equation": "Birth_Rate * Total_Population",
+      "from_stock": null,
+      "to_stock": "stock-susceptible-hosts",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-infection-sensitive",
+      "name": "Infection (Sensitive)",
+      "equation": "Beta_S * Susceptible_Hosts * Infected_Sensitive / Total_Population",
+      "from_stock": "stock-susceptible-hosts",
+      "to_stock": "stock-infected-with-sensitive-strain",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-infection-resistant",
+      "name": "Infection (Resistant)",
+      "equation": "Beta_R * Susceptible_Hosts * Infected_Resistant / Total_Population",
+      "from_stock": "stock-susceptible-hosts",
+      "to_stock": "stock-infected-with-resistant-strain",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-natural-recovery-sensitive",
+      "name": "Natural Recovery (Sensitive)",
+      "equation": "Gamma * Infected_Sensitive * (1 - Treatment_Rate)",
+      "from_stock": "stock-infected-with-sensitive-strain",
+      "to_stock": "stock-susceptible-hosts",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-treatment-success",
+      "name": "Treatment Success",
+      "equation": "Gamma_Treated * Infected_Sensitive * Treatment_Rate",
+      "from_stock": "stock-infected-with-sensitive-strain",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-mutation-to-resistant",
+      "name": "Mutation to Resistant",
+      "equation": "Mutation_Rate * Infected_Sensitive * Treatment_Rate",
+      "from_stock": "stock-infected-with-sensitive-strain",
+      "to_stock": "stock-infected-with-resistant-strain",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-recovery-resistant",
+      "name": "Recovery (Resistant)",
+      "equation": "Gamma * Infected_Resistant",
+      "from_stock": "stock-infected-with-resistant-strain",
+      "to_stock": "stock-susceptible-hosts",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "Susceptible_Hosts + Infected_Sensitive + Infected_Resistant",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-beta-s",
+      "name": "Beta S",
+      "equation": "0.4",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-beta-r",
+      "name": "Beta R",
+      "equation": "0.35",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "Gamma",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma-treated",
+      "name": "Gamma Treated",
+      "equation": "0.3",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-treatment-rate",
+      "name": "Treatment Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-mutation-rate",
+      "name": "Mutation Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-birth-rate",
+      "name": "Birth Rate",
+      "equation": "0.0003",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-resistance-fraction",
+      "name": "Resistance Fraction",
+      "equation": "Infected_Resistant / (Infected_Sensitive + Infected_Resistant + 0.001)",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-total-infections",
+      "name": "Total Infections",
+      "equation": "Infected_Sensitive + Infected_Resistant",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-effective-treatment-rate",
+      "name": "Effective Treatment Rate",
+      "equation": "Treatment_Rate * (1 - Resistance_Fraction)",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-r0-sensitive",
+      "name": "R0 Sensitive",
+      "equation": "Beta_S / Gamma",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-r0-resistant",
+      "name": "R0 Resistant",
+      "equation": "Beta_R / Gamma",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Susceptible Hosts",
+      "to_element": "Infection (Sensitive)"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Infected with Sensitive Strain",
+      "to_element": "Infection (Sensitive)"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Susceptible Hosts",
+      "to_element": "Infection (Resistant)"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Infected with Resistant Strain",
+      "to_element": "Infection (Resistant)"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Infected with Sensitive Strain",
+      "to_element": "Natural Recovery (Sensitive)"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Treatment Rate",
+      "to_element": "Natural Recovery (Sensitive)"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Infected with Sensitive Strain",
+      "to_element": "Treatment Success"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Treatment Rate",
+      "to_element": "Treatment Success"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Infected with Sensitive Strain",
+      "to_element": "Mutation to Resistant"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Treatment Rate",
+      "to_element": "Mutation to Resistant"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Infected with Resistant Strain",
+      "to_element": "Recovery (Resistant)"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 520,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.788325Z",
+  "updated_at": "2026-01-11T20:04:50.788325Z",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

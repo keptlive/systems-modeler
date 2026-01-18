@@ -1,0 +1,239 @@
+{
+  "id": "permafrost-carbon-feedback-model-cli",
+  "name": "Permafrost Carbon Feedback Model",
+  "description": "Models the release of carbon from thawing permafrost as global temperatures rise. Arctic permafrost contains approximately 1,500 Gt of carbon\u2014twice the amount in the atmosphere. As temperatures rise, permafrost thaws and releases CO2 and methane, creating a positive feedback loop that accelerates warming. Reference: IPCC (2021). Climate Change 2021: The Physical Science Basis. Source: https://www.ipcc.ch/report/ar6/wg1/",
+  "stocks": [
+    {
+      "id": "stock-permafrost-carbon",
+      "name": "Permafrost Carbon",
+      "initial_value": 1500,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-atmospheric-co2",
+      "name": "Atmospheric CO2",
+      "initial_value": 880,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-global-temperature-anomaly",
+      "name": "Global Temperature Anomaly",
+      "initial_value": 1.1,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-carbon-release",
+      "name": "Carbon Release",
+      "equation": "Release_Rate * Permafrost_Carbon * Thaw_Fraction",
+      "from_stock": "stock-permafrost-carbon",
+      "to_stock": "stock-atmospheric-co2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-anthropogenic-emissions",
+      "name": "Anthropogenic Emissions",
+      "equation": "Baseline_Emissions * (1 - Emission_Reduction_Rate * (Time - 2020) / 80)",
+      "from_stock": null,
+      "to_stock": "stock-atmospheric-co2",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-natural-uptake",
+      "name": "Natural Uptake",
+      "equation": "Uptake_Rate * (Atmospheric_CO2 - Preindustrial_CO2)",
+      "from_stock": "stock-atmospheric-co2",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-warming",
+      "name": "Warming",
+      "equation": "Climate_Sensitivity * (Radiative_Forcing - Lambda * Global_Temperature_Anomaly) / Heat_Capacity",
+      "from_stock": null,
+      "to_stock": "stock-global-temperature-anomaly",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-thaw-fraction",
+      "name": "Thaw Fraction",
+      "equation": "MIN(1, MAX(0, (Global_Temperature_Anomaly - Thaw_Threshold) / Temperature_Sensitivity))",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-release-rate",
+      "name": "Release Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-thaw-threshold",
+      "name": "Thaw Threshold",
+      "equation": "1.5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-temperature-sensitivity",
+      "name": "Temperature Sensitivity",
+      "equation": "3",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-baseline-emissions",
+      "name": "Baseline Emissions",
+      "equation": "10",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-emission-reduction-rate",
+      "name": "Emission Reduction Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-uptake-rate",
+      "name": "Uptake Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-preindustrial-co2",
+      "name": "Preindustrial CO2",
+      "equation": "590",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-radiative-forcing",
+      "name": "Radiative Forcing",
+      "equation": "5.35 * LN(Atmospheric_CO2 / Preindustrial_CO2)",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-climate-sensitivity",
+      "name": "Climate Sensitivity",
+      "equation": "3",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-lambda",
+      "name": "Lambda",
+      "equation": "3.7 / Climate_Sensitivity",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-heat-capacity",
+      "name": "Heat Capacity",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Permafrost Carbon",
+      "to_element": "Carbon Release"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Thaw Fraction",
+      "to_element": "Carbon Release"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Release Rate",
+      "to_element": "Carbon Release"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Global Temperature Anomaly",
+      "to_element": "Thaw Fraction"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Atmospheric CO2",
+      "to_element": "Radiative Forcing"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Radiative Forcing",
+      "to_element": "Warming"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Global Temperature Anomaly",
+      "to_element": "Warming"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.715946Z",
+  "updated_at": "2026-01-11T20:04:50.715946Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

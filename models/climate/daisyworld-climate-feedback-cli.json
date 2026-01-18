@@ -1,0 +1,198 @@
+{
+  "id": "daisyworld-climate-feedback-cli",
+  "name": "Daisyworld Climate Feedback Model",
+  "description": "James Lovelock's Daisyworld model (1983) demonstrating how life can regulate planetary temperature. Black and white daisies interact to stabilize climate, a simplified model supporting the Gaia hypothesis. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "source": "https://doi.org/10.1111/j.1600-0889.1983.tb00031.x",
+  "reference": "Watson AJ, Lovelock JE. Biological homeostasis of the global environment: the parable of Daisyworld. Tellus B. 1983;35(4):284-289.",
+  "stocks": [
+    {
+      "id": "stock-white",
+      "name": "White Daisy Coverage",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-black",
+      "name": "Black Daisy Coverage",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-white-growth",
+      "name": "White Daisy Growth",
+      "equation": "White_Daisy_Coverage * (Available_Ground * Growth_Rate_White - Death_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-white",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-black-growth",
+      "name": "Black Daisy Growth",
+      "equation": "Black_Daisy_Coverage * (Available_Ground * Growth_Rate_Black - Death_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-black",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-available",
+      "name": "Available Ground",
+      "equation": "1 - White_Daisy_Coverage - Black_Daisy_Coverage",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-planet-temp",
+      "name": "Planet Temperature",
+      "equation": "((Solar_Luminosity * (1 - Planet_Albedo)) / Stefan_Boltzmann)^0.25 - 273",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-planet-albedo",
+      "name": "Planet Albedo",
+      "equation": "White_Daisy_Coverage * White_Albedo + Black_Daisy_Coverage * Black_Albedo + Available_Ground * Ground_Albedo",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-local-white-temp",
+      "name": "Local White Temperature",
+      "equation": "Planet_Temperature + (Planet_Albedo - White_Albedo) * q",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-local-black-temp",
+      "name": "Local Black Temperature",
+      "equation": "Planet_Temperature + (Planet_Albedo - Black_Albedo) * q",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-growth-white",
+      "name": "Growth Rate White",
+      "equation": "MAX(0, 1 - 0.003265 * (Optimal_Temp - Local_White_Temperature)^2)",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-growth-black",
+      "name": "Growth Rate Black",
+      "equation": "MAX(0, 1 - 0.003265 * (Optimal_Temp - Local_Black_Temperature)^2)",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-solar",
+      "name": "Solar Luminosity",
+      "equation": "900 + 10 * TIME",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-white-albedo",
+      "name": "White Albedo",
+      "equation": "0.75",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-black-albedo",
+      "name": "Black Albedo",
+      "equation": "0.25",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-ground-albedo",
+      "name": "Ground Albedo",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-death-rate",
+      "name": "Death Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-optimal-temp",
+      "name": "Optimal Temp",
+      "equation": "22.5",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-q",
+      "name": "q",
+      "equation": "20",
+      "position": {
+        "x": 600,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-stefan",
+      "name": "Stefan Boltzmann",
+      "equation": "5.67e-8",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T21:34:33.048504+00:00",
+  "updated_at": "2026-01-11T21:34:33.048504+00:00"
+}

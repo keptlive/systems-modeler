@@ -1,0 +1,414 @@
+{
+  "id": "software-project-dynamics-brooks-law-eco",
+  "name": "Software Project Dynamics (Brooks' Law)",
+  "description": "Models the dynamics of software project management including Brooks' Law: adding manpower to a late software project makes it later. Captures experience dilution, training overhead, and communication costs. Reference: Based on project dynamics models (Lyneis & Ford, 2007). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-tasks-remaining",
+      "name": "Tasks Remaining",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-tasks-completed",
+      "name": "Tasks Completed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-workforce",
+      "name": "Workforce",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-experienced-staff",
+      "name": "Experienced Staff",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-new-staff",
+      "name": "New Staff",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-cumulative-cost",
+      "name": "Cumulative Cost",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-task-completion-rate",
+      "name": "Task Completion Rate",
+      "equation": "Effective_Productivity * Net_Available_Time",
+      "from_stock": "stock-tasks-remaining",
+      "to_stock": "stock-tasks-completed",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-rework-discovery-rate",
+      "name": "Rework Discovery Rate",
+      "equation": "Tasks_Completed * Error_Rate * Error_Detection_Rate",
+      "from_stock": "stock-tasks-completed",
+      "to_stock": "stock-tasks-remaining",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-scope-creep",
+      "name": "Scope Creep",
+      "equation": "Initial_Scope * Scope_Creep_Rate",
+      "from_stock": null,
+      "to_stock": "stock-tasks-remaining",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-hiring-rate",
+      "name": "Hiring Rate",
+      "equation": "MAX(0, (Desired_Workforce - Workforce) / Hiring_Delay)",
+      "from_stock": null,
+      "to_stock": "stock-new-staff",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-turnover-rate",
+      "name": "Turnover Rate",
+      "equation": "Workforce * Turnover_Rate",
+      "from_stock": "stock-workforce",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-experience-gain",
+      "name": "Experience Gain",
+      "equation": "New_Staff / Assimilation_Time",
+      "from_stock": "stock-new-staff",
+      "to_stock": "stock-experienced-staff",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-experienced-turnover",
+      "name": "Experienced Turnover",
+      "equation": "Turnover * (Experienced_Staff / Workforce)",
+      "from_stock": "stock-experienced-staff",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-new-staff-turnover",
+      "name": "New Staff Turnover",
+      "equation": "Turnover * (New_Staff / Workforce)",
+      "from_stock": "stock-new-staff",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-cost-rate",
+      "name": "Cost Rate",
+      "equation": "Workforce * Cost_Per_Person_Week",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-cost",
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-initial-scope",
+      "name": "Initial Scope",
+      "equation": "1000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-nominal-productivity",
+      "name": "Nominal Productivity",
+      "equation": "1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-experience-fraction",
+      "name": "Experience Fraction",
+      "equation": "Experienced_Staff / MAX(1, Workforce)",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-new-staff-productivity",
+      "name": "New Staff Productivity",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-average-productivity",
+      "name": "Average Productivity",
+      "equation": "Nominal_Productivity * (Experience_Fraction + New_Staff_Productivity * (1 - Experience_Fraction))",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-communication-overhead",
+      "name": "Communication Overhead",
+      "equation": "Communication_Cost * Workforce * (Workforce - 1) / 2",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-communication-cost-per-pair",
+      "name": "Communication Cost per Pair",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-training-overhead",
+      "name": "Training Overhead",
+      "equation": "Training_Time_Per_New_Person * New_Staff / MAX(1, Experienced_Staff)",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-training-time-per-new-person",
+      "name": "Training Time per New Person",
+      "equation": "10",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-available-hours-per-person",
+      "name": "Available Hours per Person",
+      "equation": "40",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-net-available-time",
+      "name": "Net Available Time",
+      "equation": "MAX(0, Workforce * Available_Hours_Per_Person - Communication_Overhead - Training_Overhead * Experienced_Staff)",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-effective-productivity",
+      "name": "Effective Productivity",
+      "equation": "Average_Productivity * (Net_Available_Time / (Workforce * Available_Hours_Per_Person + 0.01))",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-error-rate",
+      "name": "Error Rate",
+      "equation": "0.2 * (1 - 0.5 * Experience_Fraction) * Schedule_Pressure_Effect",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-error-detection-rate",
+      "name": "Error Detection Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-schedule-pressure",
+      "name": "Schedule Pressure",
+      "equation": "Perceived_Schedule_Remaining / MAX(0.1, Actual_Schedule_Remaining)",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-perceived-schedule-remaining",
+      "name": "Perceived Schedule Remaining",
+      "equation": "MAX(0, Original_Deadline - Time)",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-actual-schedule-remaining",
+      "name": "Actual Schedule Remaining",
+      "equation": "Tasks_Remaining / MAX(1, Task_Completion)",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-original-deadline",
+      "name": "Original Deadline",
+      "equation": "26",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-schedule-pressure-effect",
+      "name": "Schedule Pressure Effect",
+      "equation": "MIN(2, MAX(1, Schedule_Pressure))",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-desired-workforce",
+      "name": "Desired Workforce",
+      "equation": "IF Schedule_Pressure > 1.2 THEN Workforce * 1.5 ELSE Workforce",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-hiring-delay",
+      "name": "Hiring Delay",
+      "equation": "4",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-assimilation-time",
+      "name": "Assimilation Time",
+      "equation": "8",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-turnover-rate",
+      "name": "Turnover Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-scope-creep-rate",
+      "name": "Scope Creep Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-cost-per-person-week",
+      "name": "Cost per Person Week",
+      "equation": "2500",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-project-complete",
+      "name": "Project Complete",
+      "equation": "IF Tasks_Remaining < 10 THEN 1 ELSE 0",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:04:50.767659Z",
+  "updated_at": "2026-01-11T20:04:50.767659Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

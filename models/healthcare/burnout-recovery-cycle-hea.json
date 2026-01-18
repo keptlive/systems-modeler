@@ -1,0 +1,247 @@
+{
+  "id": "burnout-recovery-cycle-hea",
+  "name": "Burnout and Recovery Cycle Model",
+  "description": "Model of workplace burnout showing the cycle of stress accumulation, burnout, and recovery. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-energy",
+      "name": "Personal_Energy",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-stress",
+      "name": "Accumulated_Stress",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-burned",
+      "name": "Burnout_Level",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-restore",
+      "name": "Energy_Restoration",
+      "equation": "(Max_Energy - Personal_Energy) * Recovery_Rate * (1 - Burnout_Level / 100)",
+      "from_stock": null,
+      "to_stock": "stock-energy",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-drain",
+      "name": "Energy_Drain",
+      "equation": "Workload * Stress_Sensitivity * (1 + Accumulated_Stress / 50)",
+      "from_stock": "stock-energy",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-stress-add",
+      "name": "Stress_Accumulation",
+      "equation": "Workload * (1 - Personal_Energy / 100)",
+      "from_stock": null,
+      "to_stock": "stock-stress",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-stress-rel",
+      "name": "Stress_Release",
+      "equation": "Accumulated_Stress * Coping_Rate",
+      "from_stock": "stock-stress",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-burnout-on",
+      "name": "Burnout_Onset",
+      "equation": "Accumulated_Stress * (1 - Personal_Energy / 100) * 0.05",
+      "from_stock": null,
+      "to_stock": "stock-burned",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-burnout-rec",
+      "name": "Burnout_Recovery",
+      "equation": "Burnout_Level * Recovery_Support * 0.02",
+      "from_stock": "stock-burned",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-max",
+      "name": "Max_Energy",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-recovery",
+      "name": "Recovery_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-workload",
+      "name": "Workload",
+      "equation": "60",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-sens",
+      "name": "Stress_Sensitivity",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-coping",
+      "name": "Coping_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-support",
+      "name": "Recovery_Support",
+      "equation": "1.0",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Max_Energy",
+      "to_element": "Energy_Restoration"
+    },
+    {
+      "id": "c2",
+      "from_element": "Personal_Energy",
+      "to_element": "Energy_Restoration"
+    },
+    {
+      "id": "c3",
+      "from_element": "Recovery_Rate",
+      "to_element": "Energy_Restoration"
+    },
+    {
+      "id": "c4",
+      "from_element": "Burnout_Level",
+      "to_element": "Energy_Restoration"
+    },
+    {
+      "id": "c5",
+      "from_element": "Workload",
+      "to_element": "Energy_Drain"
+    },
+    {
+      "id": "c6",
+      "from_element": "Stress_Sensitivity",
+      "to_element": "Energy_Drain"
+    },
+    {
+      "id": "c7",
+      "from_element": "Accumulated_Stress",
+      "to_element": "Energy_Drain"
+    },
+    {
+      "id": "c8",
+      "from_element": "Workload",
+      "to_element": "Stress_Accumulation"
+    },
+    {
+      "id": "c9",
+      "from_element": "Personal_Energy",
+      "to_element": "Stress_Accumulation"
+    },
+    {
+      "id": "c10",
+      "from_element": "Accumulated_Stress",
+      "to_element": "Stress_Release"
+    },
+    {
+      "id": "c11",
+      "from_element": "Coping_Rate",
+      "to_element": "Stress_Release"
+    },
+    {
+      "id": "c12",
+      "from_element": "Accumulated_Stress",
+      "to_element": "Burnout_Onset"
+    },
+    {
+      "id": "c13",
+      "from_element": "Personal_Energy",
+      "to_element": "Burnout_Onset"
+    },
+    {
+      "id": "c14",
+      "from_element": "Burnout_Level",
+      "to_element": "Burnout_Recovery"
+    },
+    {
+      "id": "c15",
+      "from_element": "Recovery_Support",
+      "to_element": "Burnout_Recovery"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T11:49:16.387836+00:00",
+  "updated_at": "2026-01-12T11:49:16.387840+00:00",
+  "source": "https://doi.org/10.1146/annurev.psych.52.1.397",
+  "reference": "Maslach C, Schaufeli WB, Leiter MP. Job Burnout. Annual Review of Psychology. 2001;52:397-422."
+}

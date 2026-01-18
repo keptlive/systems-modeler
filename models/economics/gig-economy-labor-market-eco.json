@@ -1,0 +1,409 @@
+{
+  "id": "gig-economy-labor-market-eco",
+  "name": "Gig Economy Labor Market Model",
+  "description": "A system dynamics model of platform-based gig work based on Katz & Krueger (2019) 'The Rise and Nature of Alternative Work Arrangements' (doi:10.1257/aer.20161500) and Stanford's studies on gig economy dynamics. Models worker flows, platform competition, and earnings dynamics. Reference: Parker, G. G., et al. (2016). Platform Revolution. Norton. Source: https://www.wwnorton.com/",
+  "stocks": [
+    {
+      "id": "stock-traditional-workers",
+      "name": "Traditional Workers",
+      "initial_value": 120000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-gig-workers",
+      "name": "Gig Workers",
+      "initial_value": 15000000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-unemployed",
+      "name": "Unemployed",
+      "initial_value": 6000000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-active-platforms",
+      "name": "Active Platforms",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-gig-demand",
+      "name": "Gig Service Demand",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-average-gig-earnings",
+      "name": "Average Gig Earnings",
+      "initial_value": 35000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-traditional-to-gig",
+      "name": "Traditional to Gig",
+      "equation": "Traditional_Workers * Transition_to_Gig_Rate * Gig_Attractiveness",
+      "from_stock": "stock-traditional-workers",
+      "to_stock": "stock-gig-workers",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-gig-to-traditional",
+      "name": "Gig to Traditional",
+      "equation": "Gig_Workers * Return_to_Traditional_Rate",
+      "from_stock": "stock-gig-workers",
+      "to_stock": "stock-traditional-workers",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-unemployed-to-gig",
+      "name": "Unemployed to Gig",
+      "equation": "Unemployed * Gig_Entry_Rate * Platform_Availability",
+      "from_stock": "stock-unemployed",
+      "to_stock": "stock-gig-workers",
+      "position": {
+        "x": 250,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-gig-churn",
+      "name": "Gig Churn",
+      "equation": "Gig_Workers * Gig_Exit_Rate * (1 - Job_Satisfaction)",
+      "from_stock": "stock-gig-workers",
+      "to_stock": "stock-unemployed",
+      "position": {
+        "x": 250,
+        "y": 325
+      }
+    },
+    {
+      "id": "flow-layoffs",
+      "name": "Layoffs",
+      "equation": "Traditional_Workers * Layoff_Rate",
+      "from_stock": "stock-traditional-workers",
+      "to_stock": "stock-unemployed",
+      "position": {
+        "x": 150,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-platform-entry",
+      "name": "Platform Entry",
+      "equation": "Platform_Entry_Rate * Market_Opportunity",
+      "from_stock": null,
+      "to_stock": "stock-active-platforms",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-platform-exit",
+      "name": "Platform Exit",
+      "equation": "Active_Platforms * Platform_Failure_Rate",
+      "from_stock": "stock-active-platforms",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-demand-growth",
+      "name": "Demand Growth",
+      "equation": "Gig_Service_Demand * Demand_Growth_Rate * Consumer_Adoption",
+      "from_stock": null,
+      "to_stock": "stock-gig-demand",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-earnings-adjustment",
+      "name": "Earnings Adjustment",
+      "equation": "Average_Gig_Earnings * Earnings_Growth * Supply_Demand_Balance",
+      "from_stock": null,
+      "to_stock": "stock-average-gig-earnings",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-earnings-pressure",
+      "name": "Earnings Pressure",
+      "equation": "Average_Gig_Earnings * Competition_Pressure",
+      "from_stock": "stock-average-gig-earnings",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-transition-to-gig-rate",
+      "name": "Transition to Gig Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 150,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gig-attractiveness",
+      "name": "Gig Attractiveness",
+      "equation": "Flexibility_Value + (Average_Gig_Earnings / Traditional_Wage - 0.8)",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-flexibility-value",
+      "name": "Flexibility Value",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-traditional-wage",
+      "name": "Traditional Wage",
+      "equation": "50000",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-return-to-traditional-rate",
+      "name": "Return to Traditional Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-gig-entry-rate",
+      "name": "Gig Entry Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-platform-availability",
+      "name": "Platform Availability",
+      "equation": "MIN(1, Active_Platforms / 30)",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-gig-exit-rate",
+      "name": "Gig Exit Rate",
+      "equation": "0.25",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-job-satisfaction",
+      "name": "Job Satisfaction",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-layoff-rate",
+      "name": "Layoff Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-platform-entry-rate",
+      "name": "Platform Entry Rate",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-market-opportunity",
+      "name": "Market Opportunity",
+      "equation": "Gig_Service_Demand / (Gig_Workers * 1000)",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-platform-failure-rate",
+      "name": "Platform Failure Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-demand-growth-rate",
+      "name": "Demand Growth Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-consumer-adoption",
+      "name": "Consumer Adoption",
+      "equation": "0.8",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-supply-demand-balance",
+      "name": "Supply Demand Balance",
+      "equation": "Gig_Service_Demand / (Gig_Workers + 1)",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-earnings-growth",
+      "name": "Earnings Growth",
+      "equation": "0.02",
+      "position": {
+        "x": 600,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-competition-pressure",
+      "name": "Competition Pressure",
+      "equation": "IF(Gig_Workers / Gig_Service_Demand > 2, 0.05, 0)",
+      "position": {
+        "x": 650,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Traditional Workers",
+      "to_element": "Traditional to Gig"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Gig Attractiveness",
+      "to_element": "Traditional to Gig"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Average Gig Earnings",
+      "to_element": "Gig Attractiveness"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Unemployed",
+      "to_element": "Unemployed to Gig"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Platform Availability",
+      "to_element": "Unemployed to Gig"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Active Platforms",
+      "to_element": "Platform Availability"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Gig Workers",
+      "to_element": "Gig Churn"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Job Satisfaction",
+      "to_element": "Gig Churn"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Gig Service Demand",
+      "to_element": "Supply Demand Balance"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Gig Workers",
+      "to_element": "Supply Demand Balance"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Supply Demand Balance",
+      "to_element": "Earnings Adjustment"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2040,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

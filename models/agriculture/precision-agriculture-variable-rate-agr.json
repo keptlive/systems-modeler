@@ -1,0 +1,180 @@
+{
+  "id": "precision-agriculture-variable-rate-agr",
+  "name": "Precision Agriculture Variable Rate Model",
+  "description": "Model of spatially variable fertilizer application for yield optimization. Source: Basso et al. (2016), European J Agronomy. Reference: Bass, F. M. (1969). A new product growth for model consumer durables. Management Science, 15(5), 215-227. DOI: https://doi.org/10.1287/mnsc.15.5.215",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Soil_Nitrogen",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Crop_N_Uptake",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Yield",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "N_Balance",
+      "equation": "N_Application + Mineralization - Plant_Uptake - Leaching",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Plant_Uptake",
+      "equation": "Plant_Uptake_Rate",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Yield_Accumulation",
+      "equation": "IF(TIME > 60, NUE * Plant_Uptake_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Base_N_Rate",
+      "equation": "150",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Zone_Factor",
+      "equation": "1.0",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "NDVI",
+      "equation": "0.7",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "N_Application",
+      "equation": "IF(TIME < 30, Base_N_Rate * Zone_Factor / 30, 0)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Mineralization",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Leaching",
+      "equation": "0.02 * Soil_Nitrogen",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Max_Uptake",
+      "equation": "3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Plant_Uptake_Rate",
+      "equation": "Max_Uptake * Soil_Nitrogen / (50 + Soil_Nitrogen) * NDVI",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "NUE",
+      "equation": "40",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Profit",
+      "equation": "Yield * 200 - N_Application * 0.8",
+      "position": {
+        "x": 500,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Soil_Nitrogen",
+      "to_element": "Plant_Uptake_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:47:15.681935+00:00",
+  "updated_at": "2026-01-15T14:47:15.681938+00:00",
+  "source": "https://doi.org/10.1016/j.eja.2016.03.009",
+  "reference": "Basso, B. et al. (2016). Digital agriculture to design sustainable agricultural systems. European J Agronomy 77:103-111."
+}

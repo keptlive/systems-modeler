@@ -1,0 +1,269 @@
+{
+  "id": "covid19-multi-variant-epi",
+  "name": "COVID-19 Multi-Variant Dynamics Model",
+  "description": "SEIR-based model for multiple strains of COVID-19 with optimal control. Includes wild-type and variant competition, cross-immunity, and vaccination effects. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "source": "https://doi.org/10.1371/journal.pone.0303791",
+  "reference": "Akinyemi et al. (2024). A mathematical model of COVID-19 with multiple variants under optimal control in Ghana. PLoS ONE, 19(7), e0303791.",
+  "stocks": [
+    {
+      "id": "stock-s",
+      "name": "Susceptible",
+      "initial_value": 30000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-e1",
+      "name": "Exposed Variant 1",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-e2",
+      "name": "Exposed Variant 2",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-i1",
+      "name": "Infectious Variant 1",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-i2",
+      "name": "Infectious Variant 2",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-r",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-v",
+      "name": "Vaccinated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-exposure1",
+      "name": "Exposure V1",
+      "equation": "beta1 * Susceptible * Infectious_Variant_1 / N",
+      "from_stock": "stock-s",
+      "to_stock": "stock-e1",
+      "position": {
+        "x": 175,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-exposure2",
+      "name": "Exposure V2",
+      "equation": "beta2 * Susceptible * Infectious_Variant_2 / N",
+      "from_stock": "stock-s",
+      "to_stock": "stock-e2",
+      "position": {
+        "x": 175,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-infection1",
+      "name": "Infection V1",
+      "equation": "Exposed_Variant_1 / Latent_Period",
+      "from_stock": "stock-e1",
+      "to_stock": "stock-i1",
+      "position": {
+        "x": 325,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-infection2",
+      "name": "Infection V2",
+      "equation": "Exposed_Variant_2 / Latent_Period",
+      "from_stock": "stock-e2",
+      "to_stock": "stock-i2",
+      "position": {
+        "x": 325,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-recovery1",
+      "name": "Recovery V1",
+      "equation": "Infectious_Variant_1 * (1 - CFR1) / Infectious_Period",
+      "from_stock": "stock-i1",
+      "to_stock": "stock-r",
+      "position": {
+        "x": 475,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-recovery2",
+      "name": "Recovery V2",
+      "equation": "Infectious_Variant_2 * (1 - CFR2) / Infectious_Period",
+      "from_stock": "stock-i2",
+      "to_stock": "stock-r",
+      "position": {
+        "x": 475,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-vaccination",
+      "name": "Vaccination",
+      "equation": "Susceptible * Vaccination_Rate",
+      "from_stock": "stock-s",
+      "to_stock": "stock-v",
+      "position": {
+        "x": 100,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-waning",
+      "name": "Immunity Waning",
+      "equation": "Vaccinated / Immunity_Duration",
+      "from_stock": "stock-v",
+      "to_stock": "stock-s",
+      "position": {
+        "x": 100,
+        "y": 425
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-n",
+      "name": "N",
+      "equation": "30000000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-beta1",
+      "name": "beta1",
+      "equation": "0.3",
+      "position": {
+        "x": 175,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-beta2",
+      "name": "beta2",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-latent",
+      "name": "Latent Period",
+      "equation": "5",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-infectious",
+      "name": "Infectious Period",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cfr1",
+      "name": "CFR1",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cfr2",
+      "name": "CFR2",
+      "equation": "0.015",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-vax-rate",
+      "name": "Vaccination Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 50,
+        "y": 275
+      }
+    },
+    {
+      "id": "var-immunity",
+      "name": "Immunity Duration",
+      "equation": "180",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-cross-immunity",
+      "name": "Cross Immunity",
+      "equation": "0.7",
+      "position": {
+        "x": 175,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T03:11:09.889343+00:00",
+  "updated_at": "2026-01-12T03:11:09.889343+00:00"
+}

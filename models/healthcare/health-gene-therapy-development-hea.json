@@ -1,0 +1,261 @@
+{
+  "id": "health-gene-therapy-development-hea",
+  "name": "Gene Therapy Development Pipeline",
+  "description": "Models gene therapy development from research through approval. Based on FDA gene therapy guidance and biotech industry data. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "category": "health",
+  "stocks": [
+    {
+      "id": "stock-research",
+      "name": "Research_Stage",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-preclinical",
+      "name": "Preclinical",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-phase1",
+      "name": "Phase_1_Trials",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-phase23",
+      "name": "Phase_2_3_Trials",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-approved",
+      "name": "Approved_Therapies",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-new-research",
+      "name": "New_Research",
+      "equation": "Research_Funding / Cost_Per_Research",
+      "from_stock": null,
+      "to_stock": "stock-research",
+      "position": {
+        "x": 25,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-to-preclinical",
+      "name": "To_Preclinical",
+      "equation": "Research_Stage * Research_Success_Rate / Research_Duration",
+      "from_stock": "stock-research",
+      "to_stock": "stock-preclinical",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-to-phase1",
+      "name": "To_Phase1",
+      "equation": "Preclinical * Preclinical_Success / Preclinical_Duration",
+      "from_stock": "stock-preclinical",
+      "to_stock": "stock-phase1",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-to-phase23",
+      "name": "To_Phase2_3",
+      "equation": "Phase_1_Trials * Phase1_Success / Phase1_Duration",
+      "from_stock": "stock-phase1",
+      "to_stock": "stock-phase23",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-approval",
+      "name": "FDA_Approval",
+      "equation": "Phase_2_3_Trials * Approval_Rate / Phase23_Duration",
+      "from_stock": "stock-phase23",
+      "to_stock": "stock-approved",
+      "position": {
+        "x": 625,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-research-fail",
+      "name": "Research_Failure",
+      "equation": "Research_Stage * (1 - Research_Success_Rate) / Research_Duration",
+      "from_stock": "stock-research",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-preclinical-fail",
+      "name": "Preclinical_Failure",
+      "equation": "Preclinical * (1 - Preclinical_Success) / Preclinical_Duration",
+      "from_stock": "stock-preclinical",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-phase1-fail",
+      "name": "Phase1_Failure",
+      "equation": "Phase_1_Trials * (1 - Phase1_Success) / Phase1_Duration",
+      "from_stock": "stock-phase1",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-phase23-fail",
+      "name": "Phase23_Failure",
+      "equation": "Phase_2_3_Trials * (1 - Approval_Rate) / Phase23_Duration",
+      "from_stock": "stock-phase23",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-funding",
+      "name": "Research_Funding",
+      "equation": "10e9",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cost-research",
+      "name": "Cost_Per_Research",
+      "equation": "1e7",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-research-success",
+      "name": "Research_Success_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-research-dur",
+      "name": "Research_Duration",
+      "equation": "3",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-preclinical-success",
+      "name": "Preclinical_Success",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-preclinical-dur",
+      "name": "Preclinical_Duration",
+      "equation": "2",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-phase1-success",
+      "name": "Phase1_Success",
+      "equation": "0.6",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-phase1-dur",
+      "name": "Phase1_Duration",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-approval-rate",
+      "name": "Approval_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-phase23-dur",
+      "name": "Phase23_Duration",
+      "equation": "4",
+      "position": {
+        "x": 700,
+        "y": 350
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 1
+  },
+  "source": "https://www.fda.gov/vaccines-blood-biologics/cellular-gene-therapy-products",
+  "reference": "FDA (2023) Gene Therapy Products Guidance.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:15:34.768168+00:00",
+  "updated_at": "2026-01-12T06:15:34.768168+00:00"
+}

@@ -1,0 +1,222 @@
+{
+  "id": "demographics-aging-society-dependency-soc",
+  "name": "Aging Society Dependency Ratio",
+  "description": "Models demographic transition and dependency ratios. Based on UN World Population Prospects and OECD pension analysis. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "category": "social",
+  "stocks": [
+    {
+      "id": "stock-young",
+      "name": "Youth_0_14_Million",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-working",
+      "name": "Working_Age_15_64_Million",
+      "initial_value": 600,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-elderly",
+      "name": "Elderly_65plus_Million",
+      "initial_value": 150,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-pension-fund",
+      "name": "Pension_Fund_Trillion",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-births",
+      "name": "Births",
+      "equation": "Working_Age_15_64_Million * Fertility_Rate / 1000 * 15",
+      "from_stock": null,
+      "to_stock": "stock-young",
+      "position": {
+        "x": 25,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-youth-death",
+      "name": "Youth_Deaths",
+      "equation": "Youth_0_14_Million * Youth_Mortality",
+      "from_stock": "stock-young",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-mature",
+      "name": "Maturation",
+      "equation": "Youth_0_14_Million / 15",
+      "from_stock": "stock-young",
+      "to_stock": "stock-working",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-working-death",
+      "name": "Working_Deaths",
+      "equation": "Working_Age_15_64_Million * Working_Mortality",
+      "from_stock": "stock-working",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-retire",
+      "name": "Retirement",
+      "equation": "Working_Age_15_64_Million / 50",
+      "from_stock": "stock-working",
+      "to_stock": "stock-elderly",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-elderly-death",
+      "name": "Elderly_Deaths",
+      "equation": "Elderly_65plus_Million * Elderly_Mortality",
+      "from_stock": "stock-elderly",
+      "to_stock": null,
+      "position": {
+        "x": 575,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-contributions",
+      "name": "Pension_Contributions",
+      "equation": "Working_Age_15_64_Million * Avg_Contribution",
+      "from_stock": null,
+      "to_stock": "stock-pension-fund",
+      "position": {
+        "x": 325,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-payouts",
+      "name": "Pension_Payouts",
+      "equation": "Elderly_65plus_Million * Avg_Pension",
+      "from_stock": "stock-pension-fund",
+      "to_stock": null,
+      "position": {
+        "x": 475,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-fertility",
+      "name": "Fertility_Rate",
+      "equation": "15",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-youth-mort",
+      "name": "Youth_Mortality",
+      "equation": "0.001",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-work-mort",
+      "name": "Working_Mortality",
+      "equation": "0.002",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-elderly-mort",
+      "name": "Elderly_Mortality",
+      "equation": "0.04",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-contribution",
+      "name": "Avg_Contribution",
+      "equation": "0.005",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-pension",
+      "name": "Avg_Pension",
+      "equation": "0.015",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-dependency",
+      "name": "Old_Age_Dependency_Ratio",
+      "equation": "Elderly_65plus_Million / Working_Age_15_64_Million",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-total-dependency",
+      "name": "Total_Dependency_Ratio",
+      "equation": "(Youth_0_14_Million + Elderly_65plus_Million) / Working_Age_15_64_Million",
+      "position": {
+        "x": 550,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://population.un.org/wpp/",
+  "reference": "UN (2022) World Population Prospects 2022.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:15:34.766113+00:00",
+  "updated_at": "2026-01-12T06:15:34.766113+00:00"
+}

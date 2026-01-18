@@ -1,0 +1,243 @@
+{
+  "id": "hares-and-lynxes-population-model-eco",
+  "name": "Hares and Lynxes Population Model",
+  "description": "A modular predator-prey model demonstrating the classic snowshoe hare and Canadian lynx population cycles. The model uses graphical functions to capture non-linear relationships between hare density and both lynx mortality and kill rates. Based on the classic Lotka-Volterra dynamics but with more realistic functional responses. Reference: Lotka, A. J. (1920). Analytical note on certain rhythmic relations in organic systems. PNAS, 6(7), 410-415. DOI: https://doi.org/10.1073/pnas.6.7.410",
+  "stocks": [
+    {
+      "id": "stock-hares",
+      "name": "Hares",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-lynxes",
+      "name": "Lynxes",
+      "initial_value": 1250,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-hare-births",
+      "name": "Hare Births",
+      "equation": "hares * birth_fraction_hares",
+      "from_stock": null,
+      "to_stock": "stock-hares",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-hare-deaths",
+      "name": "Hare Deaths",
+      "equation": "lynxes * hares_killed_per_lynx",
+      "from_stock": "stock-hares",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-lynx-births",
+      "name": "Lynx Births",
+      "equation": "lynxes * birth_fraction_lynxes",
+      "from_stock": null,
+      "to_stock": "stock-lynxes",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-lynx-deaths",
+      "name": "Lynx Deaths",
+      "equation": "death_fraction_lynxes * lynxes",
+      "from_stock": "stock-lynxes",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-lynx-harvest",
+      "name": "Lynx Harvest",
+      "equation": "PULSE(size_of_one_time_lynx_harvest, 4, 0)",
+      "from_stock": "stock-lynxes",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-area",
+      "name": "Area",
+      "equation": "1000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-birth-fraction-hares",
+      "name": "Birth Fraction (Hares)",
+      "equation": "1.25",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-birth-fraction-lynxes",
+      "name": "Birth Fraction (Lynxes)",
+      "equation": "0.25",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-hare-density",
+      "name": "Hare Density",
+      "equation": "hares / area",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-hares-killed-per-lynx",
+      "name": "Hares Killed per Lynx",
+      "equation": "LOOKUP(hare_density, hares_killed_table)",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-hares-killed-lookup-table",
+      "name": "Hares Killed Lookup Table",
+      "equation": "0",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-death-fraction-lynxes",
+      "name": "Death Fraction (Lynxes)",
+      "equation": "LOOKUP(hare_density, death_fraction_table)",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-death-fraction-lookup-table",
+      "name": "Death Fraction Lookup Table",
+      "equation": "0",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-size-of-one-time-lynx-harvest",
+      "name": "Size of One-Time Lynx Harvest",
+      "equation": "100",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Hares",
+      "to_element": "Hare Births"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Birth Fraction (Hares)",
+      "to_element": "Hare Births"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Hares",
+      "to_element": "Hare Density"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Area",
+      "to_element": "Hare Density"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Hare Density",
+      "to_element": "Hares Killed per Lynx"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Hares Killed per Lynx",
+      "to_element": "Hare Deaths"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Lynxes",
+      "to_element": "Hare Deaths"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Lynxes",
+      "to_element": "Lynx Births"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Birth Fraction (Lynxes)",
+      "to_element": "Lynx Births"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Lynxes",
+      "to_element": "Lynx Deaths"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Hare Density",
+      "to_element": "Death Fraction (Lynxes)"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Death Fraction (Lynxes)",
+      "to_element": "Lynx Deaths"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Size of One-Time Lynx Harvest",
+      "to_element": "Lynx Harvest"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 12,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T20:04:50.735736Z",
+  "updated_at": "2026-01-11T20:04:50.735736Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

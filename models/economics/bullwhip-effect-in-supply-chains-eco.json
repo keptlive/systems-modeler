@@ -1,0 +1,244 @@
+{
+  "id": "bullwhip-effect-in-supply-chains-eco",
+  "name": "Bullwhip Effect in Supply Chains",
+  "description": "Models the amplification of order variability as it moves upstream in a supply chain. Small fluctuations in consumer demand create increasingly larger swings in orders placed by retailers, wholesalers, and manufacturers. A classic example of system dynamics oscillation caused by delays and feedback. Reference: Based on System Dynamics supply chain models (Sterman, 2000). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-retailer-inventory",
+      "name": "Retailer Inventory",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-wholesaler-inventory",
+      "name": "Wholesaler Inventory",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-manufacturer-inventory",
+      "name": "Manufacturer Inventory",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-retailer-backlog",
+      "name": "Retailer Backlog",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-wholesaler-backlog",
+      "name": "Wholesaler Backlog",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-retail-sales",
+      "name": "Retail Sales",
+      "equation": "MIN(Customer_Demand, Retailer_Inventory)",
+      "from_stock": "stock-retailer-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-retailer-orders",
+      "name": "Retailer Orders",
+      "equation": "MAX(0, Expected_Demand + (Desired_Retailer_Inventory - Retailer_Inventory) / Inventory_Adjustment_Time)",
+      "from_stock": null,
+      "to_stock": "stock-retailer-backlog",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-shipments-to-retailer",
+      "name": "Shipments to Retailer",
+      "equation": "MIN(Wholesaler_Inventory, Retailer_Backlog / Shipping_Delay)",
+      "from_stock": "stock-retailer-backlog",
+      "to_stock": "stock-retailer-inventory",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-wholesaler-orders",
+      "name": "Wholesaler Orders",
+      "equation": "MAX(0, Retailer_Orders + (Desired_Wholesaler_Inventory - Wholesaler_Inventory) / Inventory_Adjustment_Time)",
+      "from_stock": null,
+      "to_stock": "stock-wholesaler-backlog",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-shipments-to-wholesaler",
+      "name": "Shipments to Wholesaler",
+      "equation": "MIN(Manufacturer_Inventory, Wholesaler_Backlog / Shipping_Delay)",
+      "from_stock": "stock-wholesaler-backlog",
+      "to_stock": "stock-wholesaler-inventory",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-production",
+      "name": "Production",
+      "equation": "MAX(0, Wholesaler_Orders + (Desired_Manufacturer_Inventory - Manufacturer_Inventory) / Inventory_Adjustment_Time)",
+      "from_stock": null,
+      "to_stock": "stock-manufacturer-inventory",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-customer-demand",
+      "name": "Customer Demand",
+      "equation": "100 + STEP(20, 5)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-expected-demand",
+      "name": "Expected Demand",
+      "equation": "SMOOTH(Customer_Demand, Demand_Smoothing_Time)",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-demand-smoothing-time",
+      "name": "Demand Smoothing Time",
+      "equation": "4",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-desired-retailer-inventory",
+      "name": "Desired Retailer Inventory",
+      "equation": "Expected_Demand * Safety_Stock_Coverage",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-desired-wholesaler-inventory",
+      "name": "Desired Wholesaler Inventory",
+      "equation": "Expected_Demand * Safety_Stock_Coverage",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-desired-manufacturer-inventory",
+      "name": "Desired Manufacturer Inventory",
+      "equation": "Expected_Demand * Safety_Stock_Coverage",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-safety-stock-coverage",
+      "name": "Safety Stock Coverage",
+      "equation": "4",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-inventory-adjustment-time",
+      "name": "Inventory Adjustment Time",
+      "equation": "4",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-shipping-delay",
+      "name": "Shipping Delay",
+      "equation": "2",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Customer Demand",
+      "to_element": "Retail Sales"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Retailer Inventory",
+      "to_element": "Retail Sales"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Expected Demand",
+      "to_element": "Retailer Orders"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Desired Retailer Inventory",
+      "to_element": "Retailer Orders"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Retailer Inventory",
+      "to_element": "Retailer Orders"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.125
+  },
+  "created_at": "2026-01-11T20:04:50.748040Z",
+  "updated_at": "2026-01-11T20:04:50.748040Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

@@ -1,0 +1,182 @@
+{
+  "id": "limits-to-growth-system-archetype-edu",
+  "name": "Limits to Growth System Archetype Model",
+  "description": "Classic system archetype showing growth constrained by limiting factors. From Senge's Fifth Discipline. Reference: Senge, P. M. (1990). The Fifth Discipline. Doubleday/Currency. Source: https://mitsloan.mit.edu/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Performance",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Limiting Condition",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Growth",
+      "equation": "Performance * Growth_Rate * Growth_Enabler",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Decline",
+      "equation": "Performance * Decline_Rate * Limiting_Effect",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Constraint Buildup",
+      "equation": "Performance * Constraint_Generation_Rate",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Constraint Relief",
+      "equation": "Limiting_Condition * Relief_Rate",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Growth Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Decline Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Growth Enabler",
+      "equation": "1 - Limiting_Effect",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Limiting Effect",
+      "equation": "MIN(1, Limiting_Condition / Limit_Threshold)",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Limit Threshold",
+      "equation": "500",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Constraint Generation Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Relief Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "v8",
+      "name": "System State",
+      "equation": "IF(Limiting_Effect < 0.5, 'Growing', IF(Limiting_Effect < 0.9, 'Constrained', 'At Limit'))",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Headroom",
+      "equation": "1 - Limiting_Effect",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Performance",
+      "to_element": "Growth"
+    },
+    {
+      "id": "c2",
+      "from_element": "Limiting Condition",
+      "to_element": "Limiting Effect"
+    },
+    {
+      "id": "c3",
+      "from_element": "Limiting Effect",
+      "to_element": "Growth Enabler"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:24:00.397886",
+  "updated_at": "2026-01-15T14:24:00.397894",
+  "source": "https://www.penguinrandomhouse.com/books/163984/the-fifth-discipline-by-peter-m-senge/",
+  "reference": "Senge PM. The Fifth Discipline: The Art and Practice of the Learning Organization. Doubleday. 1990."
+}

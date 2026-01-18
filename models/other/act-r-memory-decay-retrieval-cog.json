@@ -1,0 +1,171 @@
+{
+  "id": "act-r-memory-decay-retrieval-cog",
+  "name": "ACT-R Memory Decay and Retrieval Model",
+  "description": "Cognitive architecture memory dynamics. Source: Anderson et al. (2004), Psychological Review. Reference: Anderson, R. M., & May, R. M. (1991). Infectious Diseases of Humans. Oxford University Press.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Base_Level_Activation",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Retrieval_Count",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Total_Retrievals",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Activation_Change",
+      "equation": "(Target_Activation - Base_Level_Activation) / Tau",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Practice_Effect",
+      "equation": "Retrieval_Attempt * Retrieval_Success",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Retrieval_Log",
+      "equation": "Retrieval_Attempt",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "d",
+      "equation": "0.5",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Tau",
+      "equation": "1",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Threshold",
+      "equation": "-0.5",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Time_Since_Practice",
+      "equation": "TIME + 1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Target_Activation",
+      "equation": "LN(Retrieval_Count) - d * LN(Time_Since_Practice)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Retrieval_Probability",
+      "equation": "1 / (1 + EXP(-(Base_Level_Activation - Threshold)))",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Retrieval_Attempt",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Retrieval_Success",
+      "equation": "IF(Retrieval_Probability > 0.5, 1, 0)",
+      "position": {
+        "x": 300,
+        "y": 480
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Retrieval_Latency",
+      "equation": "0.05 * EXP(-Base_Level_Activation)",
+      "position": {
+        "x": 500,
+        "y": 480
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Base_Level_Activation",
+      "to_element": "Retrieval_Probability"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:54:39.082447+00:00",
+  "updated_at": "2026-01-15T14:54:39.082458+00:00",
+  "source": "https://doi.org/10.1037/0033-295X.111.4.1036",
+  "reference": "Anderson, J.R. et al. (2004). An integrated theory of the mind. Psychological Review 111:1036-1060."
+}

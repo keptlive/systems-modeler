@@ -1,0 +1,131 @@
+{
+  "id": "antarctic-ice-sheet-instability-model-cli",
+  "name": "Antarctic Ice Sheet Instability Model",
+  "description": "Model of Antarctic ice sheet dynamics including Marine Ice Sheet Instability (MISI) and Marine Ice Cliff Instability (MICI) mechanisms. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "stock-wais-volume",
+      "name": "WAIS_Volume",
+      "initial_value": 3000000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-eais-volume",
+      "name": "EAIS_Volume",
+      "initial_value": 21700000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-grounding-line",
+      "name": "Grounding_Line",
+      "initial_value": 1800,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-accumulation",
+      "name": "accumulation",
+      "equation": "0",
+      "from_stock": null,
+      "to_stock": "stock-wais-volume",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ice-shelf-melt",
+      "name": "ice_shelf_melt",
+      "equation": "0",
+      "from_stock": "stock-wais-volume",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-cliff-collapse",
+      "name": "cliff_collapse",
+      "equation": "0",
+      "from_stock": "stock-wais-volume",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-grounding-line-retreat",
+      "name": "grounding_line_retreat",
+      "equation": "0",
+      "from_stock": "stock-grounding-line",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-ocean-warming",
+      "name": "ocean_warming",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-melt-sensitivity",
+      "name": "melt_sensitivity",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cliff-height-threshold",
+      "name": "cliff_height_threshold",
+      "equation": "100",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-misi-feedback",
+      "name": "MISI_feedback",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2000,
+    "end": 2500,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.698865Z",
+  "updated_at": "2026-01-11T20:04:50.698865Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

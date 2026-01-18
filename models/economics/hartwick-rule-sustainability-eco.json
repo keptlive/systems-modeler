@@ -1,0 +1,143 @@
+{
+  "id": "hartwick-rule-sustainability-eco",
+  "name": "Hartwick Rule Sustainability",
+  "description": "John Hartwick's 1977 rule showing that investing resource rents in reproducible capital maintains constant consumption. Key to sustainability economics. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-resource",
+      "name": "Natural_Capital",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-produced",
+      "name": "Produced_Capital",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-wealth",
+      "name": "Total_Wealth",
+      "initial_value": 1100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-depletion",
+      "name": "Resource_Depletion",
+      "equation": "Natural_Capital * depletion_rate",
+      "from_stock": "stock-resource",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-investment",
+      "name": "Investment",
+      "equation": "Resource_Rent",
+      "from_stock": null,
+      "to_stock": "stock-produced",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-wealth",
+      "name": "Wealth_Change",
+      "equation": "Investment - Resource_Depletion",
+      "from_stock": null,
+      "to_stock": "stock-wealth",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-depletion-rate",
+      "name": "depletion_rate",
+      "equation": "0.03",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-rent",
+      "name": "Resource_Rent",
+      "equation": "Natural_Capital * depletion_rate * unit_rent",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-unit-rent",
+      "name": "unit_rent",
+      "equation": "1",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-consumption",
+      "name": "Sustainable_Consumption",
+      "equation": "Produced_Capital * return_rate",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-return",
+      "name": "return_rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Natural_Capital",
+      "to_element": "Resource_Rent"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Resource_Rent",
+      "to_element": "Investment"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Produced_Capital",
+      "to_element": "Sustainable_Consumption"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.2307/1828079",
+  "reference": "Hartwick JM. Intergenerational Equity and the Investing of Rents from Exhaustible Resources. American Economic Review. 1977;67(5):972-974."
+}

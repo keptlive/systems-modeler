@@ -1,0 +1,275 @@
+{
+  "id": "social-inequality-dynamics-soc",
+  "name": "Social Inequality Dynamics Model",
+  "description": "Models wealth inequality, social mobility, and policy interventions. Based on Piketty (2014) Capital in the Twenty-First Century framework. Reference: Juran, J. M. (1999). Juran's Quality Handbook. McGraw-Hill. Source: https://www.mheducation.com/",
+  "stocks": [
+    {
+      "id": "stock-bottom-wealth",
+      "name": "Bottom_50pct_Wealth",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-middle-wealth",
+      "name": "Middle_40pct_Wealth",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-top-wealth",
+      "name": "Top_10pct_Wealth",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-social-mobility",
+      "name": "Social_Mobility_Index",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-bottom-income",
+      "name": "Bottom_Income",
+      "equation": "Labor_Share * GDP * Bottom_Labor_Share",
+      "from_stock": null,
+      "to_stock": "stock-bottom-wealth",
+      "position": {
+        "x": 75,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-bottom-consumption",
+      "name": "Bottom_Consumption",
+      "equation": "Bottom_50pct_Wealth * Bottom_Consumption_Rate",
+      "from_stock": "stock-bottom-wealth",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-middle-income",
+      "name": "Middle_Income",
+      "equation": "Labor_Share * GDP * Middle_Labor_Share + Capital_Return * Middle_40pct_Wealth * 0.3",
+      "from_stock": null,
+      "to_stock": "stock-middle-wealth",
+      "position": {
+        "x": 275,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-middle-consumption",
+      "name": "Middle_Consumption",
+      "equation": "Middle_40pct_Wealth * Middle_Consumption_Rate",
+      "from_stock": "stock-middle-wealth",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-top-income",
+      "name": "Top_Income",
+      "equation": "Capital_Return * Top_10pct_Wealth + Labor_Share * GDP * Top_Labor_Share",
+      "from_stock": null,
+      "to_stock": "stock-top-wealth",
+      "position": {
+        "x": 475,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-top-consumption",
+      "name": "Top_Consumption",
+      "equation": "Top_10pct_Wealth * Top_Consumption_Rate",
+      "from_stock": "stock-top-wealth",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-redistribution",
+      "name": "Redistribution",
+      "equation": "Tax_Rate * Top_10pct_Wealth * Redistribution_Efficiency",
+      "from_stock": "stock-top-wealth",
+      "to_stock": "stock-bottom-wealth",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-mobility-change",
+      "name": "Mobility_Change",
+      "equation": "(Education_Investment / GDP - Inequality_Index * 0.1 - Social_Mobility_Index) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-social-mobility",
+      "position": {
+        "x": 275,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-gdp",
+      "name": "GDP",
+      "equation": "1000 * (1 + 0.02 * TIME)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-labor-share",
+      "name": "Labor_Share",
+      "equation": "0.6 - 0.002 * TIME",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-capital-return",
+      "name": "Capital_Return",
+      "equation": "0.05",
+      "position": {
+        "x": 340,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-bottom-labor-share",
+      "name": "Bottom_Labor_Share",
+      "equation": "0.3",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-middle-labor-share",
+      "name": "Middle_Labor_Share",
+      "equation": "0.5",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-top-labor-share",
+      "name": "Top_Labor_Share",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-bottom-consumption-rate",
+      "name": "Bottom_Consumption_Rate",
+      "equation": "0.95",
+      "position": {
+        "x": 220,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-middle-consumption-rate",
+      "name": "Middle_Consumption_Rate",
+      "equation": "0.8",
+      "position": {
+        "x": 340,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-top-consumption-rate",
+      "name": "Top_Consumption_Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 460,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-tax-rate",
+      "name": "Tax_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 580,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-redistribution-efficiency",
+      "name": "Redistribution_Efficiency",
+      "equation": "0.7",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-education-investment",
+      "name": "Education_Investment",
+      "equation": "50",
+      "position": {
+        "x": 220,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-adjustment-time",
+      "name": "Adjustment_Time",
+      "equation": "10",
+      "position": {
+        "x": 340,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-inequality-index",
+      "name": "Inequality_Index",
+      "equation": "Top_10pct_Wealth / (Bottom_50pct_Wealth + Middle_40pct_Wealth + 1)",
+      "position": {
+        "x": 500,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T01:15:55.421818+00:00",
+  "updated_at": "2026-01-12T01:15:55.421826+00:00",
+  "source": "https://doi.org/10.4159/9780674369542",
+  "reference": "Piketty T. Capital in the Twenty-First Century. Harvard University Press. 2014."
+}

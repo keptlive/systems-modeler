@@ -1,0 +1,210 @@
+{
+  "id": "social-mobility-dynamics-soc",
+  "name": "Social Mobility Dynamics Model",
+  "description": "Model of intergenerational social mobility showing how education, wealth, and opportunity affect class transitions. Based on Chetty et al. (2014). Reference: OECD Education at a Glance. Source: https://www.oecd.org/education/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Lower Class",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Middle Class",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Upper Class",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Upward Mobility Lower",
+      "equation": "Lower_Class * Mobility_Rate_Low_Mid * Education_Effect * Opportunity_Index",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Downward Mobility Middle",
+      "equation": "Middle_Class * Downward_Rate_Mid_Low * Economic_Shock",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Upward Mobility Middle",
+      "equation": "Middle_Class * Mobility_Rate_Mid_Up * Education_Effect * Wealth_Effect",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Downward Mobility Upper",
+      "equation": "Upper_Class * Downward_Rate_Up_Mid",
+      "from_stock": "s3",
+      "to_stock": "s2",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Mobility Rate Low Mid",
+      "equation": "0.05",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Mobility Rate Mid Up",
+      "equation": "0.03",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Downward Rate Mid Low",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Downward Rate Up Mid",
+      "equation": "0.01",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Education Effect",
+      "equation": "1 + Education_Investment * 0.5",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Education Investment",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Opportunity Index",
+      "equation": "0.8",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Wealth Effect",
+      "equation": "Upper_Class / 20",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Economic Shock",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Gini Coefficient",
+      "equation": "(Upper_Class - Lower_Class) / 100",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Intergenerational Elasticity",
+      "equation": "1 - (Mobility_Rate_Low_Mid + Mobility_Rate_Mid_Up) / 2",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Lower Class",
+      "to_element": "Upward Mobility Lower"
+    },
+    {
+      "id": "c2",
+      "from_element": "Middle Class",
+      "to_element": "Upward Mobility Middle"
+    },
+    {
+      "id": "c3",
+      "from_element": "Upper Class",
+      "to_element": "Wealth Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:55:42.037670+00:00",
+  "updated_at": "2026-01-12T01:55:42.037676+00:00",
+  "source": "https://doi.org/10.1093/qje/qju022",
+  "reference": "Chetty R, Hendren N, Kline P, Saez E. Where is the Land of Opportunity? The Geography of Intergenerational Mobility in the United States. Quarterly Journal of Economics. 2014;129(4):1553-1623."
+}

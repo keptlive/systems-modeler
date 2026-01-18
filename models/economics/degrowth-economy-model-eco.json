@@ -1,0 +1,208 @@
+{
+  "id": "degrowth-economy-model-eco",
+  "name": "Degrowth Economy Model",
+  "description": "Model of planned economic degrowth showing how reducing GDP can maintain wellbeing while reducing environmental impact. Based on Kallis et al. (2018). Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "GDP",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Environmental Impact",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Wellbeing Index",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "GDP Change",
+      "equation": "GDP * Economic_Policy_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Impact Reduction",
+      "equation": "Environmental_Impact * Efficiency_Improvement - GDP * Impact_Intensity",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Wellbeing Change",
+      "equation": "(Basic_Needs_Met + Social_Goods + Environmental_Quality - Current_Wellbeing) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Economic Policy Rate",
+      "equation": "-0.01",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Efficiency Improvement",
+      "equation": "0.03",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Impact Intensity",
+      "equation": "0.5",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Basic Needs Met",
+      "equation": "MIN(100, GDP * Basic_Needs_Efficiency)",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Basic Needs Efficiency",
+      "equation": "1.5",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Social Goods",
+      "equation": "Work_Life_Balance + Community_Strength",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Work Life Balance",
+      "equation": "50 - GDP * 0.2",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Community Strength",
+      "equation": "40",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Environmental Quality",
+      "equation": "100 - Environmental_Impact",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Current Wellbeing",
+      "equation": "Wellbeing_Index",
+      "position": {
+        "x": 650,
+        "y": 250
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Adjustment Time",
+      "equation": "5",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Sustainability Score",
+      "equation": "Wellbeing_Index / Environmental_Impact * 100",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "GDP",
+      "to_element": "Basic Needs Met"
+    },
+    {
+      "id": "c2",
+      "from_element": "Environmental Impact",
+      "to_element": "Environmental Quality"
+    },
+    {
+      "id": "c3",
+      "from_element": "Wellbeing Index",
+      "to_element": "Wellbeing Change"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:55:42.037794+00:00",
+  "updated_at": "2026-01-12T01:55:42.037801+00:00",
+  "source": "https://doi.org/10.1146/annurev-environ-102017-025941",
+  "reference": "Kallis G, Kostakis V, Lange S, Muraca B, Paulson S, Schmelzer M. Research On Degrowth. Annual Review of Environment and Resources. 2018;43:291-316."
+}

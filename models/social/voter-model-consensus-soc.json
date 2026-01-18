@@ -1,0 +1,117 @@
+{
+  "id": "voter-model-consensus-soc",
+  "name": "Voter Model for Consensus Formation",
+  "description": "The classic voter model from statistical physics (Clifford & Sudbury 1973, Holley & Liggett 1975). Individuals randomly adopt neighbors' opinions. Shows how random imitation leads to consensus in finite populations. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-opinion-a",
+      "name": "Fraction Opinion A",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-opinion-b",
+      "name": "Fraction Opinion B",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-a-to-b",
+      "name": "A to B Conversion",
+      "equation": "Conversion_Rate * Fraction_Opinion_A * Fraction_Opinion_B + Noise_A_to_B",
+      "from_stock": "stock-opinion-a",
+      "to_stock": "stock-opinion-b",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-b-to-a",
+      "name": "B to A Conversion",
+      "equation": "Conversion_Rate * Fraction_Opinion_B * Fraction_Opinion_A + Noise_B_to_A",
+      "from_stock": "stock-opinion-b",
+      "to_stock": "stock-opinion-a",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-conversion-rate",
+      "name": "Conversion Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-noise-a-to-b",
+      "name": "Noise A to B",
+      "equation": "0.01 * (0.5 - Fraction_Opinion_A) * RANDOM",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-noise-b-to-a",
+      "name": "Noise B to A",
+      "equation": "0.01 * (0.5 - Fraction_Opinion_B) * RANDOM",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-random",
+      "name": "RANDOM",
+      "equation": "0",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-consensus-level",
+      "name": "Consensus Level",
+      "equation": "ABS(Fraction_Opinion_A - Fraction_Opinion_B)",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-entropy",
+      "name": "Opinion Entropy",
+      "equation": "- Fraction_Opinion_A * LN(Fraction_Opinion_A + 0.001) - Fraction_Opinion_B * LN(Fraction_Opinion_B + 0.001)",
+      "position": {
+        "x": 300,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-11T21:11:32.978780+00:00",
+  "updated_at": "2026-01-11T21:11:32.978780+00:00",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

@@ -1,0 +1,172 @@
+{
+  "id": "h5n1-avian-influenza-spillover-epi",
+  "name": "H5N1 Avian Influenza Spillover Model",
+  "description": "Models the potential zoonotic spillover of H5N1 avian influenza from poultry and wild birds to humans, including farm worker exposure and potential human-to-human transmission. Based on CDC and WHO surveillance frameworks for highly pathogenic avian influenza.",
+  "source": "https://doi.org/10.1038/s41467-022-30087-3",
+  "reference": "Koopmans M, et al. Transmission of H5N1 influenza virus from poultry to humans: modeling exposure risk. Nature Communications. 2022. WHO Global Influenza Programme.",
+  "stocks": [
+    {
+      "id": "stock-poultry-susceptible",
+      "name": "Susceptible Poultry",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "stock-poultry-infected",
+      "name": "Infected Poultry",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {"x": 250, "y": 100}
+    },
+    {
+      "id": "stock-human-susceptible",
+      "name": "Susceptible Humans",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {"x": 100, "y": 300}
+    },
+    {
+      "id": "stock-human-exposed",
+      "name": "Exposed Humans",
+      "initial_value": 0,
+      "equation": "",
+      "position": {"x": 250, "y": 300}
+    },
+    {
+      "id": "stock-human-infected",
+      "name": "Infected Humans",
+      "initial_value": 0,
+      "equation": "",
+      "position": {"x": 400, "y": 300}
+    },
+    {
+      "id": "stock-human-recovered",
+      "name": "Recovered Humans",
+      "initial_value": 0,
+      "equation": "",
+      "position": {"x": 550, "y": 300}
+    },
+    {
+      "id": "stock-human-deaths",
+      "name": "Human Deaths",
+      "initial_value": 0,
+      "equation": "",
+      "position": {"x": 550, "y": 400}
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-poultry-transmission",
+      "name": "Poultry Transmission",
+      "equation": "poultry_beta * Susceptible_Poultry * Infected_Poultry / Total_Poultry",
+      "from_stock": "stock-poultry-susceptible",
+      "to_stock": "stock-poultry-infected",
+      "position": {"x": 175, "y": 100}
+    },
+    {
+      "id": "flow-spillover",
+      "name": "Zoonotic Spillover",
+      "equation": "spillover_rate * Exposed_Workers * Infected_Poultry / Total_Poultry",
+      "from_stock": "stock-human-susceptible",
+      "to_stock": "stock-human-exposed",
+      "position": {"x": 175, "y": 300}
+    },
+    {
+      "id": "flow-human-infection",
+      "name": "Human Infection Onset",
+      "equation": "Exposed_Humans / Incubation_Period",
+      "from_stock": "stock-human-exposed",
+      "to_stock": "stock-human-infected",
+      "position": {"x": 325, "y": 300}
+    },
+    {
+      "id": "flow-human-transmission",
+      "name": "Human to Human",
+      "equation": "human_beta * Susceptible_Humans * Infected_Humans / Total_Population",
+      "from_stock": "stock-human-susceptible",
+      "to_stock": "stock-human-exposed",
+      "position": {"x": 175, "y": 350}
+    },
+    {
+      "id": "flow-human-recovery",
+      "name": "Human Recovery",
+      "equation": "Infected_Humans * (1 - Case_Fatality_Rate) / Infectious_Period",
+      "from_stock": "stock-human-infected",
+      "to_stock": "stock-human-recovered",
+      "position": {"x": 475, "y": 300}
+    },
+    {
+      "id": "flow-human-death",
+      "name": "Human Death",
+      "equation": "Infected_Humans * Case_Fatality_Rate / Infectious_Period",
+      "from_stock": "stock-human-infected",
+      "to_stock": "stock-human-deaths",
+      "position": {"x": 475, "y": 400}
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-poultry-beta",
+      "name": "poultry_beta",
+      "equation": "2.5",
+      "position": {"x": 175, "y": 50}
+    },
+    {
+      "id": "var-human-beta",
+      "name": "human_beta",
+      "equation": "0.3",
+      "position": {"x": 175, "y": 450}
+    },
+    {
+      "id": "var-spillover",
+      "name": "spillover_rate",
+      "equation": "0.0001",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "var-workers",
+      "name": "Exposed_Workers",
+      "equation": "50000",
+      "position": {"x": 250, "y": 200}
+    },
+    {
+      "id": "var-incubation",
+      "name": "Incubation_Period",
+      "equation": "3",
+      "position": {"x": 325, "y": 250}
+    },
+    {
+      "id": "var-infectious",
+      "name": "Infectious_Period",
+      "equation": "7",
+      "position": {"x": 475, "y": 250}
+    },
+    {
+      "id": "var-cfr",
+      "name": "Case_Fatality_Rate",
+      "equation": "0.52",
+      "position": {"x": 475, "y": 450}
+    },
+    {
+      "id": "var-total-poultry",
+      "name": "Total_Poultry",
+      "equation": "10001000",
+      "position": {"x": 100, "y": 50}
+    },
+    {
+      "id": "var-total-pop",
+      "name": "Total_Population",
+      "equation": "1000000",
+      "position": {"x": 100, "y": 450}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-15T21:00:00.000000+00:00",
+  "updated_at": "2026-01-15T21:00:00.000000+00:00"
+}

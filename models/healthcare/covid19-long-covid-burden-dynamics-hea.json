@@ -1,0 +1,225 @@
+{
+  "id": "covid19-long-covid-burden-dynamics-hea",
+  "name": "Long COVID Disease Burden Dynamics",
+  "description": "Model of post-acute sequelae of SARS-CoV-2 (PASC/Long COVID) prevalence and disability burden. Based on Davis et al. 2023 Nature Reviews. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Acute COVID Cases",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Long COVID Cases",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Recovered from LC",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Disabled from LC",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Cumulative Acute",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "New Acute Cases",
+      "equation": "Daily_Case_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Developing Long COVID",
+      "equation": "Acute_COVID_Cases * Long_COVID_Rate / Acute_Duration",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Acute Recovery",
+      "equation": "Acute_COVID_Cases * (1 - Long_COVID_Rate) / Acute_Duration",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "f4",
+      "name": "LC Recovery",
+      "equation": "Long_COVID_Cases * LC_Recovery_Rate",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "LC to Disability",
+      "equation": "Long_COVID_Cases * Disability_Rate",
+      "from_stock": "s2",
+      "to_stock": "s4",
+      "position": {
+        "x": 350,
+        "y": 275
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Cumulative Tracking",
+      "equation": "Daily_Case_Rate",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Daily Case Rate",
+      "equation": "5000",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Long COVID Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Acute Duration",
+      "equation": "14",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "v4",
+      "name": "LC Recovery Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Disability Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v6",
+      "name": "LC Prevalence",
+      "equation": "Long_COVID_Cases / (Cumulative_Acute + 1)",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "DALY Burden",
+      "equation": "Long_COVID_Cases * 0.2 + Disabled_from_LC * 0.6",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Healthcare Cost",
+      "equation": "Long_COVID_Cases * 5000 + Disabled_from_LC * 20000",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Acute COVID Cases",
+      "to_element": "Developing Long COVID"
+    },
+    {
+      "id": "c2",
+      "from_element": "Long COVID Cases",
+      "to_element": "LC Recovery"
+    },
+    {
+      "id": "c3",
+      "from_element": "Long COVID Cases",
+      "to_element": "LC to Disability"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 730,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:14:19.551189",
+  "updated_at": "2026-01-15T14:14:19.551197",
+  "source": "https://doi.org/10.1038/s41579-022-00846-2",
+  "reference": "Davis HE, et al. Long COVID: major findings, mechanisms and recommendations. Nature Reviews Microbiology. 2023;21:133-146."
+}

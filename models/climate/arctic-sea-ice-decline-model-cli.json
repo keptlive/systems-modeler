@@ -1,0 +1,156 @@
+{
+  "id": "arctic-sea-ice-decline-model-cli",
+  "name": "Arctic Sea Ice Decline Model",
+  "description": "Model of Arctic sea ice extent decline with ice-albedo feedback and September minimum projections. Reference: Based on project dynamics models (Lyneis & Ford, 2007). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-ice-extent",
+      "name": "Ice_Extent",
+      "initial_value": 7.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-ice-volume",
+      "name": "Ice_Volume",
+      "initial_value": 16.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-multi-year-ice",
+      "name": "Multi_Year_Ice",
+      "initial_value": 3.5,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-ice-melt",
+      "name": "ice_melt",
+      "equation": "melt_sensitivity * warming_rate * (Ice_Extent + feedback_amplification)",
+      "from_stock": "stock-ice-extent",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-ice-formation",
+      "name": "ice_formation",
+      "equation": "0",
+      "from_stock": null,
+      "to_stock": "stock-ice-extent",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-volume-loss",
+      "name": "volume_loss",
+      "equation": "0",
+      "from_stock": "stock-ice-volume",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-myi-loss",
+      "name": "myi_loss",
+      "equation": "0",
+      "from_stock": "stock-multi-year-ice",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-warming-rate",
+      "name": "warming_rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-melt-sensitivity",
+      "name": "melt_sensitivity",
+      "equation": "0.15",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-albedo-ice",
+      "name": "albedo_ice",
+      "equation": "0.6",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-albedo-ocean",
+      "name": "albedo_ocean",
+      "equation": "0.06",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-ice-free-threshold",
+      "name": "ice_free_threshold",
+      "equation": "1.0",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Ice_Extent",
+      "to_element": "ice_melt"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "warming_rate",
+      "to_element": "ice_melt"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "melt_sensitivity",
+      "to_element": "ice_melt"
+    }
+  ],
+  "time_settings": {
+    "start": 1979,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.699512Z",
+  "updated_at": "2026-01-11T20:04:50.699512Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

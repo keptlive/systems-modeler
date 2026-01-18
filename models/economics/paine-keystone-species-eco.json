@@ -1,0 +1,257 @@
+{
+  "id": "paine-keystone-species-eco",
+  "name": "Paine Keystone Species Model",
+  "description": "Robert Paine's keystone species concept showing how removal of a top predator leads to competitive exclusion. Reference: Paine, R.T. (1969). A Note on Trophic Complexity.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Keystone_Predator",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Dominant_Prey",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Subordinate_Prey",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Resource",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Predator_Birth",
+      "equation": "Keystone_Predator * (Consumption_Dom + Consumption_Sub) * Conversion_Efficiency",
+      "from_stock": null,
+      "to_stock": "Keystone_Predator",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Predator_Death",
+      "equation": "Keystone_Predator * Predator_Mortality",
+      "from_stock": "Keystone_Predator",
+      "to_stock": null,
+      "position": {
+        "x": 220,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Dominant_Growth",
+      "equation": "Dominant_Prey * Growth_Dom * Resource / (K_Resource + Resource)",
+      "from_stock": null,
+      "to_stock": "Dominant_Prey",
+      "position": {
+        "x": 340,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Dominant_Predation",
+      "equation": "Consumption_Dom * Keystone_Predator",
+      "from_stock": "Dominant_Prey",
+      "to_stock": null,
+      "position": {
+        "x": 460,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Subordinate_Growth",
+      "equation": "Subordinate_Prey * Growth_Sub * Resource / (K_Resource + Resource)",
+      "from_stock": null,
+      "to_stock": "Subordinate_Prey",
+      "position": {
+        "x": 580,
+        "y": 300
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Subordinate_Predation",
+      "equation": "Consumption_Sub * Keystone_Predator",
+      "from_stock": "Subordinate_Prey",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Resource_Renewal",
+      "equation": "Resource_Growth * (1 - Resource / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "Resource",
+      "position": {
+        "x": 820,
+        "y": 300
+      }
+    },
+    {
+      "id": "f8",
+      "name": "Resource_Consumption",
+      "equation": "(Dominant_Prey * Consumption_D + Subordinate_Prey * Consumption_S) * Resource / (K_Resource + Resource)",
+      "from_stock": "Resource",
+      "to_stock": null,
+      "position": {
+        "x": 940,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Growth_Dom",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Growth_Sub",
+      "equation": "0.3",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Consumption_Dom",
+      "equation": "0.1 * Dominant_Prey / (50 + Dominant_Prey)",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Consumption_Sub",
+      "equation": "0.05 * Subordinate_Prey / (50 + Subordinate_Prey)",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Conversion_Efficiency",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Predator_Mortality",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "K_Resource",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Resource_Growth",
+      "equation": "100",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Carrying_Capacity",
+      "equation": "500",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Consumption_D",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Consumption_S",
+      "equation": "0.08",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Species_Diversity",
+      "equation": "IF Dominant_Prey > 1 AND Subordinate_Prey > 1 THEN 2 ELSE 1",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1086/282498",
+  "reference": "Paine, R.T. (1969). A Note on Trophic Complexity and Community Stability. American Naturalist, 103(929), 91-93.",
+  "created_at": "2026-01-15T19:54:27.819554+00:00",
+  "updated_at": "2026-01-15T19:54:27.819554+00:00"
+}

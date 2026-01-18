@@ -1,0 +1,228 @@
+{
+  "id": "covid19-vaccine-distribution-priority-epi",
+  "name": "COVID-19 Vaccine Distribution with Priority Groups",
+  "description": "Models vaccine rollout with age-based priority groups. Based on Bubar et al. (2021) Science. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "category": "epidemiology",
+  "stocks": [
+    {
+      "id": "stock-unvax-elderly",
+      "name": "Unvaccinated_Elderly",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-unvax-adult",
+      "name": "Unvaccinated_Adult",
+      "initial_value": 600000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-unvax-young",
+      "name": "Unvaccinated_Young",
+      "initial_value": 350000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-vax-elderly",
+      "name": "Vaccinated_Elderly",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-vax-adult",
+      "name": "Vaccinated_Adult",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-vax-young",
+      "name": "Vaccinated_Young",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-supply",
+      "name": "Vaccine_Supply",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-vax-elder",
+      "name": "Vaccinate_Elderly",
+      "equation": "MIN(Unvaccinated_Elderly, Vaccine_Supply * Elderly_Priority / Total_Priority) * Uptake_Elderly",
+      "from_stock": "stock-unvax-elderly",
+      "to_stock": "stock-vax-elderly",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-vax-adult",
+      "name": "Vaccinate_Adult",
+      "equation": "MIN(Unvaccinated_Adult, Vaccine_Supply * Adult_Priority / Total_Priority) * Uptake_Adult",
+      "from_stock": "stock-unvax-adult",
+      "to_stock": "stock-vax-adult",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-vax-young",
+      "name": "Vaccinate_Young",
+      "equation": "MIN(Unvaccinated_Young, Vaccine_Supply * Young_Priority / Total_Priority) * Uptake_Young",
+      "from_stock": "stock-unvax-young",
+      "to_stock": "stock-vax-young",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-supply-in",
+      "name": "Supply_Arrival",
+      "equation": "Daily_Production * Production_Ramp",
+      "from_stock": null,
+      "to_stock": "stock-supply",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "flow-supply-out",
+      "name": "Supply_Used",
+      "equation": "Vaccinate_Elderly + Vaccinate_Adult + Vaccinate_Young",
+      "from_stock": "stock-supply",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-elder-pri",
+      "name": "Elderly_Priority",
+      "equation": "IF(Unvaccinated_Elderly > 5000, 3, 0)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-adult-pri",
+      "name": "Adult_Priority",
+      "equation": "IF(Unvaccinated_Elderly < 10000, 2, 0.5)",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-young-pri",
+      "name": "Young_Priority",
+      "equation": "IF(Unvaccinated_Adult < 100000, 1, 0.2)",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-pri",
+      "name": "Total_Priority",
+      "equation": "Elderly_Priority + Adult_Priority + Young_Priority + 0.001",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-uptake-e",
+      "name": "Uptake_Elderly",
+      "equation": "0.85",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-uptake-a",
+      "name": "Uptake_Adult",
+      "equation": "0.75",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-uptake-y",
+      "name": "Uptake_Young",
+      "equation": "0.65",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-daily-prod",
+      "name": "Daily_Production",
+      "equation": "5000",
+      "position": {
+        "x": 100,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-ramp",
+      "name": "Production_Ramp",
+      "equation": "MIN(1, TIME / 30)",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1126/science.abe6959",
+  "reference": "Bubar KM et al. (2021) Model-informed COVID-19 vaccine prioritization strategies by age and serostatus. Science 371(6532):916-921.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:32:44.851842+00:00",
+  "updated_at": "2026-01-12T06:32:44.851842+00:00"
+}

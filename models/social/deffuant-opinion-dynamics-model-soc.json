@@ -1,0 +1,153 @@
+{
+  "id": "deffuant-opinion-dynamics-model-soc",
+  "name": "Deffuant Opinion Dynamics Model",
+  "description": "Models how opinions evolve through pairwise interactions with bounded confidence. People only adjust their opinions when interacting with others whose views are sufficiently close. This leads to clustering - society fragments into distinct opinion groups rather than converging to consensus. Used to study polarization, echo chambers, and consensus formation. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-mean-opinion",
+      "name": "Mean Opinion",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-opinion-variance",
+      "name": "Opinion Variance",
+      "initial_value": 0.083,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-effective-groups",
+      "name": "Effective Groups",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-variance-reduction",
+      "name": "Variance Reduction",
+      "equation": "Convergence_Rate * Opinion_Variance * Interaction_Probability",
+      "from_stock": "stock-opinion-variance",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-group-formation",
+      "name": "Group Formation",
+      "equation": "IF Opinion_Variance / Confidence_Threshold^2 > Effective_Groups THEN 0.01 ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-effective-groups",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-confidence-threshold",
+      "name": "Confidence Threshold",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-convergence-rate",
+      "name": "Convergence Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-interaction-probability",
+      "name": "Interaction Probability",
+      "equation": "2 * Confidence_Threshold",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-expected-clusters",
+      "name": "Expected Clusters",
+      "equation": "CEIL(1 / (2 * Confidence_Threshold))",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-polarization-index",
+      "name": "Polarization Index",
+      "equation": "1 - 4 * Opinion_Variance",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-consensus-reached",
+      "name": "Consensus Reached",
+      "equation": "IF Opinion_Variance < 0.01 THEN 1 ELSE 0",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Opinion Variance",
+      "to_element": "Variance Reduction"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Convergence Rate",
+      "to_element": "Variance Reduction"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Interaction Probability",
+      "to_element": "Variance Reduction"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Confidence Threshold",
+      "to_element": "Interaction Probability"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Confidence Threshold",
+      "to_element": "Expected Clusters"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 1000,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.857594Z",
+  "updated_at": "2026-01-11T20:04:50.857594Z",
+  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
+  "reference": "Social Network Analysis and System Dynamics Models"
+}

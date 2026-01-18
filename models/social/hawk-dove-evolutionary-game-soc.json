@@ -1,0 +1,231 @@
+{
+  "id": "hawk-dove-evolutionary-game-soc",
+  "name": "Hawk-Dove Evolutionary Game Model",
+  "description": "Models evolutionary stable strategies in conflict scenarios. Based on Maynard Smith & Price (1973). DOI: 10.1038/246015a0",
+  "stocks": [
+    {
+      "id": "stock-hawks",
+      "name": "Hawk_Population",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-doves",
+      "name": "Dove_Population",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-resources",
+      "name": "Resource_Pool",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-hawkgrowth",
+      "name": "Hawk_Growth",
+      "equation": "Hawk_Population * Hawk_Fitness * Reproduction_Rate",
+      "from_stock": null,
+      "to_stock": "stock-hawks",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-hawkdeath",
+      "name": "Hawk_Death",
+      "equation": "Hawk_Population * (Base_Mortality + Injury_Cost * Hawk_Hawk_Encounters)",
+      "from_stock": "stock-hawks",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-dovegrowth",
+      "name": "Dove_Growth",
+      "equation": "Dove_Population * Dove_Fitness * Reproduction_Rate",
+      "from_stock": null,
+      "to_stock": "stock-doves",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-dovedeath",
+      "name": "Dove_Death",
+      "equation": "Dove_Population * Base_Mortality",
+      "from_stock": "stock-doves",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-resregen",
+      "name": "Resource_Regeneration",
+      "equation": "Resource_Growth_Rate * (Resource_Capacity - Resource_Pool) / Resource_Capacity",
+      "from_stock": null,
+      "to_stock": "stock-resources",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-consumption",
+      "name": "Resource_Consumption",
+      "equation": "(Hawk_Population + Dove_Population) * Consumption_Rate",
+      "from_stock": "stock-resources",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-hawkfreq",
+      "name": "Hawk_Frequency",
+      "equation": "Hawk_Population / (Hawk_Population + Dove_Population)",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-hawkfit",
+      "name": "Hawk_Fitness",
+      "equation": "Hawk_Frequency * (Resource_Value - Contest_Cost) / 2 + (1 - Hawk_Frequency) * Resource_Value",
+      "position": {
+        "x": 150,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-dovefit",
+      "name": "Dove_Fitness",
+      "equation": "Hawk_Frequency * 0 + (1 - Hawk_Frequency) * Resource_Value / 2",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-hhencounter",
+      "name": "Hawk_Hawk_Encounters",
+      "equation": "Hawk_Frequency",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-resvalue",
+      "name": "Resource_Value",
+      "equation": "Resource_Pool / 100",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-contcost",
+      "name": "Contest_Cost",
+      "equation": "1.5",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-injurycost",
+      "name": "Injury_Cost",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-reprodrate",
+      "name": "Reproduction_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-basemort",
+      "name": "Base_Mortality",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-resgrowth",
+      "name": "Resource_Growth_Rate",
+      "equation": "10",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-rescap",
+      "name": "Resource_Capacity",
+      "equation": "200",
+      "position": {
+        "x": 250,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-consrate",
+      "name": "Consumption_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Hawk_Population",
+      "to_element": "Hawk_Frequency"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:49:51.600160+00:00",
+  "updated_at": "2026-01-12T02:49:51.600170+00:00",
+  "source": "https://doi.org/10.1038/246015a0",
+  "reference": "Maynard Smith J, Price GR (1973). The Logic of Animal Conflict. Nature."
+}

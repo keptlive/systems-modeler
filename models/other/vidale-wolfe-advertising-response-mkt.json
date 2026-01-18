@@ -1,0 +1,105 @@
+{
+  "id": "vidale-wolfe-advertising-response-mkt",
+  "name": "Vidale-Wolfe Advertising Response",
+  "description": "Classic dynamic advertising response model with saturation effects",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Market_Share",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Advertising_Rate",
+      "equation": "10.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Response_Constant",
+      "equation": "0.1",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Decay_Constant",
+      "equation": "0.05",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Saturation_Level",
+      "equation": "1.0",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Share_Gain",
+      "equation": "Response_Constant*Advertising_Rate*(Saturation_Level-Market_Share)/Saturation_Level",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Share_Loss",
+      "equation": "Decay_Constant*Market_Share",
+      "position": {
+        "x": 300,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Advertising_Rate",
+      "to_element": "Share_Gain"
+    },
+    {
+      "id": "c2",
+      "from_element": "Market_Share",
+      "to_element": "Share_Gain"
+    },
+    {
+      "id": "c3",
+      "from_element": "Market_Share",
+      "to_element": "Share_Loss"
+    },
+    {
+      "id": "c4",
+      "from_element": "Decay_Constant",
+      "to_element": "Share_Loss"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 100.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:42:17.939456+00:00",
+  "updated_at": "2026-01-15T20:42:17.939456+00:00",
+  "source": "https://doi.org/10.1287/opre.5.3.370",
+  "reference": "Vidale, M.L. & Wolfe, H.B. (1957) An operations-research study of sales response to advertising. Oper. Res. 5:370-381"
+}

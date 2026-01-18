@@ -1,0 +1,219 @@
+{
+  "id": "education-online-learning-completion-edu",
+  "name": "Online Course Completion Dynamics",
+  "description": "Models student progression through online courses including engagement, completion, and dropout. Based on MOOC research by Reich & Ruip\u00e9rez-Valiente (2019). Reference: National Center for Education Statistics (NCES). Source: https://nces.ed.gov/",
+  "category": "education",
+  "stocks": [
+    {
+      "id": "stock-enrolled",
+      "name": "Enrolled_Students",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-active",
+      "name": "Active_Learners",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-completed",
+      "name": "Completed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-dropout",
+      "name": "Dropped_Out",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-motivation",
+      "name": "Avg_Motivation",
+      "initial_value": 0.8,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-activation",
+      "name": "Activation",
+      "equation": "Enrolled_Students * Activation_Rate",
+      "from_stock": "stock-enrolled",
+      "to_stock": "stock-active",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-completion",
+      "name": "Completion",
+      "equation": "Active_Learners * Completion_Rate * Avg_Motivation",
+      "from_stock": "stock-active",
+      "to_stock": "stock-completed",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-dropout-e",
+      "name": "Early_Dropout",
+      "equation": "Enrolled_Students * Early_Dropout_Rate",
+      "from_stock": "stock-enrolled",
+      "to_stock": "stock-dropout",
+      "position": {
+        "x": 175,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-dropout-a",
+      "name": "Active_Dropout",
+      "equation": "Active_Learners * Active_Dropout_Rate * (1 - Avg_Motivation)",
+      "from_stock": "stock-active",
+      "to_stock": "stock-dropout",
+      "position": {
+        "x": 250,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-motivation-decay",
+      "name": "Motivation_Decay",
+      "equation": "(Avg_Motivation - Base_Motivation) * Decay_Rate",
+      "from_stock": "stock-motivation",
+      "to_stock": null,
+      "position": {
+        "x": 325,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-motivation-boost",
+      "name": "Motivation_Boost",
+      "equation": "(1 - Avg_Motivation) * Engagement_Interventions * Boost_Rate",
+      "from_stock": null,
+      "to_stock": "stock-motivation",
+      "position": {
+        "x": 475,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-activation",
+      "name": "Activation_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-completion",
+      "name": "Completion_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-early-drop",
+      "name": "Early_Dropout_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-active-drop",
+      "name": "Active_Dropout_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-base-mot",
+      "name": "Base_Motivation",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-decay",
+      "name": "Decay_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-engagement",
+      "name": "Engagement_Interventions",
+      "equation": "1",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-boost",
+      "name": "Boost_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-overall-completion",
+      "name": "Overall_Completion_Rate",
+      "equation": "Completed / (Completed + Dropped_Out + 0.01)",
+      "position": {
+        "x": 550,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 16,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1126/science.aav7958",
+  "reference": "Reich J & Ruip\u00e9rez-Valiente JA (2019) The MOOC Pivot. Science.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:12:55.728605+00:00",
+  "updated_at": "2026-01-12T06:12:55.728605+00:00"
+}

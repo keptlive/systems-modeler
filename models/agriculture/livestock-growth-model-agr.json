@@ -1,0 +1,106 @@
+{
+  "id": "livestock-growth-model-agr",
+  "name": "Livestock Growth Model",
+  "description": "Animal growth as function of feed intake and efficiency",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Body_Weight",
+      "initial_value": 50.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Feed_Consumed",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Feed_Intake",
+      "equation": "5.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Feed_Conversion_Ratio",
+      "equation": "4.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Maintenance_Requirement",
+      "equation": "0.5",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Available_for_Growth",
+      "equation": "Feed_Intake-Maintenance_Requirement*Body_Weight/100",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Weight_Gain",
+      "equation": "Available_for_Growth/Feed_Conversion_Ratio",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Feed_Intake",
+      "to_element": "Available_for_Growth"
+    },
+    {
+      "id": "c2",
+      "from_element": "Body_Weight",
+      "to_element": "Available_for_Growth"
+    },
+    {
+      "id": "c3",
+      "from_element": "Available_for_Growth",
+      "to_element": "Weight_Gain"
+    },
+    {
+      "id": "c4",
+      "from_element": "Feed_Conversion_Ratio",
+      "to_element": "Weight_Gain"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 365.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:51:57.248922+00:00",
+  "updated_at": "2026-01-15T20:51:57.248922+00:00",
+  "source": "https://doi.org/10.2527/jas2009-2001",
+  "reference": "National Research Council (2000) Nutrient Requirements of Beef Cattle. National Academies Press"
+}

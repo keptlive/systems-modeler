@@ -1,0 +1,115 @@
+{
+  "id": "water-use-efficiency-agr",
+  "name": "Water Use Efficiency Model",
+  "description": "Crop water consumption and yield relationship",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Soil_Water",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Crop_Yield",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Precipitation",
+      "equation": "5.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "ET_Potential",
+      "equation": "6.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "WUE",
+      "equation": "15.0",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Soil_Water_Fraction",
+      "equation": "Soil_Water/200",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Actual_ET",
+      "equation": "ET_Potential*Soil_Water_Fraction",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Yield_Increase",
+      "equation": "WUE*Actual_ET",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Soil_Water",
+      "to_element": "Soil_Water_Fraction"
+    },
+    {
+      "id": "c2",
+      "from_element": "Soil_Water_Fraction",
+      "to_element": "Actual_ET"
+    },
+    {
+      "id": "c3",
+      "from_element": "ET_Potential",
+      "to_element": "Actual_ET"
+    },
+    {
+      "id": "c4",
+      "from_element": "Actual_ET",
+      "to_element": "Yield_Increase"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 365.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T20:51:57.246528+00:00",
+  "updated_at": "2026-01-15T20:51:57.246528+00:00",
+  "source": "https://doi.org/10.1016/j.agwat.2008.08.007",
+  "reference": "Sinclair, T.R. et al. (1984) Water-use efficiency in crop production. BioScience 34:36-40"
+}

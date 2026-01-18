@@ -1,0 +1,222 @@
+{
+  "id": "air-quality-health-cli",
+  "name": "Air Quality and Public Health",
+  "description": "Model of air pollution levels and health impacts. Captures emission sources, atmospheric dispersion, and dose-response relationships. Based on environmental epidemiology and air quality management research. Reference: WHO (2021). Air Quality Guidelines. Source: https://www.who.int/publications/i/item/9789240034228",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "PM25_Concentration",
+      "initial_value": 25,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Ozone_Concentration",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Health_Burden",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Emission_Control_Level",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "PM25_Change",
+      "equation": "(Equilibrium_PM25 - PM25_Concentration) / Atmospheric_Residence",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Ozone_Change",
+      "equation": "(Equilibrium_Ozone - Ozone_Concentration) / Ozone_Lifetime",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Health_Impact_Change",
+      "equation": "(PM25_Health_Impact + Ozone_Health_Impact - Health_Burden) / Health_Lag",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Control_Improvement",
+      "equation": "(Target_Control - Emission_Control_Level) / Policy_Implementation_Time",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 250,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Base_Emissions",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Atmospheric_Residence",
+      "equation": "5",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Ozone_Lifetime",
+      "equation": "3",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Health_Lag",
+      "equation": "30",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Equilibrium_PM25",
+      "equation": "Base_Emissions * (1 - Emission_Control_Level) * 0.5",
+      "position": {
+        "x": 150,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Equilibrium_Ozone",
+      "equation": "30 + (1 - Emission_Control_Level) * 20",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "PM25_Health_Impact",
+      "equation": "Population * (PM25_Concentration - 10) * PM25_Risk_Factor",
+      "position": {
+        "x": 150,
+        "y": 180
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Ozone_Health_Impact",
+      "equation": "Population * MAX(0, Ozone_Concentration - 35) * Ozone_Risk_Factor",
+      "position": {
+        "x": 450,
+        "y": 180
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Population",
+      "equation": "1000000",
+      "position": {
+        "x": 100,
+        "y": 230
+      }
+    },
+    {
+      "id": "v10",
+      "name": "PM25_Risk_Factor",
+      "equation": "0.0001",
+      "position": {
+        "x": 250,
+        "y": 230
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Ozone_Risk_Factor",
+      "equation": "0.00005",
+      "position": {
+        "x": 400,
+        "y": 230
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Target_Control",
+      "equation": "0.7",
+      "position": {
+        "x": 550,
+        "y": 230
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Policy_Implementation_Time",
+      "equation": "10",
+      "position": {
+        "x": 300,
+        "y": 280
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2060,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1016/S0140-6736(17)30505-6",
+  "reference": "Landrigan PJ et al. (2018) The Lancet Commission on pollution and health. Lancet.",
+  "created_at": "2026-01-12T07:04:13.444157+00:00",
+  "updated_at": "2026-01-12T07:04:13.444157+00:00"
+}

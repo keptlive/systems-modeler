@@ -1,0 +1,167 @@
+{
+  "id": "ostrom-commons-governance-soc",
+  "name": "Ostrom Commons Governance Model",
+  "description": "Elinor Ostrom's Nobel Prize model of common pool resource governance. Reference: Ostrom, E. (1990). Governing the Commons.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Common_Resource",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Institutional_Strength",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Compliance",
+      "initial_value": 0.8,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Resource_Regeneration",
+      "equation": "Common_Resource * Regeneration_Rate * (1 - Common_Resource / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "Common_Resource",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Harvesting",
+      "equation": "Common_Resource * Harvest_Rate * (1 - Compliance * Institutional_Strength / 100)",
+      "from_stock": "Common_Resource",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Institution_Building",
+      "equation": "Compliance * Investment_Rate - Institutional_Strength * Erosion_Rate",
+      "from_stock": null,
+      "to_stock": "Institutional_Strength",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Compliance_Change",
+      "equation": "(Institutional_Strength / 100 - Compliance) * Adjustment_Rate + Peer_Pressure",
+      "from_stock": null,
+      "to_stock": "Compliance",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Regeneration_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Carrying_Capacity",
+      "equation": "2000",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Harvest_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Investment_Rate",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Erosion_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Adjustment_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Peer_Pressure",
+      "equation": "(Compliance - 0.5) * 0.05",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Sustainability_Index",
+      "equation": "Common_Resource / Carrying_Capacity * Compliance",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1017/CBO9780511807763",
+  "reference": "Ostrom, E. (1990). Governing the Commons: The Evolution of Institutions for Collective Action. Cambridge University Press.",
+  "created_at": "2026-01-15T20:00:17.841627+00:00",
+  "updated_at": "2026-01-15T20:00:17.841627+00:00"
+}

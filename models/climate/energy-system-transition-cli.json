@@ -1,0 +1,222 @@
+{
+  "id": "energy-system-transition-cli",
+  "name": "Energy System Transition",
+  "description": "Energy system transition model showing competition between fossil and renewable energy sources. Models learning curves, capacity investment, and grid integration. Source: Based on Grubler et al. (2018), Nature Energy. DOI: 10.1038/s41560-018-0172-6",
+  "stocks": [
+    {
+      "id": "stock-fossil-capacity",
+      "name": "Fossil_Capacity",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-renewable-capacity",
+      "name": "Renewable_Capacity",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-cumulative-renewable",
+      "name": "Cumulative_Renewable_Production",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-fossil-investment",
+      "name": "Fossil_Investment",
+      "equation": "MAX(0, (Energy_Demand - Total_Capacity) * Fossil_Share / Construction_Time)",
+      "from_stock": null,
+      "to_stock": "stock-fossil-capacity",
+      "position": {
+        "x": 75,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-fossil-retirement",
+      "name": "Fossil_Retirement",
+      "equation": "Fossil_Capacity / Fossil_Lifetime",
+      "from_stock": "stock-fossil-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 225,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-renewable-investment",
+      "name": "Renewable_Investment",
+      "equation": "MAX(0, (Energy_Demand - Total_Capacity) * (1 - Fossil_Share) / Construction_Time) + Policy_Support",
+      "from_stock": null,
+      "to_stock": "stock-renewable-capacity",
+      "position": {
+        "x": 375,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-renewable-retirement",
+      "name": "Renewable_Retirement",
+      "equation": "Renewable_Capacity / Renewable_Lifetime",
+      "from_stock": "stock-renewable-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 525,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-renewable-production",
+      "name": "Renewable_Production",
+      "equation": "Renewable_Capacity * Capacity_Factor",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-renewable",
+      "position": {
+        "x": 375,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-energy-demand",
+      "name": "Energy_Demand",
+      "equation": "6000",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-capacity",
+      "name": "Total_Capacity",
+      "equation": "Fossil_Capacity + Renewable_Capacity",
+      "position": {
+        "x": 300,
+        "y": 230
+      }
+    },
+    {
+      "id": "var-fossil-cost",
+      "name": "Fossil_Cost",
+      "equation": "60",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-renewable-cost",
+      "name": "Renewable_Cost",
+      "equation": "100 * (Cumulative_Renewable_Production / 1000) ^ (-0.3)",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fossil-share",
+      "name": "Fossil_Share",
+      "equation": "1 / (1 + (Renewable_Cost / Fossil_Cost) ^ (-3))",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-fossil-lifetime",
+      "name": "Fossil_Lifetime",
+      "equation": "40",
+      "position": {
+        "x": 150,
+        "y": 230
+      }
+    },
+    {
+      "id": "var-renewable-lifetime",
+      "name": "Renewable_Lifetime",
+      "equation": "25",
+      "position": {
+        "x": 450,
+        "y": 230
+      }
+    },
+    {
+      "id": "var-construction-time",
+      "name": "Construction_Time",
+      "equation": "3",
+      "position": {
+        "x": 300,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-policy-support",
+      "name": "Policy_Support",
+      "equation": "100",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-capacity-factor",
+      "name": "Capacity_Factor",
+      "equation": "0.25",
+      "position": {
+        "x": 550,
+        "y": 380
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Fossil_Capacity",
+      "to_element": "Total_Capacity"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Renewable_Capacity",
+      "to_element": "Total_Capacity"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Cumulative_Renewable_Production",
+      "to_element": "Renewable_Cost"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Fossil_Cost",
+      "to_element": "Fossil_Share"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Renewable_Cost",
+      "to_element": "Fossil_Share"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:47:58.495537Z",
+  "updated_at": "2026-01-11T20:47:58.495537Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

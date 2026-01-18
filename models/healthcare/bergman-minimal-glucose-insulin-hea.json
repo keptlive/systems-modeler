@@ -1,0 +1,171 @@
+{
+  "id": "bergman-minimal-glucose-insulin-hea",
+  "name": "Bergman Minimal Model of Glucose-Insulin",
+  "description": "Minimal model for glucose tolerance test analysis, widely used in diabetes research. Source: Bergman et al. (1979), Am J Physiol.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Glucose",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Insulin_Remote",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Insulin_Plasma",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Glucose_Dynamics",
+      "equation": "-(p1 + Insulin_Remote) * Glucose + p1 * Gb",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Insulin_Remote_Dynamics",
+      "equation": "-p2 * Insulin_Remote + p3 * (Insulin_Plasma - Ib)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Insulin_Plasma_Dynamics",
+      "equation": "-n * (Insulin_Plasma - Ib) + gamma * MAX(0, Glucose - h) * TIME",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "p1",
+      "equation": "0.028",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "p2",
+      "equation": "0.025",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "p3",
+      "equation": "0.00013",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "n",
+      "equation": "0.26",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "gamma",
+      "equation": "0.004",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Gb",
+      "equation": "90",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Ib",
+      "equation": "10",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "h",
+      "equation": "100",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Insulin_Sensitivity",
+      "equation": "p3 / p2",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Insulin_Remote",
+      "to_element": "Glucose_Dynamics"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 240,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:39:40.986608+00:00",
+  "updated_at": "2026-01-15T14:39:40.986611+00:00",
+  "source": "https://doi.org/10.1152/ajpendo.1979.236.6.E667",
+  "reference": "Bergman, R.N. et al. (1979). Quantitative estimation of insulin sensitivity. Am J Physiol 236:E667-677."
+}

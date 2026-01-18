@@ -1,0 +1,238 @@
+{
+  "id": "dengue-vector-borne-transmission-epi",
+  "name": "Dengue Fever Vector-Borne Transmission Model",
+  "description": "Ross-Macdonald style model of dengue transmission between humans and Aedes mosquitoes with climate dependence. Based on WHO dengue epidemiology. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Susceptible Humans",
+      "initial_value": 999000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Infected Humans",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Recovered Humans",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Susceptible Mosquitoes",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Infected Mosquitoes",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Human Infection",
+      "equation": "Susceptible_Humans * Human_Infection_Rate * Infected_Mosquitoes / Total_Mosquitoes",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Human Recovery",
+      "equation": "Infected_Humans / Infectious_Period",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Mosquito Birth",
+      "equation": "Mosquito_Birth_Rate * Total_Mosquitoes * Temperature_Effect",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Mosquito Infection",
+      "equation": "Susceptible_Mosquitoes * Mosquito_Infection_Rate * Infected_Humans / Total_Humans",
+      "from_stock": "s4",
+      "to_stock": "s5",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Susceptible Mosquito Death",
+      "equation": "Susceptible_Mosquitoes * Mosquito_Death_Rate",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Infected Mosquito Death",
+      "equation": "Infected_Mosquitoes * Mosquito_Death_Rate",
+      "from_stock": "s5",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Human Infection Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Infectious Period",
+      "equation": "7",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Mosquito Birth Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Mosquito Death Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Mosquito Infection Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Temperature Effect",
+      "equation": "1 + 0.5 * SIN(TIME * 3.14159 / 180)",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Total Humans",
+      "equation": "Susceptible_Humans + Infected_Humans + Recovered_Humans",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Total Mosquitoes",
+      "equation": "Susceptible_Mosquitoes + Infected_Mosquitoes",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "v9",
+      "name": "R0 Estimate",
+      "equation": "SQRT(Human_Infection_Rate * Mosquito_Infection_Rate / (Mosquito_Death_Rate * (1/Infectious_Period)))",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Attack Rate",
+      "equation": "Infected_Humans / Total_Humans",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Infected Mosquitoes",
+      "to_element": "Human Infection"
+    },
+    {
+      "id": "c2",
+      "from_element": "Infected Humans",
+      "to_element": "Mosquito Infection"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:20:13.047118",
+  "updated_at": "2026-01-15T14:20:13.047627",
+  "source": "https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue",
+  "reference": "WHO. Dengue and severe dengue fact sheet. World Health Organization. 2023."
+}

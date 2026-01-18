@@ -1,0 +1,2107 @@
+{
+  "id": "query-file",
+  "name": "Query File",
+  "description": "Model from Query_file.mdl",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "IncomeDue",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "RevenueDue",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "CumAwarenessMarketingCost",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "CumResearchRelatedCost",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "s5",
+      "name": "TotalEnergyConsumption",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "s6",
+      "name": "CumIncome",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "s7",
+      "name": "CumSalesRelatedCost",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 500
+      }
+    },
+    {
+      "id": "s8",
+      "name": "CumExpense",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 500
+      }
+    },
+    {
+      "id": "s9",
+      "name": "CumulativeOrder",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 500
+      }
+    },
+    {
+      "id": "s10",
+      "name": "BalanceFunds",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 650
+      }
+    },
+    {
+      "id": "s11",
+      "name": "Revenue",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 650
+      }
+    },
+    {
+      "id": "s12",
+      "name": "WorkingProductsInHouseholds",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 650
+      }
+    },
+    {
+      "id": "s13",
+      "name": "StockAtRetailers",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 800
+      }
+    },
+    {
+      "id": "s14",
+      "name": "StockAtJwires",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 800
+      }
+    },
+    {
+      "id": "s15",
+      "name": "OrdersInPipeline",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 800
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "EnergyConsumptionRate",
+      "equation": "kWhPerStovePerDay*WorkingProductsInHouseholds",
+      "from_stock": null,
+      "to_stock": "TotalEnergyConsumption",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "OrderRate",
+      "equation": "Orders",
+      "from_stock": null,
+      "to_stock": "CumulativeOrder",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "MECSGrantRate",
+      "equation": "PULSE(1,1)*2.92162e+06 + PULSE(1,1)*5 + PULSE(2*30,1)*2.75625e+06 + PULSE(4*30,1)*2.75625e+06",
+      "from_stock": null,
+      "to_stock": "CumIncome",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "DispatchRate",
+      "equation": "MIN(RetailersStockDiscrepancy/LT2,StockAtJwires/Minimum_Leadtime)",
+      "from_stock": "StockAtJwires",
+      "to_stock": "StockAtRetailers",
+      "position": {
+        "x": 300,
+        "y": 320
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "UnitConversionFactor",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "IncomeDelay",
+      "equation": "0.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "JwiresIncome",
+      "equation": "DELAY FIXED(RetailerIncome, IncomeDelay , 0 )",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "RetailerIncome",
+      "equation": "Downpayment",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "GST_Expenses",
+      "equation": "(GSTReceived-GSTPaid)*Sales",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "I2",
+      "equation": "(SalesPricePerStove+GSTReceived)*Sales*I2Fraction*(1-I2Default)",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "GSTReceived",
+      "equation": "SalesPricePerStove*GSTpercent",
+      "position": {
+        "x": 230,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "I1",
+      "equation": "(SalesPricePerStove+GSTReceived)*Sales*I1Fraction*(1-I1Default)",
+      "position": {
+        "x": 360,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "GSTPaid",
+      "equation": "AppliedCost*GSTpercent",
+      "position": {
+        "x": 490,
+        "y": 130
+      }
+    },
+    {
+      "id": "v10",
+      "name": "GSTpercent",
+      "equation": "0.0",
+      "position": {
+        "x": 620,
+        "y": 130
+      }
+    },
+    {
+      "id": "v11",
+      "name": "ParamResearchRC",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 210
+      }
+    },
+    {
+      "id": "v12",
+      "name": "NumberOfPersonForRandM",
+      "equation": "2.0",
+      "position": {
+        "x": 230,
+        "y": 210
+      }
+    },
+    {
+      "id": "v13",
+      "name": "AwarenessMarketingCost",
+      "equation": "(Banners +Pamphlets +VideosAndPR)/DebitDay +LocalNewsChannel+LocalNewspaper",
+      "position": {
+        "x": 360,
+        "y": 210
+      }
+    },
+    {
+      "id": "v14",
+      "name": "RetailerSalary",
+      "equation": "PULSE(0, FreqRetailer )*Retailers*RsPerDayPerRetailer",
+      "position": {
+        "x": 490,
+        "y": 210
+      }
+    },
+    {
+      "id": "v15",
+      "name": "CCCsalary",
+      "equation": "PULSE(0, FreqCCC )*CCCs*RsPerDayPerCCC",
+      "position": {
+        "x": 620,
+        "y": 210
+      }
+    },
+    {
+      "id": "v16",
+      "name": "Channel",
+      "equation": "3.0",
+      "position": {
+        "x": 100,
+        "y": 290
+      }
+    },
+    {
+      "id": "v17",
+      "name": "RsPerDayPerRetailer",
+      "equation": "1000/30",
+      "position": {
+        "x": 230,
+        "y": 290
+      }
+    },
+    {
+      "id": "v18",
+      "name": "FreqRetailer",
+      "equation": "9*30",
+      "position": {
+        "x": 360,
+        "y": 290
+      }
+    },
+    {
+      "id": "v19",
+      "name": "Newspaper",
+      "equation": "3.0",
+      "position": {
+        "x": 490,
+        "y": 290
+      }
+    },
+    {
+      "id": "v20",
+      "name": "EquipmentsCost",
+      "equation": "PULSE(21+1,1)*(Qty_laptops*PricePerLaptop+QtyTab*PricePerTablet)/DebitDay",
+      "position": {
+        "x": 620,
+        "y": 290
+      }
+    },
+    {
+      "id": "v21",
+      "name": "FreqRetailersAndCCC",
+      "equation": "2.0",
+      "position": {
+        "x": 100,
+        "y": 370
+      }
+    },
+    {
+      "id": "v22",
+      "name": "FreqCCC",
+      "equation": "9*30",
+      "position": {
+        "x": 230,
+        "y": 370
+      }
+    },
+    {
+      "id": "v23",
+      "name": "FreqNews",
+      "equation": "10*30",
+      "position": {
+        "x": 360,
+        "y": 370
+      }
+    },
+    {
+      "id": "v24",
+      "name": "FreqNewspaper",
+      "equation": "5*30",
+      "position": {
+        "x": 490,
+        "y": 370
+      }
+    },
+    {
+      "id": "v25",
+      "name": "RandMRetailersCost",
+      "equation": "NumberOfPersonForRandM*RsPerTrainingRandMReatilers",
+      "position": {
+        "x": 620,
+        "y": 370
+      }
+    },
+    {
+      "id": "v26",
+      "name": "RsPerDayPerCCC",
+      "equation": "2000/30",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "v27",
+      "name": "Retailers",
+      "equation": "TotalShops*RetailerPerShop",
+      "position": {
+        "x": 230,
+        "y": 450
+      }
+    },
+    {
+      "id": "v28",
+      "name": "RsPerTrainingRandMReatilers",
+      "equation": "10000.0",
+      "position": {
+        "x": 360,
+        "y": 450
+      }
+    },
+    {
+      "id": "v29",
+      "name": "RetailersCCCTrainingCost",
+      "equation": "FreqRetailersAndCCC*RsPerTrainingRetailerCCC",
+      "position": {
+        "x": 490,
+        "y": 450
+      }
+    },
+    {
+      "id": "v30",
+      "name": "RsPerDayPerChannel",
+      "equation": "2000/30",
+      "position": {
+        "x": 620,
+        "y": 450
+      }
+    },
+    {
+      "id": "v31",
+      "name": "RsPerDayPerNewspaper",
+      "equation": "5000/30",
+      "position": {
+        "x": 100,
+        "y": 530
+      }
+    },
+    {
+      "id": "v32",
+      "name": "LocalNewspaper",
+      "equation": "PULSE(0, FreqNewspaper )*RsPerDayPerNewspaper*Newspaper",
+      "position": {
+        "x": 230,
+        "y": 530
+      }
+    },
+    {
+      "id": "v33",
+      "name": "RsPerTrainingRetailerCCC",
+      "equation": "25000.0",
+      "position": {
+        "x": 360,
+        "y": 530
+      }
+    },
+    {
+      "id": "v34",
+      "name": "ResearchRelatedCost",
+      "equation": "UserAdoptionCompensation+RetailerSalary+CCCsalary",
+      "position": {
+        "x": 490,
+        "y": 530
+      }
+    },
+    {
+      "id": "v35",
+      "name": "LocalNewsChannel",
+      "equation": "PULSE(0, FreqNews )*RsPerDayPerChannel*Channel",
+      "position": {
+        "x": 620,
+        "y": 530
+      }
+    },
+    {
+      "id": "v36",
+      "name": "Pamphlets",
+      "equation": "PULSE(14+1,1 )*QtyPamphlet*RsPerPamphlet",
+      "position": {
+        "x": 100,
+        "y": 610
+      }
+    },
+    {
+      "id": "v37",
+      "name": "Banners",
+      "equation": "PULSE(14+1,1 )*QtyBanners*RsPerbanner",
+      "position": {
+        "x": 230,
+        "y": 610
+      }
+    },
+    {
+      "id": "v38",
+      "name": "DebitDay",
+      "equation": "1.0",
+      "position": {
+        "x": 360,
+        "y": 610
+      }
+    },
+    {
+      "id": "v39",
+      "name": "PrintingStationaryCost",
+      "equation": "PULSE(7+1,1)*50000",
+      "position": {
+        "x": 490,
+        "y": 610
+      }
+    },
+    {
+      "id": "v40",
+      "name": "RsPerbanner",
+      "equation": "800.0",
+      "position": {
+        "x": 620,
+        "y": 610
+      }
+    },
+    {
+      "id": "v41",
+      "name": "Qty_laptops",
+      "equation": "5.0",
+      "position": {
+        "x": 100,
+        "y": 690
+      }
+    },
+    {
+      "id": "v42",
+      "name": "QtyTab",
+      "equation": "0.0",
+      "position": {
+        "x": 230,
+        "y": 690
+      }
+    },
+    {
+      "id": "v43",
+      "name": "QtyBanners",
+      "equation": "40.0",
+      "position": {
+        "x": 360,
+        "y": 690
+      }
+    },
+    {
+      "id": "v44",
+      "name": "QtyPamphlet",
+      "equation": "100000.0",
+      "position": {
+        "x": 490,
+        "y": 690
+      }
+    },
+    {
+      "id": "v45",
+      "name": "VideosAndPR",
+      "equation": "PULSE(14+1,1 )*50000",
+      "position": {
+        "x": 620,
+        "y": 690
+      }
+    },
+    {
+      "id": "v46",
+      "name": "PricePerLaptop",
+      "equation": "40000.0",
+      "position": {
+        "x": 100,
+        "y": 770
+      }
+    },
+    {
+      "id": "v47",
+      "name": "PricePerTablet",
+      "equation": "5000.0",
+      "position": {
+        "x": 230,
+        "y": 770
+      }
+    },
+    {
+      "id": "v48",
+      "name": "RsPerPamphlet",
+      "equation": "0.5",
+      "position": {
+        "x": 360,
+        "y": 770
+      }
+    },
+    {
+      "id": "v49",
+      "name": "ProfessionalECookingCost",
+      "equation": "75000.0",
+      "position": {
+        "x": 490,
+        "y": 770
+      }
+    },
+    {
+      "id": "v50",
+      "name": "TOTForFO",
+      "equation": "15000.0",
+      "position": {
+        "x": 620,
+        "y": 770
+      }
+    },
+    {
+      "id": "v51",
+      "name": "ProjectLeadCostPerMonth",
+      "equation": "ProjectLead*RsPerMonthPerProjectLead",
+      "position": {
+        "x": 100,
+        "y": 850
+      }
+    },
+    {
+      "id": "v52",
+      "name": "ProjectLead",
+      "equation": "1.0",
+      "position": {
+        "x": 230,
+        "y": 850
+      }
+    },
+    {
+      "id": "v53",
+      "name": "RsPerMonthPerProjectLead",
+      "equation": "3750*30",
+      "position": {
+        "x": 360,
+        "y": 850
+      }
+    },
+    {
+      "id": "v54",
+      "name": "I2Default",
+      "equation": "0/100",
+      "position": {
+        "x": 490,
+        "y": 850
+      }
+    },
+    {
+      "id": "v55",
+      "name": "DownpaymentFraction",
+      "equation": "100/100",
+      "position": {
+        "x": 620,
+        "y": 850
+      }
+    },
+    {
+      "id": "v56",
+      "name": "I2Duration",
+      "equation": "60.0",
+      "position": {
+        "x": 100,
+        "y": 930
+      }
+    },
+    {
+      "id": "v57",
+      "name": "I1Default",
+      "equation": "0/100",
+      "position": {
+        "x": 230,
+        "y": 930
+      }
+    },
+    {
+      "id": "v58",
+      "name": "I1Due",
+      "equation": "DELAY FIXED(I1, I1Duration , 0)",
+      "position": {
+        "x": 360,
+        "y": 930
+      }
+    },
+    {
+      "id": "v59",
+      "name": "I1Duration",
+      "equation": "30.0",
+      "position": {
+        "x": 490,
+        "y": 930
+      }
+    },
+    {
+      "id": "v60",
+      "name": "I1Fraction",
+      "equation": "0/100",
+      "position": {
+        "x": 620,
+        "y": 930
+      }
+    },
+    {
+      "id": "v61",
+      "name": "I2Due",
+      "equation": "DELAY FIXED(I2, I2Duration , 0 )",
+      "position": {
+        "x": 100,
+        "y": 1010
+      }
+    },
+    {
+      "id": "v62",
+      "name": "I2Fraction",
+      "equation": "0/100",
+      "position": {
+        "x": 230,
+        "y": 1010
+      }
+    },
+    {
+      "id": "v63",
+      "name": "AddnGrant",
+      "equation": "(PULSE(1,1)*9.422*1e+06 + PULSE(1,1)*340)",
+      "position": {
+        "x": 360,
+        "y": 1010
+      }
+    },
+    {
+      "id": "v64",
+      "name": "ParamFC",
+      "equation": "1.0",
+      "position": {
+        "x": 490,
+        "y": 1010
+      }
+    },
+    {
+      "id": "v65",
+      "name": "ParamSetupC",
+      "equation": "1.0",
+      "position": {
+        "x": 620,
+        "y": 1010
+      }
+    },
+    {
+      "id": "v66",
+      "name": "FixedCost",
+      "equation": "(PULSE TRAIN(30, 1 , 30, 571 )*(TotalManpowerMonthlyCost)/DebitDayPerMonth)",
+      "position": {
+        "x": 100,
+        "y": 1090
+      }
+    },
+    {
+      "id": "v67",
+      "name": "InitialSetupCost",
+      "equation": "PrintingStationaryCost +TrainingCost + EquipmentsCost +AwarenessMarketingCost",
+      "position": {
+        "x": 230,
+        "y": 1090
+      }
+    },
+    {
+      "id": "v68",
+      "name": "JwiresMargin",
+      "equation": "521.0",
+      "position": {
+        "x": 360,
+        "y": 1090
+      }
+    },
+    {
+      "id": "v69",
+      "name": "SalesPricePerStove",
+      "equation": "4271.0",
+      "position": {
+        "x": 490,
+        "y": 1090
+      }
+    },
+    {
+      "id": "v70",
+      "name": "AppliedCost",
+      "equation": "IF THEN ELSE(CumulativeOrder>=OrderQtyWithIoT, CostPriceWithOutIoT , CostPriceISwithIoT\\ )",
+      "position": {
+        "x": 620,
+        "y": 1090
+      }
+    },
+    {
+      "id": "v71",
+      "name": "OrderQtyWithIoT",
+      "equation": "1530.0",
+      "position": {
+        "x": 100,
+        "y": 1170
+      }
+    },
+    {
+      "id": "v72",
+      "name": "CostPriceWithOutIoT",
+      "equation": "3412.5",
+      "position": {
+        "x": 230,
+        "y": 1170
+      }
+    },
+    {
+      "id": "v73",
+      "name": "IoTCost",
+      "equation": "2100.0",
+      "position": {
+        "x": 360,
+        "y": 1170
+      }
+    },
+    {
+      "id": "v74",
+      "name": "UserAdoptionCompensation",
+      "equation": "PULSE(270+1,1)*NoOfStoves*RsPerStove/DebitDay",
+      "position": {
+        "x": 490,
+        "y": 1170
+      }
+    },
+    {
+      "id": "v75",
+      "name": "JWIRESStaff",
+      "equation": "Accountants + Storekeeper + ProjectManager + NumberOfFOs + ProjectLead",
+      "position": {
+        "x": 620,
+        "y": 1170
+      }
+    },
+    {
+      "id": "v76",
+      "name": "RetailerPerShop",
+      "equation": "1.0",
+      "position": {
+        "x": 100,
+        "y": 1250
+      }
+    },
+    {
+      "id": "v77",
+      "name": "NoOfStoves",
+      "equation": "1500.0",
+      "position": {
+        "x": 230,
+        "y": 1250
+      }
+    },
+    {
+      "id": "v78",
+      "name": "RsPerStove",
+      "equation": "750.0",
+      "position": {
+        "x": 360,
+        "y": 1250
+      }
+    },
+    {
+      "id": "v79",
+      "name": "kWhPerStovePerDay",
+      "equation": "RANDOM UNIFORM( 0.23 , 0.53 , 1 )",
+      "position": {
+        "x": 490,
+        "y": 1250
+      }
+    },
+    {
+      "id": "v80",
+      "name": "OrderPattern",
+      "equation": "WITH LOOKUP ( Time/UnitConversionFactor, ([(0,0)-(575,800)],(0,0),(1,530),(2,0),(60,0),(61,500),(62,0),(120,0),(121,500),(\\ 122,0),(210,0),(211,500),(212,0),(270 ,0),(271,500),(272,0),(330,0),(331,500),(332,0),(390,0),(391,700),(392,0),(450,0),(\\ 451,700),(452,0),(480,0),(481,800),(482 ,0),(510,0),(511,800),(512,0),(540,0),(541,800),(542,0),(575,0) ))",
+      "position": {
+        "x": 620,
+        "y": 1250
+      }
+    },
+    {
+      "id": "v81",
+      "name": "Expenses",
+      "equation": "Order_Cost + SalesRelatedCost +InitialSetupCost*ParamSetupC + FixedCost*ParamFC+ ResearchRelatedCost *ParamResearchRC + GST_Expenses",
+      "position": {
+        "x": 100,
+        "y": 1330
+      }
+    },
+    {
+      "id": "v82",
+      "name": "Downpayment",
+      "equation": "Sales*(SalesPricePerStove+GSTReceived)*DownpaymentFraction",
+      "position": {
+        "x": 230,
+        "y": 1330
+      }
+    },
+    {
+      "id": "v83",
+      "name": "Order_Cost",
+      "equation": "(Orders*(AppliedCost+GSTPaid))",
+      "position": {
+        "x": 360,
+        "y": 1330
+      }
+    },
+    {
+      "id": "v84",
+      "name": "Trainees",
+      "equation": "TotalShops*RetailerPerShop + JWIRESStaff + CCCs",
+      "position": {
+        "x": 490,
+        "y": 1330
+      }
+    },
+    {
+      "id": "v85",
+      "name": "TrainingCost",
+      "equation": "PULSE(1,1)*(TOTForFO+ProfessionalECookingCost+RandMRetailersCost+RetailersCCCTrainingCost\\ )",
+      "position": {
+        "x": 620,
+        "y": 1330
+      }
+    },
+    {
+      "id": "v86",
+      "name": "ProjectManagerCostPerMonth",
+      "equation": "ProjectManager*RsPerMonthPerProjectManager",
+      "position": {
+        "x": 100,
+        "y": 1410
+      }
+    },
+    {
+      "id": "v87",
+      "name": "TotalManpowerMonthlyCost",
+      "equation": "AccountantCostPerMonth+StorekeeperCostPerMonth+FOsCostperMonth+ProjectManagerCostPerMonth\\ + ProjectLeadCostPerMonth",
+      "position": {
+        "x": 230,
+        "y": 1410
+      }
+    },
+    {
+      "id": "v88",
+      "name": "Orders",
+      "equation": "OrderPattern*0 + NewOrderPattern*1",
+      "position": {
+        "x": 360,
+        "y": 1410
+      }
+    },
+    {
+      "id": "v89",
+      "name": "SalesRelatedCost",
+      "equation": "Sales*(TeamPaymentPerSale + ShopPaymentPerSale + JwiresMargin)",
+      "position": {
+        "x": 490,
+        "y": 1410
+      }
+    },
+    {
+      "id": "v90",
+      "name": "SalesPattern",
+      "equation": "PULSE TRAIN(1*30,30,0,2*30-1)*50/30 + PULSE TRAIN(2*30,30,0,3*30-1)*100/30 + PULSE TRAIN\\ (3*30,30,0,4*30-1)*250/30 + PULSE TRAIN(4*30,30,0,5*30-1)*300/30 + PULSE TRAIN(5*30\\ ,60,0,7*30-1)*400/30 + PULSE TRAIN(7*30,90,0,10*30-1)*200/30 + PULSE TRAIN(10*30,60\\ ,0,12*30-1)*250/30+ PULSE TRAIN(12*30,60,0,14*30-1)*300/30 + PULSE TRAIN(14*30,30,\\ 0,15*30-1)*500/30 + PULSE TRAIN(15*30,30,0,16*30-1)*600/30 + PULSE TRAIN(16*30,90\\ ,0,570-1)*800/30",
+      "position": {
+        "x": 620,
+        "y": 1410
+      }
+    },
+    {
+      "id": "v91",
+      "name": "CostPriceISwithIoT",
+      "equation": "CostPriceWithOutIoT+IoTCost",
+      "position": {
+        "x": 100,
+        "y": 1490
+      }
+    },
+    {
+      "id": "v92",
+      "name": "Accountants",
+      "equation": "1.0",
+      "position": {
+        "x": 230,
+        "y": 1490
+      }
+    },
+    {
+      "id": "v93",
+      "name": "AccountantCostPerMonth",
+      "equation": "Accountants*RsPerMonthPerAccountant",
+      "position": {
+        "x": 360,
+        "y": 1490
+      }
+    },
+    {
+      "id": "v94",
+      "name": "DebitDayPerMonth",
+      "equation": "1.0",
+      "position": {
+        "x": 490,
+        "y": 1490
+      }
+    },
+    {
+      "id": "v95",
+      "name": "ProjectManager",
+      "equation": "1.0",
+      "position": {
+        "x": 620,
+        "y": 1490
+      }
+    },
+    {
+      "id": "v96",
+      "name": "StorekeeperCostPerMonth",
+      "equation": "Storekeeper*RsPerMonthPerStorekeeper",
+      "position": {
+        "x": 100,
+        "y": 1570
+      }
+    },
+    {
+      "id": "v97",
+      "name": "Storekeeper",
+      "equation": "1.0",
+      "position": {
+        "x": 230,
+        "y": 1570
+      }
+    },
+    {
+      "id": "v98",
+      "name": "RsPerMonthPerFO",
+      "equation": "1500*30",
+      "position": {
+        "x": 360,
+        "y": 1570
+      }
+    },
+    {
+      "id": "v99",
+      "name": "RsPerMonthPerAccountant",
+      "equation": "1500*30",
+      "position": {
+        "x": 490,
+        "y": 1570
+      }
+    },
+    {
+      "id": "v100",
+      "name": "RsPerMonthPerStorekeeper",
+      "equation": "763.75*30",
+      "position": {
+        "x": 620,
+        "y": 1570
+      }
+    },
+    {
+      "id": "v101",
+      "name": "RsPerMonthPerProjectManager",
+      "equation": "3250*30",
+      "position": {
+        "x": 100,
+        "y": 1650
+      }
+    },
+    {
+      "id": "v102",
+      "name": "CCCPerShop",
+      "equation": "3.0",
+      "position": {
+        "x": 230,
+        "y": 1650
+      }
+    },
+    {
+      "id": "v103",
+      "name": "ShopPaymentPerSale",
+      "equation": "200.0",
+      "position": {
+        "x": 360,
+        "y": 1650
+      }
+    },
+    {
+      "id": "v104",
+      "name": "FOperDistrict",
+      "equation": "1.0",
+      "position": {
+        "x": 490,
+        "y": 1650
+      }
+    },
+    {
+      "id": "v105",
+      "name": "FOsCostperMonth",
+      "equation": "NumberOfFOs*RsPerMonthPerFO",
+      "position": {
+        "x": 620,
+        "y": 1650
+      }
+    },
+    {
+      "id": "v106",
+      "name": "TotalShops",
+      "equation": "Districts*ShopsPerDistrict",
+      "position": {
+        "x": 100,
+        "y": 1730
+      }
+    },
+    {
+      "id": "v107",
+      "name": "TeamPaymentPerSale",
+      "equation": "300.0",
+      "position": {
+        "x": 230,
+        "y": 1730
+      }
+    },
+    {
+      "id": "v108",
+      "name": "CCCs",
+      "equation": "CCCPerShop*TotalShops",
+      "position": {
+        "x": 360,
+        "y": 1730
+      }
+    },
+    {
+      "id": "v109",
+      "name": "NumberOfFOs",
+      "equation": "Districts*FOperDistrict",
+      "position": {
+        "x": 490,
+        "y": 1730
+      }
+    },
+    {
+      "id": "v110",
+      "name": "LT1",
+      "equation": "30.0",
+      "position": {
+        "x": 620,
+        "y": 1730
+      }
+    },
+    {
+      "id": "v111",
+      "name": "LT2",
+      "equation": "3.0",
+      "position": {
+        "x": 100,
+        "y": 1810
+      }
+    },
+    {
+      "id": "v112",
+      "name": "Deliveries",
+      "equation": "DELAY FIXED(Orders, LT1 , 0)",
+      "position": {
+        "x": 230,
+        "y": 1810
+      }
+    },
+    {
+      "id": "v113",
+      "name": "DesiredInventoryPerShop",
+      "equation": "10.0",
+      "position": {
+        "x": 360,
+        "y": 1810
+      }
+    },
+    {
+      "id": "v114",
+      "name": "DesiredStockAtRetailers",
+      "equation": "DesiredInventoryPerShop*ShopsPerDistrict*Districts",
+      "position": {
+        "x": 490,
+        "y": 1810
+      }
+    },
+    {
+      "id": "v115",
+      "name": "RetailersStockDiscrepancy",
+      "equation": "(DesiredStockAtRetailers-StockAtRetailers)",
+      "position": {
+        "x": 620,
+        "y": 1810
+      }
+    },
+    {
+      "id": "v116",
+      "name": "Districts",
+      "equation": "2.0",
+      "position": {
+        "x": 100,
+        "y": 1890
+      }
+    },
+    {
+      "id": "v117",
+      "name": "Minimum_Leadtime",
+      "equation": "1.0",
+      "position": {
+        "x": 230,
+        "y": 1890
+      }
+    },
+    {
+      "id": "v118",
+      "name": "Sales",
+      "equation": "MIN(SalesPattern, StockAtRetailers/Minimum_Leadtime)*0 + SalesPattern",
+      "position": {
+        "x": 360,
+        "y": 1890
+      }
+    },
+    {
+      "id": "v119",
+      "name": "ShopsPerDistrict",
+      "equation": "5.0",
+      "position": {
+        "x": 490,
+        "y": 1890
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "WorkingProductsInHouseholds",
+      "to_element": "EnergyConsumptionRate"
+    },
+    {
+      "id": "c2",
+      "from_element": "kWhPerStovePerDay",
+      "to_element": "EnergyConsumptionRate"
+    },
+    {
+      "id": "c3",
+      "from_element": "Orders",
+      "to_element": "OrderRate"
+    },
+    {
+      "id": "c4",
+      "from_element": "LT2",
+      "to_element": "DispatchRate"
+    },
+    {
+      "id": "c5",
+      "from_element": "RetailersStockDiscrepancy",
+      "to_element": "DispatchRate"
+    },
+    {
+      "id": "c6",
+      "from_element": "Retailers",
+      "to_element": "DispatchRate"
+    },
+    {
+      "id": "c7",
+      "from_element": "Minimum_Leadtime",
+      "to_element": "DispatchRate"
+    },
+    {
+      "id": "c8",
+      "from_element": "StockAtJwires",
+      "to_element": "DispatchRate"
+    },
+    {
+      "id": "c9",
+      "from_element": "IncomeDelay",
+      "to_element": "JwiresIncome"
+    },
+    {
+      "id": "c10",
+      "from_element": "RetailerIncome",
+      "to_element": "JwiresIncome"
+    },
+    {
+      "id": "c11",
+      "from_element": "Downpayment",
+      "to_element": "RetailerIncome"
+    },
+    {
+      "id": "c12",
+      "from_element": "GSTReceived",
+      "to_element": "GST_Expenses"
+    },
+    {
+      "id": "c13",
+      "from_element": "Sales",
+      "to_element": "GST_Expenses"
+    },
+    {
+      "id": "c14",
+      "from_element": "GSTPaid",
+      "to_element": "GST_Expenses"
+    },
+    {
+      "id": "c15",
+      "from_element": "GSTReceived",
+      "to_element": "I2"
+    },
+    {
+      "id": "c16",
+      "from_element": "I2Default",
+      "to_element": "I2"
+    },
+    {
+      "id": "c17",
+      "from_element": "I2Fraction",
+      "to_element": "I2"
+    },
+    {
+      "id": "c18",
+      "from_element": "SalesPricePerStove",
+      "to_element": "I2"
+    },
+    {
+      "id": "c19",
+      "from_element": "Sales",
+      "to_element": "I2"
+    },
+    {
+      "id": "c20",
+      "from_element": "SalesPricePerStove",
+      "to_element": "GSTReceived"
+    },
+    {
+      "id": "c21",
+      "from_element": "GSTpercent",
+      "to_element": "GSTReceived"
+    },
+    {
+      "id": "c22",
+      "from_element": "Sales",
+      "to_element": "GSTReceived"
+    },
+    {
+      "id": "c23",
+      "from_element": "I1Fraction",
+      "to_element": "I1"
+    },
+    {
+      "id": "c24",
+      "from_element": "GSTReceived",
+      "to_element": "I1"
+    },
+    {
+      "id": "c25",
+      "from_element": "SalesPricePerStove",
+      "to_element": "I1"
+    },
+    {
+      "id": "c26",
+      "from_element": "Sales",
+      "to_element": "I1"
+    },
+    {
+      "id": "c27",
+      "from_element": "I1Default",
+      "to_element": "I1"
+    },
+    {
+      "id": "c28",
+      "from_element": "AppliedCost",
+      "to_element": "GSTPaid"
+    },
+    {
+      "id": "c29",
+      "from_element": "GSTpercent",
+      "to_element": "GSTPaid"
+    },
+    {
+      "id": "c30",
+      "from_element": "Banners",
+      "to_element": "AwarenessMarketingCost"
+    },
+    {
+      "id": "c31",
+      "from_element": "LocalNewspaper",
+      "to_element": "AwarenessMarketingCost"
+    },
+    {
+      "id": "c32",
+      "from_element": "Channel",
+      "to_element": "AwarenessMarketingCost"
+    },
+    {
+      "id": "c33",
+      "from_element": "Newspaper",
+      "to_element": "AwarenessMarketingCost"
+    },
+    {
+      "id": "c34",
+      "from_element": "LocalNewsChannel",
+      "to_element": "AwarenessMarketingCost"
+    },
+    {
+      "id": "c35",
+      "from_element": "DebitDay",
+      "to_element": "AwarenessMarketingCost"
+    },
+    {
+      "id": "c36",
+      "from_element": "Pamphlets",
+      "to_element": "AwarenessMarketingCost"
+    },
+    {
+      "id": "c37",
+      "from_element": "VideosAndPR",
+      "to_element": "AwarenessMarketingCost"
+    },
+    {
+      "id": "c38",
+      "from_element": "FreqRetailer",
+      "to_element": "RetailerSalary"
+    },
+    {
+      "id": "c39",
+      "from_element": "RsPerDayPerRetailer",
+      "to_element": "RetailerSalary"
+    },
+    {
+      "id": "c40",
+      "from_element": "Retailers",
+      "to_element": "RetailerSalary"
+    },
+    {
+      "id": "c41",
+      "from_element": "FreqCCC",
+      "to_element": "CCCsalary"
+    },
+    {
+      "id": "c42",
+      "from_element": "RsPerDayPerCCC",
+      "to_element": "CCCsalary"
+    },
+    {
+      "id": "c43",
+      "from_element": "CCCs",
+      "to_element": "CCCsalary"
+    },
+    {
+      "id": "c44",
+      "from_element": "PricePerTablet",
+      "to_element": "EquipmentsCost"
+    },
+    {
+      "id": "c45",
+      "from_element": "PricePerLaptop",
+      "to_element": "EquipmentsCost"
+    },
+    {
+      "id": "c46",
+      "from_element": "Qty_laptops",
+      "to_element": "EquipmentsCost"
+    },
+    {
+      "id": "c47",
+      "from_element": "QtyTab",
+      "to_element": "EquipmentsCost"
+    },
+    {
+      "id": "c48",
+      "from_element": "DebitDay",
+      "to_element": "EquipmentsCost"
+    },
+    {
+      "id": "c49",
+      "from_element": "NumberOfPersonForRandM",
+      "to_element": "RandMRetailersCost"
+    },
+    {
+      "id": "c50",
+      "from_element": "RsPerTrainingRandMReatilers",
+      "to_element": "RandMRetailersCost"
+    },
+    {
+      "id": "c51",
+      "from_element": "RetailerPerShop",
+      "to_element": "Retailers"
+    },
+    {
+      "id": "c52",
+      "from_element": "TotalShops",
+      "to_element": "Retailers"
+    },
+    {
+      "id": "c53",
+      "from_element": "RsPerTrainingRetailerCCC",
+      "to_element": "RetailersCCCTrainingCost"
+    },
+    {
+      "id": "c54",
+      "from_element": "FreqRetailer",
+      "to_element": "RetailersCCCTrainingCost"
+    },
+    {
+      "id": "c55",
+      "from_element": "Retailers",
+      "to_element": "RetailersCCCTrainingCost"
+    },
+    {
+      "id": "c56",
+      "from_element": "FreqRetailersAndCCC",
+      "to_element": "RetailersCCCTrainingCost"
+    },
+    {
+      "id": "c57",
+      "from_element": "FreqNews",
+      "to_element": "LocalNewspaper"
+    },
+    {
+      "id": "c58",
+      "from_element": "FreqNewspaper",
+      "to_element": "LocalNewspaper"
+    },
+    {
+      "id": "c59",
+      "from_element": "Newspaper",
+      "to_element": "LocalNewspaper"
+    },
+    {
+      "id": "c60",
+      "from_element": "RsPerDayPerNewspaper",
+      "to_element": "LocalNewspaper"
+    },
+    {
+      "id": "c61",
+      "from_element": "RetailerSalary",
+      "to_element": "ResearchRelatedCost"
+    },
+    {
+      "id": "c62",
+      "from_element": "UserAdoptionCompensation",
+      "to_element": "ResearchRelatedCost"
+    },
+    {
+      "id": "c63",
+      "from_element": "CCCs",
+      "to_element": "ResearchRelatedCost"
+    },
+    {
+      "id": "c64",
+      "from_element": "CCCsalary",
+      "to_element": "ResearchRelatedCost"
+    },
+    {
+      "id": "c65",
+      "from_element": "RsPerDayPerChannel",
+      "to_element": "LocalNewsChannel"
+    },
+    {
+      "id": "c66",
+      "from_element": "FreqNews",
+      "to_element": "LocalNewsChannel"
+    },
+    {
+      "id": "c67",
+      "from_element": "Channel",
+      "to_element": "LocalNewsChannel"
+    },
+    {
+      "id": "c68",
+      "from_element": "RsPerPamphlet",
+      "to_element": "Pamphlets"
+    },
+    {
+      "id": "c69",
+      "from_element": "QtyPamphlet",
+      "to_element": "Pamphlets"
+    },
+    {
+      "id": "c70",
+      "from_element": "QtyBanners",
+      "to_element": "Banners"
+    },
+    {
+      "id": "c71",
+      "from_element": "RsPerbanner",
+      "to_element": "Banners"
+    },
+    {
+      "id": "c72",
+      "from_element": "RsPerMonthPerProjectLead",
+      "to_element": "ProjectLeadCostPerMonth"
+    },
+    {
+      "id": "c73",
+      "from_element": "ProjectLead",
+      "to_element": "ProjectLeadCostPerMonth"
+    },
+    {
+      "id": "c74",
+      "from_element": "I1Duration",
+      "to_element": "I1Due"
+    },
+    {
+      "id": "c75",
+      "from_element": "I1",
+      "to_element": "I1Due"
+    },
+    {
+      "id": "c76",
+      "from_element": "I2Duration",
+      "to_element": "I2Due"
+    },
+    {
+      "id": "c77",
+      "from_element": "I2",
+      "to_element": "I2Due"
+    },
+    {
+      "id": "c78",
+      "from_element": "DebitDayPerMonth",
+      "to_element": "FixedCost"
+    },
+    {
+      "id": "c79",
+      "from_element": "DebitDay",
+      "to_element": "FixedCost"
+    },
+    {
+      "id": "c80",
+      "from_element": "TotalManpowerMonthlyCost",
+      "to_element": "FixedCost"
+    },
+    {
+      "id": "c81",
+      "from_element": "TrainingCost",
+      "to_element": "InitialSetupCost"
+    },
+    {
+      "id": "c82",
+      "from_element": "PrintingStationaryCost",
+      "to_element": "InitialSetupCost"
+    },
+    {
+      "id": "c83",
+      "from_element": "AwarenessMarketingCost",
+      "to_element": "InitialSetupCost"
+    },
+    {
+      "id": "c84",
+      "from_element": "EquipmentsCost",
+      "to_element": "InitialSetupCost"
+    },
+    {
+      "id": "c85",
+      "from_element": "OrderQtyWithIoT",
+      "to_element": "AppliedCost"
+    },
+    {
+      "id": "c86",
+      "from_element": "CostPriceISwithIoT",
+      "to_element": "AppliedCost"
+    },
+    {
+      "id": "c87",
+      "from_element": "CumulativeOrder",
+      "to_element": "AppliedCost"
+    },
+    {
+      "id": "c88",
+      "from_element": "CostPriceWithOutIoT",
+      "to_element": "AppliedCost"
+    },
+    {
+      "id": "c89",
+      "from_element": "RsPerStove",
+      "to_element": "UserAdoptionCompensation"
+    },
+    {
+      "id": "c90",
+      "from_element": "DebitDay",
+      "to_element": "UserAdoptionCompensation"
+    },
+    {
+      "id": "c91",
+      "from_element": "NoOfStoves",
+      "to_element": "UserAdoptionCompensation"
+    },
+    {
+      "id": "c92",
+      "from_element": "ProjectLead",
+      "to_element": "JWIRESStaff"
+    },
+    {
+      "id": "c93",
+      "from_element": "Storekeeper",
+      "to_element": "JWIRESStaff"
+    },
+    {
+      "id": "c94",
+      "from_element": "ProjectManager",
+      "to_element": "JWIRESStaff"
+    },
+    {
+      "id": "c95",
+      "from_element": "Accountants",
+      "to_element": "JWIRESStaff"
+    },
+    {
+      "id": "c96",
+      "from_element": "NumberOfFOs",
+      "to_element": "JWIRESStaff"
+    },
+    {
+      "id": "c97",
+      "from_element": "UnitConversionFactor",
+      "to_element": "OrderPattern"
+    },
+    {
+      "id": "c98",
+      "from_element": "SalesRelatedCost",
+      "to_element": "Expenses"
+    },
+    {
+      "id": "c99",
+      "from_element": "ParamFC",
+      "to_element": "Expenses"
+    },
+    {
+      "id": "c100",
+      "from_element": "InitialSetupCost",
+      "to_element": "Expenses"
+    },
+    {
+      "id": "c101",
+      "from_element": "ParamResearchRC",
+      "to_element": "Expenses"
+    },
+    {
+      "id": "c102",
+      "from_element": "ResearchRelatedCost",
+      "to_element": "Expenses"
+    },
+    {
+      "id": "c103",
+      "from_element": "Sales",
+      "to_element": "Expenses"
+    },
+    {
+      "id": "c104",
+      "from_element": "GST_Expenses",
+      "to_element": "Expenses"
+    },
+    {
+      "id": "c105",
+      "from_element": "ParamSetupC",
+      "to_element": "Expenses"
+    },
+    {
+      "id": "c106",
+      "from_element": "Order_Cost",
+      "to_element": "Expenses"
+    },
+    {
+      "id": "c107",
+      "from_element": "FixedCost",
+      "to_element": "Expenses"
+    },
+    {
+      "id": "c108",
+      "from_element": "GSTReceived",
+      "to_element": "Downpayment"
+    },
+    {
+      "id": "c109",
+      "from_element": "SalesPricePerStove",
+      "to_element": "Downpayment"
+    },
+    {
+      "id": "c110",
+      "from_element": "Sales",
+      "to_element": "Downpayment"
+    },
+    {
+      "id": "c111",
+      "from_element": "DownpaymentFraction",
+      "to_element": "Downpayment"
+    },
+    {
+      "id": "c112",
+      "from_element": "AppliedCost",
+      "to_element": "Order_Cost"
+    },
+    {
+      "id": "c113",
+      "from_element": "Orders",
+      "to_element": "Order_Cost"
+    },
+    {
+      "id": "c114",
+      "from_element": "GSTPaid",
+      "to_element": "Order_Cost"
+    },
+    {
+      "id": "c115",
+      "from_element": "RetailerPerShop",
+      "to_element": "Trainees"
+    },
+    {
+      "id": "c116",
+      "from_element": "JWIRESStaff",
+      "to_element": "Trainees"
+    },
+    {
+      "id": "c117",
+      "from_element": "TotalShops",
+      "to_element": "Trainees"
+    },
+    {
+      "id": "c118",
+      "from_element": "CCCs",
+      "to_element": "Trainees"
+    },
+    {
+      "id": "c119",
+      "from_element": "TOTForFO",
+      "to_element": "TrainingCost"
+    },
+    {
+      "id": "c120",
+      "from_element": "RetailersCCCTrainingCost",
+      "to_element": "TrainingCost"
+    },
+    {
+      "id": "c121",
+      "from_element": "RandMRetailersCost",
+      "to_element": "TrainingCost"
+    },
+    {
+      "id": "c122",
+      "from_element": "Retailers",
+      "to_element": "TrainingCost"
+    },
+    {
+      "id": "c123",
+      "from_element": "ProfessionalECookingCost",
+      "to_element": "TrainingCost"
+    },
+    {
+      "id": "c124",
+      "from_element": "ProjectManager",
+      "to_element": "ProjectManagerCostPerMonth"
+    },
+    {
+      "id": "c125",
+      "from_element": "RsPerMonthPerProjectManager",
+      "to_element": "ProjectManagerCostPerMonth"
+    },
+    {
+      "id": "c126",
+      "from_element": "FOsCostperMonth",
+      "to_element": "TotalManpowerMonthlyCost"
+    },
+    {
+      "id": "c127",
+      "from_element": "ProjectLead",
+      "to_element": "TotalManpowerMonthlyCost"
+    },
+    {
+      "id": "c128",
+      "from_element": "ProjectLeadCostPerMonth",
+      "to_element": "TotalManpowerMonthlyCost"
+    },
+    {
+      "id": "c129",
+      "from_element": "Storekeeper",
+      "to_element": "TotalManpowerMonthlyCost"
+    },
+    {
+      "id": "c130",
+      "from_element": "ProjectManager",
+      "to_element": "TotalManpowerMonthlyCost"
+    },
+    {
+      "id": "c131",
+      "from_element": "ProjectManagerCostPerMonth",
+      "to_element": "TotalManpowerMonthlyCost"
+    },
+    {
+      "id": "c132",
+      "from_element": "AccountantCostPerMonth",
+      "to_element": "TotalManpowerMonthlyCost"
+    },
+    {
+      "id": "c133",
+      "from_element": "StorekeeperCostPerMonth",
+      "to_element": "TotalManpowerMonthlyCost"
+    },
+    {
+      "id": "c134",
+      "from_element": "OrderPattern",
+      "to_element": "Orders"
+    },
+    {
+      "id": "c135",
+      "from_element": "JwiresMargin",
+      "to_element": "SalesRelatedCost"
+    },
+    {
+      "id": "c136",
+      "from_element": "ShopPaymentPerSale",
+      "to_element": "SalesRelatedCost"
+    },
+    {
+      "id": "c137",
+      "from_element": "Sales",
+      "to_element": "SalesRelatedCost"
+    },
+    {
+      "id": "c138",
+      "from_element": "TeamPaymentPerSale",
+      "to_element": "SalesRelatedCost"
+    },
+    {
+      "id": "c139",
+      "from_element": "IoTCost",
+      "to_element": "CostPriceISwithIoT"
+    },
+    {
+      "id": "c140",
+      "from_element": "CostPriceWithOutIoT",
+      "to_element": "CostPriceISwithIoT"
+    },
+    {
+      "id": "c141",
+      "from_element": "RsPerMonthPerAccountant",
+      "to_element": "AccountantCostPerMonth"
+    },
+    {
+      "id": "c142",
+      "from_element": "Accountants",
+      "to_element": "AccountantCostPerMonth"
+    },
+    {
+      "id": "c143",
+      "from_element": "Storekeeper",
+      "to_element": "StorekeeperCostPerMonth"
+    },
+    {
+      "id": "c144",
+      "from_element": "RsPerMonthPerStorekeeper",
+      "to_element": "StorekeeperCostPerMonth"
+    },
+    {
+      "id": "c145",
+      "from_element": "RsPerMonthPerFO",
+      "to_element": "FOsCostperMonth"
+    },
+    {
+      "id": "c146",
+      "from_element": "NumberOfFOs",
+      "to_element": "FOsCostperMonth"
+    },
+    {
+      "id": "c147",
+      "from_element": "Districts",
+      "to_element": "TotalShops"
+    },
+    {
+      "id": "c148",
+      "from_element": "ShopsPerDistrict",
+      "to_element": "TotalShops"
+    },
+    {
+      "id": "c149",
+      "from_element": "TotalShops",
+      "to_element": "CCCs"
+    },
+    {
+      "id": "c150",
+      "from_element": "CCCPerShop",
+      "to_element": "CCCs"
+    },
+    {
+      "id": "c151",
+      "from_element": "FOperDistrict",
+      "to_element": "NumberOfFOs"
+    },
+    {
+      "id": "c152",
+      "from_element": "Districts",
+      "to_element": "NumberOfFOs"
+    },
+    {
+      "id": "c153",
+      "from_element": "Orders",
+      "to_element": "Deliveries"
+    },
+    {
+      "id": "c154",
+      "from_element": "LT1",
+      "to_element": "Deliveries"
+    },
+    {
+      "id": "c155",
+      "from_element": "Districts",
+      "to_element": "DesiredStockAtRetailers"
+    },
+    {
+      "id": "c156",
+      "from_element": "DesiredInventoryPerShop",
+      "to_element": "DesiredStockAtRetailers"
+    },
+    {
+      "id": "c157",
+      "from_element": "ShopsPerDistrict",
+      "to_element": "DesiredStockAtRetailers"
+    },
+    {
+      "id": "c158",
+      "from_element": "StockAtRetailers",
+      "to_element": "RetailersStockDiscrepancy"
+    },
+    {
+      "id": "c159",
+      "from_element": "Retailers",
+      "to_element": "RetailersStockDiscrepancy"
+    },
+    {
+      "id": "c160",
+      "from_element": "DesiredStockAtRetailers",
+      "to_element": "RetailersStockDiscrepancy"
+    },
+    {
+      "id": "c161",
+      "from_element": "StockAtRetailers",
+      "to_element": "Sales"
+    },
+    {
+      "id": "c162",
+      "from_element": "Retailers",
+      "to_element": "Sales"
+    },
+    {
+      "id": "c163",
+      "from_element": "SalesPattern",
+      "to_element": "Sales"
+    },
+    {
+      "id": "c164",
+      "from_element": "Minimum_Leadtime",
+      "to_element": "Sales"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 571.0,
+    "dt": 1.0
+  },
+  "created_at": "2026-01-15T19:13:16.352033+00:00",
+  "updated_at": "2026-01-15T19:13:16.352033+00:00",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository - Standard System Dynamics Test Cases"
+}

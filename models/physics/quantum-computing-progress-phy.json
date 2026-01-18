@@ -1,0 +1,190 @@
+{
+  "id": "quantum-computing-progress-phy",
+  "name": "Quantum Computing Progress Model",
+  "description": "Model of quantum computing development showing qubit count growth, error rates, and computational advantage threshold. Based on quantum computing roadmaps. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Logical Qubits",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Error Rate",
+      "initial_value": 0.001,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "RD Investment",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Qubit Growth",
+      "equation": "Logical_Qubits * Qubit_Scaling_Rate * Innovation_Factor",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Error Improvement",
+      "equation": "Error_Rate * Error_Reduction_Rate * RD_Investment / 30",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Investment Growth",
+      "equation": "(MAX(0, Quantum_Advantage - 1)) * Investment_Response",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Qubit Scaling Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Innovation Factor",
+      "equation": "1 + (RD_Investment - 30) * 0.01",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Error Reduction Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Quantum Volume",
+      "equation": "Logical_Qubits * (1 - Error_Rate * 100)",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Classical Equivalent",
+      "equation": "2 ** MIN(50, Logical_Qubits * (1 - Error_Rate * 100))",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Quantum Advantage",
+      "equation": "Quantum_Volume / 1000",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Investment Response",
+      "equation": "5",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Fault Tolerance Threshold",
+      "equation": "0.0001",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Fault Tolerant",
+      "equation": "IF(Error_Rate < Fault_Tolerance_Threshold, 1, 0)",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Commercialization Ready",
+      "equation": "IF(Quantum_Advantage > 100 AND Fault_Tolerant = 1, 1, 0)",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Logical Qubits",
+      "to_element": "Qubit Growth"
+    },
+    {
+      "id": "c2",
+      "from_element": "Error Rate",
+      "to_element": "Error Improvement"
+    },
+    {
+      "id": "c3",
+      "from_element": "RD Investment",
+      "to_element": "Innovation Factor"
+    }
+  ],
+  "time_settings": {
+    "start": 2024,
+    "end": 2044,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T01:53:04.263272+00:00",
+  "updated_at": "2026-01-12T01:53:04.263275+00:00",
+  "source": "https://doi.org/10.1038/s41586-019-1666-5",
+  "reference": "Arute F, et al. Quantum supremacy using a programmable superconducting processor. Nature. 2019;574:505-510."
+}

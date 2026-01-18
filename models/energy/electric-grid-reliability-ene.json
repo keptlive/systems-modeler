@@ -1,0 +1,150 @@
+{
+  "id": "electric-grid-reliability-ene",
+  "name": "Electric Grid Reliability Model",
+  "description": "Model of power grid reliability. Source: NERC; Milano et al. (2018).",
+  "stocks": [
+    {
+      "id": "stock-gen",
+      "name": "Generation_Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-demand",
+      "name": "Peak_Demand",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-reserve",
+      "name": "Reserve_Margin",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-build",
+      "name": "Capacity_Addition",
+      "equation": "IF(Reserve_Margin < Target_Reserve, Investment_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-gen",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-retire",
+      "name": "Capacity_Retirement",
+      "equation": "Generation_Capacity * Retirement_Rate",
+      "from_stock": "stock-gen",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-demand-grow",
+      "name": "Demand_Growth",
+      "equation": "Peak_Demand * Demand_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-demand",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-reserve-calc",
+      "name": "Reserve_Update",
+      "equation": "(Generation_Capacity - Peak_Demand - Reserve_Margin) / Update_Time",
+      "from_stock": null,
+      "to_stock": "stock-reserve",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-invest",
+      "name": "Investment_Rate",
+      "equation": "5",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-retire",
+      "name": "Retirement_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-demgrow",
+      "name": "Demand_Growth_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-target",
+      "name": "Target_Reserve",
+      "equation": "15",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-update",
+      "name": "Update_Time",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-reliable",
+      "name": "Reliability_Index",
+      "equation": "MIN(1, Reserve_Margin / Target_Reserve)",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:55:38.761097+00:00",
+  "updated_at": "2026-01-12T12:55:38.761097+00:00",
+  "source": "https://systemdynamics.org/resources/",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

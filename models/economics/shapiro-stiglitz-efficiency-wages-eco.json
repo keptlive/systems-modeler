@@ -1,0 +1,156 @@
+{
+  "id": "shapiro-stiglitz-efficiency-wages-eco",
+  "name": "Shapiro-Stiglitz Efficiency Wage Model",
+  "description": "Model explaining involuntary unemployment through efficiency wages and worker incentives. Reference: Rothschild, M., & Stiglitz, J. (1976). Equilibrium in competitive insurance markets. Quarterly Journal of Economics, 90(4), 629-649. DOI: https://doi.org/10.2307/1885326",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Employment",
+      "initial_value": 90,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Wage",
+      "initial_value": 1.2,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Hiring",
+      "equation": "Hire_Rate * (Labor_Force - Employment)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Separations",
+      "equation": "(Natural_Separation + Shirk_Detection * Shirking_Probability) * Employment",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Wage_Adjustment",
+      "equation": "(No_Shirk_Wage - Wage) / Wage_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "No_Shirk_Wage",
+      "equation": "Effort_Disutility + (Effort_Disutility / Shirk_Detection) * (Natural_Separation + Hire_Rate * Employment / (Labor_Force - Employment))",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Shirking_Probability",
+      "equation": "IF(Wage < No_Shirk_Wage, 0.5, 0)",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Labor_Force",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Hire_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Natural_Separation",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Shirk_Detection",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Effort_Disutility",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Wage_Adjustment_Time",
+      "equation": "4",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Unemployment_Rate_SS",
+      "equation": "(Labor_Force - Employment) / Labor_Force",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:20:56.327924+00:00",
+  "updated_at": "2026-01-12T11:20:56.327924+00:00",
+  "source": "https://doi.org/10.2307/1816330",
+  "reference": "Shapiro C, Stiglitz JE. Equilibrium unemployment as a worker discipline device. American Economic Review. 1984;74(3):433-444. Stiglitz Nobel Prize 2001."
+}

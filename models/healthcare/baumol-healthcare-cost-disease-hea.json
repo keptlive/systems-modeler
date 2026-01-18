@@ -1,0 +1,147 @@
+{
+  "id": "baumol-healthcare-cost-disease-hea",
+  "name": "Baumol Cost Disease in Healthcare",
+  "description": "Explains rising healthcare costs through differential productivity growth between sectors. Source: Baumol (1967) and Baumol et al. (2012). DOI: 10.1257/jep.26.4.3",
+  "stocks": [
+    {
+      "id": "stock-hcost",
+      "name": "Healthcare_Cost",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-mcost",
+      "name": "Manufacturing_Cost",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-hcwage",
+      "name": "Healthcare_Wages",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-mwage",
+      "name": "Manufacturing_Wages",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-hcostgrow",
+      "name": "HC_Cost_Growth",
+      "equation": "Healthcare_Cost * Wage_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-hcost",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-mcostgrow",
+      "name": "M_Cost_Growth",
+      "equation": "Manufacturing_Cost * (Wage_Growth_Rate - Manufacturing_Productivity)",
+      "from_stock": null,
+      "to_stock": "stock-mcost",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-hwagegrow",
+      "name": "HC_Wage_Growth",
+      "equation": "Healthcare_Wages * Wage_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-hcwage",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-mwagegrow",
+      "name": "M_Wage_Growth",
+      "equation": "Manufacturing_Wages * Wage_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-mwage",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-wagegrow",
+      "name": "Wage_Growth_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-mprod",
+      "name": "Manufacturing_Productivity",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-hprod",
+      "name": "Healthcare_Productivity",
+      "equation": "0.005",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-relcost",
+      "name": "Relative_HC_Cost",
+      "equation": "Healthcare_Cost / Manufacturing_Cost",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Healthcare_Cost",
+      "to_element": "HC_Cost_Growth"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:02:23.927408Z",
+  "updated_at": "2026-01-12T02:02:23.927412Z",
+  "source": "https://doi.org/10.1257/jep.26.4.3",
+  "reference": "Baumol, W.J. (2012). The Cost Disease: Why Computers Get Cheaper and Health Care Doesn't. Yale University Press."
+}

@@ -1,0 +1,346 @@
+{
+  "id": "sterman-growth-resource-constraints-eco",
+  "name": "Resource_Regeneration",
+  "description": "Generic structure for growth with resource constraints from Sterman (2000) Business Dynamics Chapter 10. Models S-shaped growth, overshoot, and potential collapse when growth encounters limits. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Population",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Resources",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Resource_Regeneration_Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Births",
+      "equation": "Population * Birth_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Deaths",
+      "equation": "Population * Death_Rate",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Resource_Regeneration",
+      "equation": "Resource_Regeneration_Capacity * (1 - Resources / Maximum_Resources)",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Resource_Consumption",
+      "equation": "Population * Consumption_Per_Capita",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Regeneration_Degradation",
+      "equation": "Resource_Regeneration_Capacity * Degradation_Rate * (1 - Resources / Maximum_Resources)",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Birth_Rate",
+      "equation": "Normal_Birth_Rate * Effect_of_Resources_on_Birth",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Normal_Birth_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Effect_of_Resources_on_Birth",
+      "equation": "Resources_Per_Capita / Normal_Resources_Per_Capita",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Death_Rate",
+      "equation": "Normal_Death_Rate / Effect_of_Resources_on_Death",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Normal_Death_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Effect_of_Resources_on_Death",
+      "equation": "MAX(0.1, Resources_Per_Capita / Normal_Resources_Per_Capita)",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Resources_Per_Capita",
+      "equation": "Resources / MAX(1, Population)",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Normal_Resources_Per_Capita",
+      "equation": "50",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Consumption_Per_Capita",
+      "equation": "10",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Maximum_Resources",
+      "equation": "1500",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Degradation_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Birth_Rate",
+      "to_element": "Births"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Population",
+      "to_element": "Births"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Death_Rate",
+      "to_element": "Deaths"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Population",
+      "to_element": "Deaths"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Resources",
+      "to_element": "Resource_Regeneration"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Resource_Regeneration_Capacity",
+      "to_element": "Resource_Regeneration"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Maximum_Resources",
+      "to_element": "Resource_Regeneration"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Population",
+      "to_element": "Resource_Consumption"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Consumption_Per_Capita",
+      "to_element": "Resource_Consumption"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Resources",
+      "to_element": "Regeneration_Degradation"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Resource_Regeneration_Capacity",
+      "to_element": "Regeneration_Degradation"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Degradation_Rate",
+      "to_element": "Regeneration_Degradation"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Maximum_Resources",
+      "to_element": "Regeneration_Degradation"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Resource_Regeneration",
+      "to_element": "Regeneration_Degradation"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Resources",
+      "to_element": "Birth_Rate"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Normal_Birth_Rate",
+      "to_element": "Birth_Rate"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Effect_of_Resources_on_Birth",
+      "to_element": "Birth_Rate"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Resources",
+      "to_element": "Effect_of_Resources_on_Birth"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Resources_Per_Capita",
+      "to_element": "Effect_of_Resources_on_Birth"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Normal_Resources_Per_Capita",
+      "to_element": "Effect_of_Resources_on_Birth"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Resources",
+      "to_element": "Death_Rate"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Effect_of_Resources_on_Death",
+      "to_element": "Death_Rate"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "Normal_Death_Rate",
+      "to_element": "Death_Rate"
+    },
+    {
+      "id": "conn-24",
+      "from_element": "Resources",
+      "to_element": "Effect_of_Resources_on_Death"
+    },
+    {
+      "id": "conn-25",
+      "from_element": "Resources_Per_Capita",
+      "to_element": "Effect_of_Resources_on_Death"
+    },
+    {
+      "id": "conn-26",
+      "from_element": "Normal_Resources_Per_Capita",
+      "to_element": "Effect_of_Resources_on_Death"
+    },
+    {
+      "id": "conn-27",
+      "from_element": "Resources",
+      "to_element": "Resources_Per_Capita"
+    },
+    {
+      "id": "conn-28",
+      "from_element": "Population",
+      "to_element": "Resources_Per_Capita"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 300,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T07:19:37.014166+00:00",
+  "updated_at": "2026-01-12T07:19:37.014166+00:00",
+  "source": "https://web.mit.edu/jsterman/www/BusDyn2.html",
+  "reference": "Sterman, J.D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. Chapter 10: Growth with Resource Constraints."
+}

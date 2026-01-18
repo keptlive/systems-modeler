@@ -1,0 +1,177 @@
+{
+  "id": "covid19-long-covid-burden-hea",
+  "name": "COVID-19 Long COVID Health Burden Model",
+  "description": "Model of Long COVID prevalence and health system burden. Explores post-acute sequelae of SARS-CoV-2 (PASC). Source: Davis et al. (2023), Nature Reviews Microbiology. DOI: 10.1038/s41579-022-00846-2",
+  "stocks": [
+    {
+      "id": "stock-infected",
+      "name": "Infected",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Fully_Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-longcovid",
+      "name": "Long_COVID",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-disabled",
+      "name": "Disabled",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-lc-recover",
+      "name": "LC_Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-recover",
+      "name": "Full_Recovery",
+      "equation": "Infected * (1 - Long_COVID_Rate) / Acute_Duration",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-develop-lc",
+      "name": "Develop_Long_COVID",
+      "equation": "Infected * Long_COVID_Rate / Acute_Duration",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-longcovid",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-lc-recovery",
+      "name": "LC_Resolution",
+      "equation": "Long_COVID * LC_Recovery_Rate",
+      "from_stock": "stock-longcovid",
+      "to_stock": "stock-lc-recover",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-disability",
+      "name": "Progression_Disability",
+      "equation": "Long_COVID * Disability_Rate",
+      "from_stock": "stock-longcovid",
+      "to_stock": "stock-disabled",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-new-cases",
+      "name": "New_Infections",
+      "equation": "Infection_Rate",
+      "from_stock": null,
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-lc-rate",
+      "name": "Long_COVID_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-acute",
+      "name": "Acute_Duration",
+      "equation": "14",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-lc-recov",
+      "name": "LC_Recovery_Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-disab",
+      "name": "Disability_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-infect",
+      "name": "Infection_Rate",
+      "equation": "5000",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Infected",
+      "to_element": "Full_Recovery"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 730,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T22:18:53.216622+00:00",
+  "updated_at": "2026-01-11T22:18:53.216622+00:00",
+  "source": "https://doi.org/10.1038/s41579-022-00846-2",
+  "reference": "Davis, H.E. et al. (2023). Long COVID: major findings, mechanisms and recommendations."
+}

@@ -1,0 +1,198 @@
+{
+  "id": "student-loan-debt-crisis",
+  "name": "Student Loan Debt Dynamics Model",
+  "description": "Model of student debt accumulation and economic impacts.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Total_Debt",
+      "initial_value": 1700000000000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Borrowers",
+      "initial_value": 45000000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Defaulted",
+      "initial_value": 5000000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "New_Borrowing",
+      "equation": "New_Students * Average_Loan",
+      "from_stock": null,
+      "to_stock": "Total_Debt",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Interest_Accrual",
+      "equation": "Total_Debt * Interest_Rate",
+      "from_stock": null,
+      "to_stock": "Total_Debt",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Repayment",
+      "equation": "Total_Debt * Repayment_Rate * Employment_Rate",
+      "from_stock": "Total_Debt",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "New_Borrowers",
+      "equation": "New_Students",
+      "from_stock": null,
+      "to_stock": "Borrowers",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Payoff",
+      "equation": "Borrowers * Payoff_Rate * Income_Growth",
+      "from_stock": "Borrowers",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Default",
+      "equation": "Borrowers * Default_Rate * (1 - Employment_Rate)",
+      "from_stock": "Borrowers",
+      "to_stock": "Defaulted",
+      "position": {
+        "x": 450,
+        "y": 275
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "New_Students",
+      "equation": "2000000",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Average_Loan",
+      "equation": "30000",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Interest_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Repayment_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Employment_Rate",
+      "equation": "0.95",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Payoff_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Default_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Income_Growth",
+      "equation": "1.02",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Debt_Per_Borrower",
+      "equation": "Total_Debt / Borrowers",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2050,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1257/jep.30.1.139",
+  "reference": "Looney, A. & Yannelis, C. (2016). A Crisis in Student Loans? How Changes in the Characteristics of Borrowers and in the Institutions They Attended Contributed to Rising Loan Defaults. Brookings Papers. DOI: 10.1257/jep.30.1.139",
+  "created_at": "2026-01-15T19:31:51.617641+00:00",
+  "updated_at": "2026-01-15T19:31:51.617641+00:00"
+}

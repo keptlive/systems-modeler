@@ -1,0 +1,219 @@
+{
+  "id": "saas-metrics-dynamics-eco",
+  "name": "SaaS Business Metrics Model",
+  "description": "Model of SaaS subscription business with MRR, churn, and customer lifetime value dynamics. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Customers",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "MRR",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "CAC_Payback_Pool",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "New_Customers",
+      "equation": "Marketing_Spend / CAC",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Churned_Customers",
+      "equation": "Churn_Rate * Customers",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "f3",
+      "name": "New_MRR",
+      "equation": "New_Customers * ARPU",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Churned_MRR",
+      "equation": "Churn_Rate * MRR",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Expansion_MRR",
+      "equation": "Expansion_Rate * MRR",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "f6",
+      "name": "CAC_Spending",
+      "equation": "Marketing_Spend",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "f7",
+      "name": "CAC_Recovery",
+      "equation": "MRR * Gross_Margin",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Marketing_Spend",
+      "equation": "20000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "CAC",
+      "equation": "500",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "v3",
+      "name": "ARPU",
+      "equation": "100",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Churn_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Expansion_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Gross_Margin",
+      "equation": "0.8",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "LTV",
+      "equation": "ARPU * Gross_Margin / Churn_Rate",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "LTV_CAC_Ratio",
+      "equation": "LTV / CAC",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "CAC_Payback_Months",
+      "equation": "CAC / (ARPU * Gross_Margin)",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Net_MRR_Growth",
+      "equation": "New_MRR + Expansion_MRR - Churned_MRR",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:23:21.190197+00:00",
+  "updated_at": "2026-01-12T11:23:21.190197+00:00",
+  "source": "https://doi.org/10.1007/s12525-019-00357-0",
+  "reference": "Groesser SN, Jovy N. Business model analysis using computational modeling: A strategy tool for exploration and decision-making. J Mgmt Control. 2016;27:61-88."
+}

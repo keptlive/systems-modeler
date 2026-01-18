@@ -1,0 +1,175 @@
+{
+  "id": "inflation-expectations-spiral-eco",
+  "name": "Inflation Expectations Spiral Model",
+  "description": "Model of inflation dynamics showing how expectations become self-fulfilling. Source: Mankiw & Reis (2002), QJE. DOI: 10.1162/003355302320935034",
+  "stocks": [
+    {
+      "id": "stock-inflation",
+      "name": "Actual_Inflation",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-expect",
+      "name": "Expected_Inflation",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-wage",
+      "name": "Wage_Growth",
+      "initial_value": 3,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-inflinc",
+      "name": "Inflation_Pressure",
+      "equation": "(Output_Gap * Phillips_Coef + Expected_Inflation + Cost_Push - Actual_Inflation) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-inflation",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-expectadj",
+      "name": "Expectation_Adjustment",
+      "equation": "(Adaptive_Weight * Actual_Inflation + (1 - Adaptive_Weight) * Target_Inflation - Expected_Inflation) / Expectation_Lag",
+      "from_stock": null,
+      "to_stock": "stock-expect",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-wageinc",
+      "name": "Wage_Adjustment",
+      "equation": "(Expected_Inflation + Productivity_Growth + Labor_Bargaining - Wage_Growth) / Wage_Lag",
+      "from_stock": null,
+      "to_stock": "stock-wage",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-gap",
+      "name": "Output_Gap",
+      "equation": "2 + PULSE(5, 10, 5)",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-phillips",
+      "name": "Phillips_Coef",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-costpush",
+      "name": "Cost_Push",
+      "equation": "(Wage_Growth - Productivity_Growth) * 0.6",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-adjtime",
+      "name": "Adjustment_Time",
+      "equation": "1",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-adaptive",
+      "name": "Adaptive_Weight",
+      "equation": "0.7",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-target",
+      "name": "Target_Inflation",
+      "equation": "2",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-explag",
+      "name": "Expectation_Lag",
+      "equation": "4",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-prod",
+      "name": "Productivity_Growth",
+      "equation": "1.5",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-bargain",
+      "name": "Labor_Bargaining",
+      "equation": "0.5 * MAX(0, Output_Gap)",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-wagelag",
+      "name": "Wage_Lag",
+      "equation": "2",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T12:45:39.561739+00:00",
+  "updated_at": "2026-01-12T12:45:39.561739+00:00",
+  "source": "https://systemdynamics.org/resources/",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

@@ -1,0 +1,174 @@
+{
+  "id": "social-trust-institutions-soc",
+  "name": "Social Trust and Institutional Quality",
+  "description": "Model of co-evolution between social trust and institutional quality. High trust enables better institutions, which reinforce trust. Based on social capital literature and theories of institutional development. Reference: Fisher, R. A. (1930). The Genetical Theory of Natural Selection. Oxford University Press. Source: https://doi.org/10.5962/bhl.title.27468",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Social_Trust",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Institutional_Quality",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Corruption_Level",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Trust_Building",
+      "equation": "(Institutional_Quality * Trust_From_Institutions - Social_Trust) * Positive_Experiences / Trust_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Institution_Improvement",
+      "equation": "(Social_Trust * Trust_Effect_on_Institutions - Institutional_Quality + Reform_Effort) / Institution_Change_Time",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Corruption_Change",
+      "equation": "((1 - Institutional_Quality) * Corruption_Opportunity - Corruption_Level * Enforcement) / Corruption_Time",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 250,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Trust_Adjustment_Time",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Institution_Change_Time",
+      "equation": "20",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Trust_From_Institutions",
+      "equation": "0.8",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Trust_Effect_on_Institutions",
+      "equation": "0.7",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Reform_Effort",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Corruption_Opportunity",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Enforcement",
+      "equation": "Institutional_Quality * 0.3",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Corruption_Time",
+      "equation": "5",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Positive_Experiences",
+      "equation": "1 - Corruption_Level",
+      "position": {
+        "x": 200,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Social_Capital_Index",
+      "equation": "Social_Trust * Institutional_Quality * (1 - Corruption_Level)",
+      "position": {
+        "x": 400,
+        "y": 180
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1017/S0003055400183123",
+  "reference": "Putnam RD (1993) Making Democracy Work. Also: Rothstein B (2011) The Quality of Government. Knack S, Keefer P (1997) QJE.",
+  "created_at": "2026-01-12T06:54:12.140274+00:00",
+  "updated_at": "2026-01-12T06:54:12.140274+00:00"
+}

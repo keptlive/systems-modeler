@@ -1,0 +1,153 @@
+{
+  "id": "hiv-within-host-viral-dynamics-hea",
+  "name": "HIV Within-Host Viral Dynamics",
+  "description": "Model of HIV infection dynamics showing viral load, CD4 cells, and immune response. Source: Perelson et al. (1996), Science.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Uninfected_CD4",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Infected_CD4",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Viral_Load",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "CD4_Production",
+      "equation": "lambda_cd4 - d * Uninfected_CD4 - k * Uninfected_CD4 * Viral_Load",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Infection",
+      "equation": "k * Uninfected_CD4 * Viral_Load - delta * Infected_CD4",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Viral_Production",
+      "equation": "p * Infected_CD4 - c * Viral_Load",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "lambda_cd4",
+      "equation": "10",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "d",
+      "equation": "0.01",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "k",
+      "equation": "2.4e-5",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "delta",
+      "equation": "0.7",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "p",
+      "equation": "100",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "c",
+      "equation": "3",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "R0_basic",
+      "equation": "lambda_cd4 * k * p / (d * delta * c)",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Viral_Load",
+      "to_element": "Infection"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-15T14:39:40.986558+00:00",
+  "updated_at": "2026-01-15T14:39:40.986578+00:00",
+  "source": "https://doi.org/10.1126/science.271.5255.1582",
+  "reference": "Perelson, A.S. et al. (1996). HIV-1 dynamics in vivo: virion clearance rate, infected cell life-span, and viral generation time. Science 271:1582-1586."
+}

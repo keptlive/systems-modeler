@@ -1,0 +1,258 @@
+{
+  "id": "bernanke-gertler-accelerator-fin",
+  "name": "Bernanke-Gertler Financial Accelerator",
+  "description": "Credit market imperfections amplify economic shocks. Net worth of borrowers affects external finance premium, creating procyclical feedback. Explains credit crunches and financial crises. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-net-worth",
+      "name": "Net Worth",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-capital",
+      "name": "Capital Stock",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-output",
+      "name": "Output",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-net-worth-change",
+      "name": "Net Worth Change",
+      "equation": "Profits - Dividend_Payout",
+      "from_stock": null,
+      "to_stock": "stock-net-worth",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-investment",
+      "name": "Net Investment",
+      "equation": "Investment - Depreciation * Capital_Stock",
+      "from_stock": null,
+      "to_stock": "stock-capital",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-output-change",
+      "name": "Output Change",
+      "equation": "Output * (TFP_Growth + Capital_Growth * Capital_Share)",
+      "from_stock": null,
+      "to_stock": "stock-output",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-leverage",
+      "name": "Leverage Ratio",
+      "equation": "Capital_Stock / Net_Worth",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-premium",
+      "name": "External Finance Premium",
+      "equation": "Premium_Sensitivity * (Leverage_Ratio - 1)",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cost",
+      "name": "Cost of Capital",
+      "equation": "Risk_Free_Rate + External_Finance_Premium",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-investment",
+      "name": "Investment",
+      "equation": "MAX(0, Investment_Sensitivity * (MPK - Cost_of_Capital) * Capital_Stock)",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mpk",
+      "name": "MPK",
+      "equation": "Capital_Share * Output / Capital_Stock",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-profits",
+      "name": "Profits",
+      "equation": "Output - Wages - Interest_Payments",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-wages",
+      "name": "Wages",
+      "equation": "(1 - Capital_Share) * Output",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-interest",
+      "name": "Interest Payments",
+      "equation": "Cost_of_Capital * (Capital_Stock - Net_Worth)",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-dividend",
+      "name": "Dividend Payout",
+      "equation": "Dividend_Rate * Net_Worth",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-dividend-rate",
+      "name": "Dividend Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-depreciation",
+      "name": "Depreciation",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-risk-free",
+      "name": "Risk Free Rate",
+      "equation": "0.04",
+      "position": {
+        "x": 550,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-premium-sens",
+      "name": "Premium Sensitivity",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 530
+      }
+    },
+    {
+      "id": "var-inv-sens",
+      "name": "Investment Sensitivity",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 530
+      }
+    },
+    {
+      "id": "var-capital-share",
+      "name": "Capital Share",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 530
+      }
+    },
+    {
+      "id": "var-tfp",
+      "name": "TFP Growth",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 530
+      }
+    },
+    {
+      "id": "var-cap-growth",
+      "name": "Capital Growth",
+      "equation": "(Investment - Depreciation * Capital_Stock) / Capital_Stock",
+      "position": {
+        "x": 700,
+        "y": 530
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Net Worth",
+      "to_element": "Leverage Ratio"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Capital Stock",
+      "to_element": "Leverage Ratio"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Leverage Ratio",
+      "to_element": "External Finance Premium"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "External Finance Premium",
+      "to_element": "Cost of Capital"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:39:15.413637+00:00",
+  "updated_at": "2026-01-12T07:39:15.413643+00:00",
+  "source": "https://doi.org/10.1257/aer.89.1.14",
+  "reference": "Bernanke BS, Gertler M, Gilchrist S. The Financial Accelerator in a Quantitative Business Cycle Framework. Handbook of Macroeconomics. 1999;1:1341-1393."
+}

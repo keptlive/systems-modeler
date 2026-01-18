@@ -1,0 +1,233 @@
+{
+  "id": "covid19-icu-capacity-model-hea",
+  "name": "COVID-19 ICU Capacity Model",
+  "description": "Models ICU bed capacity stress during COVID-19 surges including ventilator availability. Based on IHME/Murray et al. (2020). DOI: 10.1038/s41591-020-0883-7",
+  "stocks": [
+    {
+      "id": "stock-hosp",
+      "name": "Hospitalized",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-icu",
+      "name": "ICU_Patients",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-vent",
+      "name": "Ventilator_Patients",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-discharged",
+      "name": "Discharged",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-deaths",
+      "name": "Deaths",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-admit",
+      "name": "Hospital_Admission",
+      "equation": "Daily_Cases * Hospitalization_Rate",
+      "from_stock": null,
+      "to_stock": "stock-hosp",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-toicu",
+      "name": "ICU_Admission",
+      "equation": "Hospitalized * ICU_Rate / Hospital_LOS",
+      "from_stock": "stock-hosp",
+      "to_stock": "stock-icu",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-tovent",
+      "name": "Ventilator_Need",
+      "equation": "ICU_Patients * Vent_Rate / ICU_LOS * MIN(1, Ventilator_Capacity / (ICU_Patients * Vent_Rate + 0.001))",
+      "from_stock": "stock-icu",
+      "to_stock": "stock-vent",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-discharge",
+      "name": "Discharge",
+      "equation": "Hospitalized * (1 - ICU_Rate) / Hospital_LOS",
+      "from_stock": "stock-hosp",
+      "to_stock": "stock-discharged",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-icudischarge",
+      "name": "ICU_Discharge",
+      "equation": "ICU_Patients * (1 - Mortality_Rate) / ICU_LOS",
+      "from_stock": "stock-icu",
+      "to_stock": "stock-discharged",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-death",
+      "name": "Death",
+      "equation": "Ventilator_Patients * Ventilator_Mortality / Vent_LOS",
+      "from_stock": "stock-vent",
+      "to_stock": "stock-deaths",
+      "position": {
+        "x": 550,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-dailycases",
+      "name": "Daily_Cases",
+      "equation": "500 * (1 + 0.5 * SIN(TIME / 30))",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-hosprate",
+      "name": "Hospitalization_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-icurate",
+      "name": "ICU_Rate",
+      "equation": "0.25",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-ventrate",
+      "name": "Vent_Rate",
+      "equation": "0.6",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-hosplos",
+      "name": "Hospital_LOS",
+      "equation": "7",
+      "position": {
+        "x": 150,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-iculos",
+      "name": "ICU_LOS",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-ventlos",
+      "name": "Vent_LOS",
+      "equation": "14",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-ventcap",
+      "name": "Ventilator_Capacity",
+      "equation": "50",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-mortrate",
+      "name": "Mortality_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-ventmort",
+      "name": "Ventilator_Mortality",
+      "equation": "0.4",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Hospitalized",
+      "to_element": "ICU_Admission"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 180,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:45:00.574798+00:00",
+  "updated_at": "2026-01-12T02:45:00.574802+00:00",
+  "source": "https://doi.org/10.1038/s41591-020-0883-7",
+  "reference": "Murray CJL, et al. (2020). Forecasting COVID-19 impact on hospital bed-days, ICU-days, ventilator-days and deaths. Nature Medicine."
+}

@@ -1,0 +1,222 @@
+{
+  "id": "rockstrom-planetary-boundaries-cli",
+  "name": "Rockstrom Planetary Boundaries Model",
+  "description": "Johan Rockstrom's planetary boundaries framework showing safe operating space for humanity. Reference: Rockstrom, J. et al. (2009). A safe operating space for humanity.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Climate_State",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Biodiversity_State",
+      "initial_value": 0.8,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Nitrogen_State",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Land_Use_State",
+      "initial_value": 0.6,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Climate_Pressure",
+      "equation": "Emission_Pressure * 0.01 - Climate_State * Recovery_Rate",
+      "from_stock": null,
+      "to_stock": "Climate_State",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Biodiversity_Loss",
+      "equation": "-Biodiversity_State * Land_Conversion_Rate - Biodiversity_State * Climate_Impact",
+      "from_stock": null,
+      "to_stock": "Biodiversity_State",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Nitrogen_Load",
+      "equation": "Fertilizer_Use * 0.02 - Nitrogen_State * Denitrification_Rate",
+      "from_stock": null,
+      "to_stock": "Nitrogen_State",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Land_Conversion",
+      "equation": "Agricultural_Expansion - Land_Use_State * Restoration_Rate",
+      "from_stock": null,
+      "to_stock": "Land_Use_State",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Emission_Pressure",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Recovery_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Land_Conversion_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Climate_Impact",
+      "equation": "Climate_State * 0.02",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Fertilizer_Use",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Denitrification_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Agricultural_Expansion",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Restoration_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Climate_Boundary",
+      "equation": "0.65",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Biodiversity_Boundary",
+      "equation": "0.9",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Nitrogen_Boundary",
+      "equation": "0.4",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Land_Boundary",
+      "equation": "0.75",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Boundaries_Exceeded",
+      "equation": "(IF Climate_State > Climate_Boundary THEN 1 ELSE 0) + (IF Biodiversity_State < Biodiversity_Boundary THEN 1 ELSE 0) + (IF Nitrogen_State > Nitrogen_Boundary THEN 1 ELSE 0) + (IF Land_Use_State > Land_Boundary THEN 1 ELSE 0)",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1038/461472a",
+  "reference": "Rockstrom, J. et al. (2009). A safe operating space for humanity. Nature, 461, 472-475.",
+  "created_at": "2026-01-15T19:56:18.833721+00:00",
+  "updated_at": "2026-01-15T19:56:18.833721+00:00"
+}

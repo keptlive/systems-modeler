@@ -1,0 +1,198 @@
+{
+  "id": "nuclear-plant-lifecycle-ene",
+  "name": "Nuclear Power Plant Lifecycle Economics",
+  "description": "Models the economic lifecycle of nuclear power plants including construction, operation, and decommissioning. Based on MIT (2018) The Future of Nuclear Energy. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "category": "energy",
+  "stocks": [
+    {
+      "id": "stock-construct",
+      "name": "Under_Construction_GW",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-operate",
+      "name": "Operating_Capacity_GW",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-decom",
+      "name": "Decommissioning_GW",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cost",
+      "name": "Cumulative_Cost_B",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-start",
+      "name": "Construction_Starts",
+      "equation": "IF(Electricity_Price > Break_Even_Price, New_Build_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-construct",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-complete",
+      "name": "Construction_Completion",
+      "equation": "Under_Construction_GW / Construction_Time",
+      "from_stock": "stock-construct",
+      "to_stock": "stock-operate",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-retire",
+      "name": "Retirements",
+      "equation": "Operating_Capacity_GW / Operating_Life",
+      "from_stock": "stock-operate",
+      "to_stock": "stock-decom",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-finish-decom",
+      "name": "Decom_Complete",
+      "equation": "Decommissioning_GW / Decom_Time",
+      "from_stock": "stock-decom",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-cost",
+      "name": "Annual_Costs",
+      "equation": "Under_Construction_GW * Construction_Cost + Operating_Capacity_GW * Operating_Cost + Decommissioning_GW * Decom_Cost",
+      "from_stock": null,
+      "to_stock": "stock-cost",
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-elec-price",
+      "name": "Electricity_Price",
+      "equation": "60",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-break",
+      "name": "Break_Even_Price",
+      "equation": "65",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-new",
+      "name": "New_Build_Rate",
+      "equation": "1",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-const-time",
+      "name": "Construction_Time",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-life",
+      "name": "Operating_Life",
+      "equation": "60",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-decom-time",
+      "name": "Decom_Time",
+      "equation": "20",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-const-cost",
+      "name": "Construction_Cost",
+      "equation": "6",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-op-cost",
+      "name": "Operating_Cost",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-decom-cost",
+      "name": "Decom_Cost",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "source": "https://energy.mit.edu/research/future-nuclear-energy-carbon-constrained-world/",
+  "reference": "MIT Energy Initiative (2018) The Future of Nuclear Energy in a Carbon-Constrained World. Massachusetts Institute of Technology.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:28:32.560951+00:00",
+  "updated_at": "2026-01-12T06:28:32.560951+00:00"
+}

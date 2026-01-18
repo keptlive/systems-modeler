@@ -1,0 +1,240 @@
+{
+  "id": "tuberculosis-latent-active-epi",
+  "name": "Tuberculosis Latent-Active Model",
+  "description": "Tuberculosis transmission model with latent and active infection states. TB has long latent periods and reactivation dynamics. Source: Based on Dye et al. (1998), Lancet. DOI: 10.1016/S0140-6736(98)08012-6",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 900000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-latent",
+      "name": "Latent_TB",
+      "initial_value": 90000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-active",
+      "name": "Active_TB",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-infection",
+      "name": "New_Infection",
+      "equation": "Beta * Susceptible * Active_TB / Total_Population",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-latent",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fast-progression",
+      "name": "Fast_Progression",
+      "equation": "New_Infection * Fast_Progression_Fraction",
+      "from_stock": "stock-latent",
+      "to_stock": "stock-active",
+      "position": {
+        "x": 325,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-reactivation",
+      "name": "Reactivation",
+      "equation": "Latent_TB * Reactivation_Rate",
+      "from_stock": "stock-latent",
+      "to_stock": "stock-active",
+      "position": {
+        "x": 325,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-treatment",
+      "name": "Treatment",
+      "equation": "Active_TB * Treatment_Rate",
+      "from_stock": "stock-active",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-natural-recovery",
+      "name": "Natural_Recovery",
+      "equation": "Active_TB * Natural_Recovery_Rate",
+      "from_stock": "stock-active",
+      "to_stock": "stock-latent",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-relapse",
+      "name": "Relapse",
+      "equation": "Recovered * Relapse_Rate",
+      "from_stock": "stock-recovered",
+      "to_stock": "stock-latent",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-tb-death",
+      "name": "TB_Death",
+      "equation": "Active_TB * TB_Death_Rate",
+      "from_stock": "stock-active",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "10",
+      "position": {
+        "x": 150,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fast-fraction",
+      "name": "Fast_Progression_Fraction",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-reactivation",
+      "name": "Reactivation_Rate",
+      "equation": "0.0005",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-treatment-rate",
+      "name": "Treatment_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-natural-recovery",
+      "name": "Natural_Recovery_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-relapse",
+      "name": "Relapse_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-tb-death",
+      "name": "TB_Death_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 350,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-total-pop",
+      "name": "Total_Population",
+      "equation": "Susceptible + Latent_TB + Active_TB + Recovered",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-prevalence",
+      "name": "TB_Prevalence",
+      "equation": "Active_TB / Total_Population",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Susceptible",
+      "to_element": "New_Infection"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Active_TB",
+      "to_element": "New_Infection"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Latent_TB",
+      "to_element": "Reactivation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Active_TB",
+      "to_element": "Treatment"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T20:52:52.274850+00:00",
+  "updated_at": "2026-01-11T20:52:52.274850+00:00",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

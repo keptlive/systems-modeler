@@ -1,0 +1,230 @@
+{
+  "id": "covid19-npi-effectiveness-dynamics-epi",
+  "name": "COVID-19 Non-Pharmaceutical Intervention Effectiveness",
+  "description": "Model of COVID-19 transmission reduction from NPIs including masks, distancing, and lockdowns. Based on Brauner et al. Science 2021 meta-analysis. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Susceptible",
+      "initial_value": 0.95,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Exposed",
+      "initial_value": 0.02,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Infected",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Recovered",
+      "initial_value": 0.02,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Compliance Level",
+      "initial_value": 0.8,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Exposure",
+      "equation": "Effective_Beta * Susceptible * Infected",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Becoming Infectious",
+      "equation": "Exposed / Latent_Period",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Recovery",
+      "equation": "Infected / Infectious_Period",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Compliance Fatigue",
+      "equation": "Compliance_Level * Fatigue_Rate",
+      "from_stock": "s5",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Base Beta",
+      "equation": "0.4",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Mask Effectiveness",
+      "equation": "0.53",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Distancing Effectiveness",
+      "equation": "0.25",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Lockdown Effectiveness",
+      "equation": "0.35",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "NPI Active",
+      "equation": "IF(TIME > 30 AND TIME < 180, 1, 0)",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Combined NPI Effect",
+      "equation": "(1 - Mask_Effectiveness * Compliance_Level) * (1 - Distancing_Effectiveness * Compliance_Level) * (1 - Lockdown_Effectiveness * NPI_Active)",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Effective Beta",
+      "equation": "Base_Beta * Combined_NPI_Effect",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Latent Period",
+      "equation": "5",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Infectious Period",
+      "equation": "10",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Fatigue Rate",
+      "equation": "0.002",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Effective R",
+      "equation": "Effective_Beta * Susceptible * Infectious_Period",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Susceptible",
+      "to_element": "Exposure"
+    },
+    {
+      "id": "c2",
+      "from_element": "Infected",
+      "to_element": "Exposure"
+    },
+    {
+      "id": "c3",
+      "from_element": "Compliance Level",
+      "to_element": "Combined NPI Effect"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:14:19.549033",
+  "updated_at": "2026-01-15T14:14:19.549044",
+  "source": "https://doi.org/10.1126/science.abd9338",
+  "reference": "Brauner JM, et al. Inferring the effectiveness of government interventions against COVID-19. Science. 2021;371(6531):eabd9338."
+}

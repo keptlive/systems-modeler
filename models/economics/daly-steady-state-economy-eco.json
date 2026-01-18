@@ -1,0 +1,155 @@
+{
+  "id": "daly-steady-state-economy-eco",
+  "name": "Daly Steady State Economy Model",
+  "description": "Herman Daly's steady-state economy model showing sustainable economic throughput within ecological limits. Demonstrates how physical stock maintenance can be sustained with minimal throughput, separating development from growth.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Natural_Capital",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {"x": 150, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "Built_Capital",
+      "initial_value": 500,
+      "equation": "",
+      "position": {"x": 350, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Human_Capital",
+      "initial_value": 300,
+      "equation": "",
+      "position": {"x": 550, "y": 200}
+    },
+    {
+      "id": "s4",
+      "name": "Waste_Stock",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 350, "y": 400}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Natural_Regeneration",
+      "equation": "Natural_Capital * Regeneration_Rate * (1 - Natural_Capital / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "Natural_Capital",
+      "position": {"x": 50, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Resource_Extraction",
+      "equation": "MIN(Extraction_Rate, Natural_Capital * Max_Extraction_Fraction)",
+      "from_stock": "Natural_Capital",
+      "to_stock": "Built_Capital",
+      "position": {"x": 250, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Capital_Depreciation",
+      "equation": "Built_Capital * Depreciation_Rate",
+      "from_stock": "Built_Capital",
+      "to_stock": "Waste_Stock",
+      "position": {"x": 350, "y": 300}
+    },
+    {
+      "id": "f4",
+      "name": "Human_Development",
+      "equation": "(Built_Capital * Education_Investment - Human_Capital) / Dev_Time",
+      "from_stock": null,
+      "to_stock": "Human_Capital",
+      "position": {"x": 450, "y": 200}
+    },
+    {
+      "id": "f5",
+      "name": "Waste_Absorption",
+      "equation": "MIN(Waste_Stock / Absorption_Time, Natural_Capital * Absorption_Capacity)",
+      "from_stock": "Waste_Stock",
+      "to_stock": null,
+      "position": {"x": 250, "y": 400}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Regeneration_Rate",
+      "equation": "0.05",
+      "position": {"x": 50, "y": 80}
+    },
+    {
+      "id": "v2",
+      "name": "Carrying_Capacity",
+      "equation": "1200",
+      "position": {"x": 150, "y": 80}
+    },
+    {
+      "id": "v3",
+      "name": "Extraction_Rate",
+      "equation": "50",
+      "position": {"x": 250, "y": 80}
+    },
+    {
+      "id": "v4",
+      "name": "Max_Extraction_Fraction",
+      "equation": "0.1",
+      "position": {"x": 350, "y": 80}
+    },
+    {
+      "id": "v5",
+      "name": "Depreciation_Rate",
+      "equation": "0.05",
+      "position": {"x": 450, "y": 80}
+    },
+    {
+      "id": "v6",
+      "name": "Education_Investment",
+      "equation": "0.01",
+      "position": {"x": 550, "y": 80}
+    },
+    {
+      "id": "v7",
+      "name": "Dev_Time",
+      "equation": "10",
+      "position": {"x": 650, "y": 200}
+    },
+    {
+      "id": "v8",
+      "name": "Absorption_Time",
+      "equation": "20",
+      "position": {"x": 150, "y": 450}
+    },
+    {
+      "id": "v9",
+      "name": "Absorption_Capacity",
+      "equation": "0.01",
+      "position": {"x": 250, "y": 450}
+    },
+    {
+      "id": "v10",
+      "name": "Throughput",
+      "equation": "Resource_Extraction",
+      "position": {"x": 450, "y": 450}
+    },
+    {
+      "id": "v11",
+      "name": "Sustainability_Index",
+      "equation": "(Natural_Capital / 1000) * (1 - Waste_Stock / 500)",
+      "position": {"x": 550, "y": 450}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1016/0921-8009(91)90020-D",
+  "reference": "Daly HE. (1991). Steady-State Economics. 2nd Edition. Island Press. Also: Daly HE. (1992). Allocation, distribution, and scale: towards an economics that is efficient, just, and sustainable. Ecological Economics, 6(3), 185-193.",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

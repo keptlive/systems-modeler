@@ -1,0 +1,175 @@
+{
+  "id": "groundwater-aquifer-model",
+  "name": "Groundwater Aquifer Depletion Model",
+  "description": "Model of groundwater extraction and natural recharge dynamics showing sustainable yield limits.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Aquifer_Storage",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Surface_Water",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Natural_Recharge",
+      "equation": "Precipitation * Recharge_Fraction * Recharge_Area",
+      "from_stock": null,
+      "to_stock": "Aquifer_Storage",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Pumping",
+      "equation": "MIN(Aquifer_Storage * Max_Extraction_Rate, Demand)",
+      "from_stock": "Aquifer_Storage",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Baseflow",
+      "equation": "MAX(0, (Aquifer_Storage - Baseflow_Threshold) * Baseflow_Rate)",
+      "from_stock": "Aquifer_Storage",
+      "to_stock": "Surface_Water",
+      "position": {
+        "x": 300,
+        "y": 275
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Surface_Outflow",
+      "equation": "Surface_Water / Residence_Time",
+      "from_stock": "Surface_Water",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Precipitation",
+      "equation": "1000",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Recharge_Fraction",
+      "equation": "0.15",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Recharge_Area",
+      "equation": "10000",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Demand",
+      "equation": "2000000",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Max_Extraction_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Baseflow_Threshold",
+      "equation": "500000",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Baseflow_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Residence_Time",
+      "equation": "30",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Sustainable_Yield",
+      "equation": "Natural_Recharge",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Depletion_Rate",
+      "equation": "(Pumping - Natural_Recharge) / Aquifer_Storage",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1038/s41893-019-0325-z",
+  "reference": "Jasechko, S. & Perrone, D. (2021). Global groundwater wells at risk of running dry. Science, 372(6540), 418-421. DOI: 10.1038/s41893-019-0325-z",
+  "created_at": "2026-01-15T19:26:14.001716+00:00",
+  "updated_at": "2026-01-15T19:26:14.001716+00:00"
+}

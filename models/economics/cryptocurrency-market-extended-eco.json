@@ -1,0 +1,493 @@
+{
+  "id": "cryptocurrency-market-extended-eco",
+  "name": "Cryptocurrency Market Dynamics Extended",
+  "description": "An extended system dynamics model of cryptocurrency markets based on Caginalp & Balenovich (1999) asset flow model and Bolt & van Oordt (2020) 'On the Value of Virtual Currencies' (doi:10.1016/j.jmoneco.2019.07.004). Models speculative dynamics, adoption, mining, and market sentiment. Reference: Nakamoto, S. (2008). Bitcoin: A Peer-to-Peer Electronic Cash System. Source: https://bitcoin.org/bitcoin.pdf",
+  "stocks": [
+    {
+      "id": "stock-price",
+      "name": "Crypto Price",
+      "initial_value": 40000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-circulating-supply",
+      "name": "Circulating Supply",
+      "initial_value": 19000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-active-wallets",
+      "name": "Active Wallets",
+      "initial_value": 50000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-market-sentiment",
+      "name": "Market Sentiment",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-exchange-reserves",
+      "name": "Exchange Reserves",
+      "initial_value": 2500000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-hash-rate",
+      "name": "Network Hash Rate",
+      "initial_value": 400,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-institutional-holdings",
+      "name": "Institutional Holdings",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-price-change",
+      "name": "Price Change",
+      "equation": "Crypto_Price * (Demand_Pressure - Supply_Pressure) * Volatility_Factor",
+      "from_stock": null,
+      "to_stock": "stock-price",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-mining",
+      "name": "Mining",
+      "equation": "Block_Reward * Blocks_per_Day",
+      "from_stock": null,
+      "to_stock": "stock-circulating-supply",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-lost-coins",
+      "name": "Lost Coins",
+      "equation": "Circulating_Supply * Loss_Rate",
+      "from_stock": "stock-circulating-supply",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-wallet-adoption",
+      "name": "Wallet Adoption",
+      "equation": "Potential_Users * Adoption_Rate * Network_Effect",
+      "from_stock": null,
+      "to_stock": "stock-active-wallets",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-wallet-abandonment",
+      "name": "Wallet Abandonment",
+      "equation": "Active_Wallets * Abandonment_Rate * (1 - Market_Sentiment)",
+      "from_stock": "stock-active-wallets",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-sentiment-increase",
+      "name": "Sentiment Increase",
+      "equation": "(1 - Market_Sentiment) * Sentiment_Recovery * Price_Momentum",
+      "from_stock": null,
+      "to_stock": "stock-market-sentiment",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-sentiment-decrease",
+      "name": "Sentiment Decrease",
+      "equation": "Market_Sentiment * Sentiment_Decay * (1 + Fear_Factor)",
+      "from_stock": "stock-market-sentiment",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-exchange-inflow",
+      "name": "Exchange Inflow",
+      "equation": "Circulating_Supply * Sell_Pressure * (1 - Market_Sentiment)",
+      "from_stock": null,
+      "to_stock": "stock-exchange-reserves",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-exchange-outflow",
+      "name": "Exchange Outflow",
+      "equation": "Exchange_Reserves * Buy_Pressure * Market_Sentiment",
+      "from_stock": "stock-exchange-reserves",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-hash-increase",
+      "name": "Hash Rate Increase",
+      "equation": "Network_Hash_Rate * Mining_Profitability * 0.1",
+      "from_stock": null,
+      "to_stock": "stock-hash-rate",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-hash-decrease",
+      "name": "Hash Rate Decrease",
+      "equation": "Network_Hash_Rate * (1 - Mining_Profitability) * 0.05",
+      "from_stock": "stock-hash-rate",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-institutional-buying",
+      "name": "Institutional Buying",
+      "equation": "Institutional_Target * Institutional_Adoption_Rate * Market_Sentiment",
+      "from_stock": null,
+      "to_stock": "stock-institutional-holdings",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-institutional-selling",
+      "name": "Institutional Selling",
+      "equation": "Institutional_Holdings * Rebalancing_Rate * (1 - Market_Sentiment)",
+      "from_stock": "stock-institutional-holdings",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-demand-pressure",
+      "name": "Demand Pressure",
+      "equation": "Market_Sentiment * Active_Wallets / 100000000 + Institutional_Holdings / Circulating_Supply",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-supply-pressure",
+      "name": "Supply Pressure",
+      "equation": "Exchange_Reserves / Circulating_Supply + Mining / Circulating_Supply",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-volatility-factor",
+      "name": "Volatility Factor",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-block-reward",
+      "name": "Block Reward",
+      "equation": "6.25",
+      "position": {
+        "x": 50,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-blocks-per-day",
+      "name": "Blocks per Day",
+      "equation": "144",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-loss-rate",
+      "name": "Loss Rate",
+      "equation": "0.0001",
+      "position": {
+        "x": 150,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-potential-users",
+      "name": "Potential Users",
+      "equation": "1000000000",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-adoption-rate",
+      "name": "Adoption Rate",
+      "equation": "0.0001",
+      "position": {
+        "x": 50,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-network-effect",
+      "name": "Network Effect",
+      "equation": "1 + SQRT(Active_Wallets / 10000000)",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-abandonment-rate",
+      "name": "Abandonment Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 180,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-price-momentum",
+      "name": "Price Momentum",
+      "equation": "IF(Price_Change > 0, 1.5, 0.5)",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-sentiment-recovery",
+      "name": "Sentiment Recovery",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-sentiment-decay",
+      "name": "Sentiment Decay",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-fear-factor",
+      "name": "Fear Factor",
+      "equation": "IF(Price_Change < 0, 0.5, 0)",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-sell-pressure",
+      "name": "Sell Pressure",
+      "equation": "0.001",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-buy-pressure",
+      "name": "Buy Pressure",
+      "equation": "0.002",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-mining-profitability",
+      "name": "Mining Profitability",
+      "equation": "MIN(1, Crypto_Price * Block_Reward / (Network_Hash_Rate * Energy_Cost))",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-energy-cost",
+      "name": "Energy Cost",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-institutional-target",
+      "name": "Institutional Target",
+      "equation": "2000000",
+      "position": {
+        "x": 350,
+        "y": 430
+      }
+    },
+    {
+      "id": "var-institutional-adoption-rate",
+      "name": "Institutional Adoption Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-rebalancing-rate",
+      "name": "Rebalancing Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 550,
+        "y": 430
+      }
+    },
+    {
+      "id": "var-market-cap",
+      "name": "Market Cap",
+      "equation": "Crypto_Price * Circulating_Supply",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Demand Pressure",
+      "to_element": "Price Change"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Supply Pressure",
+      "to_element": "Price Change"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Market Sentiment",
+      "to_element": "Demand Pressure"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Active Wallets",
+      "to_element": "Demand Pressure"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Exchange Reserves",
+      "to_element": "Supply Pressure"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Active Wallets",
+      "to_element": "Network Effect"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Market Sentiment",
+      "to_element": "Wallet Abandonment"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Market Sentiment",
+      "to_element": "Exchange Inflow"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Market Sentiment",
+      "to_element": "Exchange Outflow"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Crypto Price",
+      "to_element": "Mining Profitability"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Mining Profitability",
+      "to_element": "Hash Rate Increase"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Market Sentiment",
+      "to_element": "Institutional Buying"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

@@ -1,0 +1,154 @@
+{
+  "id": "barro-gordon-inflation-game-eco",
+  "name": "Barro-Gordon Inflation Credibility Model",
+  "description": "Game-theoretic model of monetary policy credibility and time inconsistency in central banking. Reference: Federal Reserve Economic Data (FRED). Source: https://fred.stlouisfed.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Inflation_Expectations",
+      "initial_value": 0.02,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Credibility",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Expectations_Adjustment",
+      "equation": "(Actual_Inflation - Inflation_Expectations) / Learning_Speed",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Credibility_Change",
+      "equation": "(Announced_Inflation - Actual_Inflation) * Credibility_Sensitivity / Credibility_Decay",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Optimal_Surprise_Inflation",
+      "equation": "Target_Output_Gap * Alpha_BG / (Alpha_BG + Beta_BG)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Actual_Inflation",
+      "equation": "Inflation_Expectations + Temptation_Factor * Optimal_Surprise_Inflation",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Announced_Inflation",
+      "equation": "0.02",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Target_Output_Gap",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Alpha_BG",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Beta_BG",
+      "equation": "1",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Learning_Speed",
+      "equation": "4",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Temptation_Factor",
+      "equation": "1 - Credibility",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Credibility_Sensitivity",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Credibility_Decay",
+      "equation": "10",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:20:56.316255+00:00",
+  "updated_at": "2026-01-12T11:20:56.316255+00:00",
+  "source": "https://doi.org/10.1086/261167",
+  "reference": "Barro RJ, Gordon DB. Rules, discretion and reputation in a model of monetary policy. J Monetary Economics. 1983;12:101-121."
+}

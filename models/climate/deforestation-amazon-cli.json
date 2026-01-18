@@ -1,0 +1,235 @@
+{
+  "id": "deforestation-amazon-cli",
+  "name": "Amazon Deforestation Dynamics",
+  "description": "A model of Amazon rainforest deforestation, capturing drivers including cattle ranching, soy production, logging, and policy enforcement. Based on research on tropical deforestation patterns. Reference: Global Forest Watch. Source: https://www.globalforestwatch.org/",
+  "source": "https://doi.org/10.1038/nature12914",
+  "reference": "Nepstad D, et al. Slowing Amazon deforestation through public policy and interventions in beef and soy supply chains. Science. 2014;344(6188):1118-1123.",
+  "stocks": [
+    {
+      "id": "stock-forest",
+      "name": "Forest Area",
+      "initial_value": 5500000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-pasture",
+      "name": "Pasture Area",
+      "initial_value": 700000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cropland",
+      "name": "Cropland Area",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 400
+      }
+    },
+    {
+      "id": "stock-degraded",
+      "name": "Degraded Land",
+      "initial_value": 200000,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-deforestation-pasture",
+      "name": "Deforestation for Pasture",
+      "equation": "Forest_Area * Pasture_Expansion_Rate * Cattle_Price_Index * (1 - Enforcement_Effectiveness)",
+      "from_stock": "stock-forest",
+      "to_stock": "stock-pasture",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-deforestation-crops",
+      "name": "Deforestation for Crops",
+      "equation": "Forest_Area * Crop_Expansion_Rate * Soy_Price_Index * (1 - Enforcement_Effectiveness)",
+      "from_stock": "stock-forest",
+      "to_stock": "stock-cropland",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-pasture-degradation",
+      "name": "Pasture Degradation",
+      "equation": "Pasture_Area * Degradation_Rate",
+      "from_stock": "stock-pasture",
+      "to_stock": "stock-degraded",
+      "position": {
+        "x": 600,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Forest Recovery",
+      "equation": "Degraded_Land * Natural_Regeneration_Rate",
+      "from_stock": "stock-degraded",
+      "to_stock": "stock-forest",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-intensification",
+      "name": "Pasture Intensification",
+      "equation": "Pasture_Area * Intensification_Rate * Technology_Adoption",
+      "from_stock": "stock-pasture",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-logging",
+      "name": "Selective Logging",
+      "equation": "Forest_Area * Logging_Rate * (1 - Enforcement_Effectiveness)",
+      "from_stock": "stock-forest",
+      "to_stock": "stock-degraded",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-pasture-expansion",
+      "name": "Pasture Expansion Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cattle-price",
+      "name": "Cattle Price Index",
+      "equation": "1.0",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-crop-expansion",
+      "name": "Crop Expansion Rate",
+      "equation": "0.002",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-soy-price",
+      "name": "Soy Price Index",
+      "equation": "1.0",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-enforcement",
+      "name": "Enforcement Effectiveness",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-degradation",
+      "name": "Degradation Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-regeneration",
+      "name": "Natural Regeneration Rate",
+      "equation": "0.002",
+      "position": {
+        "x": 650,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-intensification",
+      "name": "Intensification Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-technology",
+      "name": "Technology Adoption",
+      "equation": "0.5",
+      "position": {
+        "x": 650,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-logging",
+      "name": "Logging Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-carbon-stock",
+      "name": "Carbon Stock",
+      "equation": "Forest_Area * 150",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-emissions",
+      "name": "Annual Emissions",
+      "equation": "(Deforestation_for_Pasture + Deforestation_for_Crops) * 150",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T08:00:00.000000+00:00",
+  "updated_at": "2026-01-12T08:00:00.000000+00:00"
+}

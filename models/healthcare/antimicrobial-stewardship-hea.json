@@ -1,0 +1,183 @@
+{
+  "id": "antimicrobial-stewardship-hea",
+  "name": "Antimicrobial Stewardship Program Model",
+  "description": "Model of hospital antimicrobial stewardship showing prescription patterns, resistance development, and intervention effectiveness. Based on CDC guidelines. Reference: Andersson, D. I., & Hughes, D. (2014). Microbiological effects of sublethal antibiotic concentrations. Nature Reviews Microbiology. Source: https://doi.org/10.1038/nrmicro3270",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Appropriate Prescriptions",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Inappropriate Prescriptions",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Resistance Level",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Stewardship Effect",
+      "equation": "Inappropriate_Prescriptions * Stewardship_Effectiveness * Intervention_Intensity",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Practice Drift",
+      "equation": "Appropriate_Prescriptions * Drift_Rate",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Resistance Development",
+      "equation": "Inappropriate_Prescriptions * Resistance_Rate",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Resistance Decay",
+      "equation": "Resistance_Level * Natural_Decay_Rate",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Stewardship Effectiveness",
+      "equation": "0.3",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Intervention Intensity",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Drift Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Resistance Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Natural Decay Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 650,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Appropriate Fraction",
+      "equation": "Appropriate_Prescriptions / (Appropriate_Prescriptions + Inappropriate_Prescriptions)",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Treatment Failure Rate",
+      "equation": "Resistance_Level * 0.01",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Cost Savings",
+      "equation": "(50 - Inappropriate_Prescriptions) * 100",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Inappropriate Prescriptions",
+      "to_element": "Stewardship Effect"
+    },
+    {
+      "id": "c2",
+      "from_element": "Inappropriate Prescriptions",
+      "to_element": "Resistance Development"
+    },
+    {
+      "id": "c3",
+      "from_element": "Resistance Level",
+      "to_element": "Treatment Failure Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T01:55:42.037638+00:00",
+  "updated_at": "2026-01-12T01:55:42.037645+00:00",
+  "source": "https://www.cdc.gov/antibiotic-use/core-elements/hospital.html",
+  "reference": "CDC. Core Elements of Hospital Antibiotic Stewardship Programs. Centers for Disease Control and Prevention, 2019."
+}

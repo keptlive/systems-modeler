@@ -1,0 +1,197 @@
+{
+  "id": "social-media-mental-health-soc",
+  "name": "Social Media Use and Mental Health",
+  "description": "Model of the relationship between social media use and mental health outcomes, showing feedback loops between usage, comparison, and wellbeing. Reference: WHO (2022). Mental Health Action Plan. Source: https://www.who.int/publications/i/item/9789241506021",
+  "source": "https://doi.org/10.1037/amp0000279",
+  "reference": "Twenge JM, et al. Increases in Depressive Symptoms, Suicide-Related Outcomes, and Suicide Rates Among US Adolescents After 2010. Clinical Psychological Science. 2018;6(1):3-17.",
+  "stocks": [
+    {
+      "id": "stock-users",
+      "name": "Heavy_Users",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-moderate",
+      "name": "Moderate_Users",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-low",
+      "name": "Low_Users",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-wellbeing",
+      "name": "Average_Wellbeing",
+      "initial_value": 65,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-increase",
+      "name": "Usage_Increase",
+      "equation": "Moderate_Users * increase_rate * social_pressure * (1 - Average_Wellbeing / 100)",
+      "from_stock": "stock-moderate",
+      "to_stock": "stock-users",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-decrease",
+      "name": "Usage_Decrease",
+      "equation": "Heavy_Users * decrease_rate * awareness",
+      "from_stock": "stock-users",
+      "to_stock": "stock-moderate",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-disengage",
+      "name": "Disengagement",
+      "equation": "Moderate_Users * disengage_rate * wellbeing_concern",
+      "from_stock": "stock-moderate",
+      "to_stock": "stock-low",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-wellbeing-change",
+      "name": "Wellbeing_Change",
+      "equation": "(Target_Wellbeing - Average_Wellbeing) * adjustment_rate",
+      "from_stock": null,
+      "to_stock": "stock-wellbeing",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-inc",
+      "name": "increase_rate",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-pressure",
+      "name": "social_pressure",
+      "equation": "1.2",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-dec",
+      "name": "decrease_rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-aware",
+      "name": "awareness",
+      "equation": "0.3",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-disengage",
+      "name": "disengage_rate",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-concern",
+      "name": "wellbeing_concern",
+      "equation": "(100 - Average_Wellbeing) / 100",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-adj",
+      "name": "adjustment_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-target",
+      "name": "Target_Wellbeing",
+      "equation": "80 - 20 * Heavy_Users / (Heavy_Users + Moderate_Users + Low_Users)",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-heavy-share",
+      "name": "Heavy_User_Share",
+      "equation": "Heavy_Users / (Heavy_Users + Moderate_Users + Low_Users)",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-anxiety",
+      "name": "Anxiety_Index",
+      "equation": "100 - Average_Wellbeing + 10 * Heavy_User_Share",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

@@ -1,0 +1,157 @@
+{
+  "id": "homer-obesity-dynamics-hea",
+  "name": "Homer Obesity Epidemic Model",
+  "description": "System dynamics model of obesity prevalence showing the feedback loops between energy balance, weight gain, metabolism, and behavioral factors. Based on Homer et al.'s work modeling chronic disease epidemics and public health interventions.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Normal_Weight_Pop",
+      "initial_value": 60000000,
+      "equation": "",
+      "position": {"x": 150, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "Overweight_Pop",
+      "initial_value": 30000000,
+      "equation": "",
+      "position": {"x": 350, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Obese_Pop",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {"x": 550, "y": 200}
+    },
+    {
+      "id": "s4",
+      "name": "Food_Environment",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 350, "y": 400}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Becoming_Overweight",
+      "equation": "Normal_Weight_Pop * Weight_Gain_Rate * Food_Environment_Effect",
+      "from_stock": "Normal_Weight_Pop",
+      "to_stock": "Overweight_Pop",
+      "position": {"x": 250, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Becoming_Obese",
+      "equation": "Overweight_Pop * Obesity_Progression_Rate",
+      "from_stock": "Overweight_Pop",
+      "to_stock": "Obese_Pop",
+      "position": {"x": 450, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Weight_Loss_Overweight",
+      "equation": "Overweight_Pop * Weight_Loss_Rate * Intervention_Effect",
+      "from_stock": "Overweight_Pop",
+      "to_stock": "Normal_Weight_Pop",
+      "position": {"x": 250, "y": 250}
+    },
+    {
+      "id": "f4",
+      "name": "Weight_Loss_Obese",
+      "equation": "Obese_Pop * Weight_Loss_Rate * 0.5 * Intervention_Effect",
+      "from_stock": "Obese_Pop",
+      "to_stock": "Overweight_Pop",
+      "position": {"x": 450, "y": 250}
+    },
+    {
+      "id": "f5",
+      "name": "Environment_Worsening",
+      "equation": "Food_Environment * Environment_Change_Rate * Obesogenic_Pressure",
+      "from_stock": null,
+      "to_stock": "Food_Environment",
+      "position": {"x": 250, "y": 400}
+    },
+    {
+      "id": "f6",
+      "name": "Environment_Improvement",
+      "equation": "Food_Environment * Policy_Effect",
+      "from_stock": "Food_Environment",
+      "to_stock": null,
+      "position": {"x": 450, "y": 400}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Weight_Gain_Rate",
+      "equation": "0.03",
+      "position": {"x": 100, "y": 100}
+    },
+    {
+      "id": "v2",
+      "name": "Food_Environment_Effect",
+      "equation": "Food_Environment / 100",
+      "position": {"x": 200, "y": 100}
+    },
+    {
+      "id": "v3",
+      "name": "Obesity_Progression_Rate",
+      "equation": "0.05",
+      "position": {"x": 350, "y": 100}
+    },
+    {
+      "id": "v4",
+      "name": "Weight_Loss_Rate",
+      "equation": "0.02",
+      "position": {"x": 500, "y": 100}
+    },
+    {
+      "id": "v5",
+      "name": "Intervention_Effect",
+      "equation": "1",
+      "position": {"x": 650, "y": 100}
+    },
+    {
+      "id": "v6",
+      "name": "Environment_Change_Rate",
+      "equation": "0.01",
+      "position": {"x": 100, "y": 500}
+    },
+    {
+      "id": "v7",
+      "name": "Obesogenic_Pressure",
+      "equation": "1.02",
+      "position": {"x": 200, "y": 500}
+    },
+    {
+      "id": "v8",
+      "name": "Policy_Effect",
+      "equation": "0.005",
+      "position": {"x": 350, "y": 500}
+    },
+    {
+      "id": "v9",
+      "name": "Obesity_Prevalence",
+      "equation": "Obese_Pop / (Normal_Weight_Pop + Overweight_Pop + Obese_Pop)",
+      "position": {"x": 550, "y": 350}
+    },
+    {
+      "id": "v10",
+      "name": "Total_Population",
+      "equation": "Normal_Weight_Pop + Overweight_Pop + Obese_Pop",
+      "position": {"x": 550, "y": 400}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "source": "https://doi.org/10.1016/j.amepre.2009.02.014",
+  "reference": "Homer J, et al. Combined Diet and Physical Activity Promotion Programs to Prevent Type 2 Diabetes Among Persons at Increased Risk. Am J Prev Med. 2009;37(6S1):S455-S461. DOI: 10.1016/j.amepre.2009.02.014",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

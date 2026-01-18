@@ -1,0 +1,179 @@
+{
+  "id": "labor-market-matching-eco",
+  "name": "Labor Market Matching",
+  "description": "Labor market matching model showing job search, hiring, and separation dynamics. Based on search and matching theory. Source: Based on Mortensen & Pissarides (1994), Review of Economic Studies. DOI: 10.2307/2297896",
+  "stocks": [
+    {
+      "id": "stock-unemployed",
+      "name": "Unemployed",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-employed",
+      "name": "Employed",
+      "initial_value": 900000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-vacancies",
+      "name": "Job_Vacancies",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 275,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-hiring",
+      "name": "Hiring",
+      "equation": "Matching_Rate * Unemployed * Job_Vacancies / Labor_Force",
+      "from_stock": "stock-unemployed",
+      "to_stock": "stock-employed",
+      "position": {
+        "x": 275,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-separation",
+      "name": "Job_Separation",
+      "equation": "Employed * Separation_Rate",
+      "from_stock": "stock-employed",
+      "to_stock": "stock-unemployed",
+      "position": {
+        "x": 275,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-vacancy-creation",
+      "name": "Vacancy_Creation",
+      "equation": "Vacancy_Creation_Rate * Employed",
+      "from_stock": null,
+      "to_stock": "stock-vacancies",
+      "position": {
+        "x": 175,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-vacancy-fill",
+      "name": "Vacancy_Fill",
+      "equation": "Hiring",
+      "from_stock": "stock-vacancies",
+      "to_stock": null,
+      "position": {
+        "x": 375,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-matching-rate",
+      "name": "Matching_Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-separation-rate",
+      "name": "Separation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-vacancy-creation-rate",
+      "name": "Vacancy_Creation_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-labor-force",
+      "name": "Labor_Force",
+      "equation": "Unemployed + Employed",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-unemployment-rate",
+      "name": "Unemployment_Rate",
+      "equation": "Unemployed / Labor_Force",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-vacancy-rate",
+      "name": "Vacancy_Rate",
+      "equation": "Job_Vacancies / Labor_Force",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-market-tightness",
+      "name": "Market_Tightness",
+      "equation": "Job_Vacancies / (Unemployed + 1)",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Unemployed",
+      "to_element": "Hiring"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Job_Vacancies",
+      "to_element": "Hiring"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Employed",
+      "to_element": "Job_Separation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Employed",
+      "to_element": "Vacancy_Creation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:52:52.274660+00:00",
+  "updated_at": "2026-01-11T20:52:52.274660+00:00",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

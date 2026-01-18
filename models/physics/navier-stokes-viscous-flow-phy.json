@@ -1,0 +1,83 @@
+{
+  "id": "navier-stokes-viscous-flow-phy",
+  "name": "Navier-Stokes Viscous Flow (Simplified 1D)",
+  "description": "Simplified 1D representation of the Navier-Stokes equations for viscous fluid flow. Models momentum transfer with pressure gradients and viscous dissipation. The full 3D equations remain one of the millennium prize problems. Source: Navier (1822) and Stokes (1845). Reference: DOI: 10.1017/CBO9780511840531",
+  "stocks": [
+    {
+      "id": "stock-velocity",
+      "name": "Velocity",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "stock-momentum",
+      "name": "Momentum",
+      "initial_value": 10.0,
+      "equation": "",
+      "position": {"x": 400, "y": 200}
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-acceleration",
+      "name": "Acceleration",
+      "equation": "(Pressure_Gradient - Viscous_Dissipation) / Density",
+      "from_stock": null,
+      "to_stock": "stock-velocity",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "flow-momentum-transfer",
+      "name": "Momentum_Transfer",
+      "equation": "Velocity * Density - Drag_Force",
+      "from_stock": null,
+      "to_stock": "stock-momentum",
+      "position": {"x": 300, "y": 200}
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-density",
+      "name": "Density",
+      "equation": "1.0",
+      "position": {"x": 150, "y": 100}
+    },
+    {
+      "id": "var-pressure-gradient",
+      "name": "Pressure_Gradient",
+      "equation": "0.1",
+      "position": {"x": 250, "y": 100}
+    },
+    {
+      "id": "var-viscosity",
+      "name": "Kinematic_Viscosity",
+      "equation": "0.01",
+      "position": {"x": 350, "y": 100}
+    },
+    {
+      "id": "var-viscous-dissipation",
+      "name": "Viscous_Dissipation",
+      "equation": "Kinematic_Viscosity * Velocity",
+      "position": {"x": 200, "y": 300}
+    },
+    {
+      "id": "var-drag",
+      "name": "Drag_Force",
+      "equation": "0.05 * Velocity * Velocity",
+      "position": {"x": 400, "y": 300}
+    },
+    {
+      "id": "var-reynolds",
+      "name": "Reynolds_Number",
+      "equation": "Velocity * 1.0 / Kinematic_Viscosity",
+      "position": {"x": 300, "y": 50}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.1},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1017/CBO9780511840531",
+  "reference": "Batchelor, G.K. (2000). An Introduction to Fluid Dynamics. Cambridge University Press."
+}

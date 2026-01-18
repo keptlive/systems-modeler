@@ -1,0 +1,203 @@
+{
+  "id": "pandemic-healthcare-burnout-hea",
+  "name": "Pandemic Healthcare Worker Burnout",
+  "description": "Models staff burnout and healthcare capacity during pandemic surges. Source: Shaukat et al. (2020), Clinical Microbiology and Infection. DOI: 10.1016/j.cmi.2020.05.021",
+  "stocks": [
+    {
+      "id": "stock-staff",
+      "name": "Active_Healthcare_Workers",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-burnout",
+      "name": "Burnout_Level",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-patients",
+      "name": "COVID_Patients",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-exited",
+      "name": "Staff_Exited",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-hire",
+      "name": "Hiring",
+      "equation": "Hiring_Rate * IF(Staff_Shortage > 0, 1 + Staff_Shortage / 100, 1)",
+      "from_stock": null,
+      "to_stock": "stock-staff",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-exit",
+      "name": "Staff_Exit",
+      "equation": "Active_Healthcare_Workers * Exit_Rate * (1 + Burnout_Level / 50)",
+      "from_stock": "stock-staff",
+      "to_stock": "stock-exited",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-burnbuild",
+      "name": "Burnout_Buildup",
+      "equation": "Workload_Stress * PPE_Shortage_Effect * (100 - Burnout_Level) / 100",
+      "from_stock": null,
+      "to_stock": "stock-burnout",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-burnrec",
+      "name": "Burnout_Recovery",
+      "equation": "Burnout_Level * Recovery_Interventions",
+      "from_stock": "stock-burnout",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-patients",
+      "name": "Patient_Change",
+      "equation": "COVID_Patients * (Admission_Rate - Discharge_Rate - Mortality_Rate)",
+      "from_stock": null,
+      "to_stock": "stock-patients",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-hirerate",
+      "name": "Hiring_Rate",
+      "equation": "10",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-exitrate",
+      "name": "Exit_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-workload",
+      "name": "Workload_Stress",
+      "equation": "COVID_Patients / Active_Healthcare_Workers * 10",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-ppe",
+      "name": "PPE_Shortage_Effect",
+      "equation": "1.2",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-recovery",
+      "name": "Recovery_Interventions",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-admrate",
+      "name": "Admission_Rate",
+      "equation": "0.1 + 0.05 * SIN(TIME / 30)",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-discharge",
+      "name": "Discharge_Rate",
+      "equation": "0.08",
+      "position": {
+        "x": 450,
+        "y": 125
+      }
+    },
+    {
+      "id": "var-mort",
+      "name": "Mortality_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-shortage",
+      "name": "Staff_Shortage",
+      "equation": "MAX(0, COVID_Patients / 5 - Active_Healthcare_Workers)",
+      "position": {
+        "x": 250,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Burnout_Level",
+      "to_element": "Staff_Exit"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:17:16.214010+00:00",
+  "updated_at": "2026-01-12T02:17:16.214014+00:00",
+  "source": "https://doi.org/10.1016/j.cmi.2020.05.021",
+  "reference": "Shaukat, N. et al. (2020). Physical and mental health impacts of COVID-19 on healthcare workers. Clinical Microbiology and Infection."
+}

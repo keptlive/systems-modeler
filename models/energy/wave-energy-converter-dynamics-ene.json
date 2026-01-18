@@ -1,0 +1,171 @@
+{
+  "id": "wave-energy-converter-dynamics-ene",
+  "name": "Wave Energy Converter Model",
+  "description": "Point absorber wave energy device dynamics. Source: Falnes (2002), Ocean Waves and Oscillating Systems. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Buoy_Position",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Buoy_Velocity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Energy_Captured",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Velocity_Change",
+      "equation": "Buoy_Velocity",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Acceleration",
+      "equation": "(Wave_Force - Damping * Buoy_Velocity - Stiffness * Buoy_Position) / Mass",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Power_Capture",
+      "equation": "Damping * Buoy_Velocity * Buoy_Velocity",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Mass",
+      "equation": "10000",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Wave_Height",
+      "equation": "2",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Wave_Period",
+      "equation": "8",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Wave_Frequency",
+      "equation": "2 * 3.14159 / Wave_Period",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Wave_Force",
+      "equation": "50000 * Wave_Height * SIN(Wave_Frequency * TIME)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Damping",
+      "equation": "50000",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Stiffness",
+      "equation": "100000",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Average_Power",
+      "equation": "Energy_Captured / (TIME + 0.1)",
+      "position": {
+        "x": 300,
+        "y": 480
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Capture_Efficiency",
+      "equation": "Average_Power / (500 * Wave_Height * Wave_Height * Wave_Period + 0.1) * 100",
+      "position": {
+        "x": 500,
+        "y": 480
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Wave_Force",
+      "to_element": "Acceleration"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T14:52:39.346990+00:00",
+  "updated_at": "2026-01-15T14:52:39.347000+00:00",
+  "source": "https://doi.org/10.1017/CBO9780511754630",
+  "reference": "Falnes, J. (2002). Ocean Waves and Oscillating Systems. Cambridge University Press."
+}

@@ -1,0 +1,115 @@
+{
+  "id": "toggle-switch-synthetic-bio",
+  "name": "Toggle Switch Gene Circuit",
+  "description": "Bistable synthetic gene circuit with two mutually repressing genes",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Protein_U",
+      "initial_value": 1.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Protein_V",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "alpha1",
+      "equation": "3.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "alpha2",
+      "equation": "2.5",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "beta",
+      "equation": "4.0",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "gamma",
+      "equation": "4.0",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "dU_dt",
+      "equation": "alpha1/(1+Protein_V*Protein_V*Protein_V*Protein_V)-Protein_U",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "dV_dt",
+      "equation": "alpha2/(1+Protein_U*Protein_U*Protein_U*Protein_U)-Protein_V",
+      "position": {
+        "x": 300,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Protein_V",
+      "to_element": "dU_dt"
+    },
+    {
+      "id": "c2",
+      "from_element": "Protein_U",
+      "to_element": "dU_dt"
+    },
+    {
+      "id": "c3",
+      "from_element": "Protein_U",
+      "to_element": "dV_dt"
+    },
+    {
+      "id": "c4",
+      "from_element": "Protein_V",
+      "to_element": "dV_dt"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 50.0,
+    "dt": 0.01
+  },
+  "created_at": "2026-01-15T20:41:11.307298+00:00",
+  "updated_at": "2026-01-15T20:41:11.307298+00:00",
+  "source": "https://doi.org/10.1038/35002131",
+  "reference": "Gardner, T.S., Cantor, C.R. & Collins, J.J. (2000) Construction of a genetic toggle switch in E. coli. Nature 403:339-342"
+}

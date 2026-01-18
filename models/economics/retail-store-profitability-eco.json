@@ -1,0 +1,455 @@
+{
+  "id": "retail-store-profitability-eco",
+  "name": "Retail Store Profitability Model",
+  "description": "A system dynamics model of retail store profitability. Models the interactions between customer traffic, inventory management, pricing, staffing, and the feedback effects on profitability and store operations. Reference: Based on Beer Game model (Sterman, 2000). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-inventory",
+      "name": "Store Inventory",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-customers",
+      "name": "Customers in Store",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-staff",
+      "name": "Staff on Duty",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-cumulative-profit",
+      "name": "Cumulative Profit",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-customer-satisfaction",
+      "name": "Customer Satisfaction",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 450
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-replenishment",
+      "name": "Inventory Replenishment",
+      "equation": "(Target_Inventory - Store_Inventory) / Replenishment_Time",
+      "from_stock": null,
+      "to_stock": "stock-inventory",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-sales",
+      "name": "Sales Rate",
+      "equation": "Customers_in_Store * Conversion_Rate * Average_Items_Per_Sale",
+      "from_stock": "stock-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-shrinkage",
+      "name": "Shrinkage",
+      "equation": "Store_Inventory * Shrinkage_Rate",
+      "from_stock": "stock-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-arrivals",
+      "name": "Customer Arrivals",
+      "equation": "Base_Traffic * Time_of_Day_Factor * Satisfaction_Effect",
+      "from_stock": null,
+      "to_stock": "stock-customers",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-departures",
+      "name": "Customer Departures",
+      "equation": "Customers_in_Store / Average_Visit_Duration",
+      "from_stock": "stock-customers",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-hiring",
+      "name": "Staff Hiring",
+      "equation": "MAX(0, (Desired_Staff - Staff_on_Duty) / Hiring_Time)",
+      "from_stock": null,
+      "to_stock": "stock-staff",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-staff-leaving",
+      "name": "Staff Leaving",
+      "equation": "Staff_on_Duty * Turnover_Rate",
+      "from_stock": "stock-staff",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-profit-generation",
+      "name": "Profit Generation",
+      "equation": "Revenue - Total_Costs",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-profit",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-satisfaction-building",
+      "name": "Satisfaction Building",
+      "equation": "(Service_Quality - Customer_Satisfaction) / Satisfaction_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-customer-satisfaction",
+      "position": {
+        "x": 150,
+        "y": 520
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-target-inventory",
+      "name": "Target Inventory",
+      "equation": "Expected_Sales * Inventory_Coverage",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-expected-sales",
+      "name": "Expected Sales",
+      "equation": "SMOOTH(Sales_Rate, Forecast_Period)",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-inventory-coverage",
+      "name": "Inventory Coverage",
+      "equation": "14",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-replenishment-time",
+      "name": "Replenishment Time",
+      "equation": "3",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-conversion-rate",
+      "name": "Conversion Rate",
+      "equation": "0.3 * Service_Quality / 100",
+      "position": {
+        "x": 500,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-avg-items",
+      "name": "Average Items Per Sale",
+      "equation": "3",
+      "position": {
+        "x": 600,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-shrinkage-rate",
+      "name": "Shrinkage Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 700,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-base-traffic",
+      "name": "Base Traffic",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-time-factor",
+      "name": "Time of Day Factor",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-satisfaction-effect",
+      "name": "Satisfaction Effect",
+      "equation": "Customer_Satisfaction / 80",
+      "position": {
+        "x": 300,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-avg-visit",
+      "name": "Average Visit Duration",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-desired-staff",
+      "name": "Desired Staff",
+      "equation": "Customers_in_Store / Customers_Per_Staff",
+      "position": {
+        "x": 500,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-customers-per-staff",
+      "name": "Customers Per Staff",
+      "equation": "5",
+      "position": {
+        "x": 600,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-hiring-time",
+      "name": "Hiring Time",
+      "equation": "7",
+      "position": {
+        "x": 700,
+        "y": 550
+      }
+    },
+    {
+      "id": "var-turnover-rate",
+      "name": "Turnover Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 100,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-service-quality",
+      "name": "Service Quality",
+      "equation": "MIN(100, 50 + 50 * (Staff_on_Duty * Customers_Per_Staff / MAX(1, Customers_in_Store)))",
+      "position": {
+        "x": 200,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-revenue",
+      "name": "Revenue",
+      "equation": "Sales_Rate * Average_Price",
+      "position": {
+        "x": 300,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-avg-price",
+      "name": "Average Price",
+      "equation": "25",
+      "position": {
+        "x": 400,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-total-costs",
+      "name": "Total Costs",
+      "equation": "Labor_Costs + Inventory_Costs + Fixed_Costs",
+      "position": {
+        "x": 500,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-labor-costs",
+      "name": "Labor Costs",
+      "equation": "Staff_on_Duty * Hourly_Wage",
+      "position": {
+        "x": 600,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-hourly-wage",
+      "name": "Hourly Wage",
+      "equation": "15",
+      "position": {
+        "x": 700,
+        "y": 650
+      }
+    },
+    {
+      "id": "var-inventory-costs",
+      "name": "Inventory Costs",
+      "equation": "Store_Inventory * Carrying_Cost_Rate",
+      "position": {
+        "x": 100,
+        "y": 750
+      }
+    },
+    {
+      "id": "var-carrying-cost",
+      "name": "Carrying Cost Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 200,
+        "y": 750
+      }
+    },
+    {
+      "id": "var-fixed-costs",
+      "name": "Fixed Costs",
+      "equation": "500",
+      "position": {
+        "x": 300,
+        "y": 750
+      }
+    },
+    {
+      "id": "var-forecast-period",
+      "name": "Forecast Period",
+      "equation": "7",
+      "position": {
+        "x": 400,
+        "y": 750
+      }
+    },
+    {
+      "id": "var-satisfaction-adj",
+      "name": "Satisfaction Adjustment Time",
+      "equation": "14",
+      "position": {
+        "x": 500,
+        "y": 750
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Store Inventory",
+      "to_element": "Inventory Replenishment"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Customers in Store",
+      "to_element": "Sales Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Conversion Rate",
+      "to_element": "Sales Rate"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Customer Satisfaction",
+      "to_element": "Satisfaction Effect"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Satisfaction Effect",
+      "to_element": "Customer Arrivals"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Customers in Store",
+      "to_element": "Desired Staff"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Staff on Duty",
+      "to_element": "Service Quality"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Service Quality",
+      "to_element": "Satisfaction Building"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Revenue",
+      "to_element": "Profit Generation"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Total Costs",
+      "to_element": "Profit Generation"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

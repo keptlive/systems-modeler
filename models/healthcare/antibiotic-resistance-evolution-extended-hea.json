@@ -1,0 +1,258 @@
+{
+  "id": "antibiotic-resistance-evolution-extended-hea",
+  "name": "Antibiotic Resistance Evolution Extended Model",
+  "description": "Models the evolution and spread of antibiotic resistance. Based on Laxminarayan et al. (2013) analysis of antibiotic resistance crisis. Reference: Fisher, R. A. (1930). The Genetical Theory of Natural Selection. Oxford University Press. Source: https://doi.org/10.5962/bhl.title.27468",
+  "stocks": [
+    {
+      "id": "stock-susceptible-bacteria",
+      "name": "Susceptible_Bacteria",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-resistant-bacteria",
+      "name": "Resistant_Bacteria",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-multi-resistant",
+      "name": "Multi_Resistant_Bacteria",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-antibiotic-effectiveness",
+      "name": "Antibiotic_Effectiveness",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-new-drug-pipeline",
+      "name": "New_Drug_Pipeline",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-susceptible-growth",
+      "name": "Susceptible_Growth",
+      "equation": "Susceptible_Bacteria * Growth_Rate * (1 - Total_Bacteria / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-susceptible-bacteria",
+      "position": {
+        "x": 75,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-mutation-single",
+      "name": "Single_Mutation",
+      "equation": "Susceptible_Bacteria * Mutation_Rate * Antibiotic_Pressure",
+      "from_stock": "stock-susceptible-bacteria",
+      "to_stock": "stock-resistant-bacteria",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-mutation-multi",
+      "name": "Multi_Mutation",
+      "equation": "Resistant_Bacteria * Mutation_Rate * Antibiotic_Pressure * 0.1",
+      "from_stock": "stock-resistant-bacteria",
+      "to_stock": "stock-multi-resistant",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-antibiotic-kill-susceptible",
+      "name": "Kill_Susceptible",
+      "equation": "Susceptible_Bacteria * Antibiotic_Effectiveness * Treatment_Rate",
+      "from_stock": "stock-susceptible-bacteria",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-antibiotic-kill-resistant",
+      "name": "Kill_Resistant",
+      "equation": "Resistant_Bacteria * Antibiotic_Effectiveness * Treatment_Rate * Resistance_Reduction",
+      "from_stock": "stock-resistant-bacteria",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-effectiveness-decay",
+      "name": "Effectiveness_Decay",
+      "equation": "Antibiotic_Effectiveness * (Resistant_Bacteria + Multi_Resistant_Bacteria) / Total_Bacteria * Decay_Rate",
+      "from_stock": "stock-antibiotic-effectiveness",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 370
+      }
+    },
+    {
+      "id": "flow-new-drug-development",
+      "name": "New_Drug_Development",
+      "equation": "RD_Investment / Development_Cost",
+      "from_stock": null,
+      "to_stock": "stock-new-drug-pipeline",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-drug-approval",
+      "name": "Drug_Approval",
+      "equation": "New_Drug_Pipeline / Approval_Time",
+      "from_stock": "stock-new-drug-pipeline",
+      "to_stock": "stock-antibiotic-effectiveness",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-growth-rate",
+      "name": "Growth_Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-carrying-capacity",
+      "name": "Carrying_Capacity",
+      "equation": "1000000",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-bacteria",
+      "name": "Total_Bacteria",
+      "equation": "Susceptible_Bacteria + Resistant_Bacteria + Multi_Resistant_Bacteria",
+      "position": {
+        "x": 380,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mutation-rate",
+      "name": "Mutation_Rate",
+      "equation": "0.0001",
+      "position": {
+        "x": 540,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-antibiotic-pressure",
+      "name": "Antibiotic_Pressure",
+      "equation": "0.5",
+      "position": {
+        "x": 660,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-treatment-rate",
+      "name": "Treatment_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-resistance-reduction",
+      "name": "Resistance_Reduction",
+      "equation": "0.3",
+      "position": {
+        "x": 220,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-decay-rate",
+      "name": "Decay_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 340,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-rd-investment",
+      "name": "RD_Investment",
+      "equation": "10",
+      "position": {
+        "x": 460,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-development-cost",
+      "name": "Development_Cost",
+      "equation": "1000",
+      "position": {
+        "x": 580,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-approval-time",
+      "name": "Approval_Time",
+      "equation": "10",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:15:55.420135+00:00",
+  "updated_at": "2026-01-12T01:15:55.420145+00:00",
+  "source": "https://doi.org/10.1016/S0140-6736(13)62629-5",
+  "reference": "Laxminarayan R, et al. Antibiotic resistance\u2014the need for global solutions. Lancet Infectious Diseases. 2013;13(12):1057-1098."
+}

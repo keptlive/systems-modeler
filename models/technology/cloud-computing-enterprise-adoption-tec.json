@@ -1,0 +1,177 @@
+{
+  "id": "cloud-computing-enterprise-adoption-tec",
+  "name": "Enterprise Cloud Computing Adoption",
+  "description": "Models enterprise cloud migration patterns and hybrid infrastructure dynamics. Based on Gartner cloud adoption forecasts and Armbrust et al. (2010) A View of Cloud Computing, CACM. Reference: ASCE (2021). Infrastructure Report Card. American Society of Civil Engineers. Source: https://infrastructurereportcard.org/",
+  "category": "technology",
+  "stocks": [
+    {
+      "id": "stock-onprem",
+      "name": "On_Premise_Workloads_Pct",
+      "initial_value": 90,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cloud",
+      "name": "Cloud_Workloads_Pct",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-skill",
+      "name": "Cloud_Skills_Index",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-migrate",
+      "name": "Cloud_Migration",
+      "equation": "On_Premise_Workloads_Pct * Migration_Rate * Cloud_Skills_Index/100 * Cost_Benefit",
+      "from_stock": "stock-onprem",
+      "to_stock": "stock-cloud",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-repatriate",
+      "name": "Repatriation",
+      "equation": "Cloud_Workloads_Pct * Repatriation_Rate * (1 - Cloud_Skills_Index/100)",
+      "from_stock": "stock-cloud",
+      "to_stock": "stock-onprem",
+      "position": {
+        "x": 300,
+        "y": 280
+      }
+    },
+    {
+      "id": "flow-skill-build",
+      "name": "Skill_Building",
+      "equation": "(100 - Cloud_Skills_Index) * Training_Investment * Learning_Efficiency",
+      "from_stock": null,
+      "to_stock": "stock-skill",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-skill-decay",
+      "name": "Skill_Decay",
+      "equation": "Cloud_Skills_Index * Decay_Rate",
+      "from_stock": "stock-skill",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-mig-rate",
+      "name": "Migration_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cost",
+      "name": "Cost_Benefit",
+      "equation": "1.2",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-repat",
+      "name": "Repatriation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-training",
+      "name": "Training_Investment",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-learn-eff",
+      "name": "Learning_Efficiency",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-decay",
+      "name": "Decay_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-total-cost",
+      "name": "Total_IT_Cost",
+      "equation": "On_Premise_Workloads_Pct * OnPrem_Cost + Cloud_Workloads_Pct * Cloud_Cost",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-onprem-cost",
+      "name": "OnPrem_Cost",
+      "equation": "1.0",
+      "position": {
+        "x": 450,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-cloud-cost",
+      "name": "Cloud_Cost",
+      "equation": "0.7",
+      "position": {
+        "x": 600,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1145/1721654.1721672",
+  "reference": "Armbrust M et al. (2010) A View of Cloud Computing. Communications of the ACM 53(4):50-58.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:29:57.474786+00:00",
+  "updated_at": "2026-01-12T06:29:57.474786+00:00"
+}

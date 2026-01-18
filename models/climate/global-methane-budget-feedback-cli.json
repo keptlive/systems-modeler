@@ -1,0 +1,223 @@
+{
+  "id": "global-methane-budget-feedback-cli",
+  "name": "Global Methane Budget and Climate Feedback",
+  "description": "Model of global methane sources, sinks, and climate feedback including wetlands, agriculture, and fossil fuels. Based on Saunois et al. 2020. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Atmospheric CH4 ppb",
+      "initial_value": 1900,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Wetland CH4 Potential",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Permafrost CH4 Reserve",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Fossil Fuel Emissions",
+      "equation": "Fossil_Fuel_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Agricultural Emissions",
+      "equation": "Agricultural_Rate * (1 + 0.01 * TIME)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Wetland Emissions",
+      "equation": "Wetland_CH4_Potential * Wetland_Emission_Rate * Temperature_Effect",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Permafrost Release",
+      "equation": "Permafrost_CH4_Reserve * Permafrost_Thaw_Rate * Temperature_Effect",
+      "from_stock": "s3",
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "OH Oxidation Sink",
+      "equation": "Atmospheric_CH4_ppb * OH_Sink_Rate",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Soil Sink",
+      "equation": "Atmospheric_CH4_ppb * Soil_Sink_Rate",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Fossil Fuel Rate",
+      "equation": "100",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Agricultural Rate",
+      "equation": "150",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Wetland Emission Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Permafrost Thaw Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Temperature Effect",
+      "equation": "1 + 0.05 * (Atmospheric_CH4_ppb - 1800) / 100",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "v6",
+      "name": "OH Sink Rate",
+      "equation": "0.08",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Soil Sink Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "CH4 Radiative Forcing",
+      "equation": "0.036 * (SQRT(Atmospheric_CH4_ppb) - SQRT(750))",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "GWP100 Equivalent",
+      "equation": "(Atmospheric_CH4_ppb - 750) * 28",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Net Emissions",
+      "equation": "Fossil_Fuel_Emissions + Agricultural_Emissions + Wetland_Emissions + Permafrost_Release - OH_Oxidation_Sink - Soil_Sink",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Atmospheric CH4 ppb",
+      "to_element": "OH Oxidation Sink"
+    },
+    {
+      "id": "c2",
+      "from_element": "Temperature Effect",
+      "to_element": "Wetland Emissions"
+    },
+    {
+      "id": "c3",
+      "from_element": "Temperature Effect",
+      "to_element": "Permafrost Release"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:14:19.557186",
+  "updated_at": "2026-01-15T14:14:19.557195",
+  "source": "https://doi.org/10.5194/essd-12-1561-2020",
+  "reference": "Saunois M, et al. The Global Methane Budget 2000-2017. Earth System Science Data. 2020;12:1561-1623."
+}

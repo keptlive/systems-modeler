@@ -1,0 +1,376 @@
+{
+  "id": "rd-investment-innovation-eco",
+  "name": "R&D Investment and Innovation Dynamics",
+  "description": "A system dynamics model of research and development investment based on Romer (1990) 'Endogenous Technological Change' (doi:10.1086/261725) and the Nelson-Winter evolutionary economics framework. Models knowledge accumulation, innovation output, and the productivity effects of R&D spending. Reference: Romer, P. M. (1990). Endogenous technological change. Journal of Political Economy, 98(5), S71-S102. DOI: https://doi.org/10.1086/261725",
+  "stocks": [
+    {
+      "id": "stock-knowledge-stock",
+      "name": "Knowledge Stock",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-rd-personnel",
+      "name": "R&D Personnel",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-rd-capital",
+      "name": "R&D Capital",
+      "initial_value": 50000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-patents",
+      "name": "Active Patents",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-products",
+      "name": "Commercial Products",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-revenue",
+      "name": "Innovation Revenue",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {
+        "x": 650,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-knowledge-creation",
+      "name": "Knowledge Creation",
+      "equation": "R_D_Productivity * R_D_Personnel * SQRT(R_D_Capital / 1000000) * (1 + Spillover_Effect * Knowledge_Stock / 100)",
+      "from_stock": null,
+      "to_stock": "stock-knowledge-stock",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-knowledge-depreciation",
+      "name": "Knowledge Depreciation",
+      "equation": "Knowledge_Stock * Knowledge_Decay_Rate",
+      "from_stock": "stock-knowledge-stock",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-hiring",
+      "name": "Hiring",
+      "equation": "Target_R_D_Personnel * Hiring_Rate",
+      "from_stock": null,
+      "to_stock": "stock-rd-personnel",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-attrition",
+      "name": "Attrition",
+      "equation": "R_D_Personnel * Attrition_Rate",
+      "from_stock": "stock-rd-personnel",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-rd-investment",
+      "name": "R&D Investment",
+      "equation": "Innovation_Revenue * R_D_Investment_Fraction",
+      "from_stock": null,
+      "to_stock": "stock-rd-capital",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-capital-depreciation",
+      "name": "Capital Depreciation",
+      "equation": "R_D_Capital * Capital_Depreciation_Rate",
+      "from_stock": "stock-rd-capital",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-patenting",
+      "name": "Patenting",
+      "equation": "Knowledge_Creation * Patent_Propensity",
+      "from_stock": null,
+      "to_stock": "stock-patents",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-patent-expiration",
+      "name": "Patent Expiration",
+      "equation": "Active_Patents / Patent_Lifetime",
+      "from_stock": "stock-patents",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-commercialization",
+      "name": "Commercialization",
+      "equation": "Active_Patents * Commercialization_Rate",
+      "from_stock": null,
+      "to_stock": "stock-products",
+      "position": {
+        "x": 500,
+        "y": 225
+      }
+    },
+    {
+      "id": "flow-product-obsolescence",
+      "name": "Product Obsolescence",
+      "equation": "Commercial_Products / Product_Lifetime",
+      "from_stock": "stock-products",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-revenue-generation",
+      "name": "Revenue Generation",
+      "equation": "Commercial_Products * Revenue_per_Product",
+      "from_stock": null,
+      "to_stock": "stock-revenue",
+      "position": {
+        "x": 575,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-revenue-use",
+      "name": "Revenue Use",
+      "equation": "Innovation_Revenue * 0.9",
+      "from_stock": "stock-revenue",
+      "to_stock": null,
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-rd-productivity",
+      "name": "R D Productivity",
+      "equation": "0.01",
+      "position": {
+        "x": 150,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-spillover-effect",
+      "name": "Spillover Effect",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-knowledge-decay-rate",
+      "name": "Knowledge Decay Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-target-rd-personnel",
+      "name": "Target R D Personnel",
+      "equation": "10000",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-hiring-rate",
+      "name": "Hiring Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-attrition-rate",
+      "name": "Attrition Rate",
+      "equation": "0.08",
+      "position": {
+        "x": 180,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-rd-investment-fraction",
+      "name": "R D Investment Fraction",
+      "equation": "0.15",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-capital-depreciation-rate",
+      "name": "Capital Depreciation Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 180,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-patent-propensity",
+      "name": "Patent Propensity",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-patent-lifetime",
+      "name": "Patent Lifetime",
+      "equation": "20",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-commercialization-rate",
+      "name": "Commercialization Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-product-lifetime",
+      "name": "Product Lifetime",
+      "equation": "7",
+      "position": {
+        "x": 450,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-revenue-per-product",
+      "name": "Revenue per Product",
+      "equation": "100000",
+      "position": {
+        "x": 600,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "R D Productivity",
+      "to_element": "Knowledge Creation"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "R&D Personnel",
+      "to_element": "Knowledge Creation"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "R&D Capital",
+      "to_element": "Knowledge Creation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Spillover Effect",
+      "to_element": "Knowledge Creation"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Knowledge Stock",
+      "to_element": "Knowledge Creation"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Knowledge Stock",
+      "to_element": "Knowledge Depreciation"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Active Patents",
+      "to_element": "Commercialization"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Commercial Products",
+      "to_element": "Revenue Generation"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Innovation Revenue",
+      "to_element": "R&D Investment"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

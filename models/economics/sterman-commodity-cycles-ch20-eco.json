@@ -1,0 +1,438 @@
+{
+  "id": "sterman-commodity-cycles-ch20-eco",
+  "name": "Shipments",
+  "description": "Commodity market cycles model from Sterman (2000) Business Dynamics Chapter 20. Shows how production capacity adjustments, inventory, and price dynamics create boom-bust commodity cycles. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Production_Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Inventory",
+      "initial_value": 200,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Capacity_Under_Construction",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Expected_Price",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Capacity_Expansion",
+      "equation": "Capacity_Under_Construction / Construction_Time",
+      "from_stock": "s3",
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 275
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Capacity_Retirement",
+      "equation": "Production_Capacity * Depreciation_Rate",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "New_Construction",
+      "equation": "Desired_New_Capacity",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Production",
+      "equation": "MIN(Production_Capacity * Capacity_Utilization, MAX(0, Inventory_Gap / Adjustment_Time + Demand))",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Shipments",
+      "equation": "Demand",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Price_Adjustment",
+      "equation": "(Market_Price - Expected_Price) / Price_Expectation_Time",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Construction_Time",
+      "equation": "24",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Depreciation_Rate",
+      "equation": "0.04",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Desired_New_Capacity",
+      "equation": "MAX(0, (Desired_Capacity - Production_Capacity - Capacity_Under_Construction) / Construction_Time)",
+      "position": {
+        "x": 50,
+        "y": 400
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Desired_Capacity",
+      "equation": "100 * (Expected_Price / Reference_Price)^Price_Elasticity_Supply",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Capacity_Utilization",
+      "equation": "0.9",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Demand",
+      "equation": "100 * (Reference_Price / Market_Price)^Price_Elasticity_Demand",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Reference_Price",
+      "equation": "50",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Price_Elasticity_Demand",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Price_Elasticity_Supply",
+      "equation": "0.8",
+      "position": {
+        "x": 200,
+        "y": 500
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Inventory_Gap",
+      "equation": "Desired_Inventory - Inventory",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Desired_Inventory",
+      "equation": "Demand * Inventory_Coverage",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Inventory_Coverage",
+      "equation": "2",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Adjustment_Time",
+      "equation": "4",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Market_Price",
+      "equation": "Reference_Price * (Desired_Inventory / MAX(1, Inventory))",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "v15",
+      "name": "Price_Expectation_Time",
+      "equation": "12",
+      "position": {
+        "x": 700,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Capacity_Under_Construction",
+      "to_element": "Capacity_Expansion"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Construction_Time",
+      "to_element": "Capacity_Expansion"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Production",
+      "to_element": "Capacity_Retirement"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Production_Capacity",
+      "to_element": "Capacity_Retirement"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Depreciation_Rate",
+      "to_element": "Capacity_Retirement"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Desired_New_Capacity",
+      "to_element": "New_Construction"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Demand",
+      "to_element": "Production"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Inventory",
+      "to_element": "Production"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Capacity_Utilization",
+      "to_element": "Production"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Inventory_Gap",
+      "to_element": "Production"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Production_Capacity",
+      "to_element": "Production"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Adjustment_Time",
+      "to_element": "Production"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Demand",
+      "to_element": "Shipments"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Market_Price",
+      "to_element": "Price_Adjustment"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Expected_Price",
+      "to_element": "Price_Adjustment"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Price_Expectation_Time",
+      "to_element": "Price_Adjustment"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Capacity_Under_Construction",
+      "to_element": "Desired_New_Capacity"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Desired_Capacity",
+      "to_element": "Desired_New_Capacity"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Production",
+      "to_element": "Desired_New_Capacity"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Production_Capacity",
+      "to_element": "Desired_New_Capacity"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Construction_Time",
+      "to_element": "Desired_New_Capacity"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Price_Elasticity_Supply",
+      "to_element": "Desired_Capacity"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "Expected_Price",
+      "to_element": "Desired_Capacity"
+    },
+    {
+      "id": "conn-24",
+      "from_element": "Reference_Price",
+      "to_element": "Desired_Capacity"
+    },
+    {
+      "id": "conn-25",
+      "from_element": "Market_Price",
+      "to_element": "Demand"
+    },
+    {
+      "id": "conn-26",
+      "from_element": "Price_Elasticity_Demand",
+      "to_element": "Demand"
+    },
+    {
+      "id": "conn-27",
+      "from_element": "Reference_Price",
+      "to_element": "Demand"
+    },
+    {
+      "id": "conn-28",
+      "from_element": "Desired_Inventory",
+      "to_element": "Inventory_Gap"
+    },
+    {
+      "id": "conn-29",
+      "from_element": "Inventory",
+      "to_element": "Inventory_Gap"
+    },
+    {
+      "id": "conn-30",
+      "from_element": "Demand",
+      "to_element": "Desired_Inventory"
+    },
+    {
+      "id": "conn-31",
+      "from_element": "Inventory_Coverage",
+      "to_element": "Desired_Inventory"
+    },
+    {
+      "id": "conn-32",
+      "from_element": "Inventory",
+      "to_element": "Desired_Inventory"
+    },
+    {
+      "id": "conn-33",
+      "from_element": "Desired_Inventory",
+      "to_element": "Market_Price"
+    },
+    {
+      "id": "conn-34",
+      "from_element": "Inventory",
+      "to_element": "Market_Price"
+    },
+    {
+      "id": "conn-35",
+      "from_element": "Reference_Price",
+      "to_element": "Market_Price"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T07:19:37.014027+00:00",
+  "updated_at": "2026-01-12T07:19:37.014027+00:00",
+  "source": "https://web.mit.edu/jsterman/www/BusDyn2.html",
+  "reference": "Sterman, J.D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. Chapter 20: Commodity Cycles."
+}

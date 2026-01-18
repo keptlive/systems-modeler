@@ -1,0 +1,165 @@
+{
+  "id": "covid19-immunity-waning-epi",
+  "name": "COVID-19 Immunity Waning and Reinfection",
+  "description": "Models waning immunity and reinfection dynamics over time. Source: Townsend et al. (2021), Lancet Microbe. DOI: 10.1016/S2666-5247(21)00219-6",
+  "stocks": [
+    {
+      "id": "stock-s",
+      "name": "Susceptible",
+      "initial_value": 80000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-i",
+      "name": "Infected",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-r",
+      "name": "Immune",
+      "initial_value": 19000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-reinf",
+      "name": "Reinfected_Total",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-inf",
+      "name": "Infection",
+      "equation": "Beta * Susceptible * Infected / N",
+      "from_stock": "stock-s",
+      "to_stock": "stock-i",
+      "position": {
+        "x": 175,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-rec",
+      "name": "Recovery",
+      "equation": "Infected / Infectious_Period",
+      "from_stock": "stock-i",
+      "to_stock": "stock-r",
+      "position": {
+        "x": 325,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-wane",
+      "name": "Immunity_Waning",
+      "equation": "Immune / Immunity_Duration",
+      "from_stock": "stock-r",
+      "to_stock": "stock-s",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-reinf",
+      "name": "Reinfection",
+      "equation": "Beta * Immune * Infected * Reinfection_Risk / N",
+      "from_stock": null,
+      "to_stock": "stock-reinf",
+      "position": {
+        "x": 175,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-n",
+      "name": "N",
+      "equation": "100000",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-infper",
+      "name": "Infectious_Period",
+      "equation": "10",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-immdur",
+      "name": "Immunity_Duration",
+      "equation": "180",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-reinfprob",
+      "name": "Reinfection_Risk",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-waningrate",
+      "name": "Waning_Rate",
+      "equation": "1 / Immunity_Duration",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Immune",
+      "to_element": "Immunity_Waning"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 730,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:06:16.307939+00:00",
+  "updated_at": "2026-01-12T02:06:16.307942+00:00",
+  "source": "https://doi.org/10.1016/S2666-5247(21)00219-6",
+  "reference": "Townsend, J.P. et al. (2021). The durability of immunity against reinfection by SARS-CoV-2. Lancet Microbe."
+}

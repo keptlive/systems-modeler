@@ -1,0 +1,217 @@
+{
+  "id": "invasive-species-management-env",
+  "name": "Invasive Species Management Model",
+  "description": "System dynamics model of invasive species control showing management intervention effectiveness. Source: Epanchin-Niell & Hastings (2010), Annual Review of Resource Economics. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-invade",
+      "name": "Invasive_Population",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-native",
+      "name": "Native_Population",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-area",
+      "name": "Invaded_Area",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-invgrow",
+      "name": "Invasive_Growth",
+      "equation": "Invasive_Population * Invasive_Growth_Rate * (1 - Invasive_Population / Invasive_Carrying)",
+      "from_stock": null,
+      "to_stock": "stock-invade",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-control",
+      "name": "Control_Removal",
+      "equation": "Invasive_Population * Control_Effectiveness * Control_Effort / 100",
+      "from_stock": "stock-invade",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-nativegrow",
+      "name": "Native_Growth",
+      "equation": "Native_Population * Native_Growth_Rate * (1 - (Native_Population + Competition * Invasive_Population) / Native_Carrying)",
+      "from_stock": null,
+      "to_stock": "stock-native",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-nativeloss",
+      "name": "Native_Displacement",
+      "equation": "Native_Population * Displacement_Rate * Invasive_Population / 1000",
+      "from_stock": "stock-native",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-spread",
+      "name": "Area_Spread",
+      "equation": "Spread_Rate * Invaded_Area * (Max_Area - Invaded_Area) / Max_Area",
+      "from_stock": null,
+      "to_stock": "stock-area",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-contain",
+      "name": "Containment",
+      "equation": "Invaded_Area * Containment_Effort / 100",
+      "from_stock": "stock-area",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-invgrow",
+      "name": "Invasive_Growth_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-invcarry",
+      "name": "Invasive_Carrying",
+      "equation": "5000",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-control",
+      "name": "Control_Effort",
+      "equation": "20",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-controleff",
+      "name": "Control_Effectiveness",
+      "equation": "0.5",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-nativegrow",
+      "name": "Native_Growth_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-nativecarry",
+      "name": "Native_Carrying",
+      "equation": "2000",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-compete",
+      "name": "Competition",
+      "equation": "0.5",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-displace",
+      "name": "Displacement_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-spread",
+      "name": "Spread_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-maxarea",
+      "name": "Max_Area",
+      "equation": "1000",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-contain",
+      "name": "Containment_Effort",
+      "equation": "5",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T12:45:39.561819+00:00",
+  "updated_at": "2026-01-12T12:45:39.561819+00:00",
+  "source": "https://doi.org/10.1257/jep.28.4.3",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

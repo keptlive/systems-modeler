@@ -1,0 +1,199 @@
+{
+  "id": "one-health-zoonotic-spillover-hea",
+  "name": "One Health Zoonotic Spillover Risk Model",
+  "description": "System dynamics model of zoonotic disease spillover risk incorporating human-animal-environment interfaces. Source: Jones et al. (2008), Nature. DOI: 10.1038/nature06536",
+  "stocks": [
+    {
+      "id": "stock-wild",
+      "name": "Wildlife_Reservoir",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-dom",
+      "name": "Domestic_Animals",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-human",
+      "name": "Human_Pop_At_Risk",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Human_Infections",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-habitat",
+      "name": "Natural_Habitat",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-spill",
+      "name": "Spillover_Events",
+      "equation": "Wildlife_Reservoir * Contact_Rate * Spillover_Probability * Interface_Factor",
+      "from_stock": null,
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-domspill",
+      "name": "Domestic_Spillover",
+      "equation": "Domestic_Animals * Domestic_Contact * Domestic_Spillover_Prob",
+      "from_stock": null,
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-recover",
+      "name": "Recovery",
+      "equation": "Human_Infections / Recovery_Time",
+      "from_stock": "stock-infected",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-deforest",
+      "name": "Habitat_Loss",
+      "equation": "Deforestation_Rate * Natural_Habitat",
+      "from_stock": "stock-habitat",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-wildchange",
+      "name": "Wildlife_Displacement",
+      "equation": "Habitat_Loss * Displacement_Factor",
+      "from_stock": "stock-wild",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-contact",
+      "name": "Contact_Rate",
+      "equation": "0.001 + 0.002 * (1000 - Natural_Habitat) / 1000",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-spillprob",
+      "name": "Spillover_Probability",
+      "equation": "0.001",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-interface",
+      "name": "Interface_Factor",
+      "equation": "Human_Pop_At_Risk / 100000",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-domcontact",
+      "name": "Domestic_Contact",
+      "equation": "0.0001",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-domspillprob",
+      "name": "Domestic_Spillover_Prob",
+      "equation": "0.0005",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-rectime",
+      "name": "Recovery_Time",
+      "equation": "14",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-deforest",
+      "name": "Deforestation_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-displace",
+      "name": "Displacement_Factor",
+      "equation": "0.5",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T12:41:31.049311+00:00",
+  "updated_at": "2026-01-12T12:41:31.049311+00:00",
+  "source": "https://doi.org/10.1016/S0140-6736(20)30553-3",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

@@ -1,0 +1,166 @@
+{
+  "id": "healthcare-workforce-burnout-hea",
+  "name": "Healthcare Workforce Burnout Model",
+  "description": "Model of healthcare worker burnout dynamics showing how workload, understaffing, and organizational support affect burnout rates and workforce attrition. Based on pandemic-era research on healthcare workforce sustainability.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Active_Healthcare_Workers",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "Burned_Out_Workers",
+      "initial_value": 20000,
+      "equation": "",
+      "position": {"x": 450, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Organizational_Support",
+      "initial_value": 50,
+      "equation": "",
+      "position": {"x": 325, "y": 380}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Hiring",
+      "equation": "MAX(0, (Target_Workforce - Active_Healthcare_Workers - Burned_Out_Workers) / Hiring_Time)",
+      "from_stock": null,
+      "to_stock": "Active_Healthcare_Workers",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Becoming_Burned_Out",
+      "equation": "Active_Healthcare_Workers * Burnout_Rate * Workload_Effect / Support_Protection",
+      "from_stock": "Active_Healthcare_Workers",
+      "to_stock": "Burned_Out_Workers",
+      "position": {"x": 325, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Recovery",
+      "equation": "Burned_Out_Workers * Recovery_Rate * Support_Effect",
+      "from_stock": "Burned_Out_Workers",
+      "to_stock": "Active_Healthcare_Workers",
+      "position": {"x": 325, "y": 280}
+    },
+    {
+      "id": "f4",
+      "name": "Leaving_Profession",
+      "equation": "Burned_Out_Workers * Exit_Rate * (1 + Burnout_Duration_Effect)",
+      "from_stock": "Burned_Out_Workers",
+      "to_stock": null,
+      "position": {"x": 550, "y": 200}
+    },
+    {
+      "id": "f5",
+      "name": "Support_Change",
+      "equation": "(Target_Support - Organizational_Support) / Support_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "Organizational_Support",
+      "position": {"x": 225, "y": 380}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Target_Workforce",
+      "equation": "150000",
+      "position": {"x": 100, "y": 80}
+    },
+    {
+      "id": "v2",
+      "name": "Hiring_Time",
+      "equation": "12",
+      "position": {"x": 200, "y": 80}
+    },
+    {
+      "id": "v3",
+      "name": "Burnout_Rate",
+      "equation": "0.05",
+      "position": {"x": 325, "y": 80}
+    },
+    {
+      "id": "v4",
+      "name": "Workload_Effect",
+      "equation": "1 + (Patient_Demand / Active_Healthcare_Workers - Normal_Workload) / Normal_Workload",
+      "position": {"x": 450, "y": 80}
+    },
+    {
+      "id": "v5",
+      "name": "Patient_Demand",
+      "equation": "500000",
+      "position": {"x": 100, "y": 130}
+    },
+    {
+      "id": "v6",
+      "name": "Normal_Workload",
+      "equation": "5",
+      "position": {"x": 200, "y": 130}
+    },
+    {
+      "id": "v7",
+      "name": "Support_Protection",
+      "equation": "1 + Organizational_Support / 100",
+      "position": {"x": 575, "y": 80}
+    },
+    {
+      "id": "v8",
+      "name": "Recovery_Rate",
+      "equation": "0.1",
+      "position": {"x": 400, "y": 280}
+    },
+    {
+      "id": "v9",
+      "name": "Support_Effect",
+      "equation": "Organizational_Support / 50",
+      "position": {"x": 500, "y": 280}
+    },
+    {
+      "id": "v10",
+      "name": "Exit_Rate",
+      "equation": "0.02",
+      "position": {"x": 575, "y": 130}
+    },
+    {
+      "id": "v11",
+      "name": "Burnout_Duration_Effect",
+      "equation": "0.5",
+      "position": {"x": 650, "y": 200}
+    },
+    {
+      "id": "v12",
+      "name": "Target_Support",
+      "equation": "60",
+      "position": {"x": 225, "y": 450}
+    },
+    {
+      "id": "v13",
+      "name": "Support_Adjustment_Time",
+      "equation": "24",
+      "position": {"x": 350, "y": 450}
+    },
+    {
+      "id": "v14",
+      "name": "Effective_Workforce",
+      "equation": "Active_Healthcare_Workers * (1 - Burnout_Rate)",
+      "position": {"x": 500, "y": 450}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1001/jamanetworkopen.2020.17686",
+  "reference": "Shanafelt TD, et al. (2020). Changes in Burnout and Satisfaction With Work-Life Integration in Physicians and the General US Working Population Between 2011 and 2020. Mayo Clinic Proceedings, 97(3), 491-506. DOI: 10.1016/j.mayocp.2021.11.021",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

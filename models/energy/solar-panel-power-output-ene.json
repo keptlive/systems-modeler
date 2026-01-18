@@ -1,0 +1,133 @@
+{
+  "id": "solar-panel-power-output-ene",
+  "name": "Solar Panel Power Output",
+  "description": "Photovoltaic performance model with temperature effects",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Power_Output",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Panel_Temperature",
+      "initial_value": 25.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Irradiance",
+      "equation": "1000.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Panel_Area",
+      "equation": "1.6",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Efficiency_STC",
+      "equation": "0.20",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Temp_Coefficient",
+      "equation": "-0.004",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Reference_Temp",
+      "equation": "25.0",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Temperature_Loss",
+      "equation": "Temp_Coefficient*(Panel_Temperature-Reference_Temp)",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Actual_Efficiency",
+      "equation": "Efficiency_STC*(1+Temperature_Loss)",
+      "position": {
+        "x": 300,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Power",
+      "equation": "Irradiance*Panel_Area*Actual_Efficiency",
+      "position": {
+        "x": 500,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Panel_Temperature",
+      "to_element": "Temperature_Loss"
+    },
+    {
+      "id": "c2",
+      "from_element": "Temperature_Loss",
+      "to_element": "Actual_Efficiency"
+    },
+    {
+      "id": "c3",
+      "from_element": "Irradiance",
+      "to_element": "Power"
+    },
+    {
+      "id": "c4",
+      "from_element": "Actual_Efficiency",
+      "to_element": "Power"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 24.0,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-15T20:50:11.591354+00:00",
+  "updated_at": "2026-01-15T20:50:11.591354+00:00",
+  "source": "https://doi.org/10.1016/j.solener.2009.04.010",
+  "reference": "Skoplaki, E. & Palyvos, J.A. (2009) On the temperature dependence of photovoltaic module electrical performance. Solar Energy 83:614-624"
+}

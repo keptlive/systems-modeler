@@ -1,0 +1,646 @@
+{
+  "id": "labor-market-dynamics-model-eco",
+  "name": "Labor Market Dynamics Model",
+  "description": "A system dynamics model of labor market dynamics including unemployment, job search, wage dynamics, and labor force participation. Based on search and matching theory and captures the natural dynamics of employment adjustment. Reference: BLS Employment Situation. Source: https://www.bls.gov/",
+  "stocks": [
+    {
+      "id": "stock-employed-workers",
+      "name": "Employed Workers",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-unemployed-workers",
+      "name": "Unemployed Workers",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-out-of-labor-force",
+      "name": "Out of Labor Force",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-job-vacancies",
+      "name": "Job Vacancies",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-average-wage",
+      "name": "Average Wage",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-long-term-unemployed",
+      "name": "Long-term Unemployed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-hiring",
+      "name": "Hiring",
+      "equation": "Matching_Function * (1 - Long_Term_Fraction)",
+      "from_stock": "stock-unemployed-workers",
+      "to_stock": "stock-employed-workers",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-job-separations",
+      "name": "Job Separations",
+      "equation": "Employed * Separation_Rate",
+      "from_stock": "stock-employed-workers",
+      "to_stock": "stock-unemployed-workers",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-vacancy-creation",
+      "name": "Vacancy Creation",
+      "equation": "Target_Vacancies - Job_Vacancies + Hiring + Vacancy_Closing) / Vacancy_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-job-vacancies",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-vacancy-filling",
+      "name": "Vacancy Filling",
+      "equation": "Hiring",
+      "from_stock": "stock-job-vacancies",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-vacancy-closing",
+      "name": "Vacancy Closing",
+      "equation": "Job_Vacancies * Vacancy_Close_Rate",
+      "from_stock": "stock-job-vacancies",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-labor-force-entry",
+      "name": "Labor Force Entry",
+      "equation": "Out_of_Labor_Force * Entry_Rate * Participation_Effect",
+      "from_stock": "stock-out-of-labor-force",
+      "to_stock": "stock-unemployed-workers",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-labor-force-exit",
+      "name": "Labor Force Exit",
+      "equation": "Unemployed * Discouragement_Rate",
+      "from_stock": "stock-unemployed-workers",
+      "to_stock": "stock-out-of-labor-force",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-retirements-from-employment",
+      "name": "Retirements from Employment",
+      "equation": "Employed * Retirement_Rate",
+      "from_stock": "stock-employed-workers",
+      "to_stock": "stock-out-of-labor-force",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-working-age-population-growth",
+      "name": "Working Age Population Growth",
+      "equation": "Working_Age_Population * Population_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-out-of-labor-force",
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-aging-out",
+      "name": "Aging Out",
+      "equation": "Out_of_Labor_Force * Aging_Out_Rate",
+      "from_stock": "stock-out-of-labor-force",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-wage-increase",
+      "name": "Wage Increase",
+      "equation": "Average_Wage * Wage_Adjustment_Rate * IF Wage_Pressure > 0 THEN 1 ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-average-wage",
+      "position": {
+        "x": 450,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-wage-decrease",
+      "name": "Wage Decrease",
+      "equation": "Average_Wage * ABS(Wage_Adjustment_Rate) * Wage_Rigidity * IF Wage_Pressure < 0 THEN 1 ELSE 0",
+      "from_stock": "stock-average-wage",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-becoming-long-term-unemployed",
+      "name": "Becoming Long-term Unemployed",
+      "equation": "(Unemployed - Long_Term_Unemployed) * Transition_to_Long_Term_Rate",
+      "from_stock": null,
+      "to_stock": "stock-long-term-unemployed",
+      "position": {
+        "x": 250,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-long-term-unemployed-hiring",
+      "name": "Long-term Unemployed Hiring",
+      "equation": "Matching_Function * Long_Term_Fraction * Long_Term_Matching_Penalty",
+      "from_stock": "stock-long-term-unemployed",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 800
+      }
+    },
+    {
+      "id": "flow-long-term-exit",
+      "name": "Long-term Exit",
+      "equation": "Long_Term_Unemployed * Long_Term_Exit_Rate",
+      "from_stock": "stock-long-term-unemployed",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 800
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-initial-labor-force",
+      "name": "Initial Labor Force",
+      "equation": "160000000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-working-age-population",
+      "name": "Initial Working Age Population",
+      "equation": "200000000",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-vacancies",
+      "name": "Initial Vacancies",
+      "equation": "Initial_Labor_Force * Natural_Unemployment_Rate * 0.7",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-initial-wage",
+      "name": "Initial Wage",
+      "equation": "60000",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-natural-unemployment-rate",
+      "name": "Natural Unemployment Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-labor-force",
+      "name": "Labor Force",
+      "equation": "Employed + Unemployed",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-working-age-population",
+      "name": "Working Age Population",
+      "equation": "Labor_Force + Out_of_Labor_Force",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-unemployment-rate",
+      "name": "Unemployment Rate",
+      "equation": "Unemployed / Labor_Force",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-labor-force-participation-rate",
+      "name": "Labor Force Participation Rate",
+      "equation": "Labor_Force / Working_Age_Population",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-vacancy-rate",
+      "name": "Vacancy Rate",
+      "equation": "Job_Vacancies / (Employed + Job_Vacancies)",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-labor-market-tightness",
+      "name": "Labor Market Tightness",
+      "equation": "Job_Vacancies / Unemployed",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-matching-efficiency",
+      "name": "Matching Efficiency",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-matching-elasticity",
+      "name": "Matching Elasticity",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-matching-function",
+      "name": "Matching Function",
+      "equation": "Matching_Efficiency * Unemployed^Matching_Elasticity * Job_Vacancies^(1-Matching_Elasticity)",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-job-finding-rate",
+      "name": "Job Finding Rate",
+      "equation": "Matching_Function / Unemployed",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-vacancy-fill-rate",
+      "name": "Vacancy Fill Rate",
+      "equation": "Matching_Function / Job_Vacancies",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-separation-rate",
+      "name": "Separation Rate",
+      "equation": "Base_Separation_Rate * (1 + Cyclical_Separation_Effect)",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-base-separation-rate",
+      "name": "Base Separation Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-cyclical-separation-effect",
+      "name": "Cyclical Separation Effect",
+      "equation": "-0.5 * (Labor_Market_Tightness - 1)",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-target-vacancies",
+      "name": "Target Vacancies",
+      "equation": "Employed * Target_Vacancy_Rate",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-target-vacancy-rate",
+      "name": "Target Vacancy Rate",
+      "equation": "0.04 * (1 + Expected_Growth_Effect)",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-expected-growth-effect",
+      "name": "Expected Growth Effect",
+      "equation": "0.2 * (Labor_Market_Tightness - 1)",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-vacancy-adjustment-time",
+      "name": "Vacancy Adjustment Time",
+      "equation": "0.25",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-vacancy-close-rate",
+      "name": "Vacancy Close Rate",
+      "equation": "0.5",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-base-entry-rate",
+      "name": "Base Entry Rate",
+      "equation": "0.08",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-participation-effect",
+      "name": "Participation Effect",
+      "equation": "1 + 0.3 * (Labor_Market_Tightness - 1)",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-discouragement-rate",
+      "name": "Discouragement Rate",
+      "equation": "0.05 * (1 + 2 * MAX(0, Unemployment_Rate - Natural_Unemployment_Rate))",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-retirement-rate",
+      "name": "Retirement Rate",
+      "equation": "0.025",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-population-growth-rate",
+      "name": "Population Growth Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-aging-out-rate",
+      "name": "Aging Out Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-wage-adjustment-rate",
+      "name": "Wage Adjustment Rate",
+      "equation": "Wage_Pressure * Wage_Flexibility",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-wage-pressure",
+      "name": "Wage Pressure",
+      "equation": "0.3 * (Labor_Market_Tightness - 1) + 0.5 * Expected_Inflation",
+      "position": {
+        "x": 250,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-wage-flexibility",
+      "name": "Wage Flexibility",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-wage-rigidity",
+      "name": "Wage Rigidity",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-expected-inflation",
+      "name": "Expected Inflation",
+      "equation": "0.02",
+      "position": {
+        "x": 700,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-long-term-unemployed-fraction",
+      "name": "Long-term Unemployed Fraction",
+      "equation": "Long_Term_Unemployed / Unemployed",
+      "position": {
+        "x": 100,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-transition-to-long-term-rate",
+      "name": "Transition to Long-term Rate",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-long-term-matching-penalty",
+      "name": "Long-term Matching Penalty",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-long-term-exit-rate",
+      "name": "Long-term Exit Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 550,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-beveridge-curve-shift",
+      "name": "Beveridge Curve Shift",
+      "equation": "1 + 0.5 * Long_Term_Fraction",
+      "position": {
+        "x": 700,
+        "y": 640
+      }
+    },
+    {
+      "id": "var-real-wage",
+      "name": "Real Wage",
+      "equation": "Average_Wage / (1 + Expected_Inflation * Time)",
+      "position": {
+        "x": 100,
+        "y": 720
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Unemployed Workers",
+      "to_element": "Matching Function"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Job Vacancies",
+      "to_element": "Matching Function"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Matching Efficiency",
+      "to_element": "Matching Function"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Employed Workers",
+      "to_element": "Job Separations"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Separation Rate",
+      "to_element": "Job Separations"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Labor Market Tightness",
+      "to_element": "Wage Pressure"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.0625
+  },
+  "created_at": "2026-01-11T20:04:50.758421Z",
+  "updated_at": "2026-01-11T20:04:50.758421Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

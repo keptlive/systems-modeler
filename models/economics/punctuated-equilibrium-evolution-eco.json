@@ -1,0 +1,166 @@
+{
+  "id": "punctuated-equilibrium-evolution-eco",
+  "name": "Punctuated Equilibrium in Evolution",
+  "description": "Models stasis periods punctuated by rapid change. Source: Eldredge & Gould (1972). DOI: 10.1017/cbo9780511623448.016",
+  "stocks": [
+    {
+      "id": "stock-trait",
+      "name": "Phenotype_Value",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-stasis",
+      "name": "Stasis_Duration",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-speciation",
+      "name": "Speciation_Events",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-drift",
+      "name": "Genetic_Drift",
+      "equation": "Random_Variation * (1 - Stabilizing_Selection)",
+      "from_stock": null,
+      "to_stock": "stock-trait",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-punctuation",
+      "name": "Punctuation_Event",
+      "equation": "IF(Environmental_Shock > Shock_Threshold, Punctuation_Size, 0)",
+      "from_stock": null,
+      "to_stock": "stock-trait",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-stasisgrow",
+      "name": "Stasis_Accumulation",
+      "equation": "1",
+      "from_stock": null,
+      "to_stock": "stock-stasis",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-stasisreset",
+      "name": "Stasis_Reset",
+      "equation": "IF(Environmental_Shock > Shock_Threshold, Stasis_Duration, 0)",
+      "from_stock": "stock-stasis",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-speciate",
+      "name": "Speciation",
+      "equation": "IF(Environmental_Shock > Shock_Threshold, 1, 0)",
+      "from_stock": null,
+      "to_stock": "stock-speciation",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-random",
+      "name": "Random_Variation",
+      "equation": "2 * SIN(TIME * 0.5) + SIN(TIME * 1.3)",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-stab",
+      "name": "Stabilizing_Selection",
+      "equation": "0.9",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-shock",
+      "name": "Environmental_Shock",
+      "equation": "IF(MOD(TIME, 50) < 2, 10, 0)",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-shockthresh",
+      "name": "Shock_Threshold",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-punctsize",
+      "name": "Punctuation_Size",
+      "equation": "20",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-changerate",
+      "name": "Rate_Of_Change",
+      "equation": "ABS(Genetic_Drift + Punctuation_Event)",
+      "position": {
+        "x": 200,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Environmental_Shock",
+      "to_element": "Punctuation_Event"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T02:17:16.214233+00:00",
+  "updated_at": "2026-01-12T02:17:16.214236+00:00",
+  "source": "https://doi.org/10.1017/cbo9780511623448.016",
+  "reference": "Eldredge, N. & Gould, S.J. (1972). Punctuated Equilibria: An Alternative to Phyletic Gradualism."
+}

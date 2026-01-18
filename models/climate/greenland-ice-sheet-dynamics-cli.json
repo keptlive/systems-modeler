@@ -1,0 +1,33 @@
+{
+  "id": "greenland-ice-sheet-dynamics-cli",
+  "name": "Greenland Ice Sheet Mass Balance Model",
+  "description": "Model of Greenland ice sheet dynamics including surface mass balance and ice discharge. The ice sheet contains ~7m of sea level equivalent. Source: Mouginot et al. (2019). PNAS. DOI: 10.1073/pnas.1904242116",
+  "stocks": [
+    {"id": "stock-ice-mass", "name": "Ice_Sheet_Mass", "initial_value": 2900000, "equation": "", "position": {"x": 300, "y": 200}},
+    {"id": "stock-sea-level", "name": "Sea_Level_Rise", "initial_value": 0, "equation": "", "position": {"x": 500, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-snowfall", "name": "Snowfall_Accumulation", "equation": "Annual_Snowfall * Accumulation_Area", "from_stock": null, "to_stock": "stock-ice-mass", "position": {"x": 150, "y": 200}},
+    {"id": "flow-surface-melt", "name": "Surface_Melting", "equation": "Base_Melt_Rate * (1 + Melt_Sensitivity * Temperature_Anomaly) * Melt_Area", "from_stock": "stock-ice-mass", "to_stock": null, "position": {"x": 300, "y": 100}},
+    {"id": "flow-discharge", "name": "Ice_Discharge", "equation": "Base_Discharge * (1 + Discharge_Sensitivity * Temperature_Anomaly)", "from_stock": "stock-ice-mass", "to_stock": null, "position": {"x": 300, "y": 300}},
+    {"id": "flow-slr", "name": "SLR_Contribution", "equation": "(Surface_Melting + Ice_Discharge - Snowfall_Accumulation) / Ocean_Area * Ice_Density_Factor", "from_stock": null, "to_stock": "stock-sea-level", "position": {"x": 450, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-snowfall", "name": "Annual_Snowfall", "equation": "0.3", "position": {"x": 100, "y": 150}},
+    {"id": "var-accum-area", "name": "Accumulation_Area", "equation": "1500000", "position": {"x": 100, "y": 250}},
+    {"id": "var-base-melt", "name": "Base_Melt_Rate", "equation": "0.5", "position": {"x": 200, "y": 50}},
+    {"id": "var-melt-sens", "name": "Melt_Sensitivity", "equation": "0.15", "position": {"x": 350, "y": 50}},
+    {"id": "var-temp-anomaly", "name": "Temperature_Anomaly", "equation": "1.5 + TIME * 0.03", "position": {"x": 450, "y": 50}},
+    {"id": "var-melt-area", "name": "Melt_Area", "equation": "600000", "position": {"x": 300, "y": 50}},
+    {"id": "var-base-discharge", "name": "Base_Discharge", "equation": "400", "position": {"x": 200, "y": 350}},
+    {"id": "var-discharge-sens", "name": "Discharge_Sensitivity", "equation": "0.1", "position": {"x": 350, "y": 350}},
+    {"id": "var-ocean-area", "name": "Ocean_Area", "equation": "361000000", "position": {"x": 500, "y": 100}},
+    {"id": "var-density", "name": "Ice_Density_Factor", "equation": "0.917", "position": {"x": 500, "y": 300}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 1},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1073/pnas.1904242116",
+  "reference": "Mouginot, J. et al. (2019). Forty-six years of Greenland Ice Sheet mass balance from 1972 to 2018. PNAS, 116(19), 9239-9244."
+}

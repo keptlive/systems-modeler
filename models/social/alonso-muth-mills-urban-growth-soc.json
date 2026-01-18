@@ -1,0 +1,166 @@
+{
+  "id": "alonso-muth-mills-urban-growth-soc",
+  "name": "Alonso-Muth-Mills Urban Growth Model",
+  "description": "Classic monocentric city model showing how land rent and population density vary with distance from CBD. Foundation of urban economics. Source: Alonso (1964), Location and Land Use; Mills (1967), AER. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-pop-center",
+      "name": "Population_Center",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-pop-suburbs",
+      "name": "Population_Suburbs",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-pop-fringe",
+      "name": "Population_Fringe",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-housing-center",
+      "name": "Housing_Center",
+      "initial_value": 40000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "stock-housing-suburbs",
+      "name": "Housing_Suburbs",
+      "initial_value": 30000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-migrate-cs",
+      "name": "Migration_Center_Suburb",
+      "equation": "(Population_Center / Housing_Center - Population_Suburbs / Housing_Suburbs) * Mobility_Rate * Population_Center / 1000",
+      "from_stock": "stock-pop-center",
+      "to_stock": "stock-pop-suburbs",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-migrate-sf",
+      "name": "Migration_Suburb_Fringe",
+      "equation": "(Population_Suburbs / Housing_Suburbs - Population_Fringe / 15000) * Mobility_Rate * Population_Suburbs / 1000",
+      "from_stock": "stock-pop-suburbs",
+      "to_stock": "stock-pop-fringe",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-build-c",
+      "name": "Construction_Center",
+      "equation": "Land_Rent_Center * Construction_Rate",
+      "from_stock": null,
+      "to_stock": "stock-housing-center",
+      "position": {
+        "x": 50,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-build-s",
+      "name": "Construction_Suburbs",
+      "equation": "Land_Rent_Suburbs * Construction_Rate * 2",
+      "from_stock": null,
+      "to_stock": "stock-housing-suburbs",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-rent-c",
+      "name": "Land_Rent_Center",
+      "equation": "Base_Rent * (Population_Center / Housing_Center)",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-rent-s",
+      "name": "Land_Rent_Suburbs",
+      "equation": "Base_Rent * (Population_Suburbs / Housing_Suburbs) * 0.6",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-base",
+      "name": "Base_Rent",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-mobility",
+      "name": "Mobility_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-construct",
+      "name": "Construction_Rate",
+      "equation": "100",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Population_Center",
+      "to_element": "Land_Rent_Center"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T22:15:10.906149+00:00",
+  "updated_at": "2026-01-11T22:15:10.906149+00:00",
+  "source": "https://doi.org/10.2307/1884324",
+  "reference": "Alonso, W. (1964). Location and Land Use; Mills, E.S. (1967). AER."
+}

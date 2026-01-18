@@ -1,0 +1,177 @@
+{
+  "id": "wind-turbine-power-output-ene",
+  "name": "Wind Turbine Power Output Model",
+  "description": "Model of wind turbine power generation with Betz limit. Source: Burton et al. (2011), Wind Energy Handbook. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Rotor_Speed",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Generated_Energy",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Rotor_Acceleration",
+      "equation": "(Aero_Torque - Generator_Torque) / Inertia",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Power_Generation",
+      "equation": "Electrical_Power",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Wind_Speed",
+      "equation": "10",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Rotor_Diameter",
+      "equation": "100",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Air_Density",
+      "equation": "1.225",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Cp",
+      "equation": "0.4",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Inertia",
+      "equation": "1e7",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Rotor_Area",
+      "equation": "3.14159 * (Rotor_Diameter / 2)^2",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Wind_Power",
+      "equation": "0.5 * Air_Density * Rotor_Area * Wind_Speed^3",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Mechanical_Power",
+      "equation": "Cp * Wind_Power",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Tip_Speed_Ratio",
+      "equation": "Rotor_Speed * Rotor_Diameter / (2 * Wind_Speed)",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Aero_Torque",
+      "equation": "Mechanical_Power / (Rotor_Speed + 0.1)",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Generator_Torque",
+      "equation": "Mechanical_Power / (Rotor_Speed + 0.1) * 0.95",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Electrical_Power",
+      "equation": "Generator_Torque * Rotor_Speed * 0.95",
+      "position": {
+        "x": 450,
+        "y": 480
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Wind_Speed",
+      "to_element": "Wind_Power"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T14:44:54.461004+00:00",
+  "updated_at": "2026-01-15T14:44:54.461012+00:00",
+  "source": "https://doi.org/10.1002/9781119992714",
+  "reference": "Burton, T. et al. (2011). Wind Energy Handbook. 2nd ed. Wiley."
+}

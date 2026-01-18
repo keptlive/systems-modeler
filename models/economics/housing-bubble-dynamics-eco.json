@@ -1,0 +1,239 @@
+{
+  "id": "housing-bubble-dynamics-eco",
+  "name": "Housing Bubble Dynamics Model",
+  "description": "Models housing price dynamics with speculation, credit, and fundamental drivers. Based on Case & Shiller (2003). DOI: 10.1353/eca.2004.0004",
+  "stocks": [
+    {
+      "id": "stock-price",
+      "name": "House_Price",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-expect",
+      "name": "Price_Expectations",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-credit",
+      "name": "Mortgage_Credit",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-construction",
+      "name": "Housing_Stock",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-pricechg",
+      "name": "Price_Change",
+      "equation": "House_Price * (Demand_Pressure - Supply_Pressure) * Price_Adjustment",
+      "from_stock": null,
+      "to_stock": "stock-price",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-expectchg",
+      "name": "Expectation_Update",
+      "equation": "(House_Price - Price_Expectations) * Expectation_Adjustment",
+      "from_stock": null,
+      "to_stock": "stock-expect",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-creditexp",
+      "name": "Credit_Expansion",
+      "equation": "Mortgage_Credit * Credit_Growth_Rate * (1 + Speculation_Premium)",
+      "from_stock": null,
+      "to_stock": "stock-credit",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-newconstr",
+      "name": "New_Construction",
+      "equation": "Construction_Rate * (House_Price / Construction_Cost - 1) * IF(House_Price > Construction_Cost, 1, 0)",
+      "from_stock": null,
+      "to_stock": "stock-construction",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-deprec",
+      "name": "Depreciation",
+      "equation": "Housing_Stock * Depreciation_Rate",
+      "from_stock": "stock-construction",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-dempressure",
+      "name": "Demand_Pressure",
+      "equation": "Population_Growth + Income_Growth + Speculation_Premium + Credit_Effect",
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-suppressure",
+      "name": "Supply_Pressure",
+      "equation": "(Housing_Stock - Housing_Demand) / Housing_Demand * 0.1",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-priceadj",
+      "name": "Price_Adjustment",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-expectadj",
+      "name": "Expectation_Adjustment",
+      "equation": "0.3",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-popgrowth",
+      "name": "Population_Growth",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-incgrowth",
+      "name": "Income_Growth",
+      "equation": "0.02",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-specprem",
+      "name": "Speculation_Premium",
+      "equation": "MAX(0, (Price_Expectations / House_Price - 1) * 2)",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-crediteff",
+      "name": "Credit_Effect",
+      "equation": "Mortgage_Credit / (House_Price * 10) * 0.5",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-creditgrowth",
+      "name": "Credit_Growth_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-constrrate",
+      "name": "Construction_Rate",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-constrcost",
+      "name": "Construction_Cost",
+      "equation": "80",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-deprecrate",
+      "name": "Depreciation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-housdem",
+      "name": "Housing_Demand",
+      "equation": "1000 * (1 + Population_Growth * TIME)",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "House_Price",
+      "to_element": "Speculation_Premium"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T02:45:00.575067+00:00",
+  "updated_at": "2026-01-12T02:45:00.575070+00:00",
+  "source": "https://doi.org/10.1353/eca.2004.0004",
+  "reference": "Case KE, Shiller RJ (2003). Is There a Bubble in the Housing Market? Brookings Papers on Economic Activity."
+}

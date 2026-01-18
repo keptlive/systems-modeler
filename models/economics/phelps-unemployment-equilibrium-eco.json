@@ -1,0 +1,154 @@
+{
+  "id": "phelps-unemployment-equilibrium-eco",
+  "name": "Phelps Natural Rate of Unemployment Model",
+  "description": "Nobel Prize model of the natural rate of unemployment determined by labor market frictions. Reference: BLS Employment Situation. Source: https://www.bls.gov/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Employment",
+      "initial_value": 95,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Inflation_Expectations",
+      "initial_value": 0.02,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Employment_Change",
+      "equation": "(Equilibrium_Employment - Employment) / Employment_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Expectations_Adjustment",
+      "equation": "(Actual_Inflation - Inflation_Expectations) / Expectations_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Labor_Force",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Unemployment_Rate",
+      "equation": "(Labor_Force - Employment) / Labor_Force",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Natural_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Money_Growth",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Actual_Inflation",
+      "equation": "Money_Growth + Velocity_Growth",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Velocity_Growth",
+      "equation": "0",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Phillips_Coefficient",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Equilibrium_Employment",
+      "equation": "Labor_Force * (1 - Natural_Rate - Phillips_Coefficient * (Actual_Inflation - Inflation_Expectations))",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Employment_Adjustment_Time",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Expectations_Adjustment_Time",
+      "equation": "4",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:26:32.202002+00:00",
+  "updated_at": "2026-01-12T11:26:32.202002+00:00",
+  "source": "https://doi.org/10.1257/aer.97.3.421",
+  "reference": "Phelps ES. Phillips curves, expectations of inflation and optimal unemployment over time. Economica. 1967;34(135):254-281. Nobel Prize 2006."
+}

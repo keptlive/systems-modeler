@@ -1,0 +1,33 @@
+{
+  "id": "pfas-forever-chemicals-cli",
+  "name": "PFAS Forever Chemicals Environmental Persistence Model",
+  "description": "Model of per- and polyfluoroalkyl substances (PFAS) accumulation in environment and biota. These 'forever chemicals' persist for decades and bioaccumulate. Source: Sunderland et al. (2019). Environmental Science & Technology. DOI: 10.1021/acs.est.9b02227",
+  "stocks": [
+    {"id": "stock-soil", "name": "Soil_PFAS_Concentration", "initial_value": 10, "equation": "", "position": {"x": 150, "y": 150}},
+    {"id": "stock-groundwater", "name": "Groundwater_PFAS", "initial_value": 1, "equation": "", "position": {"x": 350, "y": 150}},
+    {"id": "stock-blood", "name": "Human_Blood_PFAS", "initial_value": 5, "equation": "", "position": {"x": 250, "y": 300}}
+  ],
+  "flows": [
+    {"id": "flow-deposition", "name": "Atmospheric_Deposition", "equation": "Atmospheric_Source * Deposition_Rate", "from_stock": null, "to_stock": "stock-soil", "position": {"x": 100, "y": 150}},
+    {"id": "flow-leaching", "name": "Soil_Leaching", "equation": "Soil_PFAS_Concentration * Leaching_Rate", "from_stock": "stock-soil", "to_stock": "stock-groundwater", "position": {"x": 250, "y": 150}},
+    {"id": "flow-exposure", "name": "Human_Exposure", "equation": "(Groundwater_PFAS * Drinking_Water_Exposure + Soil_PFAS_Concentration * Food_Chain_Exposure) * Absorption_Factor", "from_stock": null, "to_stock": "stock-blood", "position": {"x": 150, "y": 300}},
+    {"id": "flow-elimination", "name": "Human_Elimination", "equation": "Human_Blood_PFAS / Half_Life", "from_stock": "stock-blood", "to_stock": null, "position": {"x": 350, "y": 300}}
+  ],
+  "variables": [
+    {"id": "var-atm-source", "name": "Atmospheric_Source", "equation": "5", "position": {"x": 50, "y": 100}},
+    {"id": "var-deposition", "name": "Deposition_Rate", "equation": "0.1", "position": {"x": 150, "y": 100}},
+    {"id": "var-leaching", "name": "Leaching_Rate", "equation": "0.01", "position": {"x": 300, "y": 100}},
+    {"id": "var-drinking", "name": "Drinking_Water_Exposure", "equation": "2", "position": {"x": 400, "y": 250}},
+    {"id": "var-food", "name": "Food_Chain_Exposure", "equation": "0.5", "position": {"x": 100, "y": 250}},
+    {"id": "var-absorption", "name": "Absorption_Factor", "equation": "0.9", "position": {"x": 250, "y": 250}},
+    {"id": "var-halflife", "name": "Half_Life", "equation": "2920", "position": {"x": 400, "y": 350}},
+    {"id": "var-health-risk", "name": "Health_Risk_Index", "equation": "Human_Blood_PFAS / Safe_Threshold", "position": {"x": 350, "y": 400}},
+    {"id": "var-threshold", "name": "Safe_Threshold", "equation": "4.8", "position": {"x": 250, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 1},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1021/acs.est.9b02227",
+  "reference": "Sunderland, E.M. et al. (2019). A review of the pathways of human exposure to poly- and perfluoroalkyl substances (PFASs) and present understanding of health effects. Journal of Exposure Science & Environmental Epidemiology, 29, 131-147."
+}

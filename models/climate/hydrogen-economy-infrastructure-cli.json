@@ -1,0 +1,256 @@
+{
+  "id": "hydrogen-economy-infrastructure-cli",
+  "name": "Hydrogen Economy Infrastructure Model",
+  "description": "Models green hydrogen production, storage, and distribution infrastructure. Based on IEA Global Hydrogen Review (2021). Reference: ASCE (2021). Infrastructure Report Card. American Society of Civil Engineers. Source: https://infrastructurereportcard.org/",
+  "stocks": [
+    {
+      "id": "stock-electrolyzer-capacity",
+      "name": "Electrolyzer_Capacity",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-hydrogen-storage",
+      "name": "Hydrogen_Storage",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-distribution-network",
+      "name": "Distribution_Network",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-hydrogen-demand",
+      "name": "Hydrogen_Demand",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-cost-reduction",
+      "name": "Cost_Reduction_Progress",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-electrolyzer-investment",
+      "name": "Electrolyzer_Investment",
+      "equation": "Investment_Budget * Electrolyzer_Share / Electrolyzer_Cost",
+      "from_stock": null,
+      "to_stock": "stock-electrolyzer-capacity",
+      "position": {
+        "x": 75,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-electrolyzer-retirement",
+      "name": "Electrolyzer_Retirement",
+      "equation": "Electrolyzer_Capacity / Electrolyzer_Lifetime",
+      "from_stock": "stock-electrolyzer-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-hydrogen-production",
+      "name": "Hydrogen_Production",
+      "equation": "Electrolyzer_Capacity * Capacity_Factor * Renewable_Availability",
+      "from_stock": null,
+      "to_stock": "stock-hydrogen-storage",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-hydrogen-delivery",
+      "name": "Hydrogen_Delivery",
+      "equation": "MIN(Hydrogen_Storage / DT, Hydrogen_Demand, Distribution_Network * Network_Throughput)",
+      "from_stock": "stock-hydrogen-storage",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-network-expansion",
+      "name": "Network_Expansion",
+      "equation": "Investment_Budget * Network_Share / Network_Cost",
+      "from_stock": null,
+      "to_stock": "stock-distribution-network",
+      "position": {
+        "x": 475,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-demand-growth",
+      "name": "Demand_Growth",
+      "equation": "Hydrogen_Demand * Demand_Growth_Rate + Policy_Stimulus",
+      "from_stock": null,
+      "to_stock": "stock-hydrogen-demand",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-learning",
+      "name": "Learning_Progress",
+      "equation": "Electrolyzer_Capacity * Learning_Rate",
+      "from_stock": null,
+      "to_stock": "stock-cost-reduction",
+      "position": {
+        "x": 75,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-investment-budget",
+      "name": "Investment_Budget",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-electrolyzer-share",
+      "name": "Electrolyzer_Share",
+      "equation": "0.4",
+      "position": {
+        "x": 220,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-electrolyzer-cost",
+      "name": "Electrolyzer_Cost",
+      "equation": "500 - Cost_Reduction_Progress * 0.1",
+      "position": {
+        "x": 340,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-electrolyzer-lifetime",
+      "name": "Electrolyzer_Lifetime",
+      "equation": "20",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-capacity-factor",
+      "name": "Capacity_Factor",
+      "equation": "0.5",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-renewable-availability",
+      "name": "Renewable_Availability",
+      "equation": "0.3 + 0.01 * TIME",
+      "position": {
+        "x": 100,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-network-share",
+      "name": "Network_Share",
+      "equation": "0.3",
+      "position": {
+        "x": 220,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-network-cost",
+      "name": "Network_Cost",
+      "equation": "100",
+      "position": {
+        "x": 340,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-network-throughput",
+      "name": "Network_Throughput",
+      "equation": "10",
+      "position": {
+        "x": 460,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-demand-growth-rate",
+      "name": "Demand_Growth_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 580,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-policy-stimulus",
+      "name": "Policy_Stimulus",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-learning-rate",
+      "name": "Learning_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 220,
+        "y": 420
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T01:15:55.419110+00:00",
+  "updated_at": "2026-01-12T01:15:55.419118+00:00",
+  "source": "https://www.iea.org/reports/global-hydrogen-review-2021",
+  "reference": "IEA. Global Hydrogen Review 2021. International Energy Agency. 2021."
+}

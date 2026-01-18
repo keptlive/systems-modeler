@@ -1,0 +1,229 @@
+{
+  "id": "heart-failure-compensation-hea",
+  "name": "Heart Failure Compensatory Mechanisms",
+  "description": "Models cardiac compensation and decompensation in heart failure. Based on Packer (1992) The neurohormonal hypothesis, NEJM. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "category": "health",
+  "stocks": [
+    {
+      "id": "stock-cardiac",
+      "name": "Cardiac_Output",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-neuro",
+      "name": "Neurohormonal_Activation",
+      "initial_value": 20,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-remodel",
+      "name": "Cardiac_Remodeling",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fluid",
+      "name": "Fluid_Retention",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-output-up",
+      "name": "Output_Compensation",
+      "equation": "(Target_Output - Cardiac_Output) * Compensation_Rate * Neurohormonal_Activation/100",
+      "from_stock": null,
+      "to_stock": "stock-cardiac",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-output-down",
+      "name": "Output_Decline",
+      "equation": "Cardiac_Output * Decline_Rate * Cardiac_Remodeling/100",
+      "from_stock": "stock-cardiac",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-neuro-up",
+      "name": "Neurohormonal_Increase",
+      "equation": "MAX(0, Target_Output - Cardiac_Output) * Activation_Sensitivity",
+      "from_stock": null,
+      "to_stock": "stock-neuro",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-neuro-down",
+      "name": "Neurohormonal_Decrease",
+      "equation": "Neurohormonal_Activation * Deactivation_Rate * Beta_Blocker_Effect",
+      "from_stock": "stock-neuro",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-remodel",
+      "name": "Remodeling_Progression",
+      "equation": "Neurohormonal_Activation * Remodeling_Rate * (100 - Cardiac_Remodeling)/100",
+      "from_stock": null,
+      "to_stock": "stock-remodel",
+      "position": {
+        "x": 600,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-fluid-up",
+      "name": "Fluid_Accumulation",
+      "equation": "Neurohormonal_Activation * Fluid_Rate * (1 - ACE_Inhibitor)",
+      "from_stock": null,
+      "to_stock": "stock-fluid",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-fluid-down",
+      "name": "Fluid_Excretion",
+      "equation": "Fluid_Retention * Diuretic_Effect",
+      "from_stock": "stock-fluid",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-target",
+      "name": "Target_Output",
+      "equation": "5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-comp-rate",
+      "name": "Compensation_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-decline",
+      "name": "Decline_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-activate",
+      "name": "Activation_Sensitivity",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-deactivate",
+      "name": "Deactivation_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-beta",
+      "name": "Beta_Blocker_Effect",
+      "equation": "1.5",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-remodel-rate",
+      "name": "Remodeling_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-fluid-rate",
+      "name": "Fluid_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-ace",
+      "name": "ACE_Inhibitor",
+      "equation": "0.4",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-diuretic",
+      "name": "Diuretic_Effect",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1056/NEJM199210013271407",
+  "reference": "Packer M (1992) The Neurohormonal Hypothesis: A Theory to Explain the Mechanism of Disease Progression in Heart Failure. Journal of the American College of Cardiology 20(1):248-254.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:36:48.752546+00:00",
+  "updated_at": "2026-01-12T06:36:48.752546+00:00"
+}

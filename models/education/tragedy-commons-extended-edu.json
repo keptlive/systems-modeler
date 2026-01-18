@@ -1,0 +1,182 @@
+{
+  "id": "tragedy-commons-extended-edu",
+  "name": "Tragedy of the Commons Extended Model",
+  "description": "Individual rational behavior leading to collective resource depletion. Source: Hardin (1968), Science. DOI: 10.1126/science.162.3859.1243",
+  "stocks": [
+    {
+      "id": "stock-resource",
+      "name": "Common_Resource",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-users",
+      "name": "Number_Users",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-extracted",
+      "name": "Total_Extracted",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-regen",
+      "name": "Regeneration",
+      "equation": "Common_Resource * Regen_Rate * (1 - Common_Resource / Carrying_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-resource",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-extract",
+      "name": "Extraction",
+      "equation": "Number_Users * Extraction_Per_User * (Common_Resource / Carrying_Capacity)",
+      "from_stock": "stock-resource",
+      "to_stock": "stock-extracted",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-usergrow",
+      "name": "User_Growth",
+      "equation": "Number_Users * User_Growth_Rate * (Profit_Per_User / Profit_Threshold)",
+      "from_stock": null,
+      "to_stock": "stock-users",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-userexit",
+      "name": "User_Exit",
+      "equation": "Number_Users * Exit_Rate * (1 - Profit_Per_User / Profit_Threshold)",
+      "from_stock": "stock-users",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-regen",
+      "name": "Regen_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-carry",
+      "name": "Carrying_Capacity",
+      "equation": "1000",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-extract",
+      "name": "Extraction_Per_User",
+      "equation": "10",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-usergrow",
+      "name": "User_Growth_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-exit",
+      "name": "Exit_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-profit",
+      "name": "Profit_Per_User",
+      "equation": "Extraction_Per_User * (Common_Resource / Carrying_Capacity) * Price - Cost",
+      "position": {
+        "x": 300,
+        "y": 275
+      }
+    },
+    {
+      "id": "var-price",
+      "name": "Price",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 275
+      }
+    },
+    {
+      "id": "var-cost",
+      "name": "Cost",
+      "equation": "20",
+      "position": {
+        "x": 450,
+        "y": 275
+      }
+    },
+    {
+      "id": "var-profthresh",
+      "name": "Profit_Threshold",
+      "equation": "30",
+      "position": {
+        "x": 200,
+        "y": 275
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Common_Resource",
+      "to_element": "Extraction"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:13:18.795724+00:00",
+  "updated_at": "2026-01-12T02:13:18.795728+00:00",
+  "source": "https://doi.org/10.1126/science.162.3859.1243",
+  "reference": "Hardin, G. (1968). The Tragedy of the Commons. Science."
+}

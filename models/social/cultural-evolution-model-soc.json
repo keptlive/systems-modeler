@@ -1,0 +1,200 @@
+{
+  "id": "cultural-evolution-model-soc",
+  "name": "Cultural Evolution Model",
+  "description": "Models cultural trait transmission through social learning. Based on Boyd & Richerson (1985). DOI: 10.7208/chicago/9780226712130.001.0001",
+  "stocks": [
+    {
+      "id": "stock-traita",
+      "name": "Trait_A_Prevalence",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-traitb",
+      "name": "Trait_B_Prevalence",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-cultural",
+      "name": "Cultural_Complexity",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-atob",
+      "name": "A_to_B_Conversion",
+      "equation": "Trait_A_Prevalence * Conversion_Rate_AB * (Conformist_Bias_B + Prestige_Bias_B)",
+      "from_stock": "stock-traita",
+      "to_stock": "stock-traitb",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-btoa",
+      "name": "B_to_A_Conversion",
+      "equation": "Trait_B_Prevalence * Conversion_Rate_BA * (Conformist_Bias_A + Prestige_Bias_A)",
+      "from_stock": "stock-traitb",
+      "to_stock": "stock-traita",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-innovation",
+      "name": "Cultural_Innovation",
+      "equation": "Innovation_Rate * Population_Size",
+      "from_stock": null,
+      "to_stock": "stock-cultural",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-loss",
+      "name": "Cultural_Loss",
+      "equation": "Cultural_Complexity * Loss_Rate / (1 + Transmission_Fidelity)",
+      "from_stock": "stock-cultural",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-convab",
+      "name": "Conversion_Rate_AB",
+      "equation": "0.05",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-convba",
+      "name": "Conversion_Rate_BA",
+      "equation": "0.03",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-confbiasa",
+      "name": "Conformist_Bias_A",
+      "equation": "Trait_A_Prevalence / 100",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-confbiasb",
+      "name": "Conformist_Bias_B",
+      "equation": "Trait_B_Prevalence / 100",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-prestbiasa",
+      "name": "Prestige_Bias_A",
+      "equation": "0.2",
+      "position": {
+        "x": 150,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-prestbiasb",
+      "name": "Prestige_Bias_B",
+      "equation": "0.3",
+      "position": {
+        "x": 450,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-innovrate",
+      "name": "Innovation_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-popsize",
+      "name": "Population_Size",
+      "equation": "100",
+      "position": {
+        "x": 200,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-lossrate",
+      "name": "Loss_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-transfidel",
+      "name": "Transmission_Fidelity",
+      "equation": "0.9",
+      "position": {
+        "x": 350,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-diversity",
+      "name": "Cultural_Diversity",
+      "equation": "1 - ABS(Trait_A_Prevalence - Trait_B_Prevalence) / 100",
+      "position": {
+        "x": 300,
+        "y": 375
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Trait_A_Prevalence",
+      "to_element": "Conformist_Bias_A"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:55:29.074602+00:00",
+  "updated_at": "2026-01-12T02:55:29.074610+00:00",
+  "source": "https://doi.org/10.7208/chicago/9780226712130.001.0001",
+  "reference": "Boyd R, Richerson PJ (1985). Culture and the Evolutionary Process. U Chicago Press."
+}

@@ -1,0 +1,276 @@
+{
+  "id": "cybersecurity-threat-landscape-eco",
+  "name": "Cybersecurity Threat Landscape Model",
+  "description": "Models cybersecurity threats and defense dynamics. Based on Verizon Data Breach Investigations Report methodology. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-vulnerabilities",
+      "name": "Active_Vulnerabilities",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-threats",
+      "name": "Active_Threats",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-incidents",
+      "name": "Security_Incidents",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-defenses",
+      "name": "Defense_Capability",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-damage",
+      "name": "Cumulative_Damage",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-new-vulns",
+      "name": "New_Vulnerabilities",
+      "equation": "Software_Complexity * Vuln_Discovery_Rate",
+      "from_stock": null,
+      "to_stock": "stock-vulnerabilities",
+      "position": {
+        "x": 75,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-patching",
+      "name": "Vulnerability_Patching",
+      "equation": "Active_Vulnerabilities * Patching_Rate * Defense_Capability / Reference_Defense",
+      "from_stock": "stock-vulnerabilities",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-threat-emergence",
+      "name": "Threat_Emergence",
+      "equation": "Active_Vulnerabilities * Threat_Development_Rate * Attacker_Motivation",
+      "from_stock": null,
+      "to_stock": "stock-threats",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-threat-mitigation",
+      "name": "Threat_Mitigation",
+      "equation": "Active_Threats * Mitigation_Rate * Defense_Capability / Reference_Defense",
+      "from_stock": "stock-threats",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-attacks",
+      "name": "Successful_Attacks",
+      "equation": "Active_Threats * Attack_Success_Rate * (1 - Defense_Capability / (Defense_Capability + Active_Threats))",
+      "from_stock": null,
+      "to_stock": "stock-incidents",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-incident-resolution",
+      "name": "Incident_Resolution",
+      "equation": "Security_Incidents / Resolution_Time",
+      "from_stock": "stock-incidents",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 220
+      }
+    },
+    {
+      "id": "flow-defense-investment",
+      "name": "Defense_Investment",
+      "equation": "Security_Budget * Investment_Efficiency * (1 + Learning_from_Incidents * Security_Incidents)",
+      "from_stock": null,
+      "to_stock": "stock-defenses",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-damage-accumulation",
+      "name": "Damage_Accumulation",
+      "equation": "Security_Incidents * Damage_Per_Incident",
+      "from_stock": null,
+      "to_stock": "stock-damage",
+      "position": {
+        "x": 550,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-software-complexity",
+      "name": "Software_Complexity",
+      "equation": "1000 * (1 + 0.05 * TIME)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-vuln-discovery-rate",
+      "name": "Vuln_Discovery_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-patching-rate",
+      "name": "Patching_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-threat-development-rate",
+      "name": "Threat_Development_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 620,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-attacker-motivation",
+      "name": "Attacker_Motivation",
+      "equation": "1 + 0.1 * Cumulative_Damage / 1000",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-mitigation-rate",
+      "name": "Mitigation_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 280,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-attack-success-rate",
+      "name": "Attack_Success_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 440,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-reference-defense",
+      "name": "Reference_Defense",
+      "equation": "100",
+      "position": {
+        "x": 600,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-resolution-time",
+      "name": "Resolution_Time",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-security-budget",
+      "name": "Security_Budget",
+      "equation": "50",
+      "position": {
+        "x": 260,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-investment-efficiency",
+      "name": "Investment_Efficiency",
+      "equation": "0.2",
+      "position": {
+        "x": 400,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-learning-from-incidents",
+      "name": "Learning_from_Incidents",
+      "equation": "0.1",
+      "position": {
+        "x": 560,
+        "y": 440
+      }
+    },
+    {
+      "id": "var-damage-per-incident",
+      "name": "Damage_Per_Incident",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:22:14.817751+00:00",
+  "updated_at": "2026-01-12T01:22:14.817763+00:00",
+  "source": "https://www.verizon.com/business/resources/reports/dbir/",
+  "reference": "Verizon. 2022 Data Breach Investigations Report. Verizon Business. 2022."
+}

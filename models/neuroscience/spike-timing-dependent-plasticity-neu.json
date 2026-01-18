@@ -1,0 +1,30 @@
+{
+  "id": "spike-timing-dependent-plasticity-neu",
+  "name": "Spike-Timing-Dependent Plasticity (STDP) Model",
+  "description": "Modern model of synaptic plasticity where the precise timing of pre- and post-synaptic spikes determines the direction and magnitude of weight changes. Source: Bi & Poo (1998). Journal of Neuroscience. DOI: 10.1523/JNEUROSCI.18-24-10464.1998",
+  "stocks": [
+    {"id": "stock-weight", "name": "Synaptic_Weight", "initial_value": 0.5, "equation": "", "position": {"x": 300, "y": 200}},
+    {"id": "stock-pre-trace", "name": "Pre_Spike_Trace", "initial_value": 0, "equation": "", "position": {"x": 150, "y": 200}},
+    {"id": "stock-post-trace", "name": "Post_Spike_Trace", "initial_value": 0, "equation": "", "position": {"x": 450, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-potentiation", "name": "Weight_Update", "equation": "A_Plus * Post_Spike * Pre_Spike_Trace - A_Minus * Pre_Spike * Post_Spike_Trace", "from_stock": null, "to_stock": "stock-weight", "position": {"x": 200, "y": 200}},
+    {"id": "flow-pre-decay", "name": "Pre_Trace_Dynamics", "equation": "Pre_Spike - Pre_Spike_Trace / Tau_Plus", "from_stock": null, "to_stock": "stock-pre-trace", "position": {"x": 100, "y": 200}},
+    {"id": "flow-post-decay", "name": "Post_Trace_Dynamics", "equation": "Post_Spike - Post_Spike_Trace / Tau_Minus", "from_stock": null, "to_stock": "stock-post-trace", "position": {"x": 400, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-a-plus", "name": "A_Plus", "equation": "0.005", "position": {"x": 200, "y": 100}},
+    {"id": "var-a-minus", "name": "A_Minus", "equation": "0.00525", "position": {"x": 350, "y": 100}},
+    {"id": "var-tau-plus", "name": "Tau_Plus", "equation": "20", "position": {"x": 100, "y": 100}},
+    {"id": "var-tau-minus", "name": "Tau_Minus", "equation": "20", "position": {"x": 450, "y": 100}},
+    {"id": "var-pre-spike", "name": "Pre_Spike", "equation": "IF(MOD(TIME, 10) < 0.1, 1, 0)", "position": {"x": 100, "y": 300}},
+    {"id": "var-post-spike", "name": "Post_Spike", "equation": "IF(MOD(TIME + 5, 10) < 0.1, 1, 0)", "position": {"x": 450, "y": 300}},
+    {"id": "var-delta-t", "name": "Spike_Timing_Difference", "equation": "5", "position": {"x": 300, "y": 50}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 200, "dt": 0.1},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1523/JNEUROSCI.18-24-10464.1998",
+  "reference": "Bi, G.Q. & Poo, M.M. (1998). Synaptic modifications in cultured hippocampal neurons: dependence on spike timing, synaptic strength, and postsynaptic cell type. Journal of Neuroscience, 18(24), 10464-10472."
+}

@@ -1,0 +1,127 @@
+{
+  "id": "market-growth-adoption-eco",
+  "name": "Market Growth with Adoption",
+  "description": "Market growth model showing product adoption dynamics from Sterman's Business Dynamics (2000). Models potential and actual adopters with word-of-mouth and advertising effects. Source: Sterman, J.D. (2000), Business Dynamics, McGraw-Hill, Chapter 9. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-potential-adopters",
+      "name": "Potential_Adopters",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-adopters",
+      "name": "Adopters",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-adoption",
+      "name": "Adoption_Rate",
+      "equation": "Adoption_from_Advertising + Adoption_from_Word_of_Mouth",
+      "from_stock": "stock-potential-adopters",
+      "to_stock": "stock-adopters",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-advertising-effectiveness",
+      "name": "Advertising_Effectiveness",
+      "equation": "0.01",
+      "position": {
+        "x": 150,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-contact-rate",
+      "name": "Contact_Rate",
+      "equation": "100",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-adoption-fraction",
+      "name": "Adoption_Fraction",
+      "equation": "0.015",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-population",
+      "name": "Total_Population",
+      "equation": "Potential_Adopters + Adopters",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-advertising-adoption",
+      "name": "Adoption_from_Advertising",
+      "equation": "Advertising_Effectiveness * Potential_Adopters",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-wom-adoption",
+      "name": "Adoption_from_Word_of_Mouth",
+      "equation": "Contact_Rate * Adoption_Fraction * Potential_Adopters * Adopters / Total_Population",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Potential_Adopters",
+      "to_element": "Adoption_Rate"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Adopters",
+      "to_element": "Adoption_Rate"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Advertising_Effectiveness",
+      "to_element": "Adoption_from_Advertising"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Contact_Rate",
+      "to_element": "Adoption_from_Word_of_Mouth"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T20:47:58.493338Z",
+  "updated_at": "2026-01-11T20:47:58.493338Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}

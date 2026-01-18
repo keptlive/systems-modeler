@@ -1,0 +1,187 @@
+{
+  "id": "ai-workforce-transformation-dynamics-eco",
+  "name": "AI Workforce Transformation Dynamics Model",
+  "description": "System dynamics model of AI adoption impact on workforce with job displacement, creation, and reskilling dynamics. Based on WEF 2025 projections of 97M jobs created vs 85M displaced and McKinsey adoption data. Reference: World Economic Forum (2025). The Future of Jobs Report 2025. Source: https://www.weforum.org/reports/the-future-of-jobs-report-2025/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Traditional Jobs",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 100, "y": 150}
+    },
+    {
+      "id": "s2",
+      "name": "AI Augmented Jobs",
+      "initial_value": 20,
+      "equation": "",
+      "position": {"x": 300, "y": 150}
+    },
+    {
+      "id": "s3",
+      "name": "New AI Created Jobs",
+      "initial_value": 5,
+      "equation": "",
+      "position": {"x": 500, "y": 150}
+    },
+    {
+      "id": "s4",
+      "name": "Displaced Workers",
+      "initial_value": 2,
+      "equation": "",
+      "position": {"x": 200, "y": 300}
+    },
+    {
+      "id": "s5",
+      "name": "Workers in Reskilling",
+      "initial_value": 3,
+      "equation": "",
+      "position": {"x": 400, "y": 300}
+    },
+    {
+      "id": "s6",
+      "name": "AI Adoption Level",
+      "initial_value": 0.55,
+      "equation": "",
+      "position": {"x": 300, "y": 450}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Job Displacement",
+      "equation": "Traditional_Jobs * AI_Adoption_Level * Displacement_Rate * Automation_Susceptibility",
+      "from_stock": "s1",
+      "to_stock": "s4",
+      "position": {"x": 150, "y": 225}
+    },
+    {
+      "id": "f2",
+      "name": "Job Augmentation",
+      "equation": "Traditional_Jobs * AI_Adoption_Level * Augmentation_Rate",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {"x": 200, "y": 150}
+    },
+    {
+      "id": "f3",
+      "name": "New Job Creation",
+      "equation": "AI_Adoption_Level * Job_Creation_Rate * Innovation_Factor",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {"x": 500, "y": 100}
+    },
+    {
+      "id": "f4",
+      "name": "Reskilling Enrollment",
+      "equation": "Displaced_Workers * Reskilling_Rate * Program_Availability",
+      "from_stock": "s4",
+      "to_stock": "s5",
+      "position": {"x": 300, "y": 300}
+    },
+    {
+      "id": "f5",
+      "name": "Reemployment",
+      "equation": "Workers_in_Reskilling * Completion_Rate * (AI_Augmented_Jobs + New_AI_Created_Jobs) * 0.01",
+      "from_stock": "s5",
+      "to_stock": "s2",
+      "position": {"x": 350, "y": 225}
+    },
+    {
+      "id": "f6",
+      "name": "New AI Job Entry",
+      "equation": "Workers_in_Reskilling * Completion_Rate * 0.3",
+      "from_stock": "s5",
+      "to_stock": "s3",
+      "position": {"x": 450, "y": 225}
+    },
+    {
+      "id": "f7",
+      "name": "AI Adoption Growth",
+      "equation": "(Target_Adoption - AI_Adoption_Level) * Adoption_Speed",
+      "from_stock": null,
+      "to_stock": "s6",
+      "position": {"x": 300, "y": 500}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Displacement Rate",
+      "equation": "0.03",
+      "position": {"x": 50, "y": 200}
+    },
+    {
+      "id": "v2",
+      "name": "Automation Susceptibility",
+      "equation": "0.5",
+      "position": {"x": 100, "y": 250}
+    },
+    {
+      "id": "v3",
+      "name": "Augmentation Rate",
+      "equation": "0.05",
+      "position": {"x": 150, "y": 100}
+    },
+    {
+      "id": "v4",
+      "name": "Job Creation Rate",
+      "equation": "2.5",
+      "position": {"x": 550, "y": 50}
+    },
+    {
+      "id": "v5",
+      "name": "Innovation Factor",
+      "equation": "1 + AI_Adoption_Level * 0.5",
+      "position": {"x": 450, "y": 50}
+    },
+    {
+      "id": "v6",
+      "name": "Reskilling Rate",
+      "equation": "0.15",
+      "position": {"x": 250, "y": 350}
+    },
+    {
+      "id": "v7",
+      "name": "Program Availability",
+      "equation": "0.6",
+      "position": {"x": 350, "y": 350}
+    },
+    {
+      "id": "v8",
+      "name": "Completion Rate",
+      "equation": "0.1",
+      "position": {"x": 450, "y": 350}
+    },
+    {
+      "id": "v9",
+      "name": "Target Adoption",
+      "equation": "0.85",
+      "position": {"x": 200, "y": 500}
+    },
+    {
+      "id": "v10",
+      "name": "Adoption Speed",
+      "equation": "0.1",
+      "position": {"x": 400, "y": 500}
+    },
+    {
+      "id": "v11",
+      "name": "Net Job Change",
+      "equation": "New_Job_Creation + Job_Augmentation - Job_Displacement",
+      "position": {"x": 300, "y": 50}
+    },
+    {
+      "id": "v12",
+      "name": "Total Employment",
+      "equation": "Traditional_Jobs + AI_Augmented_Jobs + New_AI_Created_Jobs",
+      "position": {"x": 400, "y": 100}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 120, "dt": 1},
+  "created_at": "2026-01-15T16:00:00.000000",
+  "updated_at": "2026-01-15T16:00:00.000000",
+  "source": "https://www.weforum.org/reports/the-future-of-jobs-report-2025/",
+  "reference": "World Economic Forum (2025). The Future of Jobs Report 2025. McKinsey Global Survey on AI (2024)."
+}

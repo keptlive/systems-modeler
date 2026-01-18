@@ -1,0 +1,251 @@
+{
+  "id": "renewable-grid-storage-cli",
+  "name": "Renewable Energy Grid Storage Model",
+  "description": "Models grid-scale battery storage dynamics for renewable integration. Based on Sepulveda et al. (2021) analysis of storage requirements for decarbonization. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "stock-battery-charge",
+      "name": "Battery_State_of_Charge",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-grid-frequency",
+      "name": "Grid_Frequency",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-curtailed-energy",
+      "name": "Curtailed_Energy",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-unmet-demand",
+      "name": "Unmet_Demand",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-charging",
+      "name": "Battery_Charging",
+      "equation": "MIN(Excess_Generation, (Max_Charge - Battery_State_of_Charge) / DT) * Charge_Efficiency",
+      "from_stock": null,
+      "to_stock": "stock-battery-charge",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-discharging",
+      "name": "Battery_Discharging",
+      "equation": "MIN(Generation_Shortfall / Discharge_Efficiency, Battery_State_of_Charge / DT)",
+      "from_stock": "stock-battery-charge",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-frequency-deviation",
+      "name": "Frequency_Change",
+      "equation": "(Supply_Demand_Balance * Frequency_Sensitivity)",
+      "from_stock": null,
+      "to_stock": "stock-grid-frequency",
+      "position": {
+        "x": 500,
+        "y": 130
+      }
+    },
+    {
+      "id": "flow-curtailment",
+      "name": "Energy_Curtailment",
+      "equation": "MAX(0, Excess_Generation - Battery_Charging)",
+      "from_stock": null,
+      "to_stock": "stock-curtailed-energy",
+      "position": {
+        "x": 150,
+        "y": 280
+      }
+    },
+    {
+      "id": "flow-shortfall",
+      "name": "Demand_Shortfall",
+      "equation": "MAX(0, Generation_Shortfall - Battery_Discharging * Discharge_Efficiency)",
+      "from_stock": null,
+      "to_stock": "stock-unmet-demand",
+      "position": {
+        "x": 500,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-solar-generation",
+      "name": "Solar_Generation",
+      "equation": "Solar_Capacity * MAX(0, SIN((TIME - 6) * 3.14159 / 12)) * (1 - Cloud_Cover)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-wind-generation",
+      "name": "Wind_Generation",
+      "equation": "Wind_Capacity * (0.3 + 0.4 * SIN(TIME * 0.3) + 0.3 * SIN(TIME * 1.1))",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-total-generation",
+      "name": "Total_Generation",
+      "equation": "Solar_Generation + Wind_Generation",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Demand",
+      "equation": "Base_Demand * (1 + 0.2 * SIN((TIME - 14) * 3.14159 / 12))",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-excess-generation",
+      "name": "Excess_Generation",
+      "equation": "MAX(0, Total_Generation - Demand)",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-generation-shortfall",
+      "name": "Generation_Shortfall",
+      "equation": "MAX(0, Demand - Total_Generation)",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-supply-demand-balance",
+      "name": "Supply_Demand_Balance",
+      "equation": "Total_Generation + Battery_Discharging * Discharge_Efficiency - Demand - Battery_Charging",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "var-solar-capacity",
+      "name": "Solar_Capacity",
+      "equation": "1000",
+      "position": {
+        "x": 100,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-wind-capacity",
+      "name": "Wind_Capacity",
+      "equation": "800",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-base-demand",
+      "name": "Base_Demand",
+      "equation": "1200",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-max-charge",
+      "name": "Max_Charge",
+      "equation": "4000",
+      "position": {
+        "x": 400,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-charge-efficiency",
+      "name": "Charge_Efficiency",
+      "equation": "0.92",
+      "position": {
+        "x": 500,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-discharge-efficiency",
+      "name": "Discharge_Efficiency",
+      "equation": "0.92",
+      "position": {
+        "x": 600,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-frequency-sensitivity",
+      "name": "Frequency_Sensitivity",
+      "equation": "0.001",
+      "position": {
+        "x": 700,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-cloud-cover",
+      "name": "Cloud_Cover",
+      "equation": "0.2",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 168,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T01:12:15.898144+00:00",
+  "updated_at": "2026-01-12T01:12:15.898156+00:00",
+  "source": "https://doi.org/10.1016/j.joule.2021.02.006",
+  "reference": "Sepulveda NA, et al. The design space for long-duration energy storage in decarbonized power systems. Nature Energy. 2021;6:506-516."
+}

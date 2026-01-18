@@ -1,0 +1,284 @@
+{
+  "id": "seirs-model-with-vital-dynamics-epi",
+  "name": "SEIRS Model with Vital Dynamics",
+  "description": "A comprehensive SEIRS model including birth and death rates (vital dynamics). Models endemic diseases in populations with demographic turnover. The exposed compartment represents the latent period before becoming infectious. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "stocks": [
+    {
+      "id": "stock-susceptible",
+      "name": "Susceptible",
+      "initial_value": 99990,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exposed",
+      "name": "Exposed",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-infected",
+      "name": "Infected",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-recovered",
+      "name": "Recovered",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-births",
+      "name": "Births",
+      "equation": "Mu * Total_Population",
+      "from_stock": null,
+      "to_stock": "stock-susceptible",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-infection",
+      "name": "Infection",
+      "equation": "Beta * Susceptible * Infected / Total_Population",
+      "from_stock": "stock-susceptible",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-becoming-infectious",
+      "name": "Becoming Infectious",
+      "equation": "Sigma * Exposed",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-infected",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "Gamma * Infected",
+      "from_stock": "stock-infected",
+      "to_stock": "stock-recovered",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-waning-immunity",
+      "name": "Waning Immunity",
+      "equation": "Xi * Recovered",
+      "from_stock": "stock-recovered",
+      "to_stock": "stock-susceptible",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-deaths-s",
+      "name": "Deaths (S)",
+      "equation": "Mu * Susceptible",
+      "from_stock": "stock-susceptible",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-deaths-e",
+      "name": "Deaths (E)",
+      "equation": "Mu * Exposed",
+      "from_stock": "stock-exposed",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-deaths-i",
+      "name": "Deaths (I)",
+      "equation": "(Mu + Alpha) * Infected",
+      "from_stock": "stock-infected",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-deaths-r",
+      "name": "Deaths (R)",
+      "equation": "Mu * Recovered",
+      "from_stock": "stock-recovered",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "Beta",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-sigma",
+      "name": "Sigma",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-gamma",
+      "name": "Gamma",
+      "equation": "0.1",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-xi",
+      "name": "Xi",
+      "equation": "0.005",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-mu",
+      "name": "Mu",
+      "equation": "0.00004",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-alpha",
+      "name": "Alpha",
+      "equation": "0.001",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "Susceptible + Exposed + Infected + Recovered",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Mu",
+      "to_element": "Births"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Total Population",
+      "to_element": "Births"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Beta",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Susceptible",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Infected",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Total Population",
+      "to_element": "Infection"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Sigma",
+      "to_element": "Becoming Infectious"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Exposed",
+      "to_element": "Becoming Infectious"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Gamma",
+      "to_element": "Recovery"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Infected",
+      "to_element": "Recovery"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Xi",
+      "to_element": "Waning Immunity"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Recovered",
+      "to_element": "Waning Immunity"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 3650,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T20:04:50.804387Z",
+  "updated_at": "2026-01-11T20:04:50.804387Z",
+  "source": "https://doi.org/10.1016/S0025-5564(02)00108-6",
+  "reference": "Hethcote HW. The mathematics of infectious diseases. SIAM Review. 2000;42(4):599-653."
+}

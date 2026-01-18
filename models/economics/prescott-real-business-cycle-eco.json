@@ -1,0 +1,186 @@
+{
+  "id": "prescott-real-business-cycle-eco",
+  "name": "Prescott Real Business Cycle Model",
+  "description": "Nobel Prize-winning model showing how technology shocks drive business cycle fluctuations in competitive equilibrium. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Capital",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Technology",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Consumption",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Investment",
+      "equation": "Output - Consumption",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Depreciation_RBC",
+      "equation": "Delta_RBC * Capital",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Tech_Growth",
+      "equation": "Rho_Tech * (Tech_Trend - Technology) + Tech_Shock",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Consumption_Change",
+      "equation": "(Optimal_Consumption - Consumption) / Consumption_Adjustment",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Output",
+      "equation": "Technology * (Capital ^ Alpha_RBC) * (Labor_RBC ^ (1 - Alpha_RBC))",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Alpha_RBC",
+      "equation": "0.36",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Labor_RBC",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Delta_RBC",
+      "equation": "0.025",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Rho_Tech",
+      "equation": "0.95",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Tech_Trend",
+      "equation": "1",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Tech_Shock",
+      "equation": "0",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Optimal_Consumption",
+      "equation": "(1 - Beta_RBC) * Output",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Beta_RBC",
+      "equation": "0.25",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Consumption_Adjustment",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:20:56.327830+00:00",
+  "updated_at": "2026-01-12T11:20:56.327830+00:00",
+  "source": "https://doi.org/10.2307/1913386",
+  "reference": "Kydland FE, Prescott EC. Time to build and aggregate fluctuations. Econometrica. 1982;50(6):1345-1370. Nobel Prize 2004."
+}

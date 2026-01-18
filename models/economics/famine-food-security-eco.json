@@ -1,0 +1,158 @@
+{
+  "id": "famine-food-security-eco",
+  "name": "Famine and Food Security Dynamics",
+  "description": "A system dynamics model of food security, capturing the dynamics of food production, storage, distribution, and consumption under stress conditions. Based on the FAO's food security framework analyzing availability, access, utilization, and stability. Reference: FAO Food Security Statistics. Source: https://www.fao.org/",
+  "source": "https://doi.org/10.1016/j.worlddev.2015.04.004",
+  "reference": "Headey D, Fan S. Anatomy of a Crisis: The Causes and Consequences of Surging Food Prices. World Development. 2008;36(12):2346-2359. See also FAO Food Security Framework.",
+  "stocks": [
+    {
+      "id": "stock-food-stores",
+      "name": "Food Stores",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-population",
+      "name": "Population",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-malnutrition",
+      "name": "Malnourished Population",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 700,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-production",
+      "name": "Food Production",
+      "equation": "Agricultural_Land * Yield_Per_Hectare * Climate_Factor",
+      "from_stock": null,
+      "to_stock": "stock-food-stores",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-consumption",
+      "name": "Food Consumption",
+      "equation": "Population * Per_Capita_Consumption * Food_Availability_Factor",
+      "from_stock": "stock-food-stores",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-onset-malnutrition",
+      "name": "Onset of Malnutrition",
+      "equation": "(Population - Malnourished_Population) * Malnutrition_Rate",
+      "from_stock": "stock-population",
+      "to_stock": "stock-malnutrition",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery from Malnutrition",
+      "equation": "Malnourished_Population * Recovery_Rate * Food_Availability_Factor",
+      "from_stock": "stock-malnutrition",
+      "to_stock": "stock-population",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-land",
+      "name": "Agricultural Land",
+      "equation": "500000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-yield",
+      "name": "Yield Per Hectare",
+      "equation": "2.5",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-climate",
+      "name": "Climate Factor",
+      "equation": "1.0",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-consumption",
+      "name": "Per Capita Consumption",
+      "equation": "0.8",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-availability",
+      "name": "Food Availability Factor",
+      "equation": "MIN(1, Food_Stores / (Population * Per_Capita_Consumption))",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-malnutrition-rate",
+      "name": "Malnutrition Rate",
+      "equation": "0.01 * (1 - Food_Availability_Factor)",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recovery-rate",
+      "name": "Recovery Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 700,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T08:00:00.000000+00:00",
+  "updated_at": "2026-01-12T08:00:00.000000+00:00"
+}

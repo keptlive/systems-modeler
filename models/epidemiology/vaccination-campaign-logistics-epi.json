@@ -1,0 +1,363 @@
+{
+  "id": "vaccination-campaign-logistics-epi",
+  "name": "Public Health Vaccination Campaign Model",
+  "description": "A system dynamics model of mass vaccination logistics based on Lee et al. (2015) 'A computer simulation model for vaccine logistics' (doi:10.1016/j.vaccine.2015.08.052) and WHO vaccination campaign planning frameworks. Models vaccine supply chain, administration capacity, and population coverage. Reference: Based on System Dynamics supply chain models (Sterman, 2000). Source: https://systemdynamics.org/",
+  "stocks": [
+    {
+      "id": "stock-unvaccinated",
+      "name": "Unvaccinated Population",
+      "initial_value": 10000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-first-dose",
+      "name": "First Dose Received",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fully-vaccinated",
+      "name": "Fully Vaccinated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-vaccine-inventory",
+      "name": "Vaccine Inventory",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-vaccination-sites",
+      "name": "Active Vaccination Sites",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-trained-staff",
+      "name": "Trained Vaccination Staff",
+      "initial_value": 500,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "stock-wasted-doses",
+      "name": "Wasted Doses",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-first-vaccination",
+      "name": "First Dose Administration",
+      "equation": "MIN(Unvaccinated_Population * Willingness_Rate, Daily_Capacity, Vaccine_Inventory / 2)",
+      "from_stock": "stock-unvaccinated",
+      "to_stock": "stock-first-dose",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-second-vaccination",
+      "name": "Second Dose Administration",
+      "equation": "MIN(Eligible_for_Second_Dose, Daily_Capacity * 0.5, Vaccine_Inventory / 2)",
+      "from_stock": "stock-first-dose",
+      "to_stock": "stock-fully-vaccinated",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-vaccine-delivery",
+      "name": "Vaccine Delivery",
+      "equation": "Weekly_Delivery_Rate / 7",
+      "from_stock": null,
+      "to_stock": "stock-vaccine-inventory",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-vaccine-use",
+      "name": "Vaccine Use",
+      "equation": "First_Dose_Administration + Second_Dose_Administration",
+      "from_stock": "stock-vaccine-inventory",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-wastage",
+      "name": "Wastage",
+      "equation": "Vaccine_Inventory * Wastage_Rate",
+      "from_stock": "stock-vaccine-inventory",
+      "to_stock": "stock-wasted-doses",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "flow-site-opening",
+      "name": "Site Opening",
+      "equation": "IF(Active_Vaccination_Sites < Target_Sites, Site_Opening_Rate, 0)",
+      "from_stock": null,
+      "to_stock": "stock-vaccination-sites",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-site-closing",
+      "name": "Site Closing",
+      "equation": "IF(Coverage_Rate > 0.8, Active_Vaccination_Sites * 0.1, 0)",
+      "from_stock": "stock-vaccination-sites",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-staff-training",
+      "name": "Staff Training",
+      "equation": "Training_Rate",
+      "from_stock": null,
+      "to_stock": "stock-trained-staff",
+      "position": {
+        "x": 350,
+        "y": 450
+      }
+    },
+    {
+      "id": "flow-staff-attrition",
+      "name": "Staff Attrition",
+      "equation": "Trained_Vaccination_Staff * 0.02",
+      "from_stock": "stock-trained-staff",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 450
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-willingness-rate",
+      "name": "Willingness Rate",
+      "equation": "0.7",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-daily-capacity",
+      "name": "Daily Capacity",
+      "equation": "Active_Vaccination_Sites * Doses_per_Site * Staff_Adequacy",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-doses-per-site",
+      "name": "Doses per Site",
+      "equation": "200",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-staff-adequacy",
+      "name": "Staff Adequacy",
+      "equation": "MIN(1, Trained_Vaccination_Staff / (Active_Vaccination_Sites * 5))",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-eligible-for-second-dose",
+      "name": "Eligible for Second Dose",
+      "equation": "DELAY(First_Dose_Administration, Dose_Interval)",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-dose-interval",
+      "name": "Dose Interval",
+      "equation": "21",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-weekly-delivery-rate",
+      "name": "Weekly Delivery Rate",
+      "equation": "300000",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-wastage-rate",
+      "name": "Wastage Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-target-sites",
+      "name": "Target Sites",
+      "equation": "200",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-site-opening-rate",
+      "name": "Site Opening Rate",
+      "equation": "5",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-training-rate",
+      "name": "Training Rate",
+      "equation": "20",
+      "position": {
+        "x": 300,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-coverage-rate",
+      "name": "Coverage Rate",
+      "equation": "Fully_Vaccinated / (Unvaccinated_Population + First_Dose_Received + Fully_Vaccinated)",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-total-population",
+      "name": "Total Population",
+      "equation": "Unvaccinated_Population + First_Dose_Received + Fully_Vaccinated",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Unvaccinated Population",
+      "to_element": "First Dose Administration"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Willingness Rate",
+      "to_element": "First Dose Administration"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Daily Capacity",
+      "to_element": "First Dose Administration"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Vaccine Inventory",
+      "to_element": "First Dose Administration"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Active Vaccination Sites",
+      "to_element": "Daily Capacity"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Doses per Site",
+      "to_element": "Daily Capacity"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Staff Adequacy",
+      "to_element": "Daily Capacity"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Trained Vaccination Staff",
+      "to_element": "Staff Adequacy"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Eligible for Second Dose",
+      "to_element": "Second Dose Administration"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Coverage Rate",
+      "to_element": "Site Closing"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Fully Vaccinated",
+      "to_element": "Coverage Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+}

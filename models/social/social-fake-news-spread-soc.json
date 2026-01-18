@@ -1,0 +1,181 @@
+{
+  "id": "social-fake-news-spread-soc",
+  "name": "Misinformation Spread in Social Networks",
+  "description": "Epidemiological model of fake news spread incorporating fact-checking, platform intervention, and belief persistence. Based on Vosoughi et al. (2018) Science study. DOI: 10.1126/science.aap9559",
+  "category": "social",
+  "stocks": [
+    {
+      "id": "stock-unaware",
+      "name": "Unaware",
+      "initial_value": 0.9,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-exposed",
+      "name": "Exposed_Believers",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-spreaders",
+      "name": "Active_Spreaders",
+      "initial_value": 0.05,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fact-checked",
+      "name": "Fact_Checked",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-immune",
+      "name": "Immune_Skeptical",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-exposure",
+      "name": "Exposure",
+      "equation": "Beta_misinfo * Unaware * Active_Spreaders * Viral_Coefficient",
+      "from_stock": "stock-unaware",
+      "to_stock": "stock-exposed",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-sharing",
+      "name": "Start_Sharing",
+      "equation": "Exposed_Believers * Sharing_Rate",
+      "from_stock": "stock-exposed",
+      "to_stock": "stock-spreaders",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fact-check",
+      "name": "Fact_Checking",
+      "equation": "Active_Spreaders * Fact_Check_Rate",
+      "from_stock": "stock-spreaders",
+      "to_stock": "stock-fact-checked",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-become-immune",
+      "name": "Become_Skeptical",
+      "equation": "Fact_Checked * Skepticism_Rate",
+      "from_stock": "stock-fact-checked",
+      "to_stock": "stock-immune",
+      "position": {
+        "x": 475,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-platform-removal",
+      "name": "Platform_Removal",
+      "equation": "Active_Spreaders * Platform_Intervention",
+      "from_stock": "stock-spreaders",
+      "to_stock": "stock-immune",
+      "position": {
+        "x": 400,
+        "y": 275
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-beta",
+      "name": "Beta_misinfo",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-viral",
+      "name": "Viral_Coefficient",
+      "equation": "1.5",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-sharing",
+      "name": "Sharing_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fact-check",
+      "name": "Fact_Check_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-skepticism",
+      "name": "Skepticism_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-platform",
+      "name": "Platform_Intervention",
+      "equation": "0.01",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1126/science.aap9559",
+  "reference": "Vosoughi S, Roy D, Aral S (2018) The spread of true and false news online. Science.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:10:19.330118+00:00",
+  "updated_at": "2026-01-12T06:10:19.330118+00:00"
+}

@@ -1,0 +1,230 @@
+{
+  "id": "deforestation-climate-feedback-cli",
+  "name": "Deforestation-Climate Feedback Model",
+  "description": "Model showing feedbacks between tropical deforestation, carbon emissions, temperature rise, and forest dieback. Based on Cox et al. (2000) and Malhi et al. (2008). Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Forest Area",
+      "initial_value": 5500000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Atmospheric CO2",
+      "initial_value": 410,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Temperature Anomaly",
+      "initial_value": 1.1,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Deforestation",
+      "equation": "Forest_Area * Deforestation_Rate * (1 + Economic_Pressure)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Forest Regrowth",
+      "equation": "(Potential_Forest - Forest_Area) / Regrowth_Time * (1 - Drought_Stress)",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "f3",
+      "name": "CO2 Emissions",
+      "equation": "Deforestation * Carbon_per_Hectare + Fossil_Emissions",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Forest Carbon Uptake",
+      "equation": "Forest_Area * Uptake_Rate * (1 - Drought_Stress)",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Temperature Change",
+      "equation": "(Equilibrium_Temperature - Temperature_Anomaly) / Climate_Response_Time",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Deforestation Rate",
+      "equation": "0.005",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Economic Pressure",
+      "equation": "0.2",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Potential Forest",
+      "equation": "6000000",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Regrowth Time",
+      "equation": "50",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Carbon per Hectare",
+      "equation": "0.0001",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Fossil Emissions",
+      "equation": "40",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Uptake Rate",
+      "equation": "0.000001",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Climate Sensitivity",
+      "equation": "3",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Pre Industrial CO2",
+      "equation": "280",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Equilibrium Temperature",
+      "equation": "Climate_Sensitivity * LN(Atmospheric_CO2 / Pre_Industrial_CO2) / LN(2)",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Climate Response Time",
+      "equation": "30",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Drought Stress",
+      "equation": "MIN(1, Temperature_Anomaly / 4)",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Forest Area",
+      "to_element": "Deforestation"
+    },
+    {
+      "id": "c2",
+      "from_element": "Atmospheric CO2",
+      "to_element": "Equilibrium Temperature"
+    },
+    {
+      "id": "c3",
+      "from_element": "Temperature Anomaly",
+      "to_element": "Drought Stress"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T01:41:05.120407Z",
+  "updated_at": "2026-01-12T01:41:05.120411Z",
+  "source": "https://doi.org/10.1038/nature01095",
+  "reference": "Cox PM, Betts RA, Jones CD, Spall SA, Totterdell IJ. Acceleration of global warming due to carbon-cycle feedbacks in a coupled climate model. Nature. 2000;408:184-187."
+}

@@ -1,0 +1,171 @@
+{
+  "id": "wilson-cowan-neural-mass-neu",
+  "name": "Wilson-Cowan Neural Mass Model",
+  "description": "Model of cortical dynamics showing excitatory-inhibitory interactions. Reference: Wilson, H.R. & Cowan, J.D. (1972). Excitatory and inhibitory interactions.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Excitatory_Activity",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Inhibitory_Activity",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "E_Dynamics",
+      "equation": "(-Excitatory_Activity + Sigmoid_E) / Tau_E",
+      "from_stock": null,
+      "to_stock": "Excitatory_Activity",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "I_Dynamics",
+      "equation": "(-Inhibitory_Activity + Sigmoid_I) / Tau_I",
+      "from_stock": null,
+      "to_stock": "Inhibitory_Activity",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Tau_E",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Tau_I",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "W_EE",
+      "equation": "16",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "W_EI",
+      "equation": "12",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "W_IE",
+      "equation": "15",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "W_II",
+      "equation": "3",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "P",
+      "equation": "1.25",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Input_E",
+      "equation": "W_EE * Excitatory_Activity - W_EI * Inhibitory_Activity + P",
+      "position": {
+        "x": 550,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Input_I",
+      "equation": "W_IE * Excitatory_Activity - W_II * Inhibitory_Activity",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Theta",
+      "equation": "4",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Sigmoid_E",
+      "equation": "1 / (1 + EXP(-Input_E + Theta))",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Sigmoid_I",
+      "equation": "1 / (1 + EXP(-Input_I + Theta))",
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1
+  },
+  "source": "https://doi.org/10.1016/S0006-3495(72)86068-5",
+  "reference": "Wilson, H.R. & Cowan, J.D. (1972). Excitatory and inhibitory interactions in localized populations of model neurons. Biophysical Journal, 12(1), 1-24.",
+  "created_at": "2026-01-15T19:58:51.626980+00:00",
+  "updated_at": "2026-01-15T19:58:51.626980+00:00"
+}

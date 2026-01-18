@@ -1,0 +1,128 @@
+{
+  "id": "rayleigh-benard-convection-phy",
+  "name": "Rayleigh-Bénard Convection Model",
+  "description": "Classic model of thermal convection in a fluid layer heated from below. Above a critical Rayleigh number, convection cells form. This is a fundamental paradigm for pattern formation in physics. Source: Bénard (1900), Rayleigh (1916). DOI: 10.1098/rspa.1916.0076",
+  "stocks": [
+    {
+      "id": "stock-bottom-temp",
+      "name": "Bottom_Temperature",
+      "initial_value": 100,
+      "equation": "",
+      "position": {"x": 150, "y": 300}
+    },
+    {
+      "id": "stock-top-temp",
+      "name": "Top_Temperature",
+      "initial_value": 20,
+      "equation": "",
+      "position": {"x": 150, "y": 100}
+    },
+    {
+      "id": "stock-convection",
+      "name": "Convection_Amplitude",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {"x": 350, "y": 200}
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-heating",
+      "name": "Bottom_Heating",
+      "equation": "Heat_Input",
+      "from_stock": null,
+      "to_stock": "stock-bottom-temp",
+      "position": {"x": 50, "y": 300}
+    },
+    {
+      "id": "flow-cooling",
+      "name": "Top_Cooling",
+      "equation": "Heat_Loss",
+      "from_stock": "stock-top-temp",
+      "to_stock": null,
+      "position": {"x": 50, "y": 100}
+    },
+    {
+      "id": "flow-convection-growth",
+      "name": "Convection_Growth",
+      "equation": "IF(Rayleigh_Number > Critical_Ra, Growth_Rate * (Rayleigh_Number / Critical_Ra - 1) * Convection_Amplitude, -0.1 * Convection_Amplitude)",
+      "from_stock": null,
+      "to_stock": "stock-convection",
+      "position": {"x": 250, "y": 200}
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-temp-diff",
+      "name": "Temperature_Difference",
+      "equation": "Bottom_Temperature - Top_Temperature",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "var-height",
+      "name": "Layer_Height",
+      "equation": "0.1",
+      "position": {"x": 350, "y": 100}
+    },
+    {
+      "id": "var-alpha",
+      "name": "Thermal_Expansion",
+      "equation": "0.0002",
+      "position": {"x": 450, "y": 100}
+    },
+    {
+      "id": "var-gravity",
+      "name": "Gravity",
+      "equation": "9.81",
+      "position": {"x": 350, "y": 300}
+    },
+    {
+      "id": "var-thermal-diff",
+      "name": "Thermal_Diffusivity",
+      "equation": "0.00014",
+      "position": {"x": 450, "y": 200}
+    },
+    {
+      "id": "var-viscosity",
+      "name": "Kinematic_Viscosity",
+      "equation": "0.00001",
+      "position": {"x": 450, "y": 300}
+    },
+    {
+      "id": "var-rayleigh",
+      "name": "Rayleigh_Number",
+      "equation": "Thermal_Expansion * Gravity * Temperature_Difference * Layer_Height^3 / (Thermal_Diffusivity * Kinematic_Viscosity)",
+      "position": {"x": 300, "y": 50}
+    },
+    {
+      "id": "var-critical-ra",
+      "name": "Critical_Ra",
+      "equation": "1708",
+      "position": {"x": 450, "y": 50}
+    },
+    {
+      "id": "var-growth",
+      "name": "Growth_Rate",
+      "equation": "0.1",
+      "position": {"x": 250, "y": 300}
+    },
+    {
+      "id": "var-heat-input",
+      "name": "Heat_Input",
+      "equation": "10",
+      "position": {"x": 50, "y": 350}
+    },
+    {
+      "id": "var-heat-loss",
+      "name": "Heat_Loss",
+      "equation": "Top_Temperature * 0.1",
+      "position": {"x": 50, "y": 50}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 200, "dt": 0.1},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1098/rspa.1916.0076",
+  "reference": "Rayleigh, Lord (1916). On convection currents in a horizontal layer of fluid when the higher temperature is on the under side. Phil. Mag., 32, 529-546."
+}

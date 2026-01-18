@@ -1,0 +1,206 @@
+{
+  "id": "pandemic-mental-health-hea",
+  "name": "Pandemic Mental Health Impact Model",
+  "description": "Model of pandemic effects on population mental health. Captures stress accumulation, social isolation effects, and treatment capacity constraints. Based on COVID-19 mental health research. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Healthy_Population",
+      "initial_value": 80000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Mild_Distress",
+      "initial_value": 15000,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Clinical_Disorder",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Treatment_Queue",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Stress_Onset",
+      "equation": "Healthy_Population * Stress_Rate * Pandemic_Intensity",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Natural_Recovery",
+      "equation": "Mild_Distress * Natural_Recovery_Rate * Social_Support_Effect",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {
+        "x": 250,
+        "y": 270
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Disorder_Onset",
+      "equation": "Mild_Distress * Progression_Rate * Duration_Effect",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Seeking_Treatment",
+      "equation": "Clinical_Disorder * Help_Seeking_Rate",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "position": {
+        "x": 500,
+        "y": 280
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Treatment_Completion",
+      "equation": "MIN(Treatment_Queue, Treatment_Capacity) / Treatment_Duration",
+      "from_stock": "s4",
+      "to_stock": "s1",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Stress_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Natural_Recovery_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Progression_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Help_Seeking_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Treatment_Capacity",
+      "equation": "500",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Treatment_Duration",
+      "equation": "12",
+      "position": {
+        "x": 250,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Pandemic_Intensity",
+      "equation": "IF Time < 24 THEN 2 ELSE IF Time < 48 THEN 1.5 ELSE 1",
+      "position": {
+        "x": 400,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Social_Support_Effect",
+      "equation": "0.5 + 0.5 * (1 - Pandemic_Intensity / 2)",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Duration_Effect",
+      "equation": "1 + 0.02 * Time",
+      "position": {
+        "x": 200,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Total_Affected",
+      "equation": "Mild_Distress + Clinical_Disorder + Treatment_Queue",
+      "position": {
+        "x": 400,
+        "y": 180
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 72,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1016/S0140-6736(21)02143-7",
+  "reference": "Santomauro DF et al. (2021) Global prevalence and burden of depressive and anxiety disorders in 204 countries and territories in 2020 due to the COVID-19 pandemic. Lancet.",
+  "created_at": "2026-01-12T06:57:53.545407+00:00",
+  "updated_at": "2026-01-12T06:57:53.545407+00:00"
+}

@@ -1,0 +1,190 @@
+{
+  "id": "cyert-march-behavioral-firm-man",
+  "name": "Cyert-March Behavioral Theory of the Firm",
+  "description": "Firms are coalitions with conflicting goals, satisfice rather than optimize, search sequentially, and adapt aspirations. Foundational behavioral economics model. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-organizational-slack",
+      "name": "Organizational Slack",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-sales-target",
+      "name": "Sales Target",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-profit-target",
+      "name": "Profit Target",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-slack-change",
+      "name": "Slack Change",
+      "equation": "Profit - Profit_Target",
+      "from_stock": null,
+      "to_stock": "stock-organizational-slack",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-sales-target-update",
+      "name": "Sales Target Update",
+      "equation": "Target_Adaptation * (Actual_Sales - Sales_Target)",
+      "from_stock": null,
+      "to_stock": "stock-sales-target",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-profit-target-update",
+      "name": "Profit Target Update",
+      "equation": "Target_Adaptation * (Profit - Profit_Target)",
+      "from_stock": null,
+      "to_stock": "stock-profit-target",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-actual-sales",
+      "name": "Actual Sales",
+      "equation": "Market_Size * Market_Share",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-profit",
+      "name": "Profit",
+      "equation": "Actual_Sales * Margin - Fixed_Costs - Slack_Payments",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-market-size",
+      "name": "Market Size",
+      "equation": "1000",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-market-share",
+      "name": "Market Share",
+      "equation": "0.1 + 0.1 * Search_Effort",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-margin",
+      "name": "Margin",
+      "equation": "0.2",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-fixed-costs",
+      "name": "Fixed Costs",
+      "equation": "5",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-slack-payments",
+      "name": "Slack Payments",
+      "equation": "MIN(Organizational_Slack, 5)",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-search-effort",
+      "name": "Search Effort",
+      "equation": "IF(Profit < Profit_Target OR Actual_Sales < Sales_Target, 1, 0.2)",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-target-adaptation",
+      "name": "Target Adaptation",
+      "equation": "0.2",
+      "position": {
+        "x": 450,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-goal-conflict",
+      "name": "Goal Conflict",
+      "equation": "ABS(Actual_Sales - Sales_Target) + ABS(Profit - Profit_Target)",
+      "position": {
+        "x": 350,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Organizational Slack",
+      "to_element": "Slack Payments"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Profit",
+      "to_element": "Slack Change"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Search Effort",
+      "to_element": "Market Share"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:48:28.113939+00:00",
+  "updated_at": "2026-01-12T07:48:28.113946+00:00",
+  "source": "https://doi.org/10.2307/j.ctt1b7x823",
+  "reference": "Cyert RM, March JG. A Behavioral Theory of the Firm. Prentice-Hall. 1963."
+}

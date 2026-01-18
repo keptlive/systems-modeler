@@ -1,0 +1,161 @@
+{
+  "id": "social-opinion-polarization-dynamics-soc",
+  "name": "Opinion Polarization Dynamics",
+  "description": "Bounded confidence model of opinion dynamics showing how polarization emerges from limited interaction between groups. Based on Hegselmann & Krause (2002) and Deffuant et al. (2000). Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "category": "social",
+  "stocks": [
+    {
+      "id": "stock-moderate",
+      "name": "Moderate_Population",
+      "initial_value": 0.6,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-left",
+      "name": "Left_Leaning",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-right",
+      "name": "Right_Leaning",
+      "initial_value": 0.2,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-extreme-left",
+      "name": "Extreme_Left",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-extreme-right",
+      "name": "Extreme_Right",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-mod-to-left",
+      "name": "Shift_to_Left",
+      "equation": "Moderate_Population * Left_Influence * Interaction_Rate",
+      "from_stock": "stock-moderate",
+      "to_stock": "stock-left",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mod-to-right",
+      "name": "Shift_to_Right",
+      "equation": "Moderate_Population * Right_Influence * Interaction_Rate",
+      "from_stock": "stock-moderate",
+      "to_stock": "stock-right",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-left-extreme",
+      "name": "Left_Radicalization",
+      "equation": "Left_Leaning * Echo_Chamber_Effect * (1 - Confidence_Bound)",
+      "from_stock": "stock-left",
+      "to_stock": "stock-extreme-left",
+      "position": {
+        "x": 100,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-right-extreme",
+      "name": "Right_Radicalization",
+      "equation": "Right_Leaning * Echo_Chamber_Effect * (1 - Confidence_Bound)",
+      "from_stock": "stock-right",
+      "to_stock": "stock-extreme-right",
+      "position": {
+        "x": 300,
+        "y": 275
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-interaction",
+      "name": "Interaction_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-confidence",
+      "name": "Confidence_Bound",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-echo",
+      "name": "Echo_Chamber_Effect",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-left-inf",
+      "name": "Left_Influence",
+      "equation": "Left_Leaning / (Left_Leaning + Moderate_Population + 0.01)",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-right-inf",
+      "name": "Right_Influence",
+      "equation": "Right_Leaning / (Right_Leaning + Moderate_Population + 0.01)",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1002/cplx.10033",
+  "reference": "Hegselmann R & Krause U (2002) Opinion dynamics and bounded confidence. JASSS.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:10:19.327177+00:00",
+  "updated_at": "2026-01-12T06:10:19.327177+00:00"
+}

@@ -1,0 +1,195 @@
+{
+  "id": "crop-yield-climate-agr",
+  "name": "Climate Change Crop Yield Impact",
+  "description": "Model of climate change effects on agricultural crop yields. Captures temperature stress, CO2 fertilization, water availability, and adaptation. Based on agricultural economics and crop modeling literature. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Crop_Yield_Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Temperature_Anomaly",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "CO2_Concentration",
+      "initial_value": 420,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Adaptation_Level",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Yield_Change",
+      "equation": "(Potential_Yield - Crop_Yield_Capacity) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Warming",
+      "equation": "Warming_Rate",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "f3",
+      "name": "CO2_Increase",
+      "equation": "CO2_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Adaptation_Investment",
+      "equation": "Adaptation_Rate * Yield_Gap",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 250,
+        "y": 430
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Baseline_Yield",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Warming_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "v3",
+      "name": "CO2_Growth_Rate",
+      "equation": "2.5",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Adaptation_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Temperature_Effect",
+      "equation": "IF Temperature_Anomaly < 2 THEN 1 - 0.05 * Temperature_Anomaly ELSE 0.9 - 0.1 * (Temperature_Anomaly - 2)",
+      "position": {
+        "x": 150,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "CO2_Effect",
+      "equation": "1 + 0.1 * LN(CO2_Concentration / 280)",
+      "position": {
+        "x": 350,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Adaptation_Effect",
+      "equation": "1 + 0.2 * Adaptation_Level",
+      "position": {
+        "x": 550,
+        "y": 130
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Potential_Yield",
+      "equation": "Baseline_Yield * Temperature_Effect * CO2_Effect * Adaptation_Effect",
+      "position": {
+        "x": 250,
+        "y": 180
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Yield_Gap",
+      "equation": "MAX(0, 100 - Crop_Yield_Capacity) / 100",
+      "position": {
+        "x": 450,
+        "y": 180
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Adjustment_Time",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 180
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2020,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1038/nclimate2153",
+  "reference": "Challinor AJ et al. (2014) A meta-analysis of crop yield under climate change and adaptation. Nature Climate Change. Lobell DB et al. (2011) Science.",
+  "created_at": "2026-01-12T06:56:34.378848+00:00",
+  "updated_at": "2026-01-12T06:56:34.378848+00:00"
+}

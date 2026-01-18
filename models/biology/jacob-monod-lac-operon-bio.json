@@ -1,0 +1,42 @@
+{
+  "id": "jacob-monod-lac-operon-bio",
+  "name": "Jacob-Monod Lac Operon Model",
+  "description": "François Jacob and Jacques Monod's (1961) model of gene regulation in the lac operon. Shows how lactose induces enzyme production by removing repressor inhibition. Foundation of molecular biology understanding of gene expression. Nobel Prize 1965.",
+  "stocks": [
+    {"id": "stock-repressor", "name": "Repressor", "initial_value": 100, "equation": "", "position": {"x": 150, "y": 200}},
+    {"id": "stock-free-operator", "name": "Free Operator", "initial_value": 0, "equation": "", "position": {"x": 350, "y": 200}},
+    {"id": "stock-mrna", "name": "mRNA", "initial_value": 0, "equation": "", "position": {"x": 550, "y": 200}},
+    {"id": "stock-enzyme", "name": "Enzyme", "initial_value": 0, "equation": "", "position": {"x": 550, "y": 350}},
+    {"id": "stock-lactose", "name": "Lactose", "initial_value": 0, "equation": "", "position": {"x": 150, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-repressor-synthesis", "name": "Repressor Synthesis", "equation": "Repressor_Synthesis_Rate", "from_stock": null, "to_stock": "stock-repressor", "position": {"x": 50, "y": 200}},
+    {"id": "flow-repressor-degradation", "name": "Repressor Degradation", "equation": "Repressor * Repressor_Degradation_Rate", "from_stock": "stock-repressor", "to_stock": null, "position": {"x": 250, "y": 200}},
+    {"id": "flow-operator-release", "name": "Operator Release", "equation": "Bound_Operator * Lactose * Induction_Rate", "from_stock": null, "to_stock": "stock-free-operator", "position": {"x": 250, "y": 200}},
+    {"id": "flow-operator-binding", "name": "Operator Binding", "equation": "Free_Operator * Repressor * Binding_Rate", "from_stock": "stock-free-operator", "to_stock": null, "position": {"x": 450, "y": 200}},
+    {"id": "flow-transcription", "name": "Transcription", "equation": "Free_Operator * Transcription_Rate", "from_stock": null, "to_stock": "stock-mrna", "position": {"x": 450, "y": 200}},
+    {"id": "flow-mrna-decay", "name": "mRNA Decay", "equation": "mRNA * mRNA_Decay_Rate", "from_stock": "stock-mrna", "to_stock": null, "position": {"x": 650, "y": 200}},
+    {"id": "flow-translation", "name": "Translation", "equation": "mRNA * Translation_Rate", "from_stock": null, "to_stock": "stock-enzyme", "position": {"x": 550, "y": 275}},
+    {"id": "flow-enzyme-decay", "name": "Enzyme Decay", "equation": "Enzyme * Enzyme_Decay_Rate", "from_stock": "stock-enzyme", "to_stock": null, "position": {"x": 650, "y": 350}},
+    {"id": "flow-lactose-uptake", "name": "Lactose Uptake", "equation": "External_Lactose * Uptake_Rate", "from_stock": null, "to_stock": "stock-lactose", "position": {"x": 50, "y": 350}},
+    {"id": "flow-lactose-metabolism", "name": "Lactose Metabolism", "equation": "Lactose * Enzyme * Metabolism_Rate", "from_stock": "stock-lactose", "to_stock": null, "position": {"x": 250, "y": 350}}
+  ],
+  "variables": [
+    {"id": "var-external-lactose", "name": "External Lactose", "equation": "IF Time > 20 THEN 100 ELSE 0", "position": {"x": 100, "y": 100}},
+    {"id": "var-bound-operator", "name": "Bound Operator", "equation": "1 - Free_Operator", "position": {"x": 350, "y": 100}},
+    {"id": "var-repressor-synthesis-rate", "name": "Repressor Synthesis Rate", "equation": "5", "position": {"x": 150, "y": 420}},
+    {"id": "var-repressor-degradation-rate", "name": "Repressor Degradation Rate", "equation": "0.05", "position": {"x": 350, "y": 420}},
+    {"id": "var-induction-rate", "name": "Induction Rate", "equation": "0.01", "position": {"x": 550, "y": 420}},
+    {"id": "var-binding-rate", "name": "Binding Rate", "equation": "0.1", "position": {"x": 150, "y": 490}},
+    {"id": "var-transcription-rate", "name": "Transcription Rate", "equation": "10", "position": {"x": 350, "y": 490}},
+    {"id": "var-mrna-decay-rate", "name": "mRNA Decay Rate", "equation": "0.2", "position": {"x": 550, "y": 490}},
+    {"id": "var-translation-rate", "name": "Translation Rate", "equation": "5", "position": {"x": 200, "y": 560}},
+    {"id": "var-enzyme-decay-rate", "name": "Enzyme Decay Rate", "equation": "0.1", "position": {"x": 400, "y": 560}},
+    {"id": "var-uptake-rate", "name": "Uptake Rate", "equation": "0.1", "position": {"x": 550, "y": 560}},
+    {"id": "var-metabolism-rate", "name": "Metabolism Rate", "equation": "0.001", "position": {"x": 350, "y": 630}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 100, "dt": 0.1},
+  "source": "https://doi.org/10.1016/S0022-2836(61)80072-7",
+  "reference": "Jacob F, Monod J. Genetic regulatory mechanisms in the synthesis of proteins. Journal of Molecular Biology. 1961;3:318-356."
+}

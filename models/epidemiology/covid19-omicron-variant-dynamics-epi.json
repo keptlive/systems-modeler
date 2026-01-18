@@ -1,0 +1,144 @@
+{
+  "id": "covid19-omicron-variant-dynamics-epi",
+  "name": "COVID-19 Omicron Variant Dynamics",
+  "description": "SEIR model adapted for the Omicron variant characteristics including higher transmissibility, lower severity, significant immune escape, and shorter incubation period. Based on epidemiological studies of BA.1, BA.2, and subsequent subvariants.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Susceptible",
+      "initial_value": 50000000,
+      "equation": "",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "Exposed",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {"x": 250, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Infected",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {"x": 400, "y": 200}
+    },
+    {
+      "id": "s4",
+      "name": "Recovered",
+      "initial_value": 150000000,
+      "equation": "",
+      "position": {"x": 550, "y": 200}
+    },
+    {
+      "id": "s5",
+      "name": "Vaccinated",
+      "initial_value": 100000000,
+      "equation": "",
+      "position": {"x": 325, "y": 350}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Infection",
+      "equation": "Beta_Omicron * Susceptible * Infected / Total_Pop",
+      "from_stock": "Susceptible",
+      "to_stock": "Exposed",
+      "position": {"x": 175, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "Becoming_Infectious",
+      "equation": "Exposed / Latent_Period_Omicron",
+      "from_stock": "Exposed",
+      "to_stock": "Infected",
+      "position": {"x": 325, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Recovery",
+      "equation": "Infected / Infectious_Period",
+      "from_stock": "Infected",
+      "to_stock": "Recovered",
+      "position": {"x": 475, "y": 200}
+    },
+    {
+      "id": "f4",
+      "name": "Breakthrough_Infection",
+      "equation": "Beta_Omicron * Vaccinated * Infected / Total_Pop * Immune_Escape",
+      "from_stock": "Vaccinated",
+      "to_stock": "Exposed",
+      "position": {"x": 280, "y": 275}
+    },
+    {
+      "id": "f5",
+      "name": "Waning_Immunity",
+      "equation": "Recovered * Waning_Rate",
+      "from_stock": "Recovered",
+      "to_stock": "Susceptible",
+      "position": {"x": 325, "y": 100}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Beta_Omicron",
+      "equation": "0.9",
+      "position": {"x": 100, "y": 80}
+    },
+    {
+      "id": "v2",
+      "name": "Latent_Period_Omicron",
+      "equation": "3",
+      "position": {"x": 250, "y": 80}
+    },
+    {
+      "id": "v3",
+      "name": "Infectious_Period",
+      "equation": "5",
+      "position": {"x": 400, "y": 80}
+    },
+    {
+      "id": "v4",
+      "name": "Immune_Escape",
+      "equation": "0.5",
+      "position": {"x": 550, "y": 80}
+    },
+    {
+      "id": "v5",
+      "name": "Waning_Rate",
+      "equation": "0.003",
+      "position": {"x": 450, "y": 100}
+    },
+    {
+      "id": "v6",
+      "name": "Total_Pop",
+      "equation": "Susceptible + Exposed + Infected + Recovered + Vaccinated",
+      "position": {"x": 175, "y": 350}
+    },
+    {
+      "id": "v7",
+      "name": "R_Effective",
+      "equation": "Beta_Omicron * (Susceptible + Vaccinated * Immune_Escape) / Total_Pop * Infectious_Period",
+      "position": {"x": 500, "y": 350}
+    },
+    {
+      "id": "v8",
+      "name": "Daily_Cases",
+      "equation": "Exposed / Latent_Period_Omicron",
+      "position": {"x": 100, "y": 350}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 180,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1126/science.abn7760",
+  "reference": "Viana R, et al. (2022). Rapid epidemic expansion of the SARS-CoV-2 Omicron variant in southern Africa. Nature, 603, 679-686. DOI: 10.1038/s41586-022-04411-y. Also: Liu L, et al. (2022). Striking antibody evasion manifested by the Omicron variant. Nature, 602, 676-681.",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

@@ -1,0 +1,34 @@
+{
+  "id": "attention-deficit-dopamine-neu",
+  "name": "ADHD Dopamine Signaling Model",
+  "description": "Model of dopamine signaling dysfunction in ADHD. Reduced dopamine availability in prefrontal cortex affects attention and reward processing. Stimulant medications increase synaptic dopamine. Source: Volkow et al. (2009). JAMA Psychiatry. DOI: 10.1001/archgenpsychiatry.2009.34",
+  "stocks": [
+    {"id": "stock-vesicular", "name": "Vesicular_Dopamine", "initial_value": 100, "equation": "", "position": {"x": 150, "y": 150}},
+    {"id": "stock-synaptic", "name": "Synaptic_Dopamine", "initial_value": 10, "equation": "", "position": {"x": 350, "y": 150}},
+    {"id": "stock-receptor", "name": "Receptor_Activation", "initial_value": 0.5, "equation": "", "position": {"x": 550, "y": 150}},
+    {"id": "stock-attention", "name": "Attention_Level", "initial_value": 0.5, "equation": "", "position": {"x": 350, "y": 300}}
+  ],
+  "flows": [
+    {"id": "flow-release", "name": "Dopamine_Release", "equation": "Vesicular_Dopamine * Release_Rate * (1 + Stimulant_Effect)", "from_stock": "stock-vesicular", "to_stock": "stock-synaptic", "position": {"x": 250, "y": 150}},
+    {"id": "flow-reuptake", "name": "Dopamine_Reuptake", "equation": "Synaptic_Dopamine * Reuptake_Rate * (1 - Stimulant_Blockade)", "from_stock": "stock-synaptic", "to_stock": "stock-vesicular", "position": {"x": 250, "y": 200}},
+    {"id": "flow-binding", "name": "Receptor_Binding", "equation": "(Synaptic_Dopamine * Binding_Affinity - Receptor_Activation) / Binding_Time", "from_stock": null, "to_stock": "stock-receptor", "position": {"x": 450, "y": 150}},
+    {"id": "flow-attention", "name": "Attention_Change", "equation": "(Target_Attention - Attention_Level) / Attention_Response_Time", "from_stock": null, "to_stock": "stock-attention", "position": {"x": 250, "y": 300}}
+  ],
+  "variables": [
+    {"id": "var-release", "name": "Release_Rate", "equation": "0.05", "position": {"x": 200, "y": 100}},
+    {"id": "var-reuptake", "name": "Reuptake_Rate", "equation": "0.3", "position": {"x": 300, "y": 250}},
+    {"id": "var-binding", "name": "Binding_Affinity", "equation": "0.1", "position": {"x": 450, "y": 100}},
+    {"id": "var-binding-time", "name": "Binding_Time", "equation": "0.5", "position": {"x": 500, "y": 200}},
+    {"id": "var-stimulant", "name": "Stimulant_Effect", "equation": "IF(TIME > 10, 0.5, 0)", "position": {"x": 100, "y": 100}},
+    {"id": "var-blockade", "name": "Stimulant_Blockade", "equation": "IF(TIME > 10, 0.7, 0)", "position": {"x": 100, "y": 250}},
+    {"id": "var-target-attention", "name": "Target_Attention", "equation": "Receptor_Activation", "position": {"x": 450, "y": 300}},
+    {"id": "var-attention-time", "name": "Attention_Response_Time", "equation": "2", "position": {"x": 350, "y": 350}},
+    {"id": "var-deficit", "name": "Attention_Deficit", "equation": "1 - Attention_Level", "position": {"x": 500, "y": 350}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 50, "dt": 0.1},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.1001/archgenpsychiatry.2009.34",
+  "reference": "Volkow, N.D. et al. (2009). Evaluating dopamine reward pathway in ADHD: Clinical implications. JAMA, 302(10), 1084-1091."
+}

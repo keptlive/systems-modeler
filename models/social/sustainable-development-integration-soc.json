@@ -1,0 +1,202 @@
+{
+  "id": "sustainable-development-integration-soc",
+  "name": "Sustainable Development Systems Integration Model",
+  "description": "System dynamics model integrating economic, social, and environmental dimensions of sustainable development. Source: PNAS (2023), UN SDGs framework. Reference: NBER Economic Research. Source: https://www.nber.org/",
+  "stocks": [
+    {
+      "id": "stock-eco",
+      "name": "Economic_Capital",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-soc",
+      "name": "Social_Capital",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-env",
+      "name": "Natural_Capital",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-well",
+      "name": "Human_Wellbeing",
+      "initial_value": 60,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-ecogrow",
+      "name": "Economic_Growth",
+      "equation": "Economic_Capital * Growth_Rate * Social_Capital / 100 * Natural_Capital / 100",
+      "from_stock": null,
+      "to_stock": "stock-eco",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-ecodep",
+      "name": "Capital_Depreciation",
+      "equation": "Economic_Capital * Depreciation_Rate",
+      "from_stock": "stock-eco",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-socinv",
+      "name": "Social_Investment",
+      "equation": "Economic_Capital * Social_Investment_Rate",
+      "from_stock": null,
+      "to_stock": "stock-soc",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-socdec",
+      "name": "Social_Decay",
+      "equation": "Social_Capital * Social_Decay_Rate",
+      "from_stock": "stock-soc",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-envregen",
+      "name": "Environmental_Regeneration",
+      "equation": "Natural_Capital * Regeneration_Rate * (1 - Natural_Capital / Env_Capacity)",
+      "from_stock": null,
+      "to_stock": "stock-env",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-envdeg",
+      "name": "Environmental_Degradation",
+      "equation": "Economic_Capital * Degradation_Factor",
+      "from_stock": "stock-env",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-wellgain",
+      "name": "Wellbeing_Improvement",
+      "equation": "(Economic_Capital * 0.3 + Social_Capital * 0.4 + Natural_Capital * 0.3) / 100 - Human_Wellbeing / 100",
+      "from_stock": null,
+      "to_stock": "stock-well",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-growth",
+      "name": "Growth_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-depr",
+      "name": "Depreciation_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-socinv",
+      "name": "Social_Investment_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-socdec",
+      "name": "Social_Decay_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-regen",
+      "name": "Regeneration_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-envcap",
+      "name": "Env_Capacity",
+      "equation": "150",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-degrad",
+      "name": "Degradation_Factor",
+      "equation": "0.005",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-12T12:41:31.049404+00:00",
+  "updated_at": "2026-01-12T12:41:31.049404+00:00",
+  "source": "https://doi.org/10.1257/jep.28.4.3",
+  "reference": "System Dynamics Society. System Dynamics Review. Wiley; Various years."
+}

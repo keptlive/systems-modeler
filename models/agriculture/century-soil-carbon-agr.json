@@ -1,0 +1,38 @@
+{
+  "id": "century-soil-carbon-agr",
+  "name": "CENTURY Soil Carbon Model",
+  "description": "Simplified CENTURY model (Parton et al., 1987) for soil organic carbon dynamics. Shows partitioning between active, slow, and passive carbon pools with different turnover times. Foundational for agricultural carbon accounting.",
+  "stocks": [
+    {"id": "stock-active-carbon", "name": "Active Carbon", "initial_value": 500, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-slow-carbon", "name": "Slow Carbon", "initial_value": 3000, "equation": "", "position": {"x": 400, "y": 200}},
+    {"id": "stock-passive-carbon", "name": "Passive Carbon", "initial_value": 5000, "equation": "", "position": {"x": 600, "y": 200}},
+    {"id": "stock-structural-litter", "name": "Structural Litter", "initial_value": 200, "equation": "", "position": {"x": 300, "y": 350}}
+  ],
+  "flows": [
+    {"id": "flow-litter-input", "name": "Litter Input", "equation": "Plant_Production * Allocation_to_Litter", "from_stock": null, "to_stock": "stock-structural-litter", "position": {"x": 200, "y": 350}},
+    {"id": "flow-litter-decomposition", "name": "Litter Decomposition", "equation": "Structural_Litter * Litter_Decay_Rate * Temperature_Factor * Moisture_Factor", "from_stock": "stock-structural-litter", "to_stock": "stock-active-carbon", "position": {"x": 250, "y": 275}},
+    {"id": "flow-active-decay", "name": "Active Decay", "equation": "Active_Carbon * Active_Decay_Rate * Temperature_Factor * Moisture_Factor", "from_stock": "stock-active-carbon", "to_stock": null, "position": {"x": 100, "y": 200}},
+    {"id": "flow-active-to-slow", "name": "Active to Slow", "equation": "Active_Carbon * Active_Decay_Rate * Temperature_Factor * Moisture_Factor * Active_to_Slow_Fraction", "from_stock": "stock-active-carbon", "to_stock": "stock-slow-carbon", "position": {"x": 300, "y": 200}},
+    {"id": "flow-slow-decay", "name": "Slow Decay", "equation": "Slow_Carbon * Slow_Decay_Rate * Temperature_Factor * Moisture_Factor", "from_stock": "stock-slow-carbon", "to_stock": null, "position": {"x": 400, "y": 130}},
+    {"id": "flow-slow-to-passive", "name": "Slow to Passive", "equation": "Slow_Carbon * Slow_Decay_Rate * Temperature_Factor * Moisture_Factor * Slow_to_Passive_Fraction", "from_stock": "stock-slow-carbon", "to_stock": "stock-passive-carbon", "position": {"x": 500, "y": 200}},
+    {"id": "flow-passive-decay", "name": "Passive Decay", "equation": "Passive_Carbon * Passive_Decay_Rate * Temperature_Factor * Moisture_Factor", "from_stock": "stock-passive-carbon", "to_stock": null, "position": {"x": 700, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-plant-production", "name": "Plant Production", "equation": "1000", "position": {"x": 200, "y": 420}},
+    {"id": "var-allocation-to-litter", "name": "Allocation to Litter", "equation": "0.5", "position": {"x": 400, "y": 420}},
+    {"id": "var-litter-decay-rate", "name": "Litter Decay Rate", "equation": "0.05", "position": {"x": 200, "y": 100}},
+    {"id": "var-active-decay-rate", "name": "Active Decay Rate", "equation": "0.5", "position": {"x": 350, "y": 100}},
+    {"id": "var-slow-decay-rate", "name": "Slow Decay Rate", "equation": "0.02", "position": {"x": 500, "y": 100}},
+    {"id": "var-passive-decay-rate", "name": "Passive Decay Rate", "equation": "0.0005", "position": {"x": 650, "y": 100}},
+    {"id": "var-active-to-slow-fraction", "name": "Active to Slow Fraction", "equation": "0.3", "position": {"x": 200, "y": 490}},
+    {"id": "var-slow-to-passive-fraction", "name": "Slow to Passive Fraction", "equation": "0.05", "position": {"x": 400, "y": 490}},
+    {"id": "var-temperature-factor", "name": "Temperature Factor", "equation": "1", "position": {"x": 550, "y": 490}},
+    {"id": "var-moisture-factor", "name": "Moisture Factor", "equation": "1", "position": {"x": 650, "y": 490}},
+    {"id": "var-total-soil-carbon", "name": "Total Soil Carbon", "equation": "Active_Carbon + Slow_Carbon + Passive_Carbon", "position": {"x": 400, "y": 560}},
+    {"id": "var-carbon-residence-time", "name": "Carbon Residence Time", "equation": "Total_Soil_Carbon / (Active_Decay + Slow_Decay + Passive_Decay)", "position": {"x": 200, "y": 560}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 200, "dt": 1},
+  "source": "https://doi.org/10.1007/BF00000785",
+  "reference": "Parton WJ et al. Analysis of factors controlling soil organic matter levels in Great Plains grasslands. Soil Science Society of America Journal. 1987;51(5):1173-1179."
+}

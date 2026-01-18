@@ -1,0 +1,200 @@
+{
+  "id": "startup-runway-burn-rate-eco",
+  "name": "Startup Runway and Burn Rate Dynamics",
+  "description": "Model of startup financial dynamics showing cash runway, burn rate optimization, and the race to achieve product-market fit before funding runs out. Reference: Blank, S. (2013). The Four Steps to the Epiphany. K&S Ranch. Source: https://steveblank.com/",
+  "source": "https://doi.org/10.1257/jep.15.4.145",
+  "reference": "Gompers PA, Lerner J. The Venture Capital Cycle. MIT Press. 2004.",
+  "stocks": [
+    {
+      "id": "stock-cash",
+      "name": "Cash_Balance",
+      "initial_value": 2000000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-mrr",
+      "name": "Monthly_Revenue",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-customers",
+      "name": "Customers",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-burn",
+      "name": "Monthly_Burn",
+      "equation": "operating_expenses + marketing_spend",
+      "from_stock": "stock-cash",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-revenue",
+      "name": "Revenue_Inflow",
+      "equation": "Monthly_Revenue",
+      "from_stock": null,
+      "to_stock": "stock-cash",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-mrr-growth",
+      "name": "MRR_Growth",
+      "equation": "new_customers * arpu",
+      "from_stock": null,
+      "to_stock": "stock-mrr",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-churn",
+      "name": "MRR_Churn",
+      "equation": "Monthly_Revenue * churn_rate",
+      "from_stock": "stock-mrr",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-acquire",
+      "name": "Customer_Acquisition",
+      "equation": "marketing_spend / cac",
+      "from_stock": null,
+      "to_stock": "stock-customers",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-customer-churn",
+      "name": "Customer_Churn",
+      "equation": "Customers * churn_rate",
+      "from_stock": "stock-customers",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-opex",
+      "name": "operating_expenses",
+      "equation": "150000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-mktg",
+      "name": "marketing_spend",
+      "equation": "50000",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-arpu",
+      "name": "arpu",
+      "equation": "100",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-churn",
+      "name": "churn_rate",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cac",
+      "name": "cac",
+      "equation": "500",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-new",
+      "name": "new_customers",
+      "equation": "marketing_spend / cac",
+      "position": {
+        "x": 500,
+        "y": 275
+      }
+    },
+    {
+      "id": "var-runway",
+      "name": "Runway_Months",
+      "equation": "Cash_Balance / (operating_expenses + marketing_spend - Monthly_Revenue)",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-ltv",
+      "name": "LTV",
+      "equation": "arpu / churn_rate",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-ratio",
+      "name": "LTV_CAC_Ratio",
+      "equation": "LTV / cac",
+      "position": {
+        "x": 400,
+        "y": 500
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 36,
+    "dt": 1,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}

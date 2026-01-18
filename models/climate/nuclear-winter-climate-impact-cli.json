@@ -1,0 +1,32 @@
+{
+  "id": "nuclear-winter-climate-impact-cli",
+  "name": "Nuclear Winter Climate Impact Model",
+  "description": "Model of climate cooling from nuclear war-induced atmospheric soot. Even limited nuclear exchange could cause significant agricultural collapse. Source: Robock et al. (2007). Atmospheric Chemistry and Physics. DOI: 10.5194/acp-7-2003-2007",
+  "stocks": [
+    {"id": "stock-soot", "name": "Stratospheric_Soot", "initial_value": 0, "equation": "", "position": {"x": 200, "y": 150}},
+    {"id": "stock-temp", "name": "Surface_Temperature_Anomaly", "initial_value": 0, "equation": "", "position": {"x": 400, "y": 150}},
+    {"id": "stock-food", "name": "Global_Food_Production", "initial_value": 100, "equation": "", "position": {"x": 300, "y": 300}}
+  ],
+  "flows": [
+    {"id": "flow-injection", "name": "Soot_Injection", "equation": "IF(TIME < 1, Initial_Soot_Mass, 0)", "from_stock": null, "to_stock": "stock-soot", "position": {"x": 100, "y": 150}},
+    {"id": "flow-removal", "name": "Soot_Removal", "equation": "Stratospheric_Soot / Soot_Lifetime", "from_stock": "stock-soot", "to_stock": null, "position": {"x": 300, "y": 150}},
+    {"id": "flow-cooling", "name": "Temperature_Change", "equation": "(Equilibrium_Cooling - Surface_Temperature_Anomaly) / Thermal_Response_Time", "from_stock": null, "to_stock": "stock-temp", "position": {"x": 500, "y": 150}},
+    {"id": "flow-food", "name": "Food_Production_Change", "equation": "Global_Food_Production * Food_Sensitivity * Surface_Temperature_Anomaly", "from_stock": "stock-food", "to_stock": null, "position": {"x": 200, "y": 300}}
+  ],
+  "variables": [
+    {"id": "var-soot-mass", "name": "Initial_Soot_Mass", "equation": "5", "position": {"x": 100, "y": 100}},
+    {"id": "var-lifetime", "name": "Soot_Lifetime", "equation": "10", "position": {"x": 250, "y": 100}},
+    {"id": "var-equil-cool", "name": "Equilibrium_Cooling", "equation": "-Cooling_Coefficient * Stratospheric_Soot", "position": {"x": 400, "y": 100}},
+    {"id": "var-cool-coeff", "name": "Cooling_Coefficient", "equation": "1.5", "position": {"x": 500, "y": 100}},
+    {"id": "var-thermal-time", "name": "Thermal_Response_Time", "equation": "2", "position": {"x": 550, "y": 200}},
+    {"id": "var-food-sens", "name": "Food_Sensitivity", "equation": "-0.1", "position": {"x": 150, "y": 350}},
+    {"id": "var-solar-reduction", "name": "Solar_Radiation_Reduction", "equation": "0.2 * Stratospheric_Soot", "position": {"x": 350, "y": 350}},
+    {"id": "var-famine-risk", "name": "Famine_Risk", "equation": "IF(Global_Food_Production < 70, 1, 0)", "position": {"x": 400, "y": 350}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 30, "dt": 0.25},
+  "created_at": "2026-01-15T00:00:00Z",
+  "updated_at": "2026-01-15T00:00:00Z",
+  "source": "https://doi.org/10.5194/acp-7-2003-2007",
+  "reference": "Robock, A., Oman, L. & Stenchikov, G.L. (2007). Nuclear winter revisited with a modern climate model and current nuclear arsenals: Still catastrophic consequences. Journal of Geophysical Research, 112, D13107."
+}

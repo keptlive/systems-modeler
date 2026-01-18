@@ -1,0 +1,252 @@
+{
+  "id": "soil-degradation-dynamics-agr",
+  "name": "Soil Degradation Dynamics Model",
+  "description": "Models soil quality decline from intensive agriculture and erosion. Based on Pimentel et al. (1995). DOI: 10.1126/science.267.5201.1117",
+  "stocks": [
+    {
+      "id": "stock-soilorg",
+      "name": "Soil_Organic_Matter",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-topsoil",
+      "name": "Topsoil_Depth",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-nutrients",
+      "name": "Soil_Nutrients",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-yield",
+      "name": "Crop_Yield",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-omdecomp",
+      "name": "OM_Decomposition",
+      "equation": "Soil_Organic_Matter * Decomposition_Rate * Temperature_Factor",
+      "from_stock": "stock-soilorg",
+      "to_stock": "stock-nutrients",
+      "position": {
+        "x": 250,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-omaddition",
+      "name": "OM_Addition",
+      "equation": "Residue_Return + Manure_Application",
+      "from_stock": null,
+      "to_stock": "stock-soilorg",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-erosion",
+      "name": "Soil_Erosion",
+      "equation": "Topsoil_Depth * Erosion_Rate * (1 - Cover_Crop_Effect)",
+      "from_stock": "stock-topsoil",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-formation",
+      "name": "Soil_Formation",
+      "equation": "Soil_Formation_Rate",
+      "from_stock": null,
+      "to_stock": "stock-topsoil",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-nutrientloss",
+      "name": "Nutrient_Loss",
+      "equation": "Soil_Nutrients * (Leaching_Rate + Crop_Uptake_Rate)",
+      "from_stock": "stock-nutrients",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-fertapp",
+      "name": "Fertilizer_Application",
+      "equation": "Fertilizer_Rate",
+      "from_stock": null,
+      "to_stock": "stock-nutrients",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-harvest",
+      "name": "Crop_Production",
+      "equation": "Soil_Quality_Index * Base_Yield",
+      "from_stock": null,
+      "to_stock": "stock-yield",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-decomprate",
+      "name": "Decomposition_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-tempfactor",
+      "name": "Temperature_Factor",
+      "equation": "1 + 0.1 * SIN(TIME / 12)",
+      "position": {
+        "x": 300,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-residue",
+      "name": "Residue_Return",
+      "equation": "2",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-manure",
+      "name": "Manure_Application",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-erosionrate",
+      "name": "Erosion_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-covercrop",
+      "name": "Cover_Crop_Effect",
+      "equation": "0.3",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-soilform",
+      "name": "Soil_Formation_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-leaching",
+      "name": "Leaching_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 200,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-cropuptake",
+      "name": "Crop_Uptake_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-fertrate",
+      "name": "Fertilizer_Rate",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-soilqual",
+      "name": "Soil_Quality_Index",
+      "equation": "(Soil_Organic_Matter / 50 + Topsoil_Depth / 30 + Soil_Nutrients / 100) / 3",
+      "position": {
+        "x": 400,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-baseyield",
+      "name": "Base_Yield",
+      "equation": "100",
+      "position": {
+        "x": 500,
+        "y": 325
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Soil_Organic_Matter",
+      "to_element": "OM_Decomposition"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:55:29.074259+00:00",
+  "updated_at": "2026-01-12T02:55:29.074268+00:00",
+  "source": "https://doi.org/10.1126/science.267.5201.1117",
+  "reference": "Pimentel D, et al. (1995). Environmental and Economic Costs of Soil Erosion. Science."
+}

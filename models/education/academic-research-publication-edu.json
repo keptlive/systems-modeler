@@ -1,0 +1,457 @@
+{
+  "id": "academic-research-publication-edu",
+  "name": "Academic Research Publication Model",
+  "description": "A system dynamics model of academic publish-or-perish dynamics based on Edwards & Roy (2017) 'Academic Research in the 21st Century: Maintaining Scientific Integrity in a Climate of Perverse Incentives' (doi:10.1089/ees.2016.0223) and research productivity models. Tracks publication pressure, research quality, and career advancement. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "stocks": [
+    {
+      "id": "stock-junior-faculty",
+      "name": "Junior Faculty",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-senior-faculty",
+      "name": "Senior Faculty",
+      "initial_value": 80000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-research-projects",
+      "name": "Active Research Projects",
+      "initial_value": 200000,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-manuscripts",
+      "name": "Manuscripts Under Review",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-published-papers",
+      "name": "Published Papers",
+      "initial_value": 2000000,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-research-quality",
+      "name": "Average Research Quality",
+      "initial_value": 0.7,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "stock-grant-funding",
+      "name": "Available Grant Funding",
+      "initial_value": 50000000000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-hiring",
+      "name": "New Faculty Hiring",
+      "equation": "PhD_Graduates * Academic_Job_Rate * Funding_Availability",
+      "from_stock": null,
+      "to_stock": "stock-junior-faculty",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-tenure",
+      "name": "Tenure Promotion",
+      "equation": "Junior_Faculty * Tenure_Rate * Publication_Performance",
+      "from_stock": "stock-junior-faculty",
+      "to_stock": "stock-senior-faculty",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-tenure-denial",
+      "name": "Tenure Denial/Departure",
+      "equation": "Junior_Faculty * (1 - Tenure_Rate) / Tenure_Clock",
+      "from_stock": "stock-junior-faculty",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-retirement",
+      "name": "Retirement",
+      "equation": "Senior_Faculty * Retirement_Rate",
+      "from_stock": "stock-senior-faculty",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-project-start",
+      "name": "New Projects",
+      "equation": "(Junior_Faculty + Senior_Faculty) * Projects_per_Faculty * Funding_Success_Rate",
+      "from_stock": null,
+      "to_stock": "stock-research-projects",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-project-completion",
+      "name": "Project Completion",
+      "equation": "Active_Research_Projects / Average_Project_Duration",
+      "from_stock": "stock-research-projects",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-submission",
+      "name": "Manuscript Submission",
+      "equation": "Active_Research_Projects * Papers_per_Project / Average_Project_Duration",
+      "from_stock": null,
+      "to_stock": "stock-manuscripts",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-acceptance",
+      "name": "Paper Acceptance",
+      "equation": "Manuscripts_Under_Review * Acceptance_Rate * Average_Research_Quality",
+      "from_stock": "stock-manuscripts",
+      "to_stock": "stock-published-papers",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-rejection",
+      "name": "Paper Rejection",
+      "equation": "Manuscripts_Under_Review * (1 - Acceptance_Rate * Average_Research_Quality) * 0.5",
+      "from_stock": "stock-manuscripts",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-quality-improvement",
+      "name": "Quality Improvement",
+      "equation": "(1 - Average_Research_Quality) * Quality_Improvement_Rate * Mentorship_Effect",
+      "from_stock": null,
+      "to_stock": "stock-research-quality",
+      "position": {
+        "x": 250,
+        "y": 420
+      }
+    },
+    {
+      "id": "flow-quality-erosion",
+      "name": "Quality Erosion",
+      "equation": "Average_Research_Quality * Publication_Pressure * 0.01",
+      "from_stock": "stock-research-quality",
+      "to_stock": null,
+      "position": {
+        "x": 350,
+        "y": 420
+      }
+    },
+    {
+      "id": "flow-funding-appropriation",
+      "name": "Funding Appropriation",
+      "equation": "Annual_Research_Budget",
+      "from_stock": null,
+      "to_stock": "stock-grant-funding",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-grant-awards",
+      "name": "Grant Awards",
+      "equation": "(Junior_Faculty + Senior_Faculty) * Funding_per_Faculty * Funding_Success_Rate",
+      "from_stock": "stock-grant-funding",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-phd-graduates",
+      "name": "PhD Graduates",
+      "equation": "60000",
+      "position": {
+        "x": 50,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-academic-job-rate",
+      "name": "Academic Job Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-funding-availability",
+      "name": "Funding Availability",
+      "equation": "Available_Grant_Funding / 50000000000",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-tenure-rate",
+      "name": "Tenure Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-tenure-clock",
+      "name": "Tenure Clock",
+      "equation": "7",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-publication-performance",
+      "name": "Publication Performance",
+      "equation": "Published_Papers / (Junior_Faculty * Tenure_Clock * 2)",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-retirement-rate",
+      "name": "Retirement Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 350,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-projects-per-faculty",
+      "name": "Projects per Faculty",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-funding-success-rate",
+      "name": "Funding Success Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 150,
+        "y": 380
+      }
+    },
+    {
+      "id": "var-average-project-duration",
+      "name": "Average Project Duration",
+      "equation": "3",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-papers-per-project",
+      "name": "Papers per Project",
+      "equation": "3",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-acceptance-rate",
+      "name": "Acceptance Rate",
+      "equation": "0.25",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-publication-pressure",
+      "name": "Publication Pressure",
+      "equation": "Junior_Faculty / (Published_Papers / 10 + 1)",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-quality-improvement-rate",
+      "name": "Quality Improvement Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 200,
+        "y": 470
+      }
+    },
+    {
+      "id": "var-mentorship-effect",
+      "name": "Mentorship Effect",
+      "equation": "Senior_Faculty / (Junior_Faculty + 1)",
+      "position": {
+        "x": 250,
+        "y": 470
+      }
+    },
+    {
+      "id": "var-annual-research-budget",
+      "name": "Annual Research Budget",
+      "equation": "50000000000",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-funding-per-faculty",
+      "name": "Funding per Faculty",
+      "equation": "200000",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-h-index-average",
+      "name": "H Index Average",
+      "equation": "SQRT(Published_Papers / (Senior_Faculty + Junior_Faculty))",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "PhD Graduates",
+      "to_element": "New Faculty Hiring"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Academic Job Rate",
+      "to_element": "New Faculty Hiring"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Junior Faculty",
+      "to_element": "Tenure Promotion"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Tenure Rate",
+      "to_element": "Tenure Promotion"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Publication Performance",
+      "to_element": "Tenure Promotion"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Active Research Projects",
+      "to_element": "Manuscript Submission"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Manuscripts Under Review",
+      "to_element": "Paper Acceptance"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Acceptance Rate",
+      "to_element": "Paper Acceptance"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Average Research Quality",
+      "to_element": "Paper Acceptance"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Publication Pressure",
+      "to_element": "Quality Erosion"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Mentorship Effect",
+      "to_element": "Quality Improvement"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Available Grant Funding",
+      "to_element": "Funding Availability"
+    }
+  ],
+  "time_settings": {
+    "start": 2020,
+    "end": 2050,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-11T21:00:00.000000Z",
+  "updated_at": "2026-01-11T21:00:00.000000Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "System Dynamics Educational Models - PySD Cookbook"
+}

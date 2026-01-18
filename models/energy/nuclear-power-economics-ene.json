@@ -1,0 +1,261 @@
+{
+  "id": "nuclear-power-economics-ene",
+  "name": "Nuclear Power Economics Model",
+  "description": "Models nuclear plant construction, operation, and decommissioning costs. Based on MIT Future of Nuclear Energy (2018). Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "stocks": [
+    {
+      "id": "stock-capacity",
+      "name": "Nuclear_Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-constr",
+      "name": "Under_Construction",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "stock-cost",
+      "name": "Cumulative_Cost",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-waste",
+      "name": "Nuclear_Waste",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-startconstr",
+      "name": "Start_Construction",
+      "equation": "Construction_Decision * Project_Size",
+      "from_stock": null,
+      "to_stock": "stock-constr",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-complete",
+      "name": "Project_Completion",
+      "equation": "Under_Construction / Construction_Time",
+      "from_stock": "stock-constr",
+      "to_stock": "stock-capacity",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-retire",
+      "name": "Plant_Retirement",
+      "equation": "Nuclear_Capacity / Plant_Lifetime",
+      "from_stock": "stock-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "flow-opcost",
+      "name": "Operating_Cost",
+      "equation": "Nuclear_Capacity * Operating_Cost_Rate",
+      "from_stock": null,
+      "to_stock": "stock-cost",
+      "position": {
+        "x": 200,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-constrcost",
+      "name": "Construction_Cost",
+      "equation": "Under_Construction * Construction_Cost_Rate * (1 + Cost_Overrun)",
+      "from_stock": null,
+      "to_stock": "stock-cost",
+      "position": {
+        "x": 100,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-decomcost",
+      "name": "Decommissioning_Cost",
+      "equation": "Plant_Retirement * Decommissioning_Cost_Per_Unit",
+      "from_stock": null,
+      "to_stock": "stock-cost",
+      "position": {
+        "x": 350,
+        "y": 175
+      }
+    },
+    {
+      "id": "flow-wastegen",
+      "name": "Waste_Generation",
+      "equation": "Nuclear_Capacity * Waste_Rate",
+      "from_stock": null,
+      "to_stock": "stock-waste",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-constrdec",
+      "name": "Construction_Decision",
+      "equation": "IF(Electricity_Price > LCOE AND Policy_Support > 0.5, 1, 0)",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-projsize",
+      "name": "Project_Size",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-constrtime",
+      "name": "Construction_Time",
+      "equation": "10",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-plantlife",
+      "name": "Plant_Lifetime",
+      "equation": "60",
+      "position": {
+        "x": 450,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-opcostrate",
+      "name": "Operating_Cost_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-constrcostrate",
+      "name": "Construction_Cost_Rate",
+      "equation": "6",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-costoverrun",
+      "name": "Cost_Overrun",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 325
+      }
+    },
+    {
+      "id": "var-decomcost",
+      "name": "Decommissioning_Cost_Per_Unit",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-wasterate",
+      "name": "Waste_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 500,
+        "y": 175
+      }
+    },
+    {
+      "id": "var-eleprice",
+      "name": "Electricity_Price",
+      "equation": "0.05 + 0.01 * TIME / 50",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-lcoe",
+      "name": "LCOE",
+      "equation": "(Operating_Cost_Rate + Construction_Cost_Rate / Plant_Lifetime)",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-polsupport",
+      "name": "Policy_Support",
+      "equation": "0.7",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-capfactor",
+      "name": "Capacity_Factor",
+      "equation": "0.9",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Nuclear_Capacity",
+      "to_element": "Operating_Cost"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T02:59:36.700344+00:00",
+  "updated_at": "2026-01-12T02:59:36.700348+00:00",
+  "source": "https://energy.mit.edu/research/future-nuclear-energy-carbonconstrainedworld/",
+  "reference": "MIT (2018). The Future of Nuclear Energy in a Carbon-Constrained World."
+}

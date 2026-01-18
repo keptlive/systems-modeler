@@ -1,0 +1,216 @@
+{
+  "id": "depression-treatment-pathway-hybrid-hea",
+  "name": "Depression Treatment Pathway Model",
+  "description": "Model of depression disease progression and treatment pathways examining GP vs specialist service utilization. Based on UK NHS data showing community-based care reduces inpatient service use. Reference: Viana, J., et al. (2022). Modeling disease progression and treatment pathways for depression using agent based modeling and system dynamics. Frontiers in Public Health, 10, 1011104. Source: https://doi.org/10.3389/fpubh.2022.1011104",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "No Depression",
+      "initial_value": 0.75,
+      "equation": "",
+      "position": {"x": 100, "y": 150}
+    },
+    {
+      "id": "s2",
+      "name": "Mild Depression",
+      "initial_value": 0.12,
+      "equation": "",
+      "position": {"x": 250, "y": 150}
+    },
+    {
+      "id": "s3",
+      "name": "Moderate Depression",
+      "initial_value": 0.08,
+      "equation": "",
+      "position": {"x": 400, "y": 150}
+    },
+    {
+      "id": "s4",
+      "name": "Severe Depression",
+      "initial_value": 0.04,
+      "equation": "",
+      "position": {"x": 550, "y": 150}
+    },
+    {
+      "id": "s5",
+      "name": "Inpatient Care",
+      "initial_value": 0.01,
+      "equation": "",
+      "position": {"x": 550, "y": 300}
+    },
+    {
+      "id": "s6",
+      "name": "GP Service Utilization",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {"x": 200, "y": 300}
+    },
+    {
+      "id": "s7",
+      "name": "Specialist Service Utilization",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {"x": 400, "y": 300}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Onset Mild",
+      "equation": "No_Depression * Incidence_Rate * Risk_Factor",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {"x": 175, "y": 150}
+    },
+    {
+      "id": "f2",
+      "name": "Progression to Moderate",
+      "equation": "Mild_Depression * Progression_Rate * (1 - GP_Treatment_Effect)",
+      "from_stock": "s2",
+      "to_stock": "s3",
+      "position": {"x": 325, "y": 150}
+    },
+    {
+      "id": "f3",
+      "name": "Progression to Severe",
+      "equation": "Moderate_Depression * Severe_Progression_Rate * (1 - Specialist_Treatment_Effect)",
+      "from_stock": "s3",
+      "to_stock": "s4",
+      "position": {"x": 475, "y": 150}
+    },
+    {
+      "id": "f4",
+      "name": "Recovery from Mild",
+      "equation": "Mild_Depression * (Natural_Recovery + GP_Treatment_Effect * 0.5)",
+      "from_stock": "s2",
+      "to_stock": "s1",
+      "position": {"x": 175, "y": 200}
+    },
+    {
+      "id": "f5",
+      "name": "Recovery from Moderate",
+      "equation": "Moderate_Depression * (Natural_Recovery * 0.5 + Specialist_Treatment_Effect * 0.6)",
+      "from_stock": "s3",
+      "to_stock": "s2",
+      "position": {"x": 325, "y": 200}
+    },
+    {
+      "id": "f6",
+      "name": "Hospitalization",
+      "equation": "Severe_Depression * Hospitalization_Rate * (1 - Community_Care_Effect)",
+      "from_stock": "s4",
+      "to_stock": "s5",
+      "position": {"x": 550, "y": 225}
+    },
+    {
+      "id": "f7",
+      "name": "Discharge",
+      "equation": "Inpatient_Care * Discharge_Rate",
+      "from_stock": "s5",
+      "to_stock": "s4",
+      "position": {"x": 600, "y": 225}
+    },
+    {
+      "id": "f8",
+      "name": "GP Utilization Change",
+      "equation": "(Mild_Depression + Moderate_Depression * 0.5 - GP_Service_Utilization) * Service_Adjustment_Rate",
+      "from_stock": null,
+      "to_stock": "s6",
+      "position": {"x": 200, "y": 350}
+    },
+    {
+      "id": "f9",
+      "name": "Specialist Utilization Change",
+      "equation": "(Moderate_Depression + Severe_Depression - Specialist_Service_Utilization) * Service_Adjustment_Rate",
+      "from_stock": null,
+      "to_stock": "s7",
+      "position": {"x": 400, "y": 350}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Incidence Rate",
+      "equation": "0.02",
+      "position": {"x": 150, "y": 50}
+    },
+    {
+      "id": "v2",
+      "name": "Risk Factor",
+      "equation": "1.0",
+      "position": {"x": 200, "y": 100}
+    },
+    {
+      "id": "v3",
+      "name": "Progression Rate",
+      "equation": "0.1",
+      "position": {"x": 300, "y": 100}
+    },
+    {
+      "id": "v4",
+      "name": "Severe Progression Rate",
+      "equation": "0.08",
+      "position": {"x": 450, "y": 100}
+    },
+    {
+      "id": "v5",
+      "name": "GP Treatment Effect",
+      "equation": "GP_Service_Utilization * Treatment_Effectiveness_GP",
+      "position": {"x": 250, "y": 250}
+    },
+    {
+      "id": "v6",
+      "name": "Specialist Treatment Effect",
+      "equation": "Specialist_Service_Utilization * Treatment_Effectiveness_Specialist",
+      "position": {"x": 450, "y": 250}
+    },
+    {
+      "id": "v7",
+      "name": "Treatment Effectiveness GP",
+      "equation": "0.6",
+      "position": {"x": 150, "y": 250}
+    },
+    {
+      "id": "v8",
+      "name": "Treatment Effectiveness Specialist",
+      "equation": "0.8",
+      "position": {"x": 350, "y": 250}
+    },
+    {
+      "id": "v9",
+      "name": "Natural Recovery",
+      "equation": "0.05",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "v10",
+      "name": "Hospitalization Rate",
+      "equation": "0.15",
+      "position": {"x": 500, "y": 250}
+    },
+    {
+      "id": "v11",
+      "name": "Community Care Effect",
+      "equation": "Specialist_Service_Utilization * 0.5",
+      "position": {"x": 600, "y": 350}
+    },
+    {
+      "id": "v12",
+      "name": "Discharge Rate",
+      "equation": "0.1",
+      "position": {"x": 650, "y": 300}
+    },
+    {
+      "id": "v13",
+      "name": "Service Adjustment Rate",
+      "equation": "0.1",
+      "position": {"x": 300, "y": 400}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 365, "dt": 1},
+  "created_at": "2026-01-15T16:00:00.000000",
+  "updated_at": "2026-01-15T16:00:00.000000",
+  "source": "https://doi.org/10.3389/fpubh.2022.1011104",
+  "reference": "Viana, J., et al. (2022). Modeling disease progression and treatment pathways for depression jointly using agent based modeling and system dynamics. Frontiers in Public Health, 10, 1011104."
+}

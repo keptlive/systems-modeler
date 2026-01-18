@@ -1,0 +1,132 @@
+{
+  "id": "ipcc-ar6-carbon-budget-cli",
+  "name": "IPCC AR6 Carbon Budget Model",
+  "description": "Simplified carbon budget model based on IPCC AR6 Working Group I findings. Tracks cumulative emissions against remaining carbon budget for 1.5C and 2C targets. Shows relationship between emission pathways and temperature outcomes.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Cumulative_Emissions",
+      "initial_value": 2390,
+      "equation": "",
+      "position": {"x": 200, "y": 200}
+    },
+    {
+      "id": "s2",
+      "name": "Atmospheric_CO2",
+      "initial_value": 420,
+      "equation": "",
+      "position": {"x": 400, "y": 200}
+    },
+    {
+      "id": "s3",
+      "name": "Global_Temperature_Anomaly",
+      "initial_value": 1.1,
+      "equation": "",
+      "position": {"x": 600, "y": 200}
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Annual_Emissions",
+      "equation": "Baseline_Emissions * (1 - Mitigation_Rate)",
+      "from_stock": null,
+      "to_stock": "Cumulative_Emissions",
+      "position": {"x": 100, "y": 200}
+    },
+    {
+      "id": "f2",
+      "name": "CO2_Increase",
+      "equation": "Annual_Emissions * Airborne_Fraction / 7.8",
+      "from_stock": null,
+      "to_stock": "Atmospheric_CO2",
+      "position": {"x": 300, "y": 200}
+    },
+    {
+      "id": "f3",
+      "name": "Warming",
+      "equation": "(Equilibrium_Temp - Global_Temperature_Anomaly) / Climate_Lag",
+      "from_stock": null,
+      "to_stock": "Global_Temperature_Anomaly",
+      "position": {"x": 500, "y": 200}
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Baseline_Emissions",
+      "equation": "40",
+      "position": {"x": 100, "y": 80}
+    },
+    {
+      "id": "v2",
+      "name": "Mitigation_Rate",
+      "equation": "0.03",
+      "position": {"x": 200, "y": 80}
+    },
+    {
+      "id": "v3",
+      "name": "Airborne_Fraction",
+      "equation": "0.45",
+      "position": {"x": 300, "y": 80}
+    },
+    {
+      "id": "v4",
+      "name": "Climate_Sensitivity",
+      "equation": "3",
+      "position": {"x": 400, "y": 80}
+    },
+    {
+      "id": "v5",
+      "name": "Climate_Lag",
+      "equation": "30",
+      "position": {"x": 500, "y": 80}
+    },
+    {
+      "id": "v6",
+      "name": "Equilibrium_Temp",
+      "equation": "Climate_Sensitivity * LN(Atmospheric_CO2 / 280) / LN(2)",
+      "position": {"x": 600, "y": 80}
+    },
+    {
+      "id": "v7",
+      "name": "Budget_1_5C",
+      "equation": "500",
+      "position": {"x": 100, "y": 350}
+    },
+    {
+      "id": "v8",
+      "name": "Budget_2C",
+      "equation": "1150",
+      "position": {"x": 200, "y": 350}
+    },
+    {
+      "id": "v9",
+      "name": "Remaining_1_5C",
+      "equation": "MAX(0, Budget_1_5C - (Cumulative_Emissions - 2390))",
+      "position": {"x": 350, "y": 350}
+    },
+    {
+      "id": "v10",
+      "name": "Remaining_2C",
+      "equation": "MAX(0, Budget_2C - (Cumulative_Emissions - 2390))",
+      "position": {"x": 500, "y": 350}
+    },
+    {
+      "id": "v11",
+      "name": "Years_to_Exhaust_1_5C",
+      "equation": "Remaining_1_5C / MAX(1, Annual_Emissions)",
+      "position": {"x": 650, "y": 350}
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 2023,
+    "end": 2100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1017/9781009157896",
+  "reference": "IPCC (2021). Climate Change 2021: The Physical Science Basis. Contribution of Working Group I to the Sixth Assessment Report. Cambridge University Press. DOI: 10.1017/9781009157896. Chapter 5: Global Carbon and other Biogeochemical Cycles and Feedbacks.",
+  "created_at": "2026-01-15T20:30:00.000000Z",
+  "updated_at": "2026-01-15T20:30:00.000000Z"
+}

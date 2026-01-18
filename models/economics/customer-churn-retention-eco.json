@@ -1,0 +1,215 @@
+{
+  "id": "customer-churn-retention-eco",
+  "name": "Customer Churn and Retention Model",
+  "description": "A model of customer lifecycle dynamics including acquisition, retention, and churn. Based on customer relationship management and subscription business research. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "source": "https://doi.org/10.1509/jmkg.67.1.92.18601",
+  "reference": "Reinartz W, Kumar V. The Impact of Customer Relationship Characteristics on Profitable Lifetime Duration. Journal of Marketing. 2003;67(1):77-99.",
+  "stocks": [
+    {
+      "id": "stock-prospects",
+      "name": "Prospects",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-new",
+      "name": "New Customers",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-active",
+      "name": "Active Customers",
+      "initial_value": 5000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-churned",
+      "name": "Churned Customers",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-acquisition",
+      "name": "Acquisition",
+      "equation": "Prospects * Conversion_Rate * Marketing_Effectiveness",
+      "from_stock": "stock-prospects",
+      "to_stock": "stock-new",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-activation",
+      "name": "Activation",
+      "equation": "New_Customers / Onboarding_Time",
+      "from_stock": "stock-new",
+      "to_stock": "stock-active",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-new-churn",
+      "name": "New Customer Churn",
+      "equation": "New_Customers * Early_Churn_Rate",
+      "from_stock": "stock-new",
+      "to_stock": "stock-churned",
+      "position": {
+        "x": 325,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-churn",
+      "name": "Customer Churn",
+      "equation": "Active_Customers * Churn_Rate * (1 - Retention_Effect)",
+      "from_stock": "stock-active",
+      "to_stock": "stock-churned",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-reactivation",
+      "name": "Reactivation",
+      "equation": "Churned_Customers * Reactivation_Rate * Winback_Effort",
+      "from_stock": "stock-churned",
+      "to_stock": "stock-new",
+      "position": {
+        "x": 400,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-total-customers",
+      "name": "Total Customers",
+      "equation": "New_Customers + Active_Customers",
+      "position": {
+        "x": 325,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-conversion",
+      "name": "Conversion Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-marketing",
+      "name": "Marketing Effectiveness",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-onboarding",
+      "name": "Onboarding Time",
+      "equation": "2",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-early-churn",
+      "name": "Early Churn Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-churn",
+      "name": "Churn Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-retention",
+      "name": "Retention Effect",
+      "equation": "0.2",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-reactivation",
+      "name": "Reactivation Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-winback",
+      "name": "Winback Effort",
+      "equation": "1",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-clv",
+      "name": "Customer Lifetime Value",
+      "equation": "Monthly_Revenue / Churn_Rate",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-monthly-rev",
+      "name": "Monthly Revenue",
+      "equation": "50",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T21:45:15.070341+00:00",
+  "updated_at": "2026-01-11T21:45:15.070341+00:00"
+}

@@ -1,0 +1,218 @@
+{
+  "id": "soil-carbon-sequestration-cli",
+  "name": "Agricultural Soil Carbon Sequestration",
+  "description": "Model of soil carbon dynamics under different agricultural practices, showing how regenerative agriculture can sequester atmospheric carbon. Based on soil carbon research. Reference: IPCC (2021). Climate Change 2021: The Physical Science Basis. Source: https://www.ipcc.ch/report/ar6/wg1/",
+  "source": "https://doi.org/10.1038/s41586-019-1866-z",
+  "reference": "Sanderman J, Hengl T, Fiske GJ. Soil carbon debt of 12,000 years of human land use. PNAS. 2017;114(36):9575-9580.",
+  "stocks": [
+    {
+      "id": "stock-active",
+      "name": "Active_Soil_Carbon",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-stable",
+      "name": "Stable_Soil_Carbon",
+      "initial_value": 70,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-biomass",
+      "name": "Crop_Biomass",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-input",
+      "name": "Carbon_Input",
+      "equation": "Crop_Biomass * residue_return * decomposition_rate",
+      "from_stock": null,
+      "to_stock": "stock-active",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-stabilize",
+      "name": "Stabilization",
+      "equation": "Active_Soil_Carbon * stabilization_rate * clay_content",
+      "from_stock": "stock-active",
+      "to_stock": "stock-stable",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-respire-a",
+      "name": "Active_Respiration",
+      "equation": "Active_Soil_Carbon * respiration_rate * temperature_factor",
+      "from_stock": "stock-active",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-respire-s",
+      "name": "Stable_Respiration",
+      "equation": "Stable_Soil_Carbon * stable_respiration_rate * temperature_factor",
+      "from_stock": "stock-stable",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "flow-growth",
+      "name": "Biomass_Growth",
+      "equation": "growth_rate * (1 - Crop_Biomass / max_biomass)",
+      "from_stock": null,
+      "to_stock": "stock-biomass",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "flow-harvest",
+      "name": "Harvest",
+      "equation": "Crop_Biomass * harvest_rate",
+      "from_stock": "stock-biomass",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-residue",
+      "name": "residue_return",
+      "equation": "0.4",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-decomp",
+      "name": "decomposition_rate",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-stab",
+      "name": "stabilization_rate",
+      "equation": "0.02",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-clay",
+      "name": "clay_content",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-resp",
+      "name": "respiration_rate",
+      "equation": "0.1",
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-sresp",
+      "name": "stable_respiration_rate",
+      "equation": "0.005",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-temp",
+      "name": "temperature_factor",
+      "equation": "1.0",
+      "position": {
+        "x": 300,
+        "y": 50
+      }
+    },
+    {
+      "id": "var-grow",
+      "name": "growth_rate",
+      "equation": "5",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-max",
+      "name": "max_biomass",
+      "equation": "20",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-harv",
+      "name": "harvest_rate",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Soil_Carbon",
+      "equation": "Active_Soil_Carbon + Stable_Soil_Carbon",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T12:00:00.000000+00:00",
+  "updated_at": "2026-01-12T12:00:00.000000+00:00"
+}
