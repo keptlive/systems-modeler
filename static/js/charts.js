@@ -54,6 +54,9 @@ const Charts = {
     setResults(results) {
         this.results = results;
 
+        // Clear old variable options when loading new results
+        this.options.variables = {};
+
         // Initialize variable options if not set
         if (results && results.values) {
             const varNames = Object.keys(results.values);
