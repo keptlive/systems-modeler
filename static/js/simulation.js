@@ -9,12 +9,8 @@ const Simulation = {
     // Chart configuration
     margin: { top: 20, right: 100, bottom: 40, left: 60 },
     colors: d3.schemeCategory10,
-
     /**
-     * Initialize simulation module
-     */
-    /**
-     * Get time settings based on steps count
+     * Calculate simulation time range from step count. Returns {start, end, dt}.
      */
     getTimeSettings(steps) {
         const dt = App.model.time_settings?.dt || 0.1;
@@ -154,10 +150,14 @@ const Simulation = {
         if (!this.results) return;
 
         const varNames = Object.keys(this.results.values);
-        const timeSteps = this.results.time.length;
+        const time = this.results.time;
+        const timeSteps = time.length;
+        const startTime = time[0];
+        const endTime = time[time.length - 1];
+        const dt = timeSteps > 1 ? (time[1] - time[0]).toFixed(2) : 0;
 
         let html = `
-            <p><strong>Time steps:</strong> ${timeSteps}</p>
+            <p><strong>Time:</strong> ${startTime} → ${endTime.toFixed(1)} (${timeSteps} pts, dt=${dt})</p>
             <p><strong>Variables:</strong> ${varNames.length}</p>
             <div style="margin-top: 0.5rem; font-size: 0.8rem;">
         `;
