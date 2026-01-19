@@ -27,7 +27,7 @@ const Library = {
         try {
             const response = await fetch("/api/models");
             const data = await response.json();
-            this.models = data.models || [];
+            this.models = Array.isArray(data) ? data : (data.models || []);
             
             // Extract unique categories
             const cats = new Set();
