@@ -15,6 +15,7 @@ import operator
 import math
 import random
 from typing import Callable, Any, Optional
+import re
 
 
 SAFE_OPERATORS: dict[type, Callable] = {
@@ -226,9 +227,16 @@ class SafeEvaluator(ast.NodeVisitor):
         # Check constants first
         if name in SAFE_CONSTANTS:
             return SAFE_CONSTANTS[name]
-        # Then check user variables
-        if name in self.variables:
-            return self.variables[name]
+        # Then check user variables - try multiple name variations
+        # to handle underscore vs space naming inconsistencies
+        name_variations = [
+            name,
+            name.replace("_", " "),  # Growth_Rate -> Growth Rate
+            name.replace(" ", "_"),  # Growth Rate -> Growth_Rate
+        ]
+        for var_name in name_variations:
+            if var_name in self.variables:
+                return self.variables[var_name]
         raise EquationError(f"Unknown variable: {name}")
 
     def visit_BinOp(self, node: ast.BinOp) -> float:
@@ -528,6 +536,85 @@ class SafeEvaluator(ast.NodeVisitor):
         raise EquationError(f"Unsupported expression type: {type(node).__name__}")
 
 
+
+
+def preprocess_equation(equation: str) -> str:
+    """
+    Preprocess equation to convert XMILE-style syntax to Python-parseable format.
+    
+    Converts:
+    - IF condition THEN true_expr ELSE false_expr -> IF_THEN_ELSE(condition, true_expr, false_expr)
+    - Single = in comparisons -> == (except <= >= == !=)
+    """
+    if not equation:
+        return equation
+    
+    result = equation.strip()
+    
+    # Convert XMILE IF-THEN-ELSE to IF_THEN_ELSE function calls
+    # Process repeatedly to handle nested structures
+    max_iterations = 20
+    
+    for _ in range(max_iterations):
+        upper_result = result.upper()
+        
+        # Find last ELSE that is not followed by " IF " (with space after IF)
+        # This distinguishes "ELSE IF condition" from "ELSE IF_THEN_ELSE(" or "ELSE something_else"
+        else_positions = []
+        idx = 0
+        while True:
+            pos = upper_result.find(" ELSE ", idx)
+            if pos == -1:
+                break
+            # Check if this is "ELSE IF " (chained conditional)
+            remainder = upper_result[pos+6:].lstrip()
+            # Only skip if it is "IF " followed by non-underscore (i.e., not IF_THEN_ELSE)
+            if remainder.startswith("IF ") or (remainder.startswith("IF") and len(remainder) > 2 and remainder[2] not in "_"):
+                pass  # This is ELSE IF, skip it for now
+            else:
+                else_positions.append(pos)
+            idx = pos + 1
+        
+        if not else_positions:
+            break
+        
+        last_else_pos = else_positions[-1]
+        before_else = result[:last_else_pos]
+        after_else = result[last_else_pos+6:]  # Skip " ELSE "
+        
+        upper_before = before_else.upper()
+        then_pos = upper_before.rfind(" THEN ")
+        if then_pos == -1:
+            break
+        
+        before_then = before_else[:then_pos]
+        between_then_else = before_else[then_pos+6:]
+        upper_before_then = before_then.upper()
+        
+        # Find the IF that matches this THEN
+        if_pos = upper_before_then.rfind(" IF ")
+        if if_pos == -1:
+            if upper_before_then.strip().upper().startswith("IF "):
+                if_pos = upper_before_then.upper().find("IF ")
+            else:
+                break
+        else:
+            if_pos += 1  # Account for space
+        
+        prefix = before_then[:if_pos]
+        condition = before_then[if_pos+3:].strip()
+        true_val = between_then_else.strip()
+        false_val = after_else.strip()
+        
+        replacement = f"IF_THEN_ELSE({condition}, {true_val}, {false_val})"
+        result = prefix + replacement
+    
+    # Convert single = to == for comparisons (not <= >= == !=)
+    result = re.sub(r"(?<![<>=!])=(?!=)", "==", result)
+    
+    return result
+
+
 def safe_eval(equation: str, variables: dict[str, float],
               context: Optional[SimulationContext] = None) -> float:
     """
@@ -547,7 +634,10 @@ def safe_eval(equation: str, variables: dict[str, float],
     if not equation or equation.strip() == "":
         return 0.0
 
-    # Normalize the equation
+    # Normalize and preprocess the equation
+    equation = preprocess_equation(equation)
+    
+    # Continue with normalization
     equation = equation.strip()
 
     # Handle simple numeric values
