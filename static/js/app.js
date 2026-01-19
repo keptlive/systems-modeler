@@ -34,7 +34,7 @@ const App = {
     init() {
         this.checkMobile();
         this.bindEvents();
-        this.loadModelList();
+        UserModels.populateDropdown();
         Canvas.init();
         LLMInterface.init();
         Simulation.init();
@@ -584,7 +584,9 @@ const App = {
 
             const saved = await response.json();
             this.model.id = saved.id;
-            this.loadModelList();
+            // Also save to localStorage
+            UserModels.save({...this.model, id: saved.id});
+            UserModels.populateDropdown();
             this.showToast('Model saved!');
         } catch (error) {
             console.error('Save error:', error);
@@ -613,24 +615,37 @@ const App = {
     /**
      * Load a model by ID
      */
-    async loadModel(id) {
+    async loadModel(idOrModel) {
         try {
-            const response = await fetch(`/api/models/${id}`);
-            if (!response.ok) throw new Error('Load failed');
-
-            const model = await response.json();
+            let model;
+            
+            // If passed an object, use it directly (from Library import)
+            if (typeof idOrModel === "object") {
+                model = idOrModel;
+            }
+            // Check UserModels (localStorage) first  
+            else if (typeof idOrModel === "string" && idOrModel.startsWith("user-")) {
+                model = UserModels.get(idOrModel);
+                if (!model) throw new Error("Model not found in saved models");
+            }
+            // Fall back to API for library models
+            else {
+                const response = await fetch(\`/api/models/\${idOrModel}\`);
+                if (!response.ok) throw new Error("Load failed");
+                model = await response.json();
+            }
+            
             this.model = model;
-            // Auto-generate missing connectors based on equation dependencies
             this.generateMissingConnectors();
-            document.getElementById('model-name').value = model.name;
+            document.getElementById("model-name").value = model.name;
             this.selected = null;
             this.updatePropertiesPanel();
             Canvas.render();
             Canvas.resetView();
             Simulation.clear();
         } catch (error) {
-            console.error('Load error:', error);
-            this.showToast('Failed to load model: ' + error.message, 'error');
+            console.error("Load error:", error);
+            this.showToast("Failed to load model: " + error.message, "error");
         }
     },
 
