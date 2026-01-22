@@ -46,7 +46,7 @@ def model_to_xmile(model: Model) -> str:
         """Convert equation variable names to normalized form."""
         if not eq:
             return "0"
-        result = eq
+        result = eq.replace("**", "^")
         # Sort by length descending to replace longer names first
         import re
         for old_name, new_name in sorted(name_map.items(), key=lambda x: -len(x[0])):
@@ -476,6 +476,9 @@ def simulate(model: Model, time_settings: Optional[TimeSettings] = None) -> Simu
         'SMOOTH' in (f.equation or '').upper() or
         'PULSE' in (f.equation or '').upper() or
         'STEP' in (f.equation or '').upper() or
+        'IF' in (f.equation or '').upper() or
+        '<' in (f.equation or '') or
+        '>' in (f.equation or '') or
         'RAMP' in (f.equation or '').upper()
         for f in model.flows
     ) or any(
@@ -483,6 +486,9 @@ def simulate(model: Model, time_settings: Optional[TimeSettings] = None) -> Simu
         'SMOOTH' in (v.equation or '').upper() or
         'PULSE' in (v.equation or '').upper() or
         'STEP' in (v.equation or '').upper() or
+        'IF' in (v.equation or '').upper() or
+        '<' in (v.equation or '') or
+        '>' in (v.equation or '') or
         'RAMP' in (v.equation or '').upper()
         for v in model.variables
     )
