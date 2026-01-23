@@ -22,27 +22,54 @@ def get_model_path(model_id: str) -> str:
     return os.path.join(MODELS_DIR, f"{model_id}.json")
 
 
+def find_model_path(model_id: str) -> Optional[str]:
+    """Find a model file by ID, searching all subdirectories."""
+    ensure_models_dir()
+    target_filename = f"{model_id}.json"
+    
+    # First check root directory
+    root_path = os.path.join(MODELS_DIR, target_filename)
+    if os.path.exists(root_path):
+        return root_path
+    
+    # Search subdirectories
+    for root, dirs, files in os.walk(MODELS_DIR):
+        if target_filename in files:
+            return os.path.join(root, target_filename)
+    
+    return None
+
+
 def list_models() -> list[Model]:
     """List all saved models. Auto-generates missing connectors from equations."""
     ensure_models_dir()
     from app.core.model import generate_connectors_from_equations
 
     models = []
-    for filename in os.listdir(MODELS_DIR):
-        if filename.endswith(".json"):
-            try:
-                with open(os.path.join(MODELS_DIR, filename), "r") as f:
-                    data = json.load(f)
-                    model = Model(**data)
+    # Walk through all subdirectories to find model files
+    for root, dirs, files in os.walk(MODELS_DIR):
+        # Get category from subdirectory name
+        category = os.path.basename(root) if root != MODELS_DIR else None
+        
+        for filename in files:
+            if filename.endswith(".json"):
+                try:
+                    filepath = os.path.join(root, filename)
+                    with open(filepath, "r") as f:
+                        data = json.load(f)
+                        # Add category if from subdirectory
+                        if category and category != "models":
+                            data["category"] = category
+                        model = Model(**data)
 
-                    # Auto-generate connectors if missing or incomplete
-                    new_connectors = generate_connectors_from_equations(model)
-                    if len(new_connectors) > len(model.connectors):
-                        model.connectors = new_connectors
+                        # Auto-generate connectors if missing or incomplete
+                        new_connectors = generate_connectors_from_equations(model)
+                        if len(new_connectors) > len(model.connectors):
+                            model.connectors = new_connectors
 
-                    models.append(model)
-            except (json.JSONDecodeError, ValueError):
-                continue
+                        models.append(model)
+                except (json.JSONDecodeError, ValueError) as e:
+                    continue
     # Sort by updated_at, handling None values and timezone-aware vs naive datetimes
     def get_sort_key(m):
         dt = m.updated_at or m.created_at
@@ -58,12 +85,21 @@ def list_models() -> list[Model]:
 def get_model(model_id: str) -> Optional[Model]:
     """Get a model by ID. Auto-generates missing connectors from equations."""
     ensure_models_dir()
-    path = get_model_path(model_id)
-    if not os.path.exists(path):
+    
+    # Search for the model file in all directories
+    path = find_model_path(model_id)
+    if not path:
         return None
+    
     try:
         with open(path, "r") as f:
             data = json.load(f)
+            
+            # Add category if from subdirectory
+            parent_dir = os.path.basename(os.path.dirname(path))
+            if parent_dir and parent_dir != "models":
+                data["category"] = parent_dir
+            
             model = Model(**data)
 
             # Auto-generate connectors if missing or incomplete
@@ -134,8 +170,9 @@ def save_model(model: Model) -> None:
 
 def delete_model(model_id: str) -> bool:
     """Delete a model by ID."""
-    path = get_model_path(model_id)
-    if os.path.exists(path):
+    # Find the model in any subdirectory
+    path = find_model_path(model_id)
+    if path and os.path.exists(path):
         os.remove(path)
         return True
     return False

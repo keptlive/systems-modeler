@@ -9,13 +9,15 @@ const Simulation = {
     // Chart configuration
     margin: { top: 20, right: 100, bottom: 40, left: 60 },
     colors: d3.schemeCategory10,
+
     /**
-     * Calculate simulation time range from step count. Returns {start, end, dt}.
+     * Get simulation time settings from model
      */
-    getTimeSettings(steps) {
-        const dt = App.model.time_settings?.dt || 0.1;
-        const start = App.model.time_settings?.start || 0;
-        const end = start + (steps * dt);
+    getTimeSettings() {
+        const ts = App.model.time_settings || {};
+        const start = ts.start ?? 0;
+        const end = ts.end ?? 100;
+        const dt = ts.dt ?? 0.25;
         return { start, end, dt };
     },
 
@@ -28,9 +30,6 @@ const Simulation = {
      * Run simulation on current model
      */
     async run() {
-        // Get steps from input
-        const stepsInput = document.getElementById("sim-steps");
-        const steps = stepsInput ? parseInt(stepsInput.value) || 100 : 100;
         if (App.model.stocks.length === 0 && App.model.flows.length === 0) {
             alert('No model to simulate. Add some stocks and flows first.');
             return;
@@ -54,7 +53,7 @@ const Simulation = {
             const response = await fetch('/api/simulate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model: App.model, time_settings: this.getTimeSettings(steps) })
+                body: JSON.stringify({ model: App.model, time_settings: this.getTimeSettings() })
             });
 
             if (!response.ok) {
@@ -68,9 +67,7 @@ const Simulation = {
             // Update advanced charts module
             if (typeof Charts !== 'undefined') {
                 Charts.setResults(this.results);
-                // Render in desktop container
                 Charts.render();
-                // Also render in mobile container if it exists
                 const mobileContainer = document.getElementById('chart-container-mobile');
                 if (mobileContainer) {
                     const originalContainer = Charts.container;
@@ -79,7 +76,6 @@ const Simulation = {
                     Charts.container = originalContainer;
                 }
             } else {
-                // Fallback to basic chart
                 this.renderChart();
             }
 
@@ -96,14 +92,15 @@ const Simulation = {
             }
 
         } catch (error) {
-            console.error('Simulation error:', error);
-            this.resultsContent.innerHTML = `
-                <p class="error" style="color: var(--accent-secondary);">
-                    Simulation error: ${error.message}
-                </p>
-            `;
+            console.error("Simulation error:", error);
+            if (this.resultsContent) {
+                this.resultsContent.innerHTML = `
+                    <p class="error" style="color: var(--accent-secondary);">
+                        Simulation error: ${error.message}
+                    </p>
+                `;
+            }
         } finally {
-            // Re-enable both buttons
             if (btn) {
                 btn.disabled = false;
                 btn.innerHTML = '<span class="icon-simulate">Run</span>';
@@ -112,8 +109,6 @@ const Simulation = {
                 mobileBtn.disabled = false;
                 mobileBtn.textContent = '▶ Run';
             }
-
-            // On mobile, show results panel after simulation completes
             if (App.isMobile && this.results) {
                 App.openSlidePanel('results');
             }
@@ -125,13 +120,15 @@ const Simulation = {
      */
     clear() {
         this.results = null;
-        this.resultsContent.innerHTML = '<p class="no-results">Run a simulation to see results</p>';
-        this.chartContainer.innerHTML = '';
-
-        // Clear advanced modules
+        if (this.resultsContent) {
+            this.resultsContent.innerHTML = '<p class="no-results">Run a simulation to see results</p>';
+        }
+        if (this.chartContainer) {
+            this.chartContainer.innerHTML = '';
+        }
         if (typeof Charts !== 'undefined') {
             Charts.results = null;
-            Charts.container.innerHTML = '';
+            if (Charts.container) Charts.container.innerHTML = '';
         }
         if (typeof Analytics !== 'undefined') {
             Analytics.results = null;
@@ -147,7 +144,7 @@ const Simulation = {
      * Display results summary
      */
     displayResults() {
-        if (!this.results) return;
+        if (!this.results || !this.chartContainer) return;
 
         const varNames = Object.keys(this.results.values);
         const time = this.results.time;
@@ -162,7 +159,6 @@ const Simulation = {
             <div style="margin-top: 0.5rem; font-size: 0.8rem;">
         `;
 
-        // Show final values
         varNames.forEach((name, i) => {
             const values = this.results.values[name];
             const finalValue = values[values.length - 1];
@@ -176,16 +172,15 @@ const Simulation = {
         });
 
         html += '</div>';
-        this.resultsContent.innerHTML = html;
+        if (this.resultsContent) this.resultsContent.innerHTML = html;
     },
 
     /**
      * Render time series chart
      */
     renderChart() {
-        if (!this.results) return;
+        if (!this.results || !this.chartContainer) return;
 
-        // Clear previous chart
         this.chartContainer.innerHTML = '';
 
         const containerRect = this.chartContainer.getBoundingClientRect();
@@ -195,7 +190,6 @@ const Simulation = {
         const innerWidth = width - this.margin.left - this.margin.right;
         const innerHeight = height - this.margin.top - this.margin.bottom;
 
-        // Create SVG
         const svg = d3.select(this.chartContainer)
             .append('svg')
             .attr('width', width)
@@ -204,16 +198,13 @@ const Simulation = {
         const g = svg.append('g')
             .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
 
-        // Prepare data
         const time = this.results.time;
         const varNames = Object.keys(this.results.values);
 
-        // Calculate scales
         const xScale = d3.scaleLinear()
             .domain([time[0], time[time.length - 1]])
             .range([0, innerWidth]);
 
-        // Find min/max across all variables
         let yMin = Infinity, yMax = -Infinity;
         varNames.forEach(name => {
             const values = this.results.values[name];
@@ -225,13 +216,11 @@ const Simulation = {
             });
         });
 
-        // Add padding to y range
         const yPadding = (yMax - yMin) * 0.1 || 1;
         const yScale = d3.scaleLinear()
             .domain([yMin - yPadding, yMax + yPadding])
             .range([innerHeight, 0]);
 
-        // Draw axes
         const xAxis = d3.axisBottom(xScale).ticks(6);
         const yAxis = d3.axisLeft(yScale).ticks(6);
 
@@ -244,7 +233,6 @@ const Simulation = {
             .attr('class', 'axis y-axis')
             .call(yAxis);
 
-        // X axis label
         g.append('text')
             .attr('class', 'axis-label')
             .attr('x', innerWidth / 2)
@@ -254,7 +242,6 @@ const Simulation = {
             .attr('font-size', '11px')
             .text('Time');
 
-        // Draw lines for each variable
         const line = d3.line()
             .x((d, i) => xScale(time[i]))
             .y(d => yScale(d))
@@ -271,7 +258,6 @@ const Simulation = {
                 .attr('stroke', color);
         });
 
-        // Legend
         const legend = svg.append('g')
             .attr('class', 'legend')
             .attr('transform', `translate(${width - this.margin.right + 10}, ${this.margin.top})`);
@@ -295,9 +281,6 @@ const Simulation = {
         });
     },
 
-    /**
-     * Format number for display
-     */
     formatNumber(n) {
         if (!isFinite(n)) return 'N/A';
         if (Math.abs(n) < 0.01 || Math.abs(n) >= 10000) {
@@ -306,9 +289,6 @@ const Simulation = {
         return n.toFixed(2);
     },
 
-    /**
-     * Truncate label
-     */
     truncateLabel(text, maxLen) {
         if (text.length <= maxLen) return text;
         return text.substring(0, maxLen - 1) + '...';

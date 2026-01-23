@@ -87,6 +87,7 @@ class Model(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str = "Untitled Model"
     description: str = ""
+    category: Optional[str] = None  # Category from subdirectory
     stocks: list[Stock] = Field(default_factory=list)
     flows: list[Flow] = Field(default_factory=list)
     variables: list[Variable] = Field(default_factory=list)

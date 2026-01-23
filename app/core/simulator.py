@@ -476,6 +476,9 @@ def simulate(model: Model, time_settings: Optional[TimeSettings] = None) -> Simu
         'SMOOTH' in (f.equation or '').upper() or
         'PULSE' in (f.equation or '').upper() or
         'STEP' in (f.equation or '').upper() or
+        'IF' in (f.equation or '').upper() or
+        '<' in (f.equation or '') or
+        '>' in (f.equation or '') or
         'RAMP' in (f.equation or '').upper()
         for f in model.flows
     ) or any(
@@ -483,6 +486,9 @@ def simulate(model: Model, time_settings: Optional[TimeSettings] = None) -> Simu
         'SMOOTH' in (v.equation or '').upper() or
         'PULSE' in (v.equation or '').upper() or
         'STEP' in (v.equation or '').upper() or
+        'IF' in (v.equation or '').upper() or
+        '<' in (v.equation or '') or
+        '>' in (v.equation or '') or
         'RAMP' in (v.equation or '').upper()
         for v in model.variables
     )

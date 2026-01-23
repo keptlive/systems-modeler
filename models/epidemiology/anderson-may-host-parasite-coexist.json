@@ -1,0 +1,29 @@
+{
+  "id": "anderson-may-host-parasite-coexist",
+  "name": "Anderson-May Host-Parasite (Coexistence)",
+  "description": "Modified Anderson-May model with parameters tuned for stable host-parasite coexistence. Parameters satisfy equilibrium condition: (a-b)(K+1) = (λ-μ-b)K",
+  "category": "epidemiology",
+  "stocks": [
+    {"id": "stock-host-population", "name": "Host Population", "initial_value": 800, "equation": "", "position": {"x": 200, "y": 200}},
+    {"id": "stock-parasite-population", "name": "Parasite Population", "initial_value": 600000, "equation": "", "position": {"x": 500, "y": 200}}
+  ],
+  "flows": [
+    {"id": "flow-host-births", "name": "Host Births", "equation": "Host_Birth_Rate * Host_Population", "from_stock": null, "to_stock": "stock-host-population", "position": {"x": 100, "y": 200}},
+    {"id": "flow-host-deaths", "name": "Host Deaths", "equation": "(Host_Death_Rate + Alpha * Mean_Parasite_Burden) * Host_Population", "from_stock": "stock-host-population", "to_stock": null, "position": {"x": 300, "y": 200}},
+    {"id": "flow-parasite-production", "name": "Parasite Production", "equation": "Lambda * Parasite_Population", "from_stock": null, "to_stock": "stock-parasite-population", "position": {"x": 400, "y": 200}},
+    {"id": "flow-parasite-death", "name": "Parasite Death", "equation": "(Mu + Host_Death_Rate + Alpha * (K + 1) * Mean_Parasite_Burden / K) * Parasite_Population", "from_stock": "stock-parasite-population", "to_stock": null, "position": {"x": 600, "y": 200}}
+  ],
+  "variables": [
+    {"id": "var-host-birth-rate", "name": "Host Birth Rate", "equation": "0.4", "position": {"x": 150, "y": 100}},
+    {"id": "var-host-death-rate", "name": "Host Death Rate", "equation": "0.1", "position": {"x": 300, "y": 100}},
+    {"id": "var-alpha", "name": "Alpha", "equation": "0.0003", "position": {"x": 450, "y": 100}},
+    {"id": "var-mean-parasite-burden", "name": "Mean Parasite Burden", "equation": "Parasite_Population / max(Host_Population, 1)", "position": {"x": 350, "y": 300}},
+    {"id": "var-lambda", "name": "Lambda", "equation": "1.0", "position": {"x": 150, "y": 400}},
+    {"id": "var-mu", "name": "Mu", "equation": "0.45", "position": {"x": 300, "y": 400}},
+    {"id": "var-k", "name": "K", "equation": "2", "position": {"x": 450, "y": 400}}
+  ],
+  "connectors": [],
+  "time_settings": {"start": 0, "end": 300, "dt": 0.25},
+  "source": "Modified from Anderson & May 1978",
+  "reference": "Parameters adjusted for stable coexistence dynamics"
+}

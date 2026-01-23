@@ -362,115 +362,211 @@ const App = {
     },
 
     /**
-     * Get results panel HTML content
+     * Get results panel HTML content - MOBILE
      */
     getResultsPanelContent() {
-        const desktopResults = document.getElementById('results-content');
-        const resultsHTML = desktopResults ? desktopResults.innerHTML : '<p class="no-results">Run a simulation to see results</p>';
+        const hasResults = typeof Charts !== "undefined" && Charts.results;
+        
+        // Build variable toggles if we have results
+        let variableTogglesHTML = "";
+        if (hasResults) {
+            const stockNames = this.model.stocks.map(s => s.name);
+            
+            variableTogglesHTML = stockNames.map((name, i) => {
+                const opt = Charts.options.variables[name];
+                const isVisible = opt ? opt.visible : true;
+                const color = opt ? opt.color : Charts.colors[i % Charts.colors.length];
+                return `
+                    <button class="var-chip ${isVisible ? "active" : ""}" data-var="${name}">
+                        <span class="var-chip-dot" style="background:${color}"></span>
+                        <span class="var-chip-name">${name}</span>
+                    </button>
+                `;
+            }).join("");
+        }
+        
+        // Get current chart options
+        const chartType = hasResults ? (Charts.options.type || "line") : "line";
+        const isNormalized = hasResults ? Charts.options.normalize : true;
+        const isLog = hasResults ? (Charts.options.scale === "log") : false;
 
-        // Get analytics and AI content from desktop panels
-        const analyticsContainer = document.getElementById('analytics-container');
-        const analyticsHTML = analyticsContainer ? analyticsContainer.innerHTML : '';
-        const aiContainer = document.getElementById('ai-agent-container');
-        const aiHTML = aiContainer ? aiContainer.innerHTML : '';
-
-        // Create full results panel with tabs for mobile
         return `
-            <div class="results-tabs results-tabs-mobile" id="results-tabs-mobile">
-                <button class="results-tab active" data-tab="chart-mobile">Chart</button>
-                <button class="results-tab" data-tab="analytics-mobile">Analytics</button>
-                <button class="results-tab" data-tab="ai-mobile">AI Insights</button>
-            </div>
-
-            <div class="results-tab-content active" id="tab-chart-mobile">
-                <div class="chart-options-mobile" id="chart-options-mobile">
-                    <div class="chart-option-group">
-                        <span class="chart-option-label">Type:</span>
-                        <button class="chart-option-btn active" data-chart-type="line">Line</button>
-                        <button class="chart-option-btn" data-chart-type="area">Area</button>
-                        <button class="chart-option-btn" data-chart-type="stacked">Stack</button>
-                        <button class="chart-option-btn" data-chart-type="phase">Phase</button>
-                    </div>
-                    <div class="chart-option-group">
-                        <span class="chart-option-label">Scale:</span>
-                        <button class="chart-option-btn active" data-scale="linear">Linear</button>
-                        <button class="chart-option-btn" data-scale="log">Log</button>
-                    </div>
+            <div class="mobile-results-container">
+                <div class="mobile-results-tabs" id="results-tabs-mobile">
+                    <button class="mobile-results-tab active" data-tab="chart-mobile">📊 Chart</button>
+                    <button class="mobile-results-tab" data-tab="analytics-mobile">📈 Stats</button>
+                    <button class="mobile-results-tab" data-tab="ai-mobile">🤖 AI</button>
                 </div>
-                <div class="chart-container" id="chart-container-mobile"></div>
-                <div class="results-content">${resultsHTML}</div>
-            </div>
 
-            <div class="results-tab-content" id="tab-analytics-mobile">
-                <div id="analytics-container-mobile">${analyticsHTML || '<div class="analytics-placeholder"><p>Run a simulation to see analytics</p></div>'}</div>
-            </div>
+                <div class="mobile-tab-content active" id="tab-chart-mobile">
+                    ${hasResults ? `
+                        <div class="mobile-chart-section">
+                            <label class="section-label">Variables (tap to toggle)</label>
+                            <div class="var-chips-container" id="var-chips-mobile">
+                                ${variableTogglesHTML || "<span class=\"no-vars\">No stocks in model</span>"}
+                            </div>
+                        </div>
+                        
+                        <div class="mobile-chart-section">
+                            <label class="section-label">Chart Options</label>
+                            <div class="chart-controls-mobile">
+                                <div class="chart-type-btns">
+                                    <button class="chart-type-btn ${chartType === "line" ? "active" : ""}" data-chart-type="line">Line</button>
+                                    <button class="chart-type-btn ${chartType === "area" ? "active" : ""}" data-chart-type="area">Area</button>
+                                    <button class="chart-type-btn ${chartType === "stacked" ? "active" : ""}" data-chart-type="stacked">Stacked</button>
+                                </div>
+                                <div class="chart-toggle-btns">
+                                    <button class="chart-toggle-btn ${isNormalized ? "active" : ""}" id="btn-normalize-mobile" title="Normalize to %">Norm</button>
+                                    <button class="chart-toggle-btn ${isLog ? "active" : ""}" id="btn-log-mobile" title="Log scale">Log</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-wrapper-mobile">
+                            <div class="chart-container" id="chart-container-mobile"></div>
+                        </div>
+                        
+                        <div class="mobile-chart-section">
+                            <label class="section-label">Final Values</label>
+                            <div class="results-summary-mobile" id="results-summary-mobile"></div>
+                        </div>
+                    ` : `
+                        <div class="no-results-mobile">
+                            <div class="no-results-icon">📊</div>
+                            <p>Run a simulation to see results</p>
+                        </div>
+                    `}
+                </div>
 
-            <div class="results-tab-content" id="tab-ai-mobile">
-                <div id="ai-agent-container-mobile">${aiHTML || '<div class="ai-agent-placeholder"><p>Run a simulation for AI analysis</p></div>'}</div>
+                <div class="mobile-tab-content" id="tab-analytics-mobile">
+                    <div id="analytics-container-mobile"></div>
+                </div>
+
+                <div class="mobile-tab-content" id="tab-ai-mobile">
+                    <div id="ai-agent-container-mobile"></div>
+                </div>
             </div>
         `;
     },
 
     /**
-     * Initialize mobile results tab events
+     * Initialize mobile results events
      */
     initMobileResultsEvents() {
-        const tabs = document.querySelectorAll('#results-tabs-mobile .results-tab');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabId = tab.dataset.tab;
+        const self = this;
+        
+        // Tab switching
+        document.querySelectorAll("#results-tabs-mobile .mobile-results-tab").forEach(tab => {
+            tab.addEventListener("click", function() {
+                const tabId = this.dataset.tab;
+                document.querySelectorAll("#results-tabs-mobile .mobile-results-tab").forEach(t => t.classList.remove("active"));
+                this.classList.add("active");
+                document.querySelectorAll(".mobile-tab-content").forEach(c => c.classList.remove("active"));
+                const target = document.getElementById("tab-" + tabId);
+                if (target) target.classList.add("active");
+            });
+        });
 
-                // Update tab buttons
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-
-                // Update tab content within mobile panel
-                const slidePanel = document.getElementById('slide-panel-content');
-                if (slidePanel) {
-                    slidePanel.querySelectorAll('.results-tab-content').forEach(content => {
-                        content.classList.remove('active');
-                    });
-                    const targetContent = document.getElementById(`tab-${tabId}`);
-                    if (targetContent) {
-                        targetContent.classList.add('active');
-                    }
+        // Variable chip toggles
+        document.querySelectorAll("#var-chips-mobile .var-chip").forEach(chip => {
+            chip.addEventListener("click", function() {
+                const varName = this.dataset.var;
+                if (typeof Charts !== "undefined" && Charts.options.variables[varName]) {
+                    // Toggle visibility
+                    Charts.options.variables[varName].visible = !Charts.options.variables[varName].visible;
+                    this.classList.toggle("active");
+                    self.renderMobileChart();
                 }
             });
         });
 
-        // Set up chart type buttons for mobile
-        document.querySelectorAll('#chart-options-mobile [data-chart-type]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('#chart-options-mobile [data-chart-type]').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                if (typeof Charts !== 'undefined' && Charts.results) {
-                    // Update options without triggering desktop render
-                    Charts.options.type = btn.dataset.chartType;
-                    // Render to mobile container
-                    this.renderMobileChart();
+        // Chart type buttons
+        document.querySelectorAll(".chart-type-btn[data-chart-type]").forEach(btn => {
+            btn.addEventListener("click", function() {
+                document.querySelectorAll(".chart-type-btn[data-chart-type]").forEach(b => b.classList.remove("active"));
+                this.classList.add("active");
+                if (typeof Charts !== "undefined") {
+                    Charts.options.type = this.dataset.chartType;
+                    self.renderMobileChart();
                 }
             });
         });
 
-        // Set up scale buttons for mobile
-        document.querySelectorAll('#chart-options-mobile [data-scale]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('#chart-options-mobile [data-scale]').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                if (typeof Charts !== 'undefined' && Charts.results) {
-                    Charts.options.scale = btn.dataset.scale;
-                    this.renderMobileChart();
+        // Normalize toggle
+        const normBtn = document.getElementById("btn-normalize-mobile");
+        if (normBtn) {
+            normBtn.addEventListener("click", function() {
+                if (typeof Charts !== "undefined") {
+                    Charts.options.normalize = !Charts.options.normalize;
+                    this.classList.toggle("active");
+                    self.renderMobileChart();
                 }
             });
+        }
+
+        // Log scale toggle
+        const logBtn = document.getElementById("btn-log-mobile");
+        if (logBtn) {
+            logBtn.addEventListener("click", function() {
+                if (typeof Charts !== "undefined") {
+                    Charts.options.scale = Charts.options.scale === "log" ? "linear" : "log";
+                    this.classList.toggle("active");
+                    self.renderMobileChart();
+                }
+            });
+        }
+
+        // Populate summary
+        this.updateMobileResultsSummary();
+    },
+
+    /**
+     * Update mobile results summary
+     */
+    updateMobileResultsSummary() {
+        const container = document.getElementById("results-summary-mobile");
+        if (!container || typeof Charts === "undefined" || !Charts.results) return;
+
+        const values = Charts.results.values;
+        const time = Charts.results.time;
+        const stockNames = this.model.stocks.map(s => s.name);
+        
+        let html = "<div class=\"summary-grid\">";
+        
+        stockNames.forEach((name, i) => {
+            if (values[name]) {
+                const finalVal = values[name][values[name].length - 1];
+                const opt = Charts.options.variables[name];
+                const color = opt ? opt.color : Charts.colors[i % Charts.colors.length];
+                html += "<div class=\"summary-item\">" +
+                    "<span class=\"summary-dot\" style=\"background:" + color + "\"></span>" +
+                    "<span class=\"summary-name\">" + name + "</span>" +
+                    "<span class=\"summary-value\">" + this.formatNumShort(finalVal) + "</span>" +
+                    "</div>";
+            }
         });
+        
+        html += "</div>";
+        container.innerHTML = html;
+    },
+
+    /**
+     * Format number short
+     */
+    formatNumShort(n) {
+        if (!isFinite(n)) return "N/A";
+        if (Math.abs(n) >= 1000000) return (n/1000000).toFixed(1) + "M";
+        if (Math.abs(n) >= 1000) return (n/1000).toFixed(1) + "K";
+        if (Math.abs(n) < 0.01 && n !== 0) return n.toExponential(1);
+        return n.toFixed(1);
     },
 
     /**
      * Render chart to mobile container
      */
     renderMobileChart() {
-        if (typeof Charts === 'undefined' || !Charts.results) return;
-        const mobileContainer = document.getElementById('chart-container-mobile');
+        if (typeof Charts === "undefined" || !Charts.results) return;
+        const mobileContainer = document.getElementById("chart-container-mobile");
         if (mobileContainer) {
             const originalContainer = Charts.container;
             Charts.container = mobileContainer;
@@ -479,6 +575,7 @@ const App = {
         }
     },
 
+    /**
     /**
      * Set the current tool mode
      */
@@ -630,12 +727,13 @@ const App = {
             }
             // Fall back to API for library models
             else {
-                const response = await fetch(\`/api/models/\${idOrModel}\`);
+                const response = await fetch(`/api/models/${idOrModel}`);
                 if (!response.ok) throw new Error("Load failed");
                 model = await response.json();
             }
             
             this.model = model;
+
             this.generateMissingConnectors();
             document.getElementById("model-name").value = model.name;
             this.selected = null;
@@ -1229,7 +1327,7 @@ const App = {
         const dtInput = document.getElementById('sim-dt');
         const stepsInfo = document.getElementById('sim-steps-info');
 
-        if (!modal || !openBtn) return;
+        if (!modal) return;
 
         // Update steps display when inputs change
         const updateSteps = () => {
@@ -1242,17 +1340,27 @@ const App = {
 
         // Sync inputs with current model settings
         const syncInputs = () => {
-            startInput.value = this.model.time_settings.start;
-            endInput.value = this.model.time_settings.end;
-            dtInput.value = this.model.time_settings.dt;
+            const ts = this.model?.time_settings || { start: 0, end: 100, dt: 0.25 };
+            startInput.value = ts.start ?? 0;
+            endInput.value = ts.end ?? 100;
+            dtInput.value = ts.dt ?? 0.25;
             updateSteps();
         };
 
         // Open modal
-        openBtn.addEventListener('click', () => {
+        openBtn?.addEventListener('click', () => {
             syncInputs();
             modal.classList.add('active');
         });
+
+        // Mobile settings button
+        const mobileSettingsBtn = document.getElementById('mobile-settings-btn');
+        if (mobileSettingsBtn) {
+            mobileSettingsBtn.onclick = () => {
+                syncInputs();
+                modal.classList.add('active');
+            };
+        }
 
         // Close modal
         const closeModal = () => {

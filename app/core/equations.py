@@ -161,6 +161,7 @@ SAFE_FUNCTIONS: dict[str, Callable] = {
     "round": round,
     # Conditional function
     "IF_THEN_ELSE": if_then_else,
+    "IF": if_then_else,  # Alias for IF_THEN_ELSE
     # Random functions
     "RANDOM_UNIFORM": random_uniform,
     "RANDOM_NORMAL": random_normal,

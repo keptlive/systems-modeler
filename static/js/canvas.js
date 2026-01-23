@@ -7,6 +7,19 @@ const Canvas = {
     svg: null,
     container: null,
     defs: null,
+    _mainGroup: null,
+    
+    // Lazy getter for mainGroup - ensures it exists when accessed
+    get mainGroup() {
+        if (!this._mainGroup && this.svg && !this.svg.empty()) {
+            this._mainGroup = this.svg.select("g.main-group");
+            if (this._mainGroup.empty()) {
+                this._mainGroup = this.svg.append("g").attr("class", "main-group");
+            }
+        }
+        return this._mainGroup && !this._mainGroup.empty() ? this._mainGroup : null;
+    },
+    set mainGroup(val) { this._mainGroup = val; },
 
     // Dimensions
     width: 800,
@@ -83,7 +96,7 @@ const Canvas = {
             .attr('fill', '#7f8c8d');
 
         // Create main group for zoom/pan
-        this.mainGroup = this.svg.append('g').attr('class', 'main-group');
+        this.mainGroup = this.svg.append('g').attr('class', 'main-group'); 
 
         // Mouse event handlers
         this.svg.on('click', (event) => this.handleCanvasClick(event));
@@ -575,6 +588,10 @@ const Canvas = {
      * Render the entire canvas
      */
     render() {
+        if (!this.mainGroup && this.svg) { this.mainGroup = this.svg.select("g.main-group"); if (this.mainGroup.empty()) { this.mainGroup = this.svg.append("g").attr("class", "main-group"); } } if (!this.mainGroup || this.mainGroup.empty()) {
+            console.warn("Canvas not initialized");
+            return;
+        }
         // Clear previous content (except defs)
         this.mainGroup.selectAll('g').remove();
 
@@ -593,6 +610,12 @@ const Canvas = {
         this.renderStocks(elementsLayer);
         this.renderFlows(elementsLayer);
         this.renderVariables(elementsLayer);
+        
+        // Debug: count rendered elements
+        const stockCount = elementsLayer.selectAll(".stock").size();
+        const flowCount = elementsLayer.selectAll(".flow").size();
+        const varCount = elementsLayer.selectAll(".variable").size();
+        console.log("Canvas rendered:", stockCount, "stocks,", flowCount, "flows,", varCount, "variables");
     },
 
     /**
