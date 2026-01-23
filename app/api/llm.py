@@ -191,3 +191,39 @@ async def api_refine_model(request: RefineModelRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Model refinement failed: {str(e)}")
+
+
+# Tuning endpoint
+class TuneModelRequest(BaseModel):
+    model: Model
+    goal: str
+    max_iterations: int = 10
+
+
+@router.post("/tune")
+async def tune_model_endpoint(request: TuneModelRequest):
+    """Multi-step AI tuning that iteratively adjusts parameters."""
+    from app.llm.tuner import tune_model
+    
+    result = tune_model(
+        request.model.model_dump(),
+        request.goal,
+        request.max_iterations
+    )
+    
+    return {
+        "success": result.success,
+        "iterations": result.iterations,
+        "final_model": result.final_model,
+        "summary": result.summary,
+        "steps": [
+            {
+                "iteration": s.iteration,
+                "parameters": s.parameters,
+                "results_summary": s.results_summary,
+                "ai_analysis": s.ai_analysis,
+                "suggested_changes": s.suggested_changes
+            }
+            for s in result.steps
+        ]
+    }
