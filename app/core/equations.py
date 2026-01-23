@@ -274,6 +274,9 @@ class SafeEvaluator(ast.NodeVisitor):
             # Try uppercase version
             if func_name_upper in SAFE_FUNCTIONS:
                 actual_func_name = func_name_upper
+            # Try lowercase version
+            elif func_name.lower() in SAFE_FUNCTIONS:
+                actual_func_name = func_name.lower()
             else:
                 raise EquationError(f"Unknown function: {func_name}")
 

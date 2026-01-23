@@ -46,7 +46,7 @@ def model_to_xmile(model: Model) -> str:
         """Convert equation variable names to normalized form."""
         if not eq:
             return "0"
-        result = eq
+        result = eq.replace("**", "^")
         # Sort by length descending to replace longer names first
         import re
         for old_name, new_name in sorted(name_map.items(), key=lambda x: -len(x[0])):
