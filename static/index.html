@@ -6,9 +6,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <title>Systems Modeler</title>
-    <link rel="stylesheet" href="/static/css/style.css?v=1768099092">
-    <link rel="stylesheet" href="/static/css/analytics.css?v=1768013149">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css?v=1769051763">
+    <link rel="stylesheet" href="/static/css/analytics.css?v=1769051763">
+    <script src="https://d3js.org/d3.v7.min.js?v=1769051763"></script>
 </head>
 <body>
     <div class="app">
@@ -29,7 +29,10 @@
                 <button id="btn-download" class="btn-icon" title="Export">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 </button>
-                <select id="model-select" class="model-dropdown">
+                <button id="btn-library" class="btn-icon" title="Model Library" onclick="Library.open()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                </button>
+                <select id="model-select" class="model-dropdown" title="Your saved models">
                     <option value="">Load...</option>
                 </select>
                 <button id="btn-faq" class="btn-icon" title="Help">
@@ -142,7 +145,10 @@
                     </div>
                 </div>
 
-                <!-- Mobile Simulate Button -->
+                <!-- Mobile Settings & Simulate Buttons -->
+                <button class="mobile-settings-btn" id="mobile-settings-btn" title="Simulation Settings" >
+                    ⚙️
+                </button>
                 <button class="mobile-simulate-btn" id="mobile-simulate-btn" title="Run Simulation">
                     ▶ Run
                 </button>
@@ -221,6 +227,11 @@
                                 <span class="chart-option-label">Scale:</span>
                                 <button class="chart-option-btn active" data-scale="linear">Linear</button>
                                 <button class="chart-option-btn" data-scale="log">Log</button>
+                            </div>
+                            <div class="chart-option-group">
+                                <button class="chart-option-btn active" id="btn-normalize" title="Normalize to 0-100%">
+                                    Normalize
+                                </button>
                             </div>
                             <div class="chart-option-group">
                                 <button class="chart-option-btn" id="btn-animate" title="Animate simulation">
@@ -353,13 +364,15 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/static/js/app.js"></script>
-    <script src="/static/js/canvas.js"></script>
-    <script src="/static/js/simulation.js"></script>
-    <script src="/static/js/llm-interface.js"></script>
-    <script src="/static/js/charts.js"></script>
-    <script src="/static/js/analytics.js"></script>
-    <script src="/static/js/ai-agent.js"></script>
+    <script src="/static/js/user-models.js?v=1769051763"></script>
+    <script src="/static/js/library.js?v=1769051763"></script>
+    <script src="/static/js/app.js?v=1769051763"></script>
+    <script src="/static/js/canvas.js?v=1769051763"></script>
+    <script src="/static/js/simulation.js?v=1769051763"></script>
+    <script src="/static/js/llm-interface.js?v=1769051763"></script>
+    <script src="/static/js/charts.js?v=1769051763"></script>
+    <script src="/static/js/analytics.js?v=1769051763"></script>
+    <script src="/static/js/ai-agent.js?v=1769051763"></script>
     <script>
         // Initialize the application
         document.addEventListener('DOMContentLoaded', () => {
@@ -404,6 +417,13 @@
                     Charts.setOptions({ scale: btn.dataset.scale });
                 });
             });
+
+            // Normalize button
+            document.getElementById("btn-normalize")?.addEventListener("click", (e) => {
+                const isNormalized = !Charts.options.normalize;
+                Charts.setOptions({ normalize: isNormalized });
+                e.target.classList.toggle("active", isNormalized);
+                });
 
             // Export button
             document.getElementById('btn-export-chart')?.addEventListener('click', () => {
@@ -570,10 +590,10 @@
         };
     </script>
     <!-- Mobile Panel Expand/Collapse -->
-    <script src="/static/js/mobile-expand.js"></script>
-    <script src="/static/js/xmile-import.js"></script>
-    <script src="/static/js/xmile-download.js"></script>
-    <script src="/static/js/faq.js"></script>
-    <script src="/static/js/floating-title.js"></script>
+    <script src="/static/js/mobile-expand.js?v=1769051763"></script>
+    <script src="/static/js/xmile-import.js?v=1769051763"></script>
+    <script src="/static/js/xmile-download.js?v=1769051763"></script>
+    <script src="/static/js/faq.js?v=1769051763"></script>
+    <script src="/static/js/floating-title.js?v=1769051763"></script>
 </body>
 </html>

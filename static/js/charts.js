@@ -22,7 +22,8 @@ const Charts = {
         animationDuration: 2000,
         animationSpeed: 1,     // 1x, 2x, 4x speed multiplier
         showTooltip: true,
-        showComparison: false, // Overlay previous runs
+        showComparison: false,
+        normalize: true,      // Scale each variable to 0-100% // Overlay previous runs
         variables: {}          // { 'Population': { visible: true, color: '#4CAF50' } }
     },
 
@@ -172,6 +173,33 @@ const Charts = {
             .map(([name, _]) => name);
     },
 
+
+    /**
+     * Get normalization info for each variable (min, max, range)
+     */
+    getNormalizationInfo(values) {
+        const info = {};
+        Object.keys(values).forEach(name => {
+            const vals = values[name].filter(v => isFinite(v));
+            if (vals.length > 0) {
+                const min = Math.min(...vals);
+                const max = Math.max(...vals);
+                info[name] = { min, max, range: max - min || 1 };
+            } else {
+                info[name] = { min: 0, max: 1, range: 1 };
+            }
+        });
+        return info;
+    },
+
+    /**
+     * Normalize a value to 0-100 range
+     */
+    normalizeValue(value, info) {
+        if (!isFinite(value) || info.range === 0) return 50;
+        return ((value - info.min) / info.range) * 100;
+    },
+
     /**
      * Create scales
      */
@@ -303,7 +331,7 @@ const Charts = {
             .attr('fill', 'var(--text-secondary)')
             .attr('text-anchor', 'middle')
             .attr('font-size', '12px')
-            .text('Time');
+            .text('Time: ' + this.results.time[0] + ' → ' + this.results.time[this.results.time.length-1].toFixed(1));
 
         g.append('text')
             .attr('class', 'axis-label')
@@ -502,12 +530,25 @@ const Charts = {
     renderLineChart() {
         const dim = this.getDimensions();
         const time = this.results.time;
-        const values = this.results.values;
+        const rawValues = this.results.values;
         const visibleVars = this.getVisibleVariables();
 
         if (visibleVars.length === 0) {
             this.container.innerHTML = '<div class="no-data">No variables selected</div>';
             return;
+        }
+
+        // Normalize values if enabled
+        let values = rawValues;
+        let normInfo = null;
+        if (this.options.normalize) {
+            normInfo = this.getNormalizationInfo(rawValues);
+            values = {};
+            Object.keys(rawValues).forEach(name => {
+                values[name] = rawValues[name].map(v =>
+                    this.normalizeValue(v, normInfo[name])
+                );
+            });
         }
 
         const svg = this.createSvg(dim);
@@ -1245,7 +1286,7 @@ const Charts = {
         }
 
         const currentTime = this.results.time[currentStep]?.toFixed(1) || '0';
-        const endTime = this.results.time[totalSteps - 1]?.toFixed(1) || '100';
+        const endTime = this.results.time[totalSteps - 1]?.toFixed(1) || '?';
         indicator.innerHTML = `
             <span>t = ${currentTime} / ${endTime}</span>
             <span style="margin-left: 1rem; color: var(--text-muted);">${Math.round(progress * 100)}%</span>
