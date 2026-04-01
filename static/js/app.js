@@ -38,6 +38,12 @@ const App = {
         Canvas.init();
         LLMInterface.init();
         Simulation.init();
+        // Load model from URL param if present
+        const urlParams = new URLSearchParams(window.location.search);
+        const modelId = urlParams.get("model");
+        if (modelId) {
+            setTimeout(() => this.loadModel(modelId), 1500);
+        }
         this.initSimSettings();
 
         // Handle resize

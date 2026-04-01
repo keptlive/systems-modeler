@@ -15,7 +15,7 @@ class LLMError(Exception):
 
 
 def get_llm_client():
-    """Get LLM client. Prioritizes Gemini."""
+    """Get LLM client. Prioritizes Gemini, falls back to OpenRouter."""
     gemini_key = os.environ.get("GEMINI_API_KEY")
     if gemini_key:
         try:
@@ -24,6 +24,19 @@ def get_llm_client():
             return genai, "gemini"
         except ImportError:
             pass
+
+    openrouter_key = os.environ.get("OPENROUTER_API_KEY")
+    if openrouter_key:
+        try:
+            from openai import OpenAI
+            client = OpenAI(
+                base_url="https://openrouter.ai/api/v1",
+                api_key=openrouter_key,
+            )
+            return client, "openrouter"
+        except ImportError:
+            pass
+
     return None, None
 
 
@@ -31,7 +44,7 @@ def call_llm(messages: list[dict], json_mode: bool = True) -> str:
     """Call the LLM."""
     client, provider = get_llm_client()
     if not client:
-        raise LLMError("No LLM API key found. Set GEMINI_API_KEY.")
+        raise LLMError("No LLM API key found. Set GEMINI_API_KEY or OPENROUTER_API_KEY.")
 
     if provider == "gemini":
         system_prompt = ""
@@ -52,6 +65,17 @@ def call_llm(messages: list[dict], json_mode: bool = True) -> str:
             }
         )
         return response.text
+
+    if provider == "openrouter":
+        kwargs = {
+            "model": "google/gemini-2.0-flash-001",
+            "messages": messages,
+            "max_tokens": 4096,
+        }
+        if json_mode:
+            kwargs["response_format"] = {"type": "json_object"}
+        response = client.chat.completions.create(**kwargs)
+        return response.choices[0].message.content
 
     raise LLMError("Unknown LLM provider")
 

@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>Systems Modeler</title>
-    <link rel="stylesheet" href="/static/css/style.css?v=1769051763">
-    <link rel="stylesheet" href="/static/css/analytics.css?v=1769051763">
-    <script src="https://d3js.org/d3.v7.min.js?v=1769051763"></script>
+    <title>Stock & Flow — Systems Dynamics Simulator</title>
+    <link rel="stylesheet" href="/static/css/style.css?v=1775084011">
+    <link rel="stylesheet" href="/static/css/analytics.css?v=1775084011">
+    <script src="https://d3js.org/d3.v7.min.js?v=1775084011"></script>
 </head>
 <body>
     <div class="app">
         <!-- Header -->
                                                 <header class="header glass-header-v5">
-            <div class="header-title">SYSTEMS MODELER</div>
+            <div class="header-title">STOCK &amp; FLOW</div>
             <div class="header-icons">
                 <button id="btn-new" class="btn-icon" title="New">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
@@ -35,6 +35,7 @@
                 <select id="model-select" class="model-dropdown" title="Your saved models">
                     <option value="">Load...</option>
                 </select>
+                <a href="https://stockandflow.org" target="_blank" class="btn-icon" title="Model Library" style="text-decoration:none;color:inherit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></a>
                 <button id="btn-faq" class="btn-icon" title="Help">
                     <span class="help-icon">?</span>
                 </button>
@@ -215,46 +216,32 @@
 
                     <!-- Chart Tab -->
                     <div class="results-tab-content active" id="tab-chart">
+                        <div class="chart-container" id="chart-container"></div>
+                        <div class="results-content" id="results-content">
+                            <p class="no-results">Run a simulation to see results</p>
+                        </div>
                         <div class="chart-options" id="chart-options">
                             <div class="chart-option-group">
-                                <span class="chart-option-label">Type:</span>
                                 <button class="chart-option-btn active" data-chart-type="line">Line</button>
                                 <button class="chart-option-btn" data-chart-type="area">Area</button>
                                 <button class="chart-option-btn" data-chart-type="stacked">Stacked</button>
                                 <button class="chart-option-btn" data-chart-type="phase">Phase</button>
                             </div>
                             <div class="chart-option-group">
-                                <span class="chart-option-label">Scale:</span>
-                                <button class="chart-option-btn active" data-scale="linear">Linear</button>
+                                <button class="chart-option-btn active" data-scale="linear">Lin</button>
                                 <button class="chart-option-btn" data-scale="log">Log</button>
+                                <button class="chart-option-btn active" id="btn-normalize" title="Normalize">Norm</button>
                             </div>
                             <div class="chart-option-group">
-                                <button class="chart-option-btn active" id="btn-normalize" title="Normalize to 0-100%">
-                                    Normalize
-                                </button>
+                                <button class="chart-option-btn" id="btn-animate" title="Animate">&#9658;</button>
+                                <button class="chart-option-btn" id="btn-compare" title="Compare">&#x21C4;</button>
+                                <button class="chart-option-btn" id="btn-save-run" title="Save Run">&#128190;</button>
+                                <button class="chart-export-btn" id="btn-export-chart" title="Export">&#x2B07;</button>
                             </div>
-                            <div class="chart-option-group">
-                                <button class="chart-option-btn" id="btn-animate" title="Animate simulation">
-                                    &#9658; Play
-                                </button>
-                                <button class="chart-option-btn" id="btn-compare" title="Compare with previous runs">
-                                    Compare
-                                </button>
-                                <button class="chart-option-btn" id="btn-save-run" title="Save current run for comparison">
-                                    Save Run
-                                </button>
-                            </div>
-                            <button class="chart-export-btn" id="btn-export-chart" title="Export chart">
-                                &#128190; Export
-                            </button>
                         </div>
                         <!-- Variable toggles -->
                         <div class="chart-variables" id="chart-variables">
                             <!-- Dynamically populated with variable toggles -->
-                        </div>
-                        <div class="chart-container" id="chart-container"></div>
-                        <div class="results-content" id="results-content">
-                            <p class="no-results">Run a simulation to see results</p>
                         </div>
                     </div>
 
@@ -364,15 +351,15 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/static/js/user-models.js?v=1769051763"></script>
-    <script src="/static/js/library.js?v=1769051763"></script>
-    <script src="/static/js/app.js?v=1769051763"></script>
-    <script src="/static/js/canvas.js?v=1769051763"></script>
-    <script src="/static/js/simulation.js?v=1769051763"></script>
-    <script src="/static/js/llm-interface.js?v=1769051763"></script>
-    <script src="/static/js/charts.js?v=1769051763"></script>
-    <script src="/static/js/analytics.js?v=1769051763"></script>
-    <script src="/static/js/ai-agent.js?v=1769051763"></script>
+    <script src="/static/js/user-models.js?v=1775084011"></script>
+    <script src="/static/js/library.js?v=1775084011"></script>
+    <script src="/static/js/app.js?v=1775084011"></script>
+    <script src="/static/js/canvas.js?v=1775084011"></script>
+    <script src="/static/js/simulation.js?v=1775084011"></script>
+    <script src="/static/js/llm-interface.js?v=1775084011"></script>
+    <script src="/static/js/charts.js?v=1775084011"></script>
+    <script src="/static/js/analytics.js?v=1775084011"></script>
+    <script src="/static/js/ai-agent.js?v=1775084011"></script>
     <script>
         // Initialize the application
         document.addEventListener('DOMContentLoaded', () => {
@@ -590,10 +577,10 @@
         };
     </script>
     <!-- Mobile Panel Expand/Collapse -->
-    <script src="/static/js/mobile-expand.js?v=1769051763"></script>
-    <script src="/static/js/xmile-import.js?v=1769051763"></script>
-    <script src="/static/js/xmile-download.js?v=1769051763"></script>
-    <script src="/static/js/faq.js?v=1769051763"></script>
-    <script src="/static/js/floating-title.js?v=1769051763"></script>
+    <script src="/static/js/mobile-expand.js?v=1775084011"></script>
+    <script src="/static/js/xmile-import.js?v=1775084011"></script>
+    <script src="/static/js/xmile-download.js?v=1775084011"></script>
+    <script src="/static/js/faq.js?v=1775084011"></script>
+    <script src="/static/js/floating-title.js?v=1775084011"></script>
 </body>
 </html>
