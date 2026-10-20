@@ -22,7 +22,10 @@ write files. AI draft tools call the configured provider and may incur charges.
 Library models are illustrative legacy examples, not scientifically certified. Inspect
 initial conditions, units, equations and source references before interpreting results.
 Invalid equations return tool errors rather than substituted zeros. Euler uses
-left-endpoint rates; RK4 uses four derivative stages. Delay/smooth/random require Euler.
+left-endpoint rates; RK4 integrates ordinary and hidden smoothing/material-delay stocks.
+Fixed history delays and random functions require Euler. Set time_settings.random_seed
+to replay stochastic runs; an automatically chosen effective seed is returned.
+Use investigate_model for bounded full-horizon timestep comparisons and input evidence.
 Results describe assumptions, not independently verified forecasts.
 To drive a visible page, connect over HTTP/SSE and call open_workspace. Open its
 private page_url, then inspect_workspace, update_workspace_model, run_workspace and
@@ -120,6 +123,7 @@ def run_workspace(workspace_key: str,expected_revision: Annotated[int,Field(ge=1
     updated=workspaces.publish_result(workspace_key,result,expected_revision)
     updated['statistics']=summarize(result)
     updated['time_points']=len(result.time)
+    updated['random_seed']=result.random_seed
     return updated
 
 @mcp.tool(annotations=PAGE)
@@ -149,8 +153,8 @@ def resolve_model(model_id=None, model_json=None):
         return model
     return Model.model_validate(model_json)
 
-def settings_for(model, start_time=None, end_time=None, dt=None, integration_method=None):
-    changes = {'start': start_time, 'end': end_time, 'dt': dt, 'integration_method': integration_method}
+def settings_for(model, start_time=None, end_time=None, dt=None, integration_method=None, random_seed=None):
+    changes = {'start': start_time, 'end': end_time, 'dt': dt, 'integration_method': integration_method, 'random_seed': random_seed}
     data = model.time_settings.model_dump()
     data.update({k: v for k, v in changes.items() if v is not None})
     return TimeSettings(**data)
@@ -194,30 +198,47 @@ def validate_model(model_id: Optional[str] = None, model_json: Optional[dict] = 
     return inspect_inputs(model)
 
 @mcp.tool(annotations=READ)
+def investigate_model(model_id: Optional[str] = None, model_json: Optional[dict] = None,
+                      max_runs: Annotated[int, Field(ge=1, le=3)] = 3) -> dict:
+    """Investigate inputs and full-horizon timestep sensitivity; no saved changes or AI.
+
+    Compare original, half and quarter dt with exact model/engine hashes. Reports
+    missing definitions, domain leads and closed-transfer sums. No invented repairs,
+    no shortened horizon, and no claim of scientific validation. Stochastic runs
+    are excluded from pathwise convergence comparisons. At most 3 bounded runs.
+    """
+    from app.core.diagnostics import investigate_model as investigate
+    return investigate(resolve_model(model_id, model_json), max_runs)
+
+@mcp.tool(annotations=READ)
 def simulate_model(model_id: Optional[str] = None, model_json: Optional[dict] = None,
                    start_time: Optional[float] = None, end_time: Optional[float] = None,
                    dt: Optional[float] = None, integration_method: Optional[str] = None,
-                   max_points: Annotated[int, Field(ge=2, le=2000)] = 200) -> dict:
+                   max_points: Annotated[int, Field(ge=2, le=2000)] = 200,
+                   random_seed: Optional[Annotated[int, Field(strict=True, ge=0, le=4294967295)]] = None) -> dict:
     """Run Euler or RK4, inheriting omitted settings from the model. No writes or paid AI.
 
     Returns full-series statistics and sampled data including both endpoints.
-    Limits: 10,000 steps, 500 elements and 1,000,000 element steps. Invalid equations fail.
-    Stateful delay/smooth or random functions require Euler.
+    Limits: 10,000 steps, 500 elements and 1,000,000 work units (including hidden stages, random calls and RK4 evaluations). Invalid equations fail.
+    Smoothing and fixed-duration material delays support RK4. Fixed history delays
+    and random functions require Euler. random_seed overrides the model seed;
+    omitted seeds inherit the model, with the effective seed returned for replay.
     """
     model = resolve_model(model_id, model_json)
-    settings = settings_for(model, start_time, end_time, dt, integration_method)
+    settings = settings_for(model, start_time, end_time, dt, integration_method, random_seed)
     result = simulate(model, settings)
     n = len(result.time)
     count = min(max_points, n)
     indices = sorted({round(i * (n - 1) / (count - 1)) for i in range(count)})
     return {'model': model.name, 'time_points': n, 'time_range': [result.time[0], result.time[-1]],
-            'settings': settings.model_dump(), 'variables': list(result.values),
+            'settings': settings.model_dump(), 'random_seed': result.random_seed, 'variables': list(result.values),
             'summary': summarize(result), 'sampled': count < n,
             'data': {'time': [result.time[i] for i in indices],
                      **{k: [v[i] for i in indices] for k, v in result.values.items()}}}
 
 @mcp.tool(annotations=READ)
-def compare_scenarios(model_id: str, scenarios: str | list[dict]) -> dict:
+def compare_scenarios(model_id: str, scenarios: str | list[dict],
+                      random_seed: Optional[Annotated[int, Field(strict=True, ge=0, le=4294967295)]] = None) -> dict:
     """Compare 1-10 scenarios without changing the model.
 
     Accept a JSON array or JSON string: [{"name":"High", "parameters":{"birth_rate":0.05}}].
@@ -227,7 +248,11 @@ def compare_scenarios(model_id: str, scenarios: str | list[dict]) -> dict:
     rows = json.loads(scenarios) if isinstance(scenarios, str) else scenarios
     if not isinstance(rows, list) or not 1 <= len(rows) <= 10:
         raise ValueError('Provide between one and ten scenarios')
-    results = {}
+    import secrets
+    seed = random_seed if random_seed is not None else model.time_settings.random_seed
+    if seed is None:
+        seed = secrets.randbits(32)
+    results, seeds = {}, {}
     for i, row in enumerate(rows):
         if not isinstance(row, dict):
             raise ValueError('Each scenario must be an object')
@@ -235,6 +260,7 @@ def compare_scenarios(model_id: str, scenarios: str | list[dict]) -> dict:
         if not isinstance(name, str) or name in results:
             raise ValueError('Scenario names must be unique strings')
         mod = model.model_copy(deep=True)
+        mod.time_settings = TimeSettings(**{**mod.time_settings.model_dump(), 'random_seed': seed})
         params = row.get('parameters', {})
         if not isinstance(params, dict):
             raise ValueError('parameters must be an object')
@@ -250,8 +276,12 @@ def compare_scenarios(model_id: str, scenarios: str | list[dict]) -> dict:
                 element.initial_value, element.equation = value, ''
             else:
                 element.equation = str(value)
-        results[name] = summarize(simulate(mod))
-    return {'model': model.name, 'settings': model.time_settings.model_dump(), 'scenarios': results}
+        run = simulate(mod)
+        results[name] = summarize(run)
+        seeds[name] = run.random_seed
+    return {'model': model.name, 'settings': {**model.time_settings.model_dump(), 'random_seed': seed}, 'scenarios': results,
+            'random_seed': seed if any(v is not None for v in seeds.values()) else None,
+            'scenario_random_seeds': seeds}
 
 @mcp.tool(annotations=READ)
 def analyze_model(model_id: Optional[str] = None, model_json: Optional[dict] = None,
@@ -260,7 +290,7 @@ def analyze_model(model_id: Optional[str] = None, model_json: Optional[dict] = N
     model = resolve_model(model_id, model_json)
     result = simulate(model)
     report = {'model': model.name, 'settings': model.time_settings.model_dump(),
-              'time_points': len(result.time), 'statistics': summarize(result)}
+              'time_points': len(result.time), 'random_seed': result.random_seed, 'statistics': summarize(result)}
     if include_descriptive and result.values:
         from app.llm.analyzer import descriptive_analysis
         report['descriptive'] = descriptive_analysis(result.model_dump())
@@ -291,6 +321,30 @@ def modify_existing_model(model_id: Optional[str] = None, model_json: Optional[d
 def modeling_guide() -> str:
     """Workflow, numerical assumptions and library limitations."""
     return GUIDE
+
+@mcp.resource('systems://engine')
+def engine_contract() -> str:
+    """Machine-readable capabilities for planning compatible, reproducible models."""
+    from app.core.equations import SAFE_FUNCTIONS, CONTEXT_FUNCTIONS
+    return json.dumps({
+        'version': '1.3.0',
+        'integration_methods': ['euler', 'rk4'],
+        'functions': sorted(set(SAFE_FUNCTIONS) | set(CONTEXT_FUNCTIONS)),
+        'hidden_states': 'Smoothing and fixed-duration material delays support Euler and RK4',
+        'euler_only': ['fixed history delays', 'random functions'],
+        'seed': {'field': 'time_settings.random_seed', 'range': [0, 4294967295],
+                 'effective_seed_result_field': 'random_seed',
+                 'policy': 'Independent call streams, one draw per call per time; explicit function seeds override the run seed'},
+        'limits': {'elements': 500, 'intervals': 10000, 'work_units': 1000000,
+                   'per_interval': 'Explicit elements + hidden stages + random calls; RK4 multiplies this by five'},
+        'investigation': {'tool': 'investigate_model', 'max_runs': 3,
+                          'grids': ['dt', 'dt/2', 'dt/4'], 'changes_inputs': False,
+                          'stochastic_path_convergence': 'not evaluated'},
+        'unsupported': ['arrays', 'nested models', 'queues', 'conveyors', 'macros',
+                        'nonnegative stock constraints', 'changing material/fixed delay duration',
+                        'changing stateful order', 'algebraic loop solvers'],
+        'interpretation': 'Numerical completion and convergence evidence do not establish scientific validity'
+    }, indent=2)
 
 @mcp.resource('systems://models/{model_id}')
 def model_resource(model_id: str) -> str:
@@ -336,7 +390,7 @@ def create_sse_app():
     app.routes.extend(mcp.sse_app().routes)
     async def info(request):
         tools = await mcp.list_tools()
-        return JSONResponse({'name': 'systems-modeler', 'version': '1.2.0',
+        return JSONResponse({'name': 'systems-modeler', 'version': '1.3.0',
             'streamable_http': 'https://stockandflow.live/mcp/',
             'sse': 'https://stockandflow.live/mcp/sse', 'tools': [t.name for t in tools],
             'documentation': 'https://stockandflow.live/guide'})

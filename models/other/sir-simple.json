@@ -27,15 +27,24 @@
       "id": "s3",
       "name": "susceptible",
       "initial_value": 0.0,
-      "equation": "",
+      "equation": "total_population",
       "position": {
         "x": 550,
         "y": 200
       }
+    },
+    {
+      "id": "s4",
+      "name": "cumulative_cases",
+      "initial_value": 0.0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
     }
   ],
-  "flows": [],
-  "variables": [
+  "flows": [
     {
       "id": "v1",
       "name": "report_case",
@@ -43,7 +52,9 @@
       "position": {
         "x": 100,
         "y": 50
-      }
+      },
+      "from_stock": null,
+      "to_stock": "cumulative_cases"
     },
     {
       "id": "v2",
@@ -52,8 +63,23 @@
       "position": {
         "x": 230,
         "y": 50
-      }
+      },
+      "from_stock": "susceptible",
+      "to_stock": "infectious"
     },
+    {
+      "id": "v5",
+      "name": "recover",
+      "equation": "infectious/recovery_period",
+      "position": {
+        "x": 620,
+        "y": 50
+      },
+      "from_stock": "infectious",
+      "to_stock": "recovered"
+    }
+  ],
+  "variables": [
     {
       "id": "v3",
       "name": "contact_infectivity",
@@ -69,15 +95,6 @@
       "equation": "5.0",
       "position": {
         "x": 490,
-        "y": 50
-      }
-    },
-    {
-      "id": "v5",
-      "name": "recover",
-      "equation": "infectious/recovery_period",
-      "position": {
-        "x": 620,
         "y": 50
       }
     },

@@ -19,3 +19,15 @@ PYTHONPATH=. .venv/bin/python scripts/triage_library.py --audit operations/libra
 The legacy API test functions return `(success, message)` tuples, so merely collecting them with pytest does not establish correctness. Their runner must inspect those tuples. The previous model loader also missed categorized models; it now searches recursively. Full audit failures are investigation findings, not targets to fix by zero substitution or arbitrary equation changes.
 
 Browser acceptance covers library search/details/import, model editing, settings and both integrators, saving/reloading copies, JSON/XMILE export/import, Chart/Analytics/AI Insights, chart controls/scenarios/fullscreen, mobile controls and library deep links/downloads. Verify visible results after each interaction and inspect console errors. Run one bounded real AI generation/modification check against the configured production provider, separate from numerical tests, and record its outcome without credentials.
+# Version 1.3 additional verification
+
+Version1.3 adds `tests/test_model_investigation.py`, `tests/test_repair_manifest.py` and `node scripts/check_simulation_state.cjs`. The full compatibility command is:
+
+```sh
+PYTHONPATH=. .venv/bin/python -m pytest -q tests/test_engine_review.py tests/test_regressions.py tests/test_xmile_features.py tests/test_xmile_roundtrip.py tests/test_input_validation.py tests/test_analytics.py tests/test_workspaces.py tests/test_model_investigation.py tests/test_repair_manifest.py
+node scripts/check_frontend.cjs
+node scripts/check_simulation_state.cjs
+PYTHONPATH=. .venv/bin/python scripts/check_mcp.py --url http://127.0.0.1:13250 --stdio
+```
+
+Use `scripts/audit_library.py --full --random-seed 42 --output operations/library-full-v130.json` for a reproducible audit. Preserve earlier evidence and write each release to a new output file. The diagnostics CLI checks failed definitions and finite-run concerns at original/finer grids and optional RK4; it never writes definitions. Four source-backed repairs have independent reference/analytic checks and a hash-bound change receipt.

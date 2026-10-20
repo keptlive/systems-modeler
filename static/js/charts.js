@@ -339,7 +339,7 @@ const Charts = {
             .attr('fill', 'var(--text-secondary)')
             .attr('text-anchor', 'middle')
             .attr('font-size', '12px')
-            .text('Time: ' + this.results.time[0] + ' → ' + this.results.time[this.results.time.length-1].toFixed(1));
+            .text('Time: ' + this.results.time[0] + ' → ' + this.results.time[this.results.time.length-1]);
 
         g.append('text')
             .attr('class', 'axis-label')
@@ -1295,8 +1295,8 @@ const Charts = {
             this.container.appendChild(indicator);
         }
 
-        const currentTime = this.results.time[currentStep]?.toFixed(1) || '0';
-        const endTime = this.results.time[totalSteps - 1]?.toFixed(1) || '?';
+        const currentTime = this.results.time[currentStep] ?? '0';
+        const endTime = this.results.time[totalSteps - 1] ?? '?';
         indicator.innerHTML = `
             <span>t = ${currentTime} / ${endTime}</span>
             <span style="margin-left: 1rem; color: var(--text-muted);">${Math.round(progress * 100)}%</span>

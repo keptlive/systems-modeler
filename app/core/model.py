@@ -70,6 +70,7 @@ class TimeSettings(BaseModel):
     end: float = 100
     dt: float = Field(default=0.25, gt=0)
     integration_method: Literal["euler", "rk4"] = "euler"
+    random_seed: Optional[int] = Field(default=None, strict=True, ge=0, le=4294967295)
 
     @model_validator(mode="after")
     def validate_grid(self):
@@ -167,6 +168,7 @@ class SimulationResult(BaseModel):
     """Result of a simulation run."""
     time: list[float]
     values: dict[str, list[float]]  # variable_name -> list of values
+    random_seed: Optional[int] = None  # Effective seed for replaying stochastic runs
 
 
 class LLMGenerateRequest(BaseModel):

@@ -13,15 +13,15 @@
 <p><strong>Bring your own agent.</strong> Choose <strong>Connect agent</strong> to connect this page to your agent through MCP. Your agent authors and interprets the model; no server-side AI account is required. Existing manual editing and optional server AI remain available.</p>
 <ol><li>Open <a href="/">the editor</a> and choose <strong>Model Library</strong>. Search for <em>Bank Balance with Compound Interest</em> for a simple example. Expand a result to inspect its equations, then select <strong>Import</strong>.</li>
 <li>Select a stock, flow or variable on the diagram to edit its properties. Stocks accumulate quantities; flows change stocks per unit time; variables express parameters and calculations. Connectors show dependencies.</li>
-<li>Open <strong>Settings</strong>. Use <strong>Check inputs</strong> to inspect initial values, references and connections. Choose start, end, time step and Euler or Runge–Kutta 4, then <strong>Apply &amp; Run</strong>. Smaller steps can improve accuracy but require more computation. Compare runs at smaller steps before trusting a trajectory.</li>
+<li>Open <strong>Settings</strong>. Use <strong>Check inputs</strong> to inspect initial values, references and connections. The toolbar’s <strong>Inspect</strong> button opens the same report directly. Search equations, select an element to edit it, or choose <strong>Investigate numerical behavior</strong> to compare the full horizon at the current, half and quarter time steps. Download the evidence report without changing the model. Choose start, end, time step and Euler or Runge–Kutta 4, then <strong>Apply &amp; Run</strong>. Smaller steps can improve accuracy but require more computation. Compare runs at smaller steps before trusting a trajectory.</li>
 <li>Inspect <strong>Chart</strong> and <strong>Analytics</strong>. Existing line, area, stacked, phase, logarithmic, normalization, animation, comparison and saved-run controls remain available. <strong>AI Insights</strong> uses the configured provider when available.</li>
 <li>Use <strong>Save</strong> for your edited copy. <strong>My Models</strong> lists models saved in this browser. JSON export retains the full model; XMILE exports the supported scalar subset. Keep an exported copy for portability.</li></ol>
 <p>On smaller screens, the toolbar and AI, Edit and Results panels expose the same model. The separate library has category browsing, search, Simulate deep links, and JSON/XMILE downloads.</p>
 <h2>Understand a simulation</h2>
 <p>Analytics describes the recorded samples. Time-weighted means account for irregular spacing. Patterns and tail stability are qualified heuristics; raw variance comparison does not measure causal influence or parameter sensitivity. Undefined constant-series correlations are omitted, and any correlation coverage limit is reported. AI interpretation is labeled separately from statistical fallback.</p>
 <p>Euler advances using rates at the beginning of each interval. RK4 combines four derivative evaluations per interval. Settings are honored explicitly, including a nonzero start time. The final stop time is included with a shorter last interval if necessary. Recorded variables and flows correspond to the recorded stock state and time.</p>
-<p>Delay, smoothing and random functions use Euler. RK4 combinations that are not implemented correctly are rejected explicitly. A negative stock can indicate an unsuitable time step or a model-domain problem; some quantities are intentionally signed, so the engine does not automatically clamp them.</p>
-<p>Runs are limited to 500 elements, 10,000 intervals and 1,000,000 element intervals. Increase the time step or narrow the horizon when a run exceeds those bounds. Unknown symbols, circular algebraic dependencies, invalid operations and non-finite values return errors with context.</p>
+<p>Smoothing and fixed-duration material delays support Euler and RK4. Fixed history delays and random functions require Euler; unsupported combinations are rejected explicitly. Set an optional integer random seed in Settings to repeat a stochastic run. The effective seed is returned with results when one is chosen automatically. A model’s explicit function seed takes precedence for that call. Different time steps do not define a coupled stochastic experiment. A negative stock can indicate an unsuitable time step or a model-domain problem; some quantities are intentionally signed, so the engine does not automatically clamp them.</p>
+<p>Runs are limited to 500 elements, 10,000 intervals and 1,000,000 work units (elements, hidden stages and random calls per interval; RK4 charges five evaluations). Increase the time step or narrow the horizon when a run exceeds those bounds. Unknown symbols, circular algebraic dependencies, invalid operations and non-finite values return errors with context.</p>
 <h2 id="mcp">Connect an MCP client</h2>
 <p>For a visible working page, call <code>open_workspace</code> and open the private URL it returns. Keep the workspace key private. Inspect, make targeted edits, run, select a view, then confirm the browser applied the revision. Temporary sessions expire after one idle hour or a server restart; Save remains a separate action.</p>
 <table><tr><th>Page tool</th><th>Purpose</th></tr>
@@ -47,6 +47,7 @@
 <tr><td><code>list_models</code></td><td>Search and filter by category, with limit and offset.</td></tr>
 <tr><td><code>get_model</code></td><td>Inspect a complete definition and its default settings.</td></tr>
 <tr><td><code>validate_model</code></td><td>Check structure, references and a short numerical run.</td></tr>
+<tr><td><code>investigate_model</code></td><td>Compare full-horizon time steps, locate missing definitions and domain leads, and report exact model/engine hashes. No inputs are changed.</td></tr>
 <tr><td><code>simulate_model</code></td><td>Run a library or inline model; return statistics and sampled data.</td></tr>
 <tr><td><code>compare_scenarios</code></td><td>Compare numeric parameter overrides without changing the model.</td></tr>
 <tr><td><code>analyze_model</code></td><td>Calculate default-run statistics without AI.</td></tr>
@@ -55,7 +56,7 @@
 <tr><td><code>modify_existing_model</code></td><td>Ask for a revised draft without overwriting the source.</td></tr>
 </tbody></table>
 <p>Numerical MCP tools do not write model files or use a paid AI provider. The two AI tools call the configured provider and may incur provider charges. Omitted simulation settings inherit the model defaults. Inputs can provide exactly one of <code>model_id</code> or <code>model_json</code>. Tool failures use MCP errors.</p>
-<p>The server also provides <code>systems://guide</code>, the resource template <code>systems://models/{model_id}</code>, and the <code>investigate_system</code> prompt.</p>
+<p>The server also provides <code>systems://guide</code>, the machine-readable capabilities at <code>systems://engine</code>, the resource template <code>systems://models/{model_id}</code>, and the <code>investigate_system</code> prompt.</p>
 <h3>Example investigation</h3>
 <pre><code>Find population models. Inspect the equations and initial values of a
 simple candidate, validate it, and run its default settings. Compare
@@ -67,6 +68,7 @@ Do not treat the example as a verified population forecast.</code></pre>
 <tr><td><code>GET /api/models/catalog</code></td><td>Small index; supports search, category, offset and limit.</td></tr>
 <tr><td><code>GET /api/models</code></td><td>Legacy list of complete definitions.</td></tr>
 <tr><td><code>GET /api/models/{id}</code></td><td>Complete definition.</td></tr>
+<tr><td><code>POST /api/investigate</code></td><td>Inspect inputs and compare up to three bounded full-horizon runs at progressively smaller steps.</td></tr>
 <tr><td><code>POST /api/simulate</code></td><td>Submit <code>model</code> or <code>model_id</code> and optional <code>time_settings</code>.</td></tr>
 <tr><td><code>POST /api/analyze/statistics</code></td><td>Statistics for supplied simulation results.</td></tr>
 <tr><td><code>GET /api/models/{id}/export/xmile</code></td><td>XMILE download.</td></tr>
@@ -74,7 +76,7 @@ Do not treat the example as a verified population forecast.</code></pre>
 </tbody></table>
 <p>Existing create/update/delete and AI endpoints are retained. Server model storage is shared; it is not a private account vault. Do not put confidential information in public model definitions.</p>
 <h2>Imports and portability</h2>
-<p>JSON is the complete native format. Supported XMILE imports include scalar stocks, flows, auxiliaries, initial equations, time settings, graphical functions and diagram positions. Namespace quote styles and reciprocal time steps are understood. Continuous graphical functions clamp outside their range; extrapolating and discrete types retain their declared behavior. Unsupported arrays and nested models are rejected rather than silently discarded.</p>
+<p>JSON is the complete native format. Supported XMILE imports include scalar stocks, flows, auxiliaries, initial equations, time settings, graphical functions and diagram positions. Namespace quote styles and reciprocal time steps are understood. The optional run seed round-trips through a Stock &amp; Flow namespace extension; other tools may ignore this extension. Continuous graphical functions clamp outside their range; extrapolating and discrete types retain their declared behavior. Unsupported arrays and nested models are rejected rather than silently discarded.</p>
 <p>Model equations may use functions that another modeling tool does not implement. Check numerical agreement after moving a model between tools. See <a href="https://docs.oasis-open.org/xmile/xmile/v1.0/xmile-v1.0.html">the XMILE specification</a> and the repository tests for the supported subset.</p>
 <footer class="muted">Stock &amp; Flow · <a href="/">Editor</a> · <a href="https://stockandflow.org">Library</a> · <a href="https://github.com/keptlive/systems-modeler">Code and verification</a></footer>
 </body></html>

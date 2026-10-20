@@ -89,3 +89,63 @@ def test_optional_ai_provider_exception_is_not_exposed(monkeypatch):
     with pytest.raises(generator.LLMError,match='Connect your own agent') as caught:
         generator.call_llm([])
     assert 'private provider credential' not in str(caught.value)
+
+
+def test_seed_survives_storage_and_xmile_and_rejects_coercion(tmp_path, monkeypatch):
+    import pytest
+    from app.core.model import TimeSettings
+    from app.core.xmile_generator import generate_xmile
+    from app.core.xmile_parser import parse_xmile
+    monkeypatch.setattr(storage, "MODELS_DIR", str(tmp_path))
+    model = Model(time_settings={"random_seed": 0},
+                  variables=[{"name": "Draw", "equation": "RANDOM(0,1)"}])
+    saved = storage.create_model(model)
+    assert storage.get_model(saved.id).time_settings.random_seed == 0
+    assert parse_xmile(generate_xmile(model)).time_settings.random_seed == 0
+    for invalid in [True, 1.5, "42", -1, 4294967296]:
+        with pytest.raises(ValueError):
+            TimeSettings(random_seed=invalid)
+
+
+def test_investigate_api_preserves_model_and_reports_finer_grids(tmp_path, monkeypatch):
+    monkeypatch.setattr(storage, "MODELS_DIR", str(tmp_path))
+    model = Model(stocks=[{"id":"s","name":"X","initial_value":1}],
+                  flows=[{"name":"Growth","equation":"X","to_stock":"s"}],
+                  time_settings={"end":1,"dt":.25})
+    before = model.model_dump()
+    client = TestClient(app)
+    response = client.post('/api/investigate',json={"model":model.model_dump(mode="json")})
+    assert response.status_code == 200
+    report = response.json()
+    assert len(report["runs"]) == 3
+    assert [run["settings"]["dt"] for run in report["runs"]] == [.25,.125,.0625]
+    assert all(run["status"] == "completed" for run in report["runs"])
+    assert report["scientific_validation"] == "not established"
+    assert report["comparisons"][1]["maximum_scaled_stock_difference"] < report["comparisons"][0]["maximum_scaled_stock_difference"]
+    assert model.model_dump() == before and not list(tmp_path.iterdir())
+    assert client.post('/api/investigate',json={}).status_code == 422
+
+
+def test_seeded_api_run_replays_effective_seed():
+    client = TestClient(app)
+    model = {"variables":[{"name":"Draw","equation":"RANDOM(0,1)"}],
+             "time_settings":{"end":1,"dt":.25}}
+    first = client.post('/api/simulate',json={"model":model})
+    assert first.status_code == 200
+    seed = first.json()["random_seed"]
+    assert isinstance(seed,int)
+    model["time_settings"]["random_seed"] = seed
+    second = client.post('/api/simulate',json={"model":model})
+    assert second.json()["values"] == first.json()["values"]
+
+
+def test_scenario_receipt_records_actual_common_seed(monkeypatch):
+    from app import mcp_server
+    model = Model(variables=[{"name":"Draw","equation":"RANDOM(0,1)"}],
+                  time_settings={"end":1,"dt":.25,"random_seed":41})
+    monkeypatch.setattr(mcp_server, "resolve_model", lambda *args: model)
+    report = mcp_server.compare_scenarios("fixture", [{"name":"A"},{"name":"B"}], random_seed=42)
+    assert report["settings"]["random_seed"] == report["random_seed"] == 42
+    assert report["scenario_random_seeds"] == {"A":42,"B":42}
+    assert report["scenarios"]["A"] == report["scenarios"]["B"]
+    assert model.time_settings.random_seed == 41

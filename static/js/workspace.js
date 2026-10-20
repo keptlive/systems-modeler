@@ -23,6 +23,32 @@ function updateVariableToggles() {
     }
 }
 document.addEventListener('DOMContentLoaded', () => {
+    const welcome = document.createElement('section');
+    welcome.className = 'canvas-welcome'; welcome.setAttribute('aria-label', 'Start modeling');
+    const title = document.createElement('h2'); title.textContent = 'Explore how a system behaves.';
+    const intro = document.createElement('p');
+    intro.textContent = 'Start with a library model, or bring your agent to build one with you. Inspect the inputs, run it, then compare what changes.';
+    const actions = document.createElement('div'); actions.className = 'canvas-welcome-actions';
+    for (const [label, target] of [['Browse models','btn-library'],['Connect your agent','btn-connect-agent']]) {
+        const button = document.createElement('button'); button.textContent = label;
+        button.addEventListener('click', () => {
+            if (target==='btn-library') document.getElementById(target)?.click();
+            else document.querySelector('.agent-connect')?.click();
+        });
+        actions.appendChild(button);
+    }
+    const hint = document.createElement('small'); hint.textContent = 'Building by hand? Choose Stock, Flow or Var in the toolbar, then click the canvas.';
+    welcome.append(title,intro,actions,hint); document.getElementById('canvas-container').appendChild(welcome);
+    const updateWelcome = () => {
+        welcome.hidden = !!(App.model.stocks.length || App.model.flows.length || App.model.variables.length || App.mode !== 'select');
+    };
+    new MutationObserver(updateWelcome).observe(document.getElementById('canvas'),{childList:true,subtree:true});
+    document.addEventListener('click', updateWelcome);
+    for (const event of ['input','change','click','keydown']) {
+        document.addEventListener(event, () => queueMicrotask(() => Simulation.invalidateIfChanged()));
+    }
+    document.addEventListener('keydown', () => queueMicrotask(updateWelcome));
+    updateWelcome();
     for (const button of document.querySelectorAll('button[title]')) {
         const text = button.textContent.trim();
         if (!button.hasAttribute('aria-label') && (!text || /^[^\p{L}\p{N}]+$/u.test(text))) button.setAttribute('aria-label', button.title);
@@ -62,6 +88,12 @@ document.addEventListener('DOMContentLoaded', () => {
         for(const group of document.querySelectorAll('.property-group')) {
             const field=group.querySelector('input,select,textarea'),label=group.querySelector('label');
             if(field?.id && label)label.htmlFor=field.id;
+        }
+        for (const field of document.querySelectorAll('#prop-initial,#prop-initial-mobile')) {
+            const label=field.closest('.property-group')?.querySelector('label');
+            const selected=App.getSelectedElement();
+            const caption=selected?.equation?.trim() ? 'Fallback value (initial equation takes precedence)' : 'Initial value';
+            if(label && label.textContent!==caption)label.textContent=caption;
         }
         for(const node of document.querySelectorAll('#canvas g.stock,#canvas g.flow,#canvas g.variable')) {
             node.setAttribute('tabindex','0');node.setAttribute('role','button');

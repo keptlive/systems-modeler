@@ -18,6 +18,8 @@ def generate_xmile(model: Model) -> str:
     ET.SubElement(header, 'product', {'version': '1.1.0'}).text = 'Systems Modeler'
     ET.SubElement(header, 'created').text = datetime.now(timezone.utc).isoformat()
     specs = ET.SubElement(root, 'sim_specs', {'method': model.time_settings.integration_method})
+    if model.time_settings.random_seed is not None:
+        specs.set('{' + PROVENANCE_NS + '}random_seed', str(model.time_settings.random_seed))
     for tag, value in [('start', model.time_settings.start), ('stop', model.time_settings.end), ('dt', model.time_settings.dt)]:
         ET.SubElement(specs, tag).text = str(value)
     model_node = ET.SubElement(root, 'model')

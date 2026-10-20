@@ -11,6 +11,7 @@ from app.core.simulator import simulate
 parser = argparse.ArgumentParser()
 parser.add_argument("--output", required=True)
 parser.add_argument("--full", action="store_true", help="Run complete defaults rather than a 4-step smoke check")
+parser.add_argument("--random-seed", type=int, default=42, help="Fallback seed for reproducible stochastic audit runs")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 rows = []
@@ -24,15 +25,17 @@ for path in sorted((root / "models").rglob("*.json")):
         model = Model.model_validate_json(path.read_text())
         row["id"] = model.id
         ts = model.time_settings
+        if ts.random_seed is None:
+            ts = TimeSettings(**{**ts.model_dump(), "random_seed": args.random_seed})
         if not args.full:
-            ts = TimeSettings(start=ts.start, end=min(ts.end, ts.start + 4 * ts.dt),
-                              dt=ts.dt, integration_method=ts.integration_method)
+            ts = TimeSettings(**{**ts.model_dump(), "end": min(ts.end, ts.start + 4 * ts.dt)})
         result = simulate(model, ts)
-        row.update(status="passed", points=len(result.time), elements=len(result.values))
+        row.update(status="passed", points=len(result.time), elements=len(result.values), random_seed=result.random_seed)
     except Exception as exc:
         row.update(status="failed", error=str(exc))
     rows.append(row)
 report = {"scope": "full default runs" if args.full else "four-step numerical smoke checks",
+          "fallback_random_seed": args.random_seed,
           "engine_sha256": engine_hashes,
           "scientific_validation": "not established; inspect assumptions and source references",
           "seconds": round(time.monotonic() - started, 2), "counts": dict(Counter(r["status"] for r in rows)),

@@ -43,8 +43,8 @@ def inspect_inputs(model: Model, numerical_check=True) -> dict:
     if numerical_check:
         try:
             ts = model.time_settings
-            short = TimeSettings(start=ts.start, end=min(ts.end, ts.start + ts.dt),
-                                 dt=min(ts.dt, ts.end - ts.start), integration_method=ts.integration_method)
+            short = TimeSettings(**{**ts.model_dump(), "end": min(ts.end, ts.start + ts.dt),
+                                    "dt": min(ts.dt, ts.end - ts.start)})
             simulate(model, short)
             numerical = "completed_one_step"
         except Exception as exc:

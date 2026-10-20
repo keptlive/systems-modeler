@@ -18,7 +18,7 @@ const Simulation = {
         const start = ts.start ?? 0;
         const end = ts.end ?? 100;
         const dt = ts.dt ?? 0.25;
-        return { start, end, dt, integration_method: ts.integration_method || 'euler' };
+        return { start, end, dt, integration_method: ts.integration_method || 'euler', random_seed:ts.random_seed ?? null };
     },
 
     init() {
@@ -49,22 +49,35 @@ const Simulation = {
             mobileBtn.textContent = '⏳ Running...';
         }
 
+        let snapshot, generation;
         try {
             this.clear();
+            snapshot = JSON.stringify(App.modelSnapshot());
+            generation = this.generation;
             const response = await fetch('/api/simulate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model: App.modelSnapshot(), time_settings: this.getTimeSettings() })
+                body: JSON.stringify({ model: JSON.parse(snapshot), time_settings: this.getTimeSettings() })
             });
 
+            if (generation !== this.generation || snapshot !== JSON.stringify(App.modelSnapshot())) {
+                App.showToast('The model changed while this run was computing. Run the current inputs again.', 'info');
+                return;
+            }
             if (!response.ok) {
                 const error = await response.json();
                 throw new Error(error.detail || 'Simulation failed');
             }
 
-            await this.acceptResults(await response.json());
+            const result = await response.json();
+            if (generation !== this.generation || snapshot !== JSON.stringify(App.modelSnapshot())) {
+                App.showToast('The model changed while this run was computing. Run the current inputs again.', 'info');
+                return;
+            }
+            await this.acceptResults(result);
 
         } catch (error) {
+            if (generation !== this.generation || snapshot !== JSON.stringify(App.modelSnapshot())) return;
             this.lastError=error.message;
             console.error("Simulation error:", error);
             if (this.resultsContent) {
@@ -90,9 +103,21 @@ const Simulation = {
     },
 
     async acceptResults(results) {
+        this.generation = (this.generation || 0) + 1;
+        const generation = this.generation;
+        const model = JSON.parse(JSON.stringify(App.modelSnapshot()));
+        this.resultModel = model;
         this.lastError=null;
         this.results = results;
         this.displayResults();
+        let receipt = document.getElementById('run-seed-receipt');
+        if (!receipt) {
+            receipt = document.createElement('p'); receipt.id = 'run-seed-receipt';
+            receipt.className = 'run-seed-receipt';
+            document.querySelector('.results-tabs')?.before(receipt);
+        }
+        receipt.hidden = results.random_seed == null;
+        if (!receipt.hidden) receipt.textContent = `Random seed: ${results.random_seed} · Use this in Settings to replay.`;
 
         // Update advanced charts module
         if (typeof Charts !== 'undefined') {
@@ -112,26 +137,55 @@ const Simulation = {
         // Update analytics module
         if (typeof Analytics !== 'undefined') {
             await Analytics.setResults(this.results);
+            if (generation !== this.generation) return;
+            if (this.modelSignature(model) !== this.modelSignature(App.model)) {
+                this.clear('Inputs changed. Run the current model to see results.');
+                return;
+            }
             Analytics.render();
         }
 
         // Update AI agent module
         if (typeof AIAgent !== 'undefined') {
-            AIAgent.setContext(App.model, this.results);
+            AIAgent.setContext(model, results);
             AIAgent.render();
         }
 
     },
 
+    modelSignature(model) {
+        // Moving nodes or changing the title does not change a trajectory.
+        return JSON.stringify({
+            stocks:(model.stocks || []).map(({id,name,equation,initial_value})=>({id,name,equation,initial_value})),
+            flows:(model.flows || []).map(({id,name,equation,from_stock,to_stock})=>({id,name,equation,from_stock,to_stock})),
+            variables:(model.variables || []).map(({id,name,equation})=>({id,name,equation})),
+            tables:model.tables || [], time_settings:model.time_settings
+        });
+    },
+
+    invalidateIfChanged() {
+        if (this.results && this.resultModel && this.modelSignature(this.resultModel) !== this.modelSignature(App.model)) {
+            this.clear('Inputs changed. Run the current model to see results.');
+        }
+    },
 
     /**
      * Clear results
      */
-    clear() {
+    clear(message = 'Run a simulation to see results') {
+        this.generation = (this.generation || 0) + 1;
         this.results = null;
+        this.resultModel = null;
         this.lastError=null;
+        const receipt = document.getElementById('run-seed-receipt');
+        if (receipt) receipt.hidden = true;
+        document.querySelector('.mobile-results-container .run-seed-receipt')?.remove();
+        document.getElementById('chart-container-mobile')?.replaceChildren();
+        document.getElementById('var-chips-mobile')?.replaceChildren();
+        const mobileSummary = document.getElementById('results-summary-mobile');
+        if (mobileSummary) mobileSummary.textContent = message;
         if (this.resultsContent) {
-            this.resultsContent.innerHTML = '<p class="no-results">Run a simulation to see results</p>';
+            this.resultsContent.innerHTML = `<p class="no-results">${App.escapeHtml(message)}</p>`;
         }
         document.getElementById('chart-variables')?.replaceChildren();
         if (this.chartContainer) {
@@ -142,8 +196,10 @@ const Simulation = {
             if (Charts.container) Charts.container.innerHTML = '';
         }
         if (typeof Analytics !== 'undefined') {
+            Analytics.requestVersion = (Analytics.requestVersion || 0) + 1;
             Analytics.results = null;
             Analytics.statistics = null;
+            Analytics.error = null;
             Analytics.render();
         }
         if (typeof AIAgent !== 'undefined') {
@@ -162,10 +218,10 @@ const Simulation = {
         const timeSteps = time.length;
         const startTime = time[0];
         const endTime = time[time.length - 1];
-        const dt = timeSteps > 1 ? (time[1] - time[0]).toFixed(2) : 0;
+        const dt = this.resultModel?.time_settings?.dt ?? (timeSteps > 1 ? time[1] - time[0] : 0);
 
         let html = `
-            <p><strong>Time:</strong> ${startTime} → ${endTime.toFixed(1)} (${timeSteps} pts, dt=${dt})</p>
+            <p><strong>Time:</strong> ${startTime} → ${endTime} (${timeSteps} pts, nominal dt=${dt})</p>
             <p><strong>Variables:</strong> ${varNames.length}</p>
             <div style="margin-top: 0.5rem; font-size: 0.8rem;">
         `;

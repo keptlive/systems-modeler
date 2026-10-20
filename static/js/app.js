@@ -409,6 +409,7 @@ const App = {
 
         return `
             <div class="mobile-results-container">
+                ${hasResults && Charts.results.random_seed != null ? `<p class="run-seed-receipt">Random seed: ${this.escapeHtml(String(Charts.results.random_seed))} · Use this in Settings to replay.</p>` : ''}
                 <div class="mobile-results-tabs" id="results-tabs-mobile">
                     <button class="mobile-results-tab active" data-tab="chart-mobile">📊 Chart</button>
                     <button class="mobile-results-tab" data-tab="analytics-mobile">📈 Stats</button>
@@ -1196,6 +1197,7 @@ const App = {
         }
         if (element) {
             element[property] = value;
+            if (typeof Simulation !== 'undefined') Simulation.invalidateIfChanged();
             Canvas.render();
         }
     },
@@ -1391,6 +1393,7 @@ const App = {
             endInput.value = ts.end ?? 100;
             dtInput.value = ts.dt ?? 0.25;
             document.getElementById('sim-method').value = ts.integration_method || 'euler';
+            document.getElementById('sim-seed').value = ts.random_seed ?? '';
             updateSteps();
         };
 
@@ -1466,16 +1469,31 @@ const App = {
                 this.showToast('Use a positive time step, an end after the start, and at most 10,000 steps.', 'error');
                 return;
             }
-            this.model.time_settings = {
-                start,
-                end,
-                dt: parseFloat(dtInput.value),
-                integration_method: document.getElementById('sim-method').value
-            };
+            try { this.model.time_settings = this.readSimulationSettings(); }
+            catch (error) { this.showToast(error.message, 'error'); return; }
             this.syncStepCount();
             closeModal();
             Simulation.run();
         });
+    },
+
+    readSimulationSettings() {
+        if (['sim-start','sim-end','sim-dt'].some(id => document.getElementById(id).value.trim() === '')) {
+            throw new Error('Enter a start, end and time step before running.');
+        }
+        const start = Number(document.getElementById('sim-start').value);
+        const end = Number(document.getElementById('sim-end').value);
+        const dt = Number(document.getElementById('sim-dt').value);
+        if (![start,end,dt].every(Number.isFinite) || end<=start || dt<=0 || dt>end-start || Math.ceil((end-start)/dt)>10000) {
+            throw new Error('Use a positive time step, an end after the start, and at most 10,000 steps.');
+        }
+        const seedText = document.getElementById('sim-seed').value.trim();
+        const random_seed = seedText === '' ? null : Number(seedText);
+        if (random_seed !== null && (!Number.isInteger(random_seed) || random_seed<0 || random_seed>4294967295)) {
+            throw new Error('Random seed must be a whole number from 0 to 4,294,967,295.');
+        }
+        return {...this.model.time_settings,start,end,dt,random_seed,
+                integration_method:document.getElementById('sim-method').value};
     },
 
     syncStepCount() {

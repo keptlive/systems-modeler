@@ -85,8 +85,9 @@ def test_stateful_calls_keep_initial_values_and_independent_state():
     r = simulate(m)
     assert r.values["A"] == pytest.approx([0, 2.5, 4.375])
     assert r.values["B"] == pytest.approx([5, 6.25, 7.1875])
-    with pytest.raises(EquationError, match="unsupported"):
-        simulate(m, TimeSettings(end=1, integration_method="rk4"))
+    rk = simulate(m, TimeSettings(end=1, dt=.05, integration_method="rk4"))
+    assert rk.values["A"][-1] == pytest.approx(10*(1-math.exp(-.5)), rel=1e-6)
+    assert rk.values["B"][-1] == pytest.approx(10-5*math.exp(-.5), rel=1e-6)
 
 
 def test_storage_and_xmile_keep_lookup_tables(tmp_path, monkeypatch):

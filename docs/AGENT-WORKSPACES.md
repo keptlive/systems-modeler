@@ -29,3 +29,8 @@ The built-in AI draft tools are retained for compatibility and are optional. No 
 ## Verification
 
 `tests/test_workspaces.py` checks session isolation, expiry, bounded memory, exact-result publication, explicit selection, transactional preservation, stale revisions, token transport and no saved-model writes. `scripts/check_mcp.py` exercises the page tools through real HTTP/SSE clients and verifies an explicit error for page tools in isolated stdio. `scripts/check_page_workspace.py` performs a real MCP → browser → acknowledgement loop, including changed equations, retained source/units and an exact known result. Its handoff file contains a temporary secret and must not be committed.
+## Investigating and replaying a run
+
+Read `systems://engine` for capabilities and work limits. Use `investigate_model` on the model returned by `inspect_workspace` to compare full-horizon grids, inspect undefined symbols and domain leads, and obtain exact model/engine hashes. This does not modify the workspace. Use `set_workspace_view(section="inputs")` to show the searchable input report on the page.
+
+Set `time_settings.random_seed` when editing a workspace to replay a stochastic run. `run_workspace` returns its effective `random_seed`; the same receipt and exact result are delivered to the page. Optional server AI is unnecessary. For scenario comparisons, all scenarios share the recorded run seed and omitted seeds receive one common generated seed; explicit equation seeds retain precedence. This controls noise for identical call sites, but different time steps still do not define a coupled stochastic convergence experiment.

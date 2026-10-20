@@ -11,8 +11,8 @@ MCP Streamable HTTP: https://stockandflow.live/mcp/
 Legacy SSE: https://stockandflow.live/mcp/sse
 Transport information: https://stockandflow.live/mcp/info
 Local stdio: python -m app.mcp_server
-Tools: list_models, get_model, validate_model, simulate_model, compare_scenarios, analyze_model, export_model_xmile, generate_model_from_description, modify_existing_model.
-Resources: systems://guide and systems://models/{id}.
+Tools: list_models, get_model, validate_model, investigate_model, simulate_model, compare_scenarios, analyze_model, export_model_xmile, generate_model_from_description, modify_existing_model.
+Resources: systems://guide, systems://engine, systems://workspace-guide and systems://models/{id}.
 Prompt: investigate_system.
 Numerical tools do not write models or call AI providers. AI tools return unsaved drafts.
 
@@ -20,4 +20,4 @@ Agent-driven pages (HTTP/SSE): open_workspace returns a private page_url and wor
 
 Always inspect initial values, equations, flow endpoints, units and sources. A completed numerical run does not establish scientific validity. Library defaults include unresolved references, unsupported functions and unstable scenarios. Public status badges are bound to exact model-file hashes.
 
-Euler and RK4 honor configured start, end and dt. Delay/smoothing models require Euler. Bounds: 500 explicit elements, 10,000 intervals and one million element-intervals including hidden stages. Invalid inputs and unresolved equations produce explicit errors. XMILE import supports a scalar subset and rejects unsupported behavior such as arrays, queues, conveyors and explicit nonnegative constraints.
+Euler and RK4 honor configured start, end and dt. Smoothing and fixed-duration material delays support Euler/RK4. Fixed history delays and random functions require Euler. Set time_settings.random_seed (integer 0..4294967295) for reproducible stochastic runs; results return the effective random_seed. POST /api/investigate and investigate_model compare full horizons at dt, dt/2 and dt/4, without modifying inputs; stochastic path convergence is excluded. Reports include model/engine hashes, missing definitions, domain and topological conservation leads. Bounds: 500 explicit elements, 10,000 intervals and one million work units including hidden stages and random calls (RK4 charges five evaluations per interval). Invalid inputs and unresolved equations produce explicit errors. XMILE import supports a scalar subset and rejects unsupported behavior such as arrays, queues, conveyors and explicit nonnegative constraints.

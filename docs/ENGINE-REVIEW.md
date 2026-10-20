@@ -1,6 +1,6 @@
 # Independent numerical-engine review — 2026-10-20
 
-Scope: `the repository`, branch `codex/restore-sites-mcp`, production baseline `fc8dd03` plus the restoration changes. This review began independently and read-only. The parent subsequently assigned the reviewer exclusive implementation of `app/core/integration.py`, `app/core/equations.py`, this report and `tests/test_engine_review.py`. No remote deployment, provider call or library-model equation edit was made by this reviewer.
+Scope: the repository's shared numerical engine and restoration changes. An independent review was followed by implementation and regression checks for integration, equation evaluation and engine behavior.
 
 ## Answer to the central question
 
@@ -78,10 +78,10 @@ Running bare `pytest` also discovers legacy root `test_smart.py` / `test_tuner*.
 
 Remaining deliberate limits:
 
-- RK4 rejects delay/smooth/random functions instead of pretending to provide RK4 semantics for unsupported hidden state or stochastic operations.
+- RK4 now integrates exponential delay/smooth stages together with visible stocks. Fixed-history delays and stochastic calls remain explicitly Euler-only; no stochastic differential-equation interpretation is claimed.
 - Material delays require fixed duration and fixed order. Information smoothing allows changing positive finite duration. Nonpositive durations fail explicitly.
 - Fixed delays use sample-and-hold history; off-grid delay accuracy is limited by DT. Changing fixed-delay duration is unsupported.
-- Random functions are unseeded by the model schema and should not be used to promise repeatable stochastic experiments.
+- Supported random functions use isolated per-run/per-call streams, explicit seeds and a returned effective run seed. Reproducibility is defined for this engine/runtime; identical seeds do not imply cross-vendor bit identity or coupled paths under timestep changes.
 - Finite results, acceptable domain values, numerical convergence, unit consistency, source fidelity and empirical validity are separate checks. Negative stocks are not globally clamped because some quantities legitimately have a sign.
 - Full-model unsupported constructs, scientific source citations and broader MCP/API workflows remain the parent's investigation/release responsibility.
 
@@ -99,12 +99,61 @@ Targeted full runs after these changes:
 - `hivaids-progression-model-epi`: now parses its `lambda` parameter and runs to t=7.9, where infection becomes nonfinite. This exposes a subsequent model/step investigation; it is not a reason to alter the stored equations.
 - `heat-transfer-and-diffusion-model-phy`: retains explicit missing `Interior_Temperature` reference failure; adding MOD cannot repair missing model definitions.
 
-`RANDOM(min,max[,seed])` and nonstandard zero-argument `RANDOM()` remain unsupported. Proper support requires isolated per-run/per-call RNG streams, seed lifecycle validation, and repeated-evaluation caching so dependency resolution or stateful inputs cannot consume extra draws at one simulation time. Aliasing the function directly to global `random.uniform` would conceal these semantics. Existing `RANDOM_UNIFORM`/`RANDOM_NORMAL` compatibility functions are unchanged and remain unseeded at the model-schema level.
+The subsequent stochastic/RK4 pass below implements the previously deferred seeded stochastic runtime. Nonstandard zero-argument `RANDOM()` remains explicitly unsupported; no library equation was rewritten to assume a distribution.
+
+## Seeded stochastic evaluation and hidden-state RK4
+
+This iteration implements `RANDOM(min,max[,seed])`, `RANDOM_UNIFORM(min,max[,seed])`, `NORMAL(mean,sd[,seed])` and `RANDOM_NORMAL(mean,sd[,seed])`. Function seeds must be integer-valued numbers in `[0,2**32)`, with booleans and fractional values rejected. A changing function seed causes an explicit error rather than silently resetting its sequence. Bounds and distribution parameters must be finite; reversed uniform bounds and negative normal deviation are errors. Zero-width uniform distributions remain exact even at the largest finite floating-point value.
+
+Each run creates an isolated runtime and returns its effective `random_seed` when the model contains stochastic calls. When the caller omits a run seed, a fresh 32-bit seed is chosen and can be replayed through `TimeSettings.random_seed`. Each call site has a separate stream; explicitly supplied function seeds initialize that stream directly, while omitted function seeds derive stable streams from the run seed and equation/call identity. Reordering equations or adding unrelated stochastic equations does not perturb existing streams. No process-global RNG is read or mutated.
+
+A call retains one unit draw for the current logical timestep/time. Dependency retries, initial hidden-state evaluation and derivative evaluation reuse it. Conditional branches remain lazy: an inactive direct random call consumes no draws until used. A hidden smooth/delay continues evolving even when its output's IF branch is inactive, so its input noise is still sampled when its derivative is needed. These rules are tested explicitly. Uniform draws use Python's isolated `random.Random.random()` stream; normal draws use the same isolated generator's Gaussian operation. The contract promises replay for this implementation/runtime, not identical sequences in every vendor or Python version.
+
+RK4 now treats every exponential delay/smooth stage as an additional stock and evaluates four simultaneous visible/hidden derivative stages. It supports first-/third-/N-order fixed-duration material delays, information smoothing with positive changing duration, explicit feedback initialization, and coupled visible/hidden equations. Verification covers closed-form ramp/step/feedback responses, fourth-order convergence, a damped visible/hidden oscillator, and exact conservation of origin + destination + material in transit. Fixed-history `DELAY`/`DELAY_FIXED` and all stochastic calls still require Euler; RK4 is not silently substituted for an unverified stochastic or history algorithm.
+
+Work bounds count hidden stages and stochastic call sites. RK4 charges five evaluations per step (four derivative stages plus accepted output), with a one-million-work-unit ceiling in addition to the 10,000-step and 500-element limits. Flow connectivity is compiled once; derivative accumulation now scales with the number of flows rather than stocks multiplied by flows. Existing fixed-history queues retain only the existing bounded simulation history, and random caches retain one draw per call rather than all past draws.
+
+The compatibility sweep also caught and repaired MOD function disambiguation after IF/THEN/NOT; e.g. `IF MOD(TIME,7)<5 THEN ...` now remains a function call. XMILE NOT now has its specified unary arithmetic precedence instead of Python's lower-precedence logical-not grammar. Internal unary AST representation is restored to external NOT syntax during export transformations.
+
+Latest focused command: `.venv/bin/pytest -q tests/test_engine_review.py tests/test_regressions.py tests/test_xmile_features.py tests/test_xmile_roundtrip.py tests/test_input_validation.py`: **180 passed**, one existing Pydantic-settings warning, 2.39 seconds. Parent-owned tests now also check the new capability/seed schema; exact release verification should run again against the final complete source snapshot.
+
+Targeted source-unchanged library evidence:
+
+| Model | Result with this iteration |
+|---|---|
+| `uncertain-seiar-covid19-epi` | Full 1,461-point run with seed 42; two runs match bit for bit. |
+| `sird-ekf-covid19-epi` | Full 721-point run with seed 42; two runs match bit for bit. |
+| `weitzman-prices-quantities-eco` | Full 51-point run with seed 42; two runs match bit for bit. |
+| `skill-learning-forgetting-edu` | Full 401-point default run after MOD disambiguation. |
+| `diabetes-glucose-regulation-hea` | Full 241-point default run after MOD disambiguation. |
+| `learning-and-forgetting-curves-model-edu` | MOD now parses; missing model parameters remain explicit. |
+| `inventory-and-supply-chain-dynamics-eco` | Full 401-point Euler and RK4 runs, including DELAY3. |
+| `sterman-expectation-formation-cla` | Full 401-point Euler and RK4 runs, including DELAY1. |
+| `service-quality-dynamics-man` | Full 313-point Euler and RK4 runs, including SMOOTH. |
+
+### Concrete remaining coverage and source backlog
+
+These counts come from a syntax/function scan of the 1,078 unchanged JSON models and the previous 929-completed/149-failed full-run candidate list. They are impact leads, not a replacement for the parent's fresh source-hashed full audit. The previous investigation had 160 union entries; changes above supersede some classifications.
+
+| Remaining feature or investigation | Exact observed impact | Required next evidence / boundary |
+|---|---|---|
+| Nonstandard `RANDOM()` | 1 model: `wright-fisher-genetic-drift-evo` | Recover the original dialect/source before assuming U(0,1). Current error names the unsupported arity. |
+| Nonstandard single-argument `STEP` | 2 models: `sterman-workforce-hiring-man`, `lac-operon-gene-regulation-phy` | OASIS STEP takes height and start time; verify whether the source dialect intended a unit-height step. No guessed default. |
+| Array/subscript integration | 1 model: `subscripted-population-model-massachusetts-towns-eco` | The supplied initial array also contains an ellipsis, so array support alone cannot recover missing population data. |
+| Inline lookup dialect / scalar auxiliary invoked as a function | `rookies-and-experts-workforce-model-man`; related missing graph in `workforce-model-eco` | One model has explicit inline pairs but later calls a scalar auxiliary as a graph; establish original declared graphical-function semantics rather than ignoring the argument. Current errors remain explicit. |
+| Missing application-specific graph functions | 6 names across 5 models: `Effect_of_Pressure_on_Hiring` (2 workforce models), `Fossil_Emission_Scenario` (`global-carbon-cycle-model-cli`), `CO2_Scenario` (`sea-level-rise-and-ice-sheet-dynamics-model-cli`), `Resource_Usage_From_Industry` and `Resource_Extraction_Fraction` (`world3-non-renewable-resources-sector-cla`) | These are missing model-specific functions/tables, not omitted standard math built-ins. Recover authoritative tables and inputs. |
+| Request workload exceeds service policy | 6 old default failures: FitzHugh–Nagumo, Morris–Lecar, Oregonator, double pendulum, nuclear plant, simple pendulum | Do not weaken global request limits or silently change DT/horizon; a separately bounded long-running job mode is a possible extension. |
+| Malformed or incomplete expression data | `full-beer-model` placeholders and `1/R ALPHA`; unquoted spaced symbol in `sales-agency-fit-adjustment`; `IF THEN ELSE(...)` in `school-closure-initial-model`; unmatched closing parenthesis in `labor-market-dynamics-model-eco` | Recover/verify source equations. Tokenization must not invent the intended formula. |
+| Missing named lookup tables | Examples include hares/lynxes and capability trap | Their stored table placeholders are zero-valued scalar variables and contain no points; no interpolation implementation can recover erased data. |
+| Ambiguous names / reserved simulation controls | 7 old alias collisions and `agricultural-water-demand-cli`'s DT element | Resolve each against source intent; the engine cannot choose between colliding quantities or silently shadow simulation DT. |
+| Numerical instability, domain failure, dependency cycles | 65 union-investigation entries under the previous engine | Use full-horizon timestep/solver diagnostics and original equations/units. An adaptive solver or implicit method may be a future feature, but cannot be claimed to fix undefined formulas or negative physical quantities without evidence. |
+| Fixed-history delay RK4 and changing material-delay duration | Explicitly unsupported | Needs a verified history interpolation/discontinuity algorithm or material-conserving variable-delay design. Exponential delays are now covered by RK4. |
+| Remaining unused XMILE standard functions / units algebra | No specific failing library model currently identified by the scan | Examples include INIT/PREVIOUS, additional statistical distributions and dimensional algebra. Implement only with exact semantics and regressions; current errors are explicit. |
 
 ## Exact reviewer-owned source snapshot
 
 SHA-256 at handoff:
 
-- `app/core/integration.py`: `087ca590ea505d29494aa6827a1ca9df724cba0d1f53f3551fa1a6c927ef1eb4`
-- `app/core/equations.py`: `ea23e27fc6d534389971d32399b109d11f415137c7d9c7133a80fba4b44a8f25`
-- `tests/test_engine_review.py`: `8c47940cc6cbedc4d49dc3ed8c6f75ec44198f2cab5fb9c53475254602076a0f`
+- `app/core/integration.py`: `3a9b7030f3a269918d115497018c2eca7ed62f35409da5677d3cf12c7f1a4590`
+- `app/core/equations.py`: `1e967ef7d52e8aaac3a64b64eff562b9a22041373f995de4f1284cf3bb60dab1`
+- `tests/test_engine_review.py`: `9a3a5f15a78ee823c152798d694ad0f5c5cc386ca30879831a41c5bd9fc319ef`

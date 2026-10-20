@@ -36,6 +36,14 @@ async def exercise(read, write, pages=True):
         assert payload(await session.call_tool("get_model", {"model_id": mid}))["id"] == mid
         validation = payload(await session.call_tool("validate_model", {"model_json": MODEL}))
         assert validation["valid"]
+        investigation = payload(await session.call_tool("investigate_model", {"model_json": MODEL}))
+        assert len(investigation["runs"]) == 3
+        assert investigation["baseline"]["status"] == "completed"
+        random_model = {"variables":[{"name":"Draw","equation":"RANDOM(0,1)"}],
+                        "time_settings":{"end":1,"dt":.25}}
+        random_run = payload(await session.call_tool("simulate_model", {"model_json": random_model}))
+        replay = payload(await session.call_tool("simulate_model", {"model_json":random_model,"random_seed":random_run["random_seed"]}))
+        assert random_run["data"] == replay["data"]
         sim = payload(await session.call_tool("simulate_model", {"model_json": MODEL, "max_points": 3}))
         assert sim["time_range"] == [5, 6] and sim["data"]["time"] == [5, 5.5, 6]
         assert abs(sim["summary"]["X"]["final"] - 110.5170918) < .00001
@@ -59,6 +67,8 @@ async def exercise(read, write, pages=True):
         resource = await session.read_resource("systems://guide")
         assert resource.contents
         assert (await session.read_resource('systems://workspace-guide')).contents
+        contract = await session.read_resource('systems://engine')
+        assert 'random_seed' in contract.contents[0].text
         model_resource = await session.read_resource(f"systems://models/{mid}")
         assert model_resource.contents
         prompts = await session.list_prompts()

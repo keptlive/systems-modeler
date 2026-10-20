@@ -9,3 +9,11 @@ Browser acceptance uses the available Chromium in-app browser at desktop, tablet
 Automated checks: `node scripts/check_frontend.cjs` parses all source scripts and checks linear/partial-interval derivatives and constant-series classification. API/engine tests and real MCP client checks are documented in TESTING.md.
 
 Final browser acceptance also covered a manually drawn unsaved model (initial stock100 retained as100), explicit equations/units editing, and a successful run followed by an invalid initial equation. The failure state removes old chart values and presents the actual unresolved-symbol diagnostic on mobile. The agent/page loop was tested locally and over public HTTPS, including actual view acknowledgement, preserved source/units and an explicit concurrent-draft choice.
+
+## Version 1.3 investigation and polish
+
+Preserved the existing editor/AI/library/chart/import/export paths. Added an empty-canvas start with library and agent entry points, direct Inspect action, searchable equation cards, element selection from findings, source links, diagnostic disclosures and a downloadable snapshot report. Mobile retains inspection through Settings. Check inputs uses edited settings without silently applying them. Computed stock initialization is labeled as overriding the numeric fallback.
+
+Real Chromium acceptance at 1280×800, 1024×768 and 390×844 covered library search/import, Greenshields investigation at original and finer grids, equation filtering and selection, manual parameter editing, and removal of stale chart/analytics outputs. A seeded stochastic SEIAR run completed on the phone layout and displayed effective seed42. Integration tests verify replay through REST and all MCP transports. Responsive emulation remains distinct from physical-device/Safari/Firefox acceptance.
+
+A reproduced asynchronous race could pair an earlier result with newly edited equations after statistics returned. Results now retain their exact model snapshot; generation guards and input invalidation prevent that mismatch, and clearing results invalidates pending statistics. `node scripts/check_simulation_state.cjs` checks delayed completion, edits, clearing, and sub-millisecond summary precision. Saved runs remain available for intentional comparison.

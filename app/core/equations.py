@@ -189,11 +189,13 @@ SAFE_FUNCTIONS: dict[str, Callable] = {
 
 # Functions that require simulation context (time, dt)
 # These are handled specially by the evaluator
+STOCHASTIC_FUNCTIONS = {"RANDOM", "RANDOM_UNIFORM", "RANDOM_NORMAL", "NORMAL"}
+
 STATEFUL_ALIASES = {"SMTH1": "SMOOTH", "SMTH3": "SMOOTH3", "SMTHN": "SMOOTH_N",
                     "DELAYN": "DELAY_N", "DELAY": "DELAY_FIXED"}
 STATEFUL_FUNCTIONS = {"DELAY1", "DELAY3", "DELAY_N", "DELAY_FIXED",
                       "SMOOTH", "SMOOTH3", "SMOOTH_N"} | set(STATEFUL_ALIASES)
-CONTEXT_FUNCTIONS = {"STEP", "PULSE", "RAMP", "LOOKUP", "WITH_LOOKUP"} | STATEFUL_FUNCTIONS
+CONTEXT_FUNCTIONS = {"STEP", "PULSE", "RAMP", "LOOKUP", "WITH_LOOKUP"} | STATEFUL_FUNCTIONS | STOCHASTIC_FUNCTIONS
 
 SAFE_CONSTANTS: dict[str, float] = {
     "pi": math.pi,
@@ -206,6 +208,50 @@ class EquationError(Exception):
     pass
 
 
+def validate_random_seed(value):
+    """XMILE seeds are integer-valued numbers in [0, 2**32)."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise EquationError("Random seed must be an integer between 0 and 2**32-1")
+    if not 0 <= value < 2**32 or not math.isfinite(value) or value != int(value):
+        raise EquationError("Random seed must be an integer between 0 and 2**32-1")
+    return int(value)
+
+
+class RandomRuntime:
+    """Isolated per-run, per-call RNG streams with one unit draw per output time.
+
+    Explicit function seeds initialize independent streams directly. Otherwise a
+    stable hash of the run seed and call identity gives order-independent streams.
+    Only the current logical timestep's draw is retained for each call, so retries
+    and hidden-state evaluation reuse noise without growing history with time.
+    """
+    def __init__(self, seed=None):
+        self.seed = random.SystemRandom().randrange(2**32) if seed is None else validate_random_seed(seed)
+        self.epoch = 0
+        self.streams = {}
+
+    def unit_sample(self, key, kind, explicit_seed=None, at_time=None):
+        import hashlib
+        seed = validate_random_seed(explicit_seed) if explicit_seed is not None else None
+        if key not in self.streams:
+            if seed is None:
+                identity = (str(self.seed) + ":" + key).encode("utf-8")
+                stream_seed = int.from_bytes(hashlib.sha256(identity).digest(), "big")
+            else:
+                stream_seed = seed
+            self.streams[key] = {"seed": seed, "generator": random.Random(stream_seed),
+                                 "epoch": None, "sample": None}
+        stream = self.streams[key]
+        if seed != stream["seed"]:
+            raise EquationError("Changing a random function's seed during a run is unsupported")
+        epoch = (self.epoch, at_time)
+        if stream["epoch"] != epoch:
+            generator = stream["generator"]
+            stream["sample"] = generator.random() if kind == "uniform" else generator.gauss(0, 1)
+            stream["epoch"] = epoch
+        return stream["sample"]
+
+
 class SimulationContext:
     """
     Context for simulation that provides access to time, dt, lookup tables,
@@ -214,7 +260,7 @@ class SimulationContext:
     def __init__(self, time: float = 0.0, dt: float = 0.25,
                  tables: Optional[dict[str, list[tuple[float, float]]]] = None,
                  delay_state: Optional[dict] = None,
-                 smooth_state: Optional[dict] = None):
+                 smooth_state: Optional[dict] = None, random_runtime=None):
         self.time = time
         self.dt = dt
         self.tables = tables if tables is not None else {}
@@ -222,6 +268,7 @@ class SimulationContext:
         self.smooth_state = smooth_state if smooth_state is not None else {}
         self.table_types = {}
         self.equation_key = ""
+        self.random_runtime = random_runtime if random_runtime is not None else RandomRuntime()
 
 
 ENCODED_IDENTIFIER_PREFIX = "__xmile_id_"
@@ -251,7 +298,10 @@ def restore_identifiers(expression):
         value = token.string
         if token.type == tokenize.NAME and value.startswith(ENCODED_IDENTIFIER_PREFIX):
             value = json.dumps(decode_identifier(value), ensure_ascii=False)
-        output.append((token.type, value))
+        if token.type == tokenize.OP and value in ("~", "%"):
+            output.append((tokenize.NAME, "NOT" if value == "~" else "MOD"))
+        else:
+            output.append((token.type, value))
     return tokenize.untokenize(output).strip()
 
 
@@ -330,7 +380,7 @@ class SafeEvaluator(ast.NodeVisitor):
 
     def visit_UnaryOp(self, node: ast.UnaryOp) -> float:
         op_type = type(node.op)
-        if op_type is ast.Not:
+        if op_type in (ast.Not, ast.Invert):
             return float(not self.visit(node.operand))
         if op_type not in SAFE_OPERATORS:
             raise EquationError(f"Unsupported unary operator: {op_type.__name__}")
@@ -352,6 +402,9 @@ class SafeEvaluator(ast.NodeVisitor):
                 raise EquationError("A graphical function requires one input")
             return lookup_interp(self.visit(node.args[0]), self.context.tables[table_name],
                                  self.context.table_types.get(table_name, "extrapolate"))
+
+        if func_name_upper in STOCHASTIC_FUNCTIONS:
+            return self._random_value(func_name_upper, node)
 
         # Conditionals must evaluate only the selected branch.
         if func_name_upper in ("IF", "IF_THEN_ELSE"):
@@ -380,6 +433,34 @@ class SafeEvaluator(ast.NodeVisitor):
             return SAFE_FUNCTIONS[actual_func_name](*args)
         except (ValueError, TypeError) as e:
             raise EquationError(f"Function error in {func_name}: {e}")
+
+    def _random_value(self, function, node):
+        if not 2 <= len(node.args) <= 3:
+            raise EquationError(f"{function} requires 2 or 3 arguments; zero-argument RANDOM is unsupported")
+        parameters = [float(self.visit(argument)) for argument in node.args[:2]]
+        if not all(math.isfinite(parameter) for parameter in parameters):
+            raise EquationError("Random distribution parameters must be finite")
+        seed = None
+        if len(node.args) == 3:
+            if isinstance(node.args[2], ast.Constant) and isinstance(node.args[2].value, bool):
+                raise EquationError("Random seed must be an integer, not a boolean")
+            seed = validate_random_seed(self.visit(node.args[2]))
+        kind = "normal" if function in ("RANDOM_NORMAL", "NORMAL") else "uniform"
+        first, second = parameters
+        if kind == "uniform" and first > second:
+            raise EquationError("Uniform minimum must not exceed maximum")
+        if kind == "normal" and second < 0:
+            raise EquationError("Normal standard deviation must be nonnegative")
+        key = f"{canonical_name(self.context.equation_key)}:{node.lineno}:{node.col_offset}:{kind}"
+        unit = self.context.random_runtime.unit_sample(key, kind, seed, self.context.time)
+        # The convex form avoids max-min overflowing for finite opposite endpoints.
+        if kind == "uniform":
+            value = first if first == second else (1 - unit) * first + unit * second
+        else:
+            value = first + second * unit
+        if not math.isfinite(value):
+            raise EquationError("Random result is not finite; check distribution parameters")
+        return value
 
     def _table_name(self, requested):
         if requested in self.context.tables:
@@ -592,6 +673,8 @@ def preprocess_equation(equation: str) -> str:
             except (SyntaxError, ValueError) as exc:
                 raise EquationError("Invalid quoted XMILE identifier") from exc
             tokens[index] = _encode_identifier(value)
+        elif token == "~":
+            raise EquationError("Use XMILE NOT for logical negation; raw ~ is unsupported")
         elif (token.startswith(ENCODED_IDENTIFIER_PREFIX)
               or (token.isidentifier() and any(ord(character) > 127 for character in token))
               or (keyword.iskeyword(token) and token.upper() not in {"IF", "ELSE", "AND", "OR", "NOT", "TRUE", "FALSE"})):
@@ -645,10 +728,16 @@ def preprocess_equation(equation: str) -> str:
                 output.append(token + ", ".join(parts) + close)
             else:
                 position += 1
-                if upper in ("AND", "OR", "NOT"):
+                if upper in ("AND", "OR"):
                     token = upper.lower()
+                elif upper == "NOT":
+                    # Python's unary ~ has the XMILE NOT precedence relative to
+                    # exponentiation/arithmetic. The evaluator gives it logical,
+                    # never bitwise, semantics. Raw source ~ is rejected above.
+                    token = "~"
                 elif upper == "MOD" and position >= 2 and (
-                    tokens[position - 2].isidentifier() or tokens[position - 2] in (")", "]")
+                    (tokens[position - 2].isidentifier() and tokens[position - 2].upper() not in
+                     {"IF", "THEN", "ELSE", "AND", "OR", "NOT"}) or tokens[position - 2] in (")", "]")
                     or tokens[position - 2][0].isdigit() or tokens[position - 2].startswith(".")):
                     token = "%"
                 elif token == "^":
@@ -731,43 +820,78 @@ def discover_stateful(equation, variables, context):
                 evaluator.visit(node)
 
 
+def stateful_derivatives(variables, context):
+    """Hidden exponential stages' instantaneous derivatives without mutation."""
+    derivatives = {}
+    for collection in (context.delay_state, context.smooth_state):
+        for key, state in collection.items():
+            if state["function"] == "DELAY_FIXED":
+                continue
+            context.equation_key = state["equation_key"]
+            evaluator = SafeEvaluator(variables, context)
+            args = state["args"]
+            input_value = float(evaluator.visit(args[0]))
+            duration = float(evaluator.visit(args[1]))
+            if state["function"] in ("DELAY_N", "SMOOTH_N"):
+                order = float(evaluator.visit(args[2]))
+                if order != state["order"]:
+                    raise EquationError("Changing delay/smooth order is unsupported")
+            if not math.isfinite(input_value) or not math.isfinite(duration) or duration <= 0:
+                raise EquationError("Delay/smooth input must be finite and time must be positive")
+            if state["function"].startswith("DELAY") and duration != state["duration"]:
+                raise EquationError("Changing material delay time is unsupported; use SMOOTH for information")
+            previous = state["stages"]
+            tau = duration / state["order"]
+            rates = [((input_value if i == 0 else previous[i - 1]) - value) / tau
+                     for i, value in enumerate(previous)]
+            if not all(math.isfinite(rate) for rate in rates):
+                raise EquationError("Non-finite delay/smooth derivative; check equations and duration")
+            derivatives[key] = rates
+    return derivatives
+
+
 def advance_stateful(variables, context, h):
     """Commit a simultaneous Euler step from inputs at t, never from t+h."""
-    changes = []
-    histories = []
-    states = [*context.delay_state.values(), *context.smooth_state.values()]
-    for state in states:
-        context.equation_key = state["equation_key"]
-        evaluator = SafeEvaluator(variables, context)
-        args = state["args"]
-        input_value = float(evaluator.visit(args[0]))
-        duration = float(evaluator.visit(args[1]))
-        if state["function"] in ("DELAY_N", "SMOOTH_N"):
-            order = float(evaluator.visit(args[2]))
-            if order != state["order"]:
-                raise EquationError("Changing delay/smooth order is unsupported")
-        if not math.isfinite(input_value) or not math.isfinite(duration) or duration <= 0:
-            raise EquationError("Delay/smooth input must be finite and time must be positive")
-        if state["function"] == "DELAY_FIXED":
-            if duration != state["duration"]:
-                raise EquationError("Changing fixed delay time is unsupported")
-            histories.append((state, (context.time, input_value)))
-            continue
-        if state["function"].startswith("DELAY") and duration != state["duration"]:
-            raise EquationError("Changing material delay time is unsupported; use SMOOTH for information")
-        previous = state["stages"]
-        tau = duration / state["order"]
-        updated = [value + h * ((input_value if i == 0 else previous[i - 1]) - value) / tau
-                   for i, value in enumerate(previous)]
-        if not all(math.isfinite(value) for value in updated):
-            raise EquationError("Non-finite delay/smooth state; reduce dt or check equations")
-        changes.append((state, updated))
-    # Nothing changes until all derivatives have been calculated successfully.
+    rates = stateful_derivatives(variables, context)
+    changes, histories = [], []
+    for collection in (context.delay_state, context.smooth_state):
+        for key, state in collection.items():
+            if state["function"] == "DELAY_FIXED":
+                context.equation_key = state["equation_key"]
+                evaluator = SafeEvaluator(variables, context)
+                input_value = float(evaluator.visit(state["args"][0]))
+                duration = float(evaluator.visit(state["args"][1]))
+                if not math.isfinite(input_value):
+                    raise EquationError("Fixed delay input must be finite")
+                if duration != state["duration"]:
+                    raise EquationError("Changing fixed delay time is unsupported")
+                histories.append((state, (context.time, input_value)))
+                continue
+            updated = [value + h * rate for value, rate in zip(state["stages"], rates[key])]
+            if not all(math.isfinite(value) for value in updated):
+                raise EquationError("Non-finite delay/smooth state; reduce dt or check equations")
+            changes.append((state, updated))
     for state, sample in histories:
         if not state["history"] or state["history"][-1][0] != sample[0]:
             state["history"].append(sample)
     for state, updated in changes:
         state["stages"] = updated
+
+
+def equation_features(equation, table_names=()):
+    """Identify supported stochastic/fixed-delay calls, respecting table precedence."""
+    if not equation.strip():
+        return {"random_calls": 0, "fixed_delay": False}
+    try:
+        tree = _parse_expression(preprocess_equation(equation))
+    except SyntaxError as exc:
+        raise EquationError(f"Syntax error in equation: {exc}") from exc
+    tables = {canonical_name(name) for name in table_names}
+    calls = [decode_identifier(node.func.id).upper() for node in ast.walk(tree)
+             if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+             and canonical_name(decode_identifier(node.func.id)) not in tables]
+    return {"random_calls": sum(name in STOCHASTIC_FUNCTIONS for name in calls),
+            "fixed_delay": any(name in ("DELAY", "DELAY_FIXED") for name in calls)}
 
 
 def _reference_names(tree):

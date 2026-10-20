@@ -8,6 +8,22 @@ from app.storage import models as storage
 
 router = APIRouter()
 
+@router.post("/investigate")
+def investigate_inputs(request: SimulationRequest):
+    """Compare full-horizon runs at three grids without changing any inputs."""
+    from app.core.diagnostics import investigate_model
+    try:
+        if (request.model is None) == (request.model_id is None):
+            raise ValueError("Provide exactly one model or model_id")
+        model = request.model or storage.get_model(request.model_id)
+        if model is None:
+            raise HTTPException(status_code=404, detail="Model not found")
+        if request.time_settings:
+            model = model.model_copy(update={"time_settings": request.time_settings})
+        return investigate_model(model)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+
 
 @router.post("/validate")
 def validate_inputs(request: SimulationRequest):

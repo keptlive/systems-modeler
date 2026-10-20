@@ -99,7 +99,12 @@ def parse_xmile(xml_content: str) -> Model:
                     raise ValueError(f"Invalid XMILE {tag}") from exc
 
     method = sim_specs.get("method", "euler").lower() if sim_specs is not None else "euler"
-    time_settings = TimeSettings(start=start, end=end, dt=dt, integration_method=method)
+    seed = sim_specs.get('{https://stockandflow.live/ns/model}random_seed') if sim_specs is not None else None
+    try:
+        seed = int(seed) if seed is not None else None
+    except ValueError as exc:
+        raise ValueError("Invalid Stock & Flow random seed") from exc
+    time_settings = TimeSettings(start=start, end=end, dt=dt, integration_method=method, random_seed=seed)
 
     # Parse variables - preserve underscores in names for equation compatibility
     stocks, flows, variables, tables = [], [], [], []
