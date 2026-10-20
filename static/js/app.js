@@ -45,6 +45,7 @@ const App = {
             setTimeout(() => this.loadModel(modelId), 1500);
         }
         this.initSimSettings();
+        this.syncStepCount();
 
         // Handle resize
         window.addEventListener('resize', () => this.handleResize());
@@ -74,6 +75,15 @@ const App = {
      * Bind UI events
      */
     bindEvents() {
+        document.getElementById('sim-steps')?.addEventListener('change', (event) => {
+            const steps = Number(event.target.value);
+            if (!Number.isInteger(steps) || steps < 1 || steps > 10000) {
+                this.syncStepCount();
+                return;
+            }
+            const settings = this.model.time_settings;
+            settings.dt = (settings.end - settings.start) / steps;
+        });
         // Header buttons
         document.getElementById('btn-new').addEventListener('click', () => this.newModel());
         document.getElementById('btn-save').addEventListener('click', () => this.saveModel());
@@ -128,7 +138,7 @@ const App = {
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Delete' || e.key === 'Backspace') {
-                if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                if (!['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName) && !document.activeElement.isContentEditable && !document.querySelector('dialog[open]')) {
                     this.deleteSelected();
                 }
             }
@@ -144,6 +154,7 @@ const App = {
      * Open a mobile slide-up panel
      */
     openSlidePanel(panelType) {
+        this.restoreResultPanels();
         const slidePanel = document.getElementById('slide-panel');
         const panelContent = document.getElementById('slide-panel-content');
         const panelTitle = document.getElementById('slide-panel-title');
@@ -175,23 +186,16 @@ const App = {
                 if (typeof Charts !== 'undefined' && Charts.results) {
                     setTimeout(() => this.renderMobileChart(), 50);  // Small delay to ensure DOM is ready
                 }
-                // Also update analytics container
-                if (typeof Analytics !== 'undefined' && Analytics.statistics) {
-                    setTimeout(() => {
-                        const mobileAnalytics = document.getElementById('analytics-container-mobile');
-                        if (mobileAnalytics && Analytics.container) {
-                            mobileAnalytics.innerHTML = Analytics.container.innerHTML;
-                        }
-                    }, 50);
-                }
-                // Also update AI agent container
-                if (typeof AIAgent !== 'undefined' && AIAgent.analysis) {
-                    setTimeout(() => {
-                        const mobileAI = document.getElementById('ai-agent-container-mobile');
-                        if (mobileAI && AIAgent.container) {
-                            mobileAI.innerHTML = AIAgent.container.innerHTML;
-                        }
-                    }, 50);
+                for (const [module, targetId] of [[Analytics, 'analytics-container-mobile'], [AIAgent, 'ai-agent-container-mobile']]) {
+                    const target = document.getElementById(targetId);
+                    if (module?.container && target) {
+                        const placeholder = document.createComment('result panel home');
+                        module.container.before(placeholder);
+                        this.movedResults = this.movedResults || [];
+                        this.movedResults.push({node:module.container, placeholder});
+                        target.appendChild(module.container);
+                        if (module === AIAgent) module.render();
+                    }
                 }
                 break;
         }
@@ -203,7 +207,13 @@ const App = {
     /**
      * Close the slide-up panel
      */
+    restoreResultPanels() {
+        for (const {node, placeholder} of this.movedResults || []) placeholder.replaceWith(node);
+        this.movedResults = [];
+    },
+
     closeSlidePanel() {
+        this.restoreResultPanels();
         const slidePanel = document.getElementById('slide-panel');
         const overlay = document.getElementById('overlay');
 
@@ -284,7 +294,7 @@ const App = {
             <div class="properties-content">
                 <div class="property-group">
                     <label>Name</label>
-                    <input type="text" id="prop-name-mobile" value="${element.name}">
+                    <input type="text" id="prop-name-mobile" value="${this.escapeHtml(element.name)}">
                 </div>
         `;
 
@@ -301,18 +311,18 @@ const App = {
             html += `
                 <div class="property-group">
                     <label>Equation</label>
-                    <input type="text" id="prop-equation-mobile" value="${element.equation || ''}">
+                    <input type="text" id="prop-equation-mobile" value="${this.escapeHtml(element.equation || '')}">
                 </div>
             `;
         }
 
         if (this.selected.type === 'flow') {
             const stockOptions = this.model.stocks.map(s =>
-                `<option value="${s.name}" ${element.from_stock === s.name || element.from_stock === s.id ? 'selected' : ''}>${s.name}</option>`
+                `<option value="${this.escapeHtml(s.name)}" ${element.from_stock === s.name || element.from_stock === s.id ? 'selected' : ''}>${this.escapeHtml(s.name)}</option>`
             ).join('');
 
             const toStockOptions = this.model.stocks.map(s =>
-                `<option value="${s.name}" ${element.to_stock === s.name || element.to_stock === s.id ? 'selected' : ''}>${s.name}</option>`
+                `<option value="${this.escapeHtml(s.name)}" ${element.to_stock === s.name || element.to_stock === s.id ? 'selected' : ''}>${this.escapeHtml(s.name)}</option>`
             ).join('');
 
             html += `
@@ -343,17 +353,18 @@ const App = {
     initMobilePropertyEvents() {
         const nameInput = document.getElementById('prop-name-mobile');
         if (nameInput) {
-            nameInput.addEventListener('change', (e) => this.updateProperty('name', e.target.value));
+            nameInput.addEventListener('input', (e) => this.updateProperty('name', e.target.value));
         }
 
         const initialInput = document.getElementById('prop-initial-mobile');
         if (initialInput) {
+            initialInput.addEventListener('input',e=>{if(Number.isFinite(e.target.valueAsNumber))this.updateProperty('initial_value',e.target.valueAsNumber);});
             initialInput.addEventListener('change', (e) => this.updateProperty('initial_value', parseFloat(e.target.value)));
         }
 
         const equationInput = document.getElementById('prop-equation-mobile');
         if (equationInput) {
-            equationInput.addEventListener('change', (e) => this.updateProperty('equation', e.target.value));
+            equationInput.addEventListener('input', (e) => this.updateProperty('equation', e.target.value));
         }
 
         const fromStockSelect = document.getElementById('prop-from-stock-mobile');
@@ -376,16 +387,16 @@ const App = {
         // Build variable toggles if we have results
         let variableTogglesHTML = "";
         if (hasResults) {
-            const stockNames = this.model.stocks.map(s => s.name);
+            const stockNames = Object.keys(Charts.results.values);
             
             variableTogglesHTML = stockNames.map((name, i) => {
                 const opt = Charts.options.variables[name];
                 const isVisible = opt ? opt.visible : true;
                 const color = opt ? opt.color : Charts.colors[i % Charts.colors.length];
                 return `
-                    <button class="var-chip ${isVisible ? "active" : ""}" data-var="${name}">
+                    <button class="var-chip ${isVisible ? "active" : ""}" data-var="${this.escapeHtml(name)}" aria-pressed="${isVisible}">
                         <span class="var-chip-dot" style="background:${color}"></span>
-                        <span class="var-chip-name">${name}</span>
+                        <span class="var-chip-name">${this.escapeHtml(name)}</span>
                     </button>
                 `;
             }).join("");
@@ -420,6 +431,7 @@ const App = {
                                     <button class="chart-type-btn ${chartType === "line" ? "active" : ""}" data-chart-type="line">Line</button>
                                     <button class="chart-type-btn ${chartType === "area" ? "active" : ""}" data-chart-type="area">Area</button>
                                     <button class="chart-type-btn ${chartType === "stacked" ? "active" : ""}" data-chart-type="stacked">Stacked</button>
+                                    <button class="chart-type-btn ${chartType === "phase" ? "active" : ""}" data-chart-type="phase">Phase</button>
                                 </div>
                                 <div class="chart-toggle-btns">
                                     <button class="chart-toggle-btn ${isNormalized ? "active" : ""}" id="btn-normalize-mobile" title="Normalize to %">Norm</button>
@@ -439,7 +451,7 @@ const App = {
                     ` : `
                         <div class="no-results-mobile">
                             <div class="no-results-icon">📊</div>
-                            <p>Run a simulation to see results</p>
+                            <p>${Simulation.lastError ? 'Simulation failed: '+this.escapeHtml(Simulation.lastError) : 'Run a simulation to see results'}</p>
                         </div>
                     `}
                 </div>
@@ -453,6 +465,14 @@ const App = {
                 </div>
             </div>
         `;
+    },
+
+    escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
+    },
+
+    modelSnapshot() {
+        return {...this.model,id:this.model.id||'draft'};
     },
 
     /**
@@ -481,6 +501,7 @@ const App = {
                     // Toggle visibility
                     Charts.options.variables[varName].visible = !Charts.options.variables[varName].visible;
                     this.classList.toggle("active");
+                    this.setAttribute('aria-pressed', Charts.options.variables[varName].visible);
                     self.renderMobileChart();
                 }
             });
@@ -535,7 +556,7 @@ const App = {
 
         const values = Charts.results.values;
         const time = Charts.results.time;
-        const stockNames = this.model.stocks.map(s => s.name);
+        const stockNames = Object.keys(values);
         
         let html = "<div class=\"summary-grid\">";
         
@@ -546,7 +567,7 @@ const App = {
                 const color = opt ? opt.color : Charts.colors[i % Charts.colors.length];
                 html += "<div class=\"summary-item\">" +
                     "<span class=\"summary-dot\" style=\"background:" + color + "\"></span>" +
-                    "<span class=\"summary-name\">" + name + "</span>" +
+                    "<span class=\"summary-name\">" + this.escapeHtml(name) + "</span>" +
                     "<span class=\"summary-value\">" + this.formatNumShort(finalVal) + "</span>" +
                     "</div>";
             }
@@ -643,6 +664,7 @@ const App = {
             time_settings: { start: 0, end: 100, dt: 0.25 }
         };
         document.getElementById('model-name').value = this.model.name;
+        this.syncStepCount();
         document.getElementById('model-select').value = '';
         this.selected = null;
         this.updatePropertiesPanel();
@@ -659,15 +681,19 @@ const App = {
             const data = {
                 name: this.model.name,
                 description: this.model.description,
+                source: this.model.source || null,
+                reference: this.model.reference || null,
+                category: this.model.category || null,
                 stocks: this.model.stocks,
                 flows: this.model.flows,
                 variables: this.model.variables,
                 connectors: this.model.connectors,
+                tables: this.model.tables || [],
                 time_settings: this.model.time_settings
             };
 
             let response;
-            if (this.model.id) {
+            if (this.model.id && UserModels.get(this.model.id)) {
                 // Update existing
                 response = await fetch(`/api/models/${this.model.id}`, {
                     method: 'PUT',
@@ -740,12 +766,14 @@ const App = {
             
             this.model = model;
 
+            this.syncStepCount();
+
             this.generateMissingConnectors();
             document.getElementById("model-name").value = model.name;
             this.selected = null;
             this.updatePropertiesPanel();
             Canvas.render();
-            Canvas.resetView();
+            Canvas.fitToModel();
             Simulation.clear();
         } catch (error) {
             console.error("Load error:", error);
@@ -761,19 +789,25 @@ const App = {
             id: modelData.id || null,
             name: modelData.name || 'Generated Model',
             description: modelData.description || '',
+            source: modelData.source || null,
+            reference: modelData.reference || null,
+            category: modelData.category || null,
             stocks: modelData.stocks || [],
             flows: modelData.flows || [],
             variables: modelData.variables || [],
             connectors: modelData.connectors || [],
+            tables: modelData.tables || [],
             time_settings: modelData.time_settings || { start: 0, end: 100, dt: 0.25 }
         };
         // Auto-generate missing connectors based on equation dependencies
+        this.syncStepCount();
         this.generateMissingConnectors();
         document.getElementById('model-name').value = this.model.name;
+        this.syncStepCount();
         this.selected = null;
         this.updatePropertiesPanel();
         Canvas.render();
-        Canvas.resetView();
+        Canvas.fitToModel();
         Simulation.clear();
     },
 
@@ -1071,7 +1105,7 @@ const App = {
         let html = `
             <div class="property-group">
                 <label>Name</label>
-                <input type="text" id="prop-name" value="${element.name}">
+                <input type="text" id="prop-name" value="${this.escapeHtml(element.name)}">
             </div>
         `;
 
@@ -1088,18 +1122,18 @@ const App = {
             html += `
                 <div class="property-group">
                     <label>Equation</label>
-                    <input type="text" id="prop-equation" value="${element.equation || ''}">
+                    <input type="text" id="prop-equation" value="${this.escapeHtml(element.equation || '')}">
                 </div>
             `;
         }
 
         if (this.selected.type === 'flow') {
             const stockOptions = this.model.stocks.map(s =>
-                `<option value="${s.name}" ${element.from_stock === s.name || element.from_stock === s.id ? 'selected' : ''}>${s.name}</option>`
+                `<option value="${this.escapeHtml(s.name)}" ${element.from_stock === s.name || element.from_stock === s.id ? 'selected' : ''}>${this.escapeHtml(s.name)}</option>`
             ).join('');
 
             const toStockOptions = this.model.stocks.map(s =>
-                `<option value="${s.name}" ${element.to_stock === s.name || element.to_stock === s.id ? 'selected' : ''}>${s.name}</option>`
+                `<option value="${this.escapeHtml(s.name)}" ${element.to_stock === s.name || element.to_stock === s.id ? 'selected' : ''}>${this.escapeHtml(s.name)}</option>`
             ).join('');
 
             html += `
@@ -1125,17 +1159,18 @@ const App = {
         // Bind property change events
         const nameInput = document.getElementById('prop-name');
         if (nameInput) {
-            nameInput.addEventListener('change', (e) => this.updateProperty('name', e.target.value));
+            nameInput.addEventListener('input', (e) => this.updateProperty('name', e.target.value));
         }
 
         const initialInput = document.getElementById('prop-initial');
         if (initialInput) {
+            initialInput.addEventListener('input',e=>{if(Number.isFinite(e.target.valueAsNumber))this.updateProperty('initial_value',e.target.valueAsNumber);});
             initialInput.addEventListener('change', (e) => this.updateProperty('initial_value', parseFloat(e.target.value)));
         }
 
         const equationInput = document.getElementById('prop-equation');
         if (equationInput) {
-            equationInput.addEventListener('change', (e) => this.updateProperty('equation', e.target.value));
+            equationInput.addEventListener('input', (e) => this.updateProperty('equation', e.target.value));
         }
 
         const fromStockSelect = document.getElementById('prop-from-stock');
@@ -1154,6 +1189,11 @@ const App = {
      */
     updateProperty(property, value) {
         const element = this.getSelectedElement();
+        if (property === 'initial_value' && !Number.isFinite(value)) {
+            alert('Initial value must be a finite number.');
+            this.updatePropertiesPanel();
+            return;
+        }
         if (element) {
             element[property] = value;
             Canvas.render();
@@ -1350,6 +1390,7 @@ const App = {
             startInput.value = ts.start ?? 0;
             endInput.value = ts.end ?? 100;
             dtInput.value = ts.dt ?? 0.25;
+            document.getElementById('sim-method').value = ts.integration_method || 'euler';
             updateSteps();
         };
 
@@ -1418,13 +1459,28 @@ const App = {
 
         // Apply and run
         applyBtn?.addEventListener('click', () => {
+            const start = Number(startInput.value);
+            const end = Number(endInput.value);
+            const dt = Number(dtInput.value);
+            if (![start, end, dt].every(Number.isFinite) || end <= start || dt <= 0 || dt > end - start || Math.ceil((end - start) / dt) > 10000) {
+                this.showToast('Use a positive time step, an end after the start, and at most 10,000 steps.', 'error');
+                return;
+            }
             this.model.time_settings = {
-                start: parseFloat(startInput.value) || 0,
-                end: parseFloat(endInput.value) || 100,
-                dt: parseFloat(dtInput.value) || 0.25
+                start,
+                end,
+                dt: parseFloat(dtInput.value),
+                integration_method: document.getElementById('sim-method').value
             };
+            this.syncStepCount();
             closeModal();
             Simulation.run();
         });
+    },
+
+    syncStepCount() {
+        const ts = this.model.time_settings;
+        const steps = document.getElementById('sim-steps');
+        if (ts && steps) steps.value = Math.ceil((ts.end - ts.start) / ts.dt);
     }
 };

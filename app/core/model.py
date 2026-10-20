@@ -1,14 +1,15 @@
 """
 Pydantic models for systems dynamics primitives.
 """
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel, Field, model_validator, ConfigDict
+from typing import Optional, Literal
 from datetime import datetime, timezone
 import uuid
 
 
 class Position(BaseModel):
     """2D position on the canvas."""
+    model_config = ConfigDict(allow_inf_nan=False)
     x: float = 0
     y: float = 0
 
@@ -18,8 +19,10 @@ class Stock(BaseModel):
     Accumulation/level in the system.
     Examples: population, inventory, capital
     """
+    model_config = ConfigDict(allow_inf_nan=False)
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
+    units: Optional[str] = None
     initial_value: float = 0
     equation: str = ""  # For computed initial values
     position: Position = Field(default_factory=Position)
@@ -32,6 +35,7 @@ class Flow(BaseModel):
     """
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
+    units: Optional[str] = None
     equation: str = "0"
     from_stock: Optional[str] = None  # Source stock ID
     to_stock: Optional[str] = None    # Destination stock ID
@@ -45,6 +49,7 @@ class Variable(BaseModel):
     """
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
+    units: Optional[str] = None
     equation: str = "0"
     position: Position = Field(default_factory=Position)
 
@@ -60,10 +65,20 @@ class Connector(BaseModel):
 
 class TimeSettings(BaseModel):
     """Simulation time configuration."""
+    model_config = ConfigDict(allow_inf_nan=False)
     start: float = 0
     end: float = 100
-    dt: float = 0.25
-    integration_method: str = "euler"  # "euler" or "rk4"
+    dt: float = Field(default=0.25, gt=0)
+    integration_method: Literal["euler", "rk4"] = "euler"
+
+    @model_validator(mode="after")
+    def validate_grid(self):
+        if self.end <= self.start:
+            raise ValueError("end must be greater than start")
+        steps = (self.end - self.start) / self.dt
+        if steps < 1:
+            raise ValueError("dt must not exceed the simulation duration")
+        return self
 
 
 class LookupTable(BaseModel):
@@ -71,8 +86,12 @@ class LookupTable(BaseModel):
     Lookup table for graphical functions.
     Stores (x, y) points for linear interpolation.
     """
+    model_config = ConfigDict(allow_inf_nan=False)
     name: str
     points: list[tuple[float, float]] = Field(default_factory=list)
+    # Preserve historical JSON lookup behavior; XMILE imports explicitly set
+    # their standard's default (continuous/clamped).
+    interpolation: Literal["continuous", "extrapolate", "discrete"] = "extrapolate"
 
     def to_list(self) -> list[tuple[float, float]]:
         """Convert points to list of tuples for interpolation."""
@@ -87,6 +106,8 @@ class Model(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str = "Untitled Model"
     description: str = ""
+    source: Optional[str] = None
+    reference: Optional[str] = None
     category: Optional[str] = None  # Category from subdirectory
     stocks: list[Stock] = Field(default_factory=list)
     flows: list[Flow] = Field(default_factory=list)
@@ -110,6 +131,9 @@ class ModelCreate(BaseModel):
     """Request body for creating a new model."""
     name: str = "Untitled Model"
     description: str = ""
+    source: Optional[str] = None
+    reference: Optional[str] = None
+    category: Optional[str] = None
     stocks: list[Stock] = Field(default_factory=list)
     flows: list[Flow] = Field(default_factory=list)
     variables: list[Variable] = Field(default_factory=list)
@@ -122,6 +146,8 @@ class ModelUpdate(BaseModel):
     """Request body for updating a model."""
     name: Optional[str] = None
     description: Optional[str] = None
+    source: Optional[str] = None
+    reference: Optional[str] = None
     stocks: Optional[list[Stock]] = None
     flows: Optional[list[Flow]] = None
     variables: Optional[list[Variable]] = None
@@ -168,23 +194,26 @@ def generate_connectors_from_equations(model: Model) -> list[Connector]:
     Returns:
         List of Connector objects representing equation dependencies
     """
-    from app.core.equations import get_equation_variables
+    from app.core.equations import get_equation_variables, canonical_name
 
     # Build a lookup map for all element names (normalized to handle variations)
     element_names = {}  # normalized_name -> actual_name
 
     for stock in model.stocks:
+        element_names[canonical_name(stock.name)] = stock.name
         # Store original name and underscore variant
         element_names[stock.name.lower()] = stock.name
         element_names[stock.name.lower().replace(" ", "_")] = stock.name
         element_names[stock.name.lower().replace("_", " ")] = stock.name
 
     for flow in model.flows:
+        element_names[canonical_name(flow.name)] = flow.name
         element_names[flow.name.lower()] = flow.name
         element_names[flow.name.lower().replace(" ", "_")] = flow.name
         element_names[flow.name.lower().replace("_", " ")] = flow.name
 
     for var in model.variables:
+        element_names[canonical_name(var.name)] = var.name
         element_names[var.name.lower()] = var.name
         element_names[var.name.lower().replace(" ", "_")] = var.name
         element_names[var.name.lower().replace("_", " ")] = var.name
@@ -199,7 +228,7 @@ def generate_connectors_from_equations(model: Model) -> list[Connector]:
 
     def find_element_name(ref: str) -> Optional[str]:
         """Find the actual element name for a reference."""
-        ref_lower = ref.lower()
+        ref_lower = canonical_name(ref)
         if ref_lower in element_names:
             return element_names[ref_lower]
         # Try with underscore substitution

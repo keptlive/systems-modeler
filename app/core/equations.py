@@ -16,6 +16,7 @@ import math
 import random
 from typing import Callable, Any, Optional
 import re
+from functools import lru_cache
 
 
 SAFE_OPERATORS: dict[type, Callable] = {
@@ -92,20 +93,36 @@ def random_normal(mean: float, std_dev: float) -> float:
     return random.gauss(mean, std_dev)
 
 
-def lookup_interp(x: float, points: list[tuple[float, float]]) -> float:
+def lookup_interp(x: float, points: list[tuple[float, float]], interpolation: str = "extrapolate") -> float:
     """
     Linear interpolation lookup.
     Points should be sorted by x value.
     Extrapolates at boundaries.
     """
     if not points:
-        return 0.0
+        raise EquationError("Lookup table must contain at least one point")
+    if not math.isfinite(x):
+        raise EquationError("Lookup input must be finite")
+    if any(not math.isfinite(coordinate) for point in points for coordinate in point):
+        raise EquationError("Lookup table points must be finite")
+    if len({point[0] for point in points}) != len(points):
+        raise EquationError("Lookup table x coordinates must be unique")
 
     if len(points) == 1:
         return points[0][1]
 
     # Sort by x value
     sorted_points = sorted(points, key=lambda p: p[0])
+
+    if interpolation not in ("continuous", "extrapolate", "discrete"):
+        raise EquationError(f"Unknown lookup interpolation: {interpolation}")
+    if interpolation in ("continuous", "discrete"):
+        if x <= sorted_points[0][0]:
+            return sorted_points[0][1]
+        if x >= sorted_points[-1][0]:
+            return sorted_points[-1][1]
+    if interpolation == "discrete":
+        return next(y for at, y in reversed(sorted_points) if at <= x)
 
     # Handle boundary cases
     if x <= sorted_points[0][0]:
@@ -147,6 +164,8 @@ SAFE_FUNCTIONS: dict[str, Callable] = {
     "asin": math.asin,
     "acos": math.acos,
     "atan": math.atan,
+    "atan2": math.atan2,
+    "sign": lambda value: float((value > 0) - (value < 0)),
     "exp": math.exp,
     "log": math.log,
     "ln": math.log,  # Alias for natural log
@@ -159,6 +178,7 @@ SAFE_FUNCTIONS: dict[str, Callable] = {
     "floor": math.floor,
     "ceil": math.ceil,
     "round": round,
+    "mod": operator.mod,
     # Conditional function
     "IF_THEN_ELSE": if_then_else,
     "IF": if_then_else,  # Alias for IF_THEN_ELSE
@@ -169,8 +189,11 @@ SAFE_FUNCTIONS: dict[str, Callable] = {
 
 # Functions that require simulation context (time, dt)
 # These are handled specially by the evaluator
-CONTEXT_FUNCTIONS = {"STEP", "PULSE", "RAMP", "DELAY1", "DELAY3", "DELAY_N",
-                     "DELAY_FIXED", "SMOOTH", "SMOOTH3", "SMOOTH_N", "LOOKUP", "WITH_LOOKUP"}
+STATEFUL_ALIASES = {"SMTH1": "SMOOTH", "SMTH3": "SMOOTH3", "SMTHN": "SMOOTH_N",
+                    "DELAYN": "DELAY_N", "DELAY": "DELAY_FIXED"}
+STATEFUL_FUNCTIONS = {"DELAY1", "DELAY3", "DELAY_N", "DELAY_FIXED",
+                      "SMOOTH", "SMOOTH3", "SMOOTH_N"} | set(STATEFUL_ALIASES)
+CONTEXT_FUNCTIONS = {"STEP", "PULSE", "RAMP", "LOOKUP", "WITH_LOOKUP"} | STATEFUL_FUNCTIONS
 
 SAFE_CONSTANTS: dict[str, float] = {
     "pi": math.pi,
@@ -197,6 +220,54 @@ class SimulationContext:
         self.tables = tables if tables is not None else {}
         self.delay_state = delay_state if delay_state is not None else {}
         self.smooth_state = smooth_state if smooth_state is not None else {}
+        self.table_types = {}
+        self.equation_key = ""
+
+
+ENCODED_IDENTIFIER_PREFIX = "__xmile_id_"
+
+
+def _encode_identifier(value):
+    return ENCODED_IDENTIFIER_PREFIX + value.encode("utf-8").hex()
+
+
+def decode_identifier(value):
+    """Decode only lexer-generated AST identifiers, without evaluating any code."""
+    if value.startswith(ENCODED_IDENTIFIER_PREFIX):
+        try:
+            return bytes.fromhex(value[len(ENCODED_IDENTIFIER_PREFIX):]).decode("utf-8")
+        except (ValueError, UnicodeDecodeError) as exc:
+            raise EquationError("Malformed encoded identifier") from exc
+    return value
+
+
+def restore_identifiers(expression):
+    """Restore quoted XMILE names after AST unparse in an XML exporter."""
+    import io
+    import json
+    import tokenize
+    output = []
+    for token in tokenize.generate_tokens(io.StringIO(expression).readline):
+        value = token.string
+        if token.type == tokenize.NAME and value.startswith(ENCODED_IDENTIFIER_PREFIX):
+            value = json.dumps(decode_identifier(value), ensure_ascii=False)
+        output.append((token.type, value))
+    return tokenize.untokenize(output).strip()
+
+
+def canonical_name(value):
+    """Unicode-preserving aliases, with XMILE whitespace equivalence.
+
+    Retain historical punctuation aliases, but reject collisions at model entry.
+    NFC preserves composed/decomposed Unicode identity without collapsing fullwidth
+    characters into distinct ASCII characters as Python AST identifiers would.
+    """
+    import unicodedata
+    normalized = unicodedata.normalize("NFC", value).casefold()
+    normalized = re.sub(r"[ _\n\u00a0]+", "_", normalized)
+    normalized = "".join(character if character.isalnum() or character == "_" else "_"
+                         for character in normalized)
+    return re.sub(r"_+", "_", normalized)
 
 
 class SafeEvaluator(ast.NodeVisitor):
@@ -221,13 +292,12 @@ class SafeEvaluator(ast.NodeVisitor):
     # ast.Constant handles all numeric literals
 
     def visit_Name(self, node: ast.Name) -> float:
-        name = node.id
+        name = decode_identifier(node.id)
         # Check for TIME variable (case insensitive)
         if name.upper() == "TIME":
             return self.context.time
-        # Check constants first
-        if name in SAFE_CONSTANTS:
-            return SAFE_CONSTANTS[name]
+        if name.upper() in ("DT", "TIME_STEP"):
+            return self.context.dt
         # Then check user variables - try multiple name variations
         # to handle underscore vs space naming inconsistencies
         name_variations = [
@@ -238,6 +308,13 @@ class SafeEvaluator(ast.NodeVisitor):
         for var_name in name_variations:
             if var_name in self.variables:
                 return self.variables[var_name]
+        matched = [value for key, value in self.variables.items() if canonical_name(key) == canonical_name(name)]
+        if len(matched) == 1:
+            return matched[0]
+        if len(matched) > 1:
+            raise EquationError(f"Ambiguous variable alias: {name}")
+        if name.lower() in SAFE_CONSTANTS:
+            return SAFE_CONSTANTS[name.lower()]
         raise EquationError(f"Unknown variable: {name}")
 
     def visit_BinOp(self, node: ast.BinOp) -> float:
@@ -249,10 +326,12 @@ class SafeEvaluator(ast.NodeVisitor):
         try:
             return SAFE_OPERATORS[op_type](left, right)
         except ZeroDivisionError:
-            return float("inf")
+            raise EquationError("Division by zero")
 
     def visit_UnaryOp(self, node: ast.UnaryOp) -> float:
         op_type = type(node.op)
+        if op_type is ast.Not:
+            return float(not self.visit(node.operand))
         if op_type not in SAFE_OPERATORS:
             raise EquationError(f"Unsupported unary operator: {op_type.__name__}")
         operand = self.visit(node.operand)
@@ -261,8 +340,24 @@ class SafeEvaluator(ast.NodeVisitor):
     def visit_Call(self, node: ast.Call) -> float:
         if not isinstance(node.func, ast.Name):
             raise EquationError("Only simple function calls are allowed")
-        func_name = node.func.id
+        if node.keywords:
+            raise EquationError("Keyword arguments are unsupported")
+        func_name = decode_identifier(node.func.id)
         func_name_upper = func_name.upper()
+
+        # XMILE permits table_name(input) as well as LOOKUP(table_name, input).
+        table_name = self._table_name(func_name)
+        if table_name is not None:
+            if len(node.args) != 1:
+                raise EquationError("A graphical function requires one input")
+            return lookup_interp(self.visit(node.args[0]), self.context.tables[table_name],
+                                 self.context.table_types.get(table_name, "extrapolate"))
+
+        # Conditionals must evaluate only the selected branch.
+        if func_name_upper in ("IF", "IF_THEN_ELSE"):
+            if len(node.args) != 3:
+                raise EquationError("IF_THEN_ELSE requires three arguments")
+            return self.visit(node.args[1] if self.visit(node.args[0]) else node.args[2])
 
         # Handle context functions that need simulation state
         if func_name_upper in CONTEXT_FUNCTIONS:
@@ -286,6 +381,14 @@ class SafeEvaluator(ast.NodeVisitor):
         except (ValueError, TypeError) as e:
             raise EquationError(f"Function error in {func_name}: {e}")
 
+    def _table_name(self, requested):
+        if requested in self.context.tables:
+            return requested
+        matches = [name for name in self.context.tables if canonical_name(name) == canonical_name(requested)]
+        if len(matches) > 1:
+            raise EquationError(f"Ambiguous lookup table alias: {requested}")
+        return matches[0] if matches else None
+
     def _handle_context_function(self, func_name: str, args: list) -> float:
         """Handle functions that require simulation context."""
         # Note: Some functions like LOOKUP have special first argument handling
@@ -293,7 +396,8 @@ class SafeEvaluator(ast.NodeVisitor):
 
         # Generate a call_key from the first argument's AST for stateful functions
         # This provides a stable identifier across repeated evaluations
-        call_key = ast.dump(args[0]) if args else ""
+        call_key = getattr(self.context, "equation_key", "") + ":" + str(
+            (getattr(args[0], "col_offset", 0) if args else 0)) + ":" + (ast.dump(args[0]) if args else "")
 
         if func_name == "LOOKUP":
             # LOOKUP(table_name, input) - table_name must be a string literal or name
@@ -301,15 +405,18 @@ class SafeEvaluator(ast.NodeVisitor):
                 raise EquationError("LOOKUP requires 2 arguments: table_name, input")
             # First arg should be a Name node for the table name
             if isinstance(args[0], ast.Name):
-                table_name = args[0].id
+                table_name = decode_identifier(args[0].id)
             elif isinstance(args[0], ast.Constant) and isinstance(args[0].value, str):
                 table_name = args[0].value
             else:
                 raise EquationError("LOOKUP first argument must be a table name")
             input_val = self.visit(args[1])
-            if table_name not in self.context.tables:
-                raise EquationError(f"Unknown lookup table: {table_name}")
-            return lookup_interp(input_val, self.context.tables[table_name])
+            requested_name = table_name
+            table_name = self._table_name(requested_name)
+            if table_name is None:
+                raise EquationError(f"Unknown lookup table: {requested_name}")
+            return lookup_interp(input_val, self.context.tables[table_name],
+                                 self.context.table_types.get(table_name, "extrapolate"))
 
         if func_name == "WITH_LOOKUP":
             # WITH_LOOKUP(input, ((x1,y1),(x2,y2),...))
@@ -320,6 +427,9 @@ class SafeEvaluator(ast.NodeVisitor):
             if not points:
                 raise EquationError("WITH_LOOKUP: could not parse lookup points")
             return lookup_interp(input_val, points)
+
+        if func_name in STATEFUL_FUNCTIONS:
+            return self._stateful_value(func_name, args, call_key)
 
         # For other functions, evaluate all args
         evaluated_args = [self.visit(arg) for arg in args]
@@ -349,42 +459,6 @@ class SafeEvaluator(ast.NodeVisitor):
             end_time = evaluated_args[2] if len(evaluated_args) > 2 else 0.0
             return ramp_function(slope, start_time, end_time, self.context.time)
 
-        elif func_name == "DELAY1":
-            # DELAY1(input, delay_time, initial=input)
-            return self._handle_delay(1, evaluated_args, call_key)
-
-        elif func_name == "DELAY3":
-            # DELAY3(input, delay_time, initial=input)
-            return self._handle_delay(3, evaluated_args, call_key)
-
-        elif func_name == "DELAY_N":
-            # DELAY_N(input, delay_time, order, initial=input)
-            if len(evaluated_args) < 3:
-                raise EquationError("DELAY_N requires 3 arguments: input, delay_time, order")
-            order = int(evaluated_args[2])
-            return self._handle_delay(order, [evaluated_args[0], evaluated_args[1]] +
-                                     (evaluated_args[3:] if len(evaluated_args) > 3 else []), call_key)
-
-        elif func_name == "DELAY_FIXED":
-            # DELAY_FIXED(input, delay_time, initial)
-            return self._handle_delay_fixed(evaluated_args, call_key)
-
-        elif func_name == "SMOOTH":
-            # SMOOTH(input, smoothing_time, initial=input)
-            return self._handle_smooth(1, evaluated_args, call_key)
-
-        elif func_name == "SMOOTH3":
-            # SMOOTH3(input, smoothing_time, initial=input)
-            return self._handle_smooth(3, evaluated_args, call_key)
-
-        elif func_name == "SMOOTH_N":
-            # SMOOTH_N(input, smoothing_time, order, initial=input)
-            if len(evaluated_args) < 3:
-                raise EquationError("SMOOTH_N requires 3 arguments: input, smoothing_time, order")
-            order = int(evaluated_args[2])
-            return self._handle_smooth(order, [evaluated_args[0], evaluated_args[1]] +
-                                      (evaluated_args[3:] if len(evaluated_args) > 3 else []), call_key)
-
         raise EquationError(f"Unhandled context function: {func_name}")
 
     def _parse_lookup_points(self, node: ast.AST) -> list[tuple[float, float]]:
@@ -398,112 +472,54 @@ class SafeEvaluator(ast.NodeVisitor):
                     points.append((x, y))
         return points
 
-    def _handle_delay(self, order: int, args: list, call_key: str = "") -> float:
-        """Handle DELAY1, DELAY3, DELAY_N functions using exponential delay."""
-        if len(args) < 2:
-            raise EquationError(f"DELAY{order} requires at least 2 arguments: input, delay_time")
-
-        input_val = args[0]
-        delay_time = args[1]
-        initial = args[2] if len(args) > 2 else input_val
-
-        if delay_time <= 0:
-            return input_val
-
-        # Unique key for this delay instance based on stable parameters
-        # Uses order and delay_time (which are constant per equation) plus call_key
-        key = f"delay_{order}_{delay_time}_{call_key}"
-
-        if key not in self.context.delay_state:
-            # Initialize delay state as a chain of order states
-            self.context.delay_state[key] = [initial] * order
-
-        state = self.context.delay_state[key]
-        dt = self.context.dt
-
-        # Time constant for each stage
-        tau = delay_time / order
-
-        # Update each stage using exponential smoothing
-        for i in range(order):
-            inp = input_val if i == 0 else state[i - 1]
-            rate = (inp - state[i]) / tau
-            state[i] = state[i] + rate * dt
-
-        return state[-1]
-
-    def _handle_delay_fixed(self, args: list, call_key: str = "") -> float:
-        """Handle DELAY_FIXED using a circular buffer (pipeline delay)."""
-        if len(args) < 3:
-            raise EquationError("DELAY_FIXED requires 3 arguments: input, delay_time, initial")
-
-        input_val = args[0]
-        delay_time = args[1]
-        initial = args[2]
-
-        if delay_time <= 0:
-            return input_val
-
-        dt = self.context.dt
-        buffer_size = max(1, int(delay_time / dt))
-
-        # Unique key based on stable parameters
-        key = f"delay_fixed_{delay_time}_{call_key}"
-
-        if key not in self.context.delay_state:
-            # Initialize buffer with initial values
-            self.context.delay_state[key] = {
-                "buffer": [initial] * buffer_size,
-                "index": 0
-            }
-
-        state = self.context.delay_state[key]
-        buffer = state["buffer"]
-        index = state["index"]
-
-        # Get delayed value
-        output = buffer[index]
-
-        # Store current input
-        buffer[index] = input_val
-
-        # Advance index
-        state["index"] = (index + 1) % buffer_size
-
-        return output
-
-    def _handle_smooth(self, order: int, args: list, call_key: str = "") -> float:
-        """Handle SMOOTH, SMOOTH3, SMOOTH_N functions using exponential smoothing."""
-        if len(args) < 2:
-            raise EquationError(f"SMOOTH{order} requires at least 2 arguments: input, smoothing_time")
-
-        input_val = args[0]
-        smooth_time = args[1]
-        initial = args[2] if len(args) > 2 else input_val
-
-        if smooth_time <= 0:
-            return input_val
-
-        # Unique key based on stable parameters
-        key = f"smooth_{order}_{smooth_time}_{call_key}"
-
-        if key not in self.context.smooth_state:
-            # Initialize smooth state as a chain of order states
-            self.context.smooth_state[key] = [initial] * order
-
-        state = self.context.smooth_state[key]
-        dt = self.context.dt
-
-        # Time constant for each stage
-        tau = smooth_time / order
-
-        # Update each stage
-        for i in range(order):
-            inp = input_val if i == 0 else state[i - 1]
-            rate = (inp - state[i]) / tau
-            state[i] = state[i] + rate * dt
-
-        return state[-1]
+    def _stateful_value(self, function, args, call_key):
+        """Return a hidden stock's present value; never integrate while evaluating."""
+        function = STATEFUL_ALIASES.get(function, function)
+        is_fixed = function == "DELAY_FIXED"
+        is_n = function in ("DELAY_N", "SMOOTH_N")
+        minimum, maximum = (3, 4) if is_n else (2, 3)
+        if not minimum <= len(args) <= maximum:
+            raise EquationError(f"{function} requires {minimum} or {maximum} arguments")
+        order = 3 if function in ("DELAY3", "SMOOTH3") else 1
+        if is_n:
+            raw_order = self.visit(args[2])
+            order = int(raw_order)
+            if order != raw_order:
+                raise EquationError("Delay/smooth order must be an integer")
+        if not 1 <= order <= 100:
+            raise EquationError("Delay/smooth order must be between 1 and 100")
+        duration = float(self.visit(args[1]))
+        if not math.isfinite(duration) or duration <= 0:
+            raise EquationError("Delay/smooth time must be finite and greater than zero")
+        # Fixed delays promise a fixed duration; accepting a varying duration changes
+        # material conservation and requires a different, unsupported delay operator.
+        states = self.context.smooth_state if function.startswith("SMOOTH") else self.context.delay_state
+        key = function + ":" + call_key
+        if key not in states:
+            initial_index = 3 if is_n else 2
+            initial = float(self.visit(args[initial_index] if len(args) > initial_index else args[0]))
+            if not math.isfinite(initial):
+                raise EquationError("Delay/smooth initial value must be finite")
+            states[key] = {"function": function, "args": args, "equation_key": self.context.equation_key,
+                           "duration": duration, "order": order, "initial": initial,
+                           "stages": [initial] * order, "history": []}
+        state = states[key]
+        if state["order"] != order:
+            raise EquationError("Changing delay/smooth order is unsupported")
+        if is_fixed:
+            if duration != state["duration"]:
+                raise EquationError("Changing fixed delay time is unsupported")
+            target = self.context.time - duration
+            # Left-continuous sample-and-hold history is deterministic for delays
+            # that are not exact multiples of dt; no fabricated future samples.
+            from bisect import bisect_right
+            history = state["history"]
+            tolerance = 4 * max(math.ulp(self.context.time), math.ulp(duration), math.ulp(target))
+            index = bisect_right(history, (target + tolerance, math.inf)) - 1
+            return history[index][1] if index >= 0 else state["initial"]
+        if function.startswith("DELAY") and duration != state["duration"]:
+            raise EquationError("Changing material delay time is unsupported; use SMOOTH for information")
+        return state["stages"][-1]
 
     def visit_Compare(self, node: ast.Compare) -> float:
         # Support comparisons returning 0 or 1
@@ -536,87 +552,128 @@ class SafeEvaluator(ast.NodeVisitor):
             return self.visit(node.body)
         return self.visit(node.orelse)
 
+    def visit_BoolOp(self, node: ast.BoolOp) -> float:
+        for value in node.values:
+            result = bool(self.visit(value))
+            if isinstance(node.op, ast.And) and not result:
+                return 0.0
+            if isinstance(node.op, ast.Or) and result:
+                return 1.0
+        return float(isinstance(node.op, ast.And))
+
     def generic_visit(self, node):
         raise EquationError(f"Unsupported expression type: {type(node).__name__}")
 
 
 
 
+@lru_cache(maxsize=8192)
 def preprocess_equation(equation: str) -> str:
-    """
-    Preprocess equation to convert XMILE-style syntax to Python-parseable format.
-    
-    Converts:
-    - IF condition THEN true_expr ELSE false_expr -> IF_THEN_ELSE(condition, true_expr, false_expr)
-    - Single = in comparisons -> == (except <= >= == !=)
-    """
-    if not equation:
+    """Translate XMILE conditionals with nesting and argument boundaries intact."""
+    if not equation or not equation.strip():
         return equation
-    
-    result = equation.strip()
-    
-    # Convert XMILE IF-THEN-ELSE to IF_THEN_ELSE function calls
-    # Process repeatedly to handle nested structures
-    max_iterations = 20
-    
-    for _ in range(max_iterations):
-        upper_result = result.upper()
-        
-        # Find last ELSE that is not followed by " IF " (with space after IF)
-        # This distinguishes "ELSE IF condition" from "ELSE IF_THEN_ELSE(" or "ELSE something_else"
-        else_positions = []
-        idx = 0
-        while True:
-            pos = upper_result.find(" ELSE ", idx)
-            if pos == -1:
-                break
-            # Check if this is "ELSE IF " (chained conditional)
-            remainder = upper_result[pos+6:].lstrip()
-            # Only skip if it is "IF " followed by non-underscore (i.e., not IF_THEN_ELSE)
-            if remainder.startswith("IF ") or (remainder.startswith("IF") and len(remainder) > 2 and remainder[2] not in "_"):
-                pass  # This is ELSE IF, skip it for now
+    if len(equation) > 10000:
+        raise EquationError("Equation exceeds 10,000 characters")
+    import io
+    import tokenize
+    try:
+        tokens = [token.string for token in tokenize.generate_tokens(io.StringIO(equation).readline)
+                  if token.type not in (tokenize.ENDMARKER, tokenize.NEWLINE,
+                                        tokenize.NL, tokenize.INDENT, tokenize.DEDENT)]
+    except (tokenize.TokenError, IndentationError) as exc:
+        raise EquationError(f"Syntax error in equation: {exc}") from exc
+    import keyword
+    for index, token in enumerate(tokens):
+        if token.startswith('"'):
+            if token.startswith('"""') or re.search(r'\\(?!["n\\])', token):
+                raise EquationError("Invalid quoted XMILE identifier escape")
+            try:
+                value = ast.literal_eval(token)
+            except (SyntaxError, ValueError) as exc:
+                raise EquationError("Invalid quoted XMILE identifier") from exc
+            tokens[index] = _encode_identifier(value)
+        elif (token.startswith(ENCODED_IDENTIFIER_PREFIX)
+              or (token.isidentifier() and any(ord(character) > 127 for character in token))
+              or (keyword.iskeyword(token) and token.upper() not in {"IF", "ELSE", "AND", "OR", "NOT", "TRUE", "FALSE"})):
+            tokens[index] = _encode_identifier(token)
+    position = 0
+
+    def is_statement_if(index):
+        depth = 0
+        for token in tokens[index + 1:]:
+            upper = token.upper()
+            if depth == 0 and upper == "THEN":
+                return True
+            if depth == 0 and (token in (",", ")", "]") or upper == "ELSE"):
+                return False
+            if token in ("(", "["):
+                depth += 1
+            elif token in (")", "]"):
+                depth -= 1
+        return False
+
+    def sequence(stops):
+        nonlocal position
+        output = []
+        while position < len(tokens) and tokens[position].upper() not in stops:
+            token = tokens[position]
+            upper = token.upper()
+            if upper == "IF" and is_statement_if(position):
+                position += 1
+                condition = sequence({"THEN"})
+                if position >= len(tokens) or tokens[position].upper() != "THEN":
+                    raise EquationError("IF requires THEN")
+                position += 1
+                when_true = sequence({"ELSE"})
+                if position >= len(tokens) or tokens[position].upper() != "ELSE":
+                    raise EquationError("IF requires ELSE")
+                position += 1
+                when_false = sequence(stops)
+                output.append(f"IF_THEN_ELSE({condition}, {when_true}, {when_false})")
+            elif token in ("(", "["):
+                close = ")" if token == "(" else "]"
+                position += 1
+                parts = []
+                while True:
+                    parts.append(sequence({close, ","}))
+                    if position >= len(tokens):
+                        raise EquationError("Unclosed expression")
+                    delimiter = tokens[position]
+                    position += 1
+                    if delimiter == close:
+                        break
+                output.append(token + ", ".join(parts) + close)
             else:
-                else_positions.append(pos)
-            idx = pos + 1
-        
-        if not else_positions:
-            break
-        
-        last_else_pos = else_positions[-1]
-        before_else = result[:last_else_pos]
-        after_else = result[last_else_pos+6:]  # Skip " ELSE "
-        
-        upper_before = before_else.upper()
-        then_pos = upper_before.rfind(" THEN ")
-        if then_pos == -1:
-            break
-        
-        before_then = before_else[:then_pos]
-        between_then_else = before_else[then_pos+6:]
-        upper_before_then = before_then.upper()
-        
-        # Find the IF that matches this THEN
-        if_pos = upper_before_then.rfind(" IF ")
-        if if_pos == -1:
-            if upper_before_then.strip().upper().startswith("IF "):
-                if_pos = upper_before_then.upper().find("IF ")
-            else:
-                break
-        else:
-            if_pos += 1  # Account for space
-        
-        prefix = before_then[:if_pos]
-        condition = before_then[if_pos+3:].strip()
-        true_val = between_then_else.strip()
-        false_val = after_else.strip()
-        
-        replacement = f"IF_THEN_ELSE({condition}, {true_val}, {false_val})"
-        result = prefix + replacement
-    
-    # Convert single = to == for comparisons (not <= >= == !=)
-    result = re.sub(r"(?<![<>=!])=(?!=)", "==", result)
-    
-    return result
+                position += 1
+                if upper in ("AND", "OR", "NOT"):
+                    token = upper.lower()
+                elif upper == "MOD" and position >= 2 and (
+                    tokens[position - 2].isidentifier() or tokens[position - 2] in (")", "]")
+                    or tokens[position - 2][0].isdigit() or tokens[position - 2].startswith(".")):
+                    token = "%"
+                elif token == "^":
+                    token = "**"
+                elif token == "=":
+                    token = "=="
+                elif token == "<>":
+                    token = "!="
+                elif token == "<" and position < len(tokens) and tokens[position] == ">":
+                    token = "!="
+                    position += 1
+                output.append(token)
+        return " ".join(output)
+
+    return sequence(set())
+
+
+@lru_cache(maxsize=8192)
+def _parse_expression(equation):
+    if len(equation) > 10000:
+        raise EquationError("Equation exceeds 10,000 characters")
+    tree = ast.parse(equation, mode="eval")
+    if sum(1 for _ in ast.walk(tree)) > 1000:
+        raise EquationError("Equation is too complex")
+    return tree
 
 
 def safe_eval(equation: str, variables: dict[str, float],
@@ -652,7 +709,7 @@ def safe_eval(equation: str, variables: dict[str, float],
 
     try:
         # Parse the expression
-        tree = ast.parse(equation, mode="eval")
+        tree = _parse_expression(equation)
         # Evaluate safely
         evaluator = SafeEvaluator(variables, context)
         return evaluator.visit(tree)
@@ -662,106 +719,119 @@ def safe_eval(equation: str, variables: dict[str, float],
         raise EquationError(f"Error evaluating equation '{equation}': {e}")
 
 
+def discover_stateful(equation, variables, context):
+    """Initialize every hidden stock, including those in inactive IF branches."""
+    if not equation.strip():
+        return
+    tree = _parse_expression(preprocess_equation(equation))
+    evaluator = SafeEvaluator(variables, context)
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+            if decode_identifier(node.func.id).upper() in STATEFUL_FUNCTIONS:
+                evaluator.visit(node)
+
+
+def advance_stateful(variables, context, h):
+    """Commit a simultaneous Euler step from inputs at t, never from t+h."""
+    changes = []
+    histories = []
+    states = [*context.delay_state.values(), *context.smooth_state.values()]
+    for state in states:
+        context.equation_key = state["equation_key"]
+        evaluator = SafeEvaluator(variables, context)
+        args = state["args"]
+        input_value = float(evaluator.visit(args[0]))
+        duration = float(evaluator.visit(args[1]))
+        if state["function"] in ("DELAY_N", "SMOOTH_N"):
+            order = float(evaluator.visit(args[2]))
+            if order != state["order"]:
+                raise EquationError("Changing delay/smooth order is unsupported")
+        if not math.isfinite(input_value) or not math.isfinite(duration) or duration <= 0:
+            raise EquationError("Delay/smooth input must be finite and time must be positive")
+        if state["function"] == "DELAY_FIXED":
+            if duration != state["duration"]:
+                raise EquationError("Changing fixed delay time is unsupported")
+            histories.append((state, (context.time, input_value)))
+            continue
+        if state["function"].startswith("DELAY") and duration != state["duration"]:
+            raise EquationError("Changing material delay time is unsupported; use SMOOTH for information")
+        previous = state["stages"]
+        tau = duration / state["order"]
+        updated = [value + h * ((input_value if i == 0 else previous[i - 1]) - value) / tau
+                   for i, value in enumerate(previous)]
+        if not all(math.isfinite(value) for value in updated):
+            raise EquationError("Non-finite delay/smooth state; reduce dt or check equations")
+        changes.append((state, updated))
+    # Nothing changes until all derivatives have been calculated successfully.
+    for state, sample in histories:
+        if not state["history"] or state["history"][-1][0] != sample[0]:
+            state["history"].append(sample)
+    for state, updated in changes:
+        state["stages"] = updated
+
+
+def _reference_names(tree):
+    """AST names excluding function positions and named LOOKUP table arguments."""
+    excluded = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            if isinstance(node.func, ast.Name):
+                excluded.add(id(node.func))
+                if decode_identifier(node.func.id).upper() == "LOOKUP" and node.args and isinstance(node.args[0], ast.Name):
+                    excluded.add(id(node.args[0]))
+    return {decode_identifier(node.id) for node in ast.walk(tree) if isinstance(node, ast.Name) and id(node) not in excluded}
+
+
 def validate_equation(equation: str, available_variables: list[str],
-                     table_names: Optional[list[str]] = None) -> tuple[bool, str]:
-    """
-    Validate that an equation is syntactically correct and uses only known variables.
-
-    Args:
-        equation: The equation to validate
-        available_variables: List of variable names that can be referenced
-        table_names: Optional list of lookup table names
-
-    Returns:
-        Tuple of (is_valid, error_message)
-    """
-    if not equation or equation.strip() == "":
+                      table_names: Optional[list[str]] = None) -> tuple[bool, str]:
+    """Validate using the same syntax, names and supported functions as simulation."""
+    if not equation or not equation.strip():
         return True, ""
-
     try:
-        # Parse the expression
-        tree = ast.parse(equation.strip(), mode="eval")
-
-        # Extract all variable references (excluding function call names and table names)
-        referenced_vars = set()
-        function_calls = set()
-
+        tree = _parse_expression(preprocess_equation(equation))
+        known = {canonical_name(name) for name in available_variables}
+        known |= {canonical_name(name) for name in SAFE_CONSTANTS}
+        known |= {"time", "dt", "time_step"}
+        tables = {canonical_name(name) for name in (table_names or [])}
+        functions = {name.upper() for name in SAFE_FUNCTIONS} | CONTEXT_FUNCTIONS
+        allowed_nodes = (ast.Expression, ast.Constant, ast.Name, ast.Load, ast.BinOp,
+                         ast.UnaryOp, ast.Call, ast.Compare, ast.IfExp, ast.BoolOp,
+                         ast.operator, ast.unaryop, ast.cmpop, ast.boolop, ast.Tuple, ast.List)
         for node in ast.walk(tree):
-            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
-                function_calls.add(node.func.id)
-                # For LOOKUP, first arg is table name - don't count as variable
-                if node.func.id.upper() == "LOOKUP" and node.args:
-                    if isinstance(node.args[0], ast.Name):
-                        continue  # Skip the table name from variable check
-            if isinstance(node, ast.Name):
-                referenced_vars.add(node.id)
-
-        # Remove function names from referenced_vars
-        referenced_vars -= function_calls
-
-        # Build known variables set
-        known_vars = set(available_variables) | set(SAFE_CONSTANTS.keys())
-        known_vars.add("TIME")  # TIME is always available
-        known_vars.add("time")
-
-        # Add table names if provided
-        if table_names:
-            known_vars.update(table_names)
-
-        # Add known function names (case insensitive)
-        all_functions = set(SAFE_FUNCTIONS.keys()) | CONTEXT_FUNCTIONS
-        all_functions.update(f.lower() for f in all_functions)
-        known_vars.update(all_functions)
-
-        unknown = referenced_vars - known_vars
+            if not isinstance(node, allowed_nodes):
+                return False, f"Unsupported expression type: {type(node).__name__}"
+            if isinstance(node, ast.Call):
+                if not isinstance(node.func, ast.Name):
+                    return False, "Only simple function calls are allowed"
+                if node.keywords:
+                    return False, "Keyword arguments are unsupported"
+                function = decode_identifier(node.func.id)
+                if function.upper() not in functions and canonical_name(function) not in tables:
+                    return False, f"Unknown function: {function}"
+                if function.upper() == "LOOKUP" and node.args:
+                    argument = node.args[0]
+                    table = decode_identifier(argument.id) if isinstance(argument, ast.Name) else (
+                        argument.value if isinstance(argument, ast.Constant) and isinstance(argument.value, str) else None)
+                    if table is None or canonical_name(table) not in tables:
+                        return False, f"Unknown lookup table: {table}"
+        unknown = {name for name in _reference_names(tree) if canonical_name(name) not in known}
         if unknown:
             return False, f"Unknown variables: {', '.join(sorted(unknown))}"
-
         return True, ""
-    except SyntaxError as e:
-        return False, f"Syntax error: {e}"
+    except (SyntaxError, EquationError, ValueError, RecursionError) as exc:
+        return False, str(exc)
 
 
 def get_equation_variables(equation: str) -> set[str]:
-    """
-    Extract all variable names referenced in an equation.
+    """References for connectors using simulation syntax and aliases.
 
-    Args:
-        equation: The equation to analyze
-
-    Returns:
-        Set of variable names (excluding functions, constants, TIME, and table names)
+    Include e/pi because a model parameter may shadow a mathematical constant;
+    connector generation filters these against actual model element names.
     """
-    if not equation or equation.strip() == "":
+    if not equation or not equation.strip():
         return set()
-
     try:
-        tree = ast.parse(equation.strip(), mode="eval")
-        variables = set()
-        function_names = set()
-        table_refs = set()
-
-        # First pass: find function calls and table references
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
-                function_names.add(node.func.id)
-                # For LOOKUP, first arg is table name
-                if node.func.id.upper() == "LOOKUP" and node.args:
-                    if isinstance(node.args[0], ast.Name):
-                        table_refs.add(node.args[0].id)
-
-        # Second pass: collect variable references
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Name):
-                name = node.id
-                # Exclude functions, constants, TIME, and context functions
-                if (name not in SAFE_FUNCTIONS and
-                    name not in SAFE_CONSTANTS and
-                    name.upper() not in CONTEXT_FUNCTIONS and
-                    name not in function_names and
-                    name not in table_refs and
-                    name.upper() != "TIME"):
-                    variables.add(name)
-        return variables
-    except SyntaxError:
+        names = _reference_names(_parse_expression(preprocess_equation(equation)))
+        return {name for name in names if name.upper() not in ("TIME", "DT", "TIME_STEP")}
+    except (SyntaxError, EquationError, ValueError, RecursionError):
         return set()

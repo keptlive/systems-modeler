@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock & Flow — Systems Dynamics Model Library</title>
+<meta name="description" content="A library of 1,078 systems dynamics models across 26 categories. Open source. Inspect equations, assumptions and sources.">
+<meta property="og:title" content="Stock & Flow — Systems Dynamics Model Library">
+<meta property="og:description" content="1,078 systems dynamics models across 26 categories. Economics, climate, epidemiology, physics, and more. Open source. Inspect equations, assumptions and sources.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stockandflow.org">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Stock & Flow — Systems Dynamics Model Library">
+<meta name="twitter:description" content="1,078 systems dynamics models across 26 categories. Open source. Inspect equations, assumptions and sources.">
+<meta property="og:image" content="https://stockandflow.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Stock &amp; Flow">
+<meta name="twitter:image" content="https://stockandflow.org/og-image.png">
+<link rel="canonical" href="https://stockandflow.org">
+<meta name="theme-color" content="#0a0e1a">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+  <link rel="search" type="application/opensearchdescription+xml" title="Stock & Flow" href="/opensearch.xml">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-deep:#070b14;--bg-primary:#0a0e1a;--bg-card:#111827;--bg-card-hover:#1a2332;
+  --bg-surface:#151d2e;--border:#1e293b;--border-hover:#334155;
+  --text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;
+  --accent:#6366f1;--accent-hover:#818cf8;--accent-glow:rgba(99,102,241,.15);
+  --accent2:#06b6d4;--accent2-glow:rgba(6,182,212,.1);
+  --gradient-hero:linear-gradient(135deg,rgba(99,102,241,.08),rgba(6,182,212,.05));
+  --gradient-card:linear-gradient(145deg,#111827,#0f172a);
+  --radius:12px;--radius-lg:16px;--radius-xl:24px;
+  --shadow:0 4px 24px rgba(0,0,0,.3);--shadow-lg:0 8px 40px rgba(0,0,0,.4);
+  --transition:all .25s cubic-bezier(.4,0,.2,1);
+  --font:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',Roboto,sans-serif;
+  --font-mono:'SF Mono','Fira Code','Cascadia Code',monospace;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);background:var(--bg-deep);color:var(--text-primary);
+  line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+::selection{background:var(--accent);color:#fff}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg-deep)}
+::-webkit-scrollbar-thumb{background:#334155;border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:#475569}
+
+/* ===== HERO ===== */
+.hero{
+  position:relative;min-height:520px;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:80px 24px 60px;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%,rgba(99,102,241,.12),transparent),
+    radial-gradient(ellipse 60% 50% at 80% 20%,rgba(6,182,212,.08),transparent),
+    radial-gradient(ellipse 40% 60% at 20% 80%,rgba(139,92,246,.06),transparent);
+  pointer-events:none;
+}
+.hero-grid{
+  position:absolute;inset:0;opacity:.04;
+  background-image:
+    linear-gradient(rgba(255,255,255,.1) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.1) 1px,transparent 1px);
+  background-size:60px 60px;
+  animation:gridDrift 20s linear infinite;
+}
+@keyframes gridDrift{to{background-position:60px 60px}}
+.hero-content{position:relative;z-index:1;max-width:800px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 16px;border-radius:999px;font-size:.8rem;font-weight:600;
+  background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.25);
+  color:var(--accent-hover);margin-bottom:24px;letter-spacing:.5px;
+  text-transform:uppercase;
+}
+.hero-badge .pulse{
+  width:8px;height:8px;border-radius:50%;background:#34d399;
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.hero h1{
+  font-size:clamp(2.5rem,6vw,4rem);font-weight:800;
+  letter-spacing:-.03em;line-height:1.1;margin-bottom:16px;
+  background:linear-gradient(135deg,#f1f5f9 0%,#cbd5e1 50%,#94a3b8 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero h1 span{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;
+}
+.hero-sub{
+  font-size:clamp(1.05rem,2.2vw,1.35rem);color:var(--text-secondary);
+  max-width:600px;margin:0 auto 40px;line-height:1.7;
+}
+.hero-stats{
+  display:flex;gap:40px;justify-content:center;flex-wrap:wrap;margin-top:32px;
+}
+.hero-stat{text-align:center}
+.hero-stat .num{
+  font-size:2rem;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-stat .label{font-size:.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
+/* ===== SEARCH ===== */
+.search-section{
+  max-width:720px;margin:-30px auto 0;padding:0 24px;position:relative;z-index:10;
+}
+.search-wrap{
+  position:relative;
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-lg),0 0 60px rgba(99,102,241,.06);
+  transition:var(--transition);
+}
+.search-wrap:focus-within{border-color:var(--accent);box-shadow:var(--shadow-lg),0 0 0 3px var(--accent-glow)}
+.search-icon{
+  position:absolute;left:20px;top:50%;transform:translateY(-50%);
+  color:var(--text-muted);pointer-events:none;font-size:1.1rem;
+}
+#searchInput{
+  width:100%;padding:18px 50px 18px 52px;
+  background:transparent;border:none;outline:none;
+  font-size:1.05rem;color:var(--text-primary);font-family:var(--font);
+}
+#searchInput::placeholder{color:var(--text-muted)}
+.search-clear{
+  position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:var(--text-muted);cursor:pointer;
+  font-size:1.2rem;display:none;padding:4px 8px;border-radius:6px;
+  transition:var(--transition);
+}
+.search-clear:hover{color:var(--text-primary);background:rgba(255,255,255,.05)}
+.search-clear.visible{display:block}
+.search-hint{
+  text-align:center;margin-top:12px;font-size:.82rem;color:var(--text-muted);
+}
+.search-hint kbd{
+  padding:2px 6px;border-radius:4px;font-family:var(--font-mono);font-size:.75rem;
+  background:var(--bg-surface);border:1px solid var(--border);
+}
+
+/* ===== MAIN LAYOUT ===== */
+.main{max-width:1280px;margin:0 auto;padding:60px 24px 40px}
+.section-header{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  gap:16px;margin-bottom:32px;
+}
+.section-title{font-size:1.5rem;font-weight:700;letter-spacing:-.02em}
+.section-count{
+  font-size:.85rem;color:var(--text-muted);
+  padding:4px 12px;background:var(--bg-surface);border-radius:999px;
+  border:1px solid var(--border);
+}
+.back-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 16px;border-radius:var(--radius);
+  background:var(--bg-surface);border:1px solid var(--border);
+  color:var(--text-secondary);cursor:pointer;font-size:.9rem;
+  transition:var(--transition);font-family:var(--font);
+}
+.back-btn:hover{background:var(--bg-card-hover);color:var(--text-primary);border-color:var(--border-hover)}
+
+/* ===== CATEGORY GRID ===== */
+.cat-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:16px;
+}
+.cat-card{
+  position:relative;padding:24px;border-radius:var(--radius-lg);
+  background:var(--gradient-card);border:1px solid var(--border);
+  cursor:pointer;transition:var(--transition);overflow:hidden;
+}
+.cat-card::before{
+  content:'';position:absolute;inset:0;border-radius:var(--radius-lg);
+  background:linear-gradient(135deg,rgba(99,102,241,.06),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.cat-card:hover{
+  transform:translateY(-3px);border-color:var(--border-hover);
+  box-shadow:var(--shadow),0 0 30px rgba(99,102,241,.08);
+}
+.cat-card:hover::before{opacity:1}
+.cat-card:active{transform:translateY(-1px)}
+.cat-emoji{font-size:2rem;margin-bottom:12px;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
+.cat-name{
+  font-size:1rem;font-weight:600;margin-bottom:6px;
+  text-transform:capitalize;position:relative;
+}
+.cat-count{
+  font-size:.82rem;color:var(--text-muted);position:relative;
+}
+.cat-bar{
+  position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:rgba(99,102,241,.1);border-radius:0 0 var(--radius-lg) var(--radius-lg);
+  overflow:hidden;
+}
+.cat-bar-fill{
+  height:100%;border-radius:3px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .6s cubic-bezier(.4,0,.2,1);
+}
+
+/* ===== MODEL GRID ===== */
+.model-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:16px;
+}
+.model-card{
+  position:relative;padding:24px;border-radius:var(--radius-lg);
+  background:var(--gradient-card);border:1px solid var(--border);
+  transition:var(--transition);display:flex;flex-direction:column;
+}
+.model-card:hover{
+  border-color:var(--border-hover);
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
+}
+.model-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.model-name{font-size:1.05rem;font-weight:600;line-height:1.3;flex:1}
+.model-cat-badge{
+  font-size:.7rem;padding:3px 10px;border-radius:999px;white-space:nowrap;
+  background:rgba(99,102,241,.1);color:var(--accent-hover);border:1px solid rgba(99,102,241,.2);
+  text-transform:capitalize;
+}
+.model-desc{
+  font-size:.88rem;color:var(--text-secondary);line-height:1.6;
+  flex:1;margin-bottom:16px;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+}
+.model-metrics{
+  display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;
+}
+.metric{
+  display:flex;align-items:center;gap:5px;font-size:.78rem;
+  padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.05);
+}
+.metric-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.metric-dot.stocks{background:#6366f1}
+.metric-dot.flows{background:#06b6d4}
+.metric-dot.vars{background:#8b5cf6}
+.metric-label{color:var(--text-muted)}
+.metric-val{color:var(--text-primary);font-weight:600}
+.model-actions{display:flex;gap:8px;margin-top:auto}
+.btn-simulate{
+  flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 16px;border-radius:var(--radius);font-size:.85rem;font-weight:600;
+  background:linear-gradient(135deg,var(--accent),#4f46e5);
+  color:#fff;border:none;cursor:pointer;transition:var(--transition);
+  text-decoration:none;font-family:var(--font);
+}
+.btn-simulate:hover{
+  background:linear-gradient(135deg,var(--accent-hover),var(--accent));
+  box-shadow:0 4px 16px rgba(99,102,241,.3);transform:translateY(-1px);
+}
+.btn-simulate:active{transform:translateY(0)}
+
+.btn-download-group{display:flex;gap:6px}
+.btn-download{
+  display:inline-flex;align-items:center;justify-content:center;gap:4px;
+  padding:8px 12px;border-radius:var(--radius);font-size:.78rem;font-weight:500;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);
+  color:var(--text-secondary);cursor:pointer;transition:var(--transition);
+  text-decoration:none;font-family:var(--font);white-space:nowrap;
+}
+.btn-download:hover{
+  background:rgba(255,255,255,.08);border-color:var(--border-hover);
+  color:var(--text-primary);
+}
+.btn-download svg{width:12px;height:12px;flex-shrink:0}
+
+/* ===== LOADING ===== */
+.loading{display:flex;flex-direction:column;align-items:center;gap:16px;padding:80px 0;color:var(--text-muted)}
+.spinner{
+  width:40px;height:40px;border:3px solid var(--border);
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ===== EMPTY STATE ===== */
+.empty{text-align:center;padding:80px 24px;color:var(--text-muted)}
+.empty-icon{font-size:3rem;margin-bottom:16px;opacity:.5}
+.empty-title{font-size:1.2rem;font-weight:600;color:var(--text-secondary);margin-bottom:8px}
+.empty-text{font-size:.9rem}
+
+/* ===== FOOTER ===== */
+.footer{
+  border-top:1px solid var(--border);padding:40px 24px;margin-top:60px;
+  text-align:center;color:var(--text-muted);font-size:.85rem;
+}
+.footer-links{display:flex;justify-content:center;gap:24px;margin-bottom:16px;flex-wrap:wrap}
+.footer-links a{
+  color:var(--text-secondary);text-decoration:none;transition:var(--transition);
+  display:inline-flex;align-items:center;gap:6px;
+}
+.footer-links a:hover{color:var(--accent-hover)}
+.footer-copy{opacity:.6}
+
+/* ===== ANIMATIONS ===== */
+.fade-in{animation:fadeIn .4s ease-out both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.stagger > *:nth-child(1){animation-delay:.02s}
+.stagger > *:nth-child(2){animation-delay:.04s}
+.stagger > *:nth-child(3){animation-delay:.06s}
+.stagger > *:nth-child(4){animation-delay:.08s}
+.stagger > *:nth-child(5){animation-delay:.1s}
+.stagger > *:nth-child(6){animation-delay:.12s}
+.stagger > *:nth-child(7){animation-delay:.14s}
+.stagger > *:nth-child(8){animation-delay:.16s}
+.stagger > *:nth-child(9){animation-delay:.18s}
+.stagger > *:nth-child(10){animation-delay:.2s}
+.stagger > *:nth-child(n+11){animation-delay:.22s}
+.stagger > *:nth-child(n+16){animation-delay:.24s}
+.stagger > *:nth-child(n+21){animation-delay:.26s}
+.stagger > *:nth-child(n+26){animation-delay:.28s}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .hero{min-height:420px;padding:60px 20px 50px}
+  .hero-stats{gap:24px}
+  .hero-stat .num{font-size:1.5rem}
+  .cat-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+  .cat-card{padding:18px}
+  .model-grid{grid-template-columns:1fr;gap:12px}
+  .model-card{padding:20px}
+  .section-header{flex-direction:column;align-items:flex-start}
+  .search-section{margin-top:-20px}
+}
+@media(max-width:480px){
+  .cat-grid{grid-template-columns:repeat(2,1fr)}
+  .hero h1{font-size:2rem}
+}
+
+/* ===== TRANSITIONS BETWEEN VIEWS ===== */
+#categoryView,#modelView,#searchResults{transition:opacity .3s ease}
+.view-hidden{display:none!important}
+</style>
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Stock & Flow",
+    "url": "https://stockandflow.org",
+    "description": "A library of 1,078 systems dynamics models across 26 categories. Open source. Inspect equations, assumptions and sources.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://stockandflow.org/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Stock & Flow Simulator",
+    "url": "https://stockandflow.live",
+    "description": "Interactive systems dynamics simulator. Build, simulate, and explore stock-and-flow models in the browser.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "isAccessibleForFree": true
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "DataCatalog",
+    "name": "Systems Dynamics Model Library",
+    "url": "https://stockandflow.org",
+    "description": "Curated collection of 1,078 systems dynamics models in 26 categories including economics, climate, epidemiology, physics, and more.",
+    "license": "https://opensource.org/licenses/MIT",
+    "creator": {
+      "@type": "Organization",
+      "name": "Stock & Flow",
+      "url": "https://stockandflow.org"
+    },
+    "keywords": ["systems dynamics", "stock and flow", "simulation", "XMILE", "system modeling", "feedback loops"]
+  }
+]
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Stock & Flow",
+  "url": "https://stockandflow.org",
+  "description": "A library of 1,078 systems dynamics models across 26 categories. Economics, climate, epidemiology, physics, and more. Open source. Inspect equations, assumptions and sources.",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "Stock & Flow",
+    "url": "https://stockandflow.org"
+  },
+  "screenshot": "https://stockandflow.org/og-image.png",
+  "featureList": [
+    "1,078 systems dynamics models",
+    "26 categories including economics, climate, epidemiology, physics",
+    "Interactive simulation with D3.js canvas",
+    "XMILE and JSON model downloads",
+    "AI-powered model generation",
+    "Category browsing and search"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "DataCatalog",
+  "name": "Stock & Flow Model Library",
+  "url": "https://stockandflow.org",
+  "description": "Open library of systems dynamics models for simulation and education",
+  "dataset": {
+    "@type": "Dataset",
+    "name": "Systems Dynamics Models",
+    "description": "1,078 systems dynamics models across 26 categories",
+    "license": "https://opensource.org/licenses/MIT",
+    "distribution": {
+      "@type": "DataDownload",
+      "encodingFormat": ["application/xml", "application/json"],
+      "contentUrl": "https://stockandflow.org"
+    }
+  }
+}
+</script>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="pulse"></span> Open Source</div>
+    <h1>Stock &amp; <span>Flow</span></h1>
+    <p class="hero-sub">Systems Dynamics Model Library — explore, inspect and simulate open-source examples.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num" id="statModels">0</div><div class="label">Models</div></div>
+      <div class="hero-stat"><div class="num" id="statCategories">0</div><div class="label">Categories</div></div>
+      <div class="hero-stat"><div class="num" id="statStocks">0</div><div class="label">Stocks</div></div>
+      <div class="hero-stat"><div class="num" id="statFlows">0</div><div class="label">Flows</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<div class="search-section">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search 1,078 models by name, description, or category..." autocomplete="off" spellcheck="false">
+    <button class="search-clear" id="searchClear" aria-label="Clear search">&times;</button>
+  </div>
+  <div class="search-hint">Press <kbd>/</kbd> to focus search</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+  <!-- Category View -->
+  <div id="categoryView">
+    <div class="section-header">
+      <h2 class="section-title">Browse by Category</h2>
+      <span class="section-count" id="catCount">26 categories</span>
+    </div>
+    <div class="cat-grid stagger" id="catGrid"></div>
+  </div>
+
+  <!-- Model View (single category) -->
+  <div id="modelView" class="view-hidden">
+    <div class="section-header">
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <button class="back-btn" id="backBtn">← All Categories</button>
+        <h2 class="section-title" id="modelViewTitle"></h2>
+      </div>
+      <span class="section-count" id="modelCount"></span>
+    </div>
+    <div class="model-grid stagger" id="modelGrid"></div>
+  </div>
+
+  <!-- Search Results -->
+  <div id="searchResults" class="view-hidden">
+    <div class="section-header">
+      <h2 class="section-title" id="searchTitle">Search Results</h2>
+      <span class="section-count" id="searchCount"></span>
+    </div>
+    <div class="model-grid stagger" id="searchGrid"></div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="https://stockandflow.live" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      stockandflow.live
+    </a>
+    <a href="https://github.com/keptlive/systems-modeler" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      GitHub
+    </a>
+  </div>
+  <div class="footer-copy">&copy; 2026 Stock &amp; Flow. Systems dynamics for everyone.</div>
+</footer>
+
+<script>
+const CATEGORY_ICONS = {
+  agriculture:'🌾',biology:'🧬',classic:'📚',climate:'🌍',ecology:'🦋',
+  economics:'📈',education:'🎓',energy:'⚡',engineering:'⚙️',environment:'🌿',
+  epidemiology:'🦠',evolution:'🧪',finance:'💰',healthcare:'🏥',management:'📊',
+  marine:'🐟',neuroscience:'🧠',other:'📦',physics:'⚛️',political:'🏛️',
+  psychology:'🧩',social:'👥',technology:'💻',test:'🧪',transportation:'🚗',urban:'🏙️'
+};
+
+let allModels = [];
+let categories = {};
+let totalStocks = 0, totalFlows = 0;
+
+// DOM refs
+const catGrid = document.getElementById('catGrid');
+const modelGrid = document.getElementById('modelGrid');
+const searchGrid = document.getElementById('searchGrid');
+const categoryView = document.getElementById('categoryView');
+const modelView = document.getElementById('modelView');
+const searchResults = document.getElementById('searchResults');
+const searchInput = document.getElementById('searchInput');
+const searchClear = document.getElementById('searchClear');
+
+// Animate counter
+function animateCount(el, target, duration=1200) {
+  const start = performance.now();
+  const initial = 0;
+  function step(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(initial + (target - initial) * eased).toLocaleString();
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// Render category grid
+function renderCategories() {
+  const sorted = Object.entries(categories).sort((a, b) => b[1].length - a[1].length);
+  const maxCount = sorted[0]?.[1].length || 1;
+
+  catGrid.innerHTML = sorted.map(([cat, models]) => `
+    <button type="button" class="cat-card fade-in" data-category="${escapeHTML(cat)}">
+      <span class="cat-emoji">${CATEGORY_ICONS[cat] || '📦'}</span>
+      <div class="cat-name">${escapeHTML(cat)}</div>
+      <div class="cat-count">${models.length} model${models.length !== 1 ? 's' : ''}</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:${(models.length / maxCount * 100).toFixed(1)}%"></div></div>
+    </button>
+  `).join('');
+  for (const card of catGrid.querySelectorAll('[data-category]')) {
+    card.addEventListener('click', () => showCategory(card.dataset.category));
+  }
+
+  document.getElementById('catCount').textContent = `${sorted.length} categories`;
+}
+
+// Render model card
+function modelCardHTML(m) {
+  const stockCount = m.stock_count ?? m.stocks?.length ?? 0;
+  const flowCount = m.flow_count ?? m.flows?.length ?? 0;
+  const varCount = m.variable_count ?? m.variables?.length ?? 0;
+  const desc = m.description || 'A systems dynamics example to inspect and simulate.';
+  const check = m.numerical_check === 'passed' ? 'Default run completed' :
+    m.numerical_check === 'failed' ? 'Needs investigation' : 'Not yet checked';
+  return `
+    <div class="model-card fade-in">
+      <div class="model-header">
+        <div class="model-name">${escapeHTML(m.name)}</div>
+        <span class="model-cat-badge">${CATEGORY_ICONS[m.category] || ''} ${escapeHTML(m.category || 'other')}</span>
+      </div>
+      <div class="model-desc">${escapeHTML(desc)}</div>
+      <div class="model-status ${m.numerical_check === 'failed' ? 'needs-review' : ''}">${check} · Scientific validity not established</div>
+      <div class="model-metrics">
+        <div class="metric"><span class="metric-dot stocks"></span><span class="metric-val">${stockCount}</span><span class="metric-label">stocks</span></div>
+        <div class="metric"><span class="metric-dot flows"></span><span class="metric-val">${flowCount}</span><span class="metric-label">flows</span></div>
+        <div class="metric"><span class="metric-dot vars"></span><span class="metric-val">${varCount}</span><span class="metric-label">variables</span></div>
+      </div>
+      <div class="model-actions">
+        <a class="btn-simulate" href="https://stockandflow.live/?model=${m.id}" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          Simulate
+        </a>
+        <div class="btn-download-group">
+          <a class="btn-download" href="https://stockandflow.live/api/models/${m.id}/export/xmile" download="${m.id}.xmile" title="Download XMILE (Vensim/Stella)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            XMILE
+          </a>
+          <a class="btn-download" href="#" onclick="event.preventDefault();downloadJSON('${m.id}')" title="Download JSON">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            JSON
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHTML(s) {
+  const div = document.createElement('div');
+  div.textContent = s;
+  return div.innerHTML;
+}
+
+// Show single category
+function showCategory(cat) {
+  const models = categories[cat] || [];
+  categoryView.classList.add('view-hidden');
+  searchResults.classList.add('view-hidden');
+  modelView.classList.remove('view-hidden');
+
+  document.getElementById('modelViewTitle').textContent =
+    `${CATEGORY_ICONS[cat] || ''} ${cat.charAt(0).toUpperCase() + cat.slice(1)}`;
+  document.getElementById('modelCount').textContent = `${models.length} model${models.length !== 1 ? 's' : ''}`;
+
+  modelGrid.innerHTML = models.map(modelCardHTML).join('');
+  window.scrollTo({ top: document.querySelector('.main').offsetTop - 20, behavior: 'smooth' });
+}
+
+// Back to categories
+document.getElementById('backBtn').addEventListener('click', () => {
+  modelView.classList.add('view-hidden');
+  searchResults.classList.add('view-hidden');
+  categoryView.classList.remove('view-hidden');
+  searchInput.value = '';
+  searchClear.classList.remove('visible');
+});
+
+// Search
+let searchTimeout;
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.trim();
+  searchClear.classList.toggle('visible', q.length > 0);
+
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    if (q.length === 0) {
+      searchResults.classList.add('view-hidden');
+      modelView.classList.add('view-hidden');
+      categoryView.classList.remove('view-hidden');
+      return;
+    }
+
+    const lower = q.toLowerCase();
+    const results = allModels.filter(m =>
+      m.name.toLowerCase().includes(lower) ||
+      (m.description || '').toLowerCase().includes(lower) ||
+      m.category.toLowerCase().includes(lower)
+    );
+
+    categoryView.classList.add('view-hidden');
+    modelView.classList.add('view-hidden');
+    searchResults.classList.remove('view-hidden');
+
+    document.getElementById('searchTitle').textContent = `Results for "${q}"`;
+    document.getElementById('searchCount').textContent = `${results.length} model${results.length !== 1 ? 's' : ''}`;
+
+    if (results.length === 0) {
+      searchGrid.innerHTML = `
+        <div class="empty" style="grid-column:1/-1">
+          <div class="empty-icon">🔍</div>
+          <div class="empty-title">No models found</div>
+          <div class="empty-text">Try a different search term or browse by category.</div>
+        </div>`;
+    } else {
+      // Limit to 60 for performance, show note if more
+      const shown = results.slice(0, 60);
+      searchGrid.innerHTML = shown.map(modelCardHTML).join('');
+      if (results.length > 60) {
+        searchGrid.innerHTML += `<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text-muted);font-size:.9rem">Showing 60 of ${results.length} results. Refine your search for more specific results.</div>`;
+      }
+    }
+  }, 200);
+});
+
+searchClear.addEventListener('click', () => {
+  searchInput.value = '';
+  searchClear.classList.remove('visible');
+  searchInput.focus();
+  searchInput.dispatchEvent(new Event('input'));
+});
+
+// Keyboard shortcut
+document.addEventListener('keydown', (e) => {
+  if (e.key === '/' && document.activeElement !== searchInput) {
+    e.preventDefault();
+    searchInput.focus();
+  }
+  if (e.key === 'Escape') {
+    searchInput.blur();
+    searchInput.value = '';
+    searchClear.classList.remove('visible');
+    searchInput.dispatchEvent(new Event('input'));
+  }
+});
+
+// Load data
+async function loadModels() {
+  catGrid.innerHTML = '<div class="loading" style="grid-column:1/-1"><div class="spinner"></div>Loading models...</div>';
+
+  try {
+    const res = await fetch('/api/models/catalog', {signal: AbortSignal.timeout(20000)});
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    allModels = (await res.json()).models;
+  } catch (err) {
+    console.error('Failed to load models:', err);
+    catGrid.innerHTML = `
+      <div class="empty" style="grid-column:1/-1">
+        <div class="empty-icon">⚠️</div>
+        <div class="empty-title">Could not load models</div>
+        <div class="empty-text">The model catalog is unavailable. <button type="button" onclick="loadModels()">Try again</button></div>
+      </div>`;
+    return;
+  }
+
+  // Build categories
+  categories = {};
+  totalStocks = 0;
+  totalFlows = 0;
+  allModels.forEach(m => {
+    const cat = m.category || 'other';
+    if (!categories[cat]) categories[cat] = [];
+    categories[cat].push(m);
+    totalStocks += m.stock_count ?? m.stocks?.length ?? 0;
+    totalFlows += m.flow_count ?? m.flows?.length ?? 0;
+  });
+
+  // Animate hero stats
+  animateCount(document.getElementById('statModels'), allModels.length);
+  animateCount(document.getElementById('statCategories'), Object.keys(categories).length);
+  animateCount(document.getElementById('statStocks'), totalStocks);
+  animateCount(document.getElementById('statFlows'), totalFlows);
+
+  renderCategories();
+
+  // Update search placeholder
+  searchInput.placeholder = `Search ${allModels.length.toLocaleString()} models by name, description, or category...`;
+}
+
+// Download model as JSON
+function downloadJSON(id, name) {
+  fetch('/api/models/' + id)
+    .then(r => { if (!r.ok) throw new Error('Download unavailable'); return r.json(); })
+    .then(data => {
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = id + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }).catch(() => alert('The model could not be downloaded. Please try again.'));
+}
+
+loadModels();
+</script>
+<style>
+.cat-card{font:inherit;color:inherit;text-align:left;width:100%}.cat-card:focus-visible,a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #9ecbff;outline-offset:4px}.model-status{font-size:.75rem;color:var(--text-muted);line-height:1.5;margin:0 0 16px}.model-status.needs-review{color:#f3c58a}.model-actions a{min-height:42px}.search-input{font-size:16px}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media(max-width:480px){.hero{min-height:320px;padding:36px 20px 48px}.hero-sub{font-size:15px;margin-bottom:20px}.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}.hero-stat .num{font-size:24px}.hero-stat .label{font-size:9px;letter-spacing:.4px}.hero h1{font-size:32px}.main{padding-top:36px}}
+</style>
+<!-- Cross-site navigation -->
+<div style="text-align:center;padding:1.5rem 1rem 1rem;margin-top:2rem;border-top:1px solid var(--border);">
+  <span style="font-size:0.78rem;color:var(--text-muted);margin-right:0.5rem;"><a href="https://stockandflow.live/guide" style="color:inherit;margin-right:1rem">Guide &amp; MCP</a> More free tools:</span>
+  <a href="https://launch.pics" target="_blank" rel="noopener" style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:20px;padding:0.35rem 0.8rem;font-size:0.8rem;color:var(--accent-hover);text-decoration:none;transition:all 0.15s;margin:0.2rem;display:inline-block;">Image Tools</a>
+  <a href="https://helloandy.net" target="_blank" rel="noopener" style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:20px;padding:0.35rem 0.8rem;font-size:0.8rem;color:var(--accent-hover);text-decoration:none;transition:all 0.15s;margin:0.2rem;display:inline-block;">Dev Tools</a>
+  <a href="https://everyone.food" target="_blank" rel="noopener" style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:20px;padding:0.35rem 0.8rem;font-size:0.8rem;color:var(--accent-hover);text-decoration:none;transition:all 0.15s;margin:0.2rem;display:inline-block;">Kitchen Tools</a>
+  <a href="https://contextwire.dev" target="_blank" rel="noopener" style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:20px;padding:0.35rem 0.8rem;font-size:0.8rem;color:var(--accent-hover);text-decoration:none;transition:all 0.15s;margin:0.2rem;display:inline-block;">Search API</a>
+</div>
+<style>.more-crosssite a:hover{background:var(--accent)!important;color:white!important;}</style>
+</body>
+</html>

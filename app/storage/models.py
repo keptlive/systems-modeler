@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from typing import Optional, Union
 from app.core.model import Model, ModelCreate, ModelUpdate
 import uuid
+import re
+import tempfile
 
 
 MODELS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "models")
@@ -19,13 +21,15 @@ def ensure_models_dir():
 
 def get_model_path(model_id: str) -> str:
     """Get the file path for a model."""
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,199}", model_id):
+        raise ValueError("Invalid model ID")
     return os.path.join(MODELS_DIR, f"{model_id}.json")
 
 
 def find_model_path(model_id: str) -> Optional[str]:
     """Find a model file by ID, searching all subdirectories."""
     ensure_models_dir()
-    target_filename = f"{model_id}.json"
+    target_filename = os.path.basename(get_model_path(model_id))
     
     # First check root directory
     root_path = os.path.join(MODELS_DIR, target_filename)
@@ -123,10 +127,14 @@ def create_model(model_data: Union[Model, ModelCreate]) -> Model:
         id=str(uuid.uuid4()),
         name=model_data.name,
         description=model_data.description,
+        source=model_data.source,
+        reference=model_data.reference,
         stocks=model_data.stocks,
         flows=model_data.flows,
         variables=model_data.variables,
         connectors=model_data.connectors,
+        tables=model_data.tables,
+        category=getattr(model_data, "category", None),
         time_settings=model_data.time_settings,
         created_at=now,
         updated_at=now,
@@ -143,7 +151,7 @@ def update_model(model_id: str, update_data: ModelUpdate) -> Optional[Model]:
     if not model:
         return None
 
-    update_dict = update_data.model_dump(exclude_unset=True)
+    update_dict = update_data.model_dump(exclude_unset=True, exclude_none=True)
     model_dict = model.model_dump()
     model_dict.update(update_dict)
     model_dict["updated_at"] = datetime.now(timezone.utc)
@@ -163,9 +171,18 @@ def save_model(model: Model) -> None:
     if len(new_connectors) > len(model.connectors):
         model.connectors = new_connectors
 
-    path = get_model_path(model.id)
-    with open(path, "w") as f:
-        json.dump(model.model_dump(mode="json"), f, indent=2, default=str)
+    path = find_model_path(model.id) or get_model_path(model.id)
+    # Atomic replacement keeps readers from observing partially written JSON.
+    fd, temporary = tempfile.mkstemp(prefix=".model-", dir=os.path.dirname(path))
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(model.model_dump(mode="json"), f, indent=2, default=str)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
 
 
 def delete_model(model_id: str) -> bool:

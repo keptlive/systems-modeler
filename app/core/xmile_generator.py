@@ -1,119 +1,94 @@
-"""Generate XMILE XML from a Model."""
-import html
-from datetime import datetime
+"""Export the supported scalar XMILE subset without discarding tables or geometry."""
+import ast
+from datetime import datetime, timezone
+import xml.etree.ElementTree as ET
 from app.core.model import Model
+from app.core.equations import preprocess_equation, canonical_name, decode_identifier, restore_identifiers
 
-
-def escape_xml(text: str) -> str:
-    """Escape special characters for XML."""
-    if not text:
-        return ""
-    return html.escape(text, quote=True)
+NS = 'http://docs.oasis-open.org/xmile/ns/XMILE/v1.0'
+PROVENANCE_NS = 'https://stockandflow.live/ns/model'
+ET.register_namespace('sf', PROVENANCE_NS)
 
 
 def generate_xmile(model: Model) -> str:
-    """
-    Convert a Model to XMILE XML format.
+    root = ET.Element('xmile', {'version': '1.0', 'xmlns': NS})
+    header = ET.SubElement(root, 'header')
+    ET.SubElement(header, 'name').text = model.name
+    ET.SubElement(header, 'vendor').text = 'Systems Modeler'
+    ET.SubElement(header, 'product', {'version': '1.1.0'}).text = 'Systems Modeler'
+    ET.SubElement(header, 'created').text = datetime.now(timezone.utc).isoformat()
+    specs = ET.SubElement(root, 'sim_specs', {'method': model.time_settings.integration_method})
+    for tag, value in [('start', model.time_settings.start), ('stop', model.time_settings.end), ('dt', model.time_settings.dt)]:
+        ET.SubElement(specs, tag).text = str(value)
+    model_node = ET.SubElement(root, 'model')
+    provenance = ET.SubElement(root, '{' + PROVENANCE_NS + '}provenance')
+    for field in ('description', 'source', 'reference', 'category'):
+        value = getattr(model, field)
+        if value:
+            ET.SubElement(provenance, '{' + PROVENANCE_NS + '}' + field).text = value
+    variables = ET.SubElement(model_node, 'variables')
+    tables = {table.name: table for table in model.tables}
+    embedded = set()
 
-    This generator creates valid XMILE files that can be used with:
-    - PySD library
-    - Stella/iThink
-    - Vensim (via conversion)
-    - Other XMILE-compatible tools
-    """
+    def graphical(parent, table, name=None):
+        attrs = {'type': table.interpolation}
+        if name is not None:
+            attrs['name'] = name
+        gf = ET.SubElement(parent, 'gf', attrs)
+        ET.SubElement(gf, 'xpts').text = ','.join(str(x) for x, _ in table.points)
+        ET.SubElement(gf, 'ypts').text = ','.join(str(y) for _, y in table.points)
 
-    # Build stocks XML with inflow/outflow tags
-    stocks_xml = []
+    def equation(parent, text, element_name):
+        # Embedded graphical functions export as their input expression + gf,
+        # so another XMILE reader need not understand our LOOKUP convenience call.
+        table_name = None
+        try:
+            expr = ast.parse(preprocess_equation(text), mode='eval').body
+            if isinstance(expr, ast.Call) and isinstance(expr.func, ast.Name) and expr.func.id.upper() == 'LOOKUP' and len(expr.args) == 2:
+                first = expr.args[0]
+                table_name = decode_identifier(first.id) if isinstance(first, ast.Name) else first.value if isinstance(first, ast.Constant) else None
+                if table_name in tables:
+                    argument = restore_identifiers(ast.unparse(expr.args[1]))
+                    text = argument if table_name == element_name else f'{canonical_name(table_name)}({argument})'
+        except (SyntaxError, ValueError):
+            pass
+        ET.SubElement(parent, 'eqn').text = text.replace('**', '^')
+        if table_name in tables and table_name == element_name:
+            graphical(parent, tables[table_name], table_name)
+            embedded.add(table_name)
+
     for stock in model.stocks:
-        # Find inflows and outflows for this stock
-        inflows = []
-        outflows = []
+        node = ET.SubElement(variables, 'stock', {'name': stock.name})
+        ET.SubElement(node, 'eqn').text = stock.equation or str(stock.initial_value)
+        if stock.units:
+            ET.SubElement(node, 'units').text = stock.units
         for flow in model.flows:
-            if flow.to_stock == stock.id or flow.to_stock == stock.name:
-                inflows.append(flow.name)
-            if flow.from_stock == stock.id or flow.from_stock == stock.name:
-                outflows.append(flow.name)
-
-        inflow_tags = "".join(f"\n                <inflow>{escape_xml(f)}</inflow>" for f in inflows)
-        outflow_tags = "".join(f"\n                <outflow>{escape_xml(f)}</outflow>" for f in outflows)
-
-        pos = stock.position
-        stocks_xml.append(f'''
-            <stock name="{escape_xml(stock.name)}">
-                <eqn>{stock.initial_value}</eqn>{inflow_tags}{outflow_tags}
-                <display x="{pos.x}" y="{pos.y}"/>
-            </stock>''')
-
-    # Build flows XML
-    flows_xml = []
+            if flow.to_stock in (stock.id, stock.name):
+                ET.SubElement(node, 'inflow').text = flow.name
+            if flow.from_stock in (stock.id, stock.name):
+                ET.SubElement(node, 'outflow').text = flow.name
     for flow in model.flows:
-        equation = escape_xml(flow.equation)
-        pos = flow.position
-        flows_xml.append(f'''
-            <flow name="{escape_xml(flow.name)}">
-                <eqn>{equation}</eqn>
-                <display x="{pos.x}" y="{pos.y}"/>
-            </flow>''')
-
-    # Build variables XML
-    variables_xml = []
-    for var in model.variables:
-        equation = escape_xml(str(var.equation))
-        pos = var.position
-        variables_xml.append(f'''
-            <aux name="{escape_xml(var.name)}">
-                <eqn>{equation}</eqn>
-                <display x="{pos.x}" y="{pos.y}"/>
-            </aux>''')
-
-    # Build lookup tables XML (graphical functions)
-    gf_xml = []
+        node = ET.SubElement(variables, 'flow', {'name': flow.name})
+        equation(node, flow.equation, flow.name)
+        if flow.units:
+            ET.SubElement(node, 'units').text = flow.units
+    for variable in model.variables:
+        node = ET.SubElement(variables, 'aux', {'name': variable.name})
+        equation(node, variable.equation, variable.name)
+        if variable.units:
+            ET.SubElement(node, 'units').text = variable.units
     for table in model.tables:
-        # Format points as XMILE gf (graphical function)
-        points_str = ",".join(f"({x},{y})" for x, y in table.points)
-        x_pts = ",".join(str(x) for x, _ in table.points)
-        y_pts = ",".join(str(y) for _, y in table.points)
-        gf_xml.append(f'''
-            <aux name="{escape_xml(table.name)}">
-                <gf>
-                    <xpts>{x_pts}</xpts>
-                    <ypts>{y_pts}</ypts>
-                </gf>
-            </aux>''')
-
-    # Build connectors XML
-    connectors_xml = []
-    for i, conn in enumerate(model.connectors):
-        connectors_xml.append(f'''
-            <connector uid="{i+1}">
-                <from>{escape_xml(conn.from_element)}</from>
-                <to>{escape_xml(conn.to_element)}</to>
-            </connector>''')
-
-    # Use actual model time settings
-    ts = model.time_settings
-
-    xmile = f'''<?xml version="1.0" encoding="UTF-8"?>
-<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
-    <header>
-        <name>{escape_xml(model.name)}</name>
-        <vendor>Systems Modeler</vendor>
-        <product version="1.0">Systems Modeler</product>
-        <created>{datetime.now().isoformat()}</created>
-    </header>
-    <sim_specs>
-        <start>{ts.start}</start>
-        <stop>{ts.end}</stop>
-        <dt>{ts.dt}</dt>
-    </sim_specs>
-    <model>
-        <variables>{''.join(stocks_xml)}{''.join(flows_xml)}{''.join(variables_xml)}{''.join(gf_xml)}
-        </variables>
-        <views>
-            <view>{''.join(connectors_xml)}
-            </view>
-        </views>
-    </model>
-</xmile>'''
-
-    return xmile
+        if table.name not in embedded:
+            graphical(variables, table, table.name)
+    view = ET.SubElement(ET.SubElement(model_node, 'views'), 'view')
+    elements = [*model.stocks, *model.flows, *model.variables]
+    id_to_name = {element.id: element.name for element in elements}
+    for kind, entries in [('stock', model.stocks), ('flow', model.flows), ('aux', model.variables)]:
+        for element in entries:
+            ET.SubElement(view, kind, {'name': element.name, 'x': str(element.position.x), 'y': str(element.position.y)})
+    for i, connector in enumerate(model.connectors):
+        node = ET.SubElement(view, 'connector', {'uid': str(i + 1)})
+        ET.SubElement(node, 'from').text = id_to_name.get(connector.from_element, connector.from_element)
+        ET.SubElement(node, 'to').text = id_to_name.get(connector.to_element, connector.to_element)
+    ET.indent(root, space='  ')
+    return '<?xml version="1.0" encoding="UTF-8"?>\n' + ET.tostring(root, encoding='unicode')

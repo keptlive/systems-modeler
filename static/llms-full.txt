@@ -1,0 +1,23 @@
+# Stock & Flow
+Visual stock-and-flow editor and systems dynamics simulator.
+Guide: https://stockandflow.live/guide
+Library: https://stockandflow.org/
+API schema: https://stockandflow.live/api/schema
+Health: https://stockandflow.live/api/health
+
+Use GET /api/models/catalog for the searchable metadata index and GET /api/models/{id} for definitions. POST /api/validate inspects inputs without saving. POST /api/simulate runs an explicit model or model_id. POST /api/analyze/statistics computes statistics. CRUD and XMILE import/export remain available under /api/models. AI generation and modification require an existing configured provider.
+
+MCP Streamable HTTP: https://stockandflow.live/mcp/
+Legacy SSE: https://stockandflow.live/mcp/sse
+Transport information: https://stockandflow.live/mcp/info
+Local stdio: python -m app.mcp_server
+Tools: list_models, get_model, validate_model, simulate_model, compare_scenarios, analyze_model, export_model_xmile, generate_model_from_description, modify_existing_model.
+Resources: systems://guide and systems://models/{id}.
+Prompt: investigate_system.
+Numerical tools do not write models or call AI providers. AI tools return unsaved drafts.
+
+Agent-driven pages (HTTP/SSE): open_workspace returns a private page_url and workspace_key. Open the URL, inspect_workspace, make targeted edits with edit_workspace_elements and expected_revision, run_workspace, then set_workspace_view. Check browser.applied_revision and browser.view to verify what appeared. update_workspace_model replaces a whole private draft when explicitly intended. close_workspace revokes the private session. Page tools use the user's own agent and no server-side AI account. They never write to the saved library. Session keys are private capabilities; idle expiry is one hour and a server restart ends sessions. Local stdio supports numerical tools but interactive pages require the HTTP/SSE connection.
+
+Always inspect initial values, equations, flow endpoints, units and sources. A completed numerical run does not establish scientific validity. Library defaults include unresolved references, unsupported functions and unstable scenarios. Public status badges are bound to exact model-file hashes.
+
+Euler and RK4 honor configured start, end and dt. Delay/smoothing models require Euler. Bounds: 500 explicit elements, 10,000 intervals and one million element-intervals including hidden stages. Invalid inputs and unresolved equations produce explicit errors. XMILE import supports a scalar subset and rejects unsupported behavior such as arrays, queues, conveyors and explicit nonnegative constraints.

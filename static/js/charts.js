@@ -23,7 +23,7 @@ const Charts = {
         animationSpeed: 1,     // 1x, 2x, 4x speed multiplier
         showTooltip: true,
         showComparison: false,
-        normalize: true,      // Scale each variable to 0-100% // Overlay previous runs
+        normalize: false,     // Optional scaling of each variable to 0-100%
         variables: {}          // { 'Population': { visible: true, color: '#4CAF50' } }
     },
 
@@ -37,6 +37,10 @@ const Charts = {
         '#4CAF50', '#2196F3', '#FF9800', '#E91E63', '#9C27B0',
         '#00BCD4', '#FFEB3B', '#795548', '#607D8B', '#8BC34A'
     ],
+
+    variableKey(name) {
+        return 'v-' + Array.from(name, character => character.codePointAt(0).toString(16)).join('-');
+    },
 
     /**
      * Initialize charts module
@@ -153,8 +157,11 @@ const Charts = {
      */
     getDimensions() {
         const rect = this.container.getBoundingClientRect();
-        const width = rect.width || 600;
-        const height = rect.height || 350;
+        // :empty hides the plot while render clears its old SVG. Measure the
+        // parent as a fallback rather than creating a scaled-down 600px chart.
+        const width = rect.width || this.container.parentElement.clientWidth || 600;
+        const height = rect.height || parseFloat(getComputedStyle(this.container).height) || 350;
+        this.margin = {top:24, right:width < 500 ? 16 : 120, bottom:44, left:width < 500 ? 52 : 70};
 
         return {
             width,
@@ -249,6 +256,7 @@ const Charts = {
      * Create SVG with zoom behavior
      */
     createSvg(dim) {
+        this._plotId = 'plot-' + (this._plotSequence = (this._plotSequence || 0) + 1);
         const svg = d3.select(this.container)
             .append('svg')
             .attr('width', dim.width)
@@ -260,7 +268,7 @@ const Charts = {
 
         // Clip path for chart area
         defs.append('clipPath')
-            .attr('id', 'chart-clip')
+            .attr('id', this._plotId + '-clip')
             .append('rect')
             .attr('width', dim.innerWidth)
             .attr('height', dim.innerHeight);
@@ -269,7 +277,7 @@ const Charts = {
         this.getVisibleVariables().forEach(name => {
             const color = this.options.variables[name]?.color || '#4CAF50';
             const gradient = defs.append('linearGradient')
-                .attr('id', `gradient-${name.replace(/\s+/g, '-')}`)
+                .attr('id', `gradient-${this._plotId}-${this.variableKey(name)}`)
                 .attr('x1', '0%').attr('y1', '0%')
                 .attr('x2', '0%').attr('y2', '100%');
 
@@ -291,7 +299,7 @@ const Charts = {
      * Add axes to chart
      */
     addAxes(g, xScale, yScale, dim) {
-        const xAxis = d3.axisBottom(xScale).ticks(8);
+        const xAxis = d3.axisBottom(xScale).ticks(Math.max(3, Math.floor(dim.innerWidth / 55)));
         const yAxis = d3.axisLeft(yScale).ticks(6);
 
         // X axis
@@ -337,17 +345,18 @@ const Charts = {
             .attr('class', 'axis-label')
             .attr('transform', 'rotate(-90)')
             .attr('x', -dim.innerHeight / 2)
-            .attr('y', -50)
+            .attr('y', -(this.margin.left - 14))
             .attr('fill', 'var(--text-secondary)')
             .attr('text-anchor', 'middle')
             .attr('font-size', '12px')
-            .text('Value');
+            .text(this.options.normalize && this.options.type === 'line' ? 'Normalized (%)' : 'Value');
     },
 
     /**
      * Add interactive legend
      */
     addLegend(svg, dim) {
+        if (dim.width < 500) return;
         if (!this.options.showLegend) return;
 
         const legend = svg.append('g')
@@ -423,7 +432,7 @@ const Charts = {
         const hoverDots = g.append('g').attr('class', 'hover-dots');
         visibleVars.forEach(name => {
             hoverDots.append('circle')
-                .attr('class', `hover-dot-${name.replace(/\s+/g, '-')}`)
+                .attr('class', `hover-dot-${this.variableKey(name)}`)
                 .attr('r', 5)
                 .attr('fill', this.options.variables[name]?.color || '#4CAF50')
                 .attr('stroke', 'white')
@@ -462,11 +471,11 @@ const Charts = {
                     const color = this.options.variables[name]?.color || '#4CAF50';
                     tooltipHtml += `<div class="tooltip-row">
                         <span class="tooltip-color" style="background:${color}"></span>
-                        <span class="tooltip-name">${name}:</span>
+                        <span class="tooltip-name">${App.escapeHtml(name)}:</span>
                         <span class="tooltip-value">${this.formatNumber(val)}</span>
                     </div>`;
 
-                    hoverDots.select(`.hover-dot-${name.replace(/\s+/g, '-')}`)
+                    hoverDots.select(`.hover-dot-${this.variableKey(name)}`)
                         .attr('cx', xScale(t))
                         .attr('cy', yScale(val))
                         .style('opacity', 1);
@@ -561,7 +570,7 @@ const Charts = {
 
         // Chart area with clipping
         const chartArea = g.append('g')
-            .attr('clip-path', 'url(#chart-clip)');
+            .attr('clip-path', `url(#${this._plotId}-clip)`);
 
         // Line generator
         const line = d3.line()
@@ -579,7 +588,7 @@ const Charts = {
 
             const path = chartArea.append('path')
                 .datum(vals)
-                .attr('class', `chart-line line-${name.replace(/\s+/g, '-')}`)
+                .attr('class', `chart-line line-${this.variableKey(name)}`)
                 .attr('d', line)
                 .attr('fill', 'none')
                 .attr('stroke', color)
@@ -646,7 +655,7 @@ const Charts = {
         this.addAxes(g, xScale, yScale, dim);
 
         const chartArea = g.append('g')
-            .attr('clip-path', 'url(#chart-clip)');
+            .attr('clip-path', `url(#${this._plotId}-clip)`);
 
         // Area generator
         const area = d3.area()
@@ -668,19 +677,19 @@ const Charts = {
             if (!vals) return;
 
             const color = this.options.variables[name]?.color || '#4CAF50';
-            const gradientId = `gradient-${name.replace(/\s+/g, '-')}`;
+            const gradientId = `gradient-${this._plotId}-${this.variableKey(name)}`;
 
             // Area
             chartArea.append('path')
                 .datum(vals)
-                .attr('class', `chart-area area-${name.replace(/\s+/g, '-')}`)
+                .attr('class', `chart-area area-${this.variableKey(name)}`)
                 .attr('d', area)
                 .attr('fill', `url(#${gradientId})`);
 
             // Line
             chartArea.append('path')
                 .datum(vals)
-                .attr('class', `chart-line line-${name.replace(/\s+/g, '-')}`)
+                .attr('class', `chart-line line-${this.variableKey(name)}`)
                 .attr('d', line)
                 .attr('fill', 'none')
                 .attr('stroke', color)
@@ -711,7 +720,7 @@ const Charts = {
         const stackData = time.map((t, i) => {
             const row = { time: t };
             visibleVars.forEach(name => {
-                row[name] = Math.max(0, values[name]?.[i] || 0);
+                row[name] = values[name]?.[i] ?? 0;
             });
             return row;
         });
@@ -719,19 +728,20 @@ const Charts = {
         const stack = d3.stack()
             .keys(visibleVars)
             .order(d3.stackOrderNone)
-            .offset(d3.stackOffsetNone);
+            .offset(d3.stackOffsetDiverging);
 
         const series = stack(stackData);
 
         // Y scale for stacked data
         const yMax = d3.max(series, s => d3.max(s, d => d[1]));
+        const yMin = d3.min(series, s => d3.min(s, d => d[0]));
 
         const xScale = d3.scaleLinear()
             .domain([time[0], time[time.length - 1]])
             .range([0, dim.innerWidth]);
 
         const yScale = d3.scaleLinear()
-            .domain([0, yMax * 1.1])
+            .domain(yMin === yMax ? [yMin-1,yMax+1] : [Math.min(0,yMin*1.1),Math.max(0,yMax*1.1)])
             .range([dim.innerHeight, 0]);
 
         const g = svg.append('g')
@@ -740,7 +750,7 @@ const Charts = {
         this.addAxes(g, xScale, yScale, dim);
 
         const chartArea = g.append('g')
-            .attr('clip-path', 'url(#chart-clip)');
+            .attr('clip-path', `url(#${this._plotId}-clip)`);
 
         const area = d3.area()
             .x((d, i) => xScale(time[i]))
@@ -755,7 +765,7 @@ const Charts = {
 
             chartArea.append('path')
                 .datum(s)
-                .attr('class', `stacked-area area-${name.replace(/\s+/g, '-')}`)
+                .attr('class', `stacked-area area-${this.variableKey(name)}`)
                 .attr('d', area)
                 .attr('fill', color)
                 .attr('fill-opacity', 0.7)
@@ -826,7 +836,7 @@ const Charts = {
         g.append('text')
             .attr('transform', 'rotate(-90)')
             .attr('x', -dim.innerHeight / 2)
-            .attr('y', -50)
+            .attr('y', -(this.margin.left - 14))
             .attr('fill', 'var(--text-secondary)')
             .attr('text-anchor', 'middle')
             .attr('font-size', '12px')
@@ -839,7 +849,7 @@ const Charts = {
         const line = d3.line()
             .x(d => xScale(d[0]))
             .y(d => yScale(d[1]))
-            .curve(d3.curveMonotoneX);
+            .curve(d3.curveLinear);
 
         const color = this.options.variables[xVar]?.color || '#4CAF50';
 
@@ -930,7 +940,7 @@ const Charts = {
                     .curve(d3.curveMonotoneX);
 
                 visibleVars.forEach(name => {
-                    g.select(`.line-${name.replace(/\s+/g, '-')}`)
+                    g.select(`.line-${this.variableKey(name)}`)
                         .attr('d', line(values[name]));
                 });
             });
@@ -1217,7 +1227,7 @@ const Charts = {
         this.addAxes(g, xScale, yScale, dim);
 
         const chartArea = g.append('g')
-            .attr('clip-path', 'url(#chart-clip)');
+            .attr('clip-path', `url(#${this._plotId}-clip)`);
 
         // Line generator
         const line = d3.line()
@@ -1235,7 +1245,7 @@ const Charts = {
 
             chartArea.append('path')
                 .datum(vals)
-                .attr('class', `chart-line line-${name.replace(/\s+/g, '-')}`)
+                .attr('class', `chart-line line-${this.variableKey(name)}`)
                 .attr('d', line)
                 .attr('fill', 'none')
                 .attr('stroke', color)

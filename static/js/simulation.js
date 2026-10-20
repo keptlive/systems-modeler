@@ -18,7 +18,7 @@ const Simulation = {
         const start = ts.start ?? 0;
         const end = ts.end ?? 100;
         const dt = ts.dt ?? 0.25;
-        return { start, end, dt };
+        return { start, end, dt, integration_method: ts.integration_method || 'euler' };
     },
 
     init() {
@@ -30,7 +30,7 @@ const Simulation = {
      * Run simulation on current model
      */
     async run() {
-        if (App.model.stocks.length === 0 && App.model.flows.length === 0) {
+        if (App.model.stocks.length === 0 && App.model.flows.length === 0 && App.model.variables.length === 0) {
             alert('No model to simulate. Add some stocks and flows first.');
             return;
         }
@@ -50,10 +50,11 @@ const Simulation = {
         }
 
         try {
+            this.clear();
             const response = await fetch('/api/simulate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model: App.model, time_settings: this.getTimeSettings() })
+                body: JSON.stringify({ model: App.modelSnapshot(), time_settings: this.getTimeSettings() })
             });
 
             if (!response.ok) {
@@ -61,42 +62,15 @@ const Simulation = {
                 throw new Error(error.detail || 'Simulation failed');
             }
 
-            this.results = await response.json();
-            this.displayResults();
-
-            // Update advanced charts module
-            if (typeof Charts !== 'undefined') {
-                Charts.setResults(this.results);
-                Charts.render();
-                const mobileContainer = document.getElementById('chart-container-mobile');
-                if (mobileContainer) {
-                    const originalContainer = Charts.container;
-                    Charts.container = mobileContainer;
-                    Charts.render();
-                    Charts.container = originalContainer;
-                }
-            } else {
-                this.renderChart();
-            }
-
-            // Update analytics module
-            if (typeof Analytics !== 'undefined') {
-                await Analytics.setResults(this.results);
-                Analytics.render();
-            }
-
-            // Update AI agent module
-            if (typeof AIAgent !== 'undefined') {
-                AIAgent.setContext(App.model, this.results);
-                AIAgent.render();
-            }
+            await this.acceptResults(await response.json());
 
         } catch (error) {
+            this.lastError=error.message;
             console.error("Simulation error:", error);
             if (this.resultsContent) {
                 this.resultsContent.innerHTML = `
                     <p class="error" style="color: var(--accent-secondary);">
-                        Simulation error: ${error.message}
+                        Simulation error: ${App.escapeHtml(error.message)}
                     </p>
                 `;
             }
@@ -109,20 +83,57 @@ const Simulation = {
                 mobileBtn.disabled = false;
                 mobileBtn.textContent = '▶ Run';
             }
-            if (App.isMobile && this.results) {
+            if (App.isMobile && (this.results||this.lastError)) {
                 App.openSlidePanel('results');
             }
         }
     },
+
+    async acceptResults(results) {
+        this.lastError=null;
+        this.results = results;
+        this.displayResults();
+
+        // Update advanced charts module
+        if (typeof Charts !== 'undefined') {
+            Charts.setResults(this.results);
+            Charts.render();
+            const mobileContainer = document.getElementById('chart-container-mobile');
+            if (mobileContainer) {
+                const originalContainer = Charts.container;
+                Charts.container = mobileContainer;
+                Charts.render();
+                Charts.container = originalContainer;
+            }
+        } else {
+            this.renderChart();
+        }
+
+        // Update analytics module
+        if (typeof Analytics !== 'undefined') {
+            await Analytics.setResults(this.results);
+            Analytics.render();
+        }
+
+        // Update AI agent module
+        if (typeof AIAgent !== 'undefined') {
+            AIAgent.setContext(App.model, this.results);
+            AIAgent.render();
+        }
+
+    },
+
 
     /**
      * Clear results
      */
     clear() {
         this.results = null;
+        this.lastError=null;
         if (this.resultsContent) {
             this.resultsContent.innerHTML = '<p class="no-results">Run a simulation to see results</p>';
         }
+        document.getElementById('chart-variables')?.replaceChildren();
         if (this.chartContainer) {
             this.chartContainer.innerHTML = '';
         }
@@ -166,7 +177,7 @@ const Simulation = {
             html += `
                 <div style="display: flex; align-items: center; gap: 0.5rem; margin: 0.25rem 0;">
                     <span style="width: 10px; height: 10px; background: ${color}; border-radius: 50%;"></span>
-                    <span>${name}: ${this.formatNumber(finalValue)}</span>
+                    <span>${App.escapeHtml(name)}: ${this.formatNumber(finalValue)}</span>
                 </div>
             `;
         });

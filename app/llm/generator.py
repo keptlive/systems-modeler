@@ -40,7 +40,7 @@ def get_llm_client():
     return None, None
 
 
-def call_llm(messages: list[dict], json_mode: bool = True) -> str:
+def _call_llm(messages: list[dict], json_mode: bool = True) -> str:
     """Call the LLM."""
     client, provider = get_llm_client()
     if not client:
@@ -80,6 +80,16 @@ def call_llm(messages: list[dict], json_mode: bool = True) -> str:
     raise LLMError("Unknown LLM provider")
 
 
+def call_llm(messages: list[dict], json_mode: bool = True) -> str:
+    """Optional legacy drafting; never expose a provider exception or credential URL."""
+    try:
+        return _call_llm(messages,json_mode)
+    except LLMError:
+        raise
+    except Exception:
+        raise LLMError('Optional server AI could not complete the request. Connect your own agent through MCP, or contact the site operator.') from None
+
+
 def parse_model_json(json_str: str) -> dict:
     """Parse JSON from LLM response."""
     if "```json" in json_str:
@@ -102,7 +112,9 @@ def dict_to_model(data: dict) -> Model:
     for s in data.get("stocks", []):
         pos = s.get("position", {})
         stocks.append(Stock(
+            **({"id": str(s["id"])} if s.get("id") else {}),
             name=str(s["name"]),
+            units=s.get("units"),
             initial_value=float(s.get("initial_value", 0)),
             equation=str(s.get("equation", "")),
             position=Position(x=float(pos.get("x", 300)), y=float(pos.get("y", 200)))
@@ -112,7 +124,9 @@ def dict_to_model(data: dict) -> Model:
     for f in data.get("flows", []):
         pos = f.get("position", {})
         flows.append(Flow(
+            **({"id": str(f["id"])} if f.get("id") else {}),
             name=str(f["name"]),
+            units=f.get("units"),
             equation=str(f.get("equation", "0")),
             from_stock=str(f.get("from_stock")) if f.get("from_stock") else None,
             to_stock=str(f.get("to_stock")) if f.get("to_stock") else None,
@@ -123,7 +137,9 @@ def dict_to_model(data: dict) -> Model:
     for v in data.get("variables", []):
         pos = v.get("position", {})
         variables.append(Variable(
+            **({"id": str(v["id"])} if v.get("id") else {}),
             name=str(v["name"]),
+            units=v.get("units"),
             equation=str(v.get("equation", "0")),
             position=Position(x=float(pos.get("x", 500)), y=float(pos.get("y", 200)))
         ))
@@ -142,16 +158,21 @@ def dict_to_model(data: dict) -> Model:
     time_settings = TimeSettings(
         start=float(ts.get("start", 0)),
         end=float(ts.get("end", 100)),
-        dt=float(ts.get("dt", 0.25))
+        dt=float(ts.get("dt", 0.25)),
+        integration_method=ts.get("integration_method", "euler"),
     )
 
     return Model(
         name=str(data.get("name", "Generated Model")),
         description=str(data.get("description", "")),
+        source=data.get("source"),
+        reference=data.get("reference"),
         stocks=stocks,
         flows=flows,
         variables=variables,
         connectors=connectors,
+        tables=data.get("tables", []),
+        category=data.get("category"),
         time_settings=time_settings
     )
 

@@ -2,7 +2,7 @@
 API endpoints for LLM-powered model generation and modification.
 """
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 from app.core.model import LLMGenerateRequest, LLMModifyRequest, Model
 from app.llm.generator import generate_model, is_llm_available, LLMError
@@ -17,14 +17,14 @@ router = APIRouter()
 class FindEquilibriumRequest(BaseModel):
     model: Model
     target_stocks: Optional[list[str]] = None
-    max_iterations: int = 100
+    max_iterations: int = Field(default=100, ge=1, le=500)
 
 
 class FitToDataRequest(BaseModel):
     model: Model
     historical_data: dict[str, list[float]]
     time_points: list[float]
-    max_iterations: int = 200
+    max_iterations: int = Field(default=200, ge=1, le=500)
 
 
 class RefineModelRequest(BaseModel):
@@ -34,13 +34,15 @@ class RefineModelRequest(BaseModel):
 
 
 @router.get("/status")
-async def llm_status():
+def llm_status():
     """Check if LLM functionality is available."""
-    return {"available": is_llm_available()}
+    configured=is_llm_available()
+    return {"available":configured,"configured":configured,"verified":False,
+            "message":"Optional server AI configuration; use your own agent through MCP without a server-side AI account"}
 
 
 @router.post("/generate", response_model=Model)
-async def generate_model_from_description(request: LLMGenerateRequest):
+def generate_model_from_description(request: LLMGenerateRequest):
     """
     Generate a new model from a natural language description.
 
@@ -49,7 +51,7 @@ async def generate_model_from_description(request: LLMGenerateRequest):
     if not is_llm_available():
         raise HTTPException(
             status_code=503,
-            detail="LLM not available. Set ANTHROPIC_API_KEY or OPENAI_API_KEY."
+            detail="LLM not available. Set GEMINI_API_KEY or OPENROUTER_API_KEY."
         )
 
     try:
@@ -62,7 +64,7 @@ async def generate_model_from_description(request: LLMGenerateRequest):
 
 
 @router.post("/modify", response_model=Model)
-async def modify_existing_model(request: LLMModifyRequest):
+def modify_existing_model(request: LLMModifyRequest):
     """
     Modify an existing model based on a natural language request.
 
@@ -71,7 +73,7 @@ async def modify_existing_model(request: LLMModifyRequest):
     if not is_llm_available():
         raise HTTPException(
             status_code=503,
-            detail="LLM not available. Set ANTHROPIC_API_KEY or OPENAI_API_KEY."
+            detail="LLM not available. Set GEMINI_API_KEY or OPENROUTER_API_KEY."
         )
 
     # Get the model
@@ -94,7 +96,7 @@ async def modify_existing_model(request: LLMModifyRequest):
 
 
 @router.post("/find-equilibrium")
-async def api_find_equilibrium(request: FindEquilibriumRequest):
+def api_find_equilibrium(request: FindEquilibriumRequest):
     """
     Find parameter values that lead the system to equilibrium.
 
@@ -125,7 +127,7 @@ async def api_find_equilibrium(request: FindEquilibriumRequest):
 
 
 @router.post("/fit-to-data")
-async def api_fit_to_data(request: FitToDataRequest):
+def api_fit_to_data(request: FitToDataRequest):
     """
     Fit model parameters to match historical data.
 
@@ -159,7 +161,7 @@ async def api_fit_to_data(request: FitToDataRequest):
 
 
 @router.post("/refine-model")
-async def api_refine_model(request: RefineModelRequest):
+def api_refine_model(request: RefineModelRequest):
     """
     Use AI to suggest model refinements based on user feedback.
 
@@ -201,7 +203,7 @@ class TuneModelRequest(BaseModel):
 
 
 @router.post("/tune")
-async def tune_model_endpoint(request: TuneModelRequest):
+def tune_model_endpoint(request: TuneModelRequest):
     """Multi-step AI tuning that iteratively adjusts parameters."""
     from app.llm.tuner import tune_model
     

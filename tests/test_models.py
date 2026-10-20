@@ -24,7 +24,7 @@ def load_all_models(models_dir: str = "models") -> list:
         print(f"Warning: Models directory not found: {models_path}")
         return []
 
-    for file_path in models_path.glob("*.json"):
+    for file_path in sorted(models_path.rglob("*.json")):
         try:
             with open(file_path, 'r') as f:
                 data = json.load(f)

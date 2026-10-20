@@ -2,19 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="Interactive systems dynamics simulator with AI-powered model generation, 1000+ pre-built models, real-time simulation, and XMILE import/export. Free and open source.">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="canonical" href="https://stockandflow.live/">
+    <link rel="search" type="application/opensearchdescription+xml" title="Stock &amp; Flow" href="/static/opensearch.xml">
     <title>Stock & Flow — Systems Dynamics Simulator</title>
-    <link rel="stylesheet" href="/static/css/style.css?v=1775085923">
-    <link rel="stylesheet" href="/static/css/analytics.css?v=1775085923">
-    <script src="https://d3js.org/d3.v7.min.js?v=1775085923"></script>
-</head>
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Stock & Flow — Systems Dynamics Simulator">
+    <meta property="og:description" content="Interactive systems dynamics simulator with AI-powered model generation, 1000+ pre-built models, real-time simulation, and XMILE import/export.">
+    <meta property="og:url" content="https://stockandflow.live/">
+    <meta property="og:site_name" content="Stock & Flow">
+    <meta property="og:image" content="https://stockandflow.live/static/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Stock & Flow — Systems Dynamics Simulator">
+    <meta name="twitter:description" content="Interactive systems dynamics simulator with AI-powered model generation, 1000+ pre-built models, and XMILE import/export.">
+    <meta name="twitter:image" content="https://stockandflow.live/static/og-image.png">
+    <link rel="stylesheet" href="/static/css/style.css?v=20261020-2">
+    <link rel="stylesheet" href="/static/css/analytics.css?v=20261020-2">
+    <script src="/static/vendor/d3.v7.min.js"></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Stock & Flow",
+      "url": "https://stockandflow.live/",
+      "description": "Interactive systems dynamics simulator with AI-powered model generation, 1000+ pre-built models, and XMILE import/export.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://stockandflow.live/?search={search_term}",
+        "query-input": "required name=search_term"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Stock & Flow Simulator",
+      "url": "https://stockandflow.live/",
+      "description": "Build and simulate systems dynamics models with stocks, flows, and feedback loops. AI assistant generates models from natural language. 1000+ pre-built models across 26 categories.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "AI-powered model generation",
+        "1000+ pre-built models",
+        "XMILE import/export",
+        "Real-time simulation",
+        "D3.js interactive canvas",
+        "26 model categories"
+      ],
+      "screenshot": "https://stockandflow.live/static/og-image.png"
+    }
+    </script>
+<link rel="stylesheet" href="/static/css/workspace.css?v=20261020-2"></head>
 <body>
     <div class="app">
         <!-- Header -->
                                                 <header class="header glass-header-v5">
-            <div class="header-title">STOCK &amp; FLOW</div>
+            <h1 class="header-title" style="margin:0;padding:0">STOCK &amp; FLOW</h1>
             <div class="header-icons">
                 <button id="btn-new" class="btn-icon" title="New">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
@@ -22,7 +83,7 @@
                 <button id="btn-save" class="btn-icon btn-accent" title="Save">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
                 </button>
-                <input type="file" id="xmile-file-input" accept=".xmile,.xml,.stmx" style="display:none">
+                <input type="file" id="xmile-file-input" accept=".xmile,.xml,.stmx,.json" style="display:none">
                 <button id="btn-import" class="btn-icon hide-mobile" title="Import">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 </button>
@@ -230,7 +291,7 @@
                             <div class="chart-option-group">
                                 <button class="chart-option-btn active" data-scale="linear">Lin</button>
                                 <button class="chart-option-btn" data-scale="log">Log</button>
-                                <button class="chart-option-btn active" id="btn-normalize" title="Normalize">Norm</button>
+                                <button class="chart-option-btn" id="btn-normalize" title="Normalize">Norm</button>
                             </div>
                             <div class="chart-option-group">
                                 <button class="chart-option-btn" id="btn-animate" title="Animate">&#9658;</button>
@@ -333,6 +394,7 @@
                     <label for="sim-dt">Time Step (dt)</label>
                     <input type="number" id="sim-dt" value="0.25" step="any" min="0.001">
                 </div>
+<div class="form-group"><label for="sim-method">Integration method</label><select id="sim-method"><option value="euler">Euler</option><option value="rk4">Runge–Kutta 4</option></select></div>
                 <div class="settings-info">
                     <span id="sim-steps-info">Steps: 400</span>
                 </div>
@@ -351,15 +413,15 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/static/js/user-models.js?v=1775085923"></script>
-    <script src="/static/js/library.js?v=1775085923"></script>
-    <script src="/static/js/app.js?v=1775085923"></script>
-    <script src="/static/js/canvas.js?v=1775085923"></script>
-    <script src="/static/js/simulation.js?v=1775085923"></script>
-    <script src="/static/js/llm-interface.js?v=1775085923"></script>
-    <script src="/static/js/charts.js?v=1775085923"></script>
-    <script src="/static/js/analytics.js?v=1775085923"></script>
-    <script src="/static/js/ai-agent.js?v=1775085923"></script>
+    <script src="/static/js/user-models.js?v=20261020-2"></script>
+    <script src="/static/js/library.js?v=20261020-2"></script>
+    <script src="/static/js/app.js?v=20261020-2"></script>
+    <script src="/static/js/canvas.js?v=20261020-2"></script>
+    <script src="/static/js/simulation.js?v=20261020-2"></script>
+    <script src="/static/js/llm-interface.js?v=20261020-2"></script>
+    <script src="/static/js/charts.js?v=20261020-2"></script>
+    <script src="/static/js/analytics.js?v=20261020-2"></script>
+    <script src="/static/js/ai-agent.js?v=20261020-2"></script>
     <script>
         // Initialize the application
         document.addEventListener('DOMContentLoaded', () => {
@@ -577,10 +639,12 @@
         };
     </script>
     <!-- Mobile Panel Expand/Collapse -->
-    <script src="/static/js/mobile-expand.js?v=1775085923"></script>
-    <script src="/static/js/xmile-import.js?v=1775085923"></script>
-    <script src="/static/js/xmile-download.js?v=1775085923"></script>
-    <script src="/static/js/faq.js?v=1775085923"></script>
-    <script src="/static/js/floating-title.js?v=1775085923"></script>
-</body>
+    <script src="/static/js/mobile-expand.js?v=20261020-2"></script>
+    <script src="/static/js/xmile-import.js?v=20261020-2"></script>
+    <script src="/static/js/xmile-download.js?v=20261020-2"></script>
+    <script src="/static/js/faq.js?v=20261020-2"></script>
+    <script src="/static/js/floating-title.js?v=20261020-2"></script>
+<!-- Cross-site navigation -->
+<div id="cross-site-nav" style="position:fixed;bottom:0;left:0;right:0;background:rgba(15,23,42,0.95);border-top:1px solid rgba(99,102,241,0.3);padding:6px 12px;text-align:center;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:12px;z-index:9999;backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;gap:8px;"><span style="color:rgba(255,255,255,0.5);"><a href="/guide" style="color:inherit;margin-right:1rem">Guide &amp; MCP</a> More free tools:</span><a href="https://launch.pics" style="color:#a5b4fc;text-decoration:none;padding:2px 10px;border:1px solid rgba(99,102,241,0.3);border-radius:12px;transition:all 0.2s;" onmouseover="this.style.background='rgba(99,102,241,0.2)'" onmouseout="this.style.background='transparent'">Image Tools</a><a href="https://helloandy.net" style="color:#a5b4fc;text-decoration:none;padding:2px 10px;border:1px solid rgba(99,102,241,0.3);border-radius:12px;transition:all 0.2s;" onmouseover="this.style.background='rgba(99,102,241,0.2)'" onmouseout="this.style.background='transparent'">Dev Tools</a><a href="https://everyone.food" style="color:#a5b4fc;text-decoration:none;padding:2px 10px;border:1px solid rgba(99,102,241,0.3);border-radius:12px;transition:all 0.2s;" onmouseover="this.style.background='rgba(99,102,241,0.2)'" onmouseout="this.style.background='transparent'">Kitchen Tools</a><a href="https://contextwire.dev" style="color:#a5b4fc;text-decoration:none;padding:2px 10px;border:1px solid rgba(99,102,241,0.3);border-radius:12px;transition:all 0.2s;" onmouseover="this.style.background='rgba(99,102,241,0.2)'" onmouseout="this.style.background='transparent'">Search API</a><a href="https://stockandflow.org" style="color:#a5b4fc;text-decoration:none;padding:2px 10px;border:1px solid rgba(99,102,241,0.3);border-radius:12px;transition:all 0.2s;" onmouseover="this.style.background='rgba(99,102,241,0.2)'" onmouseout="this.style.background='transparent'">Model Library</a></div>
+<script src="/static/js/validation.js?v=20261020-2"></script><script src="/static/js/workspace.js?v=20261020-2"></script><script src="/static/js/agent-workspace.js?v=20261020-2"></script></body>
 </html>

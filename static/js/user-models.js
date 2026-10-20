@@ -22,10 +22,14 @@ const UserModels = {
             id,
             name: model.name || "Untitled",
             description: model.description || "",
+            source: model.source || null,
+            reference: model.reference || null,
+            category: model.category || null,
             stocks: model.stocks || [],
             flows: model.flows || [],
             variables: model.variables || [],
             connectors: model.connectors || [],
+            tables: model.tables || [],
             time_settings: model.time_settings || { start: 0, end: 100, dt: 0.25 },
             savedAt: new Date().toISOString()
         };

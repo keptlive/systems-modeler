@@ -46,7 +46,8 @@ const LLMInterface = {
             this.available = data.available;
 
             if (this.available) {
-                this.statusEl.textContent = 'Available';
+                this.statusEl.textContent = 'Configured';
+                this.statusEl.title = 'Optional server AI configuration; provider health has not been verified';
                 this.statusEl.className = 'llm-status available';
             } else {
                 this.statusEl.textContent = 'Unavailable';
@@ -73,7 +74,7 @@ const LLMInterface = {
         // Check availability
         if (!this.available) {
             this.addMessage(
-                'LLM is not available. Please set ANTHROPIC_API_KEY or OPENAI_API_KEY environment variable.',
+                'Optional server AI is unavailable. Use Connect agent to work with your own agent through MCP.',
                 'error'
             );
             return;
@@ -140,7 +141,7 @@ const LLMInterface = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                model: App.model,
+                model: App.modelSnapshot(),
                 modification
             })
         });

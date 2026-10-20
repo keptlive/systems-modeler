@@ -1,353 +1,188 @@
-/**
- * Systems Modeler - Analytics Dashboard
- * Comprehensive statistics, pattern analysis, and data visualization
- */
+/** Recorded-sample analytics. Offline fallback uses the same conservative rules as the API. */
 const Analytics = {
     container: null,
     results: null,
     statistics: null,
+    requestVersion: 0,
+    init(containerId) { this.container = document.getElementById(containerId); },
 
-    /**
-     * Initialize analytics module
-     */
-    init(containerId) {
-        this.container = document.getElementById(containerId);
+    validateResults(results) {
+        const time = results?.time, values = results?.values;
+        if (!Array.isArray(time) || !time.length || !values || Array.isArray(values) || typeof values !== 'object' || !Object.keys(values).length) throw new Error('Nonempty time and value series are required.');
+        if (time.length > 10001 || Object.keys(values).length > 500 || time.length * Object.keys(values).length > 1000000) throw new Error('Analytics input exceeds the supported sample limit.');
+        if (!time.every(Number.isFinite) || time.some((v, i) => i && v <= time[i-1]) || !Number.isFinite(time.at(-1)-time[0])) throw new Error('Time samples must be finite and strictly increasing.');
+        if (time.length > 1 && time.some((v, i) => i && (v-time[i-1])/(time.at(-1)-time[0]) === 0)) throw new Error('Time sample spacing exceeds supported numeric resolution.');
+        for (const [name, series] of Object.entries(values)) {
+            if (!name || !Array.isArray(series) || series.length !== time.length || !series.every(Number.isFinite)) throw new Error(`Series ${name} requires one finite numeric value per time sample.`);
+        }
     },
 
-    /**
-     * Set simulation results and compute analytics
-     */
     async setResults(results) {
+        const version = ++this.requestVersion;
         this.results = results;
-
-        if (!results || !results.time || !results.values) {
-            this.statistics = null;
-            return;
-        }
-
-        // Fetch statistics from backend
+        this.statistics = null;
+        this.error = null;
+        if (!results) return;
+        try { this.validateResults(results); } catch (error) { this.error = error.message; return; }
         try {
-            const response = await fetch('/api/analyze/statistics', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ simulation_results: results })
-            });
-
-            if (response.ok) {
-                this.statistics = await response.json();
-            } else {
-                // Compute client-side if backend fails
-                this.statistics = this.computeLocalStatistics(results);
-            }
+            const response = await fetch('/api/analyze/statistics', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({simulation_results:results})});
+            if (!response.ok) throw new Error('Statistics service unavailable');
+            const statistics = await response.json();
+            if (version === this.requestVersion) this.statistics = statistics;
         } catch (error) {
-            console.error('Failed to fetch statistics:', error);
-            this.statistics = this.computeLocalStatistics(results);
+            if (version === this.requestVersion) {
+                this.statistics = this.computeLocalStatistics(results);
+                this.statistics.offline_fallback = true;
+            }
         }
     },
 
-    /**
-     * Compute statistics client-side as fallback
-     */
+    finite(value) { return Number.isFinite(value) ? value : null; },
+    sum(values) {
+        let sum = 0, correction = 0;
+        for (const value of values) {
+            const next = value - correction, total = sum + next;
+            correction = (total - sum) - next;
+            sum = total;
+        }
+        return sum;
+    },
+    moments(values) {
+        const scale = values.reduce((m,v)=>Math.max(m,Math.abs(v)),0);
+        const scaled = values.map(v=>scale ? v/scale : 0);
+        const mean = this.sum(scaled)/values.length;
+        const std = Math.sqrt(this.sum(scaled.map(v=>(v-mean)**2))/values.length);
+        return {scale,scaled,mean,std};
+    },
+    seriesStatistics(values, time) {
+        const {scale,scaled,mean,std} = this.moments(values), n = values.length;
+        const ordered = [...scaled].sort((a,b)=>a-b);
+        const median = n%2 ? ordered[Math.floor(n/2)] : (ordered[n/2-1]+ordered[n/2])/2;
+        const change = scaled.at(-1)-scaled[0], duration = time.at(-1)-time[0];
+        const weighted = n>1 ? this.finite(scale*this.sum(scaled.slice(1).map((v,i)=>(v+scaled[i])/2*((time[i+1]-time[i])/duration)))) : null;
+        const stats = {min:Math.min(...values),max:Math.max(...values),mean:this.finite(scale*mean),std:this.finite(scale*std),median:this.finite(scale*median),range:this.finite(scale*(ordered.at(-1)-ordered[0])),initial:values[0],final:values.at(-1),total_change:this.finite(scale*change),percent_change:scaled[0] ? this.finite(change/scaled[0]*100) : null,sample_count:n,time_weighted_mean:weighted};
+        stats.unrepresentable_metrics = ['mean','std','median','range','total_change'].filter(key=>stats[key]===null);
+        return stats;
+    },
     computeLocalStatistics(results) {
-        const stats = {};
-        const patterns = {};
-        const peaks = {};
-        const equilibria = {};
-
-        for (const [name, values] of Object.entries(results.values)) {
-            const validValues = values.filter(v => v !== null && isFinite(v));
-            if (validValues.length === 0) continue;
-
-            // Basic statistics
-            stats[name] = {
-                min: Math.min(...validValues),
-                max: Math.max(...validValues),
-                mean: validValues.reduce((a, b) => a + b, 0) / validValues.length,
-                initial: validValues[0],
-                final: validValues[validValues.length - 1],
-                range: Math.max(...validValues) - Math.min(...validValues)
-            };
-
-            // Standard deviation
-            const mean = stats[name].mean;
-            const variance = validValues.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) / validValues.length;
-            stats[name].std = Math.sqrt(variance);
-
-            // Percent change
-            if (stats[name].initial !== 0) {
-                stats[name].percent_change = ((stats[name].final - stats[name].initial) / stats[name].initial) * 100;
-            }
-
-            // Pattern detection
-            patterns[name] = this.detectPattern(values);
-
-            // Peak detection
-            const detectedPeaks = this.detectPeaks(results.time, values);
-            if (detectedPeaks.length > 0) {
-                peaks[name] = detectedPeaks;
-            }
-
-            // Equilibrium detection
-            const eq = this.detectEquilibrium(values);
-            if (eq) {
-                equilibria[name] = eq;
-            }
+        this.validateResults(results);
+        const statistics=Object.create(null),patterns=Object.create(null),peaks=Object.create(null),equilibria=Object.create(null);
+        for (const [name,values] of Object.entries(results.values)) {
+            statistics[name]=this.seriesStatistics(values,results.time);
+            patterns[name]=this.detectPattern(values,results.time);
+            const extrema=this.detectPeaks(results.time,values), tail=this.detectEquilibrium(values);
+            if (extrema.length) peaks[name]=extrema;
+            if (tail) equilibria[name]=tail;
         }
-
-        return {
-            statistics: stats,
-            patterns,
-            peaks,
-            equilibria,
-            correlations: this.computeCorrelations(results.values),
-            time_range: {
-                start: results.time[0],
-                end: results.time[results.time.length - 1],
-                steps: results.time.length
-            }
-        };
+        const correlation=this.correlationRecords(results.values);
+        return {statistics,patterns,peaks,equilibria,correlations:correlation.correlations,correlation_pairs:correlation.records,correlation_coverage:correlation.coverage,time_range:{start:results.time[0],end:results.time.at(-1),steps:results.time.length,intervals:results.time.length-1}};
     },
-
-    /**
-     * Detect pattern in values
-     */
-    detectPattern(values) {
-        const validValues = values.filter(v => isFinite(v));
-        if (validValues.length < 3) return 'insufficient_data';
-
-        const diffs = [];
-        for (let i = 1; i < validValues.length; i++) {
-            diffs.push(validValues[i] - validValues[i - 1]);
-        }
-
-        const allPositive = diffs.every(d => d >= 0);
-        const allNegative = diffs.every(d => d <= 0);
-
-        if (allPositive) {
-            const secondDiffs = [];
-            for (let i = 1; i < diffs.length; i++) {
-                secondDiffs.push(diffs[i] - diffs[i - 1]);
+    detectPattern(values, time=values.map((_,i)=>i)) {
+        if(values.length<3) return 'insufficient_data';
+        const {scaled:v}=this.moments(values);
+        if(Math.max(...v)-Math.min(...v)<=1e-12) return 'constant';
+        const duration=time.at(-1)-time[0], deltas=time.slice(1).map((t,i)=>(t-time[i])/duration);
+        const slopes=v.slice(1).map((x,i)=>(x-v[i])/deltas[i]);
+        if(!slopes.every(Number.isFinite)) return 'complex';
+        const tol=Math.max(...slopes.map(Math.abs))*1e-6;
+        const positive=slopes.every(s=>s>=-tol),negative=slopes.every(s=>s<=tol);
+        if(positive||negative) {
+            const suffix=positive?'growth':'decay';
+            if(Math.max(...slopes)-Math.min(...slopes)<=tol) return `linear_${suffix}`;
+            if(values.length>=4 && Math.min(...values)>0) {
+                const logs=values.map(Math.log), rates=logs.slice(1).map((x,i)=>(x-logs[i])/deltas[i]);
+                if(Math.max(...rates)-Math.min(...rates)<=Math.max(...rates.map(Math.abs))*1e-4) return `exponential_${suffix}`;
             }
-            const avgSecondDiff = secondDiffs.reduce((a, b) => a + b, 0) / secondDiffs.length;
-            return avgSecondDiff > 0 ? 'exponential_growth' : 'linear_growth';
+            const curvature=slopes.slice(1).map((s,i)=>s-slopes[i]);
+            if(curvature.every(c=>c>=-tol)) return positive?'accelerating_growth':'slowing_decline';
+            if(curvature.every(c=>c<=tol)) return positive?'slowing_growth':'accelerating_decline';
+            return positive?'monotonic_growth':'monotonic_decline';
         }
-
-        if (allNegative) {
-            const secondDiffs = [];
-            for (let i = 1; i < diffs.length; i++) {
-                secondDiffs.push(diffs[i] - diffs[i - 1]);
-            }
-            const avgSecondDiff = secondDiffs.reduce((a, b) => a + b, 0) / secondDiffs.length;
-            return avgSecondDiff < 0 ? 'exponential_decay' : 'linear_decay';
-        }
-
-        // Check for oscillation
-        let signChanges = 0;
-        for (let i = 1; i < diffs.length; i++) {
-            if (Math.sign(diffs[i]) !== Math.sign(diffs[i - 1]) && diffs[i] !== 0) {
-                signChanges++;
-            }
-        }
-        if (signChanges > validValues.length * 0.3) {
-            return 'oscillating';
-        }
-
-        // Check for peak and decline
-        const maxIdx = validValues.indexOf(Math.max(...validValues));
-        if (maxIdx / validValues.length > 0.1 && maxIdx / validValues.length < 0.9) {
-            return 'peak_and_decline';
-        }
-
+        const signs=slopes.filter(s=>Math.abs(s)>tol).map(s=>s>0?1:-1);
+        const turns=signs.slice(1).filter((s,i)=>s!==signs[i]).length;
+        if(turns>=3) return 'oscillating';
+        if(turns===1) return signs[0]>0?'peak_and_decline':'trough_and_recovery';
         return 'complex';
     },
-
-    /**
-     * Detect peaks in values
-     */
-    detectPeaks(time, values) {
-        const peaks = [];
-        for (let i = 1; i < values.length - 1; i++) {
-            if (!isFinite(values[i])) continue;
-
-            if (values[i] > values[i - 1] && values[i] > values[i + 1]) {
-                peaks.push({ type: 'peak', time: time[i], value: values[i], index: i });
-            } else if (values[i] < values[i - 1] && values[i] < values[i + 1]) {
-                peaks.push({ type: 'trough', time: time[i], value: values[i], index: i });
-            }
+    detectPeaks(time,values) {
+        const peaks=[];
+        for(let i=1;i<values.length-1;i++) {
+            const type=values[i]>values[i-1]&&values[i]>values[i+1]?'peak':values[i]<values[i-1]&&values[i]<values[i+1]?'trough':null;
+            if(type) peaks.push({type,time:time[i],value:values[i],index:i});
         }
         return peaks;
     },
-
-    /**
-     * Detect equilibrium
-     */
-    detectEquilibrium(values, threshold = 0.01) {
-        const validValues = values.filter(v => isFinite(v));
-        if (validValues.length < 10) return null;
-
-        const checkStart = Math.floor(validValues.length * 0.8);
-        const checkValues = validValues.slice(checkStart);
-
-        if (checkValues.length < 2) return null;
-
-        const mean = checkValues.reduce((a, b) => a + b, 0) / checkValues.length;
-        if (mean === 0) return null;
-
-        const variation = Math.sqrt(
-            checkValues.reduce((acc, v) => acc + Math.pow(v - mean, 2), 0) / checkValues.length
-        ) / Math.abs(mean);
-
-        if (variation < threshold) {
-            return {
-                reached: true,
-                equilibrium_value: mean,
-                variation: variation
-            };
-        }
-
-        return { reached: false, variation: variation };
+    detectEquilibrium(values,threshold=0.01) {
+        if(values.length<10) return null;
+        const start=Math.min(Math.floor(values.length*.8),values.length-3),tail=values.slice(start);
+        const {scale,scaled,mean,std}=this.moments(tail),globalScale=values.reduce((m,v)=>Math.max(m,Math.abs(v)),0);
+        const denominator=scale?Math.max(Math.abs(mean),globalScale/scale*1e-12):1;
+        const variation=std/denominator,span=(Math.max(...scaled)-Math.min(...scaled))/denominator,stable=span<=threshold;
+        return {reached:stable,start_index:start,equilibrium_value:this.finite(scale*mean),variation:this.finite(variation),relative_span:this.finite(span),status:stable?'nearly_stable_tail':'varying_tail',assessed_samples:tail.length,proves_equilibrium:false};
     },
-
-    /**
-     * Compute correlations
-     */
-    computeCorrelations(values) {
-        const varNames = Object.keys(values);
-        const correlations = {};
-
-        for (let i = 0; i < varNames.length; i++) {
-            for (let j = i + 1; j < varNames.length; j++) {
-                const name1 = varNames[i];
-                const name2 = varNames[j];
-                const arr1 = values[name1];
-                const arr2 = values[name2];
-
-                // Compute correlation coefficient
-                const n = Math.min(arr1.length, arr2.length);
-                let sum1 = 0, sum2 = 0, sum1Sq = 0, sum2Sq = 0, pSum = 0;
-
-                for (let k = 0; k < n; k++) {
-                    if (!isFinite(arr1[k]) || !isFinite(arr2[k])) continue;
-                    sum1 += arr1[k];
-                    sum2 += arr2[k];
-                    sum1Sq += arr1[k] * arr1[k];
-                    sum2Sq += arr2[k] * arr2[k];
-                    pSum += arr1[k] * arr2[k];
-                }
-
-                const num = pSum - (sum1 * sum2 / n);
-                const den = Math.sqrt((sum1Sq - sum1 * sum1 / n) * (sum2Sq - sum2 * sum2 / n));
-
-                if (den !== 0) {
-                    correlations[`${name1}|${name2}`] = Math.round((num / den) * 1000) / 1000;
-                }
-            }
+    correlationRecords(values) {
+        const names=Object.keys(values),correlations={},records=[];
+        const moments=Object.fromEntries(names.map(name=>[name,this.moments(values[name])]));
+        let assessed=0;
+        for(let i=0;i<names.length;i++) for(let j=i+1;j<names.length;j++) {
+            if(assessed>=2000) break;
+            assessed++;
+            const a=values[names[i]],b=values[names[j]];
+            if(a.length<3) continue;
+            const x=moments[names[i]],y=moments[names[j]];
+            if(!x.std||!y.std) continue;
+            let corr=this.sum(x.scaled.map((v,k)=>((v-x.mean)/x.std)*((y.scaled[k]-y.mean)/y.std)/a.length));
+            corr=Math.round(Math.max(-1,Math.min(1,corr))*1000)/1000;
+            correlations[`${names[i]}|${names[j]}`]=corr;
+            records.push({variables:[names[i],names[j]],correlation:corr,samples:a.length});
         }
-
-        return correlations;
+        const total=names.length*(names.length-1)/2;
+        return {correlations,records,coverage:{total_pairs:total,assessed_pairs:assessed,omitted_pairs:total-assessed,limit:2000}};
     },
-
-    /**
-     * Compute rate of change / derivatives
-     */
+    computeCorrelations(values) { return this.correlationRecords(values).correlations; },
+    deltaRate(first,last,dt) {
+        const scale=Math.max(Math.abs(first),Math.abs(last));
+        if(!scale) return 0;
+        const delta=last/scale-first/scale;
+        if(!delta) return 0;
+        const direct=delta*(scale/dt);
+        if(Number.isFinite(direct)&&direct!==0) return direct;
+        return this.finite(Math.sign(delta)*Math.exp(Math.log(Math.abs(delta))+Math.log(scale)-Math.log(dt)));
+    },
     computeDerivatives(time, values) {
-        const derivatives = {};
-
-        for (const [name, vals] of Object.entries(values)) {
-            const derivs = [];
-            const accel = [];  // Second derivative
-
-            for (let i = 0; i < vals.length; i++) {
-                if (i === 0) {
-                    derivs.push(0);
-                } else {
-                    const dt = time[i] - time[i-1];
-                    if (dt !== 0 && isFinite(vals[i]) && isFinite(vals[i-1])) {
-                        derivs.push((vals[i] - vals[i-1]) / dt);
-                    } else {
-                        derivs.push(0);
-                    }
-                }
-            }
-
-            // Second derivative (acceleration)
-            for (let i = 0; i < derivs.length; i++) {
-                if (i === 0) {
-                    accel.push(0);
-                } else {
-                    const dt = time[i] - time[i-1];
-                    if (dt !== 0 && isFinite(derivs[i]) && isFinite(derivs[i-1])) {
-                        accel.push((derivs[i] - derivs[i-1]) / dt);
-                    } else {
-                        accel.push(0);
-                    }
-                }
-            }
-
-            derivatives[name] = {
-                velocity: derivs,
-                acceleration: accel,
-                maxVelocity: Math.max(...derivs.map(Math.abs)),
-                avgVelocity: derivs.reduce((a, b) => a + b, 0) / derivs.length,
-                maxAcceleration: Math.max(...accel.map(Math.abs))
-            };
+        const derivatives=Object.create(null);
+        for(const [name,vals] of Object.entries(values)) {
+            const velocity=vals.slice(1).map((v,i)=>this.deltaRate(vals[i],v,time[i+1]-time[i]));
+            const acceleration=velocity.slice(1).map((v,i)=>v===null||velocity[i]===null?null:this.deltaRate(velocity[i],v,(time[i+2]-time[i])/2));
+            const maxAbs=arr=>{const finite=arr.filter(Number.isFinite);return finite.length?Math.max(...finite.map(Math.abs)):null;};
+            derivatives[name]={velocity,acceleration,maxVelocity:maxAbs(velocity),avgVelocity:time.length>1?this.deltaRate(vals[0],vals.at(-1),time.at(-1)-time[0]):null,maxAcceleration:maxAbs(acceleration)};
         }
-
         return derivatives;
     },
-
-    /**
-     * Compute sensitivity metrics (simple approach: variance contribution)
-     */
+    // Historical method name retained; this compares raw variance, not sensitivity.
     computeSensitivity(values) {
-        const sensitivity = {};
-        const varNames = Object.keys(values);
-
-        // Compute total system variance
-        let totalVariance = 0;
-        const variances = {};
-
-        for (const name of varNames) {
-            const vals = values[name].filter(v => isFinite(v));
-            if (vals.length === 0) continue;
-
-            const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
-            const variance = vals.reduce((acc, v) => acc + Math.pow(v - mean, 2), 0) / vals.length;
-            variances[name] = variance;
-            totalVariance += variance;
+        const entries=Object.entries(values),result=Object.create(null);
+        let globalScale=0;
+        for(const [,series] of entries) for(const value of series) globalScale=Math.max(globalScale,Math.abs(value));
+        const variances=Object.create(null);
+        for(const [name,series] of entries) {
+            const scaled=series.map(v=>globalScale?v/globalScale:0),mean=this.sum(scaled)/scaled.length;
+            variances[name]=this.sum(scaled.map(v=>(v-mean)**2))/scaled.length;
         }
-
-        // Compute relative contribution
-        for (const name of varNames) {
-            if (totalVariance > 0) {
-                sensitivity[name] = {
-                    variance: variances[name] || 0,
-                    relativeContribution: ((variances[name] || 0) / totalVariance) * 100,
-                    impact: variances[name] > totalVariance * 0.3 ? 'high' :
-                            variances[name] > totalVariance * 0.1 ? 'medium' : 'low'
-                };
-            } else {
-                sensitivity[name] = {
-                    variance: 0,
-                    relativeContribution: 0,
-                    impact: 'low'
-                };
-            }
+        const total=this.sum(Object.values(variances));
+        for(const [name] of entries) {
+            const share=total?variances[name]/total:0;
+            result[name]={variance:this.finite(variances[name]*globalScale*globalScale),relativeContribution:share*100,impact:share>.3?'high':share>.1?'medium':'low'};
         }
-
-        return sensitivity;
+        return result;
     },
-
-    /**
-     * Render the analytics dashboard
-     */
     render() {
         if (!this.container) return;
 
         if (!this.results || !this.statistics) {
             this.container.innerHTML = `
                 <div class="analytics-placeholder">
-                    <p>Run a simulation to see analytics</p>
+                    <p>${this.error ? App.escapeHtml(this.error) : 'Run a simulation to see analytics'}</p>
                 </div>
             `;
             return;
@@ -383,12 +218,30 @@ const Analytics = {
         html += '</div>';
 
         this.container.innerHTML = html;
+        this.container.style.minWidth = '0';
+        this.container.querySelectorAll('.stats-table-wrapper').forEach(wrapper => {
+            wrapper.style.overflowX = 'auto';
+            wrapper.tabIndex = 0;
+            wrapper.setAttribute('aria-label', 'Scrollable analytics table');
+        });
+        this.container.querySelectorAll('th').forEach(th => th.setAttribute('scope', 'col'));
+        this.container.querySelectorAll('.var-name,.pattern-var,.peak-var,.correlation-vars,.sensitivity-var').forEach(label => {
+            label.style.overflowWrap = 'anywhere';
+        });
 
         // Add event listeners for collapsible sections
         this.container.querySelectorAll('.analytics-section-header').forEach(header => {
-            header.addEventListener('click', () => {
+            header.tabIndex = 0;
+            header.setAttribute('role', 'button');
+            header.setAttribute('aria-expanded', 'true');
+            const toggle = () => {
                 const section = header.parentElement;
                 section.classList.toggle('collapsed');
+                header.setAttribute('aria-expanded', String(!section.classList.contains('collapsed')));
+            };
+            header.addEventListener('click', toggle);
+            header.addEventListener('keydown', event => {
+                if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggle(); }
             });
         });
     },
@@ -413,7 +266,7 @@ const Analytics = {
                             <span class="summary-value">${timeRange.start} - ${timeRange.end}</span>
                         </div>
                         <div class="summary-item">
-                            <span class="summary-label">Time Steps</span>
+                            <span class="summary-label">Recorded samples</span>
                             <span class="summary-value">${timeRange.steps}</span>
                         </div>
                         <div class="summary-item">
@@ -421,6 +274,7 @@ const Analytics = {
                             <span class="summary-value">${Object.keys(this.statistics.statistics).length}</span>
                         </div>
                     </div>
+                    <p class="section-description">${this.statistics.offline_fallback ? 'Computed locally while the statistics service was unavailable. ' : ''}These describe recorded samples. Patterns do not establish scientific validity, causation or equilibrium.</p>
                 </div>
             </div>
         `;
@@ -441,10 +295,11 @@ const Analytics = {
 
             rows += `
                 <tr>
-                    <td class="var-name">${name}</td>
+                    <td class="var-name">${App.escapeHtml(name)}</td>
                     <td>${this.formatNumber(s.min)}</td>
                     <td>${this.formatNumber(s.max)}</td>
                     <td>${this.formatNumber(s.mean)}</td>
+                    <td>${this.formatNumber(s.time_weighted_mean)}</td>
                     <td>${this.formatNumber(s.std)}</td>
                     <td>${this.formatNumber(s.initial)}</td>
                     <td>${this.formatNumber(s.final)}</td>
@@ -470,11 +325,12 @@ const Analytics = {
                                     <th>Variable</th>
                                     <th>Min</th>
                                     <th>Max</th>
-                                    <th>Mean</th>
+                                    <th>Sample mean</th>
+                                    <th>Time average</th>
                                     <th>Std Dev</th>
                                     <th>Initial</th>
                                     <th>Final</th>
-                                    <th>Change</th>
+                                    <th>Change %</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -482,6 +338,7 @@ const Analytics = {
                             </tbody>
                         </table>
                     </div>
+                    <p class="section-description">Population standard deviation weights each sample equally. Time average uses trapezoidal integration. Percent change is (final − initial) / initial; it is undefined from zero and can be counterintuitive with a negative initial value. N/A also marks an unrepresentable derived value.</p>
                 </div>
             </div>
         `;
@@ -496,25 +353,25 @@ const Analytics = {
 
         let content = '<div class="patterns-grid">';
 
-        for (const [name, pattern] of Object.entries(patterns)) {
+        for (const [index, [name, pattern]] of Object.entries(Object.entries(patterns))) {
             const patternInfo = this.getPatternInfo(pattern);
             const eq = equilibria[name];
 
             content += `
                 <div class="pattern-card">
                     <div class="pattern-header">
-                        <span class="pattern-var">${name}</span>
+                        <span class="pattern-var">${App.escapeHtml(name)}</span>
                         <span class="pattern-icon" style="color: ${patternInfo.color}">${patternInfo.icon}</span>
                     </div>
                     <div class="pattern-body">
                         <span class="pattern-name" style="color: ${patternInfo.color}">${patternInfo.label}</span>
                         ${eq ? `
                             <span class="equilibrium-badge ${eq.reached ? 'reached' : 'not-reached'}">
-                                ${eq.reached ? `Equilibrium: ${this.formatNumber(eq.equilibrium_value)}` : 'No equilibrium'}
+                                ${eq.reached ? `Nearly stable tail: ${this.formatNumber(eq.equilibrium_value)}` : 'Tail varies'}
                             </span>
                         ` : ''}
                     </div>
-                    <div class="pattern-sparkline" id="sparkline-${name.replace(/\s+/g, '-')}"></div>
+                    <div class="pattern-sparkline" id="analytics-sparkline-${index}" aria-hidden="true"></div>
                 </div>
             `;
         }
@@ -543,9 +400,17 @@ const Analytics = {
      */
     getPatternInfo(pattern) {
         const patterns = {
-            'exponential_growth': { label: 'Exponential Growth', icon: '&#8679;&#8679;', color: '#4CAF50' },
+            'constant': { label: 'Constant', icon: '&#8594;', color: '#90a4ae' },
+            'exponential_growth': { label: 'Approximately exponential growth', icon: '&#8679;&#8679;', color: '#4CAF50' },
             'linear_growth': { label: 'Linear Growth', icon: '&#8599;', color: '#8BC34A' },
-            'exponential_decay': { label: 'Exponential Decay', icon: '&#8681;&#8681;', color: '#f44336' },
+            'exponential_decay': { label: 'Approximately exponential decay', icon: '&#8681;&#8681;', color: '#f44336' },
+            'accelerating_growth': { label: 'Accelerating growth', icon: '&#8599;', color: '#4CAF50' },
+            'slowing_growth': { label: 'Slowing growth', icon: '&#8599;', color: '#8BC34A' },
+            'monotonic_growth': { label: 'Monotonic growth', icon: '&#8599;', color: '#8BC34A' },
+            'accelerating_decline': { label: 'Accelerating decline', icon: '&#8600;', color: '#f44336' },
+            'slowing_decline': { label: 'Slowing decline', icon: '&#8600;', color: '#FF5722' },
+            'monotonic_decline': { label: 'Monotonic decline', icon: '&#8600;', color: '#FF5722' },
+            'trough_and_recovery': { label: 'Trough and recovery', icon: '&#8595;&#8593;', color: '#2196F3' },
             'linear_decay': { label: 'Linear Decay', icon: '&#8600;', color: '#FF5722' },
             'oscillating': { label: 'Oscillating', icon: '&#8644;', color: '#9C27B0' },
             'logistic_growth': { label: 'Logistic Growth', icon: '&#8669;', color: '#2196F3' },
@@ -567,24 +432,25 @@ const Analytics = {
         const time = this.results.time;
         const values = this.results.values;
 
-        for (const [name, vals] of Object.entries(values)) {
-            const containerId = `sparkline-${name.replace(/\s+/g, '-')}`;
+        for (const [index, [name, vals]] of Object.entries(Object.entries(values))) {
+            const containerId = `analytics-sparkline-${index}`;
             const container = document.getElementById(containerId);
             if (!container) continue;
 
             const width = container.clientWidth || 100;
             const height = 30;
 
+            d3.select(container).selectAll('svg').remove();
             const svg = d3.select(container)
                 .append('svg')
                 .attr('width', width)
                 .attr('height', height);
 
-            const validVals = vals.filter(v => isFinite(v));
+            const validVals = this.moments(vals).scaled;
             if (validVals.length === 0) continue;
 
             const xScale = d3.scaleLinear()
-                .domain([0, vals.length - 1])
+                .domain([time[0], time.at(-1)])
                 .range([2, width - 2]);
 
             const yScale = d3.scaleLinear()
@@ -592,16 +458,16 @@ const Analytics = {
                 .range([height - 2, 2]);
 
             const line = d3.line()
-                .x((d, i) => xScale(i))
+                .x((d, i) => xScale(time[i]))
                 .y(d => yScale(d))
-                .defined(d => isFinite(d))
+                .defined(Number.isFinite)
                 .curve(d3.curveMonotoneX);
 
             const pattern = this.statistics.patterns[name];
             const color = this.getPatternInfo(pattern).color;
 
             svg.append('path')
-                .datum(vals)
+                .datum(validVals)
                 .attr('d', line)
                 .attr('fill', 'none')
                 .attr('stroke', color)
@@ -631,7 +497,7 @@ const Analytics = {
                         <span class="section-toggle">&#9660;</span>
                     </div>
                     <div class="analytics-section-content">
-                        <p class="no-data">No significant peaks detected</p>
+                        <p class="no-data">No strict local sample peaks or troughs detected. Endpoints and flat plateaus are excluded.</p>
                     </div>
                 </div>
             `;
@@ -641,7 +507,7 @@ const Analytics = {
         allPeaks.sort((a, b) => a.time - b.time);
 
         // Show only top peaks per variable
-        const topPeaks = {};
+        const topPeaks = Object.create(null);
         allPeaks.forEach(p => {
             if (!topPeaks[p.variable]) {
                 topPeaks[p.variable] = { peak: null, trough: null };
@@ -660,7 +526,7 @@ const Analytics = {
                 content += `
                     <div class="peak-item peak">
                         <span class="peak-icon">&#9650;</span>
-                        <span class="peak-var">${name}</span>
+                        <span class="peak-var">${App.escapeHtml(name)}</span>
                         <span class="peak-info">
                             Peak of <strong>${this.formatNumber(peak.value)}</strong> at t = ${peak.time.toFixed(2)}
                         </span>
@@ -671,7 +537,7 @@ const Analytics = {
                 content += `
                     <div class="peak-item trough">
                         <span class="peak-icon">&#9660;</span>
-                        <span class="peak-var">${name}</span>
+                        <span class="peak-var">${App.escapeHtml(name)}</span>
                         <span class="peak-info">
                             Trough of <strong>${this.formatNumber(trough.value)}</strong> at t = ${trough.time.toFixed(2)}
                         </span>
@@ -700,7 +566,11 @@ const Analytics = {
      */
     renderCorrelationsSection() {
         const correlations = this.statistics.correlations;
-        const pairs = Object.entries(correlations);
+        const pairs = this.statistics.correlation_pairs
+            ? this.statistics.correlation_pairs.map(record => [record.variables, record.correlation])
+            : Object.entries(correlations).map(([pair,corr]) => [pair.split('|'),corr]);
+        const coverage = this.statistics.correlation_coverage;
+        const coverageText = coverage?.omitted_pairs ? ` ${coverage.assessed_pairs} of ${coverage.total_pairs} pairs assessed; ${coverage.omitted_pairs} pairs omitted by the computation limit.` : '';
 
         if (pairs.length === 0) {
             return `
@@ -711,7 +581,7 @@ const Analytics = {
                         <span class="section-toggle">&#9660;</span>
                     </div>
                     <div class="analytics-section-content">
-                        <p class="no-data">Not enough variables for correlation analysis</p>
+                        <p class="no-data">No defined correlations: at least three aligned samples and two varying series are required.${coverageText}</p>
                     </div>
                 </div>
             `;
@@ -721,8 +591,7 @@ const Analytics = {
         pairs.sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
 
         let content = '<div class="correlations-list">';
-        pairs.forEach(([pair, corr]) => {
-            const [var1, var2] = pair.split('|');
+        pairs.forEach(([[var1, var2], corr]) => {
             const strength = Math.abs(corr) > 0.7 ? 'strong' : Math.abs(corr) > 0.4 ? 'moderate' : 'weak';
             const direction = corr > 0 ? 'positive' : 'negative';
             const barWidth = Math.abs(corr) * 100;
@@ -730,9 +599,9 @@ const Analytics = {
             content += `
                 <div class="correlation-item">
                     <div class="correlation-vars">
-                        <span>${var1}</span>
+                        <span>${App.escapeHtml(var1)}</span>
                         <span class="correlation-arrow">&#8596;</span>
-                        <span>${var2}</span>
+                        <span>${App.escapeHtml(var2)}</span>
                     </div>
                     <div class="correlation-bar-container">
                         <div class="correlation-bar ${direction}" style="width: ${barWidth}%"></div>
@@ -756,6 +625,7 @@ const Analytics = {
                     <span class="section-toggle">&#9660;</span>
                 </div>
                 <div class="analytics-section-content">
+                    <p class="section-description">Pearson correlation across recorded samples measures association. Shared time trends can create strong correlations without causal influence.${coverageText}</p>
                     ${content}
                 </div>
             </div>
@@ -770,7 +640,7 @@ const Analytics = {
 
         let rows = '';
         for (const [name, d] of Object.entries(this.derivatives)) {
-            const direction = d.avgVelocity > 0 ? 'increasing' :
+            const direction = d.avgVelocity === null ? 'unavailable' : d.avgVelocity > 0 ? 'increasing' :
                              d.avgVelocity < 0 ? 'decreasing' : 'stable';
             const dirClass = d.avgVelocity > 0 ? 'positive' :
                             d.avgVelocity < 0 ? 'negative' : '';
@@ -779,7 +649,7 @@ const Analytics = {
 
             rows += `
                 <tr>
-                    <td class="var-name">${name}</td>
+                    <td class="var-name">${App.escapeHtml(name)}</td>
                     <td>${this.formatNumber(d.avgVelocity)}</td>
                     <td>${this.formatNumber(d.maxVelocity)}</td>
                     <td>${this.formatNumber(d.maxAcceleration)}</td>
@@ -801,9 +671,9 @@ const Analytics = {
                             <thead>
                                 <tr>
                                     <th>Variable</th>
-                                    <th>Avg Rate</th>
-                                    <th>Max Rate</th>
-                                    <th>Max Accel</th>
+                                    <th>Net change / duration</th>
+                                    <th>Max |interval rate|</th>
+                                    <th>Max |acceleration|</th>
                                     <th>Trend</th>
                                 </tr>
                             </thead>
@@ -836,13 +706,13 @@ const Analytics = {
             content += `
                 <div class="sensitivity-item">
                     <div class="sensitivity-header">
-                        <span class="sensitivity-var">${name}</span>
+                        <span class="sensitivity-var">${App.escapeHtml(name)}</span>
                         <span class="sensitivity-value">${s.relativeContribution.toFixed(1)}%</span>
                     </div>
                     <div class="sensitivity-bar-container">
                         <div class="sensitivity-bar ${impactClass}" style="width: ${barWidth}%"></div>
                     </div>
-                    <div class="sensitivity-label ${impactClass}">${s.impact} impact</div>
+                    <div class="sensitivity-label ${impactClass}">${s.impact} variance share</div>
                 </div>
             `;
         });
@@ -853,12 +723,12 @@ const Analytics = {
             <div class="analytics-section">
                 <div class="analytics-section-header">
                     <span class="section-icon">&#9881;</span>
-                    <span class="section-title">Sensitivity Analysis</span>
+                    <span class="section-title">Variance Comparison</span>
                     <span class="section-toggle">&#9660;</span>
                 </div>
                 <div class="analytics-section-content">
                     <p class="section-description" style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.75rem;">
-                        Relative variance contribution of each variable to overall system dynamics.
+                        Shares of raw series variance depend on units and scale. This does not measure causal influence or parameter sensitivity.
                     </p>
                     ${content}
                 </div>

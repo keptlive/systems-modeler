@@ -33,7 +33,7 @@ const Canvas = {
 
     // Zoom and pan state
     scale: 1,
-    minScale: 0.5,
+    minScale: 0.1,
     maxScale: 3,
     translateX: 0,
     translateY: 0,
@@ -581,6 +581,22 @@ const Canvas = {
         this.scale = 1;
         this.translateX = 0;
         this.translateY = 0;
+        this.updateTransform();
+    },
+
+    fitToModel() {
+        const elements = [...App.model.stocks, ...App.model.flows, ...App.model.variables];
+        if (!elements.length) return this.resetView();
+        this.updateDimensions();
+        const minX = Math.min(...elements.map(e => e.position.x)) - 70;
+        const maxX = Math.max(...elements.map(e => e.position.x)) + 70;
+        const minY = Math.min(...elements.map(e => e.position.y)) - 45;
+        const maxY = Math.max(...elements.map(e => e.position.y)) + 60;
+        const availableWidth = Math.max(100, this.width - 40);
+        const availableHeight = Math.max(100, this.height - 120);
+        this.scale = Math.max(this.minScale, Math.min(1, availableWidth / (maxX-minX), availableHeight / (maxY-minY)));
+        this.translateX = (this.width - (maxX-minX)*this.scale) / 2 - minX*this.scale;
+        this.translateY = 70 + (availableHeight - (maxY-minY)*this.scale) / 2 - minY*this.scale;
         this.updateTransform();
     },
 

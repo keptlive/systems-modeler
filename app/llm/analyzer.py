@@ -1,26 +1,28 @@
-"""
-AI-powered analysis of simulation results using Google Gemini.
-Provides automatic interpretation, pattern recognition, and recommendations.
-"""
+"""Descriptive simulation analytics; heuristics do not establish model validity."""
 import os
 import json
-import numpy as np
+import math
+from itertools import combinations
 from typing import Optional
 from dataclasses import dataclass
+
+MAX_ANALYTIC_VALUES = 1_000_000
+MAX_CORRELATION_PAIRS = 2_000
 
 
 @dataclass
 class AnalysisResult:
-    """Result of AI analysis."""
+    """Result of optional AI interpretation and deterministic analytics."""
     summary: str
     insights: list[str]
     recommendations: list[str]
     patterns: list[dict]
     answer: Optional[str] = None
+    ai_used: bool = False
 
 
 def get_gemini_client():
-    """Get configured Gemini client."""
+    """Get configured Gemini client without exposing configuration."""
     gemini_key = os.environ.get("GEMINI_API_KEY")
     if gemini_key:
         try:
@@ -32,177 +34,216 @@ def get_gemini_client():
     return None
 
 
-def compute_statistics(values: list[float]) -> dict:
-    """Compute comprehensive statistics for a variable."""
-    arr = np.array([v for v in values if v is not None and np.isfinite(v)])
-    if len(arr) == 0:
-        return {"error": "No valid values"}
+def _numeric(value):
+    try:
+        return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+    except OverflowError:
+        return False
 
-    return {
-        "min": float(np.min(arr)),
-        "max": float(np.max(arr)),
-        "mean": float(np.mean(arr)),
-        "std": float(np.std(arr)),
-        "median": float(np.median(arr)),
-        "range": float(np.max(arr) - np.min(arr)),
-        "initial": float(arr[0]) if len(arr) > 0 else None,
-        "final": float(arr[-1]) if len(arr) > 0 else None,
-        "total_change": float(arr[-1] - arr[0]) if len(arr) > 1 else 0,
-        "percent_change": float((arr[-1] - arr[0]) / arr[0] * 100) if len(arr) > 1 and arr[0] != 0 else None
+
+def validate_results(results: dict) -> dict:
+    """Require aligned finite samples; never silently drop or coerce inputs."""
+    if not isinstance(results, dict):
+        raise ValueError("simulation_results must be an object")
+    time, values = results.get("time"), results.get("values")
+    if not isinstance(time, list) or not time or not isinstance(values, dict) or not values:
+        raise ValueError("simulation_results requires nonempty 'time' and 'values'")
+    if len(time) > 10_001 or len(values) > 500 or len(time) * len(values) > MAX_ANALYTIC_VALUES:
+        raise ValueError("Analytics supports at most 500 series, 10001 samples and 1000000 total values")
+    if not all(_numeric(t) for t in time):
+        raise ValueError("Time samples must be finite numbers")
+    if any(b <= a for a, b in zip(time, time[1:])) or not math.isfinite(time[-1] - time[0]):
+        raise ValueError("Time samples must strictly increase within a finite duration")
+    if len(time) > 1 and any((b - a) / (time[-1] - time[0]) == 0 for a, b in zip(time, time[1:])):
+        raise ValueError("Time sample spacing exceeds supported floating-point resolution")
+    for name, series in values.items():
+        if not isinstance(name, str) or not name:
+            raise ValueError("Every series requires a nonempty string name")
+        if not isinstance(series, list) or len(series) != len(time):
+            raise ValueError(f"Series {name!r} must have one value for every time sample")
+        if not all(_numeric(v) for v in series):
+            raise ValueError(f"Series {name!r} contains a non-finite or non-numeric value")
+    return results
+
+
+def _finite(value):
+    """JSON has no infinity; expose unrepresentable derived quantities as null."""
+    return float(value) if math.isfinite(value) else None
+
+
+def _moments(values):
+    scale = max(map(abs, values), default=0)
+    scaled = [v / scale for v in values] if scale else [0.0] * len(values)
+    mean = math.fsum(scaled) / len(values)
+    std = math.sqrt(math.fsum((v - mean) ** 2 for v in scaled) / len(values))
+    return scale, scaled, mean, std
+
+
+def compute_statistics(values: list[float], time: Optional[list[float]] = None) -> dict:
+    """Population statistics of recorded samples plus a trapezoidal time average."""
+    if not values or not all(_numeric(v) for v in values):
+        return {"error": "Expected nonempty finite numeric values"}
+    scale, scaled, mean, std = _moments(values)
+    ordered = sorted(scaled)
+    n = len(values)
+    median = ordered[n // 2] if n % 2 else (ordered[n // 2 - 1] + ordered[n // 2]) / 2
+    change = scaled[-1] - scaled[0]
+    pct = _finite(change / scaled[0] * 100) if scaled[0] else None
+    weighted_mean = None
+    if time is not None and len(time) == n and n > 1 and time[-1] > time[0]:
+        duration = time[-1] - time[0]
+        weighted_mean = _finite(scale * math.fsum(
+            ((scaled[i] + scaled[i - 1]) / 2) * ((time[i] - time[i - 1]) / duration)
+            for i in range(1, n)))
+    result = {
+        "min": float(min(values)), "max": float(max(values)), "mean": _finite(scale * mean),
+        "std": _finite(scale * std), "median": _finite(scale * median),
+        "range": _finite(scale * (max(scaled) - min(scaled))),
+        "initial": float(values[0]), "final": float(values[-1]),
+        "total_change": _finite(scale * change), "percent_change": pct,
+        "sample_count": n, "time_weighted_mean": weighted_mean,
     }
+    result["unrepresentable_metrics"] = [key for key in ("mean", "std", "median", "range", "total_change") if result[key] is None]
+    return result
 
 
 def detect_peaks(time: list[float], values: list[float]) -> list[dict]:
-    """Detect peaks and troughs in the data."""
+    """Strict local sample extrema; plateaus/endpoints are not called peaks."""
     peaks = []
-    arr = np.array(values)
-
-    for i in range(1, len(arr) - 1):
-        # Local maximum
-        if arr[i] > arr[i-1] and arr[i] > arr[i+1]:
-            peaks.append({
-                "type": "peak",
-                "time": time[i],
-                "value": float(arr[i]),
-                "index": i
-            })
-        # Local minimum
-        elif arr[i] < arr[i-1] and arr[i] < arr[i+1]:
-            peaks.append({
-                "type": "trough",
-                "time": time[i],
-                "value": float(arr[i]),
-                "index": i
-            })
-
+    for i in range(1, len(values) - 1):
+        kind = "peak" if values[i] > values[i - 1] and values[i] > values[i + 1] else (
+            "trough" if values[i] < values[i - 1] and values[i] < values[i + 1] else None)
+        if kind:
+            peaks.append({"type": kind, "time": time[i], "value": float(values[i]), "index": i})
     return peaks
 
 
 def detect_equilibrium(values: list[float], threshold: float = 0.01) -> Optional[dict]:
-    """Detect if and when the system reaches equilibrium."""
-    arr = np.array(values)
-    if len(arr) < 10:
+    """Legacy field name: report observed tail stability, never equilibrium proof."""
+    if len(values) < 10:
         return None
-
-    # Check last 20% of values for stability
-    check_start = int(len(arr) * 0.8)
-    check_values = arr[check_start:]
-
-    if len(check_values) < 2:
-        return None
-
-    # Calculate relative variation
-    mean_val = np.mean(check_values)
-    if mean_val == 0:
-        return None
-
-    variation = np.std(check_values) / abs(mean_val) if mean_val != 0 else float('inf')
-
-    if variation < threshold:
-        # Find when equilibrium started
-        for i in range(len(arr) - 1, 0, -1):
-            window = arr[max(0, i-10):i+1]
-            if len(window) < 2:
-                continue
-            window_var = np.std(window) / abs(np.mean(window)) if np.mean(window) != 0 else float('inf')
-            if window_var > threshold:
-                return {
-                    "reached": True,
-                    "start_index": i,
-                    "equilibrium_value": float(mean_val),
-                    "variation": float(variation)
-                }
-        return {
-            "reached": True,
-            "start_index": 0,
-            "equilibrium_value": float(mean_val),
-            "variation": float(variation)
-        }
-
-    return {"reached": False, "variation": float(variation)}
+    check_start = min(int(len(values) * 0.8), len(values) - 3)
+    tail = values[check_start:]
+    scale, scaled, mean, std = _moments(tail)
+    global_scale = max(map(abs, values))
+    denominator = max(abs(mean), global_scale / scale * 1e-12) if scale else 1.0
+    variation = std / denominator
+    span = (max(scaled) - min(scaled)) / denominator
+    stable = span <= threshold
+    return {
+        "reached": stable, "start_index": check_start, "equilibrium_value": _finite(scale * mean),
+        "variation": _finite(variation), "relative_span": _finite(span),
+        "status": "nearly_stable_tail" if stable else "varying_tail",
+        "assessed_samples": len(tail), "proves_equilibrium": False,
+        "criterion": f"Last {len(tail)} samples span no more than {threshold * 100:g}% of their mean magnitude; near-zero floor is 1e-12 of full-series scale",
+    }
 
 
 def detect_pattern(time: list[float], values: list[float]) -> str:
-    """Detect the overall pattern in the data."""
-    arr = np.array(values)
-    if len(arr) < 3:
+    """Conservative descriptive shape rules respecting actual sample times."""
+    if len(values) < 3:
         return "insufficient_data"
-
-    # Calculate first derivative
-    diffs = np.diff(arr)
-
-    # Check for monotonic behavior
-    all_positive = np.all(diffs >= 0)
-    all_negative = np.all(diffs <= 0)
-
-    if all_positive:
-        # Check for exponential vs linear
-        second_diff = np.diff(diffs)
-        if len(second_diff) > 0 and np.mean(second_diff) > 0:
-            return "exponential_growth"
-        return "linear_growth"
-
-    if all_negative:
-        second_diff = np.diff(diffs)
-        if len(second_diff) > 0 and np.mean(second_diff) < 0:
-            return "exponential_decay"
-        return "linear_decay"
-
-    # Check for oscillation
-    sign_changes = np.sum(np.diff(np.sign(diffs)) != 0)
-    if sign_changes > len(arr) * 0.3:
+    scale = max(map(abs, values))
+    normalized = [v / scale for v in values] if scale else [0.0] * len(values)
+    if max(normalized) - min(normalized) <= 1e-12:
+        return "constant"
+    duration = time[-1] - time[0]
+    deltas = [(time[i] - time[i - 1]) / duration for i in range(1, len(time))]
+    slopes = [(normalized[i] - normalized[i - 1]) / deltas[i - 1] for i in range(1, len(values))]
+    if not all(math.isfinite(slope) for slope in slopes):
+        return "complex"
+    tol = max(map(abs, slopes)) * 1e-6
+    positive = all(s >= -tol for s in slopes)
+    negative = all(s <= tol for s in slopes)
+    if positive or negative:
+        suffix = "growth" if positive else "decay"
+        if max(slopes) - min(slopes) <= tol:
+            return f"linear_{suffix}"
+        # Curvature alone never establishes exponential behavior. Require a
+        # nearly constant log rate, with at least four strictly positive samples.
+        if len(values) >= 4 and min(values) > 0:
+            logs = [math.log(v) for v in values]
+            rates = [(logs[i] - logs[i - 1]) / deltas[i - 1] for i in range(1, len(values))]
+            if max(rates) - min(rates) <= max(map(abs, rates)) * 1e-4:
+                return f"exponential_{suffix}"
+        curvature = [b - a for a, b in zip(slopes, slopes[1:])]
+        if all(c >= -tol for c in curvature):
+            return "accelerating_growth" if positive else "slowing_decline"
+        if all(c <= tol for c in curvature):
+            return "slowing_growth" if positive else "accelerating_decline"
+        return "monotonic_growth" if positive else "monotonic_decline"
+    signs = [1 if s > tol else -1 for s in slopes if abs(s) > tol]
+    turns = sum(a != b for a, b in zip(signs, signs[1:]))
+    if turns >= 3:
         return "oscillating"
-
-    # Check for logistic/S-curve (growth that slows)
-    first_half_growth = np.mean(diffs[:len(diffs)//2])
-    second_half_growth = np.mean(diffs[len(diffs)//2:])
-
-    if first_half_growth > 0 and second_half_growth < first_half_growth * 0.3:
-        return "logistic_growth"
-
-    if first_half_growth < 0 and second_half_growth > first_half_growth * 0.3:
-        return "logistic_decay"
-
-    # Check for peak then decline
-    max_idx = np.argmax(arr)
-    if 0.1 < max_idx / len(arr) < 0.9:
-        return "peak_and_decline"
-
+    if turns == 1:
+        return "peak_and_decline" if signs[0] > 0 else "trough_and_recovery"
     return "complex"
 
 
-def compute_correlations(results: dict) -> dict:
-    """Compute correlation matrix between all variables."""
+def correlation_records(results: dict) -> tuple[dict, list[dict], dict]:
+    """Pearson sample association, scaled before centering to avoid overflow."""
     values = results.get("values", {})
-    var_names = list(values.keys())
+    pairs = combinations(values, 2)
+    count = len(values) * (len(values) - 1) // 2
+    correlations, records = {}, []
+    moments = {name: _moments(series) for name, series in values.items()}
+    assessed = 0
+    for name1, name2 in pairs:
+        if assessed >= MAX_CORRELATION_PAIRS:
+            break
+        assessed += 1
+        a, b = values[name1], values[name2]
+        if len(a) < 3:
+            continue
+        _, x, xm, xs = moments[name1]
+        _, y, ym, ys = moments[name2]
+        if not xs or not ys:
+            continue
+        corr = math.fsum(((u - xm) / xs) * ((v - ym) / ys) / len(a) for u, v in zip(x, y))
+        corr = round(min(1.0, max(-1.0, corr)), 3)
+        correlations[f"{name1}|{name2}"] = corr
+        records.append({"variables": [name1, name2], "correlation": corr, "samples": len(a)})
+    return correlations, records, {"total_pairs": count, "assessed_pairs": assessed, "omitted_pairs": count - assessed,
+                                   "limit": MAX_CORRELATION_PAIRS, "method": "Pearson sample correlation; association does not establish causation"}
 
-    if len(var_names) < 2:
-        return {}
 
-    correlations = {}
-    for i, name1 in enumerate(var_names):
-        for name2 in var_names[i+1:]:
-            arr1 = np.array(values[name1])
-            arr2 = np.array(values[name2])
+def compute_correlations(results: dict) -> dict:
+    return correlation_records(results)[0]
 
-            # Remove NaN/Inf values
-            valid = np.isfinite(arr1) & np.isfinite(arr2)
-            if np.sum(valid) < 3:
-                continue
 
-            corr = np.corrcoef(arr1[valid], arr2[valid])[0, 1]
-            if np.isfinite(corr):
-                correlations[f"{name1}|{name2}"] = round(corr, 3)
-
-    return correlations
-
+def descriptive_analysis(results: dict) -> dict:
+    validate_results(results)
+    time, values = results["time"], results["values"]
+    stats, patterns, peaks, equilibria = {}, {}, {}, {}
+    for name, series in values.items():
+        stats[name] = compute_statistics(series, time)
+        patterns[name] = detect_pattern(time, series)
+        extrema = detect_peaks(time, series)
+        if extrema:
+            peaks[name] = extrema
+        tail = detect_equilibrium(series)
+        if tail:
+            equilibria[name] = tail
+    correlations, records, coverage = correlation_records(results)
+    return {"statistics": stats, "patterns": patterns, "peaks": peaks, "equilibria": equilibria,
+            "correlations": correlations, "correlation_pairs": records, "correlation_coverage": coverage,
+            "time_range": {"start": time[0], "end": time[-1], "steps": len(time), "intervals": len(time) - 1},
+            "limitations": ["Patterns and tail stability describe recorded samples, not scientific validity or proof of equilibrium.",
+                            "Correlation across time series may reflect shared trends; it does not establish causal influence.",
+                            "Sample mean and population standard deviation weight each recorded sample equally; time_weighted_mean uses trapezoidal integration.",
+                            "Derived metrics that exceed finite floating-point range are returned as null."]}
 
 def build_analysis_prompt(model_info: dict, results: dict, stats: dict,
                           patterns: dict, correlations: dict,
                           question: Optional[str] = None) -> str:
     """Build the prompt for AI analysis."""
 
-    prompt = """You are an expert systems dynamics analyst. Analyze the following simulation results and provide insights.
+    prompt = """You are a systems dynamics analyst interpreting unverified simulation inputs and recorded samples.
+Do not present generated equations, source claims, heuristic patterns or finite outputs as scientific validation.
+Correlations of trending time series do not prove causal influence. A nearly stable tail does not establish equilibrium.
+Recommendations are hypotheses to test, not warranted real-world interventions. State uncertainty and missing evidence.
+Only cite times and values actually provided below. Do not invent peak times or measurements.
 
 ## Model Information
 """
@@ -224,7 +265,7 @@ def build_analysis_prompt(model_info: dict, results: dict, stats: dict,
     prompt += f"\n## Simulation Time\n"
     time = results.get('time', [])
     if time:
-        prompt += f"From t={time[0]} to t={time[-1]} ({len(time)} time steps)\n"
+        prompt += f"From t={time[0]} to t={time[-1]} ({len(time)} samples, {len(time)-1} intervals)\n"
 
     prompt += "\n## Statistics per Variable\n"
     for name, s in stats.items():
@@ -232,10 +273,13 @@ def build_analysis_prompt(model_info: dict, results: dict, stats: dict,
             continue
         prompt += f"\n### {name}\n"
         prompt += f"- Range: {s['min']:.2f} to {s['max']:.2f}\n"
-        prompt += f"- Mean: {s['mean']:.2f}, Std Dev: {s['std']:.2f}\n"
+        prompt += f"- Sample mean: {s['mean']}, Population Std Dev: {s['std']}, Time-weighted mean: {s['time_weighted_mean']}\n"
         prompt += f"- Initial: {s['initial']:.2f}, Final: {s['final']:.2f}\n"
         if s.get('percent_change') is not None:
             prompt += f"- Total change: {s['percent_change']:.1f}%\n"
+        extrema = detect_peaks(time, results['values'][name])
+        if extrema:
+            prompt += f"- Recorded local extrema (first 10): {json.dumps(extrema[:10])}\n"
 
     prompt += "\n## Detected Patterns\n"
     for name, pattern in patterns.items():
@@ -275,128 +319,53 @@ Respond with ONLY valid JSON, no markdown code blocks or other text."""
 
 
 def analyze_results(model_info: dict, results: dict, question: Optional[str] = None) -> AnalysisResult:
-    """
-    Analyze simulation results using AI.
-
-    Args:
-        model_info: The model definition (stocks, flows, variables)
-        results: Simulation results with 'time' and 'values' keys
-        question: Optional user question about the results
-
-    Returns:
-        AnalysisResult with summary, insights, recommendations, and optional answer
-    """
+    """Always compute verified descriptive metrics before optional AI interpretation."""
+    report = descriptive_analysis(results)
+    stats, patterns = report["statistics"], report["patterns"]
+    pattern_records = [{"variable": name, "pattern": pattern, "stats": stats[name],
+                        "peaks": report["peaks"].get(name, []), "equilibrium": report["equilibria"].get(name)}
+                       for name, pattern in patterns.items()]
+    insights = [f"{name} shows {patterns[name].replace('_', ' ')} in the recorded samples; its range is {s['min']:.6g} to {s['max']:.6g}."
+                for name, s in stats.items()]
+    for name, tail in report["equilibria"].items():
+        if tail["reached"]:
+            insights.append(f"{name} has a nearly stable final {tail['assessed_samples']} samples; this does not establish equilibrium.")
+    fallback = AnalysisResult(
+        summary="Descriptive analysis of the recorded samples. Model validity and causal conclusions require separate checks.",
+        insights=insights[:5], recommendations=["Check equations, units, initial conditions and source assumptions before interpreting the simulation.",
+                                               "Compare smaller time steps and longer horizons before drawing conclusions from apparent stability."],
+        patterns=pattern_records,
+        answer="Natural-language interpretation requires a configured AI provider; descriptive statistics remain available." if question else None,
+    )
     client = get_gemini_client()
-
-    time = results.get("time", [])
-    values = results.get("values", {})
-
-    # Compute statistics for all variables
-    stats = {}
-    for name, vals in values.items():
-        stats[name] = compute_statistics(vals)
-
-    # Detect patterns for all variables
-    patterns = {}
-    for name, vals in values.items():
-        patterns[name] = detect_pattern(time, vals)
-
-    # Compute correlations
-    correlations = compute_correlations(results)
-
-    # Detect peaks for all variables
-    all_peaks = {}
-    for name, vals in values.items():
-        peaks = detect_peaks(time, vals)
-        if peaks:
-            all_peaks[name] = peaks
-
-    # Detect equilibrium for all variables
-    equilibria = {}
-    for name, vals in values.items():
-        eq = detect_equilibrium(vals)
-        if eq:
-            equilibria[name] = eq
-
-    # If no AI available, generate basic analysis
     if not client:
-        insights = []
-        recommendations = []
-
-        for name, s in stats.items():
-            if "error" in s:
-                continue
-            pattern = patterns.get(name, "unknown")
-            insights.append(f"{name} shows {pattern.replace('_', ' ')} behavior, ranging from {s['min']:.2f} to {s['max']:.2f}")
-
-            if pattern == "exponential_growth":
-                recommendations.append(f"Consider adding limiting factors to {name} to prevent unbounded growth")
-            elif pattern == "exponential_decay":
-                recommendations.append(f"Review inflows to {name} - currently declining rapidly")
-
-        if equilibria:
-            for name, eq in equilibria.items():
-                if eq.get("reached"):
-                    insights.append(f"{name} reaches equilibrium at approximately {eq['equilibrium_value']:.2f}")
-
-        return AnalysisResult(
-            summary="Analysis completed using statistical methods. Enable Gemini API for AI-powered insights.",
-            insights=insights[:5],
-            recommendations=recommendations[:4],
-            patterns=[{"variable": k, "pattern": v, "stats": stats.get(k, {})} for k, v in patterns.items()],
-            answer="AI analysis unavailable. Please set GEMINI_API_KEY for natural language answers." if question else None
-        )
-
-    # Build prompt and call AI
-    prompt = build_analysis_prompt(model_info, results, stats, patterns, correlations, question)
-
+        return fallback
+    prompt = build_analysis_prompt(model_info, results, stats, patterns, report["correlations"], question)
     try:
         model = client.GenerativeModel("gemini-2.5-flash")
-        response = model.generate_content(
-            prompt,
-            generation_config={
-                "response_mime_type": "application/json",
-                "max_output_tokens": 2048,
-            }
-        )
-
-        # Parse response
-        response_text = response.text
-
-        # Clean up response if needed
-        if "```json" in response_text:
-            start = response_text.find("```json") + 7
-            end = response_text.find("```", start)
-            response_text = response_text[start:end].strip()
-        elif "```" in response_text:
-            start = response_text.find("```") + 3
-            end = response_text.find("```", start)
-            response_text = response_text[start:end].strip()
-
-        data = json.loads(response_text)
-
-        return AnalysisResult(
-            summary=data.get("summary", "Analysis complete."),
-            insights=data.get("insights", []),
-            recommendations=data.get("recommendations", []),
-            patterns=[{"variable": k, "pattern": v, "stats": stats.get(k, {}),
-                      "peaks": all_peaks.get(k, []), "equilibrium": equilibria.get(k)}
-                     for k, v in patterns.items()],
-            answer=data.get("answer") if question else None
-        )
-
-    except Exception as e:
-        # Fallback to basic analysis on error
-        return AnalysisResult(
-            summary=f"AI analysis encountered an error: {str(e)}. Showing statistical analysis.",
-            insights=[f"{name} ranges from {s['min']:.2f} to {s['max']:.2f}"
-                     for name, s in stats.items() if "error" not in s][:5],
-            recommendations=["Review model equations for potential issues"],
-            patterns=[{"variable": k, "pattern": v, "stats": stats.get(k, {})} for k, v in patterns.items()],
-            answer=None
-        )
+        response = model.generate_content(prompt, generation_config={"response_mime_type": "application/json", "max_output_tokens": 2048})
+        text = response.text.strip()
+        if text.startswith("```"):
+            text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
+        data = json.loads(text)
+        if not isinstance(data, dict) or not isinstance(data.get("summary"), str):
+            raise ValueError("Invalid analysis response")
+        for field in ("insights", "recommendations"):
+            if not isinstance(data.get(field), list) or not all(isinstance(item, str) for item in data[field]):
+                raise ValueError("Invalid analysis response")
+        if data.get("answer") is not None and not isinstance(data["answer"], str):
+            raise ValueError("Invalid analysis answer")
+        return AnalysisResult(summary=data["summary"], insights=data["insights"], recommendations=data["recommendations"],
+                              patterns=pattern_records, answer=data.get("answer") if question else None, ai_used=True)
+    except Exception:
+        # Provider exceptions may include configuration details. Keep the public
+        # fallback useful and avoid disclosing raw SDK/network exceptions.
+        fallback.summary = "AI interpretation was unavailable. Showing descriptive analysis of the recorded samples."
+        if question:
+            fallback.answer = "AI interpretation was unavailable; no answer was generated."
+        return fallback
 
 
 def is_analyzer_available() -> bool:
-    """Check if AI analyzer is available."""
+    """Configuration presence, not a provider health check."""
     return get_gemini_client() is not None
