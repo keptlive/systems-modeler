@@ -1,7 +1,7 @@
 {
   "id": "solow",
   "name": "Solow",
-  "description": "Model from Solow.mdl",
+  "description": "Model from Solow.mdl Investment and depreciation dynamics restored from the original source; checked against the mathematical solution, without a claim of empirical calibration.",
   "stocks": [
     {
       "id": "s1",
@@ -14,7 +14,30 @@
       }
     }
   ],
-  "flows": [],
+  "flows": [
+    {
+      "id": "v3",
+      "name": "Investment",
+      "equation": "Economic_Output*Reinvestment_Fraction",
+      "position": {
+        "x": 360,
+        "y": 50
+      },
+      "from_stock": null,
+      "to_stock": "Machines"
+    },
+    {
+      "id": "f1",
+      "name": "Depreciation",
+      "equation": "Machines*Depreciation_Fraction",
+      "from_stock": "Machines",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
   "variables": [
     {
       "id": "v1",
@@ -31,15 +54,6 @@
       "equation": "Labour*SQRT(Machines)",
       "position": {
         "x": 230,
-        "y": 50
-      }
-    },
-    {
-      "id": "v3",
-      "name": "Investment",
-      "equation": "Economic_Output*Reinvestment_Fraction",
-      "position": {
-        "x": 360,
         "y": 50
       }
     },

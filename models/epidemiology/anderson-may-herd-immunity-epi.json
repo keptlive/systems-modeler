@@ -1,7 +1,7 @@
 {
   "id": "anderson-may-herd-immunity-epi",
   "name": "Anderson-May Herd Immunity Model",
-  "description": "Roy Anderson and Robert May's foundational work on herd immunity thresholds and vaccination programs. Shows how the critical vaccination coverage needed for disease elimination depends on R0, forming the basis for vaccination policy. Reference: Anderson, R. M., & May, R. M. (1991). Infectious Diseases of Humans. Oxford University Press.",
+  "description": "Illustrative homogeneous SIR vaccination model with births, using herd-immunity concepts discussed by Anderson and May (1985). This is not their age-structured model, fitted data or a vaccination-policy forecast. Births without mortality, vaccination efficacy and the fixed rates are explicit educational assumptions.\n\nReview 2026-10-20: repaired two diagnostic references to the existing Basic R0 variable. This homogeneous illustrative vaccination model is not the age-structured model or fitted data in Anderson-May (1985). Births without mortality and the illustrative efficacy/rates remain explicit assumptions; numerical and population-balance checks do not establish calibration. The default integrator is explicitly RK4 at the existing time grid, checked against an independent high-accuracy solution over the complete trajectory. Numerical accuracy does not establish empirical validity.",
   "stocks": [
     {
       "id": "stock-susceptible",
@@ -130,7 +130,7 @@
     {
       "id": "var-herd-immunity",
       "name": "Herd Immunity Threshold",
-      "equation": "1 - 1/R0",
+      "equation": "1 - 1/\"Basic R0\"",
       "position": {
         "x": 550,
         "y": 50
@@ -139,7 +139,7 @@
     {
       "id": "var-effective-r",
       "name": "Effective R",
-      "equation": "R0 * Susceptible / Total_Population",
+      "equation": "\"Basic R0\" * Susceptible / Total_Population",
       "position": {
         "x": 550,
         "y": 150
@@ -216,7 +216,8 @@
   "time_settings": {
     "start": 0,
     "end": 365,
-    "dt": 1
+    "dt": 1,
+    "integration_method": "rk4"
   },
   "created_at": "2026-01-12T01:30:00.000Z",
   "updated_at": "2026-01-12T01:30:00.000Z",

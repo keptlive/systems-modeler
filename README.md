@@ -35,7 +35,9 @@ Bring your own agent: `open_workspace` returns a private visible page, `inspect_
 
 The nine existing MCP tools remain: `list_models`, `get_model`, `validate_model`, `simulate_model`, `compare_scenarios`, `analyze_model`, `export_model_xmile`, `generate_model_from_description`, `modify_existing_model`. Resources `systems://guide` and `systems://models/{id}` plus the `investigate_system` prompt guide evidence-based use. Numerical tools do not save models; optional AI tools return unsaved drafts. Local stdio supports these numerical/library tools; private page sessions require HTTP/SSE.
 
-The engine rejects unresolved equations, ambiguous names, nonfinite inputs and unsupported semantics. Limits are 500 explicit elements, 10,000 intervals and one million element-intervals including hidden stages. Delay/smoothing models currently require Euler. XMILE support is a scalar subset; arrays, nested models, queues, conveyors and explicit nonnegative constraints are rejected rather than silently lost.
+The engine rejects unresolved equations, ambiguous names, nonfinite inputs and unsupported semantics. Limits are 500 explicit elements, 10,000 intervals and one million work units including hidden stages and method cost. Smoothing and fixed-duration material delays support Euler/RK4; random functions and fixed-history delays remain Euler-only. XMILE support is a scalar subset; arrays, nested models, queues, conveyors and explicit nonnegative constraints are rejected rather than silently lost.
+
+Version1.4 reconciles63 public definitions, including source restoration, independently checked mathematical repairs and citation/limitation corrections. The public audit is941 completed defaults and137 explicit failures; completion does not establish scientific validity. Known citation mismatches appear in input inspection and MCP validation. See [the release evidence](docs/RELEASE-1.4.md).
 
 ## Development and operations
 
@@ -43,10 +45,10 @@ The engine rejects unresolved equations, ambiguous names, nonfinite inputs and u
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest -q tests/test_engine_review.py tests/test_regressions.py tests/test_xmile_features.py tests/test_xmile_roundtrip.py tests/test_input_validation.py tests/test_analytics.py tests/test_workspaces.py
+python -m pytest -q tests --ignore=tests/test_models.py
 node scripts/check_frontend.cjs
 PYTHONPATH=. python scripts/check_mcp.py --stdio
-PYTHONPATH=. python scripts/audit_library.py --full --output operations/library-full.json
+PYTHONPATH=. python scripts/audit_library.py --full --tracked-only --output operations/library-full.json
 ```
 
-Run the application before the MCP client check. Browser acceptance and alternate-engine/device limitations are recorded separately; responsive emulation is not proof of physical iOS/Android compatibility. Never deploy `models/`, `models.db`, `.env` or Git credentials over production. Preserve prior features, back up scoped code/config files, and verify live API/MCP/browser journeys and model data hashes after release.
+Run the application before the MCP client check. Node.js is needed for actual JavaScript parser checks. API tests use disposable storage. The separate `tests/test_models.py` aggregate intentionally fails while unresolved library defaults remain; the full audit records each failure instead of treating it as a passing regression. Browser acceptance and alternate-engine/device limitations are recorded separately; responsive emulation is not proof of physical iOS/Android compatibility. Never synchronize `models/`, `models.db`, `.env` or Git credentials over production. Reviewed per-file model repairs require exact old/new hashes and backups; preserve all other model data.

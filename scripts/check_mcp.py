@@ -36,6 +36,11 @@ async def exercise(read, write, pages=True):
         assert payload(await session.call_tool("get_model", {"model_id": mid}))["id"] == mid
         validation = payload(await session.call_tool("validate_model", {"model_json": MODEL}))
         assert validation["valid"]
+        cited = {**MODEL, 'source': 'https://doi.org/10.1016/j.jtbi.2017.11.024',
+                 'reference': 'Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008.'}
+        checked = payload(await session.call_tool('validate_model', {'model_json': cited}))
+        assert any(issue['code'] == 'citation_mismatch' for issue in checked['issues'])
+        assert checked['scientific_validation'] == 'not established'
         investigation = payload(await session.call_tool("investigate_model", {"model_json": MODEL}))
         assert len(investigation["runs"]) == 3
         assert investigation["baseline"]["status"] == "completed"

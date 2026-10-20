@@ -1,40 +1,259 @@
 {
   "id": "vaccine-allocation-optimization-hea",
   "name": "Vaccine Allocation Optimization Model",
-  "description": "Model for optimizing vaccine allocation across age groups and risk categories. Based on CDC ACIP frameworks and WHO SAGE recommendations for prioritizing scarce vaccines to maximize lives saved and disability prevented.",
+  "description": "Illustrative Vaccine Allocation Optimization Model. Source reconciliation 2026-10-20: The former DOI is Castillo et al.'s vaccine-market-design article; Bubar et al.'s correct DOI is now provided for conceptual context. This definition has fixed three-group allocation fractions and no epidemic/contact/serostatus dynamics, policy search or optimization objective; it is not Bubar's age-structured transmission model. Lives Saved multiplies doses by efficacy and IFR without infection-risk exposure or a counterfactual epidemic, so it is not an established estimate of deaths averted. All vaccination totals begin at zero, yielding 0/0 in Deaths per Million Vaccines. No ad hoc denominator guard or assumed infection risk was added. Scientific calibration and applicability remain unverified.",
   "stocks": [
-    {"id": "stock-available-vaccines", "name": "Available Vaccines", "initial_value": 1000000, "equation": "", "position": {"x": 100, "y": 250}},
-    {"id": "stock-elderly-vaccinated", "name": "Elderly Vaccinated", "initial_value": 0, "equation": "", "position": {"x": 350, "y": 150}},
-    {"id": "stock-adult-vaccinated", "name": "Adult Vaccinated", "initial_value": 0, "equation": "", "position": {"x": 350, "y": 250}},
-    {"id": "stock-young-vaccinated", "name": "Young Vaccinated", "initial_value": 0, "equation": "", "position": {"x": 350, "y": 350}},
-    {"id": "stock-deaths-averted", "name": "Deaths Averted", "initial_value": 0, "equation": "", "position": {"x": 600, "y": 250}}
+    {
+      "id": "stock-available-vaccines",
+      "name": "Available Vaccines",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-elderly-vaccinated",
+      "name": "Elderly Vaccinated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-adult-vaccinated",
+      "name": "Adult Vaccinated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-young-vaccinated",
+      "name": "Young Vaccinated",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-deaths-averted",
+      "name": "Deaths Averted",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 250
+      }
+    }
   ],
   "flows": [
-    {"id": "flow-supply", "name": "Supply", "equation": "Weekly_Supply", "from_stock": null, "to_stock": "stock-available-vaccines", "position": {"x": 50, "y": 250}},
-    {"id": "flow-elderly-allocation", "name": "Elderly Allocation", "equation": "MIN(Elderly_Allocation_Rate * Available_Vaccines, Elderly_Unvaccinated)", "from_stock": "stock-available-vaccines", "to_stock": "stock-elderly-vaccinated", "position": {"x": 225, "y": 150}},
-    {"id": "flow-adult-allocation", "name": "Adult Allocation", "equation": "MIN(Adult_Allocation_Rate * Available_Vaccines, Adult_Unvaccinated)", "from_stock": "stock-available-vaccines", "to_stock": "stock-adult-vaccinated", "position": {"x": 225, "y": 250}},
-    {"id": "flow-young-allocation", "name": "Young Allocation", "equation": "MIN(Young_Allocation_Rate * Available_Vaccines, Young_Unvaccinated)", "from_stock": "stock-available-vaccines", "to_stock": "stock-young-vaccinated", "position": {"x": 225, "y": 350}},
-    {"id": "flow-lives-saved", "name": "Lives Saved", "equation": "Elderly_Allocation * VE * Elderly_IFR + Adult_Allocation * VE * Adult_IFR + Young_Allocation * VE * Young_IFR", "from_stock": null, "to_stock": "stock-deaths-averted", "position": {"x": 475, "y": 250}}
+    {
+      "id": "flow-supply",
+      "name": "Supply",
+      "equation": "Weekly_Supply",
+      "from_stock": null,
+      "to_stock": "stock-available-vaccines",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-elderly-allocation",
+      "name": "Elderly Allocation",
+      "equation": "MIN(Elderly_Allocation_Rate * Available_Vaccines, Elderly_Unvaccinated)",
+      "from_stock": "stock-available-vaccines",
+      "to_stock": "stock-elderly-vaccinated",
+      "position": {
+        "x": 225,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-adult-allocation",
+      "name": "Adult Allocation",
+      "equation": "MIN(Adult_Allocation_Rate * Available_Vaccines, Adult_Unvaccinated)",
+      "from_stock": "stock-available-vaccines",
+      "to_stock": "stock-adult-vaccinated",
+      "position": {
+        "x": 225,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-young-allocation",
+      "name": "Young Allocation",
+      "equation": "MIN(Young_Allocation_Rate * Available_Vaccines, Young_Unvaccinated)",
+      "from_stock": "stock-available-vaccines",
+      "to_stock": "stock-young-vaccinated",
+      "position": {
+        "x": 225,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-lives-saved",
+      "name": "Lives Saved",
+      "equation": "Elderly_Allocation * VE * Elderly_IFR + Adult_Allocation * VE * Adult_IFR + Young_Allocation * VE * Young_IFR",
+      "from_stock": null,
+      "to_stock": "stock-deaths-averted",
+      "position": {
+        "x": 475,
+        "y": 250
+      }
+    }
   ],
   "variables": [
-    {"id": "var-weekly-supply", "name": "Weekly Supply", "equation": "500000", "position": {"x": 100, "y": 100}},
-    {"id": "var-elderly-population", "name": "Elderly Population", "equation": "10000000", "position": {"x": 500, "y": 100}},
-    {"id": "var-adult-population", "name": "Adult Population", "equation": "50000000", "position": {"x": 650, "y": 100}},
-    {"id": "var-young-population", "name": "Young Population", "equation": "30000000", "position": {"x": 800, "y": 100}},
-    {"id": "var-elderly-unvaccinated", "name": "Elderly Unvaccinated", "equation": "Elderly_Population - Elderly_Vaccinated", "position": {"x": 500, "y": 170}},
-    {"id": "var-adult-unvaccinated", "name": "Adult Unvaccinated", "equation": "Adult_Population - Adult_Vaccinated", "position": {"x": 650, "y": 170}},
-    {"id": "var-young-unvaccinated", "name": "Young Unvaccinated", "equation": "Young_Population - Young_Vaccinated", "position": {"x": 800, "y": 170}},
-    {"id": "var-elderly-ifr", "name": "Elderly IFR", "equation": "0.1", "position": {"x": 500, "y": 420}},
-    {"id": "var-adult-ifr", "name": "Adult IFR", "equation": "0.005", "position": {"x": 650, "y": 420}},
-    {"id": "var-young-ifr", "name": "Young IFR", "equation": "0.0001", "position": {"x": 800, "y": 420}},
-    {"id": "var-ve", "name": "VE", "equation": "0.9", "position": {"x": 350, "y": 420}},
-    {"id": "var-elderly-allocation-rate", "name": "Elderly Allocation Rate", "equation": "0.6", "position": {"x": 200, "y": 500}},
-    {"id": "var-adult-allocation-rate", "name": "Adult Allocation Rate", "equation": "0.3", "position": {"x": 400, "y": 500}},
-    {"id": "var-young-allocation-rate", "name": "Young Allocation Rate", "equation": "0.1", "position": {"x": 600, "y": 500}},
-    {"id": "var-deaths-per-million-vaccines", "name": "Deaths per Million Vaccines", "equation": "Deaths_Averted / (Elderly_Vaccinated + Adult_Vaccinated + Young_Vaccinated) * 1000000", "position": {"x": 600, "y": 350}}
+    {
+      "id": "var-weekly-supply",
+      "name": "Weekly Supply",
+      "equation": "500000",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-elderly-population",
+      "name": "Elderly Population",
+      "equation": "10000000",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-adult-population",
+      "name": "Adult Population",
+      "equation": "50000000",
+      "position": {
+        "x": 650,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-young-population",
+      "name": "Young Population",
+      "equation": "30000000",
+      "position": {
+        "x": 800,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-elderly-unvaccinated",
+      "name": "Elderly Unvaccinated",
+      "equation": "Elderly_Population - Elderly_Vaccinated",
+      "position": {
+        "x": 500,
+        "y": 170
+      }
+    },
+    {
+      "id": "var-adult-unvaccinated",
+      "name": "Adult Unvaccinated",
+      "equation": "Adult_Population - Adult_Vaccinated",
+      "position": {
+        "x": 650,
+        "y": 170
+      }
+    },
+    {
+      "id": "var-young-unvaccinated",
+      "name": "Young Unvaccinated",
+      "equation": "Young_Population - Young_Vaccinated",
+      "position": {
+        "x": 800,
+        "y": 170
+      }
+    },
+    {
+      "id": "var-elderly-ifr",
+      "name": "Elderly IFR",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-adult-ifr",
+      "name": "Adult IFR",
+      "equation": "0.005",
+      "position": {
+        "x": 650,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-young-ifr",
+      "name": "Young IFR",
+      "equation": "0.0001",
+      "position": {
+        "x": 800,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-ve",
+      "name": "VE",
+      "equation": "0.9",
+      "position": {
+        "x": 350,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-elderly-allocation-rate",
+      "name": "Elderly Allocation Rate",
+      "equation": "0.6",
+      "position": {
+        "x": 200,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-adult-allocation-rate",
+      "name": "Adult Allocation Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 400,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-young-allocation-rate",
+      "name": "Young Allocation Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 500
+      }
+    },
+    {
+      "id": "var-deaths-per-million-vaccines",
+      "name": "Deaths per Million Vaccines",
+      "equation": "Deaths_Averted / (Elderly_Vaccinated + Adult_Vaccinated + Young_Vaccinated) * 1000000",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    }
   ],
   "connectors": [],
-  "time_settings": {"start": 0, "end": 52, "dt": 1},
-  "source": "https://doi.org/10.1126/science.abg0889",
-  "reference": "Bubar KM et al. Model-informed COVID-19 vaccine prioritization strategies by age and serostatus. Science. 2021;371(6532):916-921."
+  "time_settings": {
+    "start": 0,
+    "end": 52,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1126/science.abe6959",
+  "reference": "Bubar KM et al. Model-informed COVID-19 vaccine prioritization strategies by age and serostatus. Science. 2021;371(6532):916-921. Conceptual context only; not a reproduction."
 }

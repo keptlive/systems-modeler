@@ -482,7 +482,7 @@ class SafeEvaluator(ast.NodeVisitor):
 
         if func_name == "LOOKUP":
             # LOOKUP(table_name, input) - table_name must be a string literal or name
-            if len(args) < 2:
+            if len(args) != 2:
                 raise EquationError("LOOKUP requires 2 arguments: table_name, input")
             # First arg should be a Name node for the table name
             if isinstance(args[0], ast.Name):
@@ -501,7 +501,7 @@ class SafeEvaluator(ast.NodeVisitor):
 
         if func_name == "WITH_LOOKUP":
             # WITH_LOOKUP(input, ((x1,y1),(x2,y2),...))
-            if len(args) < 2:
+            if len(args) != 2:
                 raise EquationError("WITH_LOOKUP requires input value and lookup points")
             input_val = self.visit(args[0])
             points = self._parse_lookup_points(args[1])
@@ -517,15 +517,15 @@ class SafeEvaluator(ast.NodeVisitor):
 
         if func_name == "STEP":
             # STEP(height, step_time)
-            if len(evaluated_args) < 2:
+            if len(evaluated_args) != 2:
                 raise EquationError("STEP requires 2 arguments: height, step_time")
             height, step_time = evaluated_args[0], evaluated_args[1]
             return step_function(height, step_time, self.context.time)
 
         elif func_name == "PULSE":
             # PULSE(magnitude, start_time, repeat_interval=0)
-            if len(evaluated_args) < 2:
-                raise EquationError("PULSE requires at least 2 arguments: magnitude, start_time")
+            if not 2 <= len(evaluated_args) <= 3:
+                raise EquationError("PULSE requires 2 or 3 arguments: magnitude, start_time, optional repeat_interval")
             magnitude = evaluated_args[0]
             start_time = evaluated_args[1]
             repeat_interval = evaluated_args[2] if len(evaluated_args) > 2 else 0.0
@@ -533,8 +533,8 @@ class SafeEvaluator(ast.NodeVisitor):
 
         elif func_name == "RAMP":
             # RAMP(slope, start_time, end_time=0)
-            if len(evaluated_args) < 2:
-                raise EquationError("RAMP requires at least 2 arguments: slope, start_time")
+            if not 2 <= len(evaluated_args) <= 3:
+                raise EquationError("RAMP requires 2 or 3 arguments: slope, start_time, optional end_time")
             slope = evaluated_args[0]
             start_time = evaluated_args[1]
             end_time = evaluated_args[2] if len(evaluated_args) > 2 else 0.0
@@ -544,13 +544,13 @@ class SafeEvaluator(ast.NodeVisitor):
 
     def _parse_lookup_points(self, node: ast.AST) -> list[tuple[float, float]]:
         """Parse inline lookup points from AST."""
+        if not isinstance(node, (ast.Tuple, ast.List)):
+            raise EquationError("Inline lookup points must be coordinate pairs")
         points = []
-        if isinstance(node, ast.Tuple) or isinstance(node, ast.List):
-            for elem in node.elts:
-                if isinstance(elem, ast.Tuple) and len(elem.elts) == 2:
-                    x = self.visit(elem.elts[0])
-                    y = self.visit(elem.elts[1])
-                    points.append((x, y))
+        for elem in node.elts:
+            if not isinstance(elem, (ast.Tuple, ast.List)) or len(elem.elts) != 2:
+                raise EquationError("Each inline lookup point must contain exactly two coordinates")
+            points.append((self.visit(elem.elts[0]), self.visit(elem.elts[1])))
         return points
 
     def _stateful_value(self, function, args, call_key):
@@ -603,28 +603,29 @@ class SafeEvaluator(ast.NodeVisitor):
         return state["stages"][-1]
 
     def visit_Compare(self, node: ast.Compare) -> float:
-        # Support comparisons returning 0 or 1
-        left = self.visit(node.left)
-        for op, comparator in zip(node.ops, node.comparators):
-            right = self.visit(comparator)
-            if isinstance(op, ast.Lt):
-                result = left < right
-            elif isinstance(op, ast.LtE):
-                result = left <= right
-            elif isinstance(op, ast.Gt):
-                result = left > right
-            elif isinstance(op, ast.GtE):
-                result = left >= right
-            elif isinstance(op, ast.Eq):
-                result = left == right
-            elif isinstance(op, ast.NotEq):
-                result = left != right
-            else:
+        # XMILE 1.0 section 3.3.1: relational operators bind more tightly
+        # than equality, and both groups associate left to right. Python's
+        # comparison-chain semantics differ; explicit parentheses are already
+        # separate nested nodes and are preserved by this grouping.
+        comparisons = {ast.Lt: operator.lt, ast.LtE: operator.le,
+                       ast.Gt: operator.gt, ast.GtE: operator.ge,
+                       ast.Eq: operator.eq, ast.NotEq: operator.ne}
+        values = [self.visit(node.left), *(self.visit(value) for value in node.comparators)]
+        groups = [values[0]]
+        equalities = []
+        for op, right in zip(node.ops, values[1:]):
+            function = comparisons.get(type(op))
+            if function is None:
                 raise EquationError(f"Unsupported comparison: {type(op).__name__}")
-            if not result:
-                return 0.0
-            left = right
-        return 1.0
+            if isinstance(op, (ast.Eq, ast.NotEq)):
+                equalities.append(function)
+                groups.append(right)
+            else:
+                groups[-1] = float(function(groups[-1], right))
+        result = groups[0]
+        for function, right in zip(equalities, groups[1:]):
+            result = float(function(result, right))
+        return result
 
     def visit_IfExp(self, node: ast.IfExp) -> float:
         # Support ternary expressions: x if condition else y
@@ -648,6 +649,40 @@ class SafeEvaluator(ast.NodeVisitor):
 
 
 
+def _strip_comments(equation: str) -> str:
+    """Remove XMILE brace comments without consuming quoted identifiers."""
+    output = []
+    quote = None
+    escaped = False
+    in_comment = False
+    for character in equation:
+        if in_comment:
+            if character == "}":
+                in_comment = False
+            output.append("\n" if character == "\n" else " ")
+        elif quote is not None:
+            output.append(character)
+            if escaped:
+                escaped = False
+            elif character == "\\":
+                escaped = True
+            elif character == quote:
+                quote = None
+        elif character in ("'", '"'):
+            quote = character
+            output.append(character)
+        elif character == "{":
+            in_comment = True
+            output.append(" ")
+        elif character == "}":
+            raise EquationError("Unexpected comment terminator }")
+        else:
+            output.append(character)
+    if in_comment:
+        raise EquationError("Unclosed XMILE brace comment")
+    return "".join(output)
+
+
 @lru_cache(maxsize=8192)
 def preprocess_equation(equation: str) -> str:
     """Translate XMILE conditionals with nesting and argument boundaries intact."""
@@ -658,7 +693,7 @@ def preprocess_equation(equation: str) -> str:
     import io
     import tokenize
     try:
-        tokens = [token.string for token in tokenize.generate_tokens(io.StringIO(equation).readline)
+        tokens = [token.string for token in tokenize.generate_tokens(io.StringIO(_strip_comments(equation)).readline)
                   if token.type not in (tokenize.ENDMARKER, tokenize.NEWLINE,
                                         tokenize.NL, tokenize.INDENT, tokenize.DEDENT)]
     except (tokenize.TokenError, IndentationError) as exc:
@@ -679,6 +714,14 @@ def preprocess_equation(equation: str) -> str:
               or (token.isidentifier() and any(ord(character) > 127 for character in token))
               or (keyword.iskeyword(token) and token.upper() not in {"IF", "ELSE", "AND", "OR", "NOT", "TRUE", "FALSE"})):
             tokens[index] = _encode_identifier(token)
+    # Exact Vensim built-in spelling, verified against its official manual
+    # and the author's original School Closure Initial Model.mdl. Match tokens
+    # only, so quoted names and statement-form IF expressions remain intact.
+    index = 0
+    while index + 3 < len(tokens):
+        if [token.upper() for token in tokens[index:index + 4]] == ["IF", "THEN", "ELSE", "("]:
+            tokens[index:index + 3] = ["IF_THEN_ELSE"]
+        index += 1
     position = 0
 
     def is_statement_if(index):

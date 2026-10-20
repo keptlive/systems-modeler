@@ -1,13 +1,13 @@
 {
   "id": "seir-epidemic-model-epi",
   "name": "SEIR Epidemic Model",
-  "description": "Susceptible-Exposed-Infectious-Recovered compartmental model with latent period. Extends SIR by adding an Exposed compartment for the incubation period when individuals are infected but not yet infectious. Reference: WHO Disease Outbreak Information. Source: https://www.who.int/",
+  "description": "Illustrative closed Susceptible-Exposed-Infectious-Recovered compartmental model with a latent period. Hethcote (2000) provides conceptual background. Initial exposed individuals come from the existing Initial Exposed parameter and the remainder start susceptible. The coefficients are not WHO data or a verified parameter set from the cited review.\n\nReview 2026-10-20: reconstructed the closed SEIR initial state using the already supplied Total Population and Initial Exposed parameters; infectious and recovered remain zero. Corrected the diagnostic R0 reference and the DOI to match the named Hethcote review. The values are illustrative, not WHO data, calibration or a reproduction of a paper-specific parameter set. The default integrator is explicitly RK4 at the existing time grid, checked against an independent high-accuracy solution over the complete trajectory. Numerical accuracy does not establish empirical validity.",
   "stocks": [
     {
       "id": "stock-susceptible",
       "name": "Susceptible",
       "initial_value": 0,
-      "equation": "",
+      "equation": "Total_Population - Initial_Exposed",
       "position": {
         "x": 150,
         "y": 200
@@ -17,7 +17,7 @@
       "id": "stock-exposed",
       "name": "Exposed",
       "initial_value": 0,
-      "equation": "",
+      "equation": "Initial_Exposed",
       "position": {
         "x": 350,
         "y": 200
@@ -137,7 +137,7 @@
     {
       "id": "var-effective-reproduction-number",
       "name": "Effective Reproduction Number",
-      "equation": "R0 * Susceptible / Total_Population",
+      "equation": "\"Basic Reproduction Number (R0)\" * Susceptible / Total_Population",
       "position": {
         "x": 250,
         "y": 160
@@ -189,10 +189,11 @@
   "time_settings": {
     "start": 0,
     "end": 200,
-    "dt": 0.0625
+    "dt": 0.0625,
+    "integration_method": "rk4"
   },
   "created_at": "2026-01-11T20:04:50.803576Z",
   "updated_at": "2026-01-11T20:04:50.803576Z",
-  "source": "https://doi.org/10.1016/S0025-5564(02)00108-6",
+  "source": "https://doi.org/10.1137/S0036144500371907",
   "reference": "Hethcote HW. The mathematics of infectious diseases. SIAM Review. 2000;42(4):599-653."
 }

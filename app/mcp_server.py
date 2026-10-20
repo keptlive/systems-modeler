@@ -327,8 +327,11 @@ def engine_contract() -> str:
     """Machine-readable capabilities for planning compatible, reproducible models."""
     from app.core.equations import SAFE_FUNCTIONS, CONTEXT_FUNCTIONS
     return json.dumps({
-        'version': '1.3.0',
+        'version': '1.4.0',
         'integration_methods': ['euler', 'rk4'],
+        'source_review': 'Known citation mismatches are warnings in validate_model; corrected citations do not establish equation fidelity. Read the model description and source evidence.',
+        'syntax': ['lazy IF THEN ELSE(condition, yes, no)', 'XMILE brace comments',
+                   'XMILE left-associated comparisons with relational precedence above equality'],
         'functions': sorted(set(SAFE_FUNCTIONS) | set(CONTEXT_FUNCTIONS)),
         'hidden_states': 'Smoothing and fixed-duration material delays support Euler and RK4',
         'euler_only': ['fixed history delays', 'random functions'],
@@ -390,7 +393,7 @@ def create_sse_app():
     app.routes.extend(mcp.sse_app().routes)
     async def info(request):
         tools = await mcp.list_tools()
-        return JSONResponse({'name': 'systems-modeler', 'version': '1.3.0',
+        return JSONResponse({'name': 'systems-modeler', 'version': '1.4.0',
             'streamable_http': 'https://stockandflow.live/mcp/',
             'sse': 'https://stockandflow.live/mcp/sse', 'tools': [t.name for t in tools],
             'documentation': 'https://stockandflow.live/guide'})

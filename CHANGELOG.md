@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.0 — 2026-10-20
+
+- Reconcile63 model definitions against original implementations, mathematics and publisher records. Six previously failing public defaults now complete;137 remain explicitly unresolved. Two additional finite-but-incomplete source examples have their missing dynamics restored.
+- Check illustrative epidemic trajectories against independent DOP853 references, growth against closed forms and pharmacokinetics against independent convolution, dose accounting and AUC. Explicit RK4 defaults resolve material Euler error in three epidemic examples without changing their time grids or coefficients.
+- Correct Vensim conditional spelling, XMILE comments and comparison semantics; reject malformed function signatures and lookup points.
+- Show known citation mismatches and model limitations in input inspection and MCP reports. Bibliographic corrections never establish source fidelity or calibration.
+- Make legacy API/frontend tests assert outcomes, isolate test storage and use real JavaScript parsing. Add reproducible reference generation and per-model source/hash receipts.
+
 ## 2026-01-18
 
 ### Added

@@ -61,7 +61,7 @@ for mid in sorted(candidate_ids):
     duplicate = sorted(name for name, count in Counter(names).items() if count > 1)
     findings = []
     if entry["status"] == "passed":
-        findings.append("now_completes_after_engine_repairs")
+        findings.append("now_completes_after_reviewed_repairs")
     else:
         if unsupported: findings.append("engine_function_coverage_or_nonstandard_function")
         if syntax: findings.append("engine_syntax_coverage_or_malformed_expression")

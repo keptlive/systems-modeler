@@ -1,49 +1,67 @@
 {
   "id": "peer-vaccination-network-nudge-epi",
   "name": "Peer Network Vaccination Nudge Model",
-  "description": "Network-based SARS-CoV-2 transmission model coupled with social-psychological vaccination decision-making where side effects, breakthrough infections, and community factors nudge individuals toward resistance or willingness. Based on Kim et al. (2023) model for Georgia, USA. Reference: Kim, J.H., et al. (2023). Modelling the Interplay between Responsive Individual Vaccination Decisions and SARS-CoV-2 Spread. Vaccines, 11(8), 1351. Source: https://doi.org/10.3390/vaccines11081351",
+  "description": "Illustrative aggregate vaccination-attitude feedback model.\n\nSource reconciliation 2026-10-20: Illustrative aggregate stock-flow adaptation of vaccination-attitude feedback concepts. The former Vaccines DOI belongs to Primieri et al.'s Umbria vaccination-uptake study, not the claimed Kim network paper. The EpiModel project repository identifies a related Georgia network/agent implementation; this aggregate is not a reproduction of that implementation. Coefficients and starting fractions have no established source mapping. Equations, initial values, flow topology and layout are unchanged. Scientific/source fidelity remains unverified.",
   "stocks": [
     {
       "id": "s1",
       "name": "Vaccine Willing Population",
       "initial_value": 0.5,
       "equation": "",
-      "position": {"x": 100, "y": 150}
+      "position": {
+        "x": 100,
+        "y": 150
+      }
     },
     {
       "id": "s2",
       "name": "Vaccine Resistant Population",
       "initial_value": 0.3,
       "equation": "",
-      "position": {"x": 300, "y": 150}
+      "position": {
+        "x": 300,
+        "y": 150
+      }
     },
     {
       "id": "s3",
       "name": "Vaccinated",
       "initial_value": 0.15,
       "equation": "",
-      "position": {"x": 200, "y": 300}
+      "position": {
+        "x": 200,
+        "y": 300
+      }
     },
     {
       "id": "s4",
       "name": "Infected",
       "initial_value": 0.02,
       "equation": "",
-      "position": {"x": 400, "y": 300}
+      "position": {
+        "x": 400,
+        "y": 300
+      }
     },
     {
       "id": "s5",
       "name": "Hospitalized",
       "initial_value": 0.003,
       "equation": "",
-      "position": {"x": 500, "y": 300}
+      "position": {
+        "x": 500,
+        "y": 300
+      }
     },
     {
       "id": "s6",
       "name": "Side Effect Reports",
       "initial_value": 0.01,
       "equation": "",
-      "position": {"x": 100, "y": 450}
+      "position": {
+        "x": 100,
+        "y": 450
+      }
     }
   ],
   "flows": [
@@ -53,7 +71,10 @@
       "equation": "Vaccine_Willing_Population * (Side_Effect_Nudge + Breakthrough_Nudge) * Nudge_Effectiveness",
       "from_stock": "s1",
       "to_stock": "s2",
-      "position": {"x": 200, "y": 150}
+      "position": {
+        "x": 200,
+        "y": 150
+      }
     },
     {
       "id": "f2",
@@ -61,7 +82,10 @@
       "equation": "Vaccine_Resistant_Population * Hospitalization_Fear_Nudge * Community_Pressure",
       "from_stock": "s2",
       "to_stock": "s1",
-      "position": {"x": 200, "y": 200}
+      "position": {
+        "x": 200,
+        "y": 200
+      }
     },
     {
       "id": "f3",
@@ -69,7 +93,10 @@
       "equation": "Vaccine_Willing_Population * Vaccination_Rate * Vaccine_Availability",
       "from_stock": "s1",
       "to_stock": "s3",
-      "position": {"x": 100, "y": 225}
+      "position": {
+        "x": 100,
+        "y": 225
+      }
     },
     {
       "id": "f4",
@@ -77,7 +104,10 @@
       "equation": "(Vaccine_Willing_Population + Vaccine_Resistant_Population) * Infection_Force * (1 - Vacc_Protection * (Vaccinated / 0.7))",
       "from_stock": null,
       "to_stock": "s4",
-      "position": {"x": 350, "y": 250}
+      "position": {
+        "x": 350,
+        "y": 250
+      }
     },
     {
       "id": "f5",
@@ -85,7 +115,10 @@
       "equation": "Infected * Hospitalization_Rate",
       "from_stock": "s4",
       "to_stock": "s5",
-      "position": {"x": 450, "y": 300}
+      "position": {
+        "x": 450,
+        "y": 300
+      }
     },
     {
       "id": "f6",
@@ -93,7 +126,10 @@
       "equation": "Vaccination_Uptake * Side_Effect_Rate - Side_Effect_Reports * Report_Decay",
       "from_stock": null,
       "to_stock": "s6",
-      "position": {"x": 100, "y": 400}
+      "position": {
+        "x": 100,
+        "y": 400
+      }
     }
   ],
   "variables": [
@@ -101,79 +137,119 @@
       "id": "v1",
       "name": "Side Effect Nudge",
       "equation": "Side_Effect_Reports * 2",
-      "position": {"x": 50, "y": 100}
+      "position": {
+        "x": 50,
+        "y": 100
+      }
     },
     {
       "id": "v2",
       "name": "Breakthrough Nudge",
       "equation": "Infected * Vaccinated * 5",
-      "position": {"x": 300, "y": 100}
+      "position": {
+        "x": 300,
+        "y": 100
+      }
     },
     {
       "id": "v3",
       "name": "Nudge Effectiveness",
       "equation": "0.1",
-      "position": {"x": 200, "y": 50}
+      "position": {
+        "x": 200,
+        "y": 50
+      }
     },
     {
       "id": "v4",
       "name": "Hospitalization Fear Nudge",
       "equation": "Hospitalized * 20",
-      "position": {"x": 400, "y": 150}
+      "position": {
+        "x": 400,
+        "y": 150
+      }
     },
     {
       "id": "v5",
       "name": "Community Pressure",
       "equation": "Vaccinated * 1.5",
-      "position": {"x": 350, "y": 200}
+      "position": {
+        "x": 350,
+        "y": 200
+      }
     },
     {
       "id": "v6",
       "name": "Vaccination Rate",
       "equation": "0.03",
-      "position": {"x": 50, "y": 300}
+      "position": {
+        "x": 50,
+        "y": 300
+      }
     },
     {
       "id": "v7",
       "name": "Vaccine Availability",
       "equation": "MIN(1, TIME / 60)",
-      "position": {"x": 50, "y": 350}
+      "position": {
+        "x": 50,
+        "y": 350
+      }
     },
     {
       "id": "v8",
       "name": "Infection Force",
       "equation": "0.25 * Infected",
-      "position": {"x": 450, "y": 250}
+      "position": {
+        "x": 450,
+        "y": 250
+      }
     },
     {
       "id": "v9",
       "name": "Vacc Protection",
       "equation": "0.85",
-      "position": {"x": 300, "y": 350}
+      "position": {
+        "x": 300,
+        "y": 350
+      }
     },
     {
       "id": "v10",
       "name": "Hospitalization Rate",
       "equation": "0.05",
-      "position": {"x": 500, "y": 250}
+      "position": {
+        "x": 500,
+        "y": 250
+      }
     },
     {
       "id": "v11",
       "name": "Side Effect Rate",
       "equation": "0.02",
-      "position": {"x": 150, "y": 500}
+      "position": {
+        "x": 150,
+        "y": 500
+      }
     },
     {
       "id": "v12",
       "name": "Report Decay",
       "equation": "0.05",
-      "position": {"x": 50, "y": 500}
+      "position": {
+        "x": 50,
+        "y": 500
+      }
     }
   ],
   "connectors": [],
-  "time_settings": {"start": 0, "end": 365, "dt": 1},
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 1
+  },
   "created_at": "2026-01-15T16:00:00.000000",
   "updated_at": "2026-01-15T16:00:00.000000",
-  "source": "https://doi.org/10.3390/vaccines11081351",
-  "reference": "Kim, J.H., et al. (2023). Modelling the Interplay between Responsive Individual Vaccination Decisions and SARS-CoV-2 Spread. Vaccines, 11(8), 1351."
+  "source": "https://github.com/EpiModel/COVID-Vax-Decisions",
+  "reference": "EpiModel/COVID-Vax-Decisions. Modelling the Interplay between Responsive Individual Vaccination Decisions and the Spread of SARS-CoV-2. Project R/EpiModel implementation; conceptual comparison only, not a reproduction."
 }

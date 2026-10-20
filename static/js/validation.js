@@ -86,6 +86,7 @@ const ModelValidation = {
         const empty=add('p','No matching elements.',rows);empty.hidden=entries.length>0;
         search.addEventListener('input',()=>{let found=0;for(const row of rows.querySelectorAll('.inspection-input')){row.hidden=!row.dataset.search.includes(search.value.trim().toLowerCase());if(!row.hidden)found++;}empty.hidden=found>0;});
         const provenance=add('section',null,body);add('h3','Source & run settings',provenance);
+        if(inputs.description)add('p',inputs.description,provenance,'inspection-note');
         add('p',inputs.reference||'No reference supplied.',provenance);
         if(inputs.source&&/^https?:\/\//i.test(inputs.source)){const link=add('a',inputs.source,provenance);link.href=inputs.source;link.target='_blank';link.rel='noopener noreferrer';}
         else add('p',inputs.source||'No source link supplied.',provenance);

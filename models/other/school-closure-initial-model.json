@@ -1,7 +1,7 @@
 {
   "id": "school-closure-initial-model",
   "name": "School Closure Initial Model",
-  "description": "Model from School Closure Initial Model.mdl",
+  "description": "Model from School Closure Initial Model.mdl Original-source epidemic baseline restored; the closure flag is diagnostic and does not alter contact rates in this initial model. Source-equation fidelity is not empirical calibration.",
   "stocks": [
     {
       "id": "s1",
@@ -96,9 +96,7 @@
         "x": 450,
         "y": 200
       }
-    }
-  ],
-  "variables": [
+    },
     {
       "id": "v1",
       "name": "ARR",
@@ -106,8 +104,56 @@
       "position": {
         "x": 100,
         "y": 50
-      }
+      },
+      "from_stock": "Ia",
+      "to_stock": "Ra"
     },
+    {
+      "id": "v13",
+      "name": "CRR",
+      "equation": "Error/AT",
+      "position": {
+        "x": 360,
+        "y": 210
+      },
+      "from_stock": null,
+      "to_stock": "Smoothed_Reporting_Rate"
+    },
+    {
+      "id": "v25",
+      "name": "YIR",
+      "equation": "Lambda_Y*Sy",
+      "position": {
+        "x": 620,
+        "y": 370
+      },
+      "from_stock": "Sy",
+      "to_stock": "Iy"
+    },
+    {
+      "id": "v26",
+      "name": "YRR",
+      "equation": "Iy/RD",
+      "position": {
+        "x": 100,
+        "y": 450
+      },
+      "from_stock": "Iy",
+      "to_stock": "Ry"
+    },
+    {
+      "id": "f3",
+      "name": "AIR",
+      "equation": "Lambda_A*Sa",
+      "from_stock": "Sa",
+      "to_stock": "Ia",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    }
+  ],
+  "variables": [
     {
       "id": "v2",
       "name": "AT",
@@ -208,15 +254,6 @@
       }
     },
     {
-      "id": "v13",
-      "name": "CRR",
-      "equation": "Error/AT",
-      "position": {
-        "x": 360,
-        "y": 210
-      }
-    },
-    {
       "id": "v14",
       "name": "Error",
       "equation": "Reported_Infection_Rate-Smoothed_Reporting_Rate",
@@ -313,24 +350,6 @@
       "position": {
         "x": 490,
         "y": 370
-      }
-    },
-    {
-      "id": "v25",
-      "name": "YIR",
-      "equation": "Lambda_Y*Sy",
-      "position": {
-        "x": 620,
-        "y": 370
-      }
-    },
-    {
-      "id": "v26",
-      "name": "YRR",
-      "equation": "Iy/RD",
-      "position": {
-        "x": 100,
-        "y": 450
       }
     }
   ],

@@ -3,6 +3,7 @@ import math
 from app.core.model import Model, TimeSettings
 from app.core.equations import validate_equation
 from app.core.simulator import simulate
+from app.core.source_review import citation_reviews
 
 
 def inspect_inputs(model: Model, numerical_check=True) -> dict:
@@ -37,6 +38,9 @@ def inspect_inputs(model: Model, numerical_check=True) -> dict:
         issue("warning", "units_unverified", "Units are missing for one or more elements; dimensional consistency has not been established")
     if not model.source and not model.reference:
         issue("warning", "missing_provenance", "No source/reference metadata is supplied")
+    reviewed_sources = citation_reviews(model)
+    for review in reviewed_sources:
+        issue("warning", "citation_mismatch", review["finding"])
     if model.stocks and all(s.initial_value == 0 and not s.equation for s in model.stocks):
         issue("warning", "all_stocks_zero", "All initial stocks are zero; confirm that the intended system can start from this state")
     numerical = "not_run"
@@ -53,10 +57,12 @@ def inspect_inputs(model: Model, numerical_check=True) -> dict:
     return {"model": model.name, "valid": not any(i["severity"] == "error" for i in issues),
             "numerical_check": numerical, "scientific_validation": "not established",
             "issues": issues,
+            "source_reviews": reviewed_sources,
             "inputs": {"initial_stocks": [{"name": s.name, "initial_value": s.initial_value,
                                              "initial_equation": s.equation, "units": s.units} for s in model.stocks],
                        "parameters_and_auxiliaries": [{"name": v.name, "equation": v.equation, "units": v.units} for v in model.variables],
                        "flows": [{"name": f.name, "equation": f.equation, "from_stock": f.from_stock,
                                   "to_stock": f.to_stock, "units": f.units} for f in model.flows],
                        "time_settings": model.time_settings.model_dump(),
+                       "description": model.description,
                        "source": model.source, "reference": model.reference}}

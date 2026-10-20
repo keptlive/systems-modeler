@@ -3,6 +3,7 @@ import argparse
 import json
 import time
 import hashlib
+import subprocess
 from collections import Counter
 from pathlib import Path
 from app.core.model import Model, TimeSettings
@@ -12,13 +13,18 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--output", required=True)
 parser.add_argument("--full", action="store_true", help="Run complete defaults rather than a 4-step smoke check")
 parser.add_argument("--random-seed", type=int, default=42, help="Fallback seed for reproducible stochastic audit runs")
+parser.add_argument("--tracked-only", action="store_true", help="Audit Git-tracked public definitions, excluding local user/test additions")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 rows = []
 started = time.monotonic()
 engine_hashes = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
                  for p in sorted((root / "app" / "core").glob("*.py"))}
-for path in sorted((root / "models").rglob("*.json")):
+paths = sorted((root / "models").rglob("*.json"))
+if args.tracked_only:
+    tracked = set(subprocess.check_output(['git', 'ls-files', '-z', 'models'], cwd=root).decode().split('\0'))
+    paths = [p for p in paths if p.relative_to(root).as_posix() in tracked]
+for path in paths:
     row = {"file": str(path.relative_to(root)), "id": path.stem,
            "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
     try:
@@ -35,6 +41,7 @@ for path in sorted((root / "models").rglob("*.json")):
         row.update(status="failed", error=str(exc))
     rows.append(row)
 report = {"scope": "full default runs" if args.full else "four-step numerical smoke checks",
+          "library_scope": "Git-tracked public definitions" if args.tracked_only else "All definitions present in models/",
           "fallback_random_seed": args.random_seed,
           "engine_sha256": engine_hashes,
           "scientific_validation": "not established; inspect assumptions and source references",

@@ -1,7 +1,7 @@
 {
   "id": "two-compartment-pharmacokinetics-model-hea",
   "name": "Two-Compartment Pharmacokinetics Model",
-  "description": "A classic pharmacokinetic model tracking drug concentration in plasma (central compartment) and tissues (peripheral compartment). Models ADME - Absorption, Distribution, Metabolism, and Elimination. Used to design dosing regimens that maintain therapeutic drug levels while avoiding toxicity. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "description": "Illustrative Two-Compartment Pharmacokinetics Model. Source reconciliation 2026-10-20: The invalid book DOI was replaced by the publisher record of Gibaldi/Perrier (1982), a conceptual reference. The mechanistic equations were reconciled to the published Torsten two-compartment mass ODEs: Kel=CL/Vcentral, K12=Q/Vcentral, K21=Q/Vperipheral. Undeclared shorthand references now use existing stock names. An explicit non-systemic GI loss of Ka*GI*(1-F) makes GI depletion Ka*GI and systemic input F*Ka*GI, so F controls extent rather than only speed. Half Life now gives the slower disposition eigenmode, not ln(2)/Kel; if absorption is slower it need not equal the observed oral terminal half-life. Stocks are amounts (mg), volume L, time h, rates 1/h and concentration mg/L. Existing numerical constants and the 100 mg oral amount are illustrative, with no identified drug, fit or clinical therapeutic range; the existing therapeutic status diagnostic is not clinical advice. Scientific calibration and applicability remain unverified.",
   "stocks": [
     {
       "id": "stock-drug-in-central-compartment",
@@ -11,7 +11,8 @@
       "position": {
         "x": 150,
         "y": 200
-      }
+      },
+      "units": "mg"
     },
     {
       "id": "stock-drug-in-peripheral-compartment",
@@ -21,7 +22,8 @@
       "position": {
         "x": 350,
         "y": 200
-      }
+      },
+      "units": "mg"
     },
     {
       "id": "stock-drug-in-gi-tract",
@@ -31,51 +33,68 @@
       "position": {
         "x": 550,
         "y": 200
-      }
+      },
+      "units": "mg"
     }
   ],
   "flows": [
     {
       "id": "flow-absorption",
       "name": "Absorption",
-      "equation": "Ka * Drug_GI * Bioavailability",
+      "equation": "Ka * Drug_in_GI_Tract * Bioavailability",
       "from_stock": "stock-drug-in-gi-tract",
       "to_stock": "stock-drug-in-central-compartment",
       "position": {
         "x": 250,
         "y": 200
-      }
+      },
+      "units": "mg/h"
     },
     {
       "id": "flow-distribution",
       "name": "Distribution",
-      "equation": "K12 * Drug_Central",
+      "equation": "K12 * Drug_in_Central_Compartment",
       "from_stock": "stock-drug-in-central-compartment",
       "to_stock": "stock-drug-in-peripheral-compartment",
       "position": {
         "x": 450,
         "y": 200
-      }
+      },
+      "units": "mg/h"
     },
     {
       "id": "flow-return-from-tissue",
       "name": "Return from Tissue",
-      "equation": "K21 * Drug_Peripheral",
+      "equation": "K21 * Drug_in_Peripheral_Compartment",
       "from_stock": "stock-drug-in-peripheral-compartment",
       "to_stock": "stock-drug-in-central-compartment",
       "position": {
         "x": 650,
         "y": 200
-      }
+      },
+      "units": "mg/h"
     },
     {
       "id": "flow-elimination",
       "name": "Elimination",
-      "equation": "Kel * Drug_Central",
+      "equation": "Kel * Drug_in_Central_Compartment",
       "from_stock": "stock-drug-in-central-compartment",
       "to_stock": null,
       "position": {
         "x": 250,
+        "y": 350
+      },
+      "units": "mg/h"
+    },
+    {
+      "id": "flow-nonsystemic-gi-loss",
+      "name": "Non-systemic GI Loss",
+      "equation": "Ka * Drug_in_GI_Tract * (1 - Bioavailability)",
+      "from_stock": "stock-drug-in-gi-tract",
+      "to_stock": null,
+      "units": "mg/h",
+      "position": {
+        "x": 650,
         "y": 350
       }
     }
@@ -88,7 +107,8 @@
       "position": {
         "x": 100,
         "y": 80
-      }
+      },
+      "units": "1/h"
     },
     {
       "id": "var-bioavailability",
@@ -97,7 +117,8 @@
       "position": {
         "x": 250,
         "y": 80
-      }
+      },
+      "units": "dimensionless"
     },
     {
       "id": "var-k12",
@@ -106,7 +127,8 @@
       "position": {
         "x": 400,
         "y": 80
-      }
+      },
+      "units": "1/h"
     },
     {
       "id": "var-k21",
@@ -115,7 +137,8 @@
       "position": {
         "x": 550,
         "y": 80
-      }
+      },
+      "units": "1/h"
     },
     {
       "id": "var-kel",
@@ -124,7 +147,8 @@
       "position": {
         "x": 700,
         "y": 80
-      }
+      },
+      "units": "1/h"
     },
     {
       "id": "var-volume-central",
@@ -133,25 +157,28 @@
       "position": {
         "x": 100,
         "y": 160
-      }
+      },
+      "units": "L"
     },
     {
       "id": "var-plasma-concentration",
       "name": "Plasma Concentration",
-      "equation": "Drug_Central / Volume_Central",
+      "equation": "Drug_in_Central_Compartment / Volume_Central",
       "position": {
         "x": 250,
         "y": 160
-      }
+      },
+      "units": "mg/L"
     },
     {
       "id": "var-half-life",
       "name": "Half Life",
-      "equation": "0.693 / Kel",
+      "equation": "LN(2) / ((Kel + K12 + K21 - SQRT((Kel + K12 + K21)^2 - 4 * Kel * K21)) / 2)",
       "position": {
         "x": 400,
         "y": 160
-      }
+      },
+      "units": "h"
     },
     {
       "id": "var-therapeutic-range-low",
@@ -160,7 +187,8 @@
       "position": {
         "x": 550,
         "y": 160
-      }
+      },
+      "units": "mg/L"
     },
     {
       "id": "var-therapeutic-range-high",
@@ -169,7 +197,8 @@
       "position": {
         "x": 700,
         "y": 160
-      }
+      },
+      "units": "mg/L"
     },
     {
       "id": "var-therapeutic-status",
@@ -178,7 +207,8 @@
       "position": {
         "x": 100,
         "y": 240
-      }
+      },
+      "units": "dimensionless"
     },
     {
       "id": "var-clearance",
@@ -187,7 +217,8 @@
       "position": {
         "x": 250,
         "y": 240
-      }
+      },
+      "units": "L/h"
     }
   ],
   "connectors": [
@@ -239,6 +270,6 @@
   },
   "created_at": "2026-01-11T20:04:50.812079Z",
   "updated_at": "2026-01-11T20:04:50.812079Z",
-  "source": "https://doi.org/10.1002/9780470918890",
-  "reference": "Gibaldi M, Perrier D. Pharmacokinetics. 2nd ed. Marcel Dekker, 1982."
+  "source": "https://www.routledge.com/Pharmacokinetics-Second-Edition/Gibaldi-Perrier/p/book/9780824710422",
+  "reference": "Gibaldi M, Perrier D. Pharmacokinetics. 2nd ed. Marcel Dekker, 1982. ISBN 9780824710422. General reference. Equation reconciliation: Torsten two-compartment model documentation, https://metrumresearchgroup.github.io/Torsten/function/two-cpt/ . Illustrative constants, not a drug-specific fit."
 }
