@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.5.0 — 2026-10-20
+
+- Verify all 44 advertised functions and aliases with 218 advanced tests, including independent delay, pulse, stochastic and nonlinear reference trajectories. Separate static corpus coverage, actual function invocation and scientific validity.
+- Repair decimal pulse boundaries, RK4 test-input holding and extreme lookup arithmetic, including two independently discovered review cases. Document the accepted-time and XMILE pulse-signature contract in MCP and the guide.
+- Add a keyboard command/element finder, persistent solver/run context, tighter workbench styling and desktop/mobile series search with Stocks / All / Clear. Preserve existing product paths.
+- Fix small mobile numbers displaying as zero, hidden-series styling and mobile status overlap. Verify desktop, tablet and phone viewport workflows.
+- Full public corpus remains 941 completed / 137 failed with no definition changes. Regression suite: 563 tests plus 18 preservation subtests; use Pytest 9 for its subtests fixture.
+
 ## 1.4.0 — 2026-10-20
 
 - Reconcile63 model definitions against original implementations, mathematics and publisher records. Six previously failing public defaults now complete;137 remain explicitly unresolved. Two additional finite-but-incomplete source examples have their missing dynamics restored.

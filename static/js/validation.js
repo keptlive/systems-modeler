@@ -12,7 +12,8 @@ const ModelValidation = {
         quick.addEventListener('click',()=>this.run(quick));
     },
     async run(button,useSettingsDraft=false) {
-        if(button)button.disabled=true;
+        const previousLabel=button?.textContent;
+        if(button){button.disabled=true;button.textContent="Checking…";button.setAttribute("aria-busy","true");}
         try {
             const snapshot=JSON.parse(JSON.stringify(App.modelSnapshot()));
             if(useSettingsDraft)snapshot.time_settings=App.readSimulationSettings();
@@ -21,7 +22,7 @@ const ModelValidation = {
             if(!response.ok)throw new Error(typeof body.detail==='string'?body.detail:'Could not check model inputs');
             this.snapshot=snapshot;this.report=body;this.show(body);return true;
         }catch(error){App.showToast(error.message,'error');return false;}
-        finally{if(button)button.disabled=false;}
+        finally{if(button){button.disabled=false;button.textContent=previousLabel;button.removeAttribute("aria-busy");}}
     },
     add(tag,text,parent,className) {
         const el=document.createElement(tag);if(text!==null)el.textContent=text;
@@ -71,6 +72,7 @@ const ModelValidation = {
         investigate.addEventListener('click',()=>this.investigate(investigate,results,snapshot,report));
         const inputs=report.inputs,section=add('section',null,body);add('h3','Equations & initial values',section);
         const search=add('input',null,section,'inspection-search');search.type='search';search.placeholder='Find an element or equation…';search.setAttribute('aria-label','Find an element or equation');
+        const searchStatus=add('p','',section,'inspection-search-status');searchStatus.setAttribute('role','status');
         const rows=add('div',null,section,'inspection-inputs');
         const endpoints=new Map((snapshot?.stocks||[]).flatMap(s=>[[s.id,s.name],[s.name,s.name]]));
         const entries=[...inputs.initial_stocks.map(s=>({...s,kind:'Initial stock',equation:s.initial_equation||String(s.initial_value)})),
@@ -84,7 +86,8 @@ const ModelValidation = {
             if(entry.connection)add('small',entry.connection,row);
         }
         const empty=add('p','No matching elements.',rows);empty.hidden=entries.length>0;
-        search.addEventListener('input',()=>{let found=0;for(const row of rows.querySelectorAll('.inspection-input')){row.hidden=!row.dataset.search.includes(search.value.trim().toLowerCase());if(!row.hidden)found++;}empty.hidden=found>0;});
+        const updateSearch=()=>{let found=0;for(const row of rows.querySelectorAll('.inspection-input')){row.hidden=!row.dataset.search.includes(search.value.trim().toLowerCase());if(!row.hidden)found++;}empty.hidden=found>0;searchStatus.textContent=found+' of '+entries.length+' elements';};
+        search.addEventListener('input',updateSearch);updateSearch();
         const provenance=add('section',null,body);add('h3','Source & run settings',provenance);
         if(inputs.description)add('p',inputs.description,provenance,'inspection-note');
         add('p',inputs.reference||'No reference supplied.',provenance);

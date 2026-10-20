@@ -21,7 +21,7 @@ Optional provider configuration is described in `.env.example` and `app/llm/`. K
 
 Use **Settings → Check inputs** or `POST /api/validate` with `{"model_id":"..."}` or `{"model":{...}}`. Inspection covers names, references, syntax, initial values, flow endpoints, tables, settings and a short numerical run. Units and provenance are retained. Scientific validity is not established by these checks or by finite simulation output.
 
-All 1,078 checked-in definitions were audited unchanged: 929 default runs complete and 149 fail explicitly. See [the input investigation](docs/MODEL-INVESTIGATION.md), [engine review](docs/ENGINE-REVIEW.md), and SHA-bound receipts in `operations/`. Public status badges apply only to the exact model bytes audited. Production also has additional user models; preserve them during release.
+The current 1.5 audit runs all 1,078 checked-in definitions at their full default horizons: 941 complete and 137 fail explicitly. See [the capability contract](docs/CORPUS-TEST-CONTRACT-1.5.md), [advanced engine review](docs/ADVANCED-FUNCTION-REVIEW-1.5.md), and SHA-bound receipts in `operations/`. Public status badges apply only to the exact model bytes audited. Production also has additional user models; preserve them during release.
 
 ## API and MCP
 
@@ -37,7 +37,7 @@ The nine existing MCP tools remain: `list_models`, `get_model`, `validate_model`
 
 The engine rejects unresolved equations, ambiguous names, nonfinite inputs and unsupported semantics. Limits are 500 explicit elements, 10,000 intervals and one million work units including hidden stages and method cost. Smoothing and fixed-duration material delays support Euler/RK4; random functions and fixed-history delays remain Euler-only. XMILE support is a scalar subset; arrays, nested models, queues, conveyors and explicit nonnegative constraints are rejected rather than silently lost.
 
-Version1.4 reconciles63 public definitions, including source restoration, independently checked mathematical repairs and citation/limitation corrections. The public audit is941 completed defaults and137 explicit failures; completion does not establish scientific validity. Known citation mismatches appear in input inspection and MCP validation. See [the release evidence](docs/RELEASE-1.4.md).
+Version 1.4 reconciled 63 public definitions through source restoration, mathematical checks and citation/limitation corrections. Version 1.5 adds 218 advanced tests across all 44 advertised function names, repairs pulse and extreme lookup behavior, and improves the existing workbench with command search, run context and desktop/mobile chart selection. No model definitions changed in 1.5. Known citation mismatches remain visible in inspection and MCP validation. See [the release evidence](docs/RELEASE-1.5.md).
 
 ## Development and operations
 
@@ -47,6 +47,9 @@ Version1.4 reconciles63 public definitions, including source restoration, indepe
 pip install -r requirements-dev.txt
 python -m pytest -q tests --ignore=tests/test_models.py
 node scripts/check_frontend.cjs
+node scripts/check_simulation_state.cjs
+node scripts/check_workbench_v15.cjs
+node scripts/check_series_controls.cjs
 PYTHONPATH=. python scripts/check_mcp.py --stdio
 PYTHONPATH=. python scripts/audit_library.py --full --tracked-only --output operations/library-full.json
 ```

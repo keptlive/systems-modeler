@@ -9,18 +9,20 @@ from app.core.equations import (EquationError, safe_eval, SimulationContext,
                                 RandomRuntime, stateful_derivatives, equation_features)
 
 
-def simulation_context(model, t, dt, delay, smooth, random_runtime=None):
+def simulation_context(model, t, dt, delay, smooth, random_runtime=None, input_time=None, input_snapshot=None):
     context = SimulationContext(t, dt, {table.name: table.to_list() for table in model.tables}, delay, smooth, random_runtime)
     context.table_types = {table.name: table.interpolation for table in model.tables}
+    context.input_time = t if input_time is None else input_time
+    context.input_snapshot = input_snapshot
     return context
 
 
-def evaluate(model, stocks, t, dt, delay, smooth, initial=False, random_runtime=None):
+def evaluate(model, stocks, t, dt, delay, smooth, initial=False, random_runtime=None, input_time=None, input_snapshot=None):
     values = dict(stocks)
     pending = [(e.name, e.equation) for e in [*model.variables, *model.flows]]
     if initial:
         pending += [(s.name, s.equation) for s in model.stocks if s.equation]
-    context = simulation_context(model, t, dt, delay, smooth, random_runtime)
+    context = simulation_context(model, t, dt, delay, smooth, random_runtime, input_time, input_snapshot)
     errors = {}
     while pending:
         remaining = []
@@ -133,12 +135,14 @@ def integrate(model: Model, settings: TimeSettings):
             hidden = {key: list(state["stages"]) for collection in (delay, smooth)
                       for key, state in collection.items()}
 
+            input_snapshot = (values, simulation_context(model, t, settings.dt, delay, smooth, random_runtime))
+
             def rates(at, state, hidden_state):
                 trial_delay = {key: {**entry, "stages": hidden_state[key]} for key, entry in delay.items()}
                 trial_smooth = {key: {**entry, "stages": hidden_state[key]} for key, entry in smooth.items()}
                 vals = evaluate(model, state, at, settings.dt, trial_delay, trial_smooth,
-                                random_runtime=random_runtime)
-                context = simulation_context(model, at, settings.dt, trial_delay, trial_smooth, random_runtime)
+                                random_runtime=random_runtime, input_time=t, input_snapshot=input_snapshot)
+                context = simulation_context(model, at, settings.dt, trial_delay, trial_smooth, random_runtime, input_time=t, input_snapshot=input_snapshot)
                 return derivatives(vals), stateful_derivatives(vals, context)
 
             def trial_stocks(rates_at_stage, fraction):

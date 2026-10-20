@@ -4,8 +4,24 @@ function updateVariableToggles() {
     if (!container || !Charts.results) return;
     container.replaceChildren();
     const title = document.createElement('h4');
-    title.textContent = 'Variables';
+    title.textContent = 'Chart series';
     container.appendChild(title);
+    const toolbar=document.createElement('div');toolbar.className='series-toolbar';
+    const search=document.createElement('input');search.type='search';search.className='series-search';
+    search.placeholder='Filter series…';search.setAttribute('aria-label','Filter chart series');
+    search.value=Charts.seriesQuery||'';
+    const actions=document.createElement('div');actions.className='series-actions';
+    const names=Object.keys(Charts.options.variables);
+    const stocks=(Simulation.resultModel?.stocks||[]).map(stock=>stock.name).filter(name=>names.includes(name));
+    for(const [label,selection] of [['Stocks',stocks],['All',names],['Clear',[]]]){
+        const button=document.createElement('button');button.type='button';button.textContent=label;
+        button.setAttribute('aria-label',label==='Stocks'?'Plot only stocks':label==='All'?'Plot all series':'Clear plotted series');
+        button.disabled=label==='Stocks'&&!stocks.length;
+        button.addEventListener('click',()=>Charts.selectVariables(selection));actions.appendChild(button);
+    }
+    const count=document.createElement('p');count.className='series-count';count.setAttribute('role','status');
+    toolbar.append(search,actions,count);container.appendChild(toolbar);
+    const rows=new Map();
     for (const [name, option] of Object.entries(Charts.options.variables)) {
         const row = document.createElement('div');
         row.className = 'variable-toggle';
@@ -20,7 +36,18 @@ function updateVariableToggles() {
         color.setAttribute('aria-label', `Color for ${name}`);
         color.addEventListener('input', () => Charts.setVariableColor(name, color.value));
         row.append(label, color); container.appendChild(row);
+        rows.set(name,{row,checkbox});
     }
+    const empty=document.createElement('p');empty.textContent='No matching series. Try another name.';
+    empty.className='series-count';container.appendChild(empty);
+    const refresh=()=>{
+        const matched=new Set(Charts.filterSeries(names,search.value));
+        for(const [name,{row,checkbox}] of rows){row.hidden=!matched.has(name);checkbox.checked=!!Charts.options.variables[name]?.visible;}
+        count.textContent=`${matched.size} of ${names.length} shown · ${Charts.getVisibleVariables().length} plotted`;
+        empty.hidden=matched.size>0;
+    };
+    search.addEventListener('input',()=>{Charts.seriesQuery=search.value;refresh();});
+    Charts.onSelectionChanged=refresh;refresh();
 }
 document.addEventListener('DOMContentLoaded', () => {
     const welcome = document.createElement('section');

@@ -420,6 +420,15 @@ const App = {
                     ${hasResults ? `
                         <div class="mobile-chart-section">
                             <label class="section-label">Variables (tap to toggle)</label>
+                            <div class="series-toolbar">
+                                <input type="search" class="series-search" id="series-search-mobile" aria-label="Filter chart series" placeholder="Filter series…">
+                                <div class="series-actions">
+                                    <button type="button" data-series-selection="stocks">Stocks</button>
+                                    <button type="button" data-series-selection="all">All</button>
+                                    <button type="button" data-series-selection="clear">Clear</button>
+                                </div>
+                                <p class="series-count" id="series-count-mobile" role="status"></p>
+                            </div>
                             <div class="var-chips-container" id="var-chips-mobile">
                                 ${variableTogglesHTML || "<span class=\"no-vars\">No stocks in model</span>"}
                             </div>
@@ -495,6 +504,26 @@ const App = {
         });
 
         // Variable chip toggles
+        const search=document.getElementById('series-search-mobile');
+        const chips=[...document.querySelectorAll('#var-chips-mobile .var-chip')];
+        const names=Object.keys(Charts.options.variables);
+        const stocks=(Simulation.resultModel?.stocks||[]).map(stock=>stock.name).filter(name=>names.includes(name));
+        const refreshSeries=()=>{
+            const matched=new Set(Charts.filterSeries(names,search?.value||''));
+            for(const chip of chips){
+                chip.hidden=!matched.has(chip.dataset.var);
+                const visible=!!Charts.options.variables[chip.dataset.var]?.visible;
+                chip.classList.toggle('active',visible);chip.setAttribute('aria-pressed',visible);
+            }
+            const count=document.getElementById('series-count-mobile');
+            if(count)count.textContent=`${matched.size} of ${names.length} shown · ${Charts.getVisibleVariables().length} plotted`;
+        };
+        if(search){search.value=Charts.seriesQuery||'';search.addEventListener('input',()=>{Charts.seriesQuery=search.value;refreshSeries();});}
+        document.querySelectorAll('[data-series-selection]').forEach(button=>{
+            const mode=button.dataset.seriesSelection;button.disabled=mode==='stocks'&&!stocks.length;
+            button.addEventListener('click',()=>{Charts.selectVariables(mode==='stocks'?stocks:mode==='all'?names:[]);refreshSeries();self.renderMobileChart();});
+        });
+        refreshSeries();
         document.querySelectorAll("#var-chips-mobile .var-chip").forEach(chip => {
             chip.addEventListener("click", function() {
                 const varName = this.dataset.var;
@@ -503,6 +532,7 @@ const App = {
                     Charts.options.variables[varName].visible = !Charts.options.variables[varName].visible;
                     this.classList.toggle("active");
                     this.setAttribute('aria-pressed', Charts.options.variables[varName].visible);
+                    Charts.onSelectionChanged?.();refreshSeries();
                     self.renderMobileChart();
                 }
             });
@@ -583,9 +613,11 @@ const App = {
      */
     formatNumShort(n) {
         if (!isFinite(n)) return "N/A";
+        if (n === 0) return "0";
         if (Math.abs(n) >= 1000000) return (n/1000000).toFixed(1) + "M";
         if (Math.abs(n) >= 1000) return (n/1000).toFixed(1) + "K";
         if (Math.abs(n) < 0.01 && n !== 0) return n.toExponential(1);
+        if (Math.abs(n) < 1) return Number(n.toPrecision(3)).toString();
         return n.toFixed(1);
     },
 

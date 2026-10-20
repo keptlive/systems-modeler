@@ -113,7 +113,22 @@ const Charts = {
         if (this.options.variables[name]) {
             this.options.variables[name].visible = !this.options.variables[name].visible;
             this.render();
+            this.onSelectionChanged?.();
         }
+    },
+
+    selectVariables(names) {
+        const selected = new Set(names);
+        for (const [name, option] of Object.entries(this.options.variables)) {
+            option.visible = selected.has(name);
+        }
+        this.render();
+        this.onSelectionChanged?.();
+    },
+
+    filterSeries(names, query) {
+        const terms = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+        return names.filter(name => terms.every(term => name.toLocaleLowerCase().includes(term)));
     },
 
     /**

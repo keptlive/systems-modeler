@@ -43,23 +43,22 @@ def pulse_function(magnitude: float, start_time: float, repeat_interval: float, 
     Pulse function: returns magnitude/dt for one dt at start_time and optionally repeats.
     If repeat_interval is 0, pulse occurs only once.
     """
-    if time < start_time:
-        return 0.0
-
-    # Time since first pulse
+    if repeat_interval < 0:
+        raise EquationError("PULSE interval must be nonnegative")
     elapsed = time - start_time
-
-    if repeat_interval <= 0:
-        # Single pulse at start_time
-        if 0 <= elapsed < dt:
-            return magnitude / dt
+    # A distant repeat interval has no arithmetic role in the first pulse.
+    # Its ULP must not widen the local event window (e.g. interval=1e20).
+    tolerance = min(dt / 4, 4 * max(math.ulp(time), math.ulp(start_time),
+                                   math.ulp(dt), math.ulp(elapsed)))
+    if elapsed < -tolerance:
         return 0.0
-    else:
-        # Repeating pulse
-        time_in_period = elapsed % repeat_interval
-        if time_in_period < dt:
-            return magnitude / dt
-        return 0.0
+    elapsed = max(0.0, elapsed)
+    phase = elapsed if repeat_interval == 0 else elapsed % repeat_interval
+    if repeat_interval > 0 and repeat_interval - phase <= tolerance:
+        phase = 0.0
+    # Decimal grids can represent an event at just below its exact boundary,
+    # or the exclusive end at just below DT. Snap only within roundoff scale.
+    return magnitude / dt if phase < dt and dt - phase > tolerance else 0.0
 
 
 def ramp_function(slope: float, start_time: float, end_time: float, time: float) -> float:
@@ -108,14 +107,13 @@ def lookup_interp(x: float, points: list[tuple[float, float]], interpolation: st
     if len({point[0] for point in points}) != len(points):
         raise EquationError("Lookup table x coordinates must be unique")
 
+    if interpolation not in ("continuous", "extrapolate", "discrete"):
+        raise EquationError(f"Unknown lookup interpolation: {interpolation}")
     if len(points) == 1:
         return points[0][1]
 
     # Sort by x value
     sorted_points = sorted(points, key=lambda p: p[0])
-
-    if interpolation not in ("continuous", "extrapolate", "discrete"):
-        raise EquationError(f"Unknown lookup interpolation: {interpolation}")
     if interpolation in ("continuous", "discrete"):
         if x <= sorted_points[0][0]:
             return sorted_points[0][1]
@@ -124,36 +122,48 @@ def lookup_interp(x: float, points: list[tuple[float, float]], interpolation: st
     if interpolation == "discrete":
         return next(y for at, y in reversed(sorted_points) if at <= x)
 
-    # Handle boundary cases
-    if x <= sorted_points[0][0]:
-        # Extrapolate below first point
-        x1, y1 = sorted_points[0]
-        x2, y2 = sorted_points[1]
-        if x2 == x1:
+    def segment(x1, y1, x2, y2):
+        if x == x1 or y1 == y2:
             return y1
-        slope = (y2 - y1) / (x2 - x1)
-        return y1 + slope * (x - x1)
-
-    if x >= sorted_points[-1][0]:
-        # Extrapolate above last point
-        x1, y1 = sorted_points[-2]
-        x2, y2 = sorted_points[-1]
-        if x2 == x1:
+        if x == x2:
             return y2
-        slope = (y2 - y1) / (x2 - x1)
-        return y2 + slope * (x - x2)
+        try:
+            width, distance = x2 - x1, x - x1
+            if math.isfinite(width) and math.isfinite(distance):
+                weight = distance / width
+            else:
+                # Finite coordinates may have a difference outside float range.
+                scale = max(abs(x), abs(x1), abs(x2))
+                weight = (x / scale - x1 / scale) / (x2 / scale - x1 / scale)
+            difference = y2 - y1
+            value = ((1 - weight) * y1 + weight * y2
+                     if 0 <= weight <= 1 or not math.isfinite(difference)
+                     else y1 + weight * difference)
+        except (OverflowError, ZeroDivisionError):
+            value = math.inf
+        if not math.isfinite(value):
+            # Extrapolation can overflow intermediates while its exact affine
+            # value is finite. Fractions preserve the exact finite input floats;
+            # this rare bounded fallback also handles subnormal X spacing.
+            from fractions import Fraction
+            exact = (Fraction(y1) + (Fraction(x) - Fraction(x1)) *
+                     (Fraction(y2) - Fraction(y1)) / (Fraction(x2) - Fraction(x1)))
+            try:
+                value = float(exact)
+            except OverflowError:
+                raise EquationError("Lookup result is not finite; check extrapolation range") from None
+            if not math.isfinite(value):
+                raise EquationError("Lookup result is not finite; check extrapolation range")
+        return value
 
-    # Find surrounding points and interpolate
-    for i in range(len(sorted_points) - 1):
-        x1, y1 = sorted_points[i]
-        x2, y2 = sorted_points[i + 1]
+    if x <= sorted_points[0][0]:
+        return segment(*sorted_points[0], *sorted_points[1])
+    if x >= sorted_points[-1][0]:
+        return segment(*sorted_points[-2], *sorted_points[-1])
+    for (x1, y1), (x2, y2) in zip(sorted_points, sorted_points[1:]):
         if x1 <= x <= x2:
-            if x2 == x1:
-                return y1
-            t = (x - x1) / (x2 - x1)
-            return y1 + t * (y2 - y1)
-
-    return sorted_points[-1][1]
+            return segment(x1, y1, x2, y2)
+    raise EquationError("Lookup interval could not be located")
 
 
 SAFE_FUNCTIONS: dict[str, Callable] = {
@@ -262,6 +272,10 @@ class SimulationContext:
                  delay_state: Optional[dict] = None,
                  smooth_state: Optional[dict] = None, random_runtime=None):
         self.time = time
+        # RK4 holds declared test-input primitives at the accepted left time.
+        # Ordinary TIME and algebra still use the current RK stage time.
+        self.input_time = time
+        self.input_snapshot = None
         self.dt = dt
         self.tables = tables if tables is not None else {}
         self.delay_state = delay_state if delay_state is not None else {}
@@ -512,15 +526,28 @@ class SafeEvaluator(ast.NodeVisitor):
         if func_name in STATEFUL_FUNCTIONS:
             return self._stateful_value(func_name, args, call_key)
 
+        # Hold the complete primitive, including time/state-dependent arguments,
+        # at the accepted left state during RK4. Only declared test primitives
+        # use this snapshot; ordinary TIME/algebra and hidden states keep stage
+        # values. The accepted context has no snapshot, avoiding recursion.
+        if func_name in {"STEP", "PULSE", "RAMP"} and self.context.input_snapshot is not None:
+            accepted_values, accepted_context = self.context.input_snapshot
+            accepted_context.equation_key = self.context.equation_key
+            return SafeEvaluator(accepted_values, accepted_context)._handle_context_function(func_name, args)
+
         # For other functions, evaluate all args
         evaluated_args = [self.visit(arg) for arg in args]
+        if func_name in {"STEP", "PULSE", "RAMP"} and not all(
+            math.isfinite(value) for value in evaluated_args
+        ):
+            raise EquationError(f"{func_name} parameters must be finite")
 
         if func_name == "STEP":
             # STEP(height, step_time)
             if len(evaluated_args) != 2:
                 raise EquationError("STEP requires 2 arguments: height, step_time")
             height, step_time = evaluated_args[0], evaluated_args[1]
-            return step_function(height, step_time, self.context.time)
+            return step_function(height, step_time, self.context.input_time)
 
         elif func_name == "PULSE":
             # PULSE(magnitude, start_time, repeat_interval=0)
@@ -529,7 +556,7 @@ class SafeEvaluator(ast.NodeVisitor):
             magnitude = evaluated_args[0]
             start_time = evaluated_args[1]
             repeat_interval = evaluated_args[2] if len(evaluated_args) > 2 else 0.0
-            return pulse_function(magnitude, start_time, repeat_interval, self.context.time, self.context.dt)
+            return pulse_function(magnitude, start_time, repeat_interval, self.context.input_time, self.context.dt)
 
         elif func_name == "RAMP":
             # RAMP(slope, start_time, end_time=0)
@@ -538,7 +565,7 @@ class SafeEvaluator(ast.NodeVisitor):
             slope = evaluated_args[0]
             start_time = evaluated_args[1]
             end_time = evaluated_args[2] if len(evaluated_args) > 2 else 0.0
-            return ramp_function(slope, start_time, end_time, self.context.time)
+            return ramp_function(slope, start_time, end_time, self.context.input_time)
 
         raise EquationError(f"Unhandled context function: {func_name}")
 

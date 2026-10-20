@@ -31,7 +31,7 @@ async def lifespan(app):
 app = FastAPI(
     title="Systems Modeler",
     description="LLM-powered visual modeling tool for systems dynamics",
-    version="1.4.0",
+    version="1.5.0",
     lifespan=lifespan,
 )
 
