@@ -6,7 +6,9 @@ from itertools import combinations
 from typing import Optional
 from dataclasses import dataclass
 
-MAX_ANALYTIC_VALUES = 1_000_000
+from app.core.limits import MAX_SAMPLES, MAX_ELEMENTS, MAX_RETAINED_VALUES
+
+MAX_ANALYTIC_VALUES = MAX_RETAINED_VALUES
 MAX_CORRELATION_PAIRS = 2_000
 
 
@@ -48,8 +50,8 @@ def validate_results(results: dict) -> dict:
     time, values = results.get("time"), results.get("values")
     if not isinstance(time, list) or not time or not isinstance(values, dict) or not values:
         raise ValueError("simulation_results requires nonempty 'time' and 'values'")
-    if len(time) > 10_001 or len(values) > 500 or len(time) * len(values) > MAX_ANALYTIC_VALUES:
-        raise ValueError("Analytics supports at most 500 series, 10001 samples and 1000000 total values")
+    if len(time) > MAX_SAMPLES or len(values) > MAX_ELEMENTS or len(time) * len(values) > MAX_ANALYTIC_VALUES:
+        raise ValueError("Analytics supports at most 500 series, 100001 samples and 1000000 total values")
     if not all(_numeric(t) for t in time):
         raise ValueError("Time samples must be finite numbers")
     if any(b <= a for a, b in zip(time, time[1:])) or not math.isfinite(time[-1] - time[0]):

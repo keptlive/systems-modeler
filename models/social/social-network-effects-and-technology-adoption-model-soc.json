@@ -123,7 +123,7 @@
     {
       "id": "flow-network-value-growth",
       "name": "Network Value Growth",
-      "equation": "(Target_Value - Network_Value) / Value_Adjustment_Time * IF Target_Value > Network_Value THEN 1 ELSE 0",
+      "equation": "(\"Target Network Value\" - \"Network Value Index\") / Value_Adjustment_Time * IF \"Target Network Value\" > \"Network Value Index\" THEN 1 ELSE 0",
       "from_stock": null,
       "to_stock": "stock-network-value-index",
       "position": {
@@ -134,7 +134,7 @@
     {
       "id": "flow-network-value-depreciation",
       "name": "Network Value Depreciation",
-      "equation": "(Network_Value - Target_Value) / Value_Adjustment_Time * IF Target_Value < Network_Value THEN 1 ELSE 0",
+      "equation": "(\"Network Value Index\" - \"Target Network Value\") / Value_Adjustment_Time * IF \"Target Network Value\" < \"Network Value Index\" THEN 1 ELSE 0",
       "from_stock": "stock-network-value-index",
       "to_stock": null,
       "position": {
@@ -145,7 +145,7 @@
     {
       "id": "flow-competitor-adoption",
       "name": "Competitor Adoption",
-      "equation": "(Total_Market - Active_Users - Churned_Users - Competitor_Users) * Competitor_Adoption_Rate",
+      "equation": "(\"Total Addressable Market\" - Active_Users - Churned_Users - Competitor_Users) * Competitor_Adoption_Rate",
       "from_stock": null,
       "to_stock": "stock-competitor-users",
       "position": {
@@ -216,7 +216,7 @@
     {
       "id": "var-market-penetration",
       "name": "Market Penetration",
-      "equation": "Active_Users / Total_Market",
+      "equation": "Active_Users / \"Total Addressable Market\"",
       "position": {
         "x": 700,
         "y": 80
@@ -225,7 +225,7 @@
     {
       "id": "var-network-effect-strength",
       "name": "Network Effect Strength",
-      "equation": "LOG(1 + Active_Users / Critical_Mass) / LOG(1 + Total_Market / Critical_Mass)",
+      "equation": "LOG(1 + Active_Users / Critical_Mass) / LOG(1 + \"Total Addressable Market\" / Critical_Mass)",
       "position": {
         "x": 100,
         "y": 160
@@ -234,7 +234,7 @@
     {
       "id": "var-critical-mass",
       "name": "Critical Mass",
-      "equation": "Total_Market * 0.05",
+      "equation": "\"Total Addressable Market\" * 0.05",
       "position": {
         "x": 250,
         "y": 160
@@ -279,7 +279,7 @@
     {
       "id": "var-word-of-mouth-effect",
       "name": "Word of Mouth Effect",
-      "equation": "1 + WOM_Coefficient * Active_Users / Total_Market",
+      "equation": "1 + \"Word of Mouth Coefficient\" * Active_Users / \"Total Addressable Market\"",
       "position": {
         "x": 250,
         "y": 240
@@ -432,7 +432,7 @@
     {
       "id": "var-competitor-adoption-rate",
       "name": "Competitor Adoption Rate",
-      "equation": "0.015 * (1 + 3 * Competitor_Users / Total_Market)",
+      "equation": "0.015 * (1 + 3 * Competitor_Users / \"Total Addressable Market\")",
       "position": {
         "x": 550,
         "y": 480
@@ -450,7 +450,7 @@
     {
       "id": "var-switching-rate",
       "name": "Switching Rate",
-      "equation": "0.05 * MAX(0, Network_Value / 100 - Competitor_Users / Active_Users)",
+      "equation": "0.05 * MAX(0, \"Network Value Index\" / 100 - Competitor_Users / Active_Users)",
       "position": {
         "x": 100,
         "y": 560
@@ -468,7 +468,7 @@
     {
       "id": "var-viral-coefficient-k",
       "name": "Viral Coefficient (K)",
-      "equation": "Adoption * Total_Market / (Active_Users * Potential_Users)",
+      "equation": "\"New User Adoption\" * \"Total Addressable Market\" / (Active_Users * Potential_Users)",
       "position": {
         "x": 400,
         "y": 560
@@ -486,7 +486,7 @@
     {
       "id": "var-winner-take-all-risk",
       "name": "Winner-Take-All Risk",
-      "equation": "ABS(Market_Share - 0.5) * 2",
+      "equation": "ABS(\"Market Share vs Competitor\" - 0.5) * 2",
       "position": {
         "x": 700,
         "y": 560

@@ -219,7 +219,7 @@ def simulate_model(model_id: Optional[str] = None, model_json: Optional[dict] = 
     """Run Euler or RK4, inheriting omitted settings from the model. No writes or paid AI.
 
     Returns full-series statistics and sampled data including both endpoints.
-    Limits: 10,000 steps, 500 elements and 1,000,000 work units (including hidden stages, random calls and RK4 evaluations). Invalid equations fail.
+    Limits: 100,000 intervals, 500 elements, 1,000,000 retained scalar values and 1,000,000 work units (including hidden stages, random calls and RK4 evaluations). Invalid equations fail.
     Smoothing and fixed-duration material delays support RK4. Fixed history delays
     and random functions require Euler. random_seed overrides the model seed;
     omitted seeds inherit the model, with the effective seed returned for replay.
@@ -327,7 +327,7 @@ def engine_contract() -> str:
     """Machine-readable capabilities for planning compatible, reproducible models."""
     from app.core.equations import SAFE_FUNCTIONS, CONTEXT_FUNCTIONS
     return json.dumps({
-        'version': '1.6.0',
+        'version': '1.7.0',
         'test_inputs': 'STEP/PULSE/RAMP and their arguments are evaluated at accepted times and held over each timestep for Euler and RK4. Other time-dependent equations retain normal stage evaluation. Reduce DT to resolve off-grid events.',
         'pulse': 'PULSE(magnitude, first_time[, interval]): magnitude/DT for one DT; zero or omitted interval means one event. Not the Vensim start/width signature.',
         'integration_methods': ['euler', 'rk4'],
@@ -340,7 +340,7 @@ def engine_contract() -> str:
         'seed': {'field': 'time_settings.random_seed', 'range': [0, 4294967295],
                  'effective_seed_result_field': 'random_seed',
                  'policy': 'Independent call streams, one draw per call per time; explicit function seeds override the run seed'},
-        'limits': {'elements': 500, 'intervals': 10000, 'work_units': 1000000,
+        'limits': {'elements': 500, 'intervals': 100000, 'retained_samples': 100001, 'retained_scalar_values': 1000000, 'work_units': 1000000,
                    'per_interval': 'Explicit elements + hidden stages + random calls; RK4 multiplies this by five'},
         'investigation': {'tool': 'investigate_model', 'max_runs': 3,
                           'grids': ['dt', 'dt/2', 'dt/4'], 'changes_inputs': False,
@@ -395,7 +395,7 @@ def create_sse_app():
     app.routes.extend(mcp.sse_app().routes)
     async def info(request):
         tools = await mcp.list_tools()
-        return JSONResponse({'name': 'systems-modeler', 'version': '1.6.0',
+        return JSONResponse({'name': 'systems-modeler', 'version': '1.7.0',
             'streamable_http': 'https://stockandflow.live/mcp/',
             'sse': 'https://stockandflow.live/mcp/sse', 'tools': [t.name for t in tools],
             'documentation': 'https://stockandflow.live/guide'})

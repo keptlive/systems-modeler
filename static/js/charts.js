@@ -176,7 +176,7 @@ const Charts = {
         // parent as a fallback rather than creating a scaled-down 600px chart.
         const width = rect.width || this.container.parentElement.clientWidth || 600;
         const height = rect.height || parseFloat(getComputedStyle(this.container).height) || 350;
-        this.margin = {top:24, right:width < 500 ? 16 : 120, bottom:44, left:width < 500 ? 52 : 70};
+        this.margin = {top:24, right:width < 500 ? 16 : width < 800 ? 148 : 200, bottom:44, left:68};
 
         return {
             width,
@@ -315,7 +315,7 @@ const Charts = {
      */
     addAxes(g, xScale, yScale, dim) {
         const xAxis = d3.axisBottom(xScale).ticks(Math.max(3, Math.floor(dim.innerWidth / 55)));
-        const yAxis = d3.axisLeft(yScale).ticks(6);
+        const yAxis = d3.axisLeft(yScale).ticks(5).tickFormat(d3.format('~s'));
 
         // X axis
         g.append('g')
@@ -374,46 +374,23 @@ const Charts = {
         if (dim.width < 500) return;
         if (!this.options.showLegend) return;
 
-        const legend = svg.append('g')
-            .attr('class', 'chart-legend')
-            .attr('transform', `translate(${dim.width - this.margin.right + 15}, ${this.margin.top})`);
-
-        const varNames = Object.keys(this.options.variables);
-
-        varNames.forEach((name, i) => {
-            const opt = this.options.variables[name];
-            const y = i * 24;
-
-            const item = legend.append('g')
-                .attr('class', 'legend-item')
-                .attr('transform', `translate(0, ${y})`)
-                .style('cursor', 'pointer')
-                .on('click', () => this.toggleVariable(name));
-
-            // Color box
-            item.append('rect')
-                .attr('width', 14)
-                .attr('height', 14)
-                .attr('rx', 2)
-                .attr('fill', opt.visible ? opt.color : 'transparent')
-                .attr('stroke', opt.color)
-                .attr('stroke-width', 2);
-
-            // Label
-            item.append('text')
-                .attr('x', 20)
-                .attr('y', 11)
-                .attr('fill', opt.visible ? 'var(--text-primary)' : 'var(--text-muted)')
-                .attr('font-size', '11px')
-                .text(this.truncateLabel(name, 12));
-
-            // Hover effect
-            item.on('mouseenter', function() {
-                d3.select(this).select('rect').attr('stroke-width', 3);
-            }).on('mouseleave', function() {
-                d3.select(this).select('rect').attr('stroke-width', 2);
-            });
-        });
+        const width = this.margin.right - 20;
+        const legend = svg.append('foreignObject')
+            .attr('x', dim.width - this.margin.right + 12).attr('y', this.margin.top)
+            .attr('width', width).attr('height', Math.max(50,dim.innerHeight));
+        const list = legend.append('xhtml:div').attr('class','chart-legend-list')
+            .attr('role','group').attr('aria-label','Chart series');
+        for (const [name,opt] of Object.entries(this.options.variables)) {
+            const item = list.append('xhtml:button').attr('type','button')
+                .attr('aria-pressed',String(opt.visible)).attr('title',name)
+                .on('click',()=>{
+                    this.toggleVariable(name);
+                    [...this.container.querySelectorAll('.chart-legend-list button')].find(button=>button.title===name)?.focus();
+                });
+            item.append('xhtml:span').attr('class','legend-swatch')
+                .style('border-color',opt.color).style('background',opt.visible ? opt.color : 'transparent');
+            item.append('xhtml:span').text(name);
+        }
     },
 
     /**
@@ -837,7 +814,7 @@ const Charts = {
 
         g.append('g')
             .attr('class', 'axis y-axis')
-            .call(d3.axisLeft(yScale).ticks(6));
+            .call(d3.axisLeft(yScale).ticks(5).tickFormat(d3.format('~s')));
 
         // Axis labels
         g.append('text')
@@ -937,7 +914,7 @@ const Charts = {
 
                 // Update axes
                 g.select('.x-axis').call(d3.axisBottom(newXScale).ticks(8));
-                g.select('.y-axis').call(d3.axisLeft(newYScale).ticks(6));
+                g.select('.y-axis').call(d3.axisLeft(newYScale).ticks(5).tickFormat(d3.format('~s')));
 
                 // Update grid
                 g.select('.x-grid').call(
@@ -1057,10 +1034,61 @@ const Charts = {
     /**
      * Export chart as image
      */
-    exportAs(format = 'png') {
-        const svg = this.container.querySelector('svg');
-        if (!svg) return;
+    buildExportSvg() {
+        const live = this.container.querySelector('svg');
+        if (!live) return null;
+        const svg = live.cloneNode(true), dim = this.getDimensions();
+        // Freeze computed SVG styles: downloaded files do not have the app stylesheet.
+        const originals = [live,...live.querySelectorAll('*')], copies = [svg,...svg.querySelectorAll('*')];
+        originals.forEach((node,index) => {
+            const style = getComputedStyle(node);
+            for (const key of ['fill','stroke','stroke-width','font-family','font-size','font-weight','opacity'])
+                copies[index].style.setProperty(key,style.getPropertyValue(key));
+        });
+        svg.querySelectorAll('foreignObject').forEach(node=>node.remove());
+        const ns = 'http://www.w3.org/2000/svg';
+        const add = (tag,attributes,parent=svg) => {
+            const node=document.createElementNS(ns,tag);
+            for(const [key,value] of Object.entries(attributes)) node.setAttribute(key,String(value));
+            parent.appendChild(node); return node;
+        };
+        const columns = dim.width >= 600 ? 2 : 1, colWidth = (dim.width-32)/columns;
+        const measure = document.createElement('canvas').getContext('2d');
+        measure.font = '11px sans-serif';
+        const wrapLabel = name => {
+            const lines=[]; let line='';
+            for (const char of Array.from(name)) {
+                if (line && measure.measureText(line+char).width > colWidth-30) { lines.push(line); line=''; }
+                line+=char;
+            }
+            lines.push(line); return lines;
+        };
+        const entries=Object.entries(this.options.variables).filter(([,option])=>option.visible);
+        let y=dim.height+20;
+        for(let i=0;i<entries.length;i+=columns) {
+            let rowHeight=24;
+            for(let c=0;c<columns && i+c<entries.length;c++) {
+                const [name,option]=entries[i+c],x=16+c*colWidth;
+                const lines=wrapLabel(name);
+                add('rect',{x,y:y-9,width:9,height:9,rx:2,fill:option.color});
+                const label=add('text',{x:x+18,y,fill:'#dce9f6','font-family':'sans-serif','font-size':11});
+                lines.forEach((line,j)=>{add('tspan',{x:x+18,dy:j?16:0},label).textContent=line;});
+                rowHeight=Math.max(rowHeight,lines.length*16+10);
+            }
+            y+=rowHeight;
+        }
+        const height=entries.length ? y+12 : dim.height;
+        svg.setAttribute('width',dim.width);svg.setAttribute('height',height);
+        svg.setAttribute('viewBox',`0 0 ${dim.width} ${height}`);
+        const background=add('rect',{x:0,y:0,width:dim.width,height,fill:'#14263a'});
+        svg.insertBefore(background,svg.firstChild);
+        return {svg,width:dim.width,height};
+    },
 
+    exportAs(format = 'png') {
+        const exported = this.buildExportSvg();
+        if (!exported) return;
+        const {svg} = exported;
         const svgData = new XMLSerializer().serializeToString(svg);
         const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
 
@@ -1079,24 +1107,38 @@ const Charts = {
         const ctx = canvas.getContext('2d');
         const img = new Image();
 
-        const dim = this.getDimensions();
+        const dim = exported;
         canvas.width = dim.width * 2;  // 2x for retina
         canvas.height = dim.height * 2;
         ctx.scale(2, 2);
 
+        const imageUrl = URL.createObjectURL(svgBlob);
+        img.onerror = () => { URL.revokeObjectURL(imageUrl); App.showToast('Chart export failed. Try the SVG format.', 'error'); };
         img.onload = () => {
-            ctx.fillStyle = '#1a1a2e';  // Background color
+            URL.revokeObjectURL(imageUrl);
+            ctx.fillStyle = '#14263a';  // Background color
             ctx.fillRect(0, 0, dim.width, dim.height);
             ctx.drawImage(img, 0, 0, dim.width, dim.height);
 
             const pngUrl = canvas.toDataURL('image/png');
-            const a = document.createElement('a');
-            a.href = pngUrl;
-            a.download = 'chart.png';
-            a.click();
+            const dialog = document.createElement('dialog');
+            dialog.className = 'chart-export-dialog';
+            dialog.setAttribute('aria-label','Export chart');
+            dialog.innerHTML = '<header><h2>Export chart</h2><button type="button" aria-label="Close chart export">×</button></header><p>Your chart with all selected series. PNG is rendered at twice the display resolution.</p><div class="chart-export-preview"></div><footer></footer>';
+            const picture=document.createElement('img');picture.src=pngUrl;picture.alt='Chart export preview';
+            dialog.querySelector('.chart-export-preview').appendChild(picture);
+            const svgUrl=URL.createObjectURL(svgBlob);
+            for(const [label,href,filename] of [['Save PNG',pngUrl,'chart.png'],['Save SVG',svgUrl,'chart.svg']]) {
+                const link=document.createElement('a');link.textContent=label;link.href=href;link.download=filename;
+                dialog.querySelector('footer').appendChild(link);
+            }
+            const opener=document.activeElement;
+            dialog.querySelector('button').addEventListener('click',()=>dialog.close());
+            dialog.addEventListener('close',()=>{URL.revokeObjectURL(svgUrl);dialog.remove();opener?.focus();},{once:true});
+            document.body.appendChild(dialog);dialog.showModal();
         };
 
-        img.src = URL.createObjectURL(svgBlob);
+        img.src = imageUrl;
     },
 
     /**

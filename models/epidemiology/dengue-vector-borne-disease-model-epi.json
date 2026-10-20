@@ -1,7 +1,7 @@
 {
   "id": "dengue-vector-borne-disease-model-epi",
   "name": "Dengue Vector-Borne Disease Model",
-  "description": "Illustrative Dengue Vector-Borne Disease Model.\n\nSource reconciliation 2026-10-20: Corrected the unrelated chondrogenesis DOI to the publisher book record. This correction establishes bibliographic identity only. This generated definition is illustrative; no specific book chapter/equation, parameter table, initial values, unit system or calibration has been traced to it. The transmission equations reference Nh without a declared variable. No source mapping supports the specified vector recruitment, biting and transmission values. Equations, initial values, flow topology and layout are unchanged. Scientific/source fidelity remains unverified.",
+  "description": "Illustrative Dengue Vector-Borne Disease Model.\n\nSource reconciliation 2026-10-20: Corrected the unrelated chondrogenesis DOI to the publisher book record. This establishes bibliographic identity only; no specific book chapter/equation, parameter table, initial values, unit system or calibration has been traced to this generated definition. In version 1.7, the undefined Nh denominator in both human and vector infection equations was replaced explicitly by (Sh + Ih + Rh), the total human population. The existing Sh -> Ih -> Rh flow graph conserves that sum at 10,000 humans. This is a mathematical reconstruction of the missing normalizer, not restoration of a verified original dengue model. Initial values, numerical parameters, flow topology and layout are unchanged. Source mapping for vector recruitment, biting and transmission values remains unresolved; scientific/source fidelity remains unverified.",
   "stocks": [
     {
       "id": "stock-sh",
@@ -58,7 +58,7 @@
     {
       "id": "flow-human-infection",
       "name": "human_infection",
-      "equation": "b * beta_h * Sh * Iv / Nh",
+      "equation": "b * beta_h * Sh * Iv / (Sh + Ih + Rh)",
       "from_stock": "stock-sh",
       "to_stock": "stock-ih",
       "position": {
@@ -91,7 +91,7 @@
     {
       "id": "flow-vector-infection",
       "name": "vector_infection",
-      "equation": "b * beta_v * Sv * Ih / Nh",
+      "equation": "b * beta_v * Sv * Ih / (Sh + Ih + Rh)",
       "from_stock": "stock-sv",
       "to_stock": "stock-iv",
       "position": {

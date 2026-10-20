@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.7.0 — 2026-10-20
+
+- Diagnose all 134 previously failing public definitions in three disjoint source-review ledgers; repair or annotate 64 definitions while preserving model identities and authored inputs. Public audit: 992 completed / 86 failed, with no numerical regressions. Two new completions remain structurally incomplete and are explicitly flagged.
+- Admit source-authored fine time grids up to 100,000 intervals; enforce one million retained scalar values alongside the existing method-aware work ceiling. No solver equations changed.
+- Refine Analytics around one selected series, readable metrics and expandable comparisons; retain every analysis section. Repair fullscreen bindings, focus restoration, mobile scrolling, chart axis collisions and long legends.
+- Export a styled SVG or PNG with the complete selected-series legend through an accessible preview dialog. Remove unrelated free-tool promotions from both site footers.
+- Add independent source recurrences, conservation, convergence, capacity and DOM export checks. See docs/RELEASE-1.7.md for test scope and remaining scientific limitations.
+
 ## 1.6.0 — 2026-10-20
 
 - Refine stocks, variables, flow valves, dependency curves, wrapped labels, selection, hit zones and fit geometry; preserve saved diagram positions and equations.

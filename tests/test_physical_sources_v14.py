@@ -13,6 +13,12 @@ class PhysicalSourceReviewTests(unittest.TestCase):
         for item in review["models"]:
             with self.subTest(model=item["file"]):
                 raw = (ROOT / item["file"]).read_bytes()
+                if hashlib.sha256(raw).hexdigest() != item["after_sha256"]:
+                    chain = json.loads((ROOT / "operations/model-revision-chain-v17.json").read_text())
+                    revision = next(row for row in chain["models"] if row["file"] == item["file"])
+                    self.assertEqual(hashlib.sha256(raw).hexdigest(), revision["after_sha256"])
+                    self.assertEqual(revision["before_sha256"], item["after_sha256"])
+                    raw = revision["before_text"].encode()
                 self.assertEqual(hashlib.sha256(raw).hexdigest(), item["after_sha256"])
                 after = json.loads(raw)
                 for key in ("source", "reference", "description"):

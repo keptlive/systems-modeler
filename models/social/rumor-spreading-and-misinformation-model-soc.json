@@ -1,7 +1,7 @@
 {
   "id": "rumor-spreading-and-misinformation-model-soc",
   "name": "Rumor Spreading and Misinformation Model",
-  "description": "Models the spread of rumors and misinformation through a population, including spreaders, skeptics, fact-checkers, and the role of social media. Based on epidemiological approaches to information spreading. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "description": "Models the spread of rumors and misinformation through a population, including spreaders, skeptics, fact-checkers, and the role of social media. Based on epidemiological approaches to information spreading. Local symbol bindings repaired; original equation set and calibration remain unverified. Previous unrelated bibliographic attribution withdrawn.",
   "stocks": [
     {
       "id": "stock-ignorant-unaware",
@@ -58,7 +58,7 @@
     {
       "id": "flow-hearing-rumor",
       "name": "Hearing Rumor",
-      "equation": "Contact_Rate * Spreaders * Ignorant / Total_Population * Spread_Probability * Platform_Amplification",
+      "equation": "Contact_Rate * \"Active Spreaders\" * \"Ignorant (Unaware)\" / Total_Population * Spread_Probability * Platform_Amplification",
       "from_stock": "stock-ignorant-unaware",
       "to_stock": "stock-active-spreaders",
       "position": {
@@ -69,7 +69,7 @@
     {
       "id": "flow-stopping-spreading",
       "name": "Stopping Spreading",
-      "equation": "Spreaders * (Spreader_Fatigue_Rate + Encounter_Stifler_Rate)",
+      "equation": "\"Active Spreaders\" * (Spreader_Fatigue_Rate + Encounter_Stifler_Rate)",
       "from_stock": "stock-active-spreaders",
       "to_stock": "stock-stiflers-inactive",
       "position": {
@@ -80,7 +80,7 @@
     {
       "id": "flow-becoming-skeptic",
       "name": "Becoming Skeptic",
-      "equation": "Spreaders * Skepticism_Rate * (Fact_Check_Exposure + Critical_Thinking_Base)",
+      "equation": "\"Active Spreaders\" * Skepticism_Rate * (Fact_Check_Exposure + Critical_Thinking_Base)",
       "from_stock": "stock-active-spreaders",
       "to_stock": "stock-skeptics-fact-checkers",
       "position": {
@@ -91,7 +91,7 @@
     {
       "id": "flow-fact-check-conversion",
       "name": "Fact Check Conversion",
-      "equation": "Ignorant * Fact_Check_Encounter_Rate * Skeptics / Total_Population",
+      "equation": "\"Ignorant (Unaware)\" * Fact_Check_Encounter_Rate * \"Skeptics (Fact-checkers)\" / Total_Population",
       "from_stock": null,
       "to_stock": "stock-skeptics-fact-checkers",
       "position": {
@@ -113,7 +113,7 @@
     {
       "id": "flow-virality-decay",
       "name": "Virality Decay",
-      "equation": "Rumor_Virality * (Virality_Decay_Rate + Fact_Check_Suppression)",
+      "equation": "\"Rumor Virality Index\" * (Virality_Decay_Rate + Fact_Check_Suppression)",
       "from_stock": "stock-rumor-virality-index",
       "to_stock": null,
       "position": {
@@ -126,7 +126,7 @@
     {
       "id": "var-total-population",
       "name": "Total Population",
-      "equation": "Ignorant + Spreaders + Stiflers + Skeptics",
+      "equation": "\"Ignorant (Unaware)\" + \"Active Spreaders\" + \"Stiflers (Inactive)\" + \"Skeptics (Fact-checkers)\"",
       "position": {
         "x": 100,
         "y": 80
@@ -144,7 +144,7 @@
     {
       "id": "var-spread-probability",
       "name": "Spread Probability",
-      "equation": "Base_Spread_Probability * Credibility_Factor * Rumor_Virality / 100",
+      "equation": "Base_Spread_Probability * Credibility_Factor * \"Rumor Virality Index\" / 100",
       "position": {
         "x": 400,
         "y": 80
@@ -243,7 +243,7 @@
     {
       "id": "var-share-rate",
       "name": "Share Rate",
-      "equation": "Spreaders * 0.5",
+      "equation": "\"Active Spreaders\" * 0.5",
       "position": {
         "x": 550,
         "y": 240
@@ -261,7 +261,7 @@
     {
       "id": "var-encounter-stifler-rate",
       "name": "Encounter Stifler Rate",
-      "equation": "Contact_Rate * (Stiflers + Skeptics) / Total_Population * 0.1",
+      "equation": "Contact_Rate * (\"Stiflers (Inactive)\" + \"Skeptics (Fact-checkers)\") / Total_Population * 0.1",
       "position": {
         "x": 100,
         "y": 320
@@ -288,7 +288,7 @@
     {
       "id": "var-fact-check-exposure",
       "name": "Fact Check Exposure",
-      "equation": "Fact_Checker_Activity * Skeptics / Total_Population",
+      "equation": "Fact_Checker_Activity * \"Skeptics (Fact-checkers)\" / Total_Population",
       "position": {
         "x": 550,
         "y": 320
@@ -324,7 +324,7 @@
     {
       "id": "var-fact-check-suppression",
       "name": "Fact Check Suppression",
-      "equation": "Skeptics / Total_Population * 0.5",
+      "equation": "\"Skeptics (Fact-checkers)\" / Total_Population * 0.5",
       "position": {
         "x": 400,
         "y": 400
@@ -333,7 +333,7 @@
     {
       "id": "var-effective-reproduction-number",
       "name": "Effective Reproduction Number",
-      "equation": "Contact_Rate * Spread_Probability * Platform_Amplification * Ignorant / Total_Population / (Spreader_Fatigue_Rate + Encounter_Stifler_Rate + Skepticism_Rate)",
+      "equation": "Contact_Rate * Spread_Probability * Platform_Amplification * \"Ignorant (Unaware)\" / Total_Population / (Spreader_Fatigue_Rate + Encounter_Stifler_Rate + Skepticism_Rate)",
       "position": {
         "x": 550,
         "y": 400
@@ -342,7 +342,7 @@
     {
       "id": "var-rumor-prevalence",
       "name": "Rumor Prevalence",
-      "equation": "(Spreaders + Stiflers) / Total_Population",
+      "equation": "(\"Active Spreaders\" + \"Stiflers (Inactive)\") / Total_Population",
       "position": {
         "x": 700,
         "y": 400
@@ -351,7 +351,7 @@
     {
       "id": "var-misinformation-index",
       "name": "Misinformation Index",
-      "equation": "(Spreaders + Stiflers) / (Spreaders + Stiflers + Skeptics + 1)",
+      "equation": "(\"Active Spreaders\" + \"Stiflers (Inactive)\") / (\"Active Spreaders\" + \"Stiflers (Inactive)\" + \"Skeptics (Fact-checkers)\" + 1)",
       "position": {
         "x": 100,
         "y": 480
@@ -366,6 +366,6 @@
   },
   "created_at": "2026-01-11T20:04:50.861485Z",
   "updated_at": "2026-01-11T20:04:50.861485Z",
-  "source": "https://doi.org/10.1016/j.socnet.2007.04.006",
-  "reference": "Social Network Analysis and System Dynamics Models"
+  "source": "",
+  "reference": "Unverified illustrative local construction. Previous DOI10.1016/j.socnet.2007.04.006 is an unrelated two-mode-network paper; no source for these equations/parameters identified."
 }

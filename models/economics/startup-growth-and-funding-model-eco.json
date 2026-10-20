@@ -48,7 +48,7 @@
     {
       "id": "flow-user-acquisition",
       "name": "User Acquisition",
-      "equation": "Organic_Growth + Paid_Acquisition + Viral_Growth",
+      "equation": "Organic_Growth + \"Paid User Acquisition\" + Viral_Growth",
       "from_stock": null,
       "to_stock": "stock-active-users",
       "position": {
@@ -59,7 +59,7 @@
     {
       "id": "flow-user-churn",
       "name": "User Churn",
-      "equation": "Users * Churn_Rate",
+      "equation": "\"Active Users\" * \"Monthly Churn Rate\"",
       "from_stock": "stock-active-users",
       "to_stock": null,
       "position": {
@@ -92,7 +92,7 @@
     {
       "id": "flow-monthly-expenses",
       "name": "Monthly Expenses",
-      "equation": "Payroll + Marketing_Spend + Infrastructure + Other_Costs",
+      "equation": "Payroll + Marketing_Spend + \"Infrastructure Costs\" + Other_Costs",
       "from_stock": "stock-cash-balance",
       "to_stock": null,
       "position": {
@@ -149,7 +149,7 @@
     {
       "id": "var-organic-growth",
       "name": "Organic Growth",
-      "equation": "Users * Organic_Growth_Rate * Product_Quality / 100",
+      "equation": "\"Active Users\" * Organic_Growth_Rate * Product_Quality / 100",
       "position": {
         "x": 100,
         "y": 80
@@ -167,7 +167,7 @@
     {
       "id": "var-paid-user-acquisition",
       "name": "Paid User Acquisition",
-      "equation": "Marketing_Spend / CAC",
+      "equation": "Marketing_Spend / \"Customer Acquisition Cost\"",
       "position": {
         "x": 400,
         "y": 80
@@ -176,7 +176,7 @@
     {
       "id": "var-viral-growth",
       "name": "Viral Growth",
-      "equation": "Users * Viral_Coefficient * Product_Quality / 100",
+      "equation": "\"Active Users\" * Viral_Coefficient * Product_Quality / 100",
       "position": {
         "x": 550,
         "y": 80
@@ -194,7 +194,7 @@
     {
       "id": "var-monthly-churn-rate",
       "name": "Monthly Churn Rate",
-      "equation": "Base_Churn * (2 - Product_Quality / 100)",
+      "equation": "\"Base Churn Rate\" * (2 - Product_Quality / 100)",
       "position": {
         "x": 100,
         "y": 160
@@ -212,7 +212,7 @@
     {
       "id": "var-paying-users",
       "name": "Paying Users",
-      "equation": "Users * Conversion_Rate",
+      "equation": "\"Active Users\" * Conversion_Rate",
       "position": {
         "x": 400,
         "y": 160
@@ -248,7 +248,7 @@
     {
       "id": "var-annual-recurring-revenue",
       "name": "Annual Recurring Revenue",
-      "equation": "MRR * 12",
+      "equation": "\"Monthly Recurring Revenue\" * 12",
       "position": {
         "x": 250,
         "y": 240
@@ -266,7 +266,7 @@
     {
       "id": "var-lifetime-value",
       "name": "Lifetime Value",
-      "equation": "ARPU / Churn_Rate",
+      "equation": "ARPU / \"Monthly Churn Rate\"",
       "position": {
         "x": 550,
         "y": 240
@@ -275,7 +275,7 @@
     {
       "id": "var-ltvcac-ratio",
       "name": "LTV/CAC Ratio",
-      "equation": "LTV / CAC",
+      "equation": "\"Lifetime Value\" / \"Customer Acquisition Cost\"",
       "position": {
         "x": 700,
         "y": 240
@@ -284,7 +284,7 @@
     {
       "id": "var-payroll",
       "name": "Payroll",
-      "equation": "Employees * Average_Salary",
+      "equation": "Employees * \"Average Monthly Salary\"",
       "position": {
         "x": 100,
         "y": 320
@@ -302,7 +302,7 @@
     {
       "id": "var-marketing-spend",
       "name": "Marketing Spend",
-      "equation": "MIN(Marketing_Budget, Cash * 0.1)",
+      "equation": "MIN(Marketing_Budget, \"Cash Balance\" * 0.1)",
       "position": {
         "x": 400,
         "y": 320
@@ -320,7 +320,7 @@
     {
       "id": "var-infrastructure-costs",
       "name": "Infrastructure Costs",
-      "equation": "Users * 0.5 + 5000",
+      "equation": "\"Active Users\" * 0.5 + 5000",
       "position": {
         "x": 700,
         "y": 320
@@ -338,7 +338,7 @@
     {
       "id": "var-burn-rate",
       "name": "Burn Rate",
-      "equation": "Expenses - Revenue",
+      "equation": "\"Monthly Expenses\" - \"Monthly Revenue\"",
       "position": {
         "x": 250,
         "y": 400
@@ -347,7 +347,7 @@
     {
       "id": "var-runway",
       "name": "Runway",
-      "equation": "IF Burn_Rate > 0 THEN Cash / Burn_Rate ELSE 999",
+      "equation": "IF Burn_Rate > 0 THEN \"Cash Balance\" / Burn_Rate ELSE 999",
       "position": {
         "x": 400,
         "y": 400
@@ -356,7 +356,7 @@
     {
       "id": "var-target-employees",
       "name": "Target Employees",
-      "equation": "MIN(Max_Employees, Cash / (Average_Salary * 6))",
+      "equation": "MIN(Max_Employees, \"Cash Balance\" / (\"Average Monthly Salary\" * 6))",
       "position": {
         "x": 550,
         "y": 400
@@ -455,7 +455,7 @@
     {
       "id": "var-company-valuation",
       "name": "Company Valuation",
-      "equation": "ARR * Revenue_Multiple + Users * 50",
+      "equation": "\"Annual Recurring Revenue\" * Revenue_Multiple + \"Active Users\" * 50",
       "position": {
         "x": 700,
         "y": 560
@@ -473,7 +473,7 @@
     {
       "id": "var-profitable",
       "name": "Profitable",
-      "equation": "IF Revenue > Expenses THEN 1 ELSE 0",
+      "equation": "IF \"Monthly Revenue\" > \"Monthly Expenses\" THEN 1 ELSE 0",
       "position": {
         "x": 250,
         "y": 640
@@ -482,7 +482,7 @@
     {
       "id": "var-company-dead",
       "name": "Company Dead",
-      "equation": "IF Cash < 0 THEN 1 ELSE 0",
+      "equation": "IF \"Cash Balance\" < 0 THEN 1 ELSE 0",
       "position": {
         "x": 400,
         "y": 640

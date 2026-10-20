@@ -14,12 +14,13 @@ from pathlib import Path
 from app.core.equations import (SAFE_CONSTANTS, canonical_name, decode_identifier,
                                 equation_features, get_equation_variables, preprocess_equation)
 from app.core.model import Model, TimeSettings
+from app.core.limits import MAX_INTERVALS, MAX_RETAINED_VALUES, MAX_WORK_UNITS
 from app.core.simulator import simulate
 from app.core.validation import inspect_inputs
 
-CORE_FILES = ("model.py", "simulator.py", "integration.py", "equations.py")
+CORE_FILES = ("model.py", "simulator.py", "integration.py", "equations.py", "limits.py")
 MAX_RUNS = 3
-MAX_ELEMENT_INTERVALS_PER_RUN = 1_000_000
+MAX_ELEMENT_INTERVALS_PER_RUN = MAX_WORK_UNITS
 
 
 def source_hashes():
@@ -222,7 +223,7 @@ def investigate_model(model: Model, max_runs: int = 3) -> dict:
             row.update(status="not_attempted", reason="Static input errors" if static_invalid else "Stochastic comparisons require coupled noise")
             report["runs"].append(row)
             continue
-        if not math.isfinite(intervals) or intervals > 10_000 or visible_work > MAX_ELEMENT_INTERVALS_PER_RUN:
+        if not math.isfinite(intervals) or intervals > MAX_INTERVALS or visible_work > MAX_ELEMENT_INTERVALS_PER_RUN or (math.ceil(intervals - 1e-10) + 1) * max(1, len(model.stocks) + len(model.flows) + len(model.variables)) > MAX_RETAINED_VALUES:
             row.update(status="not_attempted", reason="Requested grid exceeds existing engine workload limits; horizon was not shortened")
             report["runs"].append(row)
             continue

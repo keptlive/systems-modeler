@@ -4,6 +4,7 @@ Invalid equations fail explicitly. No fallback engine or zero substitution.
 """
 import math
 from app.core.model import Model, TimeSettings, SimulationResult
+from app.core.limits import MAX_INTERVALS, MAX_ELEMENTS, MAX_RETAINED_VALUES, MAX_WORK_UNITS
 from app.core.equations import (EquationError, safe_eval, SimulationContext,
                                 discover_stateful, advance_stateful, canonical_name,
                                 RandomRuntime, stateful_derivatives, equation_features)
@@ -68,7 +69,7 @@ def integrate(model: Model, settings: TimeSettings):
             reference_owners[reference] = stock
     if len({canonical_name(table.name) for table in model.tables}) != len(model.tables):
         raise EquationError("Lookup table names must be unique")
-    if len(elements) > 500:
+    if len(elements) > MAX_ELEMENTS:
         raise EquationError("Models are limited to 500 elements per simulation")
     references = {s.id for s in model.stocks} | {s.name for s in model.stocks}
     for flow in model.flows:
@@ -77,11 +78,13 @@ def integrate(model: Model, settings: TimeSettings):
                 raise EquationError(f"Flow '{flow.name}' refers to unknown stock '{endpoint}'")
 
     step_count = (settings.end - settings.start) / settings.dt
-    if not math.isfinite(step_count) or step_count > 10000:
-        raise EquationError("Simulation exceeds 10,000 steps; increase dt")
+    if not math.isfinite(step_count) or step_count > MAX_INTERVALS:
+        raise EquationError("Simulation exceeds 100,000 intervals; shorten the horizon or increase dt")
     steps = math.ceil(step_count - 1e-10)
-    if steps > 10000 or steps * max(1, len(elements)) > 1000000:
-        raise EquationError("Simulation exceeds 10,000 steps or 1,000,000 element steps; increase dt")
+    if steps > MAX_INTERVALS:
+        raise EquationError("Simulation exceeds 100,000 intervals; shorten the horizon or increase dt")
+    if (steps + 1) * max(1, len(elements)) > MAX_RETAINED_VALUES:
+        raise EquationError("Simulation exceeds 1,000,000 retained scalar values; reduce elements or intervals")
     features = [equation_features(element.equation, [table.name for table in model.tables])
                 for element in elements]
     random_calls = sum(feature["random_calls"] for feature in features)
@@ -119,7 +122,7 @@ def integrate(model: Model, settings: TimeSettings):
     # RK4 requires four derivative evaluations and an accepted-output evaluation.
     work_per_step = max(1, len(elements) + hidden_stages + random_calls)
     work_per_step *= 5 if settings.integration_method == "rk4" else 1
-    if steps * work_per_step > 1000000:
+    if steps * work_per_step > MAX_WORK_UNITS:
         raise EquationError("Simulation exceeds 1,000,000 work units including delay/smooth stages, stochastic calls and RK4 evaluations")
 
     for i in range(steps):

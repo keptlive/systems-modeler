@@ -3,35 +3,228 @@
   "name": "Kahneman Dual Process Theory Model",
   "description": "Model of Daniel Kahneman's System 1 (fast, intuitive) and System 2 (slow, deliberative) thinking. Shows how cognitive load, time pressure, and task complexity affect which system dominates decision-making. Kahneman received the 2002 Nobel Prize.",
   "stocks": [
-    {"id": "stock-system2-resources", "name": "System 2 Resources", "initial_value": 100, "equation": "", "position": {"x": 200, "y": 200}},
-    {"id": "stock-decision-quality", "name": "Decision Quality", "initial_value": 70, "equation": "", "position": {"x": 450, "y": 200}},
-    {"id": "stock-fatigue", "name": "Fatigue", "initial_value": 0, "equation": "", "position": {"x": 200, "y": 350}}
+    {
+      "id": "stock-system2-resources",
+      "name": "System 2 Resources",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-decision-quality",
+      "name": "Decision Quality",
+      "initial_value": 70,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-fatigue",
+      "name": "Fatigue",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
   ],
   "flows": [
-    {"id": "flow-resource-depletion", "name": "Resource Depletion", "equation": "System2_Engagement * Depletion_Rate", "from_stock": "stock-system2-resources", "to_stock": null, "position": {"x": 100, "y": 200}},
-    {"id": "flow-resource-recovery", "name": "Resource Recovery", "equation": "(Max_Resources - System2_Resources) * Recovery_Rate", "from_stock": null, "to_stock": "stock-system2-resources", "position": {"x": 300, "y": 200}},
-    {"id": "flow-quality-change", "name": "Quality Change", "equation": "(Optimal_Quality - Decision_Quality) / Quality_Adjustment_Time", "from_stock": null, "to_stock": "stock-decision-quality", "position": {"x": 350, "y": 200}},
-    {"id": "flow-fatigue-accumulation", "name": "Fatigue Accumulation", "equation": "System2_Engagement * Fatigue_Rate", "from_stock": null, "to_stock": "stock-fatigue", "position": {"x": 100, "y": 350}},
-    {"id": "flow-fatigue-recovery", "name": "Fatigue Recovery", "equation": "Fatigue * Fatigue_Recovery_Rate", "from_stock": "stock-fatigue", "to_stock": null, "position": {"x": 300, "y": 350}}
+    {
+      "id": "flow-resource-depletion",
+      "name": "Resource Depletion",
+      "equation": "\"System 2 Engagement\" * Depletion_Rate",
+      "from_stock": "stock-system2-resources",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-resource-recovery",
+      "name": "Resource Recovery",
+      "equation": "(Max_Resources - \"System 2 Resources\") * Recovery_Rate",
+      "from_stock": null,
+      "to_stock": "stock-system2-resources",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-quality-change",
+      "name": "Quality Change",
+      "equation": "(Optimal_Quality - Decision_Quality) / Quality_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-decision-quality",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-fatigue-accumulation",
+      "name": "Fatigue Accumulation",
+      "equation": "\"System 2 Engagement\" * Fatigue_Rate",
+      "from_stock": null,
+      "to_stock": "stock-fatigue",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-fatigue-recovery",
+      "name": "Fatigue Recovery",
+      "equation": "Fatigue * Fatigue_Recovery_Rate",
+      "from_stock": "stock-fatigue",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
   ],
   "variables": [
-    {"id": "var-task-complexity", "name": "Task Complexity", "equation": "50", "position": {"x": 350, "y": 100}},
-    {"id": "var-time-pressure", "name": "Time Pressure", "equation": "30", "position": {"x": 500, "y": 100}},
-    {"id": "var-system2-demand", "name": "System 2 Demand", "equation": "Task_Complexity * (1 + Time_Pressure / 100)", "position": {"x": 200, "y": 100}},
-    {"id": "var-system2-engagement", "name": "System 2 Engagement", "equation": "MIN(System2_Resources, System2_Demand) * (1 - Fatigue / 100)", "position": {"x": 350, "y": 280}},
-    {"id": "var-system1-engagement", "name": "System 1 Engagement", "equation": "100 - System2_Engagement", "position": {"x": 550, "y": 280}},
-    {"id": "var-optimal-quality", "name": "Optimal Quality", "equation": "50 + 40 * System2_Engagement / 100 - 10 * System1_Bias_Effect", "position": {"x": 550, "y": 200}},
-    {"id": "var-system1-bias-effect", "name": "System 1 Bias Effect", "equation": "System1_Engagement / 100 * Bias_Susceptibility", "position": {"x": 450, "y": 350}},
-    {"id": "var-bias-susceptibility", "name": "Bias Susceptibility", "equation": "0.5", "position": {"x": 600, "y": 350}},
-    {"id": "var-max-resources", "name": "Max Resources", "equation": "100", "position": {"x": 150, "y": 420}},
-    {"id": "var-depletion-rate", "name": "Depletion Rate", "equation": "0.1", "position": {"x": 300, "y": 420}},
-    {"id": "var-recovery-rate", "name": "Recovery Rate", "equation": "0.05", "position": {"x": 450, "y": 420}},
-    {"id": "var-fatigue-rate", "name": "Fatigue Rate", "equation": "0.02", "position": {"x": 150, "y": 490}},
-    {"id": "var-fatigue-recovery-rate", "name": "Fatigue Recovery Rate", "equation": "0.01", "position": {"x": 350, "y": 490}},
-    {"id": "var-quality-adjustment-time", "name": "Quality Adjustment Time", "equation": "2", "position": {"x": 550, "y": 490}}
+    {
+      "id": "var-task-complexity",
+      "name": "Task Complexity",
+      "equation": "50",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-time-pressure",
+      "name": "Time Pressure",
+      "equation": "30",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-system2-demand",
+      "name": "System 2 Demand",
+      "equation": "Task_Complexity * (1 + Time_Pressure / 100)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-system2-engagement",
+      "name": "System 2 Engagement",
+      "equation": "MIN(\"System 2 Resources\", \"System 2 Demand\") * (1 - Fatigue / 100)",
+      "position": {
+        "x": 350,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-system1-engagement",
+      "name": "System 1 Engagement",
+      "equation": "100 - \"System 2 Engagement\"",
+      "position": {
+        "x": 550,
+        "y": 280
+      }
+    },
+    {
+      "id": "var-optimal-quality",
+      "name": "Optimal Quality",
+      "equation": "50 + 40 * \"System 2 Engagement\" / 100 - 10 * \"System 1 Bias Effect\"",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-system1-bias-effect",
+      "name": "System 1 Bias Effect",
+      "equation": "\"System 1 Engagement\" / 100 * Bias_Susceptibility",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-bias-susceptibility",
+      "name": "Bias Susceptibility",
+      "equation": "0.5",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-max-resources",
+      "name": "Max Resources",
+      "equation": "100",
+      "position": {
+        "x": 150,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-depletion-rate",
+      "name": "Depletion Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-recovery-rate",
+      "name": "Recovery Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 450,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-fatigue-rate",
+      "name": "Fatigue Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 150,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-fatigue-recovery-rate",
+      "name": "Fatigue Recovery Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 350,
+        "y": 490
+      }
+    },
+    {
+      "id": "var-quality-adjustment-time",
+      "name": "Quality Adjustment Time",
+      "equation": "2",
+      "position": {
+        "x": 550,
+        "y": 490
+      }
+    }
   ],
   "connectors": [],
-  "time_settings": {"start": 0, "end": 100, "dt": 0.5},
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
   "source": "https://doi.org/10.1037/0003-066X.58.9.697",
-  "reference": "Kahneman D. Thinking, Fast and Slow. Farrar, Straus and Giroux. 2011."
+  "reference": "Kahneman D (2003). A perspective on judgment and choice: mapping bounded rationality. American Psychologist58(9):697-720. doi:10.1037/0003-066X.58.9.697. Conceptual context only; no source derivation/calibration of local resource/fatigue ODEs."
 }

@@ -9,7 +9,7 @@ const Analytics = {
     validateResults(results) {
         const time = results?.time, values = results?.values;
         if (!Array.isArray(time) || !time.length || !values || Array.isArray(values) || typeof values !== 'object' || !Object.keys(values).length) throw new Error('Nonempty time and value series are required.');
-        if (time.length > 10001 || Object.keys(values).length > 500 || time.length * Object.keys(values).length > 1000000) throw new Error('Analytics input exceeds the supported sample limit.');
+        if (time.length > 100001 || Object.keys(values).length > 500 || time.length * Object.keys(values).length > 1000000) throw new Error('Analytics input exceeds the supported sample limit.');
         if (!time.every(Number.isFinite) || time.some((v, i) => i && v <= time[i-1]) || !Number.isFinite(time.at(-1)-time[0])) throw new Error('Time samples must be finite and strictly increasing.');
         if (time.length > 1 && time.some((v, i) => i && (v-time[i-1])/(time.at(-1)-time[0]) === 0)) throw new Error('Time sample spacing exceeds supported numeric resolution.');
         for (const [name, series] of Object.entries(values)) {
@@ -196,6 +196,7 @@ const Analytics = {
 
         // Summary section
         html += this.renderSummarySection();
+        html += this.renderSeriesSection();
 
         // Statistics section
         html += this.renderStatisticsSection();
@@ -229,21 +230,59 @@ const Analytics = {
             label.style.overflowWrap = 'anywhere';
         });
 
+        this.container.querySelector('[data-analysis-series]')?.addEventListener('change', event => {
+            this.focusedSeries = event.target.value;
+            this.onFocusedSeriesChanged?.(this.focusedSeries);
+            this.container.querySelector('.analysis-series-detail').innerHTML = this.renderSeriesDetail(this.focusedSeries);
+        });
+
         // Add event listeners for collapsible sections
         this.container.querySelectorAll('.analytics-section-header').forEach(header => {
             header.tabIndex = 0;
             header.setAttribute('role', 'button');
-            header.setAttribute('aria-expanded', 'true');
+            const title = header.querySelector('.section-title').textContent;
+            const expanded = this.sectionState?.[title] ?? header.parentElement.classList.contains('analytics-summary');
+            header.parentElement.classList.toggle('collapsed', !expanded);
+            header.setAttribute('aria-expanded', String(expanded));
             const toggle = () => {
                 const section = header.parentElement;
                 section.classList.toggle('collapsed');
-                header.setAttribute('aria-expanded', String(!section.classList.contains('collapsed')));
+                const open = !section.classList.contains('collapsed');
+                header.setAttribute('aria-expanded', String(open));
+                (this.sectionState ||= {})[title] = open;
+                if (open) this.renderSparklines();
             };
             header.addEventListener('click', toggle);
             header.addEventListener('keydown', event => {
                 if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggle(); }
             });
         });
+    },
+
+    renderSeriesSection() {
+        const names = Object.keys(this.statistics.statistics);
+        if (!names.includes(this.focusedSeries)) this.focusedSeries = names[0];
+        return `<section class="analysis-explorer" aria-label="Series detail">
+            <div class="analysis-eyebrow">Explore a series</div>
+            <label class="analysis-series-label">Series<select data-analysis-series aria-label="Analysis series">${names.map(name => `<option value="${App.escapeHtml(name)}" ${name === this.focusedSeries ? 'selected' : ''}>${App.escapeHtml(name)}</option>`).join('')}</select></label>
+            <div class="analysis-series-detail">${this.renderSeriesDetail(this.focusedSeries)}</div>
+        </section>`;
+    },
+    renderSeriesDetail(name) {
+        const s = this.statistics.statistics[name];
+        if (!s || s.error) return '<p class="section-description">Statistics unavailable for this series.</p>';
+        const pattern = this.getPatternInfo(this.statistics.patterns[name]);
+        const vals = this.results.values[name], time = this.results.time;
+        const scaled = this.moments(vals).scaled;
+        const lo = Math.min(...scaled), hi = Math.max(...scaled), duration = time.at(-1) - time[0];
+        // SVG viewBox keeps the trace crisp at any panel width; all recorded points are retained.
+        const points = scaled.map((v,i) => `${duration ? 4 + (time[i]-time[0])/duration*292 : 150},${hi===lo ? 40 : 72-(v-lo)/(hi-lo)*64}`).join(' ');
+        const metric = (label,value) => `<div class="analysis-metric"><dt>${label}</dt><dd>${this.formatNumber(value)}</dd></div>`;
+        return `<div class="analysis-result"><span>Final value</span><strong title="${s.final}">${this.formatNumber(s.final)}</strong><span class="analysis-pattern">${pattern.label}</span></div>
+            <svg class="analysis-trace" viewBox="0 0 300 80" role="img" aria-label="${App.escapeHtml(name)} over recorded time"><path d="M4 72H296" class="trace-baseline"/><polyline points="${points}"/></svg>
+            <div class="analysis-time"><span>t = ${this.formatNumber(time[0])}</span><span>${this.formatNumber(time.at(-1))}</span></div>
+            <dl class="analysis-metrics">${metric('Initial',s.initial)}${metric('Net change',s.total_change)}${metric('Minimum',s.min)}${metric('Maximum',s.max)}${metric('Sample mean',s.mean)}${metric('Time average',s.time_weighted_mean)}${metric('Std. deviation',s.std)}<div class="analysis-metric"><dt>Change</dt><dd>${s.percent_change == null ? 'N/A' : s.percent_change.toLocaleString('en-US',{maximumFractionDigits:1})+'%'}</dd></div></dl>
+            <details class="analysis-method"><summary>How to read these metrics</summary><p>Sample mean and population standard deviation weight each recorded sample equally. Time average uses trapezoidal integration. Change is relative to the initial value; it is undefined from zero. N/A also marks an unrepresentable derived value. The trace describes recorded samples, not scientific validation.</p></details>`;
     },
 
     /**
@@ -255,7 +294,7 @@ const Analytics = {
         return `
             <div class="analytics-section analytics-summary">
                 <div class="analytics-section-header">
-                    <span class="section-icon">&#128200;</span>
+                    <span class="section-icon" aria-hidden="true">&#128200;</span>
                     <span class="section-title">Simulation Summary</span>
                     <span class="section-toggle">&#9660;</span>
                 </div>
@@ -263,14 +302,14 @@ const Analytics = {
                     <div class="summary-grid">
                         <div class="summary-item">
                             <span class="summary-label">Time Range</span>
-                            <span class="summary-value">${timeRange.start} - ${timeRange.end}</span>
+                            <span class="summary-value">${this.formatNumber(timeRange.start)} → ${this.formatNumber(timeRange.end)}</span>
                         </div>
                         <div class="summary-item">
                             <span class="summary-label">Recorded samples</span>
                             <span class="summary-value">${timeRange.steps}</span>
                         </div>
                         <div class="summary-item">
-                            <span class="summary-label">Variables</span>
+                            <span class="summary-label">Series</span>
                             <span class="summary-value">${Object.keys(this.statistics.statistics).length}</span>
                         </div>
                     </div>
@@ -313,11 +352,12 @@ const Analytics = {
         return `
             <div class="analytics-section">
                 <div class="analytics-section-header">
-                    <span class="section-icon">&#128202;</span>
+                    <span class="section-icon" aria-hidden="true">&#128202;</span>
                     <span class="section-title">Summary Statistics</span>
                     <span class="section-toggle">&#9660;</span>
                 </div>
                 <div class="analytics-section-content">
+                    <p class="table-scroll-hint">All series · scroll horizontally for every metric</p>
                     <div class="stats-table-wrapper">
                         <table class="stats-table">
                             <thead>
@@ -371,7 +411,7 @@ const Analytics = {
                             </span>
                         ` : ''}
                     </div>
-                    <div class="pattern-sparkline" id="analytics-sparkline-${index}" aria-hidden="true"></div>
+                    <div class="pattern-sparkline" data-analytics-sparkline="${index}" aria-hidden="true"></div>
                 </div>
             `;
         }
@@ -384,7 +424,7 @@ const Analytics = {
         return `
             <div class="analytics-section">
                 <div class="analytics-section-header">
-                    <span class="section-icon">&#128208;</span>
+                    <span class="section-icon" aria-hidden="true">&#128208;</span>
                     <span class="section-title">Behavior Patterns</span>
                     <span class="section-toggle">&#9660;</span>
                 </div>
@@ -433,8 +473,7 @@ const Analytics = {
         const values = this.results.values;
 
         for (const [index, [name, vals]] of Object.entries(Object.entries(values))) {
-            const containerId = `analytics-sparkline-${index}`;
-            const container = document.getElementById(containerId);
+            const container = this.container.querySelector(`[data-analytics-sparkline="${index}"]`);
             if (!container) continue;
 
             const width = container.clientWidth || 100;
@@ -492,7 +531,7 @@ const Analytics = {
             return `
                 <div class="analytics-section">
                     <div class="analytics-section-header">
-                        <span class="section-icon">&#128205;</span>
+                        <span class="section-icon" aria-hidden="true">&#128205;</span>
                         <span class="section-title">Peak Analysis</span>
                         <span class="section-toggle">&#9660;</span>
                     </div>
@@ -550,7 +589,7 @@ const Analytics = {
         return `
             <div class="analytics-section">
                 <div class="analytics-section-header">
-                    <span class="section-icon">&#128205;</span>
+                    <span class="section-icon" aria-hidden="true">&#128205;</span>
                     <span class="section-title">Peak Analysis</span>
                     <span class="section-toggle">&#9660;</span>
                 </div>
@@ -576,7 +615,7 @@ const Analytics = {
             return `
                 <div class="analytics-section">
                     <div class="analytics-section-header">
-                        <span class="section-icon">&#128279;</span>
+                        <span class="section-icon" aria-hidden="true">&#128279;</span>
                         <span class="section-title">Correlations</span>
                         <span class="section-toggle">&#9660;</span>
                     </div>
@@ -620,7 +659,7 @@ const Analytics = {
         return `
             <div class="analytics-section">
                 <div class="analytics-section-header">
-                    <span class="section-icon">&#128279;</span>
+                    <span class="section-icon" aria-hidden="true">&#128279;</span>
                     <span class="section-title">Correlations</span>
                     <span class="section-toggle">&#9660;</span>
                 </div>
@@ -661,11 +700,12 @@ const Analytics = {
         return `
             <div class="analytics-section">
                 <div class="analytics-section-header">
-                    <span class="section-icon">&#128200;</span>
+                    <span class="section-icon" aria-hidden="true">&#128200;</span>
                     <span class="section-title">Rate of Change</span>
                     <span class="section-toggle">&#9660;</span>
                 </div>
                 <div class="analytics-section-content">
+                    <p class="table-scroll-hint">All series · scroll horizontally for every metric</p>
                     <div class="stats-table-wrapper">
                         <table class="stats-table">
                             <thead>
@@ -722,7 +762,7 @@ const Analytics = {
         return `
             <div class="analytics-section">
                 <div class="analytics-section-header">
-                    <span class="section-icon">&#9881;</span>
+                    <span class="section-icon" aria-hidden="true">&#9881;</span>
                     <span class="section-title">Variance Comparison</span>
                     <span class="section-toggle">&#9660;</span>
                 </div>
@@ -741,9 +781,10 @@ const Analytics = {
      */
     formatNumber(n) {
         if (n === null || n === undefined || !isFinite(n)) return 'N/A';
-        if (Math.abs(n) < 0.01 || Math.abs(n) >= 10000) {
+        if (n === 0) return '0';
+        if (Math.abs(n) < 0.01 || Math.abs(n) >= 1000000) {
             return n.toExponential(2);
         }
-        return n.toFixed(2);
+        return n.toLocaleString('en-US', {maximumFractionDigits: 2});
     }
 };

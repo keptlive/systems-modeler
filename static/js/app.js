@@ -79,7 +79,7 @@ const App = {
     bindEvents() {
         document.getElementById('sim-steps')?.addEventListener('change', (event) => {
             const steps = Number(event.target.value);
-            if (!Number.isInteger(steps) || steps < 1 || steps > 10000) {
+            if (!Number.isInteger(steps) || steps < 1 || steps > 100000) {
                 this.syncStepCount();
                 return;
             }
@@ -1591,7 +1591,7 @@ const App = {
                 return;
             }
             const steps = Math.ceil((end - start) / dt);
-            stepsInfo.textContent = `Steps: ${steps}${steps > 10000 ? ' · exceeds the 10,000-step limit' : ''}`;
+            stepsInfo.textContent = `Steps: ${steps}${steps > 100000 ? ' · exceeds the 100,000-interval limit' : ''}`;
         };
 
         // Sync inputs with current model settings
@@ -1673,8 +1673,8 @@ const App = {
             const start = Number(startInput.value);
             const end = Number(endInput.value);
             const dt = Number(dtInput.value);
-            if (![start, end, dt].every(Number.isFinite) || end <= start || dt <= 0 || dt > end - start || Math.ceil((end - start) / dt) > 10000) {
-                this.showToast('Use a positive time step, an end after the start, and at most 10,000 steps.', 'error');
+            if (![start, end, dt].every(Number.isFinite) || end <= start || dt <= 0 || dt > end - start || Math.ceil((end - start) / dt) > 100000) {
+                this.showToast('Use a positive time step, an end after the start, and at most 100,000 intervals.', 'error');
                 return;
             }
             try { this.model.time_settings = this.readSimulationSettings(); }
@@ -1692,8 +1692,12 @@ const App = {
         const start = Number(document.getElementById('sim-start').value);
         const end = Number(document.getElementById('sim-end').value);
         const dt = Number(document.getElementById('sim-dt').value);
-        if (![start,end,dt].every(Number.isFinite) || end<=start || dt<=0 || dt>end-start || Math.ceil((end-start)/dt)>10000) {
-            throw new Error('Use a positive time step, an end after the start, and at most 10,000 steps.');
+        if (![start,end,dt].every(Number.isFinite) || end<=start || dt<=0 || dt>end-start || Math.ceil((end-start)/dt)>100000) {
+            throw new Error('Use a positive time step, an end after the start, and at most 100,000 intervals.');
+        }
+        const intervals = Math.ceil((end-start)/dt);
+        if ((intervals+1) * [this.model.stocks,this.model.flows,this.model.variables].reduce((total,items)=>total+(items?.length || 0),0) > 1000000) {
+            throw new Error('Simulation exceeds 1,000,000 retained scalar values; reduce elements or intervals.');
         }
         const seedText = document.getElementById('sim-seed').value.trim();
         const random_seed = seedText === '' ? null : Number(seedText);

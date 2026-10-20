@@ -68,7 +68,7 @@
     {
       "id": "flow-birthsimmigration",
       "name": "Births/Immigration",
-      "equation": "Total_Population * Birth_Rate",
+      "equation": "Total_Population * \"Birth/Immigration Rate\"",
       "from_stock": null,
       "to_stock": "stock-healthy-population",
       "position": {
@@ -79,7 +79,7 @@
     {
       "id": "flow-becoming-at-risk",
       "name": "Becoming At-Risk",
-      "equation": "Healthy * Risk_Factor_Development_Rate * (1 - Prevention_Program_Effect)",
+      "equation": "\"Healthy Population\" * Risk_Factor_Development_Rate * (1 - Prevention_Program_Effect)",
       "from_stock": "stock-healthy-population",
       "to_stock": "stock-at-risk-population",
       "position": {
@@ -90,7 +90,7 @@
     {
       "id": "flow-risk-reversal",
       "name": "Risk Reversal",
-      "equation": "At_Risk * Risk_Reversal_Rate * (1 + Lifestyle_Intervention_Effect)",
+      "equation": "\"At-Risk Population\" * Risk_Reversal_Rate * (1 + Lifestyle_Intervention_Effect)",
       "from_stock": "stock-at-risk-population",
       "to_stock": "stock-healthy-population",
       "position": {
@@ -101,7 +101,7 @@
     {
       "id": "flow-disease-onset",
       "name": "Disease Onset",
-      "equation": "At_Risk * Disease_Onset_Rate",
+      "equation": "\"At-Risk Population\" * Disease_Onset_Rate",
       "from_stock": "stock-at-risk-population",
       "to_stock": "stock-undiagnosed-disease",
       "position": {
@@ -112,7 +112,7 @@
     {
       "id": "flow-diagnosis",
       "name": "Diagnosis",
-      "equation": "Undiagnosed * Diagnosis_Rate * (1 + Screening_Program_Effect)",
+      "equation": "\"Undiagnosed Disease\" * Diagnosis_Rate * (1 + Screening_Program_Effect)",
       "from_stock": "stock-undiagnosed-disease",
       "to_stock": "stock-diagnosed-uncontrolled",
       "position": {
@@ -145,7 +145,7 @@
     {
       "id": "flow-undiagnosed-complications",
       "name": "Undiagnosed Complications",
-      "equation": "Undiagnosed * Complication_Rate_Undiagnosed",
+      "equation": "\"Undiagnosed Disease\" * Complication_Rate_Undiagnosed",
       "from_stock": "stock-undiagnosed-disease",
       "to_stock": "stock-with-complications",
       "position": {
@@ -178,7 +178,7 @@
     {
       "id": "flow-healthy-deaths",
       "name": "Healthy Deaths",
-      "equation": "Healthy * Background_Death_Rate",
+      "equation": "\"Healthy Population\" * Background_Death_Rate",
       "from_stock": "stock-healthy-population",
       "to_stock": null,
       "position": {
@@ -189,7 +189,7 @@
     {
       "id": "flow-at-risk-deaths",
       "name": "At-Risk Deaths",
-      "equation": "At_Risk * Background_Death_Rate * 1.2",
+      "equation": "\"At-Risk Population\" * Background_Death_Rate * 1.2",
       "from_stock": "stock-at-risk-population",
       "to_stock": null,
       "position": {
@@ -200,7 +200,7 @@
     {
       "id": "flow-undiagnosed-deaths",
       "name": "Undiagnosed Deaths",
-      "equation": "Undiagnosed * Background_Death_Rate * 1.5",
+      "equation": "\"Undiagnosed Disease\" * Background_Death_Rate * 1.5",
       "from_stock": "stock-undiagnosed-disease",
       "to_stock": null,
       "position": {
@@ -246,7 +246,7 @@
     {
       "id": "var-total-population",
       "name": "Total Population",
-      "equation": "Healthy + At_Risk + Undiagnosed + Diagnosed_Uncontrolled + Diagnosed_Controlled + With_Complications",
+      "equation": "\"Healthy Population\" + \"At-Risk Population\" + \"Undiagnosed Disease\" + Diagnosed_Uncontrolled + Diagnosed_Controlled + With_Complications",
       "position": {
         "x": 100,
         "y": 80
@@ -255,7 +255,7 @@
     {
       "id": "var-disease-prevalence",
       "name": "Disease Prevalence",
-      "equation": "(Undiagnosed + Diagnosed_Uncontrolled + Diagnosed_Controlled + With_Complications) / Total_Population",
+      "equation": "(\"Undiagnosed Disease\" + Diagnosed_Uncontrolled + Diagnosed_Controlled + With_Complications) / Total_Population",
       "position": {
         "x": 250,
         "y": 80
@@ -471,7 +471,7 @@
     {
       "id": "var-total-healthcare-cost",
       "name": "Total Healthcare Cost",
-      "equation": "Undiagnosed * Cost_Per_Undiagnosed + Diagnosed_Uncontrolled * Cost_Per_Uncontrolled + Diagnosed_Controlled * Cost_Per_Controlled + With_Complications * Cost_Per_Complication",
+      "equation": "\"Undiagnosed Disease\" * Cost_Per_Undiagnosed + Diagnosed_Uncontrolled * Cost_Per_Uncontrolled + Diagnosed_Controlled * Cost_Per_Controlled + With_Complications * Cost_Per_Complication",
       "position": {
         "x": 100,
         "y": 480
@@ -516,7 +516,7 @@
     {
       "id": "var-qalys-lost",
       "name": "QALYs Lost",
-      "equation": "Undiagnosed * 0.05 + Diagnosed_Uncontrolled * 0.1 + With_Complications * 0.3",
+      "equation": "\"Undiagnosed Disease\" * 0.05 + Diagnosed_Uncontrolled * 0.1 + With_Complications * 0.3",
       "position": {
         "x": 100,
         "y": 560

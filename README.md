@@ -21,7 +21,7 @@ Optional provider configuration is described in `.env.example` and `app/llm/`. K
 
 Use **Settings → Check inputs** or `POST /api/validate` with `{"model_id":"..."}` or `{"model":{...}}`. Inspection covers names, references, syntax, initial values, flow endpoints, tables, settings and a short numerical run. Units and provenance are retained. Scientific validity is not established by these checks or by finite simulation output.
 
-The current 1.6 audit runs all 1,078 checked-in definitions at their full default horizons: 944 complete and 134 fail explicitly. Three LOOKUP models now match pinned source tables and independent reference trajectories. See [the source restorations](docs/LOOKUP-SOURCE-REVIEW-1.6.md), [capability contract](docs/CORPUS-TEST-CONTRACT-1.5.md), [advanced engine review](docs/ADVANCED-FUNCTION-REVIEW-1.5.md), and SHA-bound receipts in `operations/`. Public status badges apply only to the exact model bytes audited. Production also has additional user models; preserve them during release.
+The current 1.7 audit runs all 1,078 checked-in definitions at their full default horizons: 992 complete and 86 fail explicitly, with no new numerical failures. All 134 previous failures have individual diagnosis and source-review receipts; 64 definitions received reviewed equation, reference or limitation corrections. Two newly completing models remain inert because their derivatives are missing. Completion is not scientific validation. See [release evidence and limitations](docs/RELEASE-1.7.md) and the [A](docs/CORPUS-RECONCILIATION-1.7-A.md), [B](docs/CORPUS-RECONCILIATION-1.7-B.md), and [C](docs/CORPUS-RECONCILIATION-1.7-C.md) investigations. Public status badges apply only to the exact model bytes audited. Production also has additional user models; preserve them during release.
 
 ## API and MCP
 
@@ -35,11 +35,13 @@ Bring your own agent: `open_workspace` returns a private visible page, `inspect_
 
 The nine existing MCP tools remain: `list_models`, `get_model`, `validate_model`, `simulate_model`, `compare_scenarios`, `analyze_model`, `export_model_xmile`, `generate_model_from_description`, `modify_existing_model`. Resources `systems://guide` and `systems://models/{id}` plus the `investigate_system` prompt guide evidence-based use. Numerical tools do not save models; optional AI tools return unsaved drafts. Local stdio supports these numerical/library tools; private page sessions require HTTP/SSE.
 
-The engine rejects unresolved equations, ambiguous names, nonfinite inputs and unsupported semantics. Limits are 500 explicit elements, 10,000 intervals and one million work units including hidden stages and method cost. Smoothing and fixed-duration material delays support Euler/RK4; random functions and fixed-history delays remain Euler-only. XMILE support is a scalar subset; arrays, nested models, queues, conveyors and explicit nonnegative constraints are rejected rather than silently lost.
+The engine rejects unresolved equations, ambiguous names, nonfinite inputs and unsupported semantics. Limits are 500 explicit elements, 100,000 intervals, 100,001 retained samples, one million retained scalar values and one million work units including hidden stages and method cost. Smoothing and fixed-duration material delays support Euler/RK4; random functions and fixed-history delays remain Euler-only. XMILE support is a scalar subset; arrays, nested models, queues, conveyors and explicit nonnegative constraints are rejected rather than silently lost.
 
 Version 1.4 reconciled 63 public definitions through source restoration, mathematical checks and citation/limitation corrections. Version 1.5 adds 218 advanced tests across all 44 advertised function names, repairs pulse and extreme lookup behavior, and improves the existing workbench with command search, run context and desktop/mobile chart selection. No model definitions changed in 1.5. Known citation mismatches remain visible in inspection and MCP validation. See [the release evidence](docs/RELEASE-1.5.md).
 
 Version 1.6 refines diagram elements and the studio interface, makes element renames preserve dependent equations, restores three source-backed lookup definitions, and fixes mobile fullscreen and input-focus behavior. The regression run passes 595 tests plus 18 subtests, with three documented identifier-compatibility expected failures. See [1.6 evidence and limitations](docs/RELEASE-1.6.md).
+
+Version 1.7 reconciles all 134 prior public failures, refines Analytics and exports, and supports bounded fine time grids. The clean public regression suite passes 673 tests plus 18 preservation subtests, with three documented expected failures. See [1.7 evidence](docs/RELEASE-1.7.md).
 
 ## Development and operations
 

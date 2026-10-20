@@ -68,7 +68,7 @@
     {
       "id": "flow-forest-regeneration",
       "name": "Forest Regeneration",
-      "equation": "(Young_Disturbance + Mature_Disturbance + Old_Growth_Disturbance) * Regeneration_Success + Afforestation",
+      "equation": "(\"Young Forest Disturbance\" + \"Mature Forest Disturbance\" + Old_Growth_Disturbance) * \"Regeneration Success Rate\" + \"Afforestation Rate\"",
       "from_stock": null,
       "to_stock": "stock-young-forest-0-20-yr",
       "position": {
@@ -79,7 +79,7 @@
     {
       "id": "flow-young-to-mature",
       "name": "Young to Mature",
-      "equation": "Young_Forest / Young_Forest_Age",
+      "equation": "\"Young Forest (0-20 yr)\" / \"Young Forest Age Span\"",
       "from_stock": "stock-young-forest-0-20-yr",
       "to_stock": "stock-mature-forest-20-100-yr",
       "position": {
@@ -90,7 +90,7 @@
     {
       "id": "flow-mature-to-old-growth",
       "name": "Mature to Old Growth",
-      "equation": "Mature_Forest / Mature_Forest_Age",
+      "equation": "\"Mature Forest (20-100 yr)\" / \"Mature Forest Age Span\"",
       "from_stock": "stock-mature-forest-20-100-yr",
       "to_stock": "stock-old-growth-100-yr",
       "position": {
@@ -101,7 +101,7 @@
     {
       "id": "flow-young-forest-disturbance",
       "name": "Young Forest Disturbance",
-      "equation": "Young_Forest * (Fire_Rate + Pest_Rate)",
+      "equation": "\"Young Forest (0-20 yr)\" * (\"Fire Disturbance Rate\" + \"Pest/Disease Rate\")",
       "from_stock": "stock-young-forest-0-20-yr",
       "to_stock": null,
       "position": {
@@ -112,7 +112,7 @@
     {
       "id": "flow-mature-forest-disturbance",
       "name": "Mature Forest Disturbance",
-      "equation": "Mature_Forest * (Fire_Rate + Pest_Rate)",
+      "equation": "\"Mature Forest (20-100 yr)\" * (\"Fire Disturbance Rate\" + \"Pest/Disease Rate\")",
       "from_stock": "stock-mature-forest-20-100-yr",
       "to_stock": null,
       "position": {
@@ -123,7 +123,7 @@
     {
       "id": "flow-old-growth-disturbance",
       "name": "Old Growth Disturbance",
-      "equation": "Old_Growth * (Fire_Rate * 1.5 + Pest_Rate)",
+      "equation": "\"Old Growth (100+ yr)\" * (\"Fire Disturbance Rate\" * 1.5 + \"Pest/Disease Rate\")",
       "from_stock": "stock-old-growth-100-yr",
       "to_stock": null,
       "position": {
@@ -134,7 +134,7 @@
     {
       "id": "flow-timber-harvest-mature",
       "name": "Timber Harvest (Mature)",
-      "equation": "MIN(Mature_Forest * Harvest_Rate, Sustainable_Harvest)",
+      "equation": "MIN(\"Mature Forest (20-100 yr)\" * Harvest_Rate, Sustainable_Harvest)",
       "from_stock": "stock-mature-forest-20-100-yr",
       "to_stock": null,
       "position": {
@@ -145,7 +145,7 @@
     {
       "id": "flow-timber-harvest-old-growth",
       "name": "Timber Harvest (Old Growth)",
-      "equation": "Old_Growth * Old_Growth_Harvest_Rate",
+      "equation": "\"Old Growth (100+ yr)\" * Old_Growth_Harvest_Rate",
       "from_stock": "stock-old-growth-100-yr",
       "to_stock": null,
       "position": {
@@ -156,7 +156,7 @@
     {
       "id": "flow-carbon-sequestration",
       "name": "Carbon Sequestration",
-      "equation": "Young_Forest * Young_NPP + Mature_Forest * Mature_NPP + Old_Growth * Old_Growth_NPP",
+      "equation": "\"Young Forest (0-20 yr)\" * \"Young Forest NPP\" + \"Mature Forest (20-100 yr)\" * \"Mature Forest NPP\" + \"Old Growth (100+ yr)\" * \"Old Growth NPP\"",
       "from_stock": null,
       "to_stock": "stock-forest-carbon-stock",
       "position": {
@@ -167,7 +167,7 @@
     {
       "id": "flow-autotrophic-respiration",
       "name": "Autotrophic Respiration",
-      "equation": "Forest_Carbon * Respiration_Rate * Temperature_Effect",
+      "equation": "\"Forest Carbon Stock\" * Respiration_Rate * \"Temperature Effect on Respiration\"",
       "from_stock": "stock-forest-carbon-stock",
       "to_stock": null,
       "position": {
@@ -178,7 +178,7 @@
     {
       "id": "flow-litterfall-carbon",
       "name": "Litterfall Carbon",
-      "equation": "Forest_Carbon * Litterfall_Rate",
+      "equation": "\"Forest Carbon Stock\" * Litterfall_Rate",
       "from_stock": null,
       "to_stock": "stock-soil-carbon-stock",
       "position": {
@@ -189,7 +189,7 @@
     {
       "id": "flow-soil-respiration",
       "name": "Soil Respiration",
-      "equation": "Soil_Carbon * Soil_Respiration_Rate * Temperature_Effect",
+      "equation": "\"Soil Carbon Stock\" * Soil_Respiration_Rate * \"Temperature Effect on Respiration\"",
       "from_stock": "stock-soil-carbon-stock",
       "to_stock": null,
       "position": {
@@ -200,7 +200,7 @@
     {
       "id": "flow-disturbance-emissions",
       "name": "Disturbance Emissions",
-      "equation": "(Young_Disturbance * Young_Carbon_Density + Mature_Disturbance * Mature_Carbon_Density + Old_Growth_Disturbance * Old_Growth_Carbon_Density) * Combustion_Fraction",
+      "equation": "(\"Young Forest Disturbance\" * \"Young Forest Carbon Density\" + \"Mature Forest Disturbance\" * \"Mature Forest Carbon Density\" + Old_Growth_Disturbance * \"Old Growth Carbon Density\") * Combustion_Fraction",
       "from_stock": "stock-forest-carbon-stock",
       "to_stock": null,
       "position": {
@@ -211,7 +211,7 @@
     {
       "id": "flow-harvest-emissions",
       "name": "Harvest Emissions",
-      "equation": "(Harvest * Mature_Carbon_Density + Old_Growth_Harvest * Old_Growth_Carbon_Density) * Slash_Fraction",
+      "equation": "(\"Timber Harvest (Mature)\" * \"Mature Forest Carbon Density\" + \"Timber Harvest (Old Growth)\" * \"Old Growth Carbon Density\") * Slash_Fraction",
       "from_stock": "stock-forest-carbon-stock",
       "to_stock": null,
       "position": {
@@ -222,7 +222,7 @@
     {
       "id": "flow-harvest-to-products",
       "name": "Harvest to Products",
-      "equation": "(Harvest * Mature_Carbon_Density + Old_Growth_Harvest * Old_Growth_Carbon_Density) * (1 - Slash_Fraction) * Product_Retention",
+      "equation": "(\"Timber Harvest (Mature)\" * \"Mature Forest Carbon Density\" + \"Timber Harvest (Old Growth)\" * \"Old Growth Carbon Density\") * (1 - Slash_Fraction) * Product_Retention",
       "from_stock": null,
       "to_stock": "stock-wood-products-carbon",
       "position": {
@@ -233,7 +233,7 @@
     {
       "id": "flow-product-decay",
       "name": "Product Decay",
-      "equation": "Wood_Products / Product_Halflife",
+      "equation": "\"Wood Products Carbon\" / Product_Halflife",
       "from_stock": "stock-wood-products-carbon",
       "to_stock": null,
       "position": {
@@ -246,7 +246,7 @@
     {
       "id": "var-total-forest-area",
       "name": "Total Forest Area",
-      "equation": "Young_Forest + Mature_Forest + Old_Growth",
+      "equation": "\"Young Forest (0-20 yr)\" + \"Mature Forest (20-100 yr)\" + \"Old Growth (100+ yr)\"",
       "position": {
         "x": 100,
         "y": 80
@@ -282,7 +282,7 @@
     {
       "id": "var-fire-disturbance-rate",
       "name": "Fire Disturbance Rate",
-      "equation": "Base_Fire_Rate * (1 + Climate_Warming * Fire_Sensitivity)",
+      "equation": "Base_Fire_Rate * (1 + Climate_Warming * \"Fire Sensitivity to Warming\")",
       "position": {
         "x": 700,
         "y": 80
@@ -336,7 +336,7 @@
     {
       "id": "var-sustainable-harvest",
       "name": "Sustainable Harvest",
-      "equation": "Maturation_Young * 0.8",
+      "equation": "\"Young to Mature\" * 0.8",
       "position": {
         "x": 100,
         "y": 240
@@ -435,7 +435,7 @@
     {
       "id": "var-temperature-effect-on-respiration",
       "name": "Temperature Effect on Respiration",
-      "equation": "Q10 ^ (Climate_Warming / 10)",
+      "equation": "\"Q10 Factor\" ^ (Climate_Warming / 10)",
       "position": {
         "x": 250,
         "y": 400
@@ -507,7 +507,7 @@
     {
       "id": "var-total-carbon-stock",
       "name": "Total Carbon Stock",
-      "equation": "Forest_Carbon + Soil_Carbon + Wood_Products",
+      "equation": "\"Forest Carbon Stock\" + \"Soil Carbon Stock\" + \"Wood Products Carbon\"",
       "position": {
         "x": 700,
         "y": 480
@@ -516,7 +516,7 @@
     {
       "id": "var-net-ecosystem-exchange",
       "name": "Net Ecosystem Exchange",
-      "equation": "Carbon_Sequestration - Respiration - Soil_Respiration - Disturbance_Emissions - Harvest_Emissions + Product_Decay",
+      "equation": "Carbon_Sequestration - \"Autotrophic Respiration\" - Soil_Respiration - Disturbance_Emissions - Harvest_Emissions + Product_Decay",
       "position": {
         "x": 100,
         "y": 560

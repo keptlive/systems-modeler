@@ -53,7 +53,7 @@ def test_missing_parameter_does_not_repeat_identical_invalid_runs(monkeypatch):
 
 
 def test_large_grid_is_not_replaced_with_short_smoke_horizon(monkeypatch):
-    model=decay(dt=.00001)
+    model=decay(dt=.000001)
     monkeypatch.setattr(d,"simulate",lambda *args:pytest.fail("Oversized grids should not run"))
     report=d.investigate_model(model)
     assert all(row["status"] == "not_attempted" for row in report["runs"])

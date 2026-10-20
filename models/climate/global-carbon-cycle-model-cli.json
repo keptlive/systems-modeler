@@ -90,7 +90,7 @@
     {
       "id": "flow-photosynthesis-gpp",
       "name": "Photosynthesis (GPP)",
-      "equation": "Base_GPP * CO2_Fertilization * Temperature_Effect_GPP * Vegetation_Area_Fraction",
+      "equation": "Base_GPP * \"CO2 Fertilization Effect\" * Temperature_Effect_GPP * Vegetation_Area_Fraction",
       "from_stock": "stock-atmospheric-carbon",
       "to_stock": "stock-vegetation-carbon",
       "position": {
@@ -101,7 +101,7 @@
     {
       "id": "flow-autotrophic-respiration",
       "name": "Autotrophic Respiration",
-      "equation": "Vegetation_Carbon * Autotrophic_Respiration_Rate * Q10_Factor^((Temperature_Anomaly)/10)",
+      "equation": "Vegetation_Carbon * Autotrophic_Respiration_Rate * \"Q10 Temperature Factor\"^((Temperature_Anomaly)/10)",
       "from_stock": null,
       "to_stock": "stock-atmospheric-carbon",
       "position": {
@@ -112,7 +112,7 @@
     {
       "id": "flow-vegetation-respiration",
       "name": "Vegetation Respiration",
-      "equation": "Respiration * 0.5",
+      "equation": "\"Autotrophic Respiration\" * 0.5",
       "from_stock": "stock-vegetation-carbon",
       "to_stock": null,
       "position": {
@@ -134,7 +134,7 @@
     {
       "id": "flow-soil-respiration",
       "name": "Soil Respiration",
-      "equation": "Soil_Carbon / Soil_Turnover_Time * Q10_Factor^((Temperature_Anomaly)/10)",
+      "equation": "Soil_Carbon / Soil_Turnover_Time * \"Q10 Temperature Factor\"^((Temperature_Anomaly)/10)",
       "from_stock": "stock-soil-carbon",
       "to_stock": null,
       "position": {
@@ -167,7 +167,7 @@
     {
       "id": "flow-downwelling",
       "name": "Downwelling",
-      "equation": "Surface_Ocean_Carbon * Thermohaline_Rate",
+      "equation": "Surface_Ocean_Carbon * \"Thermohaline Circulation Rate\"",
       "from_stock": "stock-surface-ocean-carbon",
       "to_stock": "stock-deep-ocean-carbon",
       "position": {
@@ -178,7 +178,7 @@
     {
       "id": "flow-upwelling",
       "name": "Upwelling",
-      "equation": "Deep_Ocean_Carbon * Thermohaline_Rate * (Surface_Ocean_Carbon / Deep_Ocean_Carbon)",
+      "equation": "Deep_Ocean_Carbon * \"Thermohaline Circulation Rate\" * (Surface_Ocean_Carbon / Deep_Ocean_Carbon)",
       "from_stock": "stock-deep-ocean-carbon",
       "to_stock": "stock-surface-ocean-carbon",
       "position": {
@@ -202,7 +202,7 @@
     {
       "id": "var-atmospheric-co2-concentration",
       "name": "Atmospheric CO2 Concentration",
-      "equation": "Atmosphere_Carbon / 2.124",
+      "equation": "\"Atmospheric Carbon\" / 2.124",
       "position": {
         "x": 100,
         "y": 80
@@ -211,7 +211,7 @@
     {
       "id": "var-co2-partial-pressure",
       "name": "CO2 Partial Pressure",
-      "equation": "Atmospheric_CO2_ppm / 280",
+      "equation": "\"Atmospheric CO2 Concentration\" / 280",
       "position": {
         "x": 250,
         "y": 80
@@ -220,7 +220,7 @@
     {
       "id": "var-co2-fertilization-effect",
       "name": "CO2 Fertilization Effect",
-      "equation": "1 + Beta_CO2 * LOG(Atmospheric_CO2_ppm / 280)",
+      "equation": "1 + \"Beta CO2 Fertilization\" * LOG(\"Atmospheric CO2 Concentration\" / 280)",
       "position": {
         "x": 400,
         "y": 80
@@ -238,7 +238,7 @@
     {
       "id": "var-temperature-anomaly",
       "name": "Temperature Anomaly",
-      "equation": "Climate_Sensitivity * LOG(Atmospheric_CO2_ppm / 280) / LOG(2)",
+      "equation": "Climate_Sensitivity * LOG(\"Atmospheric CO2 Concentration\" / 280) / LOG(2)",
       "position": {
         "x": 700,
         "y": 80
@@ -346,7 +346,7 @@
     {
       "id": "var-airborne-fraction",
       "name": "Airborne Fraction",
-      "equation": "(Atmosphere_Carbon - 589) / Cumulative_Emissions",
+      "equation": "(\"Atmospheric Carbon\" - 589) / \"Cumulative Anthropogenic Emissions\"",
       "position": {
         "x": 250,
         "y": 320
@@ -355,7 +355,7 @@
     {
       "id": "var-ocean-carbon-sink",
       "name": "Ocean Carbon Sink",
-      "equation": "Ocean_Uptake - Ocean_Outgassing",
+      "equation": "\"Ocean CO2 Uptake\" - Ocean_Outgassing",
       "position": {
         "x": 400,
         "y": 320
@@ -364,7 +364,7 @@
     {
       "id": "var-land-carbon-sink",
       "name": "Land Carbon Sink",
-      "equation": "Photosynthesis - Respiration - Soil_Respiration - Deforestation",
+      "equation": "\"Photosynthesis (GPP)\" - \"Autotrophic Respiration\" - Soil_Respiration - Deforestation",
       "position": {
         "x": 550,
         "y": 320
