@@ -1,3 +1,5 @@
+// Unicode casefold exceptions for the backend-compatible rename namespace.
+const AppRenameCasefold = {"\u00b5":"\u03bc","\u00df":"ss","\u0149":"\u02bcn","\u017f":"s","\u01f0":"j\u030c","\u0345":"\u03b9","\u0390":"\u03b9\u0308\u0301","\u03b0":"\u03c5\u0308\u0301","\u03c2":"\u03c3","\u03d0":"\u03b2","\u03d1":"\u03b8","\u03d5":"\u03c6","\u03d6":"\u03c0","\u03f0":"\u03ba","\u03f1":"\u03c1","\u03f5":"\u03b5","\u0587":"\u0565\u0582","\u13a0":"\u13a0","\u13a1":"\u13a1","\u13a2":"\u13a2","\u13a3":"\u13a3","\u13a4":"\u13a4","\u13a5":"\u13a5","\u13a6":"\u13a6","\u13a7":"\u13a7","\u13a8":"\u13a8","\u13a9":"\u13a9","\u13aa":"\u13aa","\u13ab":"\u13ab","\u13ac":"\u13ac","\u13ad":"\u13ad","\u13ae":"\u13ae","\u13af":"\u13af","\u13b0":"\u13b0","\u13b1":"\u13b1","\u13b2":"\u13b2","\u13b3":"\u13b3","\u13b4":"\u13b4","\u13b5":"\u13b5","\u13b6":"\u13b6","\u13b7":"\u13b7","\u13b8":"\u13b8","\u13b9":"\u13b9","\u13ba":"\u13ba","\u13bb":"\u13bb","\u13bc":"\u13bc","\u13bd":"\u13bd","\u13be":"\u13be","\u13bf":"\u13bf","\u13c0":"\u13c0","\u13c1":"\u13c1","\u13c2":"\u13c2","\u13c3":"\u13c3","\u13c4":"\u13c4","\u13c5":"\u13c5","\u13c6":"\u13c6","\u13c7":"\u13c7","\u13c8":"\u13c8","\u13c9":"\u13c9","\u13ca":"\u13ca","\u13cb":"\u13cb","\u13cc":"\u13cc","\u13cd":"\u13cd","\u13ce":"\u13ce","\u13cf":"\u13cf","\u13d0":"\u13d0","\u13d1":"\u13d1","\u13d2":"\u13d2","\u13d3":"\u13d3","\u13d4":"\u13d4","\u13d5":"\u13d5","\u13d6":"\u13d6","\u13d7":"\u13d7","\u13d8":"\u13d8","\u13d9":"\u13d9","\u13da":"\u13da","\u13db":"\u13db","\u13dc":"\u13dc","\u13dd":"\u13dd","\u13de":"\u13de","\u13df":"\u13df","\u13e0":"\u13e0","\u13e1":"\u13e1","\u13e2":"\u13e2","\u13e3":"\u13e3","\u13e4":"\u13e4","\u13e5":"\u13e5","\u13e6":"\u13e6","\u13e7":"\u13e7","\u13e8":"\u13e8","\u13e9":"\u13e9","\u13ea":"\u13ea","\u13eb":"\u13eb","\u13ec":"\u13ec","\u13ed":"\u13ed","\u13ee":"\u13ee","\u13ef":"\u13ef","\u13f0":"\u13f0","\u13f1":"\u13f1","\u13f2":"\u13f2","\u13f3":"\u13f3","\u13f4":"\u13f4","\u13f5":"\u13f5","\u13f8":"\u13f0","\u13f9":"\u13f1","\u13fa":"\u13f2","\u13fb":"\u13f3","\u13fc":"\u13f4","\u13fd":"\u13f5","\u1c80":"\u0432","\u1c81":"\u0434","\u1c82":"\u043e","\u1c83":"\u0441","\u1c84":"\u0442","\u1c85":"\u0442","\u1c86":"\u044a","\u1c87":"\u0463","\u1c88":"\ua64b","\u1e96":"h\u0331","\u1e97":"t\u0308","\u1e98":"w\u030a","\u1e99":"y\u030a","\u1e9a":"a\u02be","\u1e9b":"\u1e61","\u1e9e":"ss","\u1f50":"\u03c5\u0313","\u1f52":"\u03c5\u0313\u0300","\u1f54":"\u03c5\u0313\u0301","\u1f56":"\u03c5\u0313\u0342","\u1f80":"\u1f00\u03b9","\u1f81":"\u1f01\u03b9","\u1f82":"\u1f02\u03b9","\u1f83":"\u1f03\u03b9","\u1f84":"\u1f04\u03b9","\u1f85":"\u1f05\u03b9","\u1f86":"\u1f06\u03b9","\u1f87":"\u1f07\u03b9","\u1f88":"\u1f00\u03b9","\u1f89":"\u1f01\u03b9","\u1f8a":"\u1f02\u03b9","\u1f8b":"\u1f03\u03b9","\u1f8c":"\u1f04\u03b9","\u1f8d":"\u1f05\u03b9","\u1f8e":"\u1f06\u03b9","\u1f8f":"\u1f07\u03b9","\u1f90":"\u1f20\u03b9","\u1f91":"\u1f21\u03b9","\u1f92":"\u1f22\u03b9","\u1f93":"\u1f23\u03b9","\u1f94":"\u1f24\u03b9","\u1f95":"\u1f25\u03b9","\u1f96":"\u1f26\u03b9","\u1f97":"\u1f27\u03b9","\u1f98":"\u1f20\u03b9","\u1f99":"\u1f21\u03b9","\u1f9a":"\u1f22\u03b9","\u1f9b":"\u1f23\u03b9","\u1f9c":"\u1f24\u03b9","\u1f9d":"\u1f25\u03b9","\u1f9e":"\u1f26\u03b9","\u1f9f":"\u1f27\u03b9","\u1fa0":"\u1f60\u03b9","\u1fa1":"\u1f61\u03b9","\u1fa2":"\u1f62\u03b9","\u1fa3":"\u1f63\u03b9","\u1fa4":"\u1f64\u03b9","\u1fa5":"\u1f65\u03b9","\u1fa6":"\u1f66\u03b9","\u1fa7":"\u1f67\u03b9","\u1fa8":"\u1f60\u03b9","\u1fa9":"\u1f61\u03b9","\u1faa":"\u1f62\u03b9","\u1fab":"\u1f63\u03b9","\u1fac":"\u1f64\u03b9","\u1fad":"\u1f65\u03b9","\u1fae":"\u1f66\u03b9","\u1faf":"\u1f67\u03b9","\u1fb2":"\u1f70\u03b9","\u1fb3":"\u03b1\u03b9","\u1fb4":"\u03ac\u03b9","\u1fb6":"\u03b1\u0342","\u1fb7":"\u03b1\u0342\u03b9","\u1fbc":"\u03b1\u03b9","\u1fbe":"\u03b9","\u1fc2":"\u1f74\u03b9","\u1fc3":"\u03b7\u03b9","\u1fc4":"\u03ae\u03b9","\u1fc6":"\u03b7\u0342","\u1fc7":"\u03b7\u0342\u03b9","\u1fcc":"\u03b7\u03b9","\u1fd2":"\u03b9\u0308\u0300","\u1fd3":"\u03b9\u0308\u0301","\u1fd6":"\u03b9\u0342","\u1fd7":"\u03b9\u0308\u0342","\u1fe2":"\u03c5\u0308\u0300","\u1fe3":"\u03c5\u0308\u0301","\u1fe4":"\u03c1\u0313","\u1fe6":"\u03c5\u0342","\u1fe7":"\u03c5\u0308\u0342","\u1ff2":"\u1f7c\u03b9","\u1ff3":"\u03c9\u03b9","\u1ff4":"\u03ce\u03b9","\u1ff6":"\u03c9\u0342","\u1ff7":"\u03c9\u0342\u03b9","\u1ffc":"\u03c9\u03b9","\uab70":"\u13a0","\uab71":"\u13a1","\uab72":"\u13a2","\uab73":"\u13a3","\uab74":"\u13a4","\uab75":"\u13a5","\uab76":"\u13a6","\uab77":"\u13a7","\uab78":"\u13a8","\uab79":"\u13a9","\uab7a":"\u13aa","\uab7b":"\u13ab","\uab7c":"\u13ac","\uab7d":"\u13ad","\uab7e":"\u13ae","\uab7f":"\u13af","\uab80":"\u13b0","\uab81":"\u13b1","\uab82":"\u13b2","\uab83":"\u13b3","\uab84":"\u13b4","\uab85":"\u13b5","\uab86":"\u13b6","\uab87":"\u13b7","\uab88":"\u13b8","\uab89":"\u13b9","\uab8a":"\u13ba","\uab8b":"\u13bb","\uab8c":"\u13bc","\uab8d":"\u13bd","\uab8e":"\u13be","\uab8f":"\u13bf","\uab90":"\u13c0","\uab91":"\u13c1","\uab92":"\u13c2","\uab93":"\u13c3","\uab94":"\u13c4","\uab95":"\u13c5","\uab96":"\u13c6","\uab97":"\u13c7","\uab98":"\u13c8","\uab99":"\u13c9","\uab9a":"\u13ca","\uab9b":"\u13cb","\uab9c":"\u13cc","\uab9d":"\u13cd","\uab9e":"\u13ce","\uab9f":"\u13cf","\uaba0":"\u13d0","\uaba1":"\u13d1","\uaba2":"\u13d2","\uaba3":"\u13d3","\uaba4":"\u13d4","\uaba5":"\u13d5","\uaba6":"\u13d6","\uaba7":"\u13d7","\uaba8":"\u13d8","\uaba9":"\u13d9","\uabaa":"\u13da","\uabab":"\u13db","\uabac":"\u13dc","\uabad":"\u13dd","\uabae":"\u13de","\uabaf":"\u13df","\uabb0":"\u13e0","\uabb1":"\u13e1","\uabb2":"\u13e2","\uabb3":"\u13e3","\uabb4":"\u13e4","\uabb5":"\u13e5","\uabb6":"\u13e6","\uabb7":"\u13e7","\uabb8":"\u13e8","\uabb9":"\u13e9","\uabba":"\u13ea","\uabbb":"\u13eb","\uabbc":"\u13ec","\uabbd":"\u13ed","\uabbe":"\u13ee","\uabbf":"\u13ef","\ufb00":"ff","\ufb01":"fi","\ufb02":"fl","\ufb03":"ffi","\ufb04":"ffl","\ufb05":"st","\ufb06":"st","\ufb13":"\u0574\u0576","\ufb14":"\u0574\u0565","\ufb15":"\u0574\u056b","\ufb16":"\u057e\u0576","\ufb17":"\u0574\u056d"};
 /**
  * Systems Modeler - Main Application
  * Supports both desktop and mobile interfaces
@@ -353,13 +355,13 @@ const App = {
     initMobilePropertyEvents() {
         const nameInput = document.getElementById('prop-name-mobile');
         if (nameInput) {
-            nameInput.addEventListener('input', (e) => this.updateProperty('name', e.target.value));
+            nameInput.addEventListener('change', (e) => this.updateProperty('name', e.target.value));
         }
 
         const initialInput = document.getElementById('prop-initial-mobile');
         if (initialInput) {
-            initialInput.addEventListener('input',e=>{if(Number.isFinite(e.target.valueAsNumber))this.updateProperty('initial_value',e.target.valueAsNumber);});
-            initialInput.addEventListener('change', (e) => this.updateProperty('initial_value', parseFloat(e.target.value)));
+            initialInput.addEventListener('input', e => this.commitInitialInput(e.target));
+            initialInput.addEventListener('change', e => this.commitInitialInput(e.target, true));
         }
 
         const equationInput = document.getElementById('prop-equation-mobile');
@@ -411,27 +413,15 @@ const App = {
             <div class="mobile-results-container">
                 ${hasResults && Charts.results.random_seed != null ? `<p class="run-seed-receipt">Random seed: ${this.escapeHtml(String(Charts.results.random_seed))} · Use this in Settings to replay.</p>` : ''}
                 <div class="mobile-results-tabs" id="results-tabs-mobile">
-                    <button class="mobile-results-tab active" data-tab="chart-mobile">📊 Chart</button>
-                    <button class="mobile-results-tab" data-tab="analytics-mobile">📈 Stats</button>
-                    <button class="mobile-results-tab" data-tab="ai-mobile">🤖 AI</button>
+                    <button class="mobile-results-tab active" data-tab="chart-mobile">Chart</button>
+                    <button class="mobile-results-tab" data-tab="analytics-mobile">Stats</button>
+                    <button class="mobile-results-tab" data-tab="ai-mobile">AI</button>
                 </div>
 
                 <div class="mobile-tab-content active" id="tab-chart-mobile">
                     ${hasResults ? `
-                        <div class="mobile-chart-section">
-                            <label class="section-label">Variables (tap to toggle)</label>
-                            <div class="series-toolbar">
-                                <input type="search" class="series-search" id="series-search-mobile" aria-label="Filter chart series" placeholder="Filter series…">
-                                <div class="series-actions">
-                                    <button type="button" data-series-selection="stocks">Stocks</button>
-                                    <button type="button" data-series-selection="all">All</button>
-                                    <button type="button" data-series-selection="clear">Clear</button>
-                                </div>
-                                <p class="series-count" id="series-count-mobile" role="status"></p>
-                            </div>
-                            <div class="var-chips-container" id="var-chips-mobile">
-                                ${variableTogglesHTML || "<span class=\"no-vars\">No stocks in model</span>"}
-                            </div>
+                        <div class="chart-wrapper-mobile">
+                            <div class="chart-container" id="chart-container-mobile"></div>
                         </div>
                         
                         <div class="mobile-chart-section">
@@ -450,8 +440,20 @@ const App = {
                             </div>
                         </div>
                         
-                        <div class="chart-wrapper-mobile">
-                            <div class="chart-container" id="chart-container-mobile"></div>
+                        <div class="mobile-chart-section">
+                            <label class="section-label">Variables (tap to toggle)</label>
+                            <div class="series-toolbar">
+                                <input type="search" class="series-search" id="series-search-mobile" aria-label="Filter chart series" placeholder="Filter series…">
+                                <div class="series-actions">
+                                    <button type="button" data-series-selection="stocks">Stocks</button>
+                                    <button type="button" data-series-selection="all">All</button>
+                                    <button type="button" data-series-selection="clear">Clear</button>
+                                </div>
+                                <p class="series-count" id="series-count-mobile" role="status"></p>
+                            </div>
+                            <div class="var-chips-container" id="var-chips-mobile">
+                                ${variableTogglesHTML || "<span class=\"no-vars\">No stocks in model</span>"}
+                            </div>
                         </div>
                         
                         <div class="mobile-chart-section">
@@ -760,18 +762,25 @@ const App = {
      * Show a toast notification
      */
     showToast(message, type = 'success') {
-        // Simple alert for now - could be replaced with a toast UI
-        if (type === 'error') {
-            alert(message);
-        } else {
-            // For success, show a brief indicator
-            const indicator = document.getElementById('mode-indicator');
-            if (indicator) {
-                indicator.textContent = message;
-                indicator.classList.add('visible');
-                setTimeout(() => indicator.classList.remove('visible'), 2000);
+        document.querySelector('.studio-toast')?.remove();
+        const notice=document.createElement('div');notice.className='studio-toast';
+        notice.dataset.kind=type;notice.setAttribute('role',type==='error'?'alert':'status');
+        const text=document.createElement('span');text.textContent=message;
+        const dismiss=document.createElement('button');dismiss.type='button';dismiss.textContent='Dismiss';
+        const owner=document.querySelector('dialog[open]')||document.querySelector('.modal-overlay.active .modal')||document.body;
+        const previousFocus=document.activeElement;
+        const removeNotice=()=>{
+            const restore=notice.contains(document.activeElement);notice.remove();
+            if(restore){
+                const target=previousFocus?.isConnected&&previousFocus!==document.body&&owner.contains(previousFocus)
+                    ?previousFocus:owner.querySelector('button:not(:disabled),input:not(:disabled),select:not(:disabled)');
+                target?.focus();
             }
-        }
+        };
+        dismiss.setAttribute('aria-label','Dismiss notification');dismiss.addEventListener('click',removeNotice);
+        notice.append(text,dismiss);
+        owner.append(notice);
+        if(type!=='error')setTimeout(removeNotice,6000);
     },
 
     /**
@@ -1192,13 +1201,13 @@ const App = {
         // Bind property change events
         const nameInput = document.getElementById('prop-name');
         if (nameInput) {
-            nameInput.addEventListener('input', (e) => this.updateProperty('name', e.target.value));
+            nameInput.addEventListener('change', (e) => this.updateProperty('name', e.target.value));
         }
 
         const initialInput = document.getElementById('prop-initial');
         if (initialInput) {
-            initialInput.addEventListener('input',e=>{if(Number.isFinite(e.target.valueAsNumber))this.updateProperty('initial_value',e.target.valueAsNumber);});
-            initialInput.addEventListener('change', (e) => this.updateProperty('initial_value', parseFloat(e.target.value)));
+            initialInput.addEventListener('input', e => this.commitInitialInput(e.target));
+            initialInput.addEventListener('change', e => this.commitInitialInput(e.target, true));
         }
 
         const equationInput = document.getElementById('prop-equation');
@@ -1220,18 +1229,181 @@ const App = {
     /**
      * Update a property of the selected element
      */
+    propertyInputError(message) {
+        if (typeof this.showToast === 'function') this.showToast(message, 'error');
+        else alert(message);
+    },
+
+    restorePropertyInputs(property, element) {
+        const ids = property === 'name' ? ['prop-name','prop-name-mobile'] :
+            ['prop-initial','prop-initial-mobile'];
+        for (const id of ids) {
+            const input = document.getElementById(id);
+            if (input) {
+                input.value = element?.[property] ?? '';
+                input.setCustomValidity?.('');
+            }
+        }
+    },
+
+    commitInitialInput(input, final = false) {
+        const value = input.valueAsNumber;
+        if (input.value.trim() === '' || !Number.isFinite(value)) {
+            input.setCustomValidity?.('Enter a finite initial value.');
+            if (final) {
+                this.restorePropertyInputs('initial_value', this.getSelectedElement());
+                this.propertyInputError('Initial value was not changed. Enter a finite number.');
+            }
+            return false;
+        }
+        input.setCustomValidity?.('');
+        return this.updateProperty('initial_value', value);
+    },
+
+    identifierKey(name) {
+        const folded = Array.from(String(name).normalize('NFC'),
+            c => AppRenameCasefold[c] ?? c.toLowerCase()).join('');
+        return folded.replace(/[ _\n\u00a0]+/g, '_')
+            .replace(/[^\p{L}\p{N}_]/gu, '_').replace(/_+/g, '_');
+    },
+
+    // Supported scalar syntax with exact source spans; never global text replace.
+    renameEquationReferences(equation, oldName, newName, tableNames = []) {
+        const source = String(equation || ''), tokens = [];
+        const oldKey = this.identifierKey(oldName);
+        const tableKeys = new Set(tableNames.map(name => this.identifierKey(name)));
+        const keywords = new Set(['IF','THEN','ELSE','AND','OR','NOT','TRUE','FALSE']);
+        const builtins = new Set(('SIN COS TAN ASIN ACOS ATAN ATAN2 SIGN EXP LOG LN LOG10 SQRT ABS MIN MAX POW FLOOR CEIL ROUND MOD IF IF_THEN_ELSE RANDOM RANDOM_UNIFORM NORMAL RANDOM_NORMAL STEP PULSE RAMP LOOKUP WITH_LOOKUP DELAY DELAY_FIXED DELAY1 DELAY3 DELAY_N DELAYN SMOOTH SMOOTH3 SMOOTH_N SMTH1 SMTH3 SMTHN').split(' '));
+        let at = 0;
+        while (at < source.length) {
+            const start = at, c = source[at];
+            if (/\s/u.test(c)) { at++; continue; }
+            if (c === '{') {
+                const end = source.indexOf('}', at + 1);
+                if (end < 0) throw new Error('An equation has an unclosed comment.');
+                at = end + 1; continue;
+            }
+            if (c === '"' || c === "'") {
+                const quote = c; at++; let closed = false;
+                while (at < source.length) {
+                    if (source[at] === '\\') { at += 2; continue; }
+                    if (source[at++] === quote) { closed = true; break; }
+                }
+                if (!closed) throw new Error('An equation has an unclosed quoted name or string.');
+                const raw = source.slice(start, at);
+                if (quote === '"') {
+                    if (/\\(?!["n\\])/.test(raw)) throw new Error('An equation uses an unsupported quoted-name escape.');
+                    let value;
+                    try { value = JSON.parse(raw); }
+                    catch { throw new Error('An equation has an invalid quoted name.'); }
+                    tokens.push({kind:'name', value, start, end:at, quoted:true});
+                } else tokens.push({kind:'string',value:raw,start,end:at});
+                continue;
+            }
+            const number = source.slice(at).match(/^(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?/);
+            if (number) { at += number[0].length; tokens.push({kind:'number',value:number[0],start,end:at}); continue; }
+            const identifier = source.slice(at).match(/^[\p{L}_\p{N}$][\p{L}\p{N}_$\p{M}]*/u);
+            if (identifier) { at += identifier[0].length; tokens.push({kind:'name',value:identifier[0],start,end:at,quoted:false}); continue; }
+            const operator = source.slice(at).match(/^(?:\*\*|\/\/|<=|>=|<>|!=|==|[()[\],+\-*/^%=<>])/);
+            if (!operator) throw new Error('An equation uses unsupported syntax near “' + source.slice(at,at+12) + '”. Rename was cancelled.');
+            at += operator[0].length; tokens.push({kind:'op',value:operator[0],start,end:at});
+        }
+        const edits = [], stack = [];
+        let previous = null;
+        for (let i = 0; i < tokens.length; i++) {
+            const token=tokens[i], next=tokens[i+1], upper=token.value.toUpperCase();
+            if (token.kind === 'op' && (token.value === '(' || token.value === '[')) {
+                const functionName = previous?.kind === 'name' ? previous.value.toUpperCase() : null;
+                stack.push({close:token.value === '(' ? ')' : ']', functionName, argument:0});
+            } else if (token.kind === 'op' && (token.value === ')' || token.value === ']')) {
+                if (stack.pop()?.close !== token.value) throw new Error('An equation has unmatched brackets. Rename was cancelled.');
+            } else if (token.kind === 'op' && token.value === ',') {
+                if (stack.length) stack[stack.length-1].argument++;
+            } else if (token.kind === 'name' && this.identifierKey(token.value) === oldKey &&
+                       (token.quoted || !keywords.has(upper))) {
+                let tableArgument = false;
+                for (let j=stack.length-1;j>=0;j--) {
+                    if (stack[j].functionName) {
+                        tableArgument = stack[j].functionName === 'LOOKUP' && stack[j].argument === 0;
+                        break;
+                    }
+                }
+                if (tableArgument && !tableKeys.has(oldKey))
+                    throw new Error('“' + oldName + '” is used as an undeclared lookup table. Resolve that ambiguity before renaming.');
+                if (!tableArgument) {
+                    if (next?.value === '[') throw new Error('Array references cannot be safely renamed by this scalar editor.');
+                    if (next?.value === '(') {
+                        if (!tableKeys.has(oldKey) && !builtins.has(upper))
+                            throw new Error('“' + oldName + '” is also used as a function. Resolve that ambiguity before renaming.');
+                    } else edits.push({start:token.start,end:token.end,value:JSON.stringify(newName)});
+                }
+            }
+            previous=token;
+        }
+        if (stack.length) throw new Error('An equation has unclosed brackets. Rename was cancelled.');
+        let result=source;
+        for (const edit of edits.reverse()) result=result.slice(0,edit.start)+edit.value+result.slice(edit.end);
+        return result;
+    },
+
+    renameElement(element, requestedName) {
+        const name=String(requestedName).trim(), oldName=element.name;
+        if (name === oldName) return;
+        const key=this.identifierKey(name), oldKey=this.identifierKey(oldName);
+        const elements=[...(this.model.stocks||[]),...(this.model.flows||[]),...(this.model.variables||[])];
+        if (!name || !key || /[\u0000-\u001f]/.test(name)) throw new Error('Enter a nonempty name without control characters.');
+        if (['time','dt','time_step'].includes(key)) throw new Error('TIME, DT and TIME_STEP are reserved simulation names.');
+        if (elements.some(other=>other!==element && this.identifierKey(other.name)===key))
+            throw new Error('That name is already used by another element, including case and spacing aliases.');
+        if (elements.some(other=>other!==element && this.identifierKey(other.name)===oldKey))
+            throw new Error('The old name is ambiguous. Resolve its existing duplicate definitions before renaming.');
+        const tableNames=(this.model.tables||[]).map(table=>table.name);
+        if (tableNames.some(table=>this.identifierKey(table)===key))
+            throw new Error('That name is already used by a lookup table.');
+        const ids=new Set(elements.map(item=>item.id));
+        if (elements.some(other=>other!==element && other.id===name))
+            throw new Error('That name is already used as another element ID.');
+        if (elements.some(other=>other!==element && other.id===oldName))
+            throw new Error('The old name also identifies another element ID. Resolve that ambiguity before renaming.');
+        const equations=elements.map(item=>({
+            item, equation:this.renameEquationReferences(item.equation,oldName,name,tableNames)
+        }));
+        const endpoints=[];
+        const renameReference=value=>!ids.has(value) && value===oldName ? name : value;
+        for (const flow of this.model.flows||[]) {
+            endpoints.push({item:flow,property:'from_stock',value:renameReference(flow.from_stock)});
+            endpoints.push({item:flow,property:'to_stock',value:renameReference(flow.to_stock)});
+        }
+        for (const connector of this.model.connectors||[]) {
+            endpoints.push({item:connector,property:'from_element',value:renameReference(connector.from_element)});
+            endpoints.push({item:connector,property:'to_element',value:renameReference(connector.to_element)});
+        }
+        for (const change of equations) if (change.item.equation !== undefined) change.item.equation=change.equation;
+        for (const change of endpoints) change.item[change.property]=change.value;
+        element.name=name;
+        for (const id of ['prop-equation','prop-equation-mobile','prop-name-equation','prop-name-mobile-equation']) {
+            const input=document.getElementById(id);
+            if (input) input.value=element.equation || '';
+        }
+    },
+
     updateProperty(property, value) {
         const element = this.getSelectedElement();
-        if (property === 'initial_value' && !Number.isFinite(value)) {
-            alert('Initial value must be a finite number.');
-            this.updatePropertiesPanel();
-            return;
+        if (!element) return false;
+        try {
+            if (property === 'initial_value' && !Number.isFinite(value))
+                throw new Error('Initial value must be a finite number.');
+            if (property === 'name') this.renameElement(element,value);
+            else element[property]=value;
+        } catch (error) {
+            this.restorePropertyInputs(property,element);
+            this.propertyInputError(error.message);
+            return false;
         }
-        if (element) {
-            element[property] = value;
-            if (typeof Simulation !== 'undefined') Simulation.invalidateIfChanged();
-            Canvas.render();
-        }
+        if (property === 'name') this.restorePropertyInputs('name',element);
+        if (typeof Simulation !== 'undefined') Simulation.invalidateIfChanged();
+        Canvas.render();
+        return true;
     },
 
     /**
@@ -1411,11 +1583,15 @@ const App = {
 
         // Update steps display when inputs change
         const updateSteps = () => {
-            const start = parseFloat(startInput.value) || 0;
-            const end = parseFloat(endInput.value) || 100;
-            const dt = parseFloat(dtInput.value) || 0.25;
+            const start = startInput.valueAsNumber;
+            const end = endInput.valueAsNumber;
+            const dt = dtInput.valueAsNumber;
+            if (![start,end,dt].every(Number.isFinite) || dt <= 0 || end <= start) {
+                stepsInfo.textContent = 'Steps: — · enter a valid time range and positive step';
+                return;
+            }
             const steps = Math.ceil((end - start) / dt);
-            stepsInfo.textContent = `Steps: ${steps}`;
+            stepsInfo.textContent = `Steps: ${steps}${steps > 10000 ? ' · exceeds the 10,000-step limit' : ''}`;
         };
 
         // Sync inputs with current model settings

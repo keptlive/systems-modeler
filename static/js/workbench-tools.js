@@ -118,7 +118,7 @@ const WorkbenchTools = {
     },
     open() {
         if(this.dialog.open){this.input.focus();return;}
-        if(document.querySelector('dialog[open]'))return;
+        if(document.querySelector('dialog[open], .modal-overlay.active, .library-modal.open'))return;
         this.opener=document.activeElement;this.input.value='';this.render();this.dialog.showModal();this.input.focus();
     },
     render() {

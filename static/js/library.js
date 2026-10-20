@@ -106,17 +106,17 @@ const Library = {
         modal.innerHTML = `
             <div class="library-content">
                 <div class="library-header">
-                    <h2>📚 Model Library</h2>
+                    <h2>Model Library</h2>
                     <span class="library-count" id="library-count">Loading...</span>
                     <button class="library-close" title="Close">&times;</button>
                 </div>
                 
                 <div class="library-controls">
-                    <input type="text" id="library-search" placeholder="Search models..." class="library-search">
-                    <select id="library-category" class="library-category">
+                    <input type="text" id="library-search" placeholder="Search models..." aria-label="Search model library" class="library-search">
+                    <select id="library-category" class="library-category" aria-label="Model category">
                         <option value="all">All Categories</option>
                     </select>
-                    <select id="library-sort" class="library-sort">
+                    <select id="library-sort" class="library-sort" aria-label="Sort models">
                         <option value="name">A-Z</option>
                         <option value="category">Category</option>
                     </select>

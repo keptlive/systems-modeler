@@ -1,0 +1,11 @@
+# Studio direction — 1.6
+
+The brief is a professional systems-modeling workspace whose diagram is legible before a user needs to open properties. The 1.5 baseline retains New, Save, Import, Export, Library, saved models, Help, agent connection, optional server AI, all manual editing tools, inspection, settings, run, chart modes, analytics, scenarios, exports and mobile panels. None of those paths is removed.
+
+Baseline review found solid high-contrast diagram shapes with very short truncated names, arrows buried under nodes, double padding narrowing chat to a column, a hidden empty-properties hint, inconsistent emoji controls and several competing border/radius styles. The desktop baseline is `live-v150-workbench.png` in the task evidence folder; phone baseline is `mobile-v150-results.png`.
+
+The selected direction is a technical drafting studio: matte navy surfaces, ink-blue stocks, lavender material flows, amber variables, fine dependency curves, restrained chrome and readable text. Typography uses the existing local system font stack with no new network dependency. Controls use one 24-unit SVG stroke family. No new framework or generic component replacement is needed.
+
+The center remains the dominant working surface. Panel headers and settings use compact secondary typography. Stock type captions and multiline names provide hierarchy. Shape, text and line style carry meaning alongside color. Existing element coordinates and equations remain unchanged by the redesign. Assistant content remains visible by default; a labeled, reversible panel toggle gives users more diagram space. Resize changes viewport dimensions only.
+
+The shell pass covers header, toolbar, assistant, property fields and empty state, results controls, series controls, library cards, settings, agent dialog and mobile sheets. Diagram rendering is a separate stylesheet and renderer change, with its geometry and interaction review in DIAGRAM-DESIGN-1.6.md. Acceptance requires actual desktop/phone screenshots, long names, keyboard selection, draft editing, errors, library and settings, plus existing frontend and simulation checks. Viewport emulation is not a claim of physical iOS/Android or cross-engine coverage.

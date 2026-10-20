@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.6.0 — 2026-10-20
+
+- Refine stocks, variables, flow valves, dependency curves, wrapped labels, selection, hit zones and fit geometry; preserve saved diagram positions and equations.
+- Polish the workbench controls, assistant, properties, results, library and mobile sheets. Put the phone chart first; add a reversible assistant toggle and expandable final values.
+- Commit element renames atomically across supported scalar references and named endpoints; reject ambiguity. Preserve valid initial values through blank/nonfinite drafts.
+- Restore six original lookup tables across three teaching models. Compare complete source trajectories and the original Stella CSV while retaining source warnings and unsupported-constraint limits.
+- Public default runs: 944 completed / 134 failed. Full regression: 595 tests, 18 preservation subtests, three explicit identifier-compatibility expected failures. Core engine unchanged; all 44 advertised names retain advanced regression coverage.
+
 ## 1.5.0 — 2026-10-20
 
 - Verify all 44 advertised functions and aliases with 218 advanced tests, including independent delay, pulse, stochastic and nonlinear reference trajectories. Separate static corpus coverage, actual function invocation and scientific validity.

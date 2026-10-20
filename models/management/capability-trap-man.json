@@ -1,7 +1,7 @@
 {
   "id": "capability-trap-man",
   "name": "Capability Trap",
-  "description": "A model demonstrating the 'capability trap' - a common management archetype where organizations sacrifice long-term capability for short-term performance. When faced with pressure, managers often 'work harder' rather than 'work smarter', reducing time spent on improvement activities. This creates a reinforcing feedback loop: reduced capability leads to lower performance, which increases pressure, further reducing improvement time. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "description": "Restored PySD-Cookbook Capability Trap teaching equations and three original clamped graphical functions. All original local nodes, inputs and layout are retained. The source itself warns that its working-time formulation is not quite correct and conflates pressures and improvement time; this caveat is retained rather than silently corrected. Source-equation reconstruction is not empirical calibration or scientific certification.",
   "stocks": [
     {
       "id": "stock-capability",
@@ -111,7 +111,7 @@
     {
       "id": "var-time-spent-working",
       "name": "Time Spent Working",
-      "equation": "MIN(normal_time_spent_working * LOOKUP(pressure_to_do_work, influence_of_pressure_on_work_time_table), maximum_work_time - time_spent_on_improvement)",
+      "equation": "MIN(Normal_Time_Spent_Working * \"Influence of Pressure on Work Time (Table)\", Maximum_Work_Time - Time_Spent_on_Improvement)",
       "position": {
         "x": 550,
         "y": 80
@@ -120,7 +120,7 @@
     {
       "id": "var-time-spent-on-improvement",
       "name": "Time Spent on Improvement",
-      "equation": "normal_time_spent_on_improvement * LOOKUP(pressure_to_improve_capability, influence_of_capability_pressure_table) * LOOKUP(pressure_to_do_work, influence_of_work_pressure_on_improvement_table)",
+      "equation": "Normal_Time_Spent_on_Improvement * \"Influence of Capability Pressure on Improvement Time (Table)\" * \"Influence of Work Pressure on Improvement Time (Table)\"",
       "position": {
         "x": 700,
         "y": 80
@@ -219,7 +219,7 @@
     {
       "id": "var-influence-of-pressure-on-work-time-table",
       "name": "Influence of Pressure on Work Time (Table)",
-      "equation": "0",
+      "equation": "LOOKUP(Work_Pressure_Curve, Pressure_to_Do_Work)",
       "position": {
         "x": 100,
         "y": 320
@@ -228,7 +228,7 @@
     {
       "id": "var-influence-of-capability-pressure-on-improvement-time-table",
       "name": "Influence of Capability Pressure on Improvement Time (Table)",
-      "equation": "0",
+      "equation": "LOOKUP(Capability_Pressure_Curve, Pressure_to_Improve_Capability)",
       "position": {
         "x": 250,
         "y": 320
@@ -237,7 +237,7 @@
     {
       "id": "var-influence-of-work-pressure-on-improvement-time-table",
       "name": "Influence of Work Pressure on Improvement Time (Table)",
-      "equation": "0",
+      "equation": "LOOKUP(Improvement_Work_Pressure_Curve, Pressure_to_Do_Work)",
       "position": {
         "x": 400,
         "y": 320
@@ -358,6 +358,94 @@
   },
   "created_at": "2026-01-11T20:04:50.822835Z",
   "updated_at": "2026-01-11T20:04:50.822835Z",
-  "source": "https://doi.org/10.1287/orsc.12.5.582.10167",
-  "reference": "Repenning NP, Sterman JD. Nobody Ever Gets Credit for Fixing Problems that Never Happened: Creating and Sustaining Process Improvement. California Management Review. 2001."
+  "source": "https://raw.githubusercontent.com/SDXorg/PySD-Cookbook/d7ebddadad9cd87cf796b9b6031ea2b5c45da4c4/source/models/Capability_Trap/Capability%20Trap.mdl",
+  "reference": "SDXorg/PySD-Cookbook. Capability Trap.mdl, revision d7ebddadad9cd87cf796b9b6031ea2b5c45da4c4. Source teaching implementation; published-paper identity/calibration not established.",
+  "tables": [
+    {
+      "name": "Work Pressure Curve",
+      "points": [
+        [
+          0,
+          0.75
+        ],
+        [
+          0.75,
+          0.75
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1.25,
+          1.25
+        ],
+        [
+          2,
+          1.5
+        ],
+        [
+          10,
+          1.5
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "Capability Pressure Curve",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0.5,
+          0
+        ],
+        [
+          0.75,
+          0.5
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1.5
+        ],
+        [
+          5,
+          1.5
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "Improvement Work Pressure Curve",
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1.5,
+          0.75
+        ],
+        [
+          2,
+          0.25
+        ],
+        [
+          5,
+          0
+        ]
+      ],
+      "interpolation": "continuous"
+    }
+  ]
 }

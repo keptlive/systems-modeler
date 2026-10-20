@@ -1,7 +1,7 @@
 {
   "id": "hares-and-lynxes-population-model-eco",
   "name": "Hares and Lynxes Population Model",
-  "description": "A modular predator-prey model demonstrating the classic snowshoe hare and Canadian lynx population cycles. The model uses graphical functions to capture non-linear relationships between hare density and both lynx mortality and kill rates. Based on the classic Lotka-Volterra dynamics but with more realistic functional responses. Reference: Lotka, A. J. (1920). Analytical note on certain rhythmic relations in organic systems. PNAS, 6(7), 410-415. DOI: https://doi.org/10.1073/pnas.6.7.410",
+  "description": "Source-backed scalar flattening of Bobby Powers's modular Stella hares/lynxes teaching example. Restores the two original clamped graphical functions; the preserved Euler default matches the original 25-row canonical output. The original nonnegative stock/flow constraints are not represented by this scalar engine, so arbitrary scenarios are not a complete semantic reproduction. Not field-calibrated ecological prediction.",
   "stocks": [
     {
       "id": "stock-hares",
@@ -28,7 +28,7 @@
     {
       "id": "flow-hare-births",
       "name": "Hare Births",
-      "equation": "hares * birth_fraction_hares",
+      "equation": "Hares * \"Birth Fraction (Hares)\"",
       "from_stock": null,
       "to_stock": "stock-hares",
       "position": {
@@ -50,7 +50,7 @@
     {
       "id": "flow-lynx-births",
       "name": "Lynx Births",
-      "equation": "lynxes * birth_fraction_lynxes",
+      "equation": "Lynxes * \"Birth Fraction (Lynxes)\"",
       "from_stock": null,
       "to_stock": "stock-lynxes",
       "position": {
@@ -61,7 +61,7 @@
     {
       "id": "flow-lynx-deaths",
       "name": "Lynx Deaths",
-      "equation": "death_fraction_lynxes * lynxes",
+      "equation": "\"Death Fraction (Lynxes)\" * Lynxes",
       "from_stock": "stock-lynxes",
       "to_stock": null,
       "position": {
@@ -72,7 +72,7 @@
     {
       "id": "flow-lynx-harvest",
       "name": "Lynx Harvest",
-      "equation": "PULSE(size_of_one_time_lynx_harvest, 4, 0)",
+      "equation": "PULSE(\"Size of One-Time Lynx Harvest\", 4, 0)",
       "from_stock": "stock-lynxes",
       "to_stock": null,
       "position": {
@@ -121,7 +121,7 @@
     {
       "id": "var-hares-killed-per-lynx",
       "name": "Hares Killed per Lynx",
-      "equation": "LOOKUP(hare_density, hares_killed_table)",
+      "equation": "Hares_Killed_Lookup_Table",
       "position": {
         "x": 700,
         "y": 80
@@ -130,7 +130,7 @@
     {
       "id": "var-hares-killed-lookup-table",
       "name": "Hares Killed Lookup Table",
-      "equation": "0",
+      "equation": "LOOKUP(Hares_Killed_Curve, Hare_Density)",
       "position": {
         "x": 100,
         "y": 160
@@ -139,7 +139,7 @@
     {
       "id": "var-death-fraction-lynxes",
       "name": "Death Fraction (Lynxes)",
-      "equation": "LOOKUP(hare_density, death_fraction_table)",
+      "equation": "Death_Fraction_Lookup_Table",
       "position": {
         "x": 250,
         "y": 160
@@ -148,7 +148,7 @@
     {
       "id": "var-death-fraction-lookup-table",
       "name": "Death Fraction Lookup Table",
-      "equation": "0",
+      "equation": "LOOKUP(Lynx_Mortality_Curve, Hare_Density)",
       "position": {
         "x": 400,
         "y": 160
@@ -238,6 +238,108 @@
   },
   "created_at": "2026-01-11T20:04:50.735736Z",
   "updated_at": "2026-01-11T20:04:50.735736Z",
-  "source": "https://github.com/SDXorg/test-models",
-  "reference": "SDXorg Test Models Repository"
+  "source": "https://raw.githubusercontent.com/SDXorg/test-models/21aab02739dc5187bc9564e4d3de14e575905d2f/samples/bpowers-hares_and_lynxes_modules/model.stmx",
+  "reference": "Powers, B. (2015). Hares and lynxes modular Stella model, SDXorg/test-models, revision 21aab02739dc5187bc9564e4d3de14e575905d2f. Default canonical output from Stella 10.0.6.",
+  "tables": [
+    {
+      "name": "Hares Killed Curve",
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          50.0,
+          50.0
+        ],
+        [
+          100.0,
+          100.0
+        ],
+        [
+          150.0,
+          150.0
+        ],
+        [
+          200.0,
+          200.0
+        ],
+        [
+          250.0,
+          250.0
+        ],
+        [
+          300.0,
+          300.0
+        ],
+        [
+          350.0,
+          350.0
+        ],
+        [
+          400.0,
+          400.0
+        ],
+        [
+          450.0,
+          450.0
+        ],
+        [
+          500.0,
+          500.0
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "Lynx Mortality Curve",
+      "points": [
+        [
+          0.0,
+          1.0
+        ],
+        [
+          10.0,
+          0.606530659712633
+        ],
+        [
+          20.0,
+          0.367879441171442
+        ],
+        [
+          30.0,
+          0.22313016014843
+        ],
+        [
+          40.0,
+          0.135335283236613
+        ],
+        [
+          50.0,
+          0.0820849986238988
+        ],
+        [
+          60.0,
+          0.0497870683678639
+        ],
+        [
+          70.0,
+          0.0301973834223185
+        ],
+        [
+          80.0,
+          0.0183156388887342
+        ],
+        [
+          90.0,
+          0.0111089965382423
+        ],
+        [
+          100.0,
+          0.00673794699908547
+        ]
+      ],
+      "interpolation": "continuous"
+    }
+  ]
 }

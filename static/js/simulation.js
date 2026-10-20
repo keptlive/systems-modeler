@@ -223,7 +223,7 @@ const Simulation = {
         let html = `
             <p><strong>Time:</strong> ${startTime} → ${endTime} (${timeSteps} pts, nominal dt=${dt})</p>
             <p><strong>Variables:</strong> ${varNames.length}</p>
-            <div style="margin-top: 0.5rem; font-size: 0.8rem;">
+            <details class="final-values"><summary>Final values · ${varNames.length} series</summary><div class="final-values-list">
         `;
 
         varNames.forEach((name, i) => {
@@ -238,7 +238,7 @@ const Simulation = {
             `;
         });
 
-        html += '</div>';
+        html += '</div></details>';
         if (this.resultsContent) this.resultsContent.innerHTML = html;
     },
 

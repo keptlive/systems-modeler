@@ -1,7 +1,7 @@
 {
   "id": "rookies-and-experts-workforce-model-man",
   "name": "Rookies and Experts Workforce Model",
-  "description": "A workforce dynamics model showing how organizations balance hiring rookies with the need for expert supervision. Demonstrates the organizational learning challenge where new hires require supervision from experts, reducing expert capacity for productive work. Features feedback between task backlog pressure and hiring decisions. Reference: Cachon, G., & Terwiesch, C. (2012). Matching Supply with Demand. McGraw-Hill. Source: https://www.mheducation.com/",
+  "description": "Restored PySD-Cookbook Rookies Demo Model teaching equations and its original clamped hiring-response table. Source punctuation in hour variables is mapped explicitly. The source directly limits task completion rate by backlog, a dimensional assumption retained for fidelity; no extra positivity or hiring rules are invented. Constants, units and organizational realism remain uncalibrated.",
   "stocks": [
     {
       "id": "stock-rookies",
@@ -38,7 +38,7 @@
     {
       "id": "flow-hiring",
       "name": "Hiring",
-      "equation": "Effect_of_Pressure_on_Hiring(Pressure_to_Hire)",
+      "equation": "Effect_of_Pressure_on_Hiring",
       "from_stock": null,
       "to_stock": "stock-rookies",
       "position": {
@@ -131,7 +131,7 @@
     {
       "id": "var-effect-of-pressure-on-hiring",
       "name": "Effect of Pressure on Hiring",
-      "equation": "LOOKUP(Pressure_to_Hire, [[-1,0],[-0.25,0],[0,2.5],[0.5,15],[1,20],[2,25],[3,25]])",
+      "equation": "LOOKUP(Hiring_Response_Curve, Pressure_to_Hire)",
       "position": {
         "x": 700,
         "y": 80
@@ -212,7 +212,7 @@
     {
       "id": "var-rookie-hours-on-task-per-week",
       "name": "Rookie-Hours on Task per Week",
-      "equation": "Rookie_Hours_Worked_per_Week",
+      "equation": "\"Rookie-Hours Worked per Week\"",
       "position": {
         "x": 550,
         "y": 240
@@ -221,7 +221,7 @@
     {
       "id": "var-expert-hours-on-task-per-week",
       "name": "Expert-Hours on Task per Week",
-      "equation": "Expert_Hours_Worked_per_Week - Expert_Hours_Spent_on_Rookie_Supervision_per_Week",
+      "equation": "\"Expert-Hours Worked per Week\" - \"Expert-Hours Spent on Rookie Supervision per Week\"",
       "position": {
         "x": 700,
         "y": 240
@@ -230,7 +230,7 @@
     {
       "id": "var-rookie-task-completion",
       "name": "Rookie Task Completion",
-      "equation": "Rookie_Hours_on_Task_per_Week / Rookie_Time_per_Task",
+      "equation": "\"Rookie-Hours on Task per Week\" / Rookie_Time_per_Task",
       "position": {
         "x": 100,
         "y": 320
@@ -239,7 +239,7 @@
     {
       "id": "var-expert-task-completion",
       "name": "Expert Task Completion",
-      "equation": "Expert_Hours_on_Task_per_Week / Expert_Time_per_Task",
+      "equation": "\"Expert-Hours on Task per Week\" / Expert_Time_per_Task",
       "position": {
         "x": 250,
         "y": 320
@@ -370,6 +370,42 @@
   },
   "created_at": "2026-01-11T20:04:50.824724Z",
   "updated_at": "2026-01-11T20:04:50.824724Z",
-  "source": "https://doi.org/10.1287/mnsc.35.3.321",
-  "reference": "Sterman JD. Business Dynamics - Workforce Management Model"
+  "source": "https://raw.githubusercontent.com/SDXorg/PySD-Cookbook/d7ebddadad9cd87cf796b9b6031ea2b5c45da4c4/source/models/Rookies_and_Experts/Rookies%20Demo%20Model.mdl",
+  "reference": "SDXorg/PySD-Cookbook. Rookies Demo Model.mdl, revision d7ebddadad9cd87cf796b9b6031ea2b5c45da4c4. Source teaching implementation; published-paper identity/calibration not established.",
+  "tables": [
+    {
+      "name": "Hiring Response Curve",
+      "points": [
+        [
+          -1,
+          0
+        ],
+        [
+          -0.25,
+          0
+        ],
+        [
+          0,
+          2.5
+        ],
+        [
+          0.5,
+          15
+        ],
+        [
+          1,
+          20
+        ],
+        [
+          2,
+          25
+        ],
+        [
+          3,
+          25
+        ]
+      ],
+      "interpolation": "continuous"
+    }
+  ]
 }

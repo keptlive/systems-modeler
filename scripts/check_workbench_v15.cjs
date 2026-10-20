@@ -40,3 +40,14 @@ sandbox.App.isMobile=true;
 tools.commands().find(x=>x.label==='A < B').run();
 assert.equal(focused,'prop-name-mobile');
 console.log('Exact-label ranking, stable empty-query order and mobile property focus passed.');
+// Opening a command must not silently stack over a draft settings/library modal.
+let opened=0,searchFocused=0,rendered=0;
+tools.dialog={open:false,showModal(){this.open=true;opened++;}};
+tools.input={value:'old query',focus(){searchFocused++;}};tools.render=()=>rendered++;
+for(const state of ['dialog[open]','.modal-overlay.active','.library-modal.open']){
+ sandbox.document.querySelector=selector=>selector.includes(state)?{}:null;
+ tools.open();assert.equal(opened,0,state);
+}
+sandbox.document.querySelector=()=>null;
+tools.open();assert.equal(opened,1);assert.equal(tools.input.value,'');assert.equal(rendered,1);assert.equal(searchFocused,1);
+console.log('Command finder preserves active modal boundaries and opens normally otherwise.');
