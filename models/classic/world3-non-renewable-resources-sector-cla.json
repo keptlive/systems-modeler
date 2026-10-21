@@ -1,7 +1,7 @@
 {
   "id": "world3-non-renewable-resources-sector-cla",
   "name": "World3 Non-Renewable Resources Sector",
-  "description": "The non-renewable resource dynamics sector from the World3 model. Models resource extraction, depletion, and the effect of declining resource availability on the economy. Reference: IRENA Renewable Energy Statistics. Source: https://www.irena.org/",
+  "description": "World3 nonrenewable resource sector reconstructed from the executable PyWorld3 resource.py standalone-sector example (p.405 of Dynamics of Growth in a Finite World). Includes its industrial-capital feedback, exponential exogenous population and clamped PCRUM/FCAOR tables. This is the isolated-sector demonstration, not the fully coupled World3 standard run. Population and capital constants replace the generated fixed-population closure; horizon and existing element geometry are retained.",
   "stocks": [
     {
       "id": "stock-non-renewable-resources",
@@ -11,7 +11,19 @@
       "position": {
         "x": 150,
         "y": 200
-      }
+      },
+      "units": "resource units"
+    },
+    {
+      "id": "v19-industrial-capital",
+      "name": "Industrial Capital",
+      "position": {
+        "x": 260,
+        "y": 600
+      },
+      "initial_value": 210000000000.0,
+      "equation": "",
+      "units": "dollars"
     }
   ],
   "flows": [
@@ -24,14 +36,39 @@
       "position": {
         "x": 250,
         "y": 200
-      }
+      },
+      "units": "resource units/year"
+    },
+    {
+      "id": "v19-capital-investment",
+      "name": "Industrial Capital Investment",
+      "position": {
+        "x": 260,
+        "y": 600
+      },
+      "equation": "Industrial_Output * (1 - 0.12 - 0.12 - 0.43)",
+      "from_stock": null,
+      "to_stock": "v19-industrial-capital",
+      "units": "dollars/year"
+    },
+    {
+      "id": "v19-capital-depreciation",
+      "name": "Industrial Capital Depreciation",
+      "position": {
+        "x": 420,
+        "y": 600
+      },
+      "equation": "Industrial_Capital / 14",
+      "from_stock": "v19-industrial-capital",
+      "to_stock": null,
+      "units": "dollars/year"
     }
   ],
   "variables": [
     {
       "id": "var-population",
       "name": "Population",
-      "equation": "3e9",
+      "equation": "1.65e9 * EXP(0.012 * (Time - 1900))",
       "position": {
         "x": 100,
         "y": 80
@@ -81,6 +118,26 @@
         "x": 100,
         "y": 160
       }
+    },
+    {
+      "id": "v19-industrial-output",
+      "name": "Industrial Output",
+      "position": {
+        "x": 1060,
+        "y": 600
+      },
+      "equation": "Industrial_Capital * (1 - Resource_Extraction_Capital_Requirement) / 3",
+      "units": "dollars/year"
+    },
+    {
+      "id": "v19-iopc",
+      "name": "Industrial Output Per Capita",
+      "position": {
+        "x": 100,
+        "y": 700
+      },
+      "equation": "Industrial_Output / Population",
+      "units": "dollars/person/year"
     }
   ],
   "connectors": [],
@@ -91,6 +148,100 @@
   },
   "created_at": "2026-01-11T20:04:50.697230Z",
   "updated_at": "2026-01-11T20:04:50.697230Z",
-  "source": "https://doi.org/10.1016/B978-0-12-850754-3.50020-2",
-  "reference": "Meadows DH, Meadows DL, Randers J, Behrens WW. The Limits to Growth. Universe Books, 1972."
+  "source": "https://raw.githubusercontent.com/cvanwynsberghe/pyworld3/cdfd0a8f3675c514f27ddc0e00c8d8bd4d1fefb8/pyworld3/resource.py",
+  "reference": "Meadows et al., Dynamics of Growth in a Finite World (1974), resource sector p.405; PyWorld3 standalone Resource, commit cdfd0a8f3675c514f27ddc0e00c8d8bd4d1fefb8.",
+  "tables": [
+    {
+      "name": "Resource_Usage_From_Industry",
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          200.0,
+          0.85
+        ],
+        [
+          400.0,
+          2.6
+        ],
+        [
+          600.0,
+          4.4
+        ],
+        [
+          800.0,
+          5.4
+        ],
+        [
+          1000.0,
+          6.2
+        ],
+        [
+          1200.0,
+          6.8
+        ],
+        [
+          1400.0,
+          7.0
+        ],
+        [
+          1600.0,
+          7.0
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "Resource_Extraction_Fraction",
+      "points": [
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.1,
+          0.9
+        ],
+        [
+          0.2,
+          0.7
+        ],
+        [
+          0.3,
+          0.5
+        ],
+        [
+          0.4,
+          0.2
+        ],
+        [
+          0.5,
+          0.1
+        ],
+        [
+          0.6,
+          0.05
+        ],
+        [
+          0.7,
+          0.05
+        ],
+        [
+          0.8,
+          0.05
+        ],
+        [
+          0.9,
+          0.05
+        ],
+        [
+          1.0,
+          0.05
+        ]
+      ],
+      "interpolation": "continuous"
+    }
+  ]
 }

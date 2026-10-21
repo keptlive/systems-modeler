@@ -1,11 +1,14 @@
 """Runtime failure causes without evaluating extra branches or repairing inputs."""
 import math
+from pydantic import ValidationError
 from app.core.equations import EquationError, canonical_name
 
 
 def error_code(error):
     if getattr(error, "code", None):
         return error.code
+    if isinstance(error, ValidationError):
+        return "invalid_input"
     text = str(error)
     if isinstance(error, OverflowError):
         return "numeric_overflow"

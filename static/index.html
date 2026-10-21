@@ -27,8 +27,8 @@
     <meta name="twitter:title" content="Stock & Flow — Systems Dynamics Simulator">
     <meta name="twitter:description" content="Interactive systems dynamics simulator with AI-powered model generation, 1000+ pre-built models, and XMILE import/export.">
     <meta name="twitter:image" content="https://stockandflow.live/static/og-image.png">
-    <link rel="stylesheet" href="/static/css/style.css?v=20261020-10">
-    <link rel="stylesheet" href="/static/css/analytics.css?v=20261020-10">
+    <link rel="stylesheet" href="/static/css/style.css?v=20261021-19h2">
+    <link rel="stylesheet" href="/static/css/analytics.css?v=20261021-19h2">
     <script src="/static/vendor/d3.v7.min.js"></script>
     <script type="application/ld+json">
     {
@@ -70,7 +70,7 @@
       "screenshot": "https://stockandflow.live/static/og-image.png"
     }
     </script>
-<link rel="stylesheet" href="/static/css/workspace.css?v=20261020-10"><link rel="stylesheet" href="/static/css/polish.css?v=20261020-10"><link rel="stylesheet" href="/static/css/studio.css?v=20261020-10"><link rel="stylesheet" href="/static/css/diagram.css?v=20261020-10"><link rel="stylesheet" href="/static/css/analysis-studio.css?v=20261020-10">
+<link rel="stylesheet" href="/static/css/workspace.css?v=20261021-19h2"><link rel="stylesheet" href="/static/css/polish.css?v=20261021-19h2"><link rel="stylesheet" href="/static/css/studio.css?v=20261021-19h2"><link rel="stylesheet" href="/static/css/diagram.css?v=20261021-19h2"><link rel="stylesheet" href="/static/css/analysis-studio.css?v=20261021-19h2">
 </head>
 <body>
     <div class="app">
@@ -395,6 +395,7 @@
                     <label for="sim-dt">Time Step (dt)</label>
                     <input type="number" id="sim-dt" value="0.25" step="any" min="0.001">
                 </div>
+<p id="sim-period-note" class="settings-help" hidden></p>
 <div class="form-group"><label for="sim-method">Integration method</label><select id="sim-method"><option value="euler">Euler</option><option value="rk4">Runge–Kutta 4</option><option value="radau">Radau</option></select></div>
                 <div id="sim-adaptive-settings" hidden>
                     <p class="field-help">Radau chooses internal steps to meet error tolerances. The time step above controls recorded output. Use it for continuous differential equations with fast and slow dynamics; random, delay, step inputs, time-triggered branches and time-driven lookup tables are unsupported.</p>
@@ -425,15 +426,15 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/static/js/user-models.js?v=20261020-10"></script>
-    <script src="/static/js/library.js?v=20261020-10"></script>
-    <script src="/static/js/app.js?v=20261020-10"></script>
-    <script src="/static/js/canvas.js?v=20261020-10"></script>
-    <script src="/static/js/simulation.js?v=20261020-10"></script>
-    <script src="/static/js/llm-interface.js?v=20261020-10"></script>
-    <script src="/static/js/charts.js?v=20261020-10"></script>
-    <script src="/static/js/analytics.js?v=20261020-10"></script>
-    <script src="/static/js/ai-agent.js?v=20261020-10"></script>
+    <script src="/static/js/user-models.js?v=20261021-19h2"></script>
+    <script src="/static/js/library.js?v=20261021-19h2"></script>
+    <script src="/static/js/app.js?v=20261021-19h2"></script>
+    <script src="/static/js/canvas.js?v=20261021-19h2"></script>
+    <script src="/static/js/simulation.js?v=20261021-19h2"></script>
+    <script src="/static/js/llm-interface.js?v=20261021-19h2"></script>
+    <script src="/static/js/charts.js?v=20261021-19h2"></script>
+    <script src="/static/js/analytics.js?v=20261021-19h2"></script>
+    <script src="/static/js/ai-agent.js?v=20261021-19h2"></script>
     <script>
         // Initialize the application
         document.addEventListener('DOMContentLoaded', () => {
@@ -593,6 +594,8 @@
                             const chart = Object.create(Charts);
                             chart.container = chartContainer;
                             chart.render();
+                        } else if (chartContainer) {
+                            chartContainer.innerHTML = Simulation.lastError ? Simulation.failureHTML() : '<p class="analytics-placeholder">Run a simulation to see results</p>';
                         }
                     }
 
@@ -601,7 +604,9 @@
                             ? document.getElementById('analytics-section-fullscreen')
                             : document.getElementById('analytics-container-fullscreen');
                         const sourceAnalytics = document.getElementById('analytics-container');
-                        if (analyticsContainer && sourceAnalytics) {
+                        if (analyticsContainer && sourceAnalytics && tabId === 'combined' && Simulation.lastError) {
+                            analyticsContainer.replaceChildren();
+                        } else if (analyticsContainer && sourceAnalytics) {
                             const analysis = Object.create(Analytics);
                             analysis.container = analyticsContainer;
                             analysis.onFocusedSeriesChanged = name => { Analytics.focusedSeries = name; };
@@ -657,14 +662,14 @@
         };
     </script>
     <!-- Mobile Panel Expand/Collapse -->
-    <script src="/static/js/mobile-expand.js?v=20261020-10"></script>
-    <script src="/static/js/xmile-import.js?v=20261020-10"></script>
-    <script src="/static/js/xmile-download.js?v=20261020-10"></script>
-    <script src="/static/js/faq.js?v=20261020-10"></script>
-    <script src="/static/js/floating-title.js?v=20261020-10"></script>
+    <script src="/static/js/mobile-expand.js?v=20261021-19h2"></script>
+    <script src="/static/js/xmile-import.js?v=20261021-19h2"></script>
+    <script src="/static/js/xmile-download.js?v=20261021-19h2"></script>
+    <script src="/static/js/faq.js?v=20261021-19h2"></script>
+    <script src="/static/js/floating-title.js?v=20261021-19h2"></script>
 <nav id="cross-site-nav" aria-label="Stock &amp; Flow resources" style="position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;gap:20px;border-top:1px solid #26374c;">
     <a href="/guide" style="text-decoration:none;">Guide &amp; MCP</a>
     <a href="https://stockandflow.org" style="text-decoration:none;">Model Library</a>
 </nav>
-<script src="/static/js/validation.js?v=20261020-10"></script><script src="/static/js/workspace.js?v=20261020-10"></script><script src="/static/js/agent-workspace.js?v=20261020-10"></script><script src="/static/js/workbench-tools.js?v=20261020-10"></script><script src="/static/js/studio.js?v=20261020-10"></script></body>
+<script src="/static/js/validation.js?v=20261021-19h2"></script><script src="/static/js/workspace.js?v=20261021-19h2"></script><script src="/static/js/agent-workspace.js?v=20261021-19h2"></script><script src="/static/js/workbench-tools.js?v=20261021-19h2"></script><script src="/static/js/studio.js?v=20261021-19h2"></script></body>
 </html>

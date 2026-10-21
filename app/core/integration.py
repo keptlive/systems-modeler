@@ -3,7 +3,9 @@
 Invalid equations fail explicitly. No fallback engine or zero substitution.
 """
 import math
-from app.core.model import Model, TimeSettings, SimulationResult
+import sys
+from fractions import Fraction
+from app.core.model import Model, TimeSettings, SimulationResult, discrete_interval_count
 from app.core.limits import MAX_INTERVALS, MAX_ELEMENTS, MAX_RETAINED_VALUES, MAX_WORK_UNITS
 from app.core.failure_diagnostics import stalled_evaluation, capacity_error
 from app.core.equations import (EquationError, safe_eval, SimulationContext,
@@ -11,24 +13,49 @@ from app.core.equations import (EquationError, safe_eval, SimulationContext,
                                 RandomRuntime, stateful_derivatives, equation_features)
 
 
+def _rk4_increment(h, a, b, c, d):
+    # Divide weights before summation so 2*b cannot overflow. For subnormal
+    # rates, division could erase a contribution that a large h would restore;
+    # use a bounded four-term exact float combination in that exceptional case.
+    rates = (a,b,c,d)
+    if not any(0 < abs(value) < 6*sys.float_info.min for value in rates):
+        try:
+            return h * math.fsum((a/6,b/3,c/3,d/6))
+        except OverflowError:
+            pass
+    exact = sum((Fraction(value)*weight for value,weight in zip(rates,(1,2,2,1))),Fraction(0))
+    return float(Fraction(h)*exact/6)
+
+
 def simulation_context(model, t, dt, delay, smooth, random_runtime=None, input_time=None, input_snapshot=None):
     context = SimulationContext(t, dt, {table.name: table.to_list() for table in model.tables}, delay, smooth, random_runtime)
+    # A declared e/pi may be awaiting its initializer or a forward auxiliary.
+    # It must not temporarily fall back to the mathematical constant.
+    context.declared_names = {canonical_name(element.name)
+                              for element in [*model.stocks, *model.flows, *model.variables]}
     context.table_types = {table.name: table.interpolation for table in model.tables}
     context.input_time = t if input_time is None else input_time
     context.input_snapshot = input_snapshot
     return context
 
 
-def evaluate(model, stocks, t, dt, delay, smooth, initial=False, random_runtime=None, input_time=None, input_snapshot=None):
+def evaluate(model, stocks, t, dt, delay, smooth, initial=False, random_runtime=None, input_time=None, input_snapshot=None, retry_work=None):
     values = dict(stocks)
     pending = [(e.name, e.equation) for e in [*model.variables, *model.flows]]
     if initial:
         pending += [(s.name, s.equation) for s in model.stocks if s.equation]
     context = simulation_context(model, t, dt, delay, smooth, random_runtime, input_time, input_snapshot)
     errors = {}
+    attempted = set()
     while pending:
         remaining = []
         for name, equation in pending:
+            # The caller already reserves one attempt per element. Forward
+            # dependencies can require many more; charge each retry before it
+            # runs, including attempts that still cannot resolve a dependency.
+            if name in attempted and retry_work is not None:
+                retry_work()
+            attempted.add(name)
             context.equation_key = name
             try:
                 result = safe_eval(equation, values, context)
@@ -60,6 +87,50 @@ def evaluate(model, stocks, t, dt, delay, smooth, initial=False, random_runtime=
 
 
 def integrate(model: Model, settings: TimeSettings):
+    from app.core.reports import prepare_reports, evaluate_report
+    period = model.time_settings.discrete_period or settings.discrete_period
+    if period is not None:
+        try:
+            discrete_interval_count(settings.start, settings.end, period)
+            if settings.dt != period or settings.integration_method != "euler":
+                raise ValueError("Discrete models require Euler with the declared period")
+        except ValueError as exc:
+            raise EquationError(str(exc), code="discrete_period_mismatch", details={"period": period}) from exc
+        settings = settings.model_copy(update={"discrete_period": period})
+    numeric_model, reports = prepare_reports(model)
+    if not reports:
+        return _integrate_numeric(model, settings)
+    interval_count = (settings.end - settings.start) / settings.dt
+    if not math.isfinite(interval_count) or interval_count > MAX_INTERVALS:
+        raise capacity_error("Simulation exceeds interval limit", resource="intervals", requested=interval_count, limit=MAX_INTERVALS)
+    steps = discrete_interval_count(settings.start, settings.end, settings.discrete_period) if settings.discrete_period is not None else math.ceil(interval_count - 1e-10)
+    report_work = (steps + 1) * len(reports)
+    if report_work > MAX_WORK_UNITS:
+        raise capacity_error("Reports exceed work budget", resource="work_units", requested=report_work, limit=MAX_WORK_UNITS)
+    import ast
+    text_capacity = (steps + 1) * sum(max([len(n.value) for n in ast.walk(tree) if isinstance(n, ast.Constant) and isinstance(n.value, str)] or [0]) for _, tree in reports)
+    if text_capacity > MAX_RETAINED_VALUES:
+        raise capacity_error("Reports exceed 1,000,000 retained text characters", resource="report_characters", requested=text_capacity, limit=MAX_RETAINED_VALUES)
+    result = _integrate_numeric(numeric_model, settings, report_work)
+    for variable, tree in reports:
+        del result.values[variable.name]
+    tables = {canonical_name(t.name) for t in model.tables}
+    result.report_values = {variable.name: [] for variable, _ in reports}
+    for index, at in enumerate(result.time) if reports else []:
+        values = {name: series[index] for name, series in result.values.items()}
+        context = simulation_context(model, at, settings.dt, {}, {})
+        for variable, tree in reports:
+            try:
+                result.report_values[variable.name].append(evaluate_report(tree, values, context, tables))
+            except (EquationError, ValueError, TypeError, OverflowError) as exc:
+                details = {"element": variable.name, "time": at}
+                if result.random_seed is not None:
+                    details["random_seed"] = result.random_seed
+                raise EquationError(f"Report '{variable.name}' at time {at:g}: {exc}", code="invalid_report", details=details) from exc
+    return result
+
+
+def _integrate_numeric(model: Model, settings: TimeSettings, report_work=0):
     elements = [*model.stocks, *model.flows, *model.variables]
     names = [canonical_name(e.name) for e in elements]
     if len(set(names)) != len(names):
@@ -85,7 +156,7 @@ def integrate(model: Model, settings: TimeSettings):
     step_count = (settings.end - settings.start) / settings.dt
     if not math.isfinite(step_count) or step_count > MAX_INTERVALS:
         raise capacity_error("Simulation exceeds 100,000 intervals; shorten the horizon or increase dt", resource="intervals", requested=step_count, limit=MAX_INTERVALS)
-    steps = math.ceil(step_count - 1e-10)
+    steps = discrete_interval_count(settings.start, settings.end, settings.discrete_period) if settings.discrete_period is not None else math.ceil(step_count - 1e-10)
     if steps > MAX_INTERVALS:
         raise capacity_error("Simulation exceeds 100,000 intervals; shorten the horizon or increase dt", resource="intervals", requested=step_count, limit=MAX_INTERVALS)
     if (steps + 1) * max(1, len(elements)) > MAX_RETAINED_VALUES:
@@ -118,19 +189,52 @@ def integrate(model: Model, settings: TimeSettings):
     if any(later <= earlier for earlier, later in zip(time, time[1:])):
         raise EquationError("dt cannot be represented at this time scale; increase dt or shift the time origin")
     if settings.integration_method == "radau":
-        from app.core.adaptive import integrate_radau, time_discontinuities
+        from app.core.adaptive import integrate_radau, time_discontinuities, state_discontinuities
         switches = time_discontinuities(model)
         if switches:
             raise EquationError("Radau does not support explicit time-triggered switches or time-driven lookup forcing, including algebraic aliases to TIME",
                                 code="unsupported_method_features",
                                 details={"category": "unsupported_capability", "method": "radau",
                                          "time_discontinuities": switches})
-        return integrate_radau(model, settings, time, evaluate)
-    delay, smooth = {}, {}
+        state_switches = state_discontinuities(model)
+        if state_switches:
+            raise EquationError("Radau requires continuous stock feedback; state-triggered branches need certified matching limits or explicit event localization",
+                                code="unsupported_method_features",
+                                details={"category":"unsupported_capability", "method":"radau",
+                                         "state_discontinuities":state_switches})
+        return integrate_radau(model, settings, time, evaluate, report_work)
     random_runtime = RandomRuntime(getattr(settings, "random_seed", None))
-    random_runtime.reserve_work(steps * max(1, len(elements) + random_calls))
+    try:
+        return _integrate_explicit(model, settings, time, steps, elements, reference_owners,
+                                   random_calls, report_work, random_runtime)
+    except EquationError as exc:
+        if random_calls:
+            exc.details.setdefault("random_seed", random_runtime.seed)
+        raise
+
+
+def _integrate_explicit(model, settings, time, steps, elements, reference_owners,
+                        random_calls, report_work, random_runtime):
+    delay, smooth = {}, {}
+    evaluations = steps * (5 if settings.integration_method == "rk4" else 1) + 1
+    ordinary_work = evaluations * max(1, len(elements) + random_calls) + report_work
+    retry_units = 0
+
+    def retry_work():
+        nonlocal retry_units
+        retry_units += 1
+        requested = ordinary_work + retry_units
+        if requested > MAX_WORK_UNITS:
+            raise capacity_error("Equation dependency retries exceed work budget", resource="work_units",
+                                 requested=requested, limit=MAX_WORK_UNITS)
+        random_runtime.reserve_work(requested)
+
+    if ordinary_work > MAX_WORK_UNITS:
+        raise capacity_error("Simulation exceeds work budget including initial evaluation", resource="work_units",
+                             requested=ordinary_work, limit=MAX_WORK_UNITS)
+    random_runtime.reserve_work(ordinary_work)
     stocks = {s.name: s.initial_value for s in model.stocks if not s.equation}
-    values = evaluate(model, stocks, time[0], settings.dt, delay, smooth, initial=True, random_runtime=random_runtime)
+    values = evaluate(model, stocks, time[0], settings.dt, delay, smooth, initial=True, random_runtime=random_runtime, retry_work=retry_work)
     stocks = {s.name: values[s.name] for s in model.stocks}
     results = {e.name: [values[e.name]] for e in elements}
 
@@ -140,25 +244,26 @@ def integrate(model: Model, settings: TimeSettings):
                   for flow in model.flows]
 
     def derivatives(vals):
-        net = {stock.name: 0.0 for stock in model.stocks}
+        terms = {stock.name: [] for stock in model.stocks}
         for name, source, destination in flow_links:
             if source is not None:
-                net[source] -= vals[name]
+                terms[source].append(-vals[name])
             if destination is not None:
-                net[destination] += vals[name]
-        return net
+                terms[destination].append(vals[name])
+        return {name: math.fsum(values) for name,values in terms.items()}
 
     hidden_stages = sum(state["order"] for state in [*delay.values(), *smooth.values()])
     # RK4 requires four derivative evaluations and an accepted-output evaluation.
     work_per_step = max(1, len(elements) + hidden_stages + random_calls)
     work_per_step *= 5 if settings.integration_method == "rk4" else 1
-    if steps * work_per_step > MAX_WORK_UNITS:
-        raise capacity_error("Simulation exceeds 1,000,000 work units including delay/smooth stages, stochastic calls and RK4 evaluations", resource="work_units", requested=steps * work_per_step, limit=MAX_WORK_UNITS)
+    ordinary_work = steps * work_per_step + max(1, len(elements) + random_calls) + report_work
+    if ordinary_work + retry_units > MAX_WORK_UNITS:
+        raise capacity_error("Simulation exceeds 1,000,000 work units including delay/smooth stages, stochastic calls and RK4 evaluations", resource="work_units", requested=ordinary_work + retry_units, limit=MAX_WORK_UNITS)
 
-    random_runtime.reserve_work(steps * work_per_step)
+    random_runtime.reserve_work(ordinary_work + retry_units)
 
     for i in range(steps):
-        t, h = time[i], time[i + 1] - time[i]
+        t, h = time[i], settings.discrete_period if settings.discrete_period is not None else time[i + 1] - time[i]
         if settings.integration_method == "euler":
             k1 = derivatives(values)
             next_stocks = {name: value + h * k1[name] for name, value in stocks.items()}
@@ -176,7 +281,7 @@ def integrate(model: Model, settings: TimeSettings):
                 trial_delay = {key: {**entry, "stages": hidden_state[key]} for key, entry in delay.items()}
                 trial_smooth = {key: {**entry, "stages": hidden_state[key]} for key, entry in smooth.items()}
                 vals = evaluate(model, state, at, settings.dt, trial_delay, trial_smooth,
-                                random_runtime=random_runtime, input_time=t, input_snapshot=input_snapshot)
+                                random_runtime=random_runtime, input_time=t, input_snapshot=input_snapshot, retry_work=retry_work)
                 context = simulation_context(model, at, settings.dt, trial_delay, trial_smooth, random_runtime, input_time=t, input_snapshot=input_snapshot)
                 return derivatives(vals), stateful_derivatives(vals, context)
 
@@ -191,9 +296,9 @@ def integrate(model: Model, settings: TimeSettings):
             k2, q2 = rates(t + h / 2, trial_stocks(k1, .5), trial_hidden(q1, .5))
             k3, q3 = rates(t + h / 2, trial_stocks(k2, .5), trial_hidden(q2, .5))
             k4, q4 = rates(t + h, trial_stocks(k3, 1), trial_hidden(q3, 1))
-            stocks = {name: value + h * (k1[name] + 2*k2[name] + 2*k3[name] + k4[name]) / 6
+            stocks = {name: value + _rk4_increment(h,k1[name],k2[name],k3[name],k4[name])
                       for name, value in stocks.items()}
-            changes = {key: [value + h * (a + 2*b + 2*c + d) / 6
+            changes = {key: [value + _rk4_increment(h,a,b,c,d)
                               for value, a, b, c, d in zip(stage_values, q1[key], q2[key], q3[key], q4[key])]
                        for key, stage_values in hidden.items()}
             if not all(math.isfinite(value) for stage_values in changes.values() for value in stage_values):
@@ -204,12 +309,14 @@ def integrate(model: Model, settings: TimeSettings):
         if not all(math.isfinite(v) for v in stocks.values()):
             raise EquationError(f"Non-finite stock at time {time[i + 1]:g}; reduce dt or check equations", code="non_finite_stock", details={"category": "invalid_equations", "time": time[i + 1], "stocks": [name for name, value in stocks.items() if not math.isfinite(value)], "previous_stock_values": {s.name: values[s.name] for s in model.stocks}})
         random_runtime.epoch = i + 1
-        values = evaluate(model, stocks, time[i + 1], settings.dt, delay, smooth, random_runtime=random_runtime)
+        values = evaluate(model, stocks, time[i + 1], settings.dt, delay, smooth, random_runtime=random_runtime, retry_work=retry_work)
         for name in results:
             results[name].append(values[name])
     return SimulationResult(time=time, values=results, random_seed=random_runtime.seed if random_calls else None,
                             integration_diagnostics={"method": settings.integration_method,
                                                      "binomial_trials": random_runtime.binomial_trials,
-                                                     "work_units": steps * work_per_step + random_runtime.binomial_trials,
+                                                     "work_units": ordinary_work + retry_units + random_runtime.binomial_trials,
+                                                     "dependency_retries": retry_units,
+                                                     "report_evaluations": report_work,
                                                      "work_unit_limit": MAX_WORK_UNITS}
-                            if random_runtime.binomial_streams else None)
+                            if random_runtime.binomial_streams or report_work or retry_units else None)

@@ -1,5 +1,6 @@
 """Inspect model inputs without repairing or inventing scientific assumptions."""
 import math
+from collections import Counter
 from app.core.model import Model, TimeSettings
 from app.core.equations import validate_equation
 from app.core.simulator import simulate
@@ -8,10 +9,34 @@ from app.core.source_review import citation_reviews
 
 def inspect_inputs(model: Model, numerical_check=True) -> dict:
     issues = []
-    def issue(severity, code, message, element=None):
-        issues.append({"severity": severity, "code": code, "element": element, "message": message})
+    def issue(severity, code, message, element=None, **details):
+        issues.append({"severity": severity, "code": code, "element": element, "message": message, **details})
     elements = [*model.stocks, *model.flows, *model.variables]
     names = [e.name for e in elements]
+    from app.core.equations import canonical_name
+    for identifier, count in Counter(e.id for e in elements).items():
+        if count > 1:
+            issue("error", "duplicate_element_id", "Element IDs must be unique for unambiguous edits and selection", identifier)
+    for name, count in Counter(canonical_name(e.name) for e in elements).items():
+        if count > 1:
+            issue("error", "name_collision", "Element names collide after case/space/punctuation normalization", name)
+        if name in {"time", "dt", "time_step"}:
+            issue("error", "reserved_name", "TIME, DT and TIME_STEP are reserved simulation names", name)
+    for name, count in Counter(canonical_name(t.name) for t in model.tables).items():
+        if count > 1:
+            issue("error", "duplicate_lookup_name", "Lookup names must be unique after normalization", name)
+    stock_references = {}
+    for stock in model.stocks:
+        for reference in {stock.id, stock.name}:
+            owner = stock_references.setdefault(reference, stock.id)
+            if owner != stock.id:
+                issue("error", "ambiguous_stock_reference", "A stock ID or name identifies multiple stocks", reference)
+    from app.core.reports import prepare_reports
+    from app.core.equations import EquationError
+    try:
+        prepare_reports(model)
+    except EquationError as exc:
+        issue("error", exc.code or "invalid_report", str(exc), exc.details.get("element"))
     for element in elements:
         valid, message = validate_equation(element.equation, names, [t.name for t in model.tables])
         if not valid:
@@ -67,14 +92,15 @@ def inspect_inputs(model: Model, numerical_check=True) -> dict:
             numerical = "completed_one_step"
         except Exception as exc:
             numerical = "failed"
-            issue("error", "numerical_input_check", str(exc))
+            from app.core.failure_diagnostics import failure_payload
+            issue("error", "numerical_input_check", str(exc), failure=failure_payload(exc))
     return {"model": model.name, "valid": not any(i["severity"] == "error" for i in issues),
             "numerical_check": numerical, "scientific_validation": "not established",
             "issues": issues,
             "source_reviews": reviewed_sources,
             "inputs": {"initial_stocks": [{"name": s.name, "initial_value": s.initial_value,
                                              "initial_equation": s.equation, "units": s.units} for s in model.stocks],
-                       "parameters_and_auxiliaries": [{"name": v.name, "equation": v.equation, "units": v.units} for v in model.variables],
+                       "parameters_and_auxiliaries": [{"name": v.name, "equation": v.equation, "units": v.units, "role": v.role} for v in model.variables],
                        "flows": [{"name": f.name, "equation": f.equation, "from_stock": f.from_stock,
                                   "to_stock": f.to_stock, "units": f.units} for f in model.flows],
                        "time_settings": model.time_settings.model_dump(),

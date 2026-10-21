@@ -1,7 +1,7 @@
 {
   "id": "real-options-investment-timing-fin",
   "name": "Real Options Investment Model",
-  "description": "Model of investment timing under uncertainty using real options theory. Source: Dixit & Pindyck (1994), Investment under Uncertainty.",
+  "description": "Perpetual investment-option benchmark reconstructed from Pindyck (1991), pp.1119-1121, equations5-10, and Dixit/Pindyck (1994), chapter5. Here mu is the risk-neutral drift r minus the opportunity cost of waiting. At default mu=r the opportunity cost is zero: no finite exercise threshold exists, the option-value limit is the asset value, and immediate exercise is never optimal. Trigger_Value is an explicit report label in that case; no infinity or false zero enters integration. Option_Value and its delta are the analytic value-matching/smooth-pasting solution, replacing the unrelated intrinsic-value lag stock. Invested is the current source exercise-policy indicator, not an accumulated construction rate; on the saved strictly increasing deterministic asset scenario it is also irreversible. The existing sinusoidal Noise is a deterministic illustration, not a Wiener process or Monte Carlo GBM simulation. Financial calibration and general path-dependent exercise handling are outside this educational benchmark.",
   "stocks": [
     {
       "id": "s1",
@@ -11,26 +11,6 @@
       "position": {
         "x": 200,
         "y": 200
-      }
-    },
-    {
-      "id": "s2",
-      "name": "Option_Value",
-      "initial_value": 50,
-      "equation": "",
-      "position": {
-        "x": 400,
-        "y": 200
-      }
-    },
-    {
-      "id": "s3",
-      "name": "Invested",
-      "initial_value": 0,
-      "equation": "",
-      "position": {
-        "x": 300,
-        "y": 350
       }
     }
   ],
@@ -44,28 +24,6 @@
       "position": {
         "x": 100,
         "y": 200
-      }
-    },
-    {
-      "id": "f2",
-      "name": "Option_Change",
-      "equation": "MAX(0, Asset_Value - Investment_Cost) - Option_Value",
-      "from_stock": null,
-      "to_stock": "s2",
-      "position": {
-        "x": 500,
-        "y": 200
-      }
-    },
-    {
-      "id": "f3",
-      "name": "Investment_Decision",
-      "equation": "IF(Asset_Value > Trigger_Value AND Invested < 1, 1, 0)",
-      "from_stock": null,
-      "to_stock": "s3",
-      "position": {
-        "x": 200,
-        "y": 350
       }
     }
   ],
@@ -118,11 +76,12 @@
     {
       "id": "v6",
       "name": "Trigger_Value",
-      "equation": "Investment_Cost * beta / (beta - 1)",
+      "equation": "IF(mu == r, 'No finite exercise threshold', IF(mu < r, Investment_Cost * beta / (beta - 1), 'Unbounded perpetual option value'))",
       "position": {
         "x": 400,
         "y": 100
-      }
+      },
+      "role": "report"
     },
     {
       "id": "v7",
@@ -131,6 +90,51 @@
       "position": {
         "x": 150,
         "y": 450
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Option_Value",
+      "position": {
+        "x": 400,
+        "y": 200
+      },
+      "equation": "IF(mu == r, Asset_Value, IF(mu < r, IF(Asset_Value < Investment_Cost * beta / (beta - 1), Investment_Cost / (beta - 1) * (Asset_Value * (beta - 1) / (Investment_Cost * beta))^beta, Asset_Value - Investment_Cost), 1 / 0))"
+    },
+    {
+      "id": "s3",
+      "name": "Invested",
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "equation": "IF(mu < r, IF(Asset_Value >= Investment_Cost * beta / (beta - 1), 1, 0), 0)"
+    },
+    {
+      "id": "f2",
+      "name": "Option_Change",
+      "position": {
+        "x": 500,
+        "y": 200
+      },
+      "equation": "Option_Delta * Value_Drift"
+    },
+    {
+      "id": "f3",
+      "name": "Investment_Decision",
+      "position": {
+        "x": 200,
+        "y": 350
+      },
+      "equation": "Invested"
+    },
+    {
+      "id": "var-option-delta-source",
+      "name": "Option_Delta",
+      "equation": "IF(mu == r, 1, IF(mu < r, IF(Asset_Value < Investment_Cost * beta / (beta - 1), (Asset_Value * (beta - 1) / (Investment_Cost * beta))^(beta - 1), 1), 1 / 0))",
+      "position": {
+        "x": 500,
+        "y": 350
       }
     }
   ],
@@ -148,6 +152,6 @@
   },
   "created_at": "2026-01-15T14:41:20.230321+00:00",
   "updated_at": "2026-01-15T14:41:20.230325+00:00",
-  "source": "https://press.princeton.edu/books/hardcover/9780691034102/investment-under-uncertainty",
-  "reference": "Dixit, A.K. & Pindyck, R.S. (1994). Investment under Uncertainty. Princeton UP."
+  "source": "https://www.mit.edu/~rpindyck/Papers/IrreverUncertInvestmentJEL1991.pdf",
+  "reference": "Pindyck RS (1991). Irreversibility, Uncertainty, and Investment. Journal of Economic Literature29:1110-1148, pp.1119-1121, equations5-10. Dixit/Pindyck (1994), Investment under Uncertainty, chapter5."
 }

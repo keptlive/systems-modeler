@@ -18,12 +18,18 @@ const Simulation = {
         const start = ts.start ?? 0;
         const end = ts.end ?? 100;
         const dt = ts.dt ?? 0.25;
-        return { start, end, dt, integration_method: ts.integration_method || 'euler', random_seed:ts.random_seed ?? null, rtol:ts.rtol ?? 1e-6, atol:ts.atol ?? 1e-9 };
+        return { start, end, dt, discrete_period:ts.discrete_period ?? null, integration_method: ts.integration_method || 'euler', random_seed:ts.random_seed ?? null, rtol:ts.rtol ?? 1e-6, atol:ts.atol ?? 1e-9 };
     },
 
     init() {
         this.chartContainer = document.getElementById('chart-container');
         this.resultsContent = document.getElementById('results-content');
+        if (!this.failureDownloadBound) {
+            document.addEventListener('click', event => {
+                if (event.target.closest('[data-simulation-action="download-failure"]')) this.downloadFailureReport();
+            });
+            this.failureDownloadBound = true;
+        }
     },
 
     /**
@@ -49,15 +55,16 @@ const Simulation = {
             mobileBtn.textContent = '⏳ Running...';
         }
 
-        let snapshot, generation;
+        let snapshot, generation, requestedSettings;
         try {
             this.clear();
             snapshot = JSON.stringify(App.modelSnapshot());
             generation = this.generation;
+            requestedSettings = this.getTimeSettings();
             const response = await fetch('/api/simulate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model: JSON.parse(snapshot), time_settings: this.getTimeSettings() })
+                body: JSON.stringify({ model: JSON.parse(snapshot), time_settings: requestedSettings })
             });
 
             if (generation !== this.generation || snapshot !== JSON.stringify(App.modelSnapshot())) {
@@ -82,6 +89,8 @@ const Simulation = {
             if (generation !== this.generation || snapshot !== JSON.stringify(App.modelSnapshot())) return;
             this.lastError=error.message;
             this.lastFailure=error.diagnostics || null;
+            this.failureModel=JSON.parse(snapshot);
+            this.failureSettings=requestedSettings;
             console.error("Simulation error:", error);
             if (this.resultsContent) {
                 this.resultsContent.innerHTML = this.failureHTML();
@@ -112,7 +121,28 @@ const Simulation = {
         const causes = roots.length ? roots.map(root => `<li><strong>${escape(root.element || (root.elements || []).join(' → '))}</strong><p>${escape(rootMessage(root))}</p>${root.equation ? `<code>${escape(root.equation)}</code>` : ''}</li>`).join('') : `<li>${escape(this.lastError || 'Simulation failed')}</li>`;
         const blocked = failure.blocked_errors || [];
         const dependents = blocked.length ? `<details><summary>${blocked.length} dependent ${blocked.length===1?'value is':'values are'} blocked</summary><ul>${blocked.map(row=>`<li>${escape(row.element)} waits for ${escape(row.waiting_for)}.</li>`).join('')}</ul></details>` : '';
-        return `<section class="simulation-failure" role="alert"><h3>${escape(title+when)}</h3><ul>${causes}</ul>${dependents}<p class="failure-help">Inspect the named inputs and equations before running again.</p></section>`;
+        const download = this.failureModel ? '<div class="failure-actions"><button type="button" class="btn btn-secondary" data-simulation-action="download-failure">Download failure report</button><small>Includes the exact inputs and settings for this run.</small></div>' : '';
+        return `<section class="simulation-failure" role="alert"><h3>${escape(title+when)}</h3><ul>${causes}</ul>${dependents}<p class="failure-help">Inspect the named inputs and equations before running again.</p>${download}</section>`;
+    },
+
+    failureReport() {
+        if (!this.failureModel || !this.lastError) return null;
+        return JSON.parse(JSON.stringify({
+            format_version: 1,
+            model: this.failureModel,
+            settings: this.lastFailure?.reproduction?.settings || this.failureSettings,
+            failure: this.lastFailure || {message:this.lastError},
+        }));
+    },
+
+    downloadFailureReport() {
+        const report = this.failureReport();
+        if (!report) return;
+        const url = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], {type:'application/json'}));
+        const link = document.createElement('a');
+        link.href = url; link.download = 'model-failure-report.json';
+        document.body.appendChild(link); link.click(); link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
     },
 
     async acceptResults(results) {
@@ -122,6 +152,8 @@ const Simulation = {
         this.resultModel = model;
         this.lastError=null;
         this.lastFailure=null;
+        this.failureModel=null;
+        this.failureSettings=null;
         this.results = results;
         this.displayResults();
         let receipt = document.getElementById('run-seed-receipt');
@@ -135,7 +167,7 @@ const Simulation = {
 
         // Update advanced charts module
         if (typeof Charts !== 'undefined') {
-            Charts.setResults(this.results);
+            Charts.setResults(this.results, model);
             Charts.render();
             const mobileContainer = document.getElementById('chart-container-mobile');
             if (mobileContainer) {
@@ -172,13 +204,14 @@ const Simulation = {
         return JSON.stringify({
             stocks:(model.stocks || []).map(({id,name,equation,initial_value})=>({id,name,equation,initial_value})),
             flows:(model.flows || []).map(({id,name,equation,from_stock,to_stock})=>({id,name,equation,from_stock,to_stock})),
-            variables:(model.variables || []).map(({id,name,equation})=>({id,name,equation})),
+            variables:(model.variables || []).map(({id,name,equation,role})=>({id,name,equation,role:role || "auxiliary"})),
             tables:model.tables || [], time_settings:model.time_settings
         });
     },
 
     invalidateIfChanged() {
-        if (this.results && this.resultModel && this.modelSignature(this.resultModel) !== this.modelSignature(App.model)) {
+        const baseline = this.results ? this.resultModel : (this.lastError ? this.failureModel : null);
+        if (baseline && this.modelSignature(baseline) !== this.modelSignature(App.model)) {
             this.clear('Inputs changed. Run the current model to see results.');
         }
     },
@@ -192,6 +225,8 @@ const Simulation = {
         this.resultModel = null;
         this.lastError=null;
         this.lastFailure=null;
+        this.failureModel=null;
+        this.failureSettings=null;
         const receipt = document.getElementById('run-seed-receipt');
         if (receipt) receipt.hidden = true;
         document.querySelector('.mobile-results-container .run-seed-receipt')?.remove();
@@ -225,6 +260,14 @@ const Simulation = {
     /**
      * Display results summary
      */
+    reportHTML(results) {
+        const reports = Object.entries(results?.report_values || {});
+        if (!reports.length) return '';
+        return '<section class="run-reports" aria-label="Report outputs"><h3>Report outputs</h3><p>Read-only results at the final saved time.</p><dl>' + reports.map(([name, values]) =>
+            '<div><dt>' + App.escapeHtml(name) + '</dt><dd>' + App.escapeHtml(String(values[values.length - 1] ?? '')) + '</dd></div>'
+        ).join('') + '</dl></section>';
+    },
+
     displayResults() {
         if (!this.results || !this.chartContainer) return;
 
@@ -253,7 +296,7 @@ const Simulation = {
             `;
         });
 
-        html += '</div></details>';
+        html += '</div></details>' + this.reportHTML(this.results);
         if (this.resultsContent) this.resultsContent.innerHTML = html;
     },
 

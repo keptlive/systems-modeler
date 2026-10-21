@@ -1,7 +1,7 @@
 {
   "id": "greenshields-traffic-flow-model-tra",
   "name": "Greenshields Traffic Flow Model",
-  "description": "Illustrative traffic stock-flow model using the Greenshields linear speed-density relation. Capacity follows from the parabolic flow-density relation. Arrival forcing and queue equations are local illustrative additions, not a reproduction of the 1935 empirical study; parameter calibration and numerical stability remain unverified.",
+  "description": "Illustrative traffic stock-flow model using the Greenshields linear speed-density relation. Capacity is the maximum of the parabolic flow-density relation. Arrival forcing and queue equations are local illustrative additions, not a reproduction of the 1935 empirical study. Explicit RK4 DT 0.02 resolves the fast density relaxation on the full 24-unit horizon; default/half/quarter grids fit the work budget. Against independent handwritten equations, maximum density error is below 0.05% of the reference maximum and falls below 0.00012% at quarter DT. For the original inputs the invariant density interval [0,50] stays below the unchanged queue trigger 120, so queue remains zero. Parameter calibration and altered-scenario queue validity remain unverified.",
   "stocks": [
     {
       "id": "s1",
@@ -141,8 +141,8 @@
   "time_settings": {
     "start": 0,
     "end": 24,
-    "dt": 0.1,
-    "integration_method": "radau"
+    "dt": 0.02,
+    "integration_method": "rk4"
   },
   "created_at": "2026-01-15T14:49:43.657712+00:00",
   "updated_at": "2026-01-15T14:49:43.657721+00:00",

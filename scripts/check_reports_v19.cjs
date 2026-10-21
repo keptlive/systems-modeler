@@ -1,0 +1,18 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path');
+const root=path.resolve(__dirname,'..');
+const fields={'sim-start':{value:'0'},'sim-end':{value:'3'},'sim-dt':{value:'1'},'sim-seed':{value:''},'sim-method':{value:'euler'}};
+const context={document:{addEventListener(){},getElementById:id=>fields[id]},d3:{schemeCategory10:[]}};
+vm.createContext(context);
+vm.runInContext(fs.readFileSync(path.join(root,'static/js/app.js'),'utf8')+';this.app=App;',context);
+vm.runInContext(fs.readFileSync(path.join(root,'static/js/simulation.js'),'utf8')+';this.sim=Simulation;',context);
+context.app.model={stocks:[],flows:[],variables:[{id:'r',name:'Status',role:'report',equation:"'Label'"}],time_settings:{start:0,end:3,dt:1,discrete_period:1}};
+context.app.selected={type:'variable',id:'r'};
+let html=context.app.getPropertiesPanelContent();assert.ok(html.includes('Report only'));assert.ok(html.includes('single quotes'));
+html=context.sim.reportHTML({report_values:{'<Name>':['<script>alert(1)</script>']}});
+assert.ok(!html.includes('<script>'));assert.ok(html.includes('&lt;script&gt;'));assert.ok(html.includes('&lt;Name&gt;'));
+assert.equal(context.sim.reportHTML({values:{}}),'');
+assert.equal(context.sim.getTimeSettings().discrete_period,1);
+assert.equal(context.app.readSimulationSettings().discrete_period,1);
+fields['sim-dt'].value='.5';assert.throws(()=>context.app.readSimulationSettings(),/declared period/);
+fields['sim-dt'].value='1';fields['sim-end'].value='3.5';assert.throws(()=>context.app.readSimulationSettings(),/declared period/);
+console.log('Report roles and escaped labels render; discrete cadence survives settings and rejects invalid changes.');

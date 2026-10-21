@@ -357,8 +357,11 @@ def test_stochastic_standalone_context_reuses_same_time_then_advances():
 
 def test_stochastic_call_budget_is_counted():
     model = seeded_model("+".join(["RANDOM(0,1)"]*100),end=10000,dt=1)
-    with pytest.raises(EquationError,match="stochastic"):
+    with pytest.raises(EquationError) as caught:
         simulate(model)
+    assert caught.value.code == "capacity_exceeded"
+    assert caught.value.details["resource"] == "work_units"
+    assert caught.value.details["requested"] > caught.value.details["limit"]
 
 
 def rk_hidden(expression,dt=.1,end=4):

@@ -1,7 +1,7 @@
 {
   "id": "solar-irradiance-and-climate-model-cli",
   "name": "Solar Irradiance and Climate Model",
-  "description": "Model of solar variability effects on Earth's climate including 11-year solar cycle and longer-term variations. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "description": "Solar-only two-layer climate response, rebuilt with actual NRLTSI2 annual TSI (LASP/NOAA CDR,1849-2021 data subset) and the deterministic FaIR2.1.0 HadGEM2-ES two-layer operator (capacities7.73/89.29 W year/m2/K,feedback0.63,exchange0.52 W/m2/K,efficacy1.52). Annual values are aligned to their calendar year and linearly interpolated; no amplitude/period sinusoid is fabricated. Original1361 W/m2 reference and287.5K initial reference temperature retained as explicit experiment conventions. Absorbed solar anomaly is(1-albedo)*deltaTSI/4 and all temperature fluxes divide by mixed-layer heat capacity. Existing CO2 forcing remains0 for this solar-only experiment. Legacy amplitude,period and sensitivity controls remain visible but do not alter the measured series or calibrated feedback.",
   "stocks": [
     {
       "id": "stock-temperature",
@@ -11,7 +11,8 @@
       "position": {
         "x": 150,
         "y": 200
-      }
+      },
+      "units": "K"
     },
     {
       "id": "stock-ocean-heat",
@@ -21,20 +22,22 @@
       "position": {
         "x": 350,
         "y": 200
-      }
+      },
+      "units": "W year/m2"
     }
   ],
   "flows": [
     {
       "id": "flow-solar-forcing",
       "name": "solar_forcing",
-      "equation": "(TSI - TSI_mean) * 0.175 / 4",
+      "equation": "(TSI - TSI_mean) * (1 - Planetary_Albedo) / 4 / ocean_heat_capacity",
       "from_stock": null,
       "to_stock": "stock-temperature",
       "position": {
         "x": 250,
         "y": 200
-      }
+      },
+      "units": "K/year"
     },
     {
       "id": "flow-co2-forcing",
@@ -45,29 +48,44 @@
       "position": {
         "x": 450,
         "y": 200
-      }
+      },
+      "units": "K/year"
     },
     {
       "id": "flow-outgoing-longwave",
       "name": "outgoing_longwave",
-      "equation": "0",
+      "equation": "Climate_Feedback * (Temperature - Reference_Temperature) / ocean_heat_capacity",
       "from_stock": "stock-temperature",
       "to_stock": null,
       "position": {
         "x": 650,
         "y": 200
-      }
+      },
+      "units": "K/year"
     },
     {
       "id": "flow-ocean-uptake",
       "name": "ocean_uptake",
-      "equation": "0",
+      "equation": "Ocean_Efficacy * Ocean_Heat_Flux / ocean_heat_capacity",
       "from_stock": "stock-temperature",
-      "to_stock": "stock-ocean-heat",
+      "to_stock": null,
       "position": {
         "x": 250,
         "y": 350
-      }
+      },
+      "units": "K/year"
+    },
+    {
+      "id": "v19-solar-deep-uptake",
+      "name": "Deep Ocean Heat Uptake",
+      "position": {
+        "x": 740,
+        "y": 600
+      },
+      "equation": "Ocean_Heat_Flux",
+      "from_stock": null,
+      "to_stock": "stock-ocean-heat",
+      "units": "W/m2"
     }
   ],
   "variables": [
@@ -110,11 +128,101 @@
     {
       "id": "var-ocean-heat-capacity",
       "name": "ocean_heat_capacity",
-      "equation": "8.5",
+      "equation": "7.73",
       "position": {
         "x": 700,
         "y": 80
       }
+    },
+    {
+      "id": "v19-tsi",
+      "name": "TSI",
+      "position": {
+        "x": 900,
+        "y": 600
+      },
+      "equation": "Annual_TSI(Time)",
+      "units": "W/m2"
+    },
+    {
+      "id": "v19-solar-albedo",
+      "name": "Planetary Albedo",
+      "position": {
+        "x": 1060,
+        "y": 600
+      },
+      "equation": "0.3",
+      "units": "dimensionless"
+    },
+    {
+      "id": "v19-temperature-baseline",
+      "name": "Reference Temperature",
+      "position": {
+        "x": 100,
+        "y": 700
+      },
+      "equation": "287.5",
+      "units": "K"
+    },
+    {
+      "id": "v19-deep-solar-capacity",
+      "name": "Deep Ocean Capacity",
+      "position": {
+        "x": 260,
+        "y": 700
+      },
+      "equation": "89.29",
+      "units": "W year/m2/K"
+    },
+    {
+      "id": "v19-solar-exchange",
+      "name": "Ocean Heat Exchange",
+      "position": {
+        "x": 420,
+        "y": 700
+      },
+      "equation": "0.52",
+      "units": "W/m2/K"
+    },
+    {
+      "id": "v19-solar-efficacy",
+      "name": "Ocean Efficacy",
+      "position": {
+        "x": 580,
+        "y": 700
+      },
+      "equation": "1.52",
+      "units": "dimensionless"
+    },
+    {
+      "id": "v19-solar-feedback",
+      "name": "Climate Feedback",
+      "position": {
+        "x": 740,
+        "y": 700
+      },
+      "equation": "0.63",
+      "units": "W/m2/K"
+    },
+    {
+      "id": "v19-solar-deep-temperature",
+      "name": "Deep Temperature",
+      "position": {
+        "x": 900,
+        "y": 700
+      },
+      "equation": "Ocean_Heat / Deep_Ocean_Capacity",
+      "units": "K anomaly"
+    },
+    {
+      "id": "v19-solar-heatflux",
+      "name": "Ocean Heat Flux",
+      "position": {
+        "x": 1060,
+        "y": 700
+      },
+      "equation": "Ocean_Heat_Exchange * (Temperature - Reference_Temperature - Deep_Temperature)",
+      "units": "W/m2"
     }
   ],
   "connectors": [
@@ -131,6 +239,706 @@
   },
   "created_at": "2026-01-11T20:04:50.721448Z",
   "updated_at": "2026-01-11T20:04:50.721448Z",
-  "source": "",
-  "reference": "Unverified illustrative solar/climate stock-flow definition. Previous DOI10.1038/nature14240 is Feldman et al.2015, Observational determination of surface radiative forcing by CO2 from2000 to2010; it is not the source of this solar-cycle model. Missing TSI and heat-budget equations unresolved."
+  "source": "https://lasp.colorado.edu/lisird/latis/dap/nrl2_tsi_P1Y.csv",
+  "reference": "NOAA/LASP NRLTSI2 annual solar irradiance CDR; FaIR2.1.0 n-layer-ebm deterministic two-layer HadGEM2-ES example and energy_balance_model._eb_matrix. Local referenceTSI1361 and initialT287.5K are experiment conventions.",
+  "tables": [
+    {
+      "name": "Annual_TSI",
+      "points": [
+        [
+          1849,
+          1360.9908447265625
+        ],
+        [
+          1850,
+          1360.7637939453125
+        ],
+        [
+          1851,
+          1360.76611328125
+        ],
+        [
+          1852,
+          1360.7635498046875
+        ],
+        [
+          1853,
+          1360.667724609375
+        ],
+        [
+          1854,
+          1360.5201416015625
+        ],
+        [
+          1855,
+          1360.42236328125
+        ],
+        [
+          1856,
+          1360.39453125
+        ],
+        [
+          1857,
+          1360.4716796875
+        ],
+        [
+          1858,
+          1360.6649169921875
+        ],
+        [
+          1859,
+          1360.8914794921875
+        ],
+        [
+          1860,
+          1360.970458984375
+        ],
+        [
+          1861,
+          1360.866455078125
+        ],
+        [
+          1862,
+          1360.7474365234375
+        ],
+        [
+          1863,
+          1360.665771484375
+        ],
+        [
+          1864,
+          1360.6585693359375
+        ],
+        [
+          1865,
+          1360.5726318359375
+        ],
+        [
+          1866,
+          1360.512939453125
+        ],
+        [
+          1867,
+          1360.4227294921875
+        ],
+        [
+          1868,
+          1360.571533203125
+        ],
+        [
+          1869,
+          1360.8140869140625
+        ],
+        [
+          1870,
+          1361.06884765625
+        ],
+        [
+          1871,
+          1361.003662109375
+        ],
+        [
+          1872,
+          1360.9293212890625
+        ],
+        [
+          1873,
+          1360.7247314453125
+        ],
+        [
+          1874,
+          1360.588134765625
+        ],
+        [
+          1875,
+          1360.4443359375
+        ],
+        [
+          1876,
+          1360.4117431640625
+        ],
+        [
+          1877,
+          1360.4122314453125
+        ],
+        [
+          1878,
+          1360.3529052734375
+        ],
+        [
+          1879,
+          1360.3328857421875
+        ],
+        [
+          1880,
+          1360.4571533203125
+        ],
+        [
+          1881,
+          1360.59521484375
+        ],
+        [
+          1882,
+          1360.513427734375
+        ],
+        [
+          1883,
+          1360.4915771484375
+        ],
+        [
+          1884,
+          1360.651611328125
+        ],
+        [
+          1885,
+          1360.5322265625
+        ],
+        [
+          1886,
+          1360.3662109375
+        ],
+        [
+          1887,
+          1360.3096923828125
+        ],
+        [
+          1888,
+          1360.2630615234375
+        ],
+        [
+          1889,
+          1360.25146484375
+        ],
+        [
+          1890,
+          1360.2816162109375
+        ],
+        [
+          1891,
+          1360.53857421875
+        ],
+        [
+          1892,
+          1360.6478271484375
+        ],
+        [
+          1893,
+          1360.816162109375
+        ],
+        [
+          1894,
+          1360.930419921875
+        ],
+        [
+          1895,
+          1360.7867431640625
+        ],
+        [
+          1896,
+          1360.5797119140625
+        ],
+        [
+          1897,
+          1360.4427490234375
+        ],
+        [
+          1898,
+          1360.4139404296875
+        ],
+        [
+          1899,
+          1360.34326171875
+        ],
+        [
+          1900,
+          1360.3201904296875
+        ],
+        [
+          1901,
+          1360.2567138671875
+        ],
+        [
+          1902,
+          1360.2841796875
+        ],
+        [
+          1903,
+          1360.4727783203125
+        ],
+        [
+          1904,
+          1360.7462158203125
+        ],
+        [
+          1905,
+          1360.5733642578125
+        ],
+        [
+          1906,
+          1360.767822265625
+        ],
+        [
+          1907,
+          1360.65087890625
+        ],
+        [
+          1908,
+          1360.711669921875
+        ],
+        [
+          1909,
+          1360.58447265625
+        ],
+        [
+          1910,
+          1360.4544677734375
+        ],
+        [
+          1911,
+          1360.3548583984375
+        ],
+        [
+          1912,
+          1360.306640625
+        ],
+        [
+          1913,
+          1360.30712890625
+        ],
+        [
+          1914,
+          1360.411865234375
+        ],
+        [
+          1915,
+          1360.72607421875
+        ],
+        [
+          1916,
+          1360.958984375
+        ],
+        [
+          1917,
+          1361.15087890625
+        ],
+        [
+          1918,
+          1361.10107421875
+        ],
+        [
+          1919,
+          1360.8389892578125
+        ],
+        [
+          1920,
+          1360.6461181640625
+        ],
+        [
+          1921,
+          1360.5411376953125
+        ],
+        [
+          1922,
+          1360.4412841796875
+        ],
+        [
+          1923,
+          1360.4375
+        ],
+        [
+          1924,
+          1360.503662109375
+        ],
+        [
+          1925,
+          1360.71923828125
+        ],
+        [
+          1926,
+          1360.8359375
+        ],
+        [
+          1927,
+          1361.02490234375
+        ],
+        [
+          1928,
+          1360.8992919921875
+        ],
+        [
+          1929,
+          1360.8455810546875
+        ],
+        [
+          1930,
+          1360.8109130859375
+        ],
+        [
+          1931,
+          1360.6817626953125
+        ],
+        [
+          1932,
+          1360.566650390625
+        ],
+        [
+          1933,
+          1360.4906005859375
+        ],
+        [
+          1934,
+          1360.559814453125
+        ],
+        [
+          1935,
+          1360.799560546875
+        ],
+        [
+          1936,
+          1361.2286376953125
+        ],
+        [
+          1937,
+          1361.2049560546875
+        ],
+        [
+          1938,
+          1361.12841796875
+        ],
+        [
+          1939,
+          1361.091552734375
+        ],
+        [
+          1940,
+          1360.99853515625
+        ],
+        [
+          1941,
+          1360.911376953125
+        ],
+        [
+          1942,
+          1360.791015625
+        ],
+        [
+          1943,
+          1360.6260986328125
+        ],
+        [
+          1944,
+          1360.6729736328125
+        ],
+        [
+          1945,
+          1360.941162109375
+        ],
+        [
+          1946,
+          1361.08837890625
+        ],
+        [
+          1947,
+          1361.3927001953125
+        ],
+        [
+          1948,
+          1361.50634765625
+        ],
+        [
+          1949,
+          1361.4088134765625
+        ],
+        [
+          1950,
+          1361.117919921875
+        ],
+        [
+          1951,
+          1360.8497314453125
+        ],
+        [
+          1952,
+          1360.8223876953125
+        ],
+        [
+          1953,
+          1360.69384765625
+        ],
+        [
+          1954,
+          1360.700927734375
+        ],
+        [
+          1955,
+          1360.881103515625
+        ],
+        [
+          1956,
+          1361.42138671875
+        ],
+        [
+          1957,
+          1361.9398193359375
+        ],
+        [
+          1958,
+          1361.8609619140625
+        ],
+        [
+          1959,
+          1361.561279296875
+        ],
+        [
+          1960,
+          1361.427490234375
+        ],
+        [
+          1961,
+          1360.9957275390625
+        ],
+        [
+          1962,
+          1360.798095703125
+        ],
+        [
+          1963,
+          1360.7325439453125
+        ],
+        [
+          1964,
+          1360.7276611328125
+        ],
+        [
+          1965,
+          1360.7740478515625
+        ],
+        [
+          1966,
+          1361.0020751953125
+        ],
+        [
+          1967,
+          1361.2230224609375
+        ],
+        [
+          1968,
+          1361.3037109375
+        ],
+        [
+          1969,
+          1361.3770751953125
+        ],
+        [
+          1970,
+          1361.3758544921875
+        ],
+        [
+          1971,
+          1361.0400390625
+        ],
+        [
+          1972,
+          1361.1002197265625
+        ],
+        [
+          1973,
+          1360.86474609375
+        ],
+        [
+          1974,
+          1360.77099609375
+        ],
+        [
+          1975,
+          1360.7154541015625
+        ],
+        [
+          1976,
+          1360.694580078125
+        ],
+        [
+          1977,
+          1360.8905029296875
+        ],
+        [
+          1978,
+          1361.2161865234375
+        ],
+        [
+          1979,
+          1361.6015625
+        ],
+        [
+          1980,
+          1361.6397705078125
+        ],
+        [
+          1981,
+          1361.683349609375
+        ],
+        [
+          1982,
+          1361.2310791015625
+        ],
+        [
+          1983,
+          1361.2137451171875
+        ],
+        [
+          1984,
+          1360.7904052734375
+        ],
+        [
+          1985,
+          1360.633056640625
+        ],
+        [
+          1986,
+          1360.6417236328125
+        ],
+        [
+          1987,
+          1360.7828369140625
+        ],
+        [
+          1988,
+          1361.1195068359375
+        ],
+        [
+          1989,
+          1361.643310546875
+        ],
+        [
+          1990,
+          1361.5521240234375
+        ],
+        [
+          1991,
+          1361.517822265625
+        ],
+        [
+          1992,
+          1361.3082275390625
+        ],
+        [
+          1993,
+          1360.9427490234375
+        ],
+        [
+          1994,
+          1360.741943359375
+        ],
+        [
+          1995,
+          1360.731689453125
+        ],
+        [
+          1996,
+          1360.67626953125
+        ],
+        [
+          1997,
+          1360.8072509765625
+        ],
+        [
+          1998,
+          1361.1759033203125
+        ],
+        [
+          1999,
+          1361.47998046875
+        ],
+        [
+          2000,
+          1361.6602783203125
+        ],
+        [
+          2001,
+          1361.568603515625
+        ],
+        [
+          2002,
+          1361.6331787109375
+        ],
+        [
+          2003,
+          1361.1282958984375
+        ],
+        [
+          2004,
+          1360.91796875
+        ],
+        [
+          2005,
+          1360.700439453125
+        ],
+        [
+          2006,
+          1360.6795654296875
+        ],
+        [
+          2007,
+          1360.6038818359375
+        ],
+        [
+          2008,
+          1360.6097412109375
+        ],
+        [
+          2009,
+          1360.6065673828125
+        ],
+        [
+          2010,
+          1360.785400390625
+        ],
+        [
+          2011,
+          1361.0689697265625
+        ],
+        [
+          2012,
+          1361.192626953125
+        ],
+        [
+          2013,
+          1361.2630615234375
+        ],
+        [
+          2014,
+          1361.38623046875
+        ],
+        [
+          2015,
+          1361.4097900390625
+        ],
+        [
+          2016,
+          1360.951904296875
+        ],
+        [
+          2017,
+          1360.65966796875
+        ],
+        [
+          2018,
+          1360.638671875
+        ],
+        [
+          2019,
+          1360.649169921875
+        ],
+        [
+          2020,
+          1360.7491455078125
+        ],
+        [
+          2021,
+          1360.974853515625
+        ]
+      ],
+      "interpolation": "continuous"
+    }
+  ]
 }

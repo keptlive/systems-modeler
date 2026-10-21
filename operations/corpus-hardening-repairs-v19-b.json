@@ -1,0 +1,398 @@
+{
+  "format_version": 1,
+  "baseline_commit": "cc010ae",
+  "models": [
+    {
+      "id": "grid-frequency-stability-ene",
+      "file": "models/energy/grid-frequency-stability-ene.json",
+      "baseline_commit": "cc010ae",
+      "before_text": "{\n  \"id\": \"grid-frequency-stability-ene\",\n  \"name\": \"Grid Frequency Stability Dynamics\",\n  \"description\": \"Illustrative grid-frequency experiment with physically consistent rotating-energy balance. Power is MW, time seconds, frequency Hz and kinetic energy MW s. Initial stored energy is derived from the existing System Inertia (5 s) times Base Generation (1000 MW), rather than an independent inconsistent 100. The net Inertial Response is demand minus generation, allowing both kinetic discharge and recharge. Frequency Change follows the exact nonlinear swing-energy identity df/dt=(Pgen-Pload)*f/(2E), retaining E/(f/f0)^2=5000 MW s. Adaptive Radau preserves the kinetic invariant to relative error below 2e-11 over the full 60 s, keeps the original output step .01, and permits half/quarter output refinements within the work budget. All original elements, geometry, forcing, droop and reserve paths remain. Governor/droop/reserve dynamics are illustrative local assumptions; this is not a reproduction of the NREL virtual-synchronous-generator network.\",\n  \"source\": \"https://docs.nlr.gov/docs/fy20osti/73872.pdf\",\n  \"reference\": \"Yan et al. (2020), NREL/CP-5D00-73872, printed p.4 (PDF p.7), eq.(12): per-unit power imbalance equals 2 H omega times d omega/dt. SI mapping E=H*Sbase*(f/f0)^2 gives dE/dt=Pgen-Pload and df/dt=(Pgen-Pload)*f/(2E).\",\n  \"stocks\": [\n    {\n      \"id\": \"stock-frequency\",\n      \"name\": \"Grid Frequency\",\n      \"initial_value\": 60,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 300,\n        \"y\": 200\n      },\n      \"units\": \"Hz\"\n    },\n    {\n      \"id\": \"stock-kinetic-energy\",\n      \"name\": \"Stored Kinetic Energy\",\n      \"initial_value\": 100,\n      \"equation\": \"System_Inertia * Base_Generation\",\n      \"position\": {\n        \"x\": 500,\n        \"y\": 200\n      },\n      \"units\": \"MW s\"\n    },\n    {\n      \"id\": \"stock-reserve\",\n      \"name\": \"Spinning Reserve\",\n      \"initial_value\": 500,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 300,\n        \"y\": 400\n      },\n      \"units\": \"MW\"\n    }\n  ],\n  \"flows\": [\n    {\n      \"id\": \"flow-frequency-change\",\n      \"name\": \"Frequency Change\",\n      \"equation\": \"(Total_Generation - Total_Demand) * Grid_Frequency / (2 * Stored_Kinetic_Energy)\",\n      \"from_stock\": null,\n      \"to_stock\": \"stock-frequency\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 200\n      },\n      \"units\": \"Hz / s\"\n    },\n    {\n      \"id\": \"flow-energy-injection\",\n      \"name\": \"Inertial Response\",\n      \"equation\": \"Total_Demand - Total_Generation\",\n      \"from_stock\": \"stock-kinetic-energy\",\n      \"to_stock\": null,\n      \"position\": {\n        \"x\": 500,\n        \"y\": 350\n      },\n      \"units\": \"MW\"\n    },\n    {\n      \"id\": \"flow-reserve-deployment\",\n      \"name\": \"Reserve Deployment\",\n      \"equation\": \"IF(ABS(Frequency_Deviation) > Deadband, Spinning_Reserve * Droop_Response * Frequency_Deviation / Nominal_Frequency, 0)\",\n      \"from_stock\": \"stock-reserve\",\n      \"to_stock\": null,\n      \"position\": {\n        \"x\": 300,\n        \"y\": 500\n      }\n    },\n    {\n      \"id\": \"flow-reserve-restoration\",\n      \"name\": \"Reserve Restoration\",\n      \"equation\": \"(Max_Reserve - Spinning_Reserve) / Reserve_Restoration_Time\",\n      \"from_stock\": null,\n      \"to_stock\": \"stock-reserve\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 400\n      }\n    }\n  ],\n  \"variables\": [\n    {\n      \"id\": \"var-generation\",\n      \"name\": \"Total Generation\",\n      \"equation\": \"Base_Generation + Primary_Response + Secondary_Response\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 100\n      },\n      \"units\": \"MW\"\n    },\n    {\n      \"id\": \"var-demand\",\n      \"name\": \"Total Demand\",\n      \"equation\": \"Base_Demand + Demand_Fluctuation\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 100\n      },\n      \"units\": \"MW\"\n    },\n    {\n      \"id\": \"var-base-gen\",\n      \"name\": \"Base Generation\",\n      \"equation\": \"1000\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 50\n      },\n      \"units\": \"MW\"\n    },\n    {\n      \"id\": \"var-base-demand\",\n      \"name\": \"Base Demand\",\n      \"equation\": \"1000\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 50\n      },\n      \"units\": \"MW\"\n    },\n    {\n      \"id\": \"var-demand-fluct\",\n      \"name\": \"Demand Fluctuation\",\n      \"equation\": \"50 * SIN(Time * 0.1)\",\n      \"position\": {\n        \"x\": 300,\n        \"y\": 50\n      },\n      \"units\": \"MW\"\n    },\n    {\n      \"id\": \"var-inertia\",\n      \"name\": \"System Inertia\",\n      \"equation\": \"5\",\n      \"position\": {\n        \"x\": 350,\n        \"y\": 100\n      },\n      \"units\": \"s\"\n    },\n    {\n      \"id\": \"var-nominal\",\n      \"name\": \"Nominal Frequency\",\n      \"equation\": \"60\",\n      \"position\": {\n        \"x\": 400,\n        \"y\": 100\n      },\n      \"units\": \"Hz\"\n    },\n    {\n      \"id\": \"var-deviation\",\n      \"name\": \"Frequency Deviation\",\n      \"equation\": \"Nominal_Frequency - Grid_Frequency\",\n      \"position\": {\n        \"x\": 400,\n        \"y\": 200\n      },\n      \"units\": \"Hz\"\n    },\n    {\n      \"id\": \"var-inertia-const\",\n      \"name\": \"Inertia Constant\",\n      \"equation\": \"10\",\n      \"position\": {\n        \"x\": 500,\n        \"y\": 100\n      },\n      \"units\": \"s\"\n    },\n    {\n      \"id\": \"var-deadband\",\n      \"name\": \"Deadband\",\n      \"equation\": \"0.02\",\n      \"position\": {\n        \"x\": 250,\n        \"y\": 350\n      },\n      \"units\": \"Hz\"\n    },\n    {\n      \"id\": \"var-droop\",\n      \"name\": \"Droop Response\",\n      \"equation\": \"0.05\",\n      \"position\": {\n        \"x\": 350,\n        \"y\": 350\n      }\n    },\n    {\n      \"id\": \"var-max-reserve\",\n      \"name\": \"Max Reserve\",\n      \"equation\": \"1000\",\n      \"position\": {\n        \"x\": 150,\n        \"y\": 350\n      },\n      \"units\": \"MW\"\n    },\n    {\n      \"id\": \"var-restoration-time\",\n      \"name\": \"Reserve Restoration Time\",\n      \"equation\": \"30\",\n      \"position\": {\n        \"x\": 150,\n        \"y\": 450\n      },\n      \"units\": \"s\"\n    },\n    {\n      \"id\": \"var-primary-response\",\n      \"name\": \"Primary Response\",\n      \"equation\": \"Droop_Response * Frequency_Deviation * 100\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 150\n      },\n      \"units\": \"MW\"\n    },\n    {\n      \"id\": \"var-secondary-response\",\n      \"name\": \"Secondary Response\",\n      \"equation\": \"0\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 150\n      },\n      \"units\": \"MW\"\n    }\n  ],\n  \"connectors\": [],\n  \"time_settings\": {\n    \"start\": 0,\n    \"end\": 60,\n    \"dt\": 0.01,\n    \"integration_method\": \"radau\",\n    \"rtol\": 1e-10,\n    \"atol\": 1e-11\n  },\n  \"created_at\": \"2026-01-12T08:00:00.000000+00:00\",\n  \"updated_at\": \"2026-01-12T08:00:00.000000+00:00\"\n}\n",
+      "before_sha256": "67dd523daa68c3f72f46699c18360f81df1037db838682b002e4032a071aed39",
+      "baseline_sha256": "67dd523daa68c3f72f46699c18360f81df1037db838682b002e4032a071aed39",
+      "after_sha256": "478e89bcf3f9bdbafdb8c5d2d0a2a6a95268ac661678bdbab6a809a0702694f5",
+      "causal_chain": "Reserve Deployment has a nonzero jump at ABS(Frequency Deviation)=0.02. Radau cannot certify it.",
+      "primary_source_url": "https://docs.nlr.gov/docs/fy20osti/73872.pdf",
+      "source_evidence": "NREL/CP-5D00-73872 printed p.4/PDF p.7 eq.(12); physical energy identity retained; reserve path is local illustrative closure.",
+      "equation_mapping": "All stock initializers, flows, auxiliaries, tables and parameter values remain equal as parsed JSON. Only solver, DT and explanatory description change; Milgram display title additionally states illustrative scope.",
+      "fields_diff": {
+        "description": {
+          "before": "Illustrative grid-frequency experiment with physically consistent rotating-energy balance. Power is MW, time seconds, frequency Hz and kinetic energy MW s. Initial stored energy is derived from the existing System Inertia (5 s) times Base Generation (1000 MW), rather than an independent inconsistent 100. The net Inertial Response is demand minus generation, allowing both kinetic discharge and recharge. Frequency Change follows the exact nonlinear swing-energy identity df/dt=(Pgen-Pload)*f/(2E), retaining E/(f/f0)^2=5000 MW s. Adaptive Radau preserves the kinetic invariant to relative error below 2e-11 over the full 60 s, keeps the original output step .01, and permits half/quarter output refinements within the work budget. All original elements, geometry, forcing, droop and reserve paths remain. Governor/droop/reserve dynamics are illustrative local assumptions; this is not a reproduction of the NREL virtual-synchronous-generator network.",
+          "after": "Illustrative grid-frequency experiment with physically consistent rotating-energy balance. Power is MW, time seconds, frequency Hz and kinetic energy MW s. Initial stored energy is System Inertia (5 s) times Base Generation (1000 MW). Net Inertial Response is demand minus generation, permitting kinetic discharge and recharge. Frequency Change follows df/dt=(Pgen-Pload)*f/(2E), preserving E/(f/f0)^2=5000 MW s. Explicit RK4 at DT 0.04 s handles the illustrative reserve deadband without claiming adaptive event localization; full 60 s default, half and quarter grids fit the engine work budget. The frequency-energy invariant agrees with the independent reduced swing equation near floating-point precision; reserve relative error is below 1e-7 against an event-split reference. All original forcing, droop and reserve paths remain. Governor/droop/reserve dynamics are illustrative local assumptions; this is not a reproduction of the NREL virtual-synchronous-generator network."
+        },
+        "time_settings": {
+          "before": {
+            "start": 0,
+            "end": 60,
+            "dt": 0.01,
+            "integration_method": "radau",
+            "rtol": 1e-10,
+            "atol": 1e-11
+          },
+          "after": {
+            "start": 0,
+            "end": 60,
+            "dt": 0.04,
+            "integration_method": "rk4",
+            "rtol": 1e-10,
+            "atol": 1e-11
+          }
+        }
+      },
+      "independent_reference": "Independent one-state reduced swing equation plus exact E=5000*(f/60)^2; deadband crossings bracketed and reserve linear ODE integrated on each event interval.",
+      "grids": [
+        0.04,
+        0.02,
+        0.01
+      ],
+      "maximum_stock_error_normalized_by_reference_max": [
+        [
+          5.93e-15,
+          1.27e-14,
+          9.18e-08
+        ],
+        [
+          1.49e-15,
+          2.86e-15,
+          6.65e-08
+        ],
+        [
+          2.74e-15,
+          1.08e-14,
+          3.37e-08
+        ]
+      ],
+      "error_stock_order": [
+        "Grid Frequency",
+        "Stored Kinetic Energy",
+        "Spinning Reserve"
+      ],
+      "milgram_counter_error_note": null,
+      "remaining_gaps": "Numerical completion and the tested default domain do not certify arbitrary scenarios or empirical calibration. Source fidelity is limited to the mapping explicitly stated above.",
+      "validation": {
+        "suite": "tests/test_corpus_hardening_v19_b.py",
+        "full_horizon_grids_completed": 3,
+        "finite_all_numeric_outputs": true,
+        "nonnegative_all_stock_samples": true,
+        "default_horizon_preserved": true,
+        "million_work_and_retained_value_limits_preserved": true,
+        "maximum_error_definition": "max absolute error at saved default times, divided by maximum absolute independent reference stock or1, whichever is greater",
+        "error_values": "conservatively rounded from measured trajectories"
+      }
+    },
+    {
+      "id": "traffic-flow-dynamics-soc",
+      "file": "models/social/traffic-flow-dynamics-soc.json",
+      "baseline_commit": "cc010ae",
+      "before_text": "{\n  \"id\": \"traffic-flow-dynamics-soc\",\n  \"name\": \"Traffic Flow Dynamics Model\",\n  \"description\": \"Illustrative traffic stock-flow model using a linear speed-density relation and queue heuristics. Lighthill and Whitham (1955), Part II, is conceptual background; this file is not a verified spatial discretization or reproduction of the LWR conservation law. Parameter units, vehicle conservation and numerical stability require review.\",\n  \"stocks\": [\n    {\n      \"id\": \"stock-density\",\n      \"name\": \"Traffic_Density\",\n      \"initial_value\": 20,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 300,\n        \"y\": 100\n      }\n    },\n    {\n      \"id\": \"stock-queue\",\n      \"name\": \"Queue_Length\",\n      \"initial_value\": 0,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 500,\n        \"y\": 100\n      }\n    },\n    {\n      \"id\": \"stock-throughput\",\n      \"name\": \"Cumulative_Throughput\",\n      \"initial_value\": 0,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 300,\n        \"y\": 250\n      }\n    }\n  ],\n  \"flows\": [\n    {\n      \"id\": \"flow-inflow\",\n      \"name\": \"Traffic_Inflow\",\n      \"equation\": \"Demand * (1 + Peak_Factor * SIN(TIME / 12 * 3.14159))\",\n      \"from_stock\": null,\n      \"to_stock\": \"stock-density\",\n      \"position\": {\n        \"x\": 150,\n        \"y\": 100\n      }\n    },\n    {\n      \"id\": \"flow-outflow\",\n      \"name\": \"Traffic_Outflow\",\n      \"equation\": \"Flow_Rate\",\n      \"from_stock\": \"stock-density\",\n      \"to_stock\": null,\n      \"position\": {\n        \"x\": 400,\n        \"y\": 100\n      }\n    },\n    {\n      \"id\": \"flow-queueform\",\n      \"name\": \"Queue_Formation\",\n      \"equation\": \"MAX(0, Traffic_Density - Critical_Density) * Spillback_Rate\",\n      \"from_stock\": null,\n      \"to_stock\": \"stock-queue\",\n      \"position\": {\n        \"x\": 450,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"flow-queuediss\",\n      \"name\": \"Queue_Dissipation\",\n      \"equation\": \"Queue_Length * Queue_Discharge_Rate * IF(Traffic_Density < Critical_Density, 1, 0.2)\",\n      \"from_stock\": \"stock-queue\",\n      \"to_stock\": null,\n      \"position\": {\n        \"x\": 550,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"flow-thruput\",\n      \"name\": \"Throughput\",\n      \"equation\": \"Flow_Rate\",\n      \"from_stock\": null,\n      \"to_stock\": \"stock-throughput\",\n      \"position\": {\n        \"x\": 300,\n        \"y\": 175\n      }\n    }\n  ],\n  \"variables\": [\n    {\n      \"id\": \"var-demand\",\n      \"name\": \"Demand\",\n      \"equation\": \"50\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"var-peakfact\",\n      \"name\": \"Peak_Factor\",\n      \"equation\": \"0.4\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"var-critdens\",\n      \"name\": \"Critical_Density\",\n      \"equation\": \"50\",\n      \"position\": {\n        \"x\": 400,\n        \"y\": 175\n      }\n    },\n    {\n      \"id\": \"var-jamdens\",\n      \"name\": \"Jam_Density\",\n      \"equation\": \"150\",\n      \"position\": {\n        \"x\": 500,\n        \"y\": 175\n      }\n    },\n    {\n      \"id\": \"var-freeflow\",\n      \"name\": \"Free_Flow_Speed\",\n      \"equation\": \"60\",\n      \"position\": {\n        \"x\": 150,\n        \"y\": 175\n      }\n    },\n    {\n      \"id\": \"var-speed\",\n      \"name\": \"Traffic_Speed\",\n      \"equation\": \"Free_Flow_Speed * (1 - Traffic_Density / Jam_Density)\",\n      \"position\": {\n        \"x\": 250,\n        \"y\": 175\n      }\n    },\n    {\n      \"id\": \"var-flowrate\",\n      \"name\": \"Flow_Rate\",\n      \"equation\": \"Traffic_Density * Traffic_Speed\",\n      \"position\": {\n        \"x\": 350,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"var-spillrate\",\n      \"name\": \"Spillback_Rate\",\n      \"equation\": \"0.1\",\n      \"position\": {\n        \"x\": 400,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"var-discharge\",\n      \"name\": \"Queue_Discharge_Rate\",\n      \"equation\": \"0.2\",\n      \"position\": {\n        \"x\": 550,\n        \"y\": 100\n      }\n    },\n    {\n      \"id\": \"var-los\",\n      \"name\": \"Level_of_Service\",\n      \"equation\": \"IF(Traffic_Density < 20, 1, IF(Traffic_Density < 35, 2, IF(Traffic_Density < 50, 3, IF(Traffic_Density < 70, 4, IF(Traffic_Density < 100, 5, 6)))))\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 250\n      }\n    }\n  ],\n  \"connectors\": [\n    {\n      \"id\": \"conn-1\",\n      \"from_element\": \"Traffic_Density\",\n      \"to_element\": \"Traffic_Speed\"\n    }\n  ],\n  \"time_settings\": {\n    \"start\": 0,\n    \"end\": 48,\n    \"dt\": 0.25,\n    \"integration_method\": \"radau\"\n  },\n  \"created_at\": \"2026-01-12T02:49:51.600040+00:00\",\n  \"updated_at\": \"2026-01-12T02:49:51.600050+00:00\",\n  \"source\": \"https://doi.org/10.1098/rspa.1955.0089\",\n  \"reference\": \"Lighthill, M.J. and Whitham, G.B. (1955). On kinematic waves II. A theory of traffic flow on long crowded roads. Proceedings of the Royal Society A 229(1178):317-345. doi:10.1098/rspa.1955.0089.\"\n}\n",
+      "before_sha256": "14b21749722cbf3b27f1cfd7f43817e58da2a2e150ae19c1e9aed88d7bc311b2",
+      "baseline_sha256": "14b21749722cbf3b27f1cfd7f43817e58da2a2e150ae19c1e9aed88d7bc311b2",
+      "after_sha256": "f328debf2247ec1af0f0fbb4f11a7cc7b5ff6225c768e66813eaa42a886fac8c",
+      "causal_chain": "Queue_Dissipation changes its coefficient discontinuously at density50; conservative Radau guard rejects the branch even though the default reachable set excludes it.",
+      "primary_source_url": "https://doi.org/10.1098/rspa.1955.0089",
+      "source_evidence": "Lighthill and Whitham 1955 Part II pp.317-345 is conceptual background, not this local lumped ODE or queue algorithm; no original native simulation artifact established.",
+      "equation_mapping": "All stock initializers, flows, auxiliaries, tables and parameter values remain equal as parsed JSON. Only solver, DT and explanatory description change; Milgram display title additionally states illustrative scope.",
+      "fields_diff": {
+        "description": {
+          "before": "Illustrative traffic stock-flow model using a linear speed-density relation and queue heuristics. Lighthill and Whitham (1955), Part II, is conceptual background; this file is not a verified spatial discretization or reproduction of the LWR conservation law. Parameter units, vehicle conservation and numerical stability require review.",
+          "after": "Illustrative traffic stock-flow model using a linear speed-density relation and queue heuristics. Lighthill and Whitham (1955), Part II, is conceptual background; this file is not a verified spatial discretization or reproduction of the LWR conservation law. Explicit RK4 DT 0.02 resolves the fast density relaxation on the full 48-unit horizon; half and quarter DT checks fit the work budget. Maximum density error against independent handwritten equations is below 1% of the initial density, falling below 0.002% at quarter DT. For these original inputs, density remains between 0 and 20, below the queue threshold 50, so the unchanged queue equation gives zero queue. Density plus cumulative throughput satisfies the integrated external inflow balance. Parameter calibration and a physical road-length/unit mapping remain illustrative assumptions."
+        },
+        "time_settings": {
+          "before": {
+            "start": 0,
+            "end": 48,
+            "dt": 0.25,
+            "integration_method": "radau"
+          },
+          "after": {
+            "start": 0,
+            "end": 48,
+            "dt": 0.02,
+            "integration_method": "rk4"
+          }
+        }
+      },
+      "independent_reference": "Handwritten 3-state ODE and analytic density+throughput inflow balance; invariant interval density[0,20] excludes queue formation and branch crossing.",
+      "grids": [
+        0.02,
+        0.01,
+        0.005
+      ],
+      "maximum_stock_error_normalized_by_reference_max": [
+        [
+          0.00966506,
+          0,
+          7.99042e-05
+        ],
+        [
+          0.00038572,
+          0,
+          3.18887e-06
+        ],
+        [
+          1.94178e-05,
+          0,
+          1.60533e-07
+        ]
+      ],
+      "error_stock_order": [
+        "Traffic_Density",
+        "Queue_Length",
+        "Cumulative_Throughput"
+      ],
+      "milgram_counter_error_note": null,
+      "remaining_gaps": "Numerical completion and the tested default domain do not certify arbitrary scenarios or empirical calibration. Source fidelity is limited to the mapping explicitly stated above.",
+      "validation": {
+        "suite": "tests/test_corpus_hardening_v19_b.py",
+        "full_horizon_grids_completed": 3,
+        "finite_all_numeric_outputs": true,
+        "nonnegative_all_stock_samples": true,
+        "default_horizon_preserved": true,
+        "million_work_and_retained_value_limits_preserved": true,
+        "maximum_error_definition": "max absolute error at saved default times, divided by maximum absolute independent reference stock or1, whichever is greater",
+        "error_values": "conservatively rounded from measured trajectories"
+      }
+    },
+    {
+      "id": "milgram-small-world-soc",
+      "file": "models/social/milgram-small-world-soc.json",
+      "baseline_commit": "cc010ae",
+      "before_text": "{\n  \"id\": \"milgram-small-world-soc\",\n  \"name\": \"Milgram Small World Network\",\n  \"description\": \"Stanley Milgram's 1967 'six degrees of separation' experiment showing social networks have small average path lengths despite large size. Reference: Milgram, S. (1967). The Small World Problem. Psychology Today, 2(1), 60-67. Source: https://doi.org/10.1037/e400002009-005\",\n  \"stocks\": [\n    {\n      \"id\": \"stock-reached\",\n      \"name\": \"People_Reached\",\n      \"initial_value\": 1,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 200\n      }\n    },\n    {\n      \"id\": \"stock-steps\",\n      \"name\": \"Chain_Steps\",\n      \"initial_value\": 0,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 400,\n        \"y\": 200\n      }\n    }\n  ],\n  \"flows\": [\n    {\n      \"id\": \"flow-spread\",\n      \"name\": \"Network_Spread\",\n      \"equation\": \"People_Reached * branching_factor * (1 - People_Reached / population)\",\n      \"from_stock\": null,\n      \"to_stock\": \"stock-reached\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 200\n      }\n    },\n    {\n      \"id\": \"flow-step\",\n      \"name\": \"Step_Count\",\n      \"equation\": \"IF(People_Reached < target_reached, 1, 0)\",\n      \"from_stock\": null,\n      \"to_stock\": \"stock-steps\",\n      \"position\": {\n        \"x\": 400,\n        \"y\": 300\n      }\n    }\n  ],\n  \"variables\": [\n    {\n      \"id\": \"var-pop\",\n      \"name\": \"population\",\n      \"equation\": \"300000000\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 100\n      }\n    },\n    {\n      \"id\": \"var-branch\",\n      \"name\": \"branching_factor\",\n      \"equation\": \"50\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 100\n      }\n    },\n    {\n      \"id\": \"var-target\",\n      \"name\": \"target_reached\",\n      \"equation\": \"population * 0.5\",\n      \"position\": {\n        \"x\": 300,\n        \"y\": 100\n      }\n    },\n    {\n      \"id\": \"var-coverage\",\n      \"name\": \"Network_Coverage\",\n      \"equation\": \"People_Reached / population\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 350\n      }\n    },\n    {\n      \"id\": \"var-remaining\",\n      \"name\": \"Steps_Remaining\",\n      \"equation\": \"ln(population / People_Reached) / ln(branching_factor)\",\n      \"position\": {\n        \"x\": 400,\n        \"y\": 350\n      }\n    },\n    {\n      \"id\": \"var-avg-path\",\n      \"name\": \"Avg_Path_Length\",\n      \"equation\": \"ln(population) / ln(branching_factor)\",\n      \"position\": {\n        \"x\": 300,\n        \"y\": 400\n      }\n    },\n    {\n      \"id\": \"var-clustering\",\n      \"name\": \"clustering_coefficient\",\n      \"equation\": \"0.1\",\n      \"position\": {\n        \"x\": 500,\n        \"y\": 100\n      }\n    }\n  ],\n  \"connectors\": [\n    {\n      \"id\": \"conn-1\",\n      \"from_element\": \"People_Reached\",\n      \"to_element\": \"Network_Spread\"\n    },\n    {\n      \"id\": \"conn-2\",\n      \"from_element\": \"branching_factor\",\n      \"to_element\": \"Network_Spread\"\n    },\n    {\n      \"id\": \"conn-3\",\n      \"from_element\": \"population\",\n      \"to_element\": \"Network_Coverage\"\n    }\n  ],\n  \"time_settings\": {\n    \"start\": 0,\n    \"end\": 10,\n    \"dt\": 1,\n    \"integration_method\": \"radau\"\n  },\n  \"source\": \"https://doi.org/10.1037/h0024480\",\n  \"reference\": \"Milgram S. The Small World Problem. Psychology Today. 1967;1(1):61-67.\"\n}\n",
+      "before_sha256": "9e9c1fb788ee3826a4399b95c45c6b74d3d40c33d9d8a667583c4eeaa8a67978",
+      "baseline_sha256": "9e9c1fb788ee3826a4399b95c45c6b74d3d40c33d9d8a667583c4eeaa8a67978",
+      "after_sha256": "cbbdc54e9e290cd73bc69112467fcee7be13426f8e9d1ad0f0319ed5a5845c73",
+      "causal_chain": "Step_Count is discontinuous at half population, and the original output DT1 also fails to resolve growth rate50 under explicit integration.",
+      "primary_source_url": "https://doi.org/10.1037/e400002009-005",
+      "source_evidence": "Milgram 1967 Psychology Today is conceptual context only; no logistic ODE or continuous-time chain-counter native model is established. Crossref primary DOI registration confirms original source DOI10.1037/h0024480 is Mills/Zytowski Helping relationship: A structural analysis (1967); corrected to registered Milgram The small-world problem DOI10.1037/e400002009-005.",
+      "equation_mapping": "All stock initializers, flows, auxiliaries, tables and parameter values remain equal as parsed JSON. Only solver, DT and explanatory description change; Milgram display title additionally states illustrative scope. Milgram source/reference metadata additionally corrects an unrelated original DOI using primary Crossref registration.",
+      "fields_diff": {
+        "name": {
+          "before": "Milgram Small World Network",
+          "after": "Illustrative Logistic Network Reach (Milgram Context)"
+        },
+        "description": {
+          "before": "Stanley Milgram's 1967 'six degrees of separation' experiment showing social networks have small average path lengths despite large size. Reference: Milgram, S. (1967). The Small World Problem. Psychology Today, 2(1), 60-67. Source: https://doi.org/10.1037/e400002009-005",
+          "after": "Illustrative continuous logistic network-reach experiment, conceptually associated with Milgram small-world studies. This generated logistic ODE is not a reconstruction of the 1967 acquaintance-chain experiment. People_Reached obeys dP/dt=50*P*(1-P/300000000). The legacy Chain_Steps stock integrates elapsed model time while reach is below half the population; it is not a count of discrete acquaintance links. Avg_Path_Length and Steps_Remaining are retained heuristic logarithmic quantities. Explicit RK4 DT 0.0025 resolves the logistic transition over the unchanged full 10-unit horizon. Default/half/quarter grids fit the work budget and agree with the exact logistic solution; threshold-duration error is bounded by half a timestep, with nonmonotone grid-phase error. No empirical calibration or native Milgram simulation is claimed."
+        },
+        "time_settings": {
+          "before": {
+            "start": 0,
+            "end": 10,
+            "dt": 1,
+            "integration_method": "radau"
+          },
+          "after": {
+            "start": 0,
+            "end": 10,
+            "dt": 0.0025,
+            "integration_method": "rk4"
+          }
+        },
+        "source": {
+          "before": "https://doi.org/10.1037/h0024480",
+          "after": "https://doi.org/10.1037/e400002009-005"
+        },
+        "reference": {
+          "before": "Milgram S. The Small World Problem. Psychology Today. 1967;1(1):61-67.",
+          "after": "Milgram, S. (1967), The small-world problem. Psychology Today, inaugural issue. PsycEXTRA DOI 10.1037/e400002009-005 identifies the original article; conceptual context only, not a native logistic simulation."
+        }
+      },
+      "independent_reference": "Exact logistic P=K/(1+(K-1)*exp(-50t)); half-population hitting time log(K-1)/50 and elapsed threshold-duration min(t,hit).",
+      "grids": [
+        0.0025,
+        0.00125,
+        0.000625
+      ],
+      "maximum_stock_error_normalized_by_reference_max": [
+        [
+          8.0118e-06,
+          3.08061e-05
+        ],
+        [
+          5.26757e-07,
+          0.000177528
+        ],
+        [
+          3.37682e-08,
+          0.000134973
+        ]
+      ],
+      "error_stock_order": [
+        "People_Reached",
+        "Chain_Steps"
+      ],
+      "milgram_counter_error_note": "Threshold-duration grid-phase error is nonmonotone but all tested absolute errors are below half DT.",
+      "remaining_gaps": "Numerical completion and the tested default domain do not certify arbitrary scenarios or empirical calibration. Source fidelity is limited to the mapping explicitly stated above.",
+      "source_metadata_verification": {
+        "provider": "https://api.crossref.org/works/10.1037/e400002009-005",
+        "title": "The small-world problem",
+        "author": "Stanley Milgram",
+        "published_year": 1967,
+        "wrong_original_doi_title": "Helping relationship: A structural analysis."
+      },
+      "validation": {
+        "suite": "tests/test_corpus_hardening_v19_b.py",
+        "full_horizon_grids_completed": 3,
+        "finite_all_numeric_outputs": true,
+        "nonnegative_all_stock_samples": true,
+        "default_horizon_preserved": true,
+        "million_work_and_retained_value_limits_preserved": true,
+        "maximum_error_definition": "max absolute error at saved default times, divided by maximum absolute independent reference stock or1, whichever is greater",
+        "error_values": "conservatively rounded from measured trajectories"
+      }
+    },
+    {
+      "id": "greenshields-traffic-flow-model-tra",
+      "file": "models/transportation/greenshields-traffic-flow-model-tra.json",
+      "baseline_commit": "cc010ae",
+      "before_text": "{\n  \"id\": \"greenshields-traffic-flow-model-tra\",\n  \"name\": \"Greenshields Traffic Flow Model\",\n  \"description\": \"Illustrative traffic stock-flow model using the Greenshields linear speed-density relation. Capacity follows from the parabolic flow-density relation. Arrival forcing and queue equations are local illustrative additions, not a reproduction of the 1935 empirical study; parameter calibration and numerical stability remain unverified.\",\n  \"stocks\": [\n    {\n      \"id\": \"s1\",\n      \"name\": \"Vehicle_Density\",\n      \"initial_value\": 20,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 200\n      }\n    },\n    {\n      \"id\": \"s2\",\n      \"name\": \"Queue_Length\",\n      \"initial_value\": 0,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 400,\n        \"y\": 200\n      }\n    }\n  ],\n  \"flows\": [\n    {\n      \"id\": \"f1\",\n      \"name\": \"Density_Change\",\n      \"equation\": \"(Arrival_Rate - Departure_Rate) / Road_Length\",\n      \"from_stock\": null,\n      \"to_stock\": \"s1\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 200\n      }\n    },\n    {\n      \"id\": \"f2\",\n      \"name\": \"Queue_Growth\",\n      \"equation\": \"IF(Vehicle_Density > Jam_Density * 0.8, Arrival_Rate - Capacity, 0)\",\n      \"from_stock\": null,\n      \"to_stock\": \"s2\",\n      \"position\": {\n        \"x\": 500,\n        \"y\": 200\n      }\n    }\n  ],\n  \"variables\": [\n    {\n      \"id\": \"v1\",\n      \"name\": \"Free_Flow_Speed\",\n      \"equation\": \"60\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"v2\",\n      \"name\": \"Jam_Density\",\n      \"equation\": \"150\",\n      \"position\": {\n        \"x\": 350,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"v3\",\n      \"name\": \"Road_Length\",\n      \"equation\": \"1\",\n      \"position\": {\n        \"x\": 500,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"v4\",\n      \"name\": \"Arrival_Rate\",\n      \"equation\": \"1500 + 500 * SIN(TIME * 0.5)\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 100\n      }\n    },\n    {\n      \"id\": \"v5\",\n      \"name\": \"Speed\",\n      \"equation\": \"Free_Flow_Speed * (1 - Vehicle_Density / Jam_Density)\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 350\n      }\n    },\n    {\n      \"id\": \"v6\",\n      \"name\": \"Flow\",\n      \"equation\": \"Vehicle_Density * Speed\",\n      \"position\": {\n        \"x\": 400,\n        \"y\": 350\n      }\n    },\n    {\n      \"id\": \"v7\",\n      \"name\": \"Capacity\",\n      \"equation\": \"Free_Flow_Speed * Jam_Density / 4\",\n      \"position\": {\n        \"x\": 300,\n        \"y\": 420\n      }\n    },\n    {\n      \"id\": \"v8\",\n      \"name\": \"Departure_Rate\",\n      \"equation\": \"MIN(Flow, Capacity)\",\n      \"position\": {\n        \"x\": 500,\n        \"y\": 420\n      }\n    },\n    {\n      \"id\": \"v9\",\n      \"name\": \"Level_of_Service\",\n      \"equation\": \"IF(Vehicle_Density < Jam_Density * 0.3, 1, IF(Vehicle_Density < Jam_Density * 0.6, 2, 3))\",\n      \"position\": {\n        \"x\": 300,\n        \"y\": 480\n      }\n    }\n  ],\n  \"connectors\": [\n    {\n      \"id\": \"c1\",\n      \"from_element\": \"Vehicle_Density\",\n      \"to_element\": \"Speed\"\n    }\n  ],\n  \"time_settings\": {\n    \"start\": 0,\n    \"end\": 24,\n    \"dt\": 0.1,\n    \"integration_method\": \"radau\"\n  },\n  \"created_at\": \"2026-01-15T14:49:43.657712+00:00\",\n  \"updated_at\": \"2026-01-15T14:49:43.657721+00:00\",\n  \"source\": \"https://onlinepubs.trb.org/Onlinepubs/hrbproceedings/14/14P1-023.pdf\",\n  \"reference\": \"Greenshields, B.D. (1935). A Study of Traffic Capacity. Highway Research Board Proceedings 14, Part I:448-477 (including discussion).\"\n}\n",
+      "before_sha256": "4c9ed576174ecc3e8a61a63722c0c8ea1dcdcc3e0db19fe6040452ef4efb8e3e",
+      "baseline_sha256": "4c9ed576174ecc3e8a61a63722c0c8ea1dcdcc3e0db19fe6040452ef4efb8e3e",
+      "after_sha256": "607a7fa95ec2c85e52f63d40c3e2f566c4222f31cf2e98e184bdd4609533fa1b",
+      "causal_chain": "Queue_Growth jumps at density120; Radau cannot certify this illustrative branch. Coarse DT0.1 is unsuitable for explicit fast density relaxation.",
+      "primary_source_url": "https://onlinepubs.trb.org/Onlinepubs/hrbproceedings/14/14P1-023.pdf",
+      "source_evidence": "Greenshields 1935 pp.448-477, speed-density analysis printed pp.468-469, eq.(1) and Fig.5. Source does not define this sinusoidal-arrival queue ODE or its numerical integrator.",
+      "equation_mapping": "All stock initializers, flows, auxiliaries, tables and parameter values remain equal as parsed JSON. Only solver, DT and explanatory description change; Milgram display title additionally states illustrative scope.",
+      "fields_diff": {
+        "description": {
+          "before": "Illustrative traffic stock-flow model using the Greenshields linear speed-density relation. Capacity follows from the parabolic flow-density relation. Arrival forcing and queue equations are local illustrative additions, not a reproduction of the 1935 empirical study; parameter calibration and numerical stability remain unverified.",
+          "after": "Illustrative traffic stock-flow model using the Greenshields linear speed-density relation. Capacity is the maximum of the parabolic flow-density relation. Arrival forcing and queue equations are local illustrative additions, not a reproduction of the 1935 empirical study. Explicit RK4 DT 0.02 resolves the fast density relaxation on the full 24-unit horizon; default/half/quarter grids fit the work budget. Against independent handwritten equations, maximum density error is below 0.05% of the reference maximum and falls below 0.00012% at quarter DT. For the original inputs the invariant density interval [0,50] stays below the unchanged queue trigger 120, so queue remains zero. Parameter calibration and altered-scenario queue validity remain unverified."
+        },
+        "time_settings": {
+          "before": {
+            "start": 0,
+            "end": 24,
+            "dt": 0.1,
+            "integration_method": "radau"
+          },
+          "after": {
+            "start": 0,
+            "end": 24,
+            "dt": 0.02,
+            "integration_method": "rk4"
+          }
+        }
+      },
+      "independent_reference": "Handwritten 2-state ODE with parabolic flow, independently derived capacity2250, and invariant interval density[0,50] below queue trigger120.",
+      "grids": [
+        0.02,
+        0.01,
+        0.005
+      ],
+      "maximum_stock_error_normalized_by_reference_max": [
+        [
+          0.000443953,
+          0
+        ],
+        [
+          2.06409e-05,
+          0
+        ],
+        [
+          1.10308e-06,
+          0
+        ]
+      ],
+      "error_stock_order": [
+        "Vehicle_Density",
+        "Queue_Length"
+      ],
+      "milgram_counter_error_note": null,
+      "remaining_gaps": "Numerical completion and the tested default domain do not certify arbitrary scenarios or empirical calibration. Source fidelity is limited to the mapping explicitly stated above.",
+      "validation": {
+        "suite": "tests/test_corpus_hardening_v19_b.py",
+        "full_horizon_grids_completed": 3,
+        "finite_all_numeric_outputs": true,
+        "nonnegative_all_stock_samples": true,
+        "default_horizon_preserved": true,
+        "million_work_and_retained_value_limits_preserved": true,
+        "maximum_error_definition": "max absolute error at saved default times, divided by maximum absolute independent reference stock or1, whichever is greater",
+        "error_values": "conservatively rounded from measured trajectories"
+      }
+    },
+    {
+      "id": "world2-forrester-original-cla",
+      "file": "models/classic/world2-forrester-original-cla.json",
+      "baseline_commit": "cc010ae",
+      "before_text": "{\n  \"id\": \"world2-forrester-original-cla\",\n  \"name\": \"World2 Forrester Original Model\",\n  \"description\": \"Jay Forrester’s five-sector WORLD2 global dynamics model. Version 1.8 restores the 1970 primary D-1354 documentor (MIT archive PDF pp. 82–91), including its 22 piecewise-linear feedback tables, birth/death normals 0.045/0.025 and initial agricultural fraction 0.3. Existing element IDs and positions are preserved. Capital Generation Multiplier is the source CIPC table divided by the retained 0.05 normal, an algebraically identical rescaling. The documented baseline pre/post-1970 policy coefficients are equal. Explicit Radau integration preserves the 1900–2100 annual output grid. This historical scenario is not a contemporary population or climate calibration.\",\n  \"source\": \"https://dome.mit.edu/bitstream/handle/1721.3/189645/39080024064039.pdf?isAllowed=y&sequence=1\",\n  \"reference\": \"Forrester, J.W. (1970), WORLD2 D-1354 equation documentor, equations 1–43, MIT archive PDF pp. 82–91; explicitly the 1970 formulation, not the later 1973 book variant.\",\n  \"stocks\": [\n    {\n      \"id\": \"stock-pop\",\n      \"name\": \"Population\",\n      \"initial_value\": 1650000000,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 200\n      }\n    },\n    {\n      \"id\": \"stock-capital\",\n      \"name\": \"Capital Investment\",\n      \"initial_value\": 400000000,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 300,\n        \"y\": 200\n      }\n    },\n    {\n      \"id\": \"stock-resources\",\n      \"name\": \"Natural Resources\",\n      \"initial_value\": 900000000000,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 500,\n        \"y\": 200\n      }\n    },\n    {\n      \"id\": \"stock-pollution\",\n      \"name\": \"Pollution\",\n      \"initial_value\": 200000000,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 300,\n        \"y\": 350\n      }\n    },\n    {\n      \"id\": \"stock-agric-frac\",\n      \"name\": \"Capital in Agriculture Fraction\",\n      \"initial_value\": 0.3,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 350\n      }\n    }\n  ],\n  \"flows\": [\n    {\n      \"id\": \"flow-births\",\n      \"name\": \"Birth Rate\",\n      \"equation\": \"Population * Birth_Rate_Normal * Birth_Rate_Multiplier\",\n      \"from_stock\": null,\n      \"to_stock\": \"stock-pop\",\n      \"position\": {\n        \"x\": 50,\n        \"y\": 200\n      }\n    },\n    {\n      \"id\": \"flow-deaths\",\n      \"name\": \"Death Rate\",\n      \"equation\": \"Population * Death_Rate_Normal * Death_Rate_Multiplier\",\n      \"from_stock\": \"stock-pop\",\n      \"to_stock\": null,\n      \"position\": {\n        \"x\": 150,\n        \"y\": 200\n      }\n    },\n    {\n      \"id\": \"flow-capital-gen\",\n      \"name\": \"Capital Generation\",\n      \"equation\": \"Population * Capital_Generation_Normal * Capital_Generation_Multiplier\",\n      \"from_stock\": null,\n      \"to_stock\": \"stock-capital\",\n      \"position\": {\n        \"x\": 250,\n        \"y\": 200\n      }\n    },\n    {\n      \"id\": \"flow-depreciation\",\n      \"name\": \"Capital Depreciation\",\n      \"equation\": \"Capital_Investment / Capital_Normal_Lifetime\",\n      \"from_stock\": \"stock-capital\",\n      \"to_stock\": null,\n      \"position\": {\n        \"x\": 350,\n        \"y\": 200\n      }\n    },\n    {\n      \"id\": \"flow-resource-use\",\n      \"name\": \"Resource Usage\",\n      \"equation\": \"Population * Resource_Usage_Normal * Resource_Usage_Multiplier\",\n      \"from_stock\": \"stock-resources\",\n      \"to_stock\": null,\n      \"position\": {\n        \"x\": 500,\n        \"y\": 250\n      }\n    },\n    {\n      \"id\": \"flow-pollution-gen\",\n      \"name\": \"Pollution Generation\",\n      \"equation\": \"Population * Pollution_Normal * Pollution_Generation_Multiplier\",\n      \"from_stock\": null,\n      \"to_stock\": \"stock-pollution\",\n      \"position\": {\n        \"x\": 250,\n        \"y\": 350\n      }\n    },\n    {\n      \"id\": \"flow-pollution-absorb\",\n      \"name\": \"Pollution Absorption\",\n      \"equation\": \"Pollution / Pollution_Absorption_Time\",\n      \"from_stock\": \"stock-pollution\",\n      \"to_stock\": null,\n      \"position\": {\n        \"x\": 350,\n        \"y\": 350\n      }\n    },\n    {\n      \"id\": \"flow-agric-adjust\",\n      \"name\": \"Agriculture Adjustment\",\n      \"equation\": \"(Desired_Agric_Fraction - Capital_in_Agriculture_Fraction) / Agric_Adjustment_Time\",\n      \"from_stock\": null,\n      \"to_stock\": \"stock-agric-frac\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 400\n      }\n    }\n  ],\n  \"variables\": [\n    {\n      \"id\": \"var-brn\",\n      \"name\": \"Birth Rate Normal\",\n      \"equation\": \"0.045\",\n      \"position\": {\n        \"x\": 50,\n        \"y\": 150\n      }\n    },\n    {\n      \"id\": \"var-brm\",\n      \"name\": \"Birth Rate Multiplier\",\n      \"equation\": \"BRM_Material * BRM_Crowding * BRM_Food * BRM_Pollution\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 100\n      }\n    },\n    {\n      \"id\": \"var-brm-mat\",\n      \"name\": \"BRM Material\",\n      \"equation\": \"World2_BRMM(Material_Standard_of_Living)\",\n      \"position\": {\n        \"x\": 50,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"var-brm-crowd\",\n      \"name\": \"BRM Crowding\",\n      \"equation\": \"World2_BRCM(Crowding_Ratio)\",\n      \"position\": {\n        \"x\": 150,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"var-brm-food\",\n      \"name\": \"BRM Food\",\n      \"equation\": \"World2_BRFM(Food_Ratio)\",\n      \"position\": {\n        \"x\": 250,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"var-brm-poll\",\n      \"name\": \"BRM Pollution\",\n      \"equation\": \"World2_BRPM(Pollution_Ratio)\",\n      \"position\": {\n        \"x\": 350,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"var-drn\",\n      \"name\": \"Death Rate Normal\",\n      \"equation\": \"0.025\",\n      \"position\": {\n        \"x\": 150,\n        \"y\": 150\n      }\n    },\n    {\n      \"id\": \"var-drm\",\n      \"name\": \"Death Rate Multiplier\",\n      \"equation\": \"DRM_Material * DRM_Crowding * DRM_Food * DRM_Pollution\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 100\n      }\n    },\n    {\n      \"id\": \"var-drm-mat\",\n      \"name\": \"DRM Material\",\n      \"equation\": \"World2_DRMM(Material_Standard_of_Living)\",\n      \"position\": {\n        \"x\": 50,\n        \"y\": 250\n      }\n    },\n    {\n      \"id\": \"var-drm-crowd\",\n      \"name\": \"DRM Crowding\",\n      \"equation\": \"World2_DRCM(Crowding_Ratio)\",\n      \"position\": {\n        \"x\": 150,\n        \"y\": 250\n      }\n    },\n    {\n      \"id\": \"var-drm-food\",\n      \"name\": \"DRM Food\",\n      \"equation\": \"World2_DRFM(Food_Ratio)\",\n      \"position\": {\n        \"x\": 250,\n        \"y\": 250\n      }\n    },\n    {\n      \"id\": \"var-drm-poll\",\n      \"name\": \"DRM Pollution\",\n      \"equation\": \"World2_DRPM(Pollution_Ratio)\",\n      \"position\": {\n        \"x\": 350,\n        \"y\": 250\n      }\n    },\n    {\n      \"id\": \"var-cgn\",\n      \"name\": \"Capital Generation Normal\",\n      \"equation\": \"0.05\",\n      \"position\": {\n        \"x\": 250,\n        \"y\": 150\n      }\n    },\n    {\n      \"id\": \"var-cgm\",\n      \"name\": \"Capital Generation Multiplier\",\n      \"equation\": \"World2_CIM(Material_Standard_of_Living)\",\n      \"position\": {\n        \"x\": 300,\n        \"y\": 100\n      }\n    },\n    {\n      \"id\": \"var-cnl\",\n      \"name\": \"Capital Normal Lifetime\",\n      \"equation\": \"40\",\n      \"position\": {\n        \"x\": 350,\n        \"y\": 150\n      }\n    },\n    {\n      \"id\": \"var-run\",\n      \"name\": \"Resource Usage Normal\",\n      \"equation\": \"1\",\n      \"position\": {\n        \"x\": 450,\n        \"y\": 150\n      }\n    },\n    {\n      \"id\": \"var-rum\",\n      \"name\": \"Resource Usage Multiplier\",\n      \"equation\": \"World2_NRMM(Material_Standard_of_Living)\",\n      \"position\": {\n        \"x\": 500,\n        \"y\": 100\n      }\n    },\n    {\n      \"id\": \"var-pn\",\n      \"name\": \"Pollution Normal\",\n      \"equation\": \"1\",\n      \"position\": {\n        \"x\": 250,\n        \"y\": 300\n      }\n    },\n    {\n      \"id\": \"var-pgm\",\n      \"name\": \"Pollution Generation Multiplier\",\n      \"equation\": \"World2_POLCM(Capital_Investment / Population)\",\n      \"position\": {\n        \"x\": 300,\n        \"y\": 250\n      }\n    },\n    {\n      \"id\": \"var-pat\",\n      \"name\": \"Pollution Absorption Time\",\n      \"equation\": \"World2_POLAT(Pollution_Ratio)\",\n      \"position\": {\n        \"x\": 350,\n        \"y\": 300\n      }\n    },\n    {\n      \"id\": \"var-msol\",\n      \"name\": \"Material Standard of Living\",\n      \"equation\": \"(Capital_Investment / Population) * (1 - Capital_in_Agriculture_Fraction) * World2_NREM(Resource_Ratio) / (1 - 0.3)\",\n      \"position\": {\n        \"x\": 400,\n        \"y\": 100\n      }\n    },\n    {\n      \"id\": \"var-food-ratio\",\n      \"name\": \"Food Ratio\",\n      \"equation\": \"World2_FPCI((Capital_Investment / Population) * Capital_in_Agriculture_Fraction / 0.3) * World2_FCM(Crowding_Ratio) * World2_FPM(Pollution_Ratio)\",\n      \"position\": {\n        \"x\": 200,\n        \"y\": 400\n      }\n    },\n    {\n      \"id\": \"var-crowd\",\n      \"name\": \"Crowding Ratio\",\n      \"equation\": \"Population / (135000000 * 26.5)\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 150\n      }\n    },\n    {\n      \"id\": \"var-poll-ratio\",\n      \"name\": \"Pollution Ratio\",\n      \"equation\": \"Pollution / 3600000000\",\n      \"position\": {\n        \"x\": 400,\n        \"y\": 350\n      }\n    },\n    {\n      \"id\": \"var-res-ratio\",\n      \"name\": \"Resource Ratio\",\n      \"equation\": \"Natural_Resources / 900000000000\",\n      \"position\": {\n        \"x\": 550,\n        \"y\": 150\n      }\n    },\n    {\n      \"id\": \"var-qol\",\n      \"name\": \"Quality of Life\",\n      \"equation\": \"World2_QLM(Material_Standard_of_Living) * World2_QLC(Crowding_Ratio) * World2_QLF(Food_Ratio) * World2_QLP(Pollution_Ratio)\",\n      \"position\": {\n        \"x\": 450,\n        \"y\": 350\n      }\n    },\n    {\n      \"id\": \"var-desired-agric\",\n      \"name\": \"Desired Agric Fraction\",\n      \"equation\": \"World2_CFIFR(Food_Ratio) * World2_CIQR(World2_QLM(Material_Standard_of_Living) / World2_QLF(Food_Ratio))\",\n      \"position\": {\n        \"x\": 50,\n        \"y\": 400\n      }\n    },\n    {\n      \"id\": \"var-agric-adj-time\",\n      \"name\": \"Agric Adjustment Time\",\n      \"equation\": \"15\",\n      \"position\": {\n        \"x\": 150,\n        \"y\": 400\n      }\n    }\n  ],\n  \"connectors\": [],\n  \"time_settings\": {\n    \"start\": 1900,\n    \"end\": 2100,\n    \"dt\": 1,\n    \"integration_method\": \"radau\",\n    \"rtol\": 1e-08,\n    \"atol\": 1e-10\n  },\n  \"created_at\": \"2026-01-12T03:11:09.889436+00:00\",\n  \"updated_at\": \"2026-01-12T03:11:09.889436+00:00\",\n  \"tables\": [\n    {\n      \"name\": \"World2_BRMM\",\n      \"points\": [\n        [\n          0,\n          1.2\n        ],\n        [\n          1,\n          1\n        ],\n        [\n          2,\n          0.85\n        ],\n        [\n          3,\n          0.75\n        ],\n        [\n          4,\n          0.7\n        ],\n        [\n          5,\n          0.7\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_BRCM\",\n      \"points\": [\n        [\n          0,\n          1\n        ],\n        [\n          1,\n          0.95\n        ],\n        [\n          2,\n          0.8\n        ],\n        [\n          3,\n          0.7\n        ],\n        [\n          4,\n          0.65\n        ],\n        [\n          5,\n          0.65\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_BRFM\",\n      \"points\": [\n        [\n          0,\n          0\n        ],\n        [\n          1,\n          1\n        ],\n        [\n          2,\n          1.6\n        ],\n        [\n          3,\n          1.9\n        ],\n        [\n          4,\n          2\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_BRPM\",\n      \"points\": [\n        [\n          0,\n          1\n        ],\n        [\n          5,\n          0.97\n        ],\n        [\n          10,\n          0.92\n        ],\n        [\n          15,\n          0.82\n        ],\n        [\n          20,\n          0.72\n        ],\n        [\n          25,\n          0.6\n        ],\n        [\n          30,\n          0.4\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_DRMM\",\n      \"points\": [\n        [\n          0.0,\n          2\n        ],\n        [\n          0.5,\n          1.4\n        ],\n        [\n          1.0,\n          1\n        ],\n        [\n          1.5,\n          0.8\n        ],\n        [\n          2.0,\n          0.7\n        ],\n        [\n          2.5,\n          0.6\n        ],\n        [\n          3.0,\n          0.53\n        ],\n        [\n          3.5,\n          0.5\n        ],\n        [\n          4.0,\n          0.5\n        ],\n        [\n          4.5,\n          0.5\n        ],\n        [\n          5.0,\n          0.5\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_DRCM\",\n      \"points\": [\n        [\n          0,\n          1\n        ],\n        [\n          1,\n          1.1\n        ],\n        [\n          2,\n          1.3\n        ],\n        [\n          3,\n          1.6\n        ],\n        [\n          4,\n          2.1\n        ],\n        [\n          5,\n          3\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_DRFM\",\n      \"points\": [\n        [\n          0.0,\n          30\n        ],\n        [\n          0.25,\n          3\n        ],\n        [\n          0.5,\n          2\n        ],\n        [\n          0.75,\n          1.4\n        ],\n        [\n          1.0,\n          1\n        ],\n        [\n          1.25,\n          0.7\n        ],\n        [\n          1.5,\n          0.6\n        ],\n        [\n          1.75,\n          0.5\n        ],\n        [\n          2.0,\n          0.5\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_DRPM\",\n      \"points\": [\n        [\n          0,\n          0.98\n        ],\n        [\n          5,\n          1.1\n        ],\n        [\n          10,\n          1.3\n        ],\n        [\n          15,\n          1.6\n        ],\n        [\n          20,\n          2.1\n        ],\n        [\n          25,\n          2.8\n        ],\n        [\n          30,\n          4\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_NREM\",\n      \"points\": [\n        [\n          0.0,\n          0\n        ],\n        [\n          0.25,\n          0.15\n        ],\n        [\n          0.5,\n          0.5\n        ],\n        [\n          0.75,\n          0.85\n        ],\n        [\n          1.0,\n          1\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_NRMM\",\n      \"points\": [\n        [\n          0,\n          0\n        ],\n        [\n          1,\n          1\n        ],\n        [\n          2,\n          1.8\n        ],\n        [\n          3,\n          2.4\n        ],\n        [\n          4,\n          2.9\n        ],\n        [\n          5,\n          3.3\n        ],\n        [\n          6,\n          3.6\n        ],\n        [\n          7,\n          3.8\n        ],\n        [\n          8,\n          3.9\n        ],\n        [\n          9,\n          3.95\n        ],\n        [\n          10,\n          4\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_FPCI\",\n      \"points\": [\n        [\n          0,\n          0.5\n        ],\n        [\n          1,\n          1\n        ],\n        [\n          2,\n          1.4\n        ],\n        [\n          3,\n          1.7\n        ],\n        [\n          4,\n          1.9\n        ],\n        [\n          5,\n          2.05\n        ],\n        [\n          6,\n          2.2\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_FCM\",\n      \"points\": [\n        [\n          0,\n          2.4\n        ],\n        [\n          1,\n          1\n        ],\n        [\n          2,\n          0.6\n        ],\n        [\n          3,\n          0.4\n        ],\n        [\n          4,\n          0.3\n        ],\n        [\n          5,\n          0.2\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_FPM\",\n      \"points\": [\n        [\n          0,\n          1\n        ],\n        [\n          5,\n          0.95\n        ],\n        [\n          10,\n          0.87\n        ],\n        [\n          15,\n          0.77\n        ],\n        [\n          20,\n          0.65\n        ],\n        [\n          25,\n          0.5\n        ],\n        [\n          30,\n          0.32\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_CIM\",\n      \"points\": [\n        [\n          0,\n          0.1\n        ],\n        [\n          1,\n          1\n        ],\n        [\n          2,\n          1.8\n        ],\n        [\n          3,\n          2.4\n        ],\n        [\n          4,\n          2.8\n        ],\n        [\n          5,\n          3\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_POLCM\",\n      \"points\": [\n        [\n          0,\n          0.05\n        ],\n        [\n          1,\n          1\n        ],\n        [\n          2,\n          3\n        ],\n        [\n          3,\n          5.4\n        ],\n        [\n          4,\n          7.4\n        ],\n        [\n          5,\n          8\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_POLAT\",\n      \"points\": [\n        [\n          0,\n          1\n        ],\n        [\n          5,\n          1.4\n        ],\n        [\n          10,\n          2.4\n        ],\n        [\n          15,\n          3.6\n        ],\n        [\n          20,\n          5.2\n        ],\n        [\n          25,\n          7.2\n        ],\n        [\n          30,\n          10\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_CFIFR\",\n      \"points\": [\n        [\n          0.0,\n          1\n        ],\n        [\n          0.5,\n          0.6\n        ],\n        [\n          1.0,\n          0.3\n        ],\n        [\n          1.5,\n          0.15\n        ],\n        [\n          2.0,\n          0.1\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_CIQR\",\n      \"points\": [\n        [\n          0.0,\n          0.7\n        ],\n        [\n          0.5,\n          0.8\n        ],\n        [\n          1.0,\n          1\n        ],\n        [\n          1.5,\n          1.5\n        ],\n        [\n          2.0,\n          2\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_QLM\",\n      \"points\": [\n        [\n          0,\n          0.2\n        ],\n        [\n          1,\n          1\n        ],\n        [\n          2,\n          1.7\n        ],\n        [\n          3,\n          2.3\n        ],\n        [\n          4,\n          2.7\n        ],\n        [\n          5,\n          2.9\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_QLC\",\n      \"points\": [\n        [\n          0.0,\n          2\n        ],\n        [\n          0.5,\n          1.3\n        ],\n        [\n          1.0,\n          1\n        ],\n        [\n          1.5,\n          0.75\n        ],\n        [\n          2.0,\n          0.55\n        ],\n        [\n          2.5,\n          0.45\n        ],\n        [\n          3.0,\n          0.38\n        ],\n        [\n          3.5,\n          0.3\n        ],\n        [\n          4.0,\n          0.25\n        ],\n        [\n          4.5,\n          0.22\n        ],\n        [\n          5.0,\n          0.2\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_QLF\",\n      \"points\": [\n        [\n          0,\n          0\n        ],\n        [\n          1,\n          1\n        ],\n        [\n          2,\n          1.8\n        ],\n        [\n          3,\n          2.4\n        ],\n        [\n          4,\n          2.7\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    },\n    {\n      \"name\": \"World2_QLP\",\n      \"points\": [\n        [\n          0,\n          1.1\n        ],\n        [\n          5,\n          1\n        ],\n        [\n          10,\n          0.88\n        ],\n        [\n          15,\n          0.71\n        ],\n        [\n          20,\n          0.55\n        ],\n        [\n          25,\n          0.35\n        ],\n        [\n          30,\n          0.12\n        ]\n      ],\n      \"interpolation\": \"continuous\"\n    }\n  ]\n}\n",
+      "before_sha256": "c0c0fed6cb1182c3455c8bd02fb053269e233f5f2b0cb02804b2b9c7b8da3528",
+      "baseline_sha256": "c0c0fed6cb1182c3455c8bd02fb053269e233f5f2b0cb02804b2b9c7b8da3528",
+      "after_sha256": "000d15e8957bec2a00e08cf5aa5a6875e5e330f0304a995465416d8580325a64",
+      "causal_chain": "15 state-driven feedback lookups can contain unresolved narrow features for adaptive stepping. Radau is explicitly unsupported; tables must remain intact.",
+      "primary_source_url": "https://dome.mit.edu/bitstream/handle/1721.3/189645/39080024064039.pdf?isAllowed=y&sequence=1",
+      "source_evidence": "Forrester 1970 D-1354 primary documentor MIT PDF pp.82-91, equations1-43. Population level listing P.K=P.J+DT*(BR.JK-DR.JK) is source Euler notation; this repair explicitly uses RK4 continuous-equation integration.",
+      "equation_mapping": "All stock initializers, flows, auxiliaries, tables and parameter values remain equal as parsed JSON. Only solver, DT and explanatory description change; Milgram display title additionally states illustrative scope.",
+      "fields_diff": {
+        "description": {
+          "before": "Jay Forrester’s five-sector WORLD2 global dynamics model. Version 1.8 restores the 1970 primary D-1354 documentor (MIT archive PDF pp. 82–91), including its 22 piecewise-linear feedback tables, birth/death normals 0.045/0.025 and initial agricultural fraction 0.3. Existing element IDs and positions are preserved. Capital Generation Multiplier is the source CIPC table divided by the retained 0.05 normal, an algebraically identical rescaling. The documented baseline pre/post-1970 policy coefficients are equal. Explicit Radau integration preserves the 1900–2100 annual output grid. This historical scenario is not a contemporary population or climate calibration.",
+          "after": "Jay Forrester’s five-sector WORLD2 global dynamics equations. Version 1.8 restored the 1970 primary D-1354 documentor (MIT archive PDF pp. 82–91), including its 22 piecewise-linear feedback tables, birth/death normals 0.045/0.025 and initial agricultural fraction 0.3. Existing element IDs and positions are preserved. Capital Generation Multiplier is the source CIPC table divided by the retained 0.05 normal, an algebraically identical rescaling. The documented baseline pre/post-1970 policy coefficients are equal. Version 1.9 uses explicit RK4 at half-year DT over the unchanged 1900–2100 horizon, with half/quarter refinements inside the work budget. This is continuous-equation numerical integration, not an exact replay of the source DYNAMO Euler listing. Maximum stock error against an independent literal-source-table reference is below 5e-6 of each stock maximum. This historical scenario is not a contemporary population or climate calibration."
+        },
+        "time_settings": {
+          "before": {
+            "start": 1900,
+            "end": 2100,
+            "dt": 1,
+            "integration_method": "radau",
+            "rtol": 1e-08,
+            "atol": 1e-10
+          },
+          "after": {
+            "start": 1900,
+            "end": 2100,
+            "dt": 0.5,
+            "integration_method": "rk4",
+            "rtol": 1e-08,
+            "atol": 1e-10
+          }
+        }
+      },
+      "independent_reference": "Independent handwritten five-stock RHS and 22 literal source tables, DOP853 rtol2e-12 max_step0.025 over1900-2100; no model AST or engine lookup reused.",
+      "grids": [
+        0.5,
+        0.25,
+        0.125
+      ],
+      "maximum_stock_error_normalized_by_reference_max": [
+        [
+          1.364e-06,
+          1.021e-06,
+          3.022e-07,
+          4.323e-06,
+          1.1e-06
+        ],
+        [
+          5.849e-07,
+          1.418e-07,
+          3.877e-08,
+          9.312e-07,
+          4.963e-07
+        ],
+        [
+          8.797e-08,
+          1.333e-08,
+          4.203e-09,
+          4.191e-07,
+          7.423e-08
+        ]
+      ],
+      "error_stock_order": [
+        "Population",
+        "Capital Investment",
+        "Natural Resources",
+        "Pollution",
+        "Capital in Agriculture Fraction"
+      ],
+      "milgram_counter_error_note": null,
+      "remaining_gaps": "Numerical completion and the tested default domain do not certify arbitrary scenarios or empirical calibration. Source fidelity is limited to the mapping explicitly stated above.",
+      "validation": {
+        "suite": "tests/test_corpus_hardening_v19_b.py",
+        "full_horizon_grids_completed": 3,
+        "finite_all_numeric_outputs": true,
+        "nonnegative_all_stock_samples": true,
+        "default_horizon_preserved": true,
+        "million_work_and_retained_value_limits_preserved": true,
+        "maximum_error_definition": "max absolute error at saved default times, divided by maximum absolute independent reference stock or1, whichever is greater",
+        "error_values": "conservatively rounded from measured trajectories"
+      }
+    }
+  ]
+}

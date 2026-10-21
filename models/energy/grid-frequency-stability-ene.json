@@ -1,9 +1,9 @@
 {
   "id": "grid-frequency-stability-ene",
   "name": "Grid Frequency Stability Dynamics",
-  "description": "A model of electrical grid frequency stability, capturing the balance between generation and demand, inertia from rotating machines, and frequency response mechanisms. Critical for renewable integration. Reference: IRENA Renewable Energy Statistics. Source: https://www.irena.org/",
-  "source": "https://doi.org/10.1109/TPWRS.2018.2821757",
-  "reference": "Milano F, et al. Foundations and Challenges of Low-Inertia Systems. Power Systems Computation Conference. 2018. See also Kundur P. Power System Stability and Control. 1994.",
+  "description": "Illustrative grid-frequency experiment with physically consistent rotating-energy balance. Power is MW, time seconds, frequency Hz and kinetic energy MW s. Initial stored energy is System Inertia (5 s) times Base Generation (1000 MW). Net Inertial Response is demand minus generation, permitting kinetic discharge and recharge. Frequency Change follows df/dt=(Pgen-Pload)*f/(2E), preserving E/(f/f0)^2=5000 MW s. Explicit RK4 at DT 0.04 s handles the illustrative reserve deadband without claiming adaptive event localization; full 60 s default, half and quarter grids fit the engine work budget. The frequency-energy invariant agrees with the independent reduced swing equation near floating-point precision; reserve relative error is below 1e-7 against an event-split reference. All original forcing, droop and reserve paths remain. Governor/droop/reserve dynamics are illustrative local assumptions; this is not a reproduction of the NREL virtual-synchronous-generator network.",
+  "source": "https://docs.nlr.gov/docs/fy20osti/73872.pdf",
+  "reference": "Yan et al. (2020), NREL/CP-5D00-73872, printed p.4 (PDF p.7), eq.(12): per-unit power imbalance equals 2 H omega times d omega/dt. SI mapping E=H*Sbase*(f/f0)^2 gives dE/dt=Pgen-Pload and df/dt=(Pgen-Pload)*f/(2E).",
   "stocks": [
     {
       "id": "stock-frequency",
@@ -13,17 +13,19 @@
       "position": {
         "x": 300,
         "y": 200
-      }
+      },
+      "units": "Hz"
     },
     {
       "id": "stock-kinetic-energy",
       "name": "Stored Kinetic Energy",
       "initial_value": 100,
-      "equation": "",
+      "equation": "System_Inertia * Base_Generation",
       "position": {
         "x": 500,
         "y": 200
-      }
+      },
+      "units": "MW s"
     },
     {
       "id": "stock-reserve",
@@ -33,31 +35,34 @@
       "position": {
         "x": 300,
         "y": 400
-      }
+      },
+      "units": "MW"
     }
   ],
   "flows": [
     {
       "id": "flow-frequency-change",
       "name": "Frequency Change",
-      "equation": "(Total_Generation - Total_Demand) / (2 * System_Inertia * Stored_Kinetic_Energy)",
+      "equation": "(Total_Generation - Total_Demand) * Grid_Frequency / (2 * Stored_Kinetic_Energy)",
       "from_stock": null,
       "to_stock": "stock-frequency",
       "position": {
         "x": 200,
         "y": 200
-      }
+      },
+      "units": "Hz / s"
     },
     {
       "id": "flow-energy-injection",
       "name": "Inertial Response",
-      "equation": "IF(Grid_Frequency < Nominal_Frequency, Inertia_Constant * Frequency_Deviation, 0)",
+      "equation": "Total_Demand - Total_Generation",
       "from_stock": "stock-kinetic-energy",
       "to_stock": null,
       "position": {
         "x": 500,
         "y": 350
-      }
+      },
+      "units": "MW"
     },
     {
       "id": "flow-reserve-deployment",
@@ -90,7 +95,8 @@
       "position": {
         "x": 100,
         "y": 100
-      }
+      },
+      "units": "MW"
     },
     {
       "id": "var-demand",
@@ -99,7 +105,8 @@
       "position": {
         "x": 200,
         "y": 100
-      }
+      },
+      "units": "MW"
     },
     {
       "id": "var-base-gen",
@@ -108,7 +115,8 @@
       "position": {
         "x": 100,
         "y": 50
-      }
+      },
+      "units": "MW"
     },
     {
       "id": "var-base-demand",
@@ -117,7 +125,8 @@
       "position": {
         "x": 200,
         "y": 50
-      }
+      },
+      "units": "MW"
     },
     {
       "id": "var-demand-fluct",
@@ -126,7 +135,8 @@
       "position": {
         "x": 300,
         "y": 50
-      }
+      },
+      "units": "MW"
     },
     {
       "id": "var-inertia",
@@ -135,7 +145,8 @@
       "position": {
         "x": 350,
         "y": 100
-      }
+      },
+      "units": "s"
     },
     {
       "id": "var-nominal",
@@ -144,7 +155,8 @@
       "position": {
         "x": 400,
         "y": 100
-      }
+      },
+      "units": "Hz"
     },
     {
       "id": "var-deviation",
@@ -153,7 +165,8 @@
       "position": {
         "x": 400,
         "y": 200
-      }
+      },
+      "units": "Hz"
     },
     {
       "id": "var-inertia-const",
@@ -162,7 +175,8 @@
       "position": {
         "x": 500,
         "y": 100
-      }
+      },
+      "units": "s"
     },
     {
       "id": "var-deadband",
@@ -171,7 +185,8 @@
       "position": {
         "x": 250,
         "y": 350
-      }
+      },
+      "units": "Hz"
     },
     {
       "id": "var-droop",
@@ -189,7 +204,8 @@
       "position": {
         "x": 150,
         "y": 350
-      }
+      },
+      "units": "MW"
     },
     {
       "id": "var-restoration-time",
@@ -198,7 +214,8 @@
       "position": {
         "x": 150,
         "y": 450
-      }
+      },
+      "units": "s"
     },
     {
       "id": "var-primary-response",
@@ -207,7 +224,8 @@
       "position": {
         "x": 100,
         "y": 150
-      }
+      },
+      "units": "MW"
     },
     {
       "id": "var-secondary-response",
@@ -216,14 +234,18 @@
       "position": {
         "x": 200,
         "y": 150
-      }
+      },
+      "units": "MW"
     }
   ],
   "connectors": [],
   "time_settings": {
     "start": 0,
     "end": 60,
-    "dt": 0.01
+    "dt": 0.04,
+    "integration_method": "rk4",
+    "rtol": 1e-10,
+    "atol": 1e-11
   },
   "created_at": "2026-01-12T08:00:00.000000+00:00",
   "updated_at": "2026-01-12T08:00:00.000000+00:00"

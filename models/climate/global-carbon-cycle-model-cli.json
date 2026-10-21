@@ -1,57 +1,62 @@
 {
   "id": "global-carbon-cycle-model-cli",
   "name": "Global Carbon Cycle Model",
-  "description": "Illustrative global carbon reservoir stock-flow model. Sarmiento and Gruber (2006) is textbook background on ocean biogeochemistry; no particular chapter, equation set, calibrated parameter table or observational validation has been established for this file.",
+  "description": "Five-reservoir global carbon cycle rebuilt from David Bice/PennState's original STELLA course model: simple terrestrial plus single-surface-ocean model, including Walker carbonate chemistry, biological pump, runoff and burial. Source preindustrial pool values600,610,1580,891.62591,38000GtC replace the generated unsupported initial states. Runs the source's steady6GtC/year fossil-emissions experiment with1.5GtC/year land-use scenario partitioned75%forest burning/25%soil disruption (GC1), over the preserved1850-2100 experiment clock; this is a step experiment, not historical reconstruction or prediction. All physical transfers conserve carbon, natural volcanic0.6 balances burial0.6. Autotrophic Respiration is a visible reporting alias; Vegetation Respiration is its single physical transfer. Airborne Fraction at initial zero cumulative emissions uses the analytic instantaneous-rate limit. Legacy generated Q10, turnover, climate-sensitivity and area controls remain visible but are not used by the restored source equations.",
   "stocks": [
     {
       "id": "stock-atmospheric-carbon",
       "name": "Atmospheric Carbon",
-      "initial_value": 589,
+      "initial_value": 600,
       "equation": "",
       "position": {
         "x": 150,
         "y": 200
-      }
+      },
+      "units": "GtC"
     },
     {
       "id": "stock-vegetation-carbon",
       "name": "Vegetation Carbon",
-      "initial_value": 450,
+      "initial_value": 610,
       "equation": "",
       "position": {
         "x": 350,
         "y": 200
-      }
+      },
+      "units": "GtC"
     },
     {
       "id": "stock-soil-carbon",
       "name": "Soil Carbon",
-      "initial_value": 1500,
+      "initial_value": 1580,
       "equation": "",
       "position": {
         "x": 550,
         "y": 200
-      }
+      },
+      "units": "GtC"
     },
     {
       "id": "stock-surface-ocean-carbon",
       "name": "Surface Ocean Carbon",
-      "initial_value": 900,
+      "initial_value": 891.62591,
       "equation": "",
       "position": {
         "x": 750,
         "y": 200
-      }
+      },
+      "units": "GtC"
     },
     {
       "id": "stock-deep-ocean-carbon",
       "name": "Deep Ocean Carbon",
-      "initial_value": 37100,
+      "initial_value": 38000,
       "equation": "",
       "position": {
         "x": 150,
         "y": 350
-      }
+      },
+      "units": "GtC"
     },
     {
       "id": "stock-cumulative-anthropogenic-emissions",
@@ -61,148 +66,221 @@
       "position": {
         "x": 350,
         "y": 350
-      }
+      },
+      "units": "GtC"
     }
   ],
   "flows": [
     {
       "id": "flow-fossil-fuel-emissions",
       "name": "Fossil Fuel Emissions",
-      "equation": "Fossil_Emission_Scenario(Time)",
+      "equation": "Fossil_Emission_Rate",
       "from_stock": null,
       "to_stock": "stock-atmospheric-carbon",
       "position": {
         "x": 250,
         "y": 200
-      }
+      },
+      "units": "GtC/year"
     },
     {
       "id": "flow-land-use-change-emissions",
       "name": "Land Use Change Emissions",
-      "equation": "Land_Use_Emission_Rate",
-      "from_stock": null,
+      "equation": "Land_Use_Emission_Rate * 0.25",
+      "from_stock": "stock-soil-carbon",
       "to_stock": "stock-atmospheric-carbon",
       "position": {
         "x": 450,
         "y": 200
-      }
+      },
+      "units": "GtC/year"
     },
     {
       "id": "flow-photosynthesis-gpp",
       "name": "Photosynthesis (GPP)",
-      "equation": "Base_GPP * \"CO2 Fertilization Effect\" * Temperature_Effect_GPP * Vegetation_Area_Fraction",
+      "equation": "Base_GPP * (CO2_Partial_Pressure - Minimum_CO2) / (CO2_Partial_Pressure - Minimum_CO2 + Photosynthesis_Half_Saturation) * (1 + Photosynthesis_Temperature_Sensitivity * Temperature_Anomaly)",
       "from_stock": "stock-atmospheric-carbon",
       "to_stock": "stock-vegetation-carbon",
       "position": {
         "x": 650,
         "y": 200
-      }
+      },
+      "units": "GtC/year"
     },
     {
       "id": "flow-autotrophic-respiration",
       "name": "Autotrophic Respiration",
-      "equation": "Vegetation_Carbon * Autotrophic_Respiration_Rate * \"Q10 Temperature Factor\"^((Temperature_Anomaly)/10)",
+      "equation": "\"Photosynthesis (GPP)\" * 0.5",
       "from_stock": null,
-      "to_stock": "stock-atmospheric-carbon",
+      "to_stock": null,
       "position": {
         "x": 250,
         "y": 350
-      }
+      },
+      "units": "GtC/year"
     },
     {
       "id": "flow-vegetation-respiration",
       "name": "Vegetation Respiration",
-      "equation": "\"Autotrophic Respiration\" * 0.5",
+      "equation": "Autotrophic_Respiration",
       "from_stock": "stock-vegetation-carbon",
-      "to_stock": null,
+      "to_stock": "stock-atmospheric-carbon",
       "position": {
         "x": 450,
         "y": 350
-      }
+      },
+      "units": "GtC/year"
     },
     {
       "id": "flow-litterfall",
       "name": "Litterfall",
-      "equation": "Vegetation_Carbon / Vegetation_Turnover_Time",
+      "equation": "50 * Vegetation_Carbon / 610",
       "from_stock": "stock-vegetation-carbon",
       "to_stock": "stock-soil-carbon",
       "position": {
         "x": 650,
         "y": 350
-      }
+      },
+      "units": "GtC/year"
     },
     {
       "id": "flow-soil-respiration",
       "name": "Soil Respiration",
-      "equation": "Soil_Carbon / Soil_Turnover_Time * \"Q10 Temperature Factor\"^((Temperature_Anomaly)/10)",
+      "equation": "49.4 * Soil_Carbon / 1580 * (1 + Soil_Temperature_Sensitivity * Temperature_Anomaly)",
       "from_stock": "stock-soil-carbon",
-      "to_stock": null,
+      "to_stock": "stock-atmospheric-carbon",
       "position": {
         "x": 250,
         "y": 500
-      }
+      },
+      "units": "GtC/year"
     },
     {
       "id": "flow-ocean-co2-uptake",
       "name": "Ocean CO2 Uptake",
-      "equation": "Piston_Velocity * (CO2_Partial_Pressure - Ocean_pCO2) * Ocean_Area",
+      "equation": "Piston_Velocity * CO2_Partial_Pressure",
       "from_stock": "stock-atmospheric-carbon",
       "to_stock": "stock-surface-ocean-carbon",
       "position": {
         "x": 450,
         "y": 500
-      }
+      },
+      "units": "GtC/year"
     },
     {
       "id": "flow-ocean-outgassing",
       "name": "Ocean Outgassing",
-      "equation": "Surface_Ocean_Carbon * Outgassing_Rate * Temperature_Effect_Ocean",
+      "equation": "Piston_Velocity * Ocean_pCO2",
       "from_stock": "stock-surface-ocean-carbon",
       "to_stock": "stock-atmospheric-carbon",
       "position": {
         "x": 650,
         "y": 500
-      }
+      },
+      "units": "GtC/year"
     },
     {
       "id": "flow-downwelling",
       "name": "Downwelling",
-      "equation": "Surface_Ocean_Carbon * \"Thermohaline Circulation Rate\"",
+      "equation": "90.6 * Surface_Ocean_Carbon / 891.62591",
       "from_stock": "stock-surface-ocean-carbon",
       "to_stock": "stock-deep-ocean-carbon",
       "position": {
         "x": 250,
         "y": 650
-      }
+      },
+      "units": "GtC/year"
     },
     {
       "id": "flow-upwelling",
       "name": "Upwelling",
-      "equation": "Deep_Ocean_Carbon * \"Thermohaline Circulation Rate\" * (Surface_Ocean_Carbon / Deep_Ocean_Carbon)",
+      "equation": "100 * Deep_Ocean_Carbon / 38000",
       "from_stock": "stock-deep-ocean-carbon",
       "to_stock": "stock-surface-ocean-carbon",
       "position": {
         "x": 450,
         "y": 650
-      }
+      },
+      "units": "GtC/year"
     },
     {
       "id": "flow-deforestation",
       "name": "Deforestation",
-      "equation": "Vegetation_Carbon * Deforestation_Rate",
+      "equation": "Land_Use_Emission_Rate * 0.75",
       "from_stock": "stock-vegetation-carbon",
-      "to_stock": null,
+      "to_stock": "stock-atmospheric-carbon",
       "position": {
         "x": 650,
         "y": 650
-      }
+      },
+      "units": "GtC/year"
+    },
+    {
+      "id": "v19-carbon-biological-pump",
+      "name": "Biological Pump",
+      "position": {
+        "x": 900,
+        "y": 700
+      },
+      "equation": "10",
+      "from_stock": "stock-surface-ocean-carbon",
+      "to_stock": "stock-deep-ocean-carbon",
+      "units": "GtC/year"
+    },
+    {
+      "id": "v19-carbon-carbon-burial",
+      "name": "Carbon Burial",
+      "position": {
+        "x": 1060,
+        "y": 700
+      },
+      "equation": "0.6",
+      "from_stock": "stock-deep-ocean-carbon",
+      "to_stock": null,
+      "units": "GtC/year"
+    },
+    {
+      "id": "v19-carbon-soil-runoff",
+      "name": "Soil Runoff",
+      "position": {
+        "x": 100,
+        "y": 800
+      },
+      "equation": "0.6 * Soil_Carbon / 1580",
+      "from_stock": "stock-soil-carbon",
+      "to_stock": "stock-surface-ocean-carbon",
+      "units": "GtC/year"
+    },
+    {
+      "id": "v19-carbon-volcanic-emissions",
+      "name": "Volcanic Emissions",
+      "position": {
+        "x": 260,
+        "y": 800
+      },
+      "equation": "0.6",
+      "from_stock": null,
+      "to_stock": "stock-atmospheric-carbon",
+      "units": "GtC/year"
+    },
+    {
+      "id": "v19-carbon-emissions-accounting",
+      "name": "Emissions Accounting",
+      "position": {
+        "x": 420,
+        "y": 800
+      },
+      "equation": "Fossil_Fuel_Emissions + Land_Use_Emission_Rate",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-anthropogenic-emissions",
+      "units": "GtC/year"
     }
   ],
   "variables": [
     {
       "id": "var-atmospheric-co2-concentration",
       "name": "Atmospheric CO2 Concentration",
-      "equation": "\"Atmospheric Carbon\" / 2.124",
+      "equation": "Atmospheric_Carbon * 280 / 600",
       "position": {
         "x": 100,
         "y": 80
@@ -211,7 +289,7 @@
     {
       "id": "var-co2-partial-pressure",
       "name": "CO2 Partial Pressure",
-      "equation": "\"Atmospheric CO2 Concentration\" / 280",
+      "equation": "Atmospheric_CO2_Concentration",
       "position": {
         "x": 250,
         "y": 80
@@ -220,7 +298,7 @@
     {
       "id": "var-co2-fertilization-effect",
       "name": "CO2 Fertilization Effect",
-      "equation": "1 + \"Beta CO2 Fertilization\" * LOG(\"Atmospheric CO2 Concentration\" / 280)",
+      "equation": "(CO2_Partial_Pressure - Minimum_CO2) / (CO2_Partial_Pressure - Minimum_CO2 + Photosynthesis_Half_Saturation)",
       "position": {
         "x": 400,
         "y": 80
@@ -238,7 +316,7 @@
     {
       "id": "var-temperature-anomaly",
       "name": "Temperature Anomaly",
-      "equation": "Climate_Sensitivity * LOG(\"Atmospheric CO2 Concentration\" / 280) / LOG(2)",
+      "equation": "(CO2_Partial_Pressure - 280) * 0.01",
       "position": {
         "x": 700,
         "y": 80
@@ -256,7 +334,7 @@
     {
       "id": "var-base-gpp",
       "name": "Base GPP",
-      "equation": "120",
+      "equation": "125",
       "position": {
         "x": 250,
         "y": 160
@@ -301,7 +379,7 @@
     {
       "id": "var-piston-velocity",
       "name": "Piston Velocity",
-      "equation": "0.06",
+      "equation": "0.278",
       "position": {
         "x": 250,
         "y": 240
@@ -346,7 +424,7 @@
     {
       "id": "var-airborne-fraction",
       "name": "Airborne Fraction",
-      "equation": "(\"Atmospheric Carbon\" - 589) / \"Cumulative Anthropogenic Emissions\"",
+      "equation": "IF Cumulative_Anthropogenic_Emissions = 0 THEN Net_Atmospheric_Carbon_Change / (Fossil_Fuel_Emissions + Land_Use_Emission_Rate) ELSE (Atmospheric_Carbon - 600) / Cumulative_Anthropogenic_Emissions",
       "position": {
         "x": 250,
         "y": 320
@@ -364,21 +442,164 @@
     {
       "id": "var-land-carbon-sink",
       "name": "Land Carbon Sink",
-      "equation": "\"Photosynthesis (GPP)\" - \"Autotrophic Respiration\" - Soil_Respiration - Deforestation",
+      "equation": "\"Photosynthesis (GPP)\" - Autotrophic_Respiration - Soil_Respiration - Deforestation - Land_Use_Change_Emissions",
       "position": {
         "x": 550,
         "y": 320
       }
+    },
+    {
+      "id": "v19-carbon-fossil-emission-rate",
+      "name": "Fossil Emission Rate",
+      "position": {
+        "x": 900,
+        "y": 800
+      },
+      "equation": "6",
+      "units": "GtC/year"
+    },
+    {
+      "id": "v19-carbon-minimum-co2",
+      "name": "Minimum CO2",
+      "position": {
+        "x": 1060,
+        "y": 800
+      },
+      "equation": "30",
+      "units": "ppm"
+    },
+    {
+      "id": "v19-carbon-photosynthesis-half-saturation",
+      "name": "Photosynthesis Half Saturation",
+      "position": {
+        "x": 100,
+        "y": 900
+      },
+      "equation": "62.5",
+      "units": "ppm"
+    },
+    {
+      "id": "v19-carbon-photosynthesis-temperature-sensitivity",
+      "name": "Photosynthesis Temperature Sensitivity",
+      "position": {
+        "x": 260,
+        "y": 900
+      },
+      "equation": "0.04",
+      "units": "1/K"
+    },
+    {
+      "id": "v19-carbon-soil-temperature-sensitivity",
+      "name": "Soil Temperature Sensitivity",
+      "position": {
+        "x": 420,
+        "y": 900
+      },
+      "equation": "0.10",
+      "units": "1/K"
+    },
+    {
+      "id": "v19-carbon-surface-ocean-temperature",
+      "name": "Surface Ocean Temperature",
+      "position": {
+        "x": 580,
+        "y": 900
+      },
+      "equation": "288",
+      "units": "K"
+    },
+    {
+      "id": "v19-carbon-surface-alkalinity",
+      "name": "Surface Alkalinity",
+      "position": {
+        "x": 740,
+        "y": 900
+      },
+      "equation": "2.22",
+      "units": "mol/m3"
+    },
+    {
+      "id": "v19-carbon-surface-carbon-concentration",
+      "name": "Surface Carbon Concentration",
+      "position": {
+        "x": 900,
+        "y": 900
+      },
+      "equation": "Surface_Ocean_Carbon / 12000 / 0.0363",
+      "units": "mol/m3"
+    },
+    {
+      "id": "v19-carbon-carbonate-equilibrium-constant",
+      "name": "Carbonate Equilibrium Constant",
+      "position": {
+        "x": 1060,
+        "y": 900
+      },
+      "equation": "0.000575 + 0.000006 * (Surface_Ocean_Temperature - 278)",
+      "units": "dimensionless"
+    },
+    {
+      "id": "v19-carbon-co2-solubility-constant",
+      "name": "CO2 Solubility Constant",
+      "position": {
+        "x": 100,
+        "y": 1000
+      },
+      "equation": "0.035 + 0.0019 * (Surface_Ocean_Temperature - 278)",
+      "units": "dimensionless"
+    },
+    {
+      "id": "v19-carbon-bicarbonate",
+      "name": "Bicarbonate",
+      "position": {
+        "x": 260,
+        "y": 1000
+      },
+      "equation": "(Surface_Carbon_Concentration - SQRT(Surface_Carbon_Concentration^2 - Surface_Alkalinity * (2 * Surface_Carbon_Concentration - Surface_Alkalinity) * (1 - 4 * Carbonate_Equilibrium_Constant))) / (1 - 4 * Carbonate_Equilibrium_Constant)",
+      "units": "mol/m3"
+    },
+    {
+      "id": "v19-carbon-carbonate",
+      "name": "Carbonate",
+      "position": {
+        "x": 420,
+        "y": 1000
+      },
+      "equation": "(Surface_Alkalinity - Bicarbonate) / 2",
+      "units": "mol/m3"
+    },
+    {
+      "id": "v19-carbon-ocean-pco2",
+      "name": "Ocean pCO2",
+      "position": {
+        "x": 580,
+        "y": 1000
+      },
+      "equation": "280 * CO2_Solubility_Constant * Bicarbonate^2 / Carbonate",
+      "units": "ppm"
+    },
+    {
+      "id": "v19-carbon-net-atmospheric-carbon-change",
+      "name": "Net Atmospheric Carbon Change",
+      "position": {
+        "x": 740,
+        "y": 1000
+      },
+      "equation": "Fossil_Fuel_Emissions + Land_Use_Change_Emissions + Deforestation + Vegetation_Respiration + Soil_Respiration + Volcanic_Emissions + Ocean_Outgassing - \"Photosynthesis (GPP)\" - \"Ocean CO2 Uptake\"",
+      "units": "GtC/year"
     }
   ],
   "connectors": [],
   "time_settings": {
     "start": 1850,
     "end": 2100,
-    "dt": 1
+    "dt": 1,
+    "integration_method": "radau",
+    "rtol": 1e-08,
+    "atol": 1e-10
   },
   "created_at": "2026-01-11T20:04:50.701420Z",
   "updated_at": "2026-01-11T20:04:50.701420Z",
-  "source": "https://doi.org/10.2307/j.ctt3fgxqx",
-  "reference": "Sarmiento, J.L. and Gruber, N. (2006). Ocean Biogeochemical Dynamics. Princeton University Press. doi:10.2307/j.ctt3fgxqx."
+  "source": "https://personal.ems.psu.edu/~dmb53/DaveSTELLA/Carbon/c_cycle_models.htm",
+  "reference": "David Bice, PennState, Modeling the Carbon Cycle, simple terrestrial and simple ocean-atmosphere STELLA equation blocks, global coupling instructions, TC4 and GC1 emissions experiments; Walker1993/Gifford1993/Siegenthaler&Sarmiento1993 as attributed by the course."
 }

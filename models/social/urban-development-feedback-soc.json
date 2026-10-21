@@ -1,13 +1,2787 @@
 {
   "id": "urban-development-feedback-soc",
-  "name": "Persons_Per_Unit",
-  "description": "Model of urban development showing feedback between housing, jobs, infrastructure, and population. Demonstrates how cities grow, decline, and gentrify. Based on Forrester Urban Dynamics and Vensim urban.mdl. Reference: Forrester, J. W. (1961). Industrial Dynamics. MIT Press. Source: https://systemdynamics.org/",
+  "created_at": "2026-01-12T07:19:37.014711+00:00",
+  "updated_at": "2026-01-12T07:19:37.014711+00:00",
+  "name": "Urban Dynamics \u2014 Native Vensim URBAN Source",
   "stocks": [
+    {
+      "id": "urban-stock-declining_industry",
+      "name": "Declining_Industry",
+      "initial_value": 100.0,
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "units": "production unit"
+    },
+    {
+      "id": "urban-stock-new_enterprise",
+      "name": "New_Enterprise",
+      "initial_value": 200.0,
+      "equation": "200",
+      "position": {
+        "x": 280,
+        "y": 100
+      },
+      "units": "production unit"
+    },
+    {
+      "id": "urban-stock-new_enterprise_average",
+      "name": "New_Enterprise_Average",
+      "initial_value": 0,
+      "equation": "New_Enterprise* (1-new_enterprise_growth_rate_initial* new_enterprise_average_time)",
+      "position": {
+        "x": 460,
+        "y": 100
+      },
+      "units": "production unit"
+    },
+    {
+      "id": "urban-stock-labor_ratio_perc",
+      "name": "Labor_Ratio_Perc",
+      "initial_value": 1.0,
+      "equation": "1",
+      "position": {
+        "x": 640,
+        "y": 100
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-stock-labor",
+      "name": "Labor",
+      "initial_value": 14000.0,
+      "equation": "14000",
+      "position": {
+        "x": 820,
+        "y": 100
+      },
+      "units": "worker"
+    },
+    {
+      "id": "urban-stock-labor_arrival_mult_perc",
+      "name": "Labor_Arrival_Mult_Perc",
+      "initial_value": 1.0,
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 260
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-stock-labor_mob_mult_perc",
+      "name": "Labor_Mob_Mult_Perc",
+      "initial_value": 1.0,
+      "equation": "1",
+      "position": {
+        "x": 280,
+        "y": 260
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-stock-underemp_mob_mult_perc",
+      "name": "Underemp_Mob_Mult_Perc",
+      "initial_value": 1.0,
+      "equation": "1",
+      "position": {
+        "x": 460,
+        "y": 260
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-stock-underemp_to_labor_perc",
+      "name": "Underemp_to_Labor_Perc",
+      "initial_value": 75.0,
+      "equation": "75",
+      "position": {
+        "x": 640,
+        "y": 260
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-stock-manager_prof_arriv_mult_perc",
+      "name": "Manager_Prof_Arriv_Mult_Perc",
+      "initial_value": 1.0,
+      "equation": "1",
+      "position": {
+        "x": 820,
+        "y": 260
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-stock-manager_professional",
+      "name": "Manager_Professional",
+      "initial_value": 3900.0,
+      "equation": "3900",
+      "position": {
+        "x": 100,
+        "y": 420
+      },
+      "units": "worker"
+    },
+    {
+      "id": "urban-stock-mature_business",
+      "name": "Mature_Business",
+      "initial_value": 1000.0,
+      "equation": "1000",
+      "position": {
+        "x": 280,
+        "y": 420
+      },
+      "units": "production unit"
+    },
+    {
+      "id": "urban-stock-premium_housing",
+      "name": "Premium_Housing",
+      "initial_value": 5000.0,
+      "equation": "5000",
+      "position": {
+        "x": 460,
+        "y": 420
+      },
+      "units": "housing unit"
+    },
+    {
+      "id": "urban-stock-premium_housing_average",
+      "name": "Premium_Housing_Average",
+      "initial_value": 0,
+      "equation": " Premium_Housing*(1-premium_housing_growth_rate_init* premium_housing_averate_time)",
+      "position": {
+        "x": 640,
+        "y": 420
+      },
+      "units": "housing unit"
+    },
+    {
+      "id": "urban-stock-tax_ratio_needed_perc",
+      "name": "Tax_Ratio_Needed_Perc",
+      "initial_value": 0,
+      "equation": "tax_ratio_needed",
+      "position": {
+        "x": 820,
+        "y": 420
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-stock-attract_migr_mult_perc",
+      "name": "Attract_Migr_Mult_Perc",
+      "initial_value": 1.0,
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 580
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-stock-underemployed",
+      "name": "Underemployed",
+      "initial_value": 1200.0,
+      "equation": "1200",
+      "position": {
+        "x": 280,
+        "y": 580
+      },
+      "units": "worker"
+    },
+    {
+      "id": "urban-stock-underemp_housing",
+      "name": "Underemp_Housing",
+      "initial_value": 1100.0,
+      "equation": "1100",
+      "position": {
+        "x": 460,
+        "y": 580
+      },
+      "units": "housing unit"
+    },
+    {
+      "id": "urban-stock-worker_housing",
+      "name": "Worker_Housing",
+      "initial_value": 21000.0,
+      "equation": "21000",
+      "position": {
+        "x": 640,
+        "y": 580
+      },
+      "units": "housing unit"
+    },
+    {
+      "id": "urban-stock-worker_housing_average",
+      "name": "Worker_Housing_Average",
+      "initial_value": 0,
+      "equation": "Worker_Housing* (1-worker_housing_growth_rate_initial* worker_housing_average_time)",
+      "position": {
+        "x": 820,
+        "y": 580
+      },
+      "units": "housing unit"
+    }
+  ],
+  "flows": [
+    {
+      "id": "urban-balance-declining_industry",
+      "name": "Balance_Declining_Industry",
+      "equation": "(mature_business_decline- declining_industry_demise)",
+      "from_stock": null,
+      "to_stock": "urban-stock-declining_industry",
+      "position": {
+        "x": 40,
+        "y": 100
+      },
+      "units": "production unit/year"
+    },
+    {
+      "id": "urban-balance-new_enterprise",
+      "name": "Balance_New_Enterprise",
+      "equation": "(new_enterprise_Construction- new_enterprise_decline)",
+      "from_stock": null,
+      "to_stock": "urban-stock-new_enterprise",
+      "position": {
+        "x": 220,
+        "y": 100
+      },
+      "units": "production unit/year"
+    },
+    {
+      "id": "urban-balance-new_enterprise_average",
+      "name": "Balance_New_Enterprise_Average",
+      "equation": "(New_Enterprise-New_Enterprise_Average)/ new_enterprise_average_time",
+      "from_stock": null,
+      "to_stock": "urban-stock-new_enterprise_average",
+      "position": {
+        "x": 400,
+        "y": 100
+      },
+      "units": "production unit/year"
+    },
+    {
+      "id": "urban-balance-labor_ratio_perc",
+      "name": "Balance_Labor_Ratio_Perc",
+      "equation": "(labor_ratio-Labor_Ratio_Perc)/ labor_ratio_perception_time",
+      "from_stock": null,
+      "to_stock": "urban-stock-labor_ratio_perc",
+      "position": {
+        "x": 580,
+        "y": 100
+      },
+      "units": "dimensionless/year"
+    },
+    {
+      "id": "urban-balance-labor",
+      "name": "Balance_Labor",
+      "equation": "(underemp_to_labor+labor_birth-labor_to_manager+ labor_arrival-labor_departure-labor_to_underemp)",
+      "from_stock": null,
+      "to_stock": "urban-stock-labor",
+      "position": {
+        "x": 760,
+        "y": 100
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-balance-labor_arrival_mult_perc",
+      "name": "Balance_Labor_Arrival_Mult_Perc",
+      "equation": "(labor_arrival_mult-Labor_Arrival_Mult_Perc) /labor_arrival_mult_perc_tab",
+      "from_stock": null,
+      "to_stock": "urban-stock-labor_arrival_mult_perc",
+      "position": {
+        "x": 40,
+        "y": 260
+      },
+      "units": "dimensionless/year"
+    },
+    {
+      "id": "urban-balance-labor_mob_mult_perc",
+      "name": "Balance_Labor_Mob_Mult_Perc",
+      "equation": "(labor_mob_mult-Labor_Mob_Mult_Perc)/ labor_mob_mult_perc_time",
+      "from_stock": null,
+      "to_stock": "urban-stock-labor_mob_mult_perc",
+      "position": {
+        "x": 220,
+        "y": 260
+      },
+      "units": "dimensionless/year"
+    },
+    {
+      "id": "urban-balance-underemp_mob_mult_perc",
+      "name": "Balance_Underemp_Mob_Mult_Perc",
+      "equation": "(underemp_mob_mult-Underemp_Mob_Mult_Perc)/ underemp_mob_mult_perc_time",
+      "from_stock": null,
+      "to_stock": "urban-stock-underemp_mob_mult_perc",
+      "position": {
+        "x": 400,
+        "y": 260
+      },
+      "units": "dimensionless/year"
+    },
+    {
+      "id": "urban-balance-underemp_to_labor_perc",
+      "name": "Balance_Underemp_to_Labor_Perc",
+      "equation": " (underemp_to_labor-Underemp_to_Labor_Perc)/ underemp_to_labor_perc_time",
+      "from_stock": null,
+      "to_stock": "urban-stock-underemp_to_labor_perc",
+      "position": {
+        "x": 580,
+        "y": 260
+      },
+      "units": "worker/year/year"
+    },
+    {
+      "id": "urban-balance-manager_prof_arriv_mult_perc",
+      "name": "Balance_Manager_Prof_Arriv_Mult_Perc",
+      "equation": "(manager_prof_arriv_mult-Manager_Prof_Arriv_Mult_Perc)/ manager_prof_arriv_mult_perc_time",
+      "from_stock": null,
+      "to_stock": "urban-stock-manager_prof_arriv_mult_perc",
+      "position": {
+        "x": 760,
+        "y": 260
+      },
+      "units": "dimensionless/year"
+    },
+    {
+      "id": "urban-balance-manager_professional",
+      "name": "Balance_Manager_Professional",
+      "equation": "(labor_to_manager+manager_prof_birth+ manager_prof_arrivals-manager_prof_depart)",
+      "from_stock": null,
+      "to_stock": "urban-stock-manager_professional",
+      "position": {
+        "x": 40,
+        "y": 420
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-balance-mature_business",
+      "name": "Balance_Mature_Business",
+      "equation": "(new_enterprise_decline-mature_business_decline)",
+      "from_stock": null,
+      "to_stock": "urban-stock-mature_business",
+      "position": {
+        "x": 220,
+        "y": 420
+      },
+      "units": "production unit/year"
+    },
+    {
+      "id": "urban-balance-premium_housing",
+      "name": "Balance_Premium_Housing",
+      "equation": "(premium_housing_contruction- premium_housing_obsolescence)",
+      "from_stock": null,
+      "to_stock": "urban-stock-premium_housing",
+      "position": {
+        "x": 400,
+        "y": 420
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-balance-premium_housing_average",
+      "name": "Balance_Premium_Housing_Average",
+      "equation": "(Premium_Housing-Premium_Housing_Average)/ premium_housing_averate_time",
+      "from_stock": null,
+      "to_stock": "urban-stock-premium_housing_average",
+      "position": {
+        "x": 580,
+        "y": 420
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-balance-tax_ratio_needed_perc",
+      "name": "Balance_Tax_Ratio_Needed_Perc",
+      "equation": "(tax_ratio_needed-Tax_Ratio_Needed_Perc)/ tax_ratio_needed_perception_time",
+      "from_stock": null,
+      "to_stock": "urban-stock-tax_ratio_needed_perc",
+      "position": {
+        "x": 760,
+        "y": 420
+      },
+      "units": "dimensionless/year"
+    },
+    {
+      "id": "urban-balance-attract_migr_mult_perc",
+      "name": "Balance_Attract_Migr_Mult_Perc",
+      "equation": "(attract_migr_mult-Attract_Migr_Mult_Perc)/ attract_migr_mult_perc_table",
+      "from_stock": null,
+      "to_stock": "urban-stock-attract_migr_mult_perc",
+      "position": {
+        "x": 40,
+        "y": 580
+      },
+      "units": "dimensionless/year"
+    },
+    {
+      "id": "urban-balance-underemployed",
+      "name": "Balance_Underemployed",
+      "equation": "(underemployed_arrivals+underemp_births+ labor_to_underemp-underemp_departures- underemp_to_labor)",
+      "from_stock": null,
+      "to_stock": "urban-stock-underemployed",
+      "position": {
+        "x": 220,
+        "y": 580
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-balance-underemp_housing",
+      "name": "Balance_Underemp_Housing",
+      "equation": " (worker_housing_obsolescence+low_cost_hous_prog- slum_housing_demolition)",
+      "from_stock": null,
+      "to_stock": "urban-stock-underemp_housing",
+      "position": {
+        "x": 400,
+        "y": 580
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-balance-worker_housing",
+      "name": "Balance_Worker_Housing",
+      "equation": "(premium_housing_obsolescence+ worker_housing_construction-worker_housing_obsolescence)",
+      "from_stock": null,
+      "to_stock": "urban-stock-worker_housing",
+      "position": {
+        "x": 580,
+        "y": 580
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-balance-worker_housing_average",
+      "name": "Balance_Worker_Housing_Average",
+      "equation": "(Worker_Housing-Worker_Housing_Average)/ worker_housing_average_time",
+      "from_stock": null,
+      "to_stock": "urban-stock-worker_housing_average",
+      "position": {
+        "x": 760,
+        "y": 580
+      },
+      "units": "housing unit/year"
+    }
+  ],
+  "variables": [
+    {
+      "id": "urban-var-declining_industry_demolition_program",
+      "name": "declining_industry_demolition_program",
+      "equation": "declining_industry_demolition_rate*Declining_Industry* IF(Time >= SWITCH_TIME_7,1,0)",
+      "position": {
+        "x": 1100,
+        "y": 100
+      },
+      "units": "production unit/year"
+    },
+    {
+      "id": "urban-var-declining_industry_demolition_rate",
+      "name": "declining_industry_demolition_rate",
+      "equation": "0",
+      "position": {
+        "x": 1260,
+        "y": 100
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-labor_training_prog",
+      "name": "labor_training_prog",
+      "equation": "LABOR_TRAINING_RATE*Labor* IF(Time >= SWITCH_TIME_2,1,0)",
+      "position": {
+        "x": 1420,
+        "y": 100
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-labor_training_rate",
+      "name": "LABOR_TRAINING_RATE",
+      "equation": "0",
+      "position": {
+        "x": 1580,
+        "y": 100
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-low_cost_hous_prog",
+      "name": "low_cost_hous_prog",
+      "equation": "low_cost_housing_constr_des*labor_construction_ratio",
+      "position": {
+        "x": 1740,
+        "y": 100
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-var-low_cost_housing_constr_des",
+      "name": "low_cost_housing_constr_des",
+      "equation": "low_cost_housing_prog_coeff*Underemployed*worker_housing_land_mult* IF(Time >= SWITCH_TIME_10,1,0)",
+      "position": {
+        "x": 1900,
+        "y": 100
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-var-low_cost_housing_prog_coeff",
+      "name": "low_cost_housing_prog_coeff",
+      "equation": "0",
+      "position": {
+        "x": 2060,
+        "y": 100
+      },
+      "units": "housing unit/worker/year"
+    },
+    {
+      "id": "urban-var-new_enterprise_constr_rate",
+      "name": "NEW_ENTERPRISE_CONSTR_RATE",
+      "equation": "0",
+      "position": {
+        "x": 2220,
+        "y": 100
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-new_enterprise_construction_program",
+      "name": "new_enterprise_construction_program",
+      "equation": "NEW_ENTERPRISE_CONSTR_RATE*production_units_total* enterprise_land_mult* IF(Time >= SWITCH_TIME_6,1,0)",
+      "position": {
+        "x": 1100,
+        "y": 185
+      },
+      "units": "production unit/year"
+    },
+    {
+      "id": "urban-var-premium_housing_const_prog",
+      "name": "premium_housing_const_prog",
+      "equation": "premium_housing_construction_ratio* Premium_Housing*premium_housing_land_mult* IF(Time >= SWITCH_TIME_3,1,0)",
+      "position": {
+        "x": 1260,
+        "y": 185
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-var-premium_housing_construction_ratio",
+      "name": "premium_housing_construction_ratio",
+      "equation": "0",
+      "position": {
+        "x": 1420,
+        "y": 185
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-slum_housing_demolition_rate",
+      "name": "SLUM_HOUSING_DEMOLITION_RATE",
+      "equation": "0",
+      "position": {
+        "x": 1580,
+        "y": 185
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-slum_housing_demolition_program",
+      "name": "slum_housing_demolition_program",
+      "equation": "SLUM_HOUSING_DEMOLITION_RATE*Underemp_Housing* IF(Time >= SWITCH_TIME_5,1,0)",
+      "position": {
+        "x": 1740,
+        "y": 185
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-var-switch_time_1",
+      "name": "SWITCH_TIME_1",
+      "equation": "0",
+      "position": {
+        "x": 1900,
+        "y": 185
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-switch_time_10",
+      "name": "SWITCH_TIME_10",
+      "equation": "0",
+      "position": {
+        "x": 2060,
+        "y": 185
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-switch_time_2",
+      "name": "SWITCH_TIME_2",
+      "equation": "0",
+      "position": {
+        "x": 2220,
+        "y": 185
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-switch_time_3",
+      "name": "SWITCH_TIME_3",
+      "equation": "0",
+      "position": {
+        "x": 1100,
+        "y": 270
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-switch_time_4",
+      "name": "SWITCH_TIME_4",
+      "equation": "0",
+      "position": {
+        "x": 1260,
+        "y": 270
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-switch_time_5",
+      "name": "SWITCH_TIME_5",
+      "equation": "0",
+      "position": {
+        "x": 1420,
+        "y": 270
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-switch_time_6",
+      "name": "SWITCH_TIME_6",
+      "equation": "0",
+      "position": {
+        "x": 1580,
+        "y": 270
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-switch_time_7",
+      "name": "SWITCH_TIME_7",
+      "equation": "0",
+      "position": {
+        "x": 1740,
+        "y": 270
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-switch_time_8",
+      "name": "SWITCH_TIME_8",
+      "equation": "0",
+      "position": {
+        "x": 1900,
+        "y": 270
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-switch_time_9",
+      "name": "SWITCH_TIME_9",
+      "equation": "0",
+      "position": {
+        "x": 2060,
+        "y": 270
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-tax_per_cap_subsidy",
+      "name": "tax_per_cap_subsidy",
+      "equation": "tax_per_cap_subsidy_size* IF(Time >= SWITCH_TIME_8,1,0)",
+      "position": {
+        "x": 2220,
+        "y": 270
+      },
+      "units": "$/person/year"
+    },
+    {
+      "id": "urban-var-tax_per_cap_subsidy_size",
+      "name": "tax_per_cap_subsidy_size",
+      "equation": "0",
+      "position": {
+        "x": 1100,
+        "y": 355
+      },
+      "units": "$/person/year"
+    },
+    {
+      "id": "urban-var-underemp_job_program_coeff",
+      "name": "underemp_job_program_coeff",
+      "equation": "0",
+      "position": {
+        "x": 1260,
+        "y": 355
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-underemp_to_labor_net",
+      "name": "underemp_to_labor_net",
+      "equation": "underemp_to_labor-labor_to_underemp",
+      "position": {
+        "x": 1420,
+        "y": 355
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-underemp_training_prog",
+      "name": "underemp_training_prog",
+      "equation": "underemp_training_rate*Underemployed* IF(Time >= SWITCH_TIME_1,1,0)",
+      "position": {
+        "x": 1580,
+        "y": 355
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-underemp_training_rate",
+      "name": "underemp_training_rate",
+      "equation": "0",
+      "position": {
+        "x": 1740,
+        "y": 355
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-underemployed_job_program",
+      "name": "underemployed_job_program",
+      "equation": "underemp_job_program_coeff*Underemployed* IF(Time >= SWITCH_TIME_9,1,0)",
+      "position": {
+        "x": 1900,
+        "y": 355
+      },
+      "units": "worker"
+    },
+    {
+      "id": "urban-var-worker_housing_const_prog",
+      "name": "worker_housing_const_prog",
+      "equation": "WORKER_HOUSING_CONSTR_RATIO*housing_units_total* worker_housing_land_mult* IF(Time >= SWITCH_TIME_4,1,0)",
+      "position": {
+        "x": 2060,
+        "y": 355
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-var-worker_housing_constr_ratio",
+      "name": "WORKER_HOUSING_CONSTR_RATIO",
+      "equation": "0",
+      "position": {
+        "x": 2220,
+        "y": 355
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-percent_underemp",
+      "name": "percent_underemp",
+      "equation": "100 * Underemployed*underemp_family_size/population",
+      "position": {
+        "x": 1100,
+        "y": 440
+      },
+      "units": "Dmnl"
+    },
+    {
+      "id": "urban-var-underemployed_crowding",
+      "name": "underemployed_crowding",
+      "equation": "100*underemp_housing_ratio",
+      "position": {
+        "x": 1260,
+        "y": 440
+      },
+      "units": "Dmnl"
+    },
+    {
+      "id": "urban-var-unemployment_rate",
+      "name": "unemployment_rate",
+      "equation": "100 * (1 - (labor_jobs + underemployed_jobs + Manager_Prof_Jobs)/ (Labor + Manager_Professional + Underemployed))",
+      "position": {
+        "x": 1420,
+        "y": 440
+      },
+      "units": "Dmnl"
+    },
+    {
+      "id": "urban-var-declining_industry_demise",
+      "name": "declining_industry_demise",
+      "equation": "(declining_industry_demise_norm* Declining_Industry*declining_industry_demise_mult)+ declining_industry_demolition_program",
+      "position": {
+        "x": 1580,
+        "y": 440
+      },
+      "units": "production unit/year"
+    },
+    {
+      "id": "urban-var-declining_industry_decline_factor",
+      "name": "declining_industry_decline_factor",
+      "equation": "1",
+      "position": {
+        "x": 1740,
+        "y": 440
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-declining_industry_demise_mult",
+      "name": "declining_industry_demise_mult",
+      "equation": "declining_industry_from_enterprise_mult* declining_industry_from_land_mult* declining_industry_decline_factor",
+      "position": {
+        "x": 1900,
+        "y": 440
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-declining_industry_demise_norm",
+      "name": "declining_industry_demise_norm",
+      "equation": "0.03",
+      "position": {
+        "x": 2060,
+        "y": 440
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-declining_industry_from_enterprise_mult",
+      "name": "declining_industry_from_enterprise_mult",
+      "equation": "declining_industry_from_enterprise_mult_tab( 1.44*LN(enterprise_multiplier))",
+      "position": {
+        "x": 2220,
+        "y": 440
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-declining_industry_from_land_mult",
+      "name": "declining_industry_from_land_mult",
+      "equation": "declining_industry_from_land_mult_tab( land_fraction_occupied)",
+      "position": {
+        "x": 1100,
+        "y": 525
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-declining_industry_construction_factor",
+      "name": "declining_industry_construction_factor",
+      "equation": "0.3",
+      "position": {
+        "x": 1260,
+        "y": 525
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-enterprise_factor",
+      "name": "enterprise_factor",
+      "equation": "1",
+      "position": {
+        "x": 1420,
+        "y": 525
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-enterprise_growth_mult",
+      "name": "enterprise_growth_mult",
+      "equation": "enterprise_growth_mult_tab( new_enterprise_growth_rate)",
+      "position": {
+        "x": 1580,
+        "y": 525
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-enterprise_labor_job_mult",
+      "name": "enterprise_labor_job_mult",
+      "equation": "enterprise_labor_job_mult_tab(Labor_Ratio_Perc)",
+      "position": {
+        "x": 1740,
+        "y": 525
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-enterprise_land_mult",
+      "name": "enterprise_land_mult",
+      "equation": "enterprise_land_mult_tab(land_fraction_occupied)",
+      "position": {
+        "x": 1900,
+        "y": 525
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-enterprise_manager_prof_job_mult",
+      "name": "enterprise_manager_prof_job_mult",
+      "equation": "enterprise_manager_prof_job_mult_tab( manager_job_ratio)",
+      "position": {
+        "x": 2060,
+        "y": 525
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-enterprise_multiplier",
+      "name": "enterprise_multiplier",
+      "equation": "enterprise_manager_prof_job_mult* enterprise_land_mult* enterprise_labor_job_mult* enterprise_tax_mult* enterprise_growth_mult* enterprise_factor",
+      "position": {
+        "x": 2220,
+        "y": 525
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-enterprise_tax_mult",
+      "name": "enterprise_tax_mult",
+      "equation": "enterprise_tax_mult_tab(1.44*LN(tax_ratio))",
+      "position": {
+        "x": 1100,
+        "y": 610
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-mature_business_construction_factor",
+      "name": "mature_business_construction_factor",
+      "equation": "0.5",
+      "position": {
+        "x": 1260,
+        "y": 610
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-new_enterprise_average_time",
+      "name": "new_enterprise_average_time",
+      "equation": "10",
+      "position": {
+        "x": 1420,
+        "y": 610
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-new_enterprise_construction",
+      "name": "new_enterprise_Construction",
+      "equation": "new_enterprise_construction_desired* labor_construction_ratio",
+      "position": {
+        "x": 1580,
+        "y": 610
+      },
+      "units": "production unit/year"
+    },
+    {
+      "id": "urban-var-new_enterprise_construction_desired",
+      "name": "new_enterprise_construction_desired",
+      "equation": "new_enterprise_construction_norm* (new_enterprise_construction_factor*New_Enterprise+ mature_business_construction_factor*Mature_Business+ declining_industry_construction_factor*Declining_Industry)* enterprise_multiplier+new_enterprise_construction_program",
+      "position": {
+        "x": 1740,
+        "y": 610
+      },
+      "units": "production unit/year"
+    },
+    {
+      "id": "urban-var-new_enterprise_construction_factor",
+      "name": "new_enterprise_construction_factor",
+      "equation": "1",
+      "position": {
+        "x": 1900,
+        "y": 610
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-new_enterprise_construction_norm",
+      "name": "new_enterprise_construction_norm",
+      "equation": "0.05",
+      "position": {
+        "x": 2060,
+        "y": 610
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-new_enterprise_growth_rate",
+      "name": "new_enterprise_growth_rate",
+      "equation": "(New_Enterprise-New_Enterprise_Average)/ (New_Enterprise_Average*new_enterprise_average_time)",
+      "position": {
+        "x": 2220,
+        "y": 610
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-new_enterprise_growth_rate_initial",
+      "name": "new_enterprise_growth_rate_initial",
+      "equation": "0.03",
+      "position": {
+        "x": 1100,
+        "y": 695
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-declining_industry_labor",
+      "name": "declining_industry_labor",
+      "equation": "10",
+      "position": {
+        "x": 1260,
+        "y": 695
+      },
+      "units": "worker/production unit"
+    },
+    {
+      "id": "urban-var-labor_construction_ratio",
+      "name": "labor_construction_ratio",
+      "equation": "labor_construction_ratio_tab(labor_ratio)",
+      "position": {
+        "x": 1420,
+        "y": 695
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_desired_construct",
+      "name": "labor_desired_construct",
+      "equation": "premium_housing_construct_desired* premium_housing_constr_lab+ worker_housing_const_des* worker_housing_constr_lab+ new_enterprise_construction_desired* new_enterprise_constr_lab+ low_cost_housing_constr_des* low_cost_housing_constr_lab",
+      "position": {
+        "x": 1580,
+        "y": 695
+      },
+      "units": "worker"
+    },
+    {
+      "id": "urban-var-labor_desired_industry",
+      "name": "labor_desired_industry",
+      "equation": "New_Enterprise*new_enterprise_labor+ Mature_Business*mature_business_labor+ Declining_Industry*declining_industry_labor",
+      "position": {
+        "x": 1740,
+        "y": 695
+      },
+      "units": "worker"
+    },
+    {
+      "id": "urban-var-labor_jobs",
+      "name": "labor_jobs",
+      "equation": "labor_desired_construct+labor_desired_industry",
+      "position": {
+        "x": 1900,
+        "y": 695
+      },
+      "units": "worker"
+    },
+    {
+      "id": "urban-var-labor_ratio",
+      "name": "labor_ratio",
+      "equation": "Labor/labor_jobs",
+      "position": {
+        "x": 2060,
+        "y": 695
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_ratio_perception_time",
+      "name": "labor_ratio_perception_time",
+      "equation": "5",
+      "position": {
+        "x": 2220,
+        "y": 695
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-low_cost_housing_constr_lab",
+      "name": "low_cost_housing_constr_lab",
+      "equation": "0.6",
+      "position": {
+        "x": 1100,
+        "y": 780
+      },
+      "units": "worker*year/housing unit"
+    },
+    {
+      "id": "urban-var-mature_business_labor",
+      "name": "mature_business_labor",
+      "equation": "15",
+      "position": {
+        "x": 1260,
+        "y": 780
+      },
+      "units": "worker/production unit"
+    },
+    {
+      "id": "urban-var-new_enterprise_constr_lab",
+      "name": "new_enterprise_constr_lab",
+      "equation": "20",
+      "position": {
+        "x": 1420,
+        "y": 780
+      },
+      "units": "worker*year/production unit"
+    },
+    {
+      "id": "urban-var-new_enterprise_labor",
+      "name": "new_enterprise_labor",
+      "equation": "20",
+      "position": {
+        "x": 1580,
+        "y": 780
+      },
+      "units": "worker/production unit"
+    },
+    {
+      "id": "urban-var-premium_housing_constr_lab",
+      "name": "premium_housing_constr_lab",
+      "equation": "2",
+      "position": {
+        "x": 1740,
+        "y": 780
+      },
+      "units": "worker*year/housing unit"
+    },
+    {
+      "id": "urban-var-underemp_ratio",
+      "name": "underemp_ratio",
+      "equation": "Underemployed/underemployed_jobs",
+      "position": {
+        "x": 1900,
+        "y": 780
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-underemployed_jobs",
+      "name": "underemployed_jobs",
+      "equation": "labor_jobs*underemployed_labor_job_ratio+ underemployed_job_program",
+      "position": {
+        "x": 2060,
+        "y": 780
+      },
+      "units": "worker"
+    },
+    {
+      "id": "urban-var-underemployed_labor_job_ratio",
+      "name": "underemployed_labor_job_ratio",
+      "equation": "underemployed_labor_job_ratio_tab(labor_ratio)",
+      "position": {
+        "x": 2220,
+        "y": 780
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-worker_housing_constr_lab",
+      "name": "worker_housing_constr_lab",
+      "equation": "1",
+      "position": {
+        "x": 1100,
+        "y": 865
+      },
+      "units": "worker*year/housing unit"
+    },
+    {
+      "id": "urban-var-declining_industry_management",
+      "name": "declining_industry_management",
+      "equation": "1",
+      "position": {
+        "x": 1260,
+        "y": 865
+      },
+      "units": "worker/production unit"
+    },
+    {
+      "id": "urban-var-labor_arrival",
+      "name": "labor_arrival",
+      "equation": "labor_arrival_normal*Labor* Labor_Arrival_Mult_Perc",
+      "position": {
+        "x": 1420,
+        "y": 865
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-labor_arrival_factor",
+      "name": "labor_arrival_factor",
+      "equation": "1",
+      "position": {
+        "x": 1580,
+        "y": 865
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_arrival_housing_mult",
+      "name": "labor_arrival_housing_mult",
+      "equation": "labor_arrival_housing_mult_tab( labor_housing_ratio)",
+      "position": {
+        "x": 1740,
+        "y": 865
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_arrival_jobs_mult",
+      "name": "labor_arrival_jobs_mult",
+      "equation": "labor_arrival_jobs_mult_tab(labor_ratio)",
+      "position": {
+        "x": 1900,
+        "y": 865
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_arrival_mult",
+      "name": "labor_arrival_mult",
+      "equation": "labor_arrival_jobs_mult*labor_arrival_underemp_mult* labor_arrival_tax_mult*labor_arrival_housing_mult* labor_arrival_factor",
+      "position": {
+        "x": 2060,
+        "y": 865
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_arrival_normal",
+      "name": "labor_arrival_normal",
+      "equation": "0.03",
+      "position": {
+        "x": 2220,
+        "y": 865
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-labor_arrival_mult_perc_tab",
+      "name": "labor_arrival_mult_perc_tab",
+      "equation": "15",
+      "position": {
+        "x": 1100,
+        "y": 950
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-labor_arrival_tax_mult",
+      "name": "labor_arrival_tax_mult",
+      "equation": "labor_arrival_tax_mult_tab(1.44*LN(tax_ratio))",
+      "position": {
+        "x": 1260,
+        "y": 950
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_arrival_underemp_mult",
+      "name": "labor_arrival_underemp_mult",
+      "equation": "labor_arrival_underemp_mult_Tab(labor_underemp_ratio)",
+      "position": {
+        "x": 1420,
+        "y": 950
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_birth",
+      "name": "labor_birth",
+      "equation": "Labor*labor_birth_rate",
+      "position": {
+        "x": 1580,
+        "y": 950
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-labor_birth_rate",
+      "name": "labor_birth_rate",
+      "equation": "0.01",
+      "position": {
+        "x": 1740,
+        "y": 950
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-labor_daparture_mult",
+      "name": "labor_daparture_mult",
+      "equation": "labor_daparture_mult_tab(1.44*LN(labor_arrival_mult))",
+      "position": {
+        "x": 1900,
+        "y": 950
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_daparture_normal",
+      "name": "labor_daparture_normal",
+      "equation": "0.02",
+      "position": {
+        "x": 2060,
+        "y": 950
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-labor_departure",
+      "name": "labor_departure",
+      "equation": "labor_daparture_normal*Labor*labor_daparture_mult",
+      "position": {
+        "x": 2220,
+        "y": 950
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-labor_edu_mult",
+      "name": "labor_edu_mult",
+      "equation": "labor_edu_mult_tab(tax_per_cap_ratio)",
+      "position": {
+        "x": 1100,
+        "y": 1035
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_housing_ratio",
+      "name": "labor_housing_ratio",
+      "equation": "(Labor*labor_family_size)/(Worker_Housing* worker_housing_pop_density)",
+      "position": {
+        "x": 1260,
+        "y": 1035
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_layoff_frac",
+      "name": "labor_layoff_frac",
+      "equation": "labor_layoff_frac_Tab(labor_ratio)",
+      "position": {
+        "x": 1420,
+        "y": 1035
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-labor_mob_fact",
+      "name": "labor_mob_fact",
+      "equation": "1",
+      "position": {
+        "x": 1580,
+        "y": 1035
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_mob_mult",
+      "name": "labor_mob_mult",
+      "equation": "manage_supply_mult*manage_labor_mult* labor_edu_mult*labor_mob_fact",
+      "position": {
+        "x": 1740,
+        "y": 1035
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_mob_mult_perc_time",
+      "name": "labor_mob_mult_perc_time",
+      "equation": "15",
+      "position": {
+        "x": 1900,
+        "y": 1035
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-labor_supply_mult",
+      "name": "labor_supply_mult",
+      "equation": "labor_supply_mult_tab(labor_ratio)",
+      "position": {
+        "x": 2060,
+        "y": 1035
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_to_manager",
+      "name": "labor_to_manager",
+      "equation": "labor_to_manager_norm*Labor* Labor_Mob_Mult_Perc+labor_training_prog",
+      "position": {
+        "x": 2220,
+        "y": 1035
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-labor_to_manager_norm",
+      "name": "labor_to_manager_norm",
+      "equation": "0.02",
+      "position": {
+        "x": 1100,
+        "y": 1120
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-labor_to_underemp",
+      "name": "labor_to_underemp",
+      "equation": "Labor*labor_layoff_frac",
+      "position": {
+        "x": 1260,
+        "y": 1120
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-labor_unedermp_mult",
+      "name": "labor_unedermp_mult",
+      "equation": "labor_underemp_mult_tab(labor_underemp_ratio)",
+      "position": {
+        "x": 1420,
+        "y": 1120
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-labor_underemp_ratio",
+      "name": "labor_underemp_ratio",
+      "equation": "Labor/Underemployed",
+      "position": {
+        "x": 1580,
+        "y": 1120
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-manage_labor_mult",
+      "name": "manage_labor_mult",
+      "equation": "manage_labor_mult_tab(manager_labor_ratio)",
+      "position": {
+        "x": 1740,
+        "y": 1120
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-manage_supply_mult",
+      "name": "manage_supply_mult",
+      "equation": "manage_supply_mult_tab(manager_job_ratio)",
+      "position": {
+        "x": 1900,
+        "y": 1120
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-manager_job_ratio",
+      "name": "manager_job_ratio",
+      "equation": "Manager_Professional/Manager_Prof_Jobs",
+      "position": {
+        "x": 2060,
+        "y": 1120
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-manager_labor_ratio",
+      "name": "manager_labor_ratio",
+      "equation": "Manager_Professional/Labor",
+      "position": {
+        "x": 2220,
+        "y": 1120
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-manager_prof_jobs",
+      "name": "Manager_Prof_Jobs",
+      "equation": "(New_Enterprise*new_enterprise_management)+ (Mature_Business*mature_business_management)+ (Declining_Industry*declining_industry_management)",
+      "position": {
+        "x": 1100,
+        "y": 1205
+      },
+      "units": "worker"
+    },
+    {
+      "id": "urban-var-mature_business_management",
+      "name": "mature_business_management",
+      "equation": "2",
+      "position": {
+        "x": 1260,
+        "y": 1205
+      },
+      "units": "worker/production unit"
+    },
+    {
+      "id": "urban-var-new_enterprise_management",
+      "name": "new_enterprise_management",
+      "equation": "4",
+      "position": {
+        "x": 1420,
+        "y": 1205
+      },
+      "units": "worker/production unit"
+    },
+    {
+      "id": "urban-var-underemp_edu_mult",
+      "name": "underemp_edu_mult",
+      "equation": "underemp_edu_mult_tab(tax_per_cap_ratio)",
+      "position": {
+        "x": 1580,
+        "y": 1205
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-underemp_fract_working",
+      "name": "underemp_fract_working",
+      "equation": "underemp_fract_working_tab(underemp_ratio)",
+      "position": {
+        "x": 1740,
+        "y": 1205
+      },
+      "units": "fraction"
+    },
+    {
+      "id": "urban-var-underemp_mob_factor",
+      "name": "underemp_mob_factor",
+      "equation": "1",
+      "position": {
+        "x": 1900,
+        "y": 1205
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-underemp_mob_mult",
+      "name": "underemp_mob_mult",
+      "equation": "labor_supply_mult*labor_unedermp_mult* underemp_edu_mult*underemp_mob_factor",
+      "position": {
+        "x": 2060,
+        "y": 1205
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-underemp_mob_mult_perc_time",
+      "name": "underemp_mob_mult_perc_time",
+      "equation": "10",
+      "position": {
+        "x": 2220,
+        "y": 1205
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-underemp_mobility",
+      "name": "underemp_mobility",
+      "equation": "Underemp_to_Labor_Perc/Underemployed",
+      "position": {
+        "x": 1100,
+        "y": 1290
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-underemp_mobility_norm",
+      "name": "underemp_mobility_norm",
+      "equation": "0.1",
+      "position": {
+        "x": 1260,
+        "y": 1290
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-underemp_to_labor",
+      "name": "underemp_to_labor",
+      "equation": "(underemp_mobility_norm* underemp_working*Underemp_Mob_Mult_Perc)+ underemp_training_prog",
+      "position": {
+        "x": 1420,
+        "y": 1290
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-underemp_to_labor_perc_time",
+      "name": "underemp_to_labor_perc_time",
+      "equation": "10",
+      "position": {
+        "x": 1580,
+        "y": 1290
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-underemp_working",
+      "name": "underemp_working",
+      "equation": "Underemployed*underemp_fract_working",
+      "position": {
+        "x": 1740,
+        "y": 1290
+      },
+      "units": "worker"
+    },
+    {
+      "id": "urban-var-worker_housing_pop_density",
+      "name": "worker_housing_pop_density",
+      "equation": "6",
+      "position": {
+        "x": 1900,
+        "y": 1290
+      },
+      "units": "person/housing unit"
+    },
+    {
+      "id": "urban-var-housing_units_total",
+      "name": "housing_units_total",
+      "equation": "Premium_Housing+Worker_Housing+Underemp_Housing",
+      "position": {
+        "x": 2060,
+        "y": 1290
+      },
+      "units": "housing unit"
+    },
+    {
+      "id": "urban-var-land_fraction_occupied",
+      "name": "land_fraction_occupied",
+      "equation": "(housing_units_total*land_per_house+ production_units_total*land_per_production_unit)/ TOTAL_LAND_AREA",
+      "position": {
+        "x": 2220,
+        "y": 1290
+      },
+      "units": "fraction"
+    },
+    {
+      "id": "urban-var-land_per_house",
+      "name": "land_per_house",
+      "equation": "0.1",
+      "position": {
+        "x": 1100,
+        "y": 1375
+      },
+      "units": "acres/housing unit"
+    },
+    {
+      "id": "urban-var-land_per_production_unit",
+      "name": "land_per_production_unit",
+      "equation": "0.2",
+      "position": {
+        "x": 1260,
+        "y": 1375
+      },
+      "units": "acres/production unit"
+    },
+    {
+      "id": "urban-var-production_units_total",
+      "name": "production_units_total",
+      "equation": "New_Enterprise+Mature_Business+Declining_Industry",
+      "position": {
+        "x": 1420,
+        "y": 1375
+      },
+      "units": "production unit"
+    },
+    {
+      "id": "urban-var-total_land_area",
+      "name": "TOTAL_LAND_AREA",
+      "equation": "100000",
+      "position": {
+        "x": 1580,
+        "y": 1375
+      },
+      "units": "acres"
+    },
+    {
+      "id": "urban-var-manager_prof_arriv_factor",
+      "name": "manager_prof_arriv_factor",
+      "equation": "1",
+      "position": {
+        "x": 1740,
+        "y": 1375
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-manager_prof_arriv_hous_mult",
+      "name": "manager_prof_arriv_hous_mult",
+      "equation": "manager_prof_arriv_housing_mult_tab (manager_prof_hous_ratio)",
+      "position": {
+        "x": 1900,
+        "y": 1375
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-manager_prof_arriv_job_mult",
+      "name": "manager_prof_arriv_job_mult",
+      "equation": "manager_prof_arriv_job_mult_tab(manager_job_ratio)",
+      "position": {
+        "x": 2060,
+        "y": 1375
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-manager_prof_arriv_mult",
+      "name": "manager_prof_arriv_mult",
+      "equation": "manager_prof_arriv_job_mult* manager_prof_arriv_pop_mult* manager_prof_arriv_tax_mult* manager_prof_arriv_hous_mult* manager_prof_arriv_factor",
+      "position": {
+        "x": 2220,
+        "y": 1375
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-manager_prof_arriv_pop_mult",
+      "name": "manager_prof_arriv_pop_mult",
+      "equation": "manager_prof_arriv_pop_mult_tab( manager_prof_ratio)",
+      "position": {
+        "x": 1100,
+        "y": 1460
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-manager_prof_arriv_mult_perc_time",
+      "name": "manager_prof_arriv_mult_perc_time",
+      "equation": "10",
+      "position": {
+        "x": 1260,
+        "y": 1460
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-manager_prof_arriv_tax_mult",
+      "name": "manager_prof_arriv_tax_mult",
+      "equation": "manager_prof_arriv_tax_mult_tab( 1.44*LN(tax_ratio))",
+      "position": {
+        "x": 1420,
+        "y": 1460
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-manager_prof_arrival_norm",
+      "name": "manager_prof_arrival_norm",
+      "equation": "0.03",
+      "position": {
+        "x": 1580,
+        "y": 1460
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-manager_prof_arrivals",
+      "name": "manager_prof_arrivals",
+      "equation": "manager_prof_arrival_norm*Manager_Professional* Manager_Prof_Arriv_Mult_Perc",
+      "position": {
+        "x": 1740,
+        "y": 1460
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-manager_prof_birth",
+      "name": "manager_prof_birth",
+      "equation": "Manager_Professional*manager_prof_birth_rate",
+      "position": {
+        "x": 1900,
+        "y": 1460
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-manager_prof_birth_rate",
+      "name": "manager_prof_birth_rate",
+      "equation": "0.0075",
+      "position": {
+        "x": 2060,
+        "y": 1460
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-manager_prof_depart",
+      "name": "manager_prof_depart",
+      "equation": "manager_prof_depart_norm*Manager_Professional* manager_prof_depart_mult",
+      "position": {
+        "x": 2220,
+        "y": 1460
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-manager_prof_depart_mult",
+      "name": "manager_prof_depart_mult",
+      "equation": "manager_prof_depart_mult_tab(1.44*LN(manager_prof_arriv_mult ))",
+      "position": {
+        "x": 1100,
+        "y": 1545
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-manager_prof_depart_norm",
+      "name": "manager_prof_depart_norm",
+      "equation": "0.02",
+      "position": {
+        "x": 1260,
+        "y": 1545
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-manager_prof_hous_ratio",
+      "name": "manager_prof_hous_ratio",
+      "equation": "(Manager_Professional*manager_prof_family_size)/ (Premium_Housing*premium_housing_pop_dens)",
+      "position": {
+        "x": 1420,
+        "y": 1545
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-manager_prof_ratio",
+      "name": "manager_prof_ratio",
+      "equation": "Manager_Professional/(Labor+Underemployed)",
+      "position": {
+        "x": 1580,
+        "y": 1545
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-premium_housing_pop_dens",
+      "name": "premium_housing_pop_dens",
+      "equation": "3",
+      "position": {
+        "x": 1740,
+        "y": 1545
+      },
+      "units": "person/housing unit"
+    },
+    {
+      "id": "urban-var-business_decline_mult",
+      "name": "business_decline_mult",
+      "equation": "business_decline_mult_tab( 1.44*LN(enterprise_multiplier))",
+      "position": {
+        "x": 1900,
+        "y": 1545
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-enterprise_decline_mult",
+      "name": "enterprise_decline_mult",
+      "equation": "enterprise_decline_mult_tab( 1.44*LN(enterprise_multiplier))",
+      "position": {
+        "x": 2060,
+        "y": 1545
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-mature_business_decline",
+      "name": "mature_business_decline",
+      "equation": "mature_business_decline_norm*Mature_Business* business_decline_mult",
+      "position": {
+        "x": 2220,
+        "y": 1545
+      },
+      "units": "production unit/year"
+    },
+    {
+      "id": "urban-var-mature_business_decline_norm",
+      "name": "mature_business_decline_norm",
+      "equation": "0.05",
+      "position": {
+        "x": 1100,
+        "y": 1630
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-new_enterprise_decline",
+      "name": "new_enterprise_decline",
+      "equation": "new_enterprise_decline_normal*New_Enterprise* enterprise_decline_mult",
+      "position": {
+        "x": 1260,
+        "y": 1630
+      },
+      "units": "production unit/year"
+    },
+    {
+      "id": "urban-var-new_enterprise_decline_normal",
+      "name": "new_enterprise_decline_normal",
+      "equation": "0.08",
+      "position": {
+        "x": 1420,
+        "y": 1630
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-premium_housing_adeq_mult",
+      "name": "premium_housing_adeq_mult",
+      "equation": "premium_housing_adeq_mult_tab(manager_prof_hous_ratio)",
+      "position": {
+        "x": 1580,
+        "y": 1630
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-premium_housing_averate_time",
+      "name": "premium_housing_averate_time",
+      "equation": "10",
+      "position": {
+        "x": 1740,
+        "y": 1630
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-premium_housing_construct_desired",
+      "name": "premium_housing_construct_desired",
+      "equation": "(premium_housing_construction_norm* Premium_Housing*premium_housing_mult)+ premium_housing_const_prog",
+      "position": {
+        "x": 1900,
+        "y": 1630
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-var-premium_housing_construction_norm",
+      "name": "premium_housing_construction_norm",
+      "equation": "0.03",
+      "position": {
+        "x": 2060,
+        "y": 1630
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-premium_housing_contruction",
+      "name": "premium_housing_contruction",
+      "equation": "premium_housing_construct_desired* labor_construction_ratio",
+      "position": {
+        "x": 2220,
+        "y": 1630
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-var-premium_housing_enterprise_mult",
+      "name": "premium_housing_enterprise_mult",
+      "equation": "premium_housing_enterprise_mult_tab( new_enterprise_growth_rate)",
+      "position": {
+        "x": 1100,
+        "y": 1715
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-premium_housing_factor",
+      "name": "premium_housing_factor",
+      "equation": "1",
+      "position": {
+        "x": 1260,
+        "y": 1715
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-premium_housing_growth_mult",
+      "name": "premium_housing_growth_mult",
+      "equation": "premium_housing_growth_mult_tab( premium_housing_growth_rate)",
+      "position": {
+        "x": 1420,
+        "y": 1715
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-premium_housing_growth_rate",
+      "name": "premium_housing_growth_rate",
+      "equation": "(Premium_Housing-Premium_Housing_Average)/ (Premium_Housing_Average*premium_housing_averate_time)",
+      "position": {
+        "x": 1580,
+        "y": 1715
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-premium_housing_growth_rate_init",
+      "name": "premium_housing_growth_rate_init",
+      "equation": "0.03",
+      "position": {
+        "x": 1740,
+        "y": 1715
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-premium_housing_land_mult",
+      "name": "premium_housing_land_mult",
+      "equation": "premium_housing_land_mult_tab(land_fraction_occupied)",
+      "position": {
+        "x": 1900,
+        "y": 1715
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-premium_housing_mult",
+      "name": "premium_housing_mult",
+      "equation": "premium_housing_adeq_mult* premium_housing_land_mult* premium_housing_pop_mult* premium_housing_tax_mult* premium_housing_enterprise_mult* premium_housing_growth_mult* premium_housing_factor",
+      "position": {
+        "x": 2060,
+        "y": 1715
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-premium_housing_obsolescence",
+      "name": "premium_housing_obsolescence",
+      "equation": "premium_housing_obsolescense_normal* Premium_Housing*premium_housing_obsolescense_mult",
+      "position": {
+        "x": 2220,
+        "y": 1715
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-var-premium_housing_obsolescense_mult",
+      "name": "premium_housing_obsolescense_mult",
+      "equation": "premium_housing_obsolescense_mult_tab( 1.44*LN(premium_housing_mult))",
+      "position": {
+        "x": 1100,
+        "y": 1800
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-premium_housing_obsolescense_normal",
+      "name": "premium_housing_obsolescense_normal",
+      "equation": "0.03",
+      "position": {
+        "x": 1260,
+        "y": 1800
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-premium_housing_pop_mult",
+      "name": "premium_housing_pop_mult",
+      "equation": "premium_housing_pop_mult_tab(manager_prof_ratio)",
+      "position": {
+        "x": 1420,
+        "y": 1800
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-premium_housing_tax_mult",
+      "name": "premium_housing_tax_mult",
+      "equation": "premium_housing_tax_mult_tab(1.44*LN(tax_ratio))",
+      "position": {
+        "x": 1580,
+        "y": 1800
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-assessed_value",
+      "name": "assessed_value",
+      "equation": "(housing_assessed_value+business_assessed_value)",
+      "position": {
+        "x": 1740,
+        "y": 1800
+      },
+      "units": "THOU $"
+    },
+    {
+      "id": "urban-var-business_assessed_value",
+      "name": "business_assessed_value",
+      "equation": "new_enterprise_assessed_value*New_Enterprise+ maturre_business_assessed_value*Mature_Business+ declining_industry_assessed_value*Declining_Industry",
+      "position": {
+        "x": 1900,
+        "y": 1800
+      },
+      "units": "THOU $"
+    },
+    {
+      "id": "urban-var-declining_industry_assessed_value",
+      "name": "declining_industry_assessed_value",
+      "equation": "100",
+      "position": {
+        "x": 2060,
+        "y": 1800
+      },
+      "units": "THOU $/production unit"
+    },
+    {
+      "id": "urban-var-housing_assessed_value",
+      "name": "housing_assessed_value",
+      "equation": "premium_housing_assessed_value*Premium_Housing+ worker_housing_assessed_value*Worker_Housing+ underemp_housing_assessed_value*Underemp_Housing",
+      "position": {
+        "x": 2220,
+        "y": 1800
+      },
+      "units": "THOU $"
+    },
+    {
+      "id": "urban-var-maturre_business_assessed_value",
+      "name": "maturre_business_assessed_value",
+      "equation": "300",
+      "position": {
+        "x": 1100,
+        "y": 1885
+      },
+      "units": "THOU $/production unit"
+    },
+    {
+      "id": "urban-var-new_enterprise_assessed_value",
+      "name": "new_enterprise_assessed_value",
+      "equation": "500",
+      "position": {
+        "x": 1260,
+        "y": 1885
+      },
+      "units": "THOU $/production unit"
+    },
+    {
+      "id": "urban-var-premium_housing_assessed_value",
+      "name": "premium_housing_assessed_value",
+      "equation": "30",
+      "position": {
+        "x": 1420,
+        "y": 1885
+      },
+      "units": "THOU $/housing unit"
+    },
+    {
+      "id": "urban-var-tax_assessment_indicated",
+      "name": "tax_assessment_indicated",
+      "equation": "tax_needed/assessed_value",
+      "position": {
+        "x": 1580,
+        "y": 1885
+      },
+      "units": "($/year)/THOU $"
+    },
+    {
+      "id": "urban-var-tax_assessment_norm",
+      "name": "tax_assessment_norm",
+      "equation": "50",
+      "position": {
+        "x": 1740,
+        "y": 1885
+      },
+      "units": "($/year)/(THOU $)"
+    },
+    {
+      "id": "urban-var-tax_collection_mult",
+      "name": "tax_collection_mult",
+      "equation": "tax_collection_mult_tab(labor_underemp_ratio)",
+      "position": {
+        "x": 1900,
+        "y": 1885
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-tax_needed",
+      "name": "tax_needed",
+      "equation": "(tax_spending_per_manager*manager_prof_family_size* Manager_Professional+ tax_spending_per_labor*labor_family_size*Labor+ tax_spending_per_underemp*underemp_family_size*Underemployed)* tax_collection_mult",
+      "position": {
+        "x": 2060,
+        "y": 1885
+      },
+      "units": "$/year"
+    },
+    {
+      "id": "urban-var-tax_collections",
+      "name": "tax_collections",
+      "equation": "assessed_value*tax_assessment_norm*tax_ratio",
+      "position": {
+        "x": 2220,
+        "y": 1885
+      },
+      "units": "$/year"
+    },
+    {
+      "id": "urban-var-tax_ratio_needed",
+      "name": "tax_ratio_needed",
+      "equation": "tax_assessment_indicated/tax_assessment_norm",
+      "position": {
+        "x": 1100,
+        "y": 1970
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-tax_ratio",
+      "name": "tax_ratio",
+      "equation": "tax_ratio_table(1.44*LN(Tax_Ratio_Needed_Perc))",
+      "position": {
+        "x": 1260,
+        "y": 1970
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-tax_ratio_needed_perception_time",
+      "name": "tax_ratio_needed_perception_time",
+      "equation": "30",
+      "position": {
+        "x": 1420,
+        "y": 1970
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-tax_spending_per_labor",
+      "name": "tax_spending_per_labor",
+      "equation": "200",
+      "position": {
+        "x": 1580,
+        "y": 1970
+      },
+      "units": "$/year/person"
+    },
+    {
+      "id": "urban-var-tax_spending_per_manager",
+      "name": "tax_spending_per_manager",
+      "equation": "150",
+      "position": {
+        "x": 1740,
+        "y": 1970
+      },
+      "units": "$/year/person"
+    },
+    {
+      "id": "urban-var-tax_spending_per_underemp",
+      "name": "tax_spending_per_underemp",
+      "equation": "300",
+      "position": {
+        "x": 1900,
+        "y": 1970
+      },
+      "units": "$/year/person"
+    },
+    {
+      "id": "urban-var-underemp_housing_assessed_value",
+      "name": "underemp_housing_assessed_value",
+      "equation": "5",
+      "position": {
+        "x": 2060,
+        "y": 1970
+      },
+      "units": "THOU $/housing unit"
+    },
+    {
+      "id": "urban-var-worker_housing_assessed_value",
+      "name": "worker_housing_assessed_value",
+      "equation": "15",
+      "position": {
+        "x": 2220,
+        "y": 1970
+      },
+      "units": "THOU $/housing unit"
+    },
+    {
+      "id": "urban-var-public_expenditure_mult",
+      "name": "public_expenditure_mult",
+      "equation": "public_exp_mult_tab(tax_per_cap_ratio)",
+      "position": {
+        "x": 1100,
+        "y": 2055
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-attract_migr_factor",
+      "name": "attract_migr_factor",
+      "equation": "1",
+      "position": {
+        "x": 1260,
+        "y": 2055
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-attract_migr_mult",
+      "name": "attract_migr_mult",
+      "equation": "underemp_arr_mob_mult* underemp_housing_mult* public_expenditure_mult* underemp_job_mult* underemp_hous_prog_mult* attract_migr_factor",
+      "position": {
+        "x": 1420,
+        "y": 2055
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-attract_migr_mult_perc_table",
+      "name": "attract_migr_mult_perc_table",
+      "equation": "20",
+      "position": {
+        "x": 1580,
+        "y": 2055
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-labor_family_size",
+      "name": "labor_family_size",
+      "equation": "6",
+      "position": {
+        "x": 1740,
+        "y": 2055
+      },
+      "units": "person/worker"
+    },
+    {
+      "id": "urban-var-manager_prof_family_size",
+      "name": "manager_prof_family_size",
+      "equation": "5",
+      "position": {
+        "x": 1900,
+        "y": 2055
+      },
+      "units": "person/worker"
+    },
+    {
+      "id": "s3",
+      "name": "population",
+      "equation": "Manager_Professional*manager_prof_family_size+ Labor*labor_family_size+ Underemployed*underemp_family_size",
+      "position": {
+        "x": 300,
+        "y": 300
+      },
+      "units": "person"
+    },
+    {
+      "id": "urban-var-tax_per_cap_norm",
+      "name": "tax_per_cap_norm",
+      "equation": "250",
+      "position": {
+        "x": 2220,
+        "y": 2055
+      },
+      "units": "$/year/person"
+    },
+    {
+      "id": "urban-var-tax_per_cap_ratio",
+      "name": "tax_per_cap_ratio",
+      "equation": "((tax_collections/population)+tax_per_cap_subsidy)/ tax_per_cap_norm",
+      "position": {
+        "x": 1100,
+        "y": 2140
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-underemp_arr_mob_mult",
+      "name": "underemp_arr_mob_mult",
+      "equation": "underemp_arr_mob_mult_tab(underemp_mobility)",
+      "position": {
+        "x": 1260,
+        "y": 2140
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-underemp_arrivals_normal",
+      "name": "UNDEREMP_ARRIVALS_NORMAL",
+      "equation": "0.05",
+      "position": {
+        "x": 1420,
+        "y": 2140
+      },
+      "units": "1/year"
+    },
+    {
+      "id": "urban-var-underemp_birth_rate",
+      "name": "underemp_birth_rate",
+      "equation": "0.015",
+      "position": {
+        "x": 1580,
+        "y": 2140
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-underemp_births",
+      "name": "underemp_births",
+      "equation": "Underemployed*underemp_birth_rate",
+      "position": {
+        "x": 1740,
+        "y": 2140
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-underemp_departures",
+      "name": "underemp_departures",
+      "equation": "underemp_departures_norm*Underemployed* underemp_departures_mult",
+      "position": {
+        "x": 1900,
+        "y": 2140
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-underemp_departures_mult",
+      "name": "underemp_departures_mult",
+      "equation": "underemp_depart_mult_tab(1.44*LN(attract_migr_mult))",
+      "position": {
+        "x": 2060,
+        "y": 2140
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-underemp_departures_norm",
+      "name": "underemp_departures_norm",
+      "equation": "0.02",
+      "position": {
+        "x": 2220,
+        "y": 2140
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-underemp_family_size",
+      "name": "underemp_family_size",
+      "equation": "8",
+      "position": {
+        "x": 1100,
+        "y": 2225
+      },
+      "units": "person/worker"
+    },
+    {
+      "id": "urban-var-underemp_hous_prog_mult",
+      "name": "underemp_hous_prog_mult",
+      "equation": "underemp_hous_prog_mult_tab(underemp_hous_prog_rate)",
+      "position": {
+        "x": 1260,
+        "y": 2225
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-underemp_hous_prog_rate",
+      "name": "underemp_hous_prog_rate",
+      "equation": "low_cost_hous_prog/Underemployed",
+      "position": {
+        "x": 1420,
+        "y": 2225
+      },
+      "units": "housing unit/year/worker"
+    },
+    {
+      "id": "urban-var-underemp_housing_mult",
+      "name": "underemp_housing_mult",
+      "equation": "underemp_hous_mult_table(underemp_housing_ratio)",
+      "position": {
+        "x": 1580,
+        "y": 2225
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-underemp_housing_ratio",
+      "name": "underemp_housing_ratio",
+      "equation": "(Underemployed*underemp_family_size)/ (Underemp_Housing*underemp_pop_density)",
+      "position": {
+        "x": 1740,
+        "y": 2225
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-underemp_job_mult",
+      "name": "underemp_job_mult",
+      "equation": "underemp_job_mult_tab(underemp_ratio)",
+      "position": {
+        "x": 1900,
+        "y": 2225
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-underemp_pop_density",
+      "name": "underemp_pop_density",
+      "equation": "12",
+      "position": {
+        "x": 2060,
+        "y": 2225
+      },
+      "units": "person/housing unit"
+    },
+    {
+      "id": "urban-var-underemployed_arrivals",
+      "name": "underemployed_arrivals",
+      "equation": "(Underemployed+Labor)* UNDEREMP_ARRIVALS_NORMAL*Attract_Migr_Mult_Perc",
+      "position": {
+        "x": 2220,
+        "y": 2225
+      },
+      "units": "worker/year"
+    },
+    {
+      "id": "urban-var-slum_housing_abandoned_mult",
+      "name": "slum_housing_abandoned_mult",
+      "equation": "slum_housing_abandomed_mult_tab( underemp_housing_ratio)",
+      "position": {
+        "x": 1100,
+        "y": 2310
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-slum_housing_demolitin_factor",
+      "name": "slum_housing_demolitin_factor",
+      "equation": "1",
+      "position": {
+        "x": 1260,
+        "y": 2310
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-slum_housing_demolition",
+      "name": "slum_housing_demolition",
+      "equation": "(slum_housing_demolition_norm* Underemp_Housing*slum_housing_demolition_mult)+ slum_housing_demolition_program",
+      "position": {
+        "x": 1420,
+        "y": 2310
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-var-slum_housing_demolition_mult",
+      "name": "slum_housing_demolition_mult",
+      "equation": "slum_housing_abandoned_mult* slum_housing_land_mult* slum_housing_demolitin_factor",
+      "position": {
+        "x": 1580,
+        "y": 2310
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-slum_housing_demolition_norm",
+      "name": "slum_housing_demolition_norm",
+      "equation": "0.02",
+      "position": {
+        "x": 1740,
+        "y": 2310
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-slum_housing_land_mult",
+      "name": "slum_housing_land_mult",
+      "equation": "slum_housing_land_mult_tab(land_fraction_occupied)",
+      "position": {
+        "x": 1900,
+        "y": 2310
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-worker_housing_adequacy_mult",
+      "name": "worker_housing_adequacy_mult",
+      "equation": "worker_housing_adequacy_mult_tab(labor_housing_ratio)",
+      "position": {
+        "x": 2060,
+        "y": 2310
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-worker_housing_average_time",
+      "name": "worker_housing_average_time",
+      "equation": "10",
+      "position": {
+        "x": 2220,
+        "y": 2310
+      },
+      "units": "year"
+    },
+    {
+      "id": "urban-var-worker_housing_const_des",
+      "name": "worker_housing_const_des",
+      "equation": "(worker_housing_const_norm*Worker_Housing* worker_housing_mult)+worker_housing_const_prog",
+      "position": {
+        "x": 1100,
+        "y": 2395
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-var-worker_housing_const_norm",
+      "name": "worker_housing_const_norm",
+      "equation": "0.03",
+      "position": {
+        "x": 1260,
+        "y": 2395
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-worker_housing_construction",
+      "name": "worker_housing_construction",
+      "equation": "worker_housing_const_des* labor_construction_ratio",
+      "position": {
+        "x": 1420,
+        "y": 2395
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-var-worker_housing_enterprise_mult",
+      "name": "worker_housing_enterprise_mult",
+      "equation": "worker_housing_enterprise_mult_tab( new_enterprise_growth_rate)",
+      "position": {
+        "x": 1580,
+        "y": 2395
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-worker_housing_factor",
+      "name": "worker_housing_factor",
+      "equation": "1",
+      "position": {
+        "x": 1740,
+        "y": 2395
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-worker_housing_growth_mult",
+      "name": "worker_housing_growth_mult",
+      "equation": "worker_housing_growth_mult_tab( worker_housing_growth_rate)",
+      "position": {
+        "x": 1900,
+        "y": 2395
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-worker_housing_growth_rate",
+      "name": "worker_housing_growth_rate",
+      "equation": "(Worker_Housing-Worker_Housing_Average)/ (Worker_Housing_Average*worker_housing_average_time)",
+      "position": {
+        "x": 2060,
+        "y": 2395
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-worker_housing_land_mult",
+      "name": "worker_housing_land_mult",
+      "equation": "worker_housing_land_mult_tab( land_fraction_occupied)",
+      "position": {
+        "x": 2220,
+        "y": 2395
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-worker_housing_growth_rate_initial",
+      "name": "worker_housing_growth_rate_initial",
+      "equation": "0.03",
+      "position": {
+        "x": 1100,
+        "y": 2480
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-worker_housing_obsolescence",
+      "name": "worker_housing_obsolescence",
+      "equation": "worker_housing_obsolescense_norm* Worker_Housing*worker_housing_obsolescense_mult",
+      "position": {
+        "x": 1260,
+        "y": 2480
+      },
+      "units": "housing unit/year"
+    },
+    {
+      "id": "urban-var-worker_housing_mult",
+      "name": "worker_housing_mult",
+      "equation": "worker_housing_adequacy_mult* worker_housing_land_mult* worker_housing_underemp_mult* worker_housing_tax_mult* worker_housing_enterprise_mult* worker_housing_growth_mult* worker_housing_factor",
+      "position": {
+        "x": 1420,
+        "y": 2480
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-worker_housing_obsolescense_mult",
+      "name": "worker_housing_obsolescense_mult",
+      "equation": "worker_housing_obsolescense_mult_tab( 1.44*LN(worker_housing_mult))",
+      "position": {
+        "x": 1580,
+        "y": 2480
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-worker_housing_obsolescense_norm",
+      "name": "worker_housing_obsolescense_norm",
+      "equation": "0.02",
+      "position": {
+        "x": 1740,
+        "y": 2480
+      },
+      "units": "fraction/year"
+    },
+    {
+      "id": "urban-var-worker_housing_tax_mult",
+      "name": "worker_housing_tax_mult",
+      "equation": "worker_housing_tax_mult_tab(1.44*LN(tax_ratio))",
+      "position": {
+        "x": 1900,
+        "y": 2480
+      },
+      "units": "dimensionless"
+    },
+    {
+      "id": "urban-var-worker_housing_underemp_mult",
+      "name": "worker_housing_underemp_mult",
+      "equation": "worker_housing_underemp_mult_tab( labor_underemp_ratio)",
+      "position": {
+        "x": 2060,
+        "y": 2480
+      },
+      "units": "dimensionless"
+    },
     {
       "id": "s1",
       "name": "Housing_Stock",
-      "initial_value": 50000,
-      "equation": "",
+      "equation": "Premium_Housing + Worker_Housing + Underemp_Housing",
       "position": {
         "x": 200,
         "y": 150
@@ -16,435 +2790,1796 @@
     {
       "id": "s2",
       "name": "Jobs",
-      "initial_value": 40000,
-      "equation": "",
+      "equation": "labor_jobs + Manager_Prof_Jobs + underemployed_jobs",
       "position": {
         "x": 400,
         "y": 150
-      }
-    },
-    {
-      "id": "s3",
-      "name": "Population",
-      "initial_value": 100000,
-      "equation": "",
-      "position": {
-        "x": 300,
-        "y": 300
-      }
-    },
-    {
-      "id": "s4",
-      "name": "Infrastructure",
-      "initial_value": 100,
-      "equation": "",
-      "position": {
-        "x": 500,
-        "y": 300
       }
     }
   ],
-  "flows": [
+  "tables": [
     {
-      "id": "f1",
-      "name": "Housing_Construction",
-      "equation": "Desired_Construction * Construction_Rate",
-      "from_stock": null,
-      "to_stock": "s1",
-      "position": {
-        "x": 100,
-        "y": 150
-      }
+      "name": "declining_industry_from_enterprise_mult_tab",
+      "points": [
+        [
+          -3.0,
+          0.4
+        ],
+        [
+          -2.0,
+          0.5
+        ],
+        [
+          -1.0,
+          0.7
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.6
+        ],
+        [
+          2.0,
+          2.4
+        ],
+        [
+          3.0,
+          4.0
+        ]
+      ],
+      "interpolation": "continuous"
     },
     {
-      "id": "f2",
-      "name": "Housing_Demolition",
-      "equation": "Housing_Stock * Demolition_Rate",
-      "from_stock": "s1",
-      "to_stock": null,
-      "position": {
-        "x": 300,
-        "y": 150
-      }
+      "name": "declining_industry_from_land_mult_tab",
+      "points": [
+        [
+          0.8,
+          1.0
+        ],
+        [
+          0.85,
+          1.2
+        ],
+        [
+          0.9,
+          1.6
+        ],
+        [
+          0.95,
+          2.2
+        ],
+        [
+          1.0,
+          6.0
+        ]
+      ],
+      "interpolation": "continuous"
     },
     {
-      "id": "f3",
-      "name": "Job_Creation",
-      "equation": "Jobs * Job_Growth_Rate * Attractiveness_for_Business",
-      "from_stock": null,
-      "to_stock": "s2",
-      "position": {
-        "x": 350,
-        "y": 150
-      }
+      "name": "enterprise_growth_mult_tab",
+      "points": [
+        [
+          -0.1,
+          0.2
+        ],
+        [
+          -0.05,
+          0.6
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.05,
+          1.4
+        ],
+        [
+          0.1,
+          1.8
+        ],
+        [
+          0.15,
+          2.2
+        ]
+      ],
+      "interpolation": "continuous"
     },
     {
-      "id": "f4",
-      "name": "Job_Loss",
-      "equation": "Jobs * Job_Decline_Rate",
-      "from_stock": "s2",
-      "to_stock": null,
-      "position": {
-        "x": 500,
-        "y": 150
-      }
+      "name": "enterprise_labor_job_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.25,
+          0.05
+        ],
+        [
+          0.5,
+          0.15
+        ],
+        [
+          0.75,
+          0.4
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.25,
+          1.5
+        ],
+        [
+          1.5,
+          1.7
+        ],
+        [
+          1.75,
+          1.8
+        ],
+        [
+          2.0,
+          1.8
+        ]
+      ],
+      "interpolation": "continuous"
     },
     {
-      "id": "f5",
-      "name": "In_Migration",
-      "equation": "Migration_Normal * Attractiveness_for_Population",
-      "from_stock": null,
-      "to_stock": "s3",
-      "position": {
-        "x": 200,
-        "y": 300
-      }
+      "name": "enterprise_land_mult_tab",
+      "points": [
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.1,
+          1.15
+        ],
+        [
+          0.2,
+          1.3
+        ],
+        [
+          0.3,
+          1.4
+        ],
+        [
+          0.4,
+          1.45
+        ],
+        [
+          0.5,
+          1.4
+        ],
+        [
+          0.6,
+          1.3
+        ],
+        [
+          0.7,
+          1.0
+        ],
+        [
+          0.8,
+          0.7
+        ],
+        [
+          0.9,
+          0.4
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ],
+      "interpolation": "continuous"
     },
     {
-      "id": "f6",
-      "name": "Out_Migration",
-      "equation": "Population * Out_Migration_Rate / Attractiveness_for_Population",
-      "from_stock": "s3",
-      "to_stock": null,
-      "position": {
-        "x": 400,
-        "y": 300
-      }
+      "name": "enterprise_manager_prof_job_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.1
+        ],
+        [
+          0.25,
+          0.15
+        ],
+        [
+          0.5,
+          0.3
+        ],
+        [
+          0.75,
+          0.5
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.25,
+          1.4
+        ],
+        [
+          1.5,
+          1.7
+        ],
+        [
+          1.75,
+          1.9
+        ],
+        [
+          2.0,
+          2.0
+        ]
+      ],
+      "interpolation": "continuous"
     },
     {
-      "id": "f7",
-      "name": "Infrastructure_Investment",
-      "equation": "Tax_Revenue * Investment_Fraction",
-      "from_stock": null,
-      "to_stock": "s4",
-      "position": {
-        "x": 450,
-        "y": 300
-      }
+      "name": "enterprise_tax_mult_tab",
+      "points": [
+        [
+          -2.0,
+          1.3
+        ],
+        [
+          -1.0,
+          1.2
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.8
+        ],
+        [
+          2.0,
+          0.5
+        ],
+        [
+          3.0,
+          0.25
+        ],
+        [
+          4.0,
+          0.1
+        ]
+      ],
+      "interpolation": "continuous"
     },
     {
-      "id": "f8",
-      "name": "Infrastructure_Decay",
-      "equation": "Infrastructure * Decay_Rate",
-      "from_stock": "s4",
-      "to_stock": null,
-      "position": {
-        "x": 600,
-        "y": 300
-      }
+      "name": "labor_construction_ratio_tab",
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.5,
+          0.5
+        ],
+        [
+          1.0,
+          0.9
+        ],
+        [
+          1.5,
+          1.1
+        ],
+        [
+          2.0,
+          1.15
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "underemployed_labor_job_ratio_tab",
+      "points": [
+        [
+          0.0,
+          1.15
+        ],
+        [
+          0.5,
+          0.8
+        ],
+        [
+          1.0,
+          0.5
+        ],
+        [
+          1.5,
+          0.25
+        ],
+        [
+          2.0,
+          0.1
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "labor_arrival_housing_mult_tab",
+      "points": [
+        [
+          0.0,
+          1.3
+        ],
+        [
+          0.5,
+          1.2
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.5,
+          0.5
+        ],
+        [
+          2.0,
+          0.2
+        ],
+        [
+          2.5,
+          0.1
+        ],
+        [
+          3.0,
+          0.05
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "labor_arrival_jobs_mult_tab",
+      "points": [
+        [
+          0.0,
+          2.6
+        ],
+        [
+          0.25,
+          2.6
+        ],
+        [
+          0.5,
+          2.4
+        ],
+        [
+          0.75,
+          1.8
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.25,
+          0.4
+        ],
+        [
+          1.5,
+          0.2
+        ],
+        [
+          1.75,
+          0.1
+        ],
+        [
+          2.0,
+          0.05
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "labor_arrival_tax_mult_tab",
+      "points": [
+        [
+          -2.0,
+          1.2
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          2.0,
+          0.7
+        ],
+        [
+          4.0,
+          0.3
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "labor_arrival_underemp_mult_Tab",
+      "points": [
+        [
+          0.0,
+          0.4
+        ],
+        [
+          1.0,
+          0.8
+        ],
+        [
+          2.0,
+          1.0
+        ],
+        [
+          3.0,
+          1.2
+        ],
+        [
+          4.0,
+          1.3
+        ],
+        [
+          5.0,
+          1.3
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "labor_daparture_mult_tab",
+      "points": [
+        [
+          -3.0,
+          8.0
+        ],
+        [
+          -2.0,
+          4.0
+        ],
+        [
+          -1.0,
+          2.0
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.5
+        ],
+        [
+          2.0,
+          0.25
+        ],
+        [
+          3.0,
+          0.125
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "labor_edu_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.2
+        ],
+        [
+          0.5,
+          0.7
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.5,
+          1.3
+        ],
+        [
+          2.0,
+          1.5
+        ],
+        [
+          2.5,
+          1.6
+        ],
+        [
+          3.0,
+          1.7
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "labor_layoff_frac_Tab",
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.5,
+          0.01
+        ],
+        [
+          1.0,
+          0.03
+        ],
+        [
+          1.5,
+          0.1
+        ],
+        [
+          2.0,
+          0.3
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "labor_supply_mult_tab",
+      "points": [
+        [
+          0.0,
+          2.4
+        ],
+        [
+          0.5,
+          2.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.5,
+          0.4
+        ],
+        [
+          2.0,
+          0.2
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "labor_underemp_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.2
+        ],
+        [
+          1.0,
+          0.7
+        ],
+        [
+          2.0,
+          1.0
+        ],
+        [
+          3.0,
+          1.2
+        ],
+        [
+          4.0,
+          1.3
+        ],
+        [
+          5.0,
+          1.4
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "manage_labor_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.2
+        ],
+        [
+          0.05,
+          0.7
+        ],
+        [
+          0.1,
+          1.0
+        ],
+        [
+          0.15,
+          1.2
+        ],
+        [
+          0.2,
+          1.3
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "manage_supply_mult_tab",
+      "points": [
+        [
+          0.0,
+          2.3
+        ],
+        [
+          0.25,
+          2.2
+        ],
+        [
+          0.5,
+          2.0
+        ],
+        [
+          0.75,
+          1.6
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.25,
+          0.5
+        ],
+        [
+          1.5,
+          0.2
+        ],
+        [
+          1.75,
+          0.1
+        ],
+        [
+          2.0,
+          0.05
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "underemp_edu_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.2
+        ],
+        [
+          0.5,
+          0.7
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.5,
+          1.3
+        ],
+        [
+          2.0,
+          1.5
+        ],
+        [
+          2.5,
+          1.6
+        ],
+        [
+          3.0,
+          1.7
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "underemp_fract_working_tab",
+      "points": [
+        [
+          0.0,
+          0.9
+        ],
+        [
+          1.0,
+          0.8
+        ],
+        [
+          2.0,
+          0.5
+        ],
+        [
+          3.0,
+          0.33
+        ],
+        [
+          4.0,
+          0.25
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "manager_prof_arriv_housing_mult_tab",
+      "points": [
+        [
+          0.0,
+          1.3
+        ],
+        [
+          0.5,
+          1.2
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.5,
+          0.5
+        ],
+        [
+          2.0,
+          0.2
+        ],
+        [
+          2.5,
+          0.1
+        ],
+        [
+          3.0,
+          0.05
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "manager_prof_arriv_job_mult_tab",
+      "points": [
+        [
+          0.0,
+          2.7
+        ],
+        [
+          0.25,
+          2.6
+        ],
+        [
+          0.5,
+          2.4
+        ],
+        [
+          0.75,
+          2.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.25,
+          0.4
+        ],
+        [
+          1.5,
+          0.2
+        ],
+        [
+          1.75,
+          0.1
+        ],
+        [
+          2.0,
+          0.05
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "manager_prof_arriv_pop_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.3
+        ],
+        [
+          0.02,
+          0.7
+        ],
+        [
+          0.04,
+          1.0
+        ],
+        [
+          0.06,
+          1.2
+        ],
+        [
+          0.08,
+          1.3
+        ],
+        [
+          0.1,
+          1.3
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "manager_prof_arriv_tax_mult_tab",
+      "points": [
+        [
+          -2.0,
+          1.4
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          2.0,
+          0.7
+        ],
+        [
+          4.0,
+          0.3
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "manager_prof_depart_mult_tab",
+      "points": [
+        [
+          -3.0,
+          8.0
+        ],
+        [
+          -2.0,
+          4.0
+        ],
+        [
+          -1.0,
+          2.0
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.5
+        ],
+        [
+          2.0,
+          0.25
+        ],
+        [
+          3.0,
+          0.125
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "business_decline_mult_tab",
+      "points": [
+        [
+          -3.0,
+          2.0
+        ],
+        [
+          -2.0,
+          1.8
+        ],
+        [
+          -1.0,
+          1.5
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.7
+        ],
+        [
+          2.0,
+          0.5
+        ],
+        [
+          3.0,
+          0.4
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "enterprise_decline_mult_tab",
+      "points": [
+        [
+          -3.0,
+          2.0
+        ],
+        [
+          -2.0,
+          1.8
+        ],
+        [
+          -1.0,
+          1.5
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.7
+        ],
+        [
+          2.0,
+          0.5
+        ],
+        [
+          3.0,
+          0.5
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "premium_housing_adeq_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.25,
+          0.001
+        ],
+        [
+          0.5,
+          0.01
+        ],
+        [
+          0.75,
+          0.2
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.25,
+          3.0
+        ],
+        [
+          1.5,
+          4.6
+        ],
+        [
+          1.75,
+          5.6
+        ],
+        [
+          2.0,
+          6.0
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "premium_housing_enterprise_mult_tab",
+      "points": [
+        [
+          -0.1,
+          0.2
+        ],
+        [
+          -0.05,
+          0.6
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.05,
+          1.4
+        ],
+        [
+          0.1,
+          1.8
+        ],
+        [
+          0.15,
+          2.2
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "premium_housing_growth_mult_tab",
+      "points": [
+        [
+          -0.1,
+          0.2
+        ],
+        [
+          -0.05,
+          0.6
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.05,
+          1.4
+        ],
+        [
+          0.1,
+          1.8
+        ],
+        [
+          0.15,
+          2.2
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "premium_housing_land_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.4
+        ],
+        [
+          0.1,
+          0.9
+        ],
+        [
+          0.2,
+          1.3
+        ],
+        [
+          0.3,
+          1.6
+        ],
+        [
+          0.4,
+          1.8
+        ],
+        [
+          0.5,
+          1.9
+        ],
+        [
+          0.6,
+          1.8
+        ],
+        [
+          0.7,
+          1.4
+        ],
+        [
+          0.8,
+          0.7
+        ],
+        [
+          0.9,
+          0.2
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "premium_housing_obsolescense_mult_tab",
+      "points": [
+        [
+          -3.0,
+          2.8
+        ],
+        [
+          -2.0,
+          2.6
+        ],
+        [
+          -1.0,
+          2.0
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.5
+        ],
+        [
+          2.0,
+          0.3
+        ],
+        [
+          3.0,
+          0.2
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "premium_housing_pop_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.3
+        ],
+        [
+          0.02,
+          0.7
+        ],
+        [
+          0.04,
+          1.0
+        ],
+        [
+          0.06,
+          1.2
+        ],
+        [
+          0.08,
+          1.3
+        ],
+        [
+          0.1,
+          1.3
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "premium_housing_tax_mult_tab",
+      "points": [
+        [
+          -2.0,
+          1.2
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          2.0,
+          0.7
+        ],
+        [
+          4.0,
+          0.3
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "tax_collection_mult_tab",
+      "points": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.5,
+          1.6
+        ],
+        [
+          1.0,
+          1.3
+        ],
+        [
+          1.5,
+          1.1
+        ],
+        [
+          2.0,
+          1.0
+        ],
+        [
+          2.5,
+          0.9
+        ],
+        [
+          3.0,
+          0.8
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "tax_ratio_table",
+      "points": [
+        [
+          -2.0,
+          0.3
+        ],
+        [
+          -1.0,
+          0.5
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.8
+        ],
+        [
+          2.0,
+          2.8
+        ],
+        [
+          3.0,
+          3.6
+        ],
+        [
+          4.0,
+          4.0
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "public_exp_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.2
+        ],
+        [
+          0.5,
+          0.6
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.5,
+          1.6
+        ],
+        [
+          2.0,
+          2.4
+        ],
+        [
+          2.5,
+          3.2
+        ],
+        [
+          3.0,
+          4.0
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "underemp_arr_mob_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.3
+        ],
+        [
+          0.025,
+          0.7
+        ],
+        [
+          0.05,
+          1.0
+        ],
+        [
+          0.075,
+          1.2
+        ],
+        [
+          0.1,
+          1.3
+        ],
+        [
+          0.125,
+          1.4
+        ],
+        [
+          0.15,
+          1.5
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "underemp_depart_mult_tab",
+      "points": [
+        [
+          -3.0,
+          8.0
+        ],
+        [
+          -2.0,
+          4.0
+        ],
+        [
+          -1.0,
+          2.0
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.5
+        ],
+        [
+          2.0,
+          0.25
+        ],
+        [
+          3.0,
+          0.125
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "underemp_hous_mult_table",
+      "points": [
+        [
+          0.0,
+          2.5
+        ],
+        [
+          0.25,
+          2.4
+        ],
+        [
+          0.5,
+          2.2
+        ],
+        [
+          0.75,
+          1.7
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.25,
+          0.4
+        ],
+        [
+          1.5,
+          0.2
+        ],
+        [
+          1.75,
+          0.1
+        ],
+        [
+          2.0,
+          0.05
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "underemp_hous_prog_mult_tab",
+      "points": [
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.01,
+          1.2
+        ],
+        [
+          0.02,
+          1.5
+        ],
+        [
+          0.03,
+          1.9
+        ],
+        [
+          0.04,
+          2.4
+        ],
+        [
+          0.05,
+          3.0
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "underemp_job_mult_tab",
+      "points": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.25,
+          2.0
+        ],
+        [
+          0.5,
+          1.9
+        ],
+        [
+          0.75,
+          1.6
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.25,
+          0.6
+        ],
+        [
+          1.5,
+          0.4
+        ],
+        [
+          1.75,
+          0.3
+        ],
+        [
+          2.0,
+          0.2
+        ],
+        [
+          2.25,
+          0.15
+        ],
+        [
+          2.5,
+          0.1
+        ],
+        [
+          2.75,
+          0.05
+        ],
+        [
+          3.0,
+          0.02
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "slum_housing_abandomed_mult_tab",
+      "points": [
+        [
+          0.0,
+          3.6
+        ],
+        [
+          0.5,
+          2.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.5,
+          0.6
+        ],
+        [
+          2.0,
+          0.4
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "slum_housing_land_mult_tab",
+      "points": [
+        [
+          0.8,
+          1.0
+        ],
+        [
+          0.85,
+          1.2
+        ],
+        [
+          0.9,
+          1.6
+        ],
+        [
+          0.95,
+          2.2
+        ],
+        [
+          1.0,
+          6.0
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "worker_housing_adequacy_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.25,
+          0.05
+        ],
+        [
+          0.5,
+          0.1
+        ],
+        [
+          0.75,
+          0.3
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.25,
+          1.8
+        ],
+        [
+          1.5,
+          2.4
+        ],
+        [
+          1.75,
+          2.8
+        ],
+        [
+          2.0,
+          3.0
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "worker_housing_enterprise_mult_tab",
+      "points": [
+        [
+          -0.2,
+          0.3
+        ],
+        [
+          -0.1,
+          0.7
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.1,
+          1.2
+        ],
+        [
+          0.2,
+          1.3
+        ],
+        [
+          0.3,
+          1.4
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "worker_housing_growth_mult_tab",
+      "points": [
+        [
+          -0.1,
+          0.2
+        ],
+        [
+          -0.05,
+          0.6
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.05,
+          1.4
+        ],
+        [
+          0.1,
+          1.8
+        ],
+        [
+          0.15,
+          2.2
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "worker_housing_land_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.4
+        ],
+        [
+          0.1,
+          0.9
+        ],
+        [
+          0.2,
+          1.3
+        ],
+        [
+          0.3,
+          1.6
+        ],
+        [
+          0.4,
+          1.8
+        ],
+        [
+          0.5,
+          1.9
+        ],
+        [
+          0.6,
+          1.8
+        ],
+        [
+          0.7,
+          1.4
+        ],
+        [
+          0.8,
+          0.7
+        ],
+        [
+          0.9,
+          0.2
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "worker_housing_obsolescense_mult_tab",
+      "points": [
+        [
+          -3.0,
+          2.2
+        ],
+        [
+          -2.0,
+          2.0
+        ],
+        [
+          -1.0,
+          1.6
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.7
+        ],
+        [
+          2.0,
+          0.5
+        ],
+        [
+          3.0,
+          0.4
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "worker_housing_tax_mult_tab",
+      "points": [
+        [
+          -2.0,
+          1.2
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          2.0,
+          0.7
+        ],
+        [
+          4.0,
+          0.3
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "worker_housing_underemp_mult_tab",
+      "points": [
+        [
+          0.0,
+          0.5
+        ],
+        [
+          1.0,
+          0.8
+        ],
+        [
+          2.0,
+          1.0
+        ],
+        [
+          3.0,
+          1.2
+        ],
+        [
+          4.0,
+          1.3
+        ],
+        [
+          5.0,
+          1.3
+        ]
+      ],
+      "interpolation": "continuous"
     }
   ],
-  "variables": [
-    {
-      "id": "v1",
-      "name": "Desired_Construction",
-      "equation": "MAX(0, (Population / Persons_Per_Unit - Housing_Stock))",
-      "position": {
-        "x": 100,
-        "y": 100
-      }
-    },
-    {
-      "id": "v2",
-      "name": "Construction_Rate",
-      "equation": "0.05",
-      "position": {
-        "x": 150,
-        "y": 50
-      }
-    },
-    {
-      "id": "v3",
-      "name": "Persons_Per_Unit",
-      "equation": "2.5",
-      "position": {
-        "x": 200,
-        "y": 50
-      }
-    },
-    {
-      "id": "v4",
-      "name": "Demolition_Rate",
-      "equation": "0.02",
-      "position": {
-        "x": 300,
-        "y": 100
-      }
-    },
-    {
-      "id": "v5",
-      "name": "Job_Growth_Rate",
-      "equation": "0.03",
-      "position": {
-        "x": 400,
-        "y": 50
-      }
-    },
-    {
-      "id": "v6",
-      "name": "Job_Decline_Rate",
-      "equation": "0.02",
-      "position": {
-        "x": 500,
-        "y": 50
-      }
-    },
-    {
-      "id": "v7",
-      "name": "Attractiveness_for_Business",
-      "equation": "Infrastructure / 100 * (1 - Population / Land_Capacity)",
-      "position": {
-        "x": 400,
-        "y": 100
-      }
-    },
-    {
-      "id": "v8",
-      "name": "Land_Capacity",
-      "equation": "200000",
-      "position": {
-        "x": 350,
-        "y": 250
-      }
-    },
-    {
-      "id": "v9",
-      "name": "Migration_Normal",
-      "equation": "5000",
-      "position": {
-        "x": 200,
-        "y": 350
-      }
-    },
-    {
-      "id": "v10",
-      "name": "Attractiveness_for_Population",
-      "equation": "(Jobs / Population) * (Housing_Stock * Persons_Per_Unit / Population) * Infrastructure / 100",
-      "position": {
-        "x": 300,
-        "y": 400
-      }
-    },
-    {
-      "id": "v11",
-      "name": "Out_Migration_Rate",
-      "equation": "0.03",
-      "position": {
-        "x": 400,
-        "y": 350
-      }
-    },
-    {
-      "id": "v12",
-      "name": "Tax_Revenue",
-      "equation": "(Population + Jobs) * Tax_Rate_Per_Capita",
-      "position": {
-        "x": 500,
-        "y": 350
-      }
-    },
-    {
-      "id": "v13",
-      "name": "Tax_Rate_Per_Capita",
-      "equation": "100",
-      "position": {
-        "x": 550,
-        "y": 400
-      }
-    },
-    {
-      "id": "v14",
-      "name": "Investment_Fraction",
-      "equation": "0.0001",
-      "position": {
-        "x": 450,
-        "y": 400
-      }
-    },
-    {
-      "id": "v15",
-      "name": "Decay_Rate",
-      "equation": "0.03",
-      "position": {
-        "x": 600,
-        "y": 350
-      }
-    }
-  ],
-  "connectors": [
-    {
-      "id": "conn-1",
-      "from_element": "Construction_Rate",
-      "to_element": "Housing_Construction"
-    },
-    {
-      "id": "conn-2",
-      "from_element": "Desired_Construction",
-      "to_element": "Housing_Construction"
-    },
-    {
-      "id": "conn-3",
-      "from_element": "Demolition_Rate",
-      "to_element": "Housing_Demolition"
-    },
-    {
-      "id": "conn-4",
-      "from_element": "Housing_Stock",
-      "to_element": "Housing_Demolition"
-    },
-    {
-      "id": "conn-5",
-      "from_element": "Job_Growth_Rate",
-      "to_element": "Job_Creation"
-    },
-    {
-      "id": "conn-6",
-      "from_element": "Jobs",
-      "to_element": "Job_Creation"
-    },
-    {
-      "id": "conn-7",
-      "from_element": "Attractiveness_for_Business",
-      "to_element": "Job_Creation"
-    },
-    {
-      "id": "conn-8",
-      "from_element": "Jobs",
-      "to_element": "Job_Loss"
-    },
-    {
-      "id": "conn-9",
-      "from_element": "Job_Decline_Rate",
-      "to_element": "Job_Loss"
-    },
-    {
-      "id": "conn-10",
-      "from_element": "Migration_Normal",
-      "to_element": "In_Migration"
-    },
-    {
-      "id": "conn-11",
-      "from_element": "Attractiveness_for_Population",
-      "to_element": "In_Migration"
-    },
-    {
-      "id": "conn-12",
-      "from_element": "Population",
-      "to_element": "In_Migration"
-    },
-    {
-      "id": "conn-13",
-      "from_element": "Out_Migration_Rate",
-      "to_element": "Out_Migration"
-    },
-    {
-      "id": "conn-14",
-      "from_element": "Attractiveness_for_Population",
-      "to_element": "Out_Migration"
-    },
-    {
-      "id": "conn-15",
-      "from_element": "Population",
-      "to_element": "Out_Migration"
-    },
-    {
-      "id": "conn-16",
-      "from_element": "Investment_Fraction",
-      "to_element": "Infrastructure_Investment"
-    },
-    {
-      "id": "conn-17",
-      "from_element": "Tax_Revenue",
-      "to_element": "Infrastructure_Investment"
-    },
-    {
-      "id": "conn-18",
-      "from_element": "Infrastructure",
-      "to_element": "Infrastructure_Decay"
-    },
-    {
-      "id": "conn-19",
-      "from_element": "Decay_Rate",
-      "to_element": "Infrastructure_Decay"
-    },
-    {
-      "id": "conn-20",
-      "from_element": "Housing_Stock",
-      "to_element": "Desired_Construction"
-    },
-    {
-      "id": "conn-21",
-      "from_element": "Population",
-      "to_element": "Desired_Construction"
-    },
-    {
-      "id": "conn-22",
-      "from_element": "Persons_Per_Unit",
-      "to_element": "Desired_Construction"
-    },
-    {
-      "id": "conn-23",
-      "from_element": "Infrastructure",
-      "to_element": "Attractiveness_for_Business"
-    },
-    {
-      "id": "conn-24",
-      "from_element": "Land_Capacity",
-      "to_element": "Attractiveness_for_Business"
-    },
-    {
-      "id": "conn-25",
-      "from_element": "Population",
-      "to_element": "Attractiveness_for_Business"
-    },
-    {
-      "id": "conn-26",
-      "from_element": "Jobs",
-      "to_element": "Attractiveness_for_Population"
-    },
-    {
-      "id": "conn-27",
-      "from_element": "Infrastructure",
-      "to_element": "Attractiveness_for_Population"
-    },
-    {
-      "id": "conn-28",
-      "from_element": "Housing_Stock",
-      "to_element": "Attractiveness_for_Population"
-    },
-    {
-      "id": "conn-29",
-      "from_element": "Population",
-      "to_element": "Attractiveness_for_Population"
-    },
-    {
-      "id": "conn-30",
-      "from_element": "Persons_Per_Unit",
-      "to_element": "Attractiveness_for_Population"
-    },
-    {
-      "id": "conn-31",
-      "from_element": "Jobs",
-      "to_element": "Tax_Revenue"
-    },
-    {
-      "id": "conn-32",
-      "from_element": "Population",
-      "to_element": "Tax_Revenue"
-    },
-    {
-      "id": "conn-33",
-      "from_element": "Tax_Rate_Per_Capita",
-      "to_element": "Tax_Revenue"
-    }
-  ],
+  "connectors": [],
+  "source": "https://vensim.com/documentation/Models/Sample/URBAN/URBAN.mdl",
+  "reference": "Forrester JW. Urban Dynamics appendix model (1974 copyright declaration), native Vensim URBAN.mdl, servermodified2024-09-04; downloaded2026-10-20. Full model equations before sketch section.",
   "time_settings": {
-    "start": 0,
-    "end": 100,
-    "dt": 0.25
+    "start": 0.0,
+    "end": 250.0,
+    "dt": 1.0
   },
-  "created_at": "2026-01-12T07:19:37.014711+00:00",
-  "updated_at": "2026-01-12T07:19:37.014711+00:00",
-  "source": "https://vensim.com/documentation/sample_models.html",
-  "reference": "Based on Forrester, J.W. (1969). Urban Dynamics. MIT Press. Vensim urban.mdl sample model."
+  "description": "Exact baseline reconstruction of the original native Vensim URBAN.mdl, including all20 integrators, all auxiliary equations, all53 lookup tables, and source numeric inputs/initial equations. This is the Forrester appendix urban model, not the unrelated generated four-stock housing/jobs/infrastructure hybrid. Six GAME(0) inputs use their declared static basevalue0; interactive game interventions and external CIN files are not selected. Vensim lookup endpoint behavior is continuous interpolation with constant endpoint extension. Source initial0, final250 years and Euler step1 are restored. Compatible original Housing_Stock, Jobs and Population nodes are source-sector aggregates; Infrastructure has no native counterpart and is archived in the repair receipt. Model classes are the source's historical categories and coefficients, not a contemporary calibrated urban forecast."
 }

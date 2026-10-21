@@ -1,7 +1,7 @@
 {
   "id": "milgram-small-world-soc",
-  "name": "Milgram Small World Network",
-  "description": "Stanley Milgram's 1967 'six degrees of separation' experiment showing social networks have small average path lengths despite large size. Reference: Milgram, S. (1967). The Small World Problem. Psychology Today, 2(1), 60-67. Source: https://doi.org/10.1037/e400002009-005",
+  "name": "Illustrative Logistic Network Reach (Milgram Context)",
+  "description": "Illustrative continuous logistic network-reach experiment, conceptually associated with Milgram small-world studies. This generated logistic ODE is not a reconstruction of the 1967 acquaintance-chain experiment. People_Reached obeys dP/dt=50*P*(1-P/300000000). The legacy Chain_Steps stock integrates elapsed model time while reach is below half the population; it is not a count of discrete acquaintance links. Avg_Path_Length and Steps_Remaining are retained heuristic logarithmic quantities. Explicit RK4 DT 0.0025 resolves the logistic transition over the unchanged full 10-unit horizon. Default/half/quarter grids fit the work budget and agree with the exact logistic solution; threshold-duration error is bounded by half a timestep, with nonmonotone grid-phase error. No empirical calibration or native Milgram simulation is claimed.",
   "stocks": [
     {
       "id": "stock-reached",
@@ -133,9 +133,9 @@
   "time_settings": {
     "start": 0,
     "end": 10,
-    "dt": 1,
-    "integration_method": "radau"
+    "dt": 0.0025,
+    "integration_method": "rk4"
   },
-  "source": "https://doi.org/10.1037/h0024480",
-  "reference": "Milgram S. The Small World Problem. Psychology Today. 1967;1(1):61-67."
+  "source": "https://doi.org/10.1037/e400002009-005",
+  "reference": "Milgram, S. (1967), The small-world problem. Psychology Today, inaugural issue. PsycEXTRA DOI 10.1037/e400002009-005 identifies the original article; conceptual context only, not a native logistic simulation."
 }

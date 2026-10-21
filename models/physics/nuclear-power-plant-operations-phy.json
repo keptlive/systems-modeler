@@ -1,532 +1,402 @@
 {
   "id": "nuclear-power-plant-operations-phy",
-  "name": "Nuclear Power Plant Operations Model",
-  "description": "A system dynamics model of nuclear reactor operations based on the point kinetics equations and Stacey (2018) 'Nuclear Reactor Physics' (Wiley, doi:10.1002/9783527812318). Models neutron population dynamics, reactivity feedback, thermal hydraulics, and power control. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "name": "Reactor Point Kinetics and Thermal Feedback \u2014 KTH Example 3-2",
+  "description": "Source reconstruction of KTH Nuclear Reactor Dynamics and Stability, chapter3 pp.74-79, Table3-2 and executable Scilab PDModel Example3-2. Four physical states are one-group neutron/precursor densities and fuel/coolant temperatures. All physical coefficients and equilibrium initial conditions are taken from the example. The time origin is shifted to the source reactivity insertion at t=1s: time0 here is immediately after the +0.0022 step; the omitted preceding1s is exact equilibrium. This autonomous post-step response is extended to the saved1000s horizon. Radau resolves prompt kinetics; dt0.2s is reporting spacing, replacing the generated0.01 output grid. Energy is measured in joules and watts, with distinct fuel/coolant heat capacities; the same heat transfer leaves fuel and enters coolant. Thermal_Power_Output is derived MW, not a lagged stock. Unrelated generated control-rod and xenon sectors are archived in the repair receipt rather than presented as part of this source model. This is an educational lumped reactor model, not plant-operation or safety guidance.",
   "stocks": [
     {
       "id": "stock-neutron-population",
-      "name": "Neutron Population",
-      "initial_value": 1000000000,
-      "equation": "",
       "position": {
         "x": 200,
         "y": 150
-      }
+      },
+      "name": "Neutron_Density",
+      "initial_value": 200,
+      "equation": "",
+      "units": "1/m^3"
     },
     {
       "id": "stock-delayed-precursors",
-      "name": "Delayed Neutron Precursors",
-      "initial_value": 50000000,
-      "equation": "",
       "position": {
         "x": 400,
         "y": 150
-      }
+      },
+      "name": "Delayed_Neutron_Precursors",
+      "initial_value": 15000,
+      "equation": "Beta * Neutron_Density / (Prompt_Lifetime * Decay_Constant)",
+      "units": "1/m^3"
     },
     {
       "id": "stock-fuel-temperature",
-      "name": "Fuel Temperature",
-      "initial_value": 600,
-      "equation": "",
       "position": {
         "x": 200,
         "y": 300
-      }
+      },
+      "name": "Fuel_Temperature",
+      "initial_value": 921.875,
+      "equation": "Equilibrium_Fuel_Temperature",
+      "units": "K"
     },
     {
       "id": "stock-coolant-temperature",
-      "name": "Coolant Temperature",
-      "initial_value": 300,
-      "equation": "",
       "position": {
         "x": 400,
         "y": 300
-      }
-    },
-    {
-      "id": "stock-control-rod-position",
-      "name": "Control Rod Position",
-      "initial_value": 0.5,
-      "equation": "",
-      "position": {
-        "x": 300,
-        "y": 420
-      }
-    },
-    {
-      "id": "stock-xenon-concentration",
-      "name": "Xenon Concentration",
-      "initial_value": 1000000,
-      "equation": "",
-      "position": {
-        "x": 500,
-        "y": 420
-      }
-    },
-    {
-      "id": "stock-power-output",
-      "name": "Thermal Power Output",
-      "initial_value": 3000,
-      "equation": "",
-      "position": {
-        "x": 600,
-        "y": 150
-      }
+      },
+      "name": "Coolant_Temperature",
+      "initial_value": 571.875,
+      "equation": "Equilibrium_Coolant_Temperature",
+      "units": "K"
     }
   ],
   "flows": [
     {
       "id": "flow-prompt-neutrons",
-      "name": "Prompt Neutron Generation",
-      "equation": "Neutron_Population * (Net_Reactivity - Beta) / Prompt_Lifetime",
-      "from_stock": null,
-      "to_stock": "stock-neutron-population",
       "position": {
         "x": 100,
         "y": 150
-      }
+      },
+      "name": "Prompt_Neutron_Generation",
+      "equation": "Neutron_Density * (Net_Reactivity - Beta) / Prompt_Lifetime",
+      "units": "1/(m^3*s)",
+      "from_stock": null,
+      "to_stock": "stock-neutron-population"
     },
     {
       "id": "flow-delayed-neutrons",
-      "name": "Delayed Neutron Release",
-      "equation": "Delayed_Neutron_Precursors * Decay_Constant",
-      "from_stock": "stock-delayed-precursors",
-      "to_stock": "stock-neutron-population",
       "position": {
         "x": 300,
         "y": 150
-      }
+      },
+      "name": "Delayed_Neutron_Release",
+      "equation": "Delayed_Neutron_Precursors * Decay_Constant",
+      "units": "1/(m^3*s)",
+      "from_stock": "stock-delayed-precursors",
+      "to_stock": "stock-neutron-population"
     },
     {
       "id": "flow-precursor-production",
-      "name": "Precursor Production",
-      "equation": "Neutron_Population * Beta / Prompt_Lifetime",
-      "from_stock": null,
-      "to_stock": "stock-delayed-precursors",
       "position": {
         "x": 400,
         "y": 100
-      }
-    },
-    {
-      "id": "flow-precursor-decay",
-      "name": "Precursor Decay",
-      "equation": "Delayed_Neutron_Precursors * Decay_Constant",
+      },
+      "name": "Precursor_Production",
+      "equation": "Neutron_Density * Beta / Prompt_Lifetime",
+      "units": "1/(m^3*s)",
       "from_stock": null,
-      "to_stock": null,
-      "position": {
-        "x": 450,
-        "y": 150
-      }
+      "to_stock": "stock-delayed-precursors"
     },
     {
       "id": "flow-fuel-heating",
-      "name": "Fuel Heating",
-      "equation": "Fission_Power / Fuel_Heat_Capacity",
-      "from_stock": null,
-      "to_stock": "stock-fuel-temperature",
       "position": {
         "x": 150,
         "y": 300
-      }
+      },
+      "name": "Fuel_Heating",
+      "equation": "Fission_Power / Fuel_Heat_Capacity",
+      "units": "K/s",
+      "from_stock": null,
+      "to_stock": "stock-fuel-temperature"
     },
     {
       "id": "flow-fuel-to-coolant",
-      "name": "Heat Transfer to Coolant",
-      "equation": "(Fuel_Temperature - Coolant_Temperature) * Heat_Transfer_Coefficient",
-      "from_stock": "stock-fuel-temperature",
-      "to_stock": "stock-coolant-temperature",
       "position": {
         "x": 300,
         "y": 300
-      }
+      },
+      "name": "Fuel_Heat_Transfer",
+      "equation": "Heat_Transfer_Rate / Fuel_Heat_Capacity",
+      "units": "K/s",
+      "from_stock": "stock-fuel-temperature",
+      "to_stock": null
+    },
+    {
+      "id": "flow-coolant-source-heating",
+      "position": {
+        "x": 650,
+        "y": 350
+      },
+      "name": "Coolant_Heat_Transfer",
+      "equation": "Heat_Transfer_Rate / Coolant_Heat_Capacity",
+      "units": "K/s",
+      "from_stock": null,
+      "to_stock": "stock-coolant-temperature"
     },
     {
       "id": "flow-coolant-cooling",
-      "name": "Coolant Heat Removal",
-      "equation": "(Coolant_Temperature - Inlet_Temperature) * Coolant_Flow_Rate",
-      "from_stock": "stock-coolant-temperature",
-      "to_stock": null,
       "position": {
         "x": 450,
         "y": 300
-      }
-    },
-    {
-      "id": "flow-rod-insertion",
-      "name": "Rod Insertion",
-      "equation": "IF(Power_Error > 0, Rod_Speed, 0)",
-      "from_stock": null,
-      "to_stock": "stock-control-rod-position",
-      "position": {
-        "x": 250,
-        "y": 420
-      }
-    },
-    {
-      "id": "flow-rod-withdrawal",
-      "name": "Rod Withdrawal",
-      "equation": "IF(Power_Error < 0, Rod_Speed, 0)",
-      "from_stock": "stock-control-rod-position",
-      "to_stock": null,
-      "position": {
-        "x": 350,
-        "y": 420
-      }
-    },
-    {
-      "id": "flow-xenon-production",
-      "name": "Xenon Production",
-      "equation": "Fission_Rate * Xenon_Yield + Iodine_Decay",
-      "from_stock": null,
-      "to_stock": "stock-xenon-concentration",
-      "position": {
-        "x": 450,
-        "y": 420
-      }
-    },
-    {
-      "id": "flow-xenon-burnup",
-      "name": "Xenon Burnup",
-      "equation": "Xenon_Concentration * Neutron_Flux * Xenon_Cross_Section + Xenon_Concentration * Xenon_Decay_Rate",
-      "from_stock": "stock-xenon-concentration",
-      "to_stock": null,
-      "position": {
-        "x": 550,
-        "y": 420
-      }
-    },
-    {
-      "id": "flow-power-generation",
-      "name": "Power Generation",
-      "equation": "(Fission_Power - Thermal_Power_Output) / Power_Time_Constant",
-      "from_stock": null,
-      "to_stock": "stock-power-output",
-      "position": {
-        "x": 550,
-        "y": 150
-      }
+      },
+      "name": "Coolant_Heat_Removal",
+      "equation": "2 * Coolant_Flow_Rate * Coolant_Specific_Heat * (Coolant_Temperature - Inlet_Temperature) / Coolant_Heat_Capacity",
+      "units": "K/s",
+      "from_stock": "stock-coolant-temperature",
+      "to_stock": null
     }
   ],
   "variables": [
     {
       "id": "var-net-reactivity",
-      "name": "Net Reactivity",
-      "equation": "Control_Reactivity + Temperature_Feedback + Xenon_Reactivity",
       "position": {
         "x": 100,
         "y": 80
-      }
+      },
+      "name": "Net_Reactivity",
+      "equation": "External_Reactivity + Temperature_Feedback + Coolant_Feedback",
+      "units": "dimensionless"
     },
     {
       "id": "var-control-reactivity",
-      "name": "Control Reactivity",
-      "equation": "(0.5 - Control_Rod_Position) * Rod_Worth",
       "position": {
         "x": 200,
         "y": 80
-      }
-    },
-    {
-      "id": "var-rod-worth",
-      "name": "Rod Worth",
-      "equation": "0.05",
-      "position": {
-        "x": 250,
-        "y": 50
-      }
+      },
+      "name": "External_Reactivity",
+      "equation": "0.0022",
+      "units": "dimensionless"
     },
     {
       "id": "var-temperature-feedback",
-      "name": "Temperature Feedback",
-      "equation": "(Fuel_Temperature - Reference_Temperature) * Doppler_Coefficient",
       "position": {
         "x": 300,
         "y": 80
-      }
+      },
+      "name": "Temperature_Feedback",
+      "equation": "(Fuel_Temperature - Equilibrium_Fuel_Temperature) * Doppler_Coefficient",
+      "units": "dimensionless"
     },
     {
       "id": "var-doppler-coefficient",
-      "name": "Doppler Coefficient",
-      "equation": "-0.000005",
       "position": {
         "x": 350,
         "y": 50
-      }
-    },
-    {
-      "id": "var-reference-temperature",
-      "name": "Reference Temperature",
-      "equation": "600",
-      "position": {
-        "x": 150,
-        "y": 350
-      }
-    },
-    {
-      "id": "var-xenon-reactivity",
-      "name": "Xenon Reactivity",
-      "equation": "-Xenon_Concentration * Xenon_Reactivity_Coefficient",
-      "position": {
-        "x": 400,
-        "y": 80
-      }
-    },
-    {
-      "id": "var-xenon-reactivity-coefficient",
-      "name": "Xenon Reactivity Coefficient",
-      "equation": "0.00000001",
-      "position": {
-        "x": 450,
-        "y": 50
-      }
+      },
+      "name": "Doppler_Coefficient",
+      "equation": "-0.00001",
+      "units": "1/K"
     },
     {
       "id": "var-beta",
-      "name": "Beta",
-      "equation": "0.0065",
       "position": {
         "x": 100,
         "y": 200
-      }
+      },
+      "name": "Beta",
+      "equation": "0.0075",
+      "units": "dimensionless"
     },
     {
       "id": "var-prompt-lifetime",
-      "name": "Prompt Lifetime",
-      "equation": "0.0001",
       "position": {
         "x": 100,
         "y": 250
-      }
+      },
+      "name": "Prompt_Lifetime",
+      "equation": "0.001",
+      "units": "s"
     },
     {
       "id": "var-decay-constant",
-      "name": "Decay Constant",
-      "equation": "0.08",
       "position": {
         "x": 450,
         "y": 200
-      }
+      },
+      "name": "Decay_Constant",
+      "equation": "0.1",
+      "units": "1/s"
     },
     {
       "id": "var-fission-power",
-      "name": "Fission Power",
-      "equation": "Neutron_Population * Energy_per_Fission / 1000000000",
       "position": {
         "x": 200,
         "y": 250
-      }
-    },
-    {
-      "id": "var-energy-per-fission",
-      "name": "Energy per Fission",
-      "equation": "3.2e-11",
-      "position": {
-        "x": 250,
-        "y": 250
-      }
+      },
+      "name": "Fission_Power",
+      "equation": "Neutron_Density * Power_Density_Factor",
+      "units": "W"
     },
     {
       "id": "var-fuel-heat-capacity",
-      "name": "Fuel Heat Capacity",
-      "equation": "1000",
       "position": {
         "x": 100,
         "y": 350
-      }
+      },
+      "name": "Fuel_Heat_Capacity",
+      "equation": "Fuel_Mass * Fuel_Specific_Heat",
+      "units": "J/K"
     },
     {
       "id": "var-heat-transfer-coefficient",
-      "name": "Heat Transfer Coefficient",
-      "equation": "0.01",
       "position": {
         "x": 300,
         "y": 350
-      }
+      },
+      "name": "Heat_Transfer_Coefficient",
+      "equation": "4000000",
+      "units": "W/K"
     },
     {
       "id": "var-inlet-temperature",
-      "name": "Inlet Temperature",
-      "equation": "280",
       "position": {
         "x": 450,
         "y": 350
-      }
+      },
+      "name": "Inlet_Temperature",
+      "equation": "550",
+      "units": "K"
     },
     {
       "id": "var-coolant-flow-rate",
-      "name": "Coolant Flow Rate",
-      "equation": "0.1",
       "position": {
         "x": 500,
         "y": 350
-      }
+      },
+      "name": "Coolant_Flow_Rate",
+      "equation": "8000",
+      "units": "kg/s"
     },
     {
-      "id": "var-power-setpoint",
-      "name": "Power Setpoint",
-      "equation": "3000",
-      "position": {
-        "x": 550,
-        "y": 80
-      }
-    },
-    {
-      "id": "var-power-error",
-      "name": "Power Error",
-      "equation": "Thermal_Power_Output - Power_Setpoint",
-      "position": {
-        "x": 600,
-        "y": 80
-      }
-    },
-    {
-      "id": "var-rod-speed",
-      "name": "Rod Speed",
-      "equation": "0.001",
-      "position": {
-        "x": 300,
-        "y": 470
-      }
-    },
-    {
-      "id": "var-fission-rate",
-      "name": "Fission Rate",
-      "equation": "Neutron_Population / 1000000",
-      "position": {
-        "x": 400,
-        "y": 470
-      }
-    },
-    {
-      "id": "var-xenon-yield",
-      "name": "Xenon Yield",
-      "equation": "0.003",
-      "position": {
-        "x": 450,
-        "y": 470
-      }
-    },
-    {
-      "id": "var-iodine-decay",
-      "name": "Iodine Decay",
-      "equation": "Fission_Rate * 0.06",
-      "position": {
-        "x": 500,
-        "y": 470
-      }
-    },
-    {
-      "id": "var-neutron-flux",
-      "name": "Neutron Flux",
-      "equation": "Neutron_Population / 1000000000",
-      "position": {
-        "x": 550,
-        "y": 470
-      }
-    },
-    {
-      "id": "var-xenon-cross-section",
-      "name": "Xenon Cross Section",
-      "equation": "0.000001",
-      "position": {
-        "x": 600,
-        "y": 470
-      }
-    },
-    {
-      "id": "var-xenon-decay-rate",
-      "name": "Xenon Decay Rate",
-      "equation": "0.0000209",
-      "position": {
-        "x": 600,
-        "y": 420
-      }
-    },
-    {
-      "id": "var-power-time-constant",
-      "name": "Power Time Constant",
-      "equation": "5",
+      "id": "var-source-coolant-capacity",
       "position": {
         "x": 650,
-        "y": 200
-      }
+        "y": 350
+      },
+      "name": "Coolant_Heat_Capacity",
+      "equation": "Coolant_Mass * Coolant_Specific_Heat",
+      "units": "J/K"
+    },
+    {
+      "id": "var-source-fuel-mass",
+      "position": {
+        "x": 650,
+        "y": 350
+      },
+      "name": "Fuel_Mass",
+      "equation": "40000",
+      "units": "kg"
+    },
+    {
+      "id": "var-source-coolant-mass",
+      "position": {
+        "x": 650,
+        "y": 350
+      },
+      "name": "Coolant_Mass",
+      "equation": "7000",
+      "units": "kg"
+    },
+    {
+      "id": "var-source-fuel-cp",
+      "position": {
+        "x": 650,
+        "y": 350
+      },
+      "name": "Fuel_Specific_Heat",
+      "equation": "200",
+      "units": "J/(kg*K)"
+    },
+    {
+      "id": "var-source-coolant-cp",
+      "position": {
+        "x": 650,
+        "y": 350
+      },
+      "name": "Coolant_Specific_Heat",
+      "equation": "4000",
+      "units": "J/(kg*K)"
+    },
+    {
+      "id": "var-source-power-factor",
+      "position": {
+        "x": 650,
+        "y": 350
+      },
+      "name": "Power_Density_Factor",
+      "equation": "7000000",
+      "units": "W*m^3"
+    },
+    {
+      "id": "var-source-equilibrium-neutron",
+      "position": {
+        "x": 650,
+        "y": 350
+      },
+      "name": "Equilibrium_Neutron_Density",
+      "equation": "200",
+      "units": "1/m^3"
+    },
+    {
+      "id": "var-source-equilibrium-coolant",
+      "position": {
+        "x": 650,
+        "y": 350
+      },
+      "name": "Equilibrium_Coolant_Temperature",
+      "equation": "Inlet_Temperature + Power_Density_Factor * Equilibrium_Neutron_Density / (2 * Coolant_Flow_Rate * Coolant_Specific_Heat)",
+      "units": "K"
+    },
+    {
+      "id": "var-reference-temperature",
+      "position": {
+        "x": 150,
+        "y": 350
+      },
+      "name": "Equilibrium_Fuel_Temperature",
+      "equation": "Equilibrium_Coolant_Temperature + Power_Density_Factor * Equilibrium_Neutron_Density / Heat_Transfer_Coefficient",
+      "units": "K"
+    },
+    {
+      "id": "var-source-coolant-alpha",
+      "position": {
+        "x": 650,
+        "y": 350
+      },
+      "name": "Coolant_Reactivity_Coefficient",
+      "equation": "-0.00005",
+      "units": "1/K"
+    },
+    {
+      "id": "var-source-coolant-feedback",
+      "position": {
+        "x": 650,
+        "y": 350
+      },
+      "name": "Coolant_Feedback",
+      "equation": "Coolant_Reactivity_Coefficient * (Coolant_Temperature - Equilibrium_Coolant_Temperature)",
+      "units": "dimensionless"
+    },
+    {
+      "id": "var-source-heat-transfer",
+      "position": {
+        "x": 650,
+        "y": 350
+      },
+      "name": "Heat_Transfer_Rate",
+      "equation": "(Fuel_Temperature - Coolant_Temperature) * Heat_Transfer_Coefficient",
+      "units": "W"
+    },
+    {
+      "id": "stock-power-output",
+      "position": {
+        "x": 600,
+        "y": 150
+      },
+      "name": "Thermal_Power_Output",
+      "equation": "Fission_Power / 1000000",
+      "units": "MW"
     }
   ],
-  "connectors": [
-    {
-      "id": "conn-1",
-      "from_element": "Net Reactivity",
-      "to_element": "Prompt Neutron Generation"
-    },
-    {
-      "id": "conn-2",
-      "from_element": "Control Reactivity",
-      "to_element": "Net Reactivity"
-    },
-    {
-      "id": "conn-3",
-      "from_element": "Temperature Feedback",
-      "to_element": "Net Reactivity"
-    },
-    {
-      "id": "conn-4",
-      "from_element": "Xenon Reactivity",
-      "to_element": "Net Reactivity"
-    },
-    {
-      "id": "conn-5",
-      "from_element": "Control Rod Position",
-      "to_element": "Control Reactivity"
-    },
-    {
-      "id": "conn-6",
-      "from_element": "Fuel Temperature",
-      "to_element": "Temperature Feedback"
-    },
-    {
-      "id": "conn-7",
-      "from_element": "Xenon Concentration",
-      "to_element": "Xenon Reactivity"
-    },
-    {
-      "id": "conn-8",
-      "from_element": "Neutron Population",
-      "to_element": "Fission Power"
-    },
-    {
-      "id": "conn-9",
-      "from_element": "Fission Power",
-      "to_element": "Fuel Heating"
-    },
-    {
-      "id": "conn-10",
-      "from_element": "Fuel Temperature",
-      "to_element": "Heat Transfer to Coolant"
-    },
-    {
-      "id": "conn-11",
-      "from_element": "Coolant Temperature",
-      "to_element": "Heat Transfer to Coolant"
-    },
-    {
-      "id": "conn-12",
-      "from_element": "Power Error",
-      "to_element": "Rod Insertion"
-    },
-    {
-      "id": "conn-13",
-      "from_element": "Thermal Power Output",
-      "to_element": "Power Error"
-    }
-  ],
+  "connectors": [],
   "time_settings": {
     "start": 0,
     "end": 1000,
-    "dt": 0.01
+    "dt": 0.2,
+    "integration_method": "radau",
+    "rtol": 1e-07,
+    "atol": 1e-09
   },
   "created_at": "2026-01-11T21:00:00.000000Z",
   "updated_at": "2026-01-11T21:00:00.000000Z",
-  "source": "https://github.com/SDXorg/test-models",
-  "reference": "SDXorg System Dynamics Test Models"
+  "source": "https://kth.diva-portal.org/smash/get/diva2%3A500623/FULLTEXT01.pdf",
+  "reference": "Anglart H. Nuclear Reactor Dynamics and Stability. KTH, chapter3, pp.74-79, equations3.29-3.43, Table3-2 and Example3-2, Scilab PDModel. PDF inspected2026-10-20. Source t=1s shifted to simulation time0."
 }

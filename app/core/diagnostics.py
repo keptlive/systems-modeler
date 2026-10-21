@@ -19,7 +19,7 @@ from app.core.simulator import simulate
 from app.core.failure_diagnostics import failure_payload
 from app.core.validation import inspect_inputs
 
-CORE_FILES = ("model.py", "simulator.py", "integration.py", "equations.py", "limits.py", "failure_diagnostics.py", "adaptive.py")
+CORE_FILES = ("model.py", "simulator.py", "integration.py", "equations.py", "limits.py", "failure_diagnostics.py", "adaptive.py", "reports.py")
 MAX_RUNS = 3
 MAX_ELEMENT_INTERVALS_PER_RUN = MAX_WORK_UNITS
 
@@ -207,6 +207,8 @@ def investigate_model(model: Model, max_runs: int = 3) -> dict:
     static_invalid = any(issue["severity"] == "error" for issue in issues) or bool(equations["syntax"])
     if equations["stochastic"]:
         report["warnings"].append("Stochastic calls detected: pathwise timestep convergence is inapplicable without a coupled-noise experiment; no refinement runs are attempted.")
+    if model.time_settings.discrete_period is not None:
+        report["warnings"].append("Discrete model: the declared period defines its recurrence; timestep refinement would change the model and is not attempted.")
     if equations["references_time_step"]:
         report["warnings"].append("Equations reference DT/TIME_STEP: refinement can change algebraic inputs or initial conditions as well as integration error.")
     if model.time_settings.integration_method == "radau":
@@ -215,6 +217,10 @@ def investigate_model(model: Model, max_runs: int = 3) -> dict:
         factor = 2 ** index
         ts = model.time_settings.model_copy(update={"dt": model.time_settings.dt / factor})
         row = {"run": index + 1, "dt_refinement_factor": factor, "settings": ts.model_dump(), "scope": "full supplied horizon"}
+        if index and model.time_settings.discrete_period is not None:
+            row.update(status="not_attempted", reason="Discrete recurrence has a fixed declared period")
+            report["runs"].append(row)
+            continue
         if ts.dt <= 0:
             row.update(status="not_attempted", reason="Refined dt cannot be represented at this numeric scale")
             report["runs"].append(row)
@@ -251,7 +257,9 @@ def investigate_model(model: Model, max_runs: int = 3) -> dict:
         report["runs"].append(row)
     report["baseline"] = report["runs"][0]
     differences = [c["maximum_scaled_stock_difference"] for c in report["comparisons"]]
-    if equations["stochastic"]:
+    if model.time_settings.discrete_period is not None:
+        conclusion = "inapplicable_for_discrete_period"
+    elif equations["stochastic"]:
         conclusion = "inapplicable_for_stochastic_paths"
     elif len(differences) < 2:
         conclusion = "insufficient_completed_refinements"

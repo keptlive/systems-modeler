@@ -180,6 +180,10 @@ const Analytics = {
         if (!this.container) return;
 
         if (!this.results || !this.statistics) {
+            if (typeof Simulation !== 'undefined' && Simulation.lastError) {
+                this.container.innerHTML = Simulation.failureHTML();
+                return;
+            }
             this.container.innerHTML = `
                 <div class="analytics-placeholder">
                     <p>${this.error ? App.escapeHtml(this.error) : 'Run a simulation to see analytics'}</p>

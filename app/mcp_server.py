@@ -5,9 +5,10 @@ from statistics import mean
 from typing import Optional, Annotated, Literal
 from pydantic import Field, BaseModel, ConfigDict
 from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp.exceptions import ToolError
 from mcp.server.transport_security import TransportSecuritySettings
 from mcp.types import ToolAnnotations
-from app.core.model import Model, TimeSettings
+from app.core.model import Model, TimeSettings, TimeSettingsPatch
 from app.core.simulator import simulate
 from app.storage import models as storage
 from app.storage.catalog import list_summaries
@@ -46,6 +47,16 @@ mcp = FastMCP('systems-modeler', instructions=GUIDE, website_url='https://stocka
 READ = ToolAnnotations(readOnlyHint=True, destructiveHint=False, openWorldHint=False)
 AI = ToolAnnotations(readOnlyHint=True, destructiveHint=False, openWorldHint=True)
 PAGE = ToolAnnotations(readOnlyHint=False, destructiveHint=False, openWorldHint=False)
+
+
+def checked_simulation(model, settings=None):
+    """Keep MCP's error flag and the engine's machine-readable causal evidence."""
+    from app.core.equations import EquationError
+    from app.core.failure_diagnostics import failure_payload
+    try:
+        return simulate(model, settings)
+    except (EquationError, ValueError, ArithmeticError) as exc:
+        raise ToolError(json.dumps({"failure": failure_payload(exc)}, allow_nan=False)) from exc
 
 def page_transport():
     if __name__=='__main__':
@@ -97,17 +108,17 @@ class WorkspaceElementEdit(BaseModel):
 
 @mcp.tool(annotations=PAGE)
 def edit_workspace_elements(workspace_key:str,edits:Annotated[list[WorkspaceElementEdit],Field(min_length=1,max_length=100)],
-                             expected_revision:Annotated[int,Field(ge=1)],time_settings:Optional[TimeSettings]=None) -> dict:
+                             expected_revision:Annotated[int,Field(ge=1)],time_settings:Optional[TimeSettingsPatch]=None) -> dict:
     """Prefer this for targeted, atomic edits. All unmentioned elements, units, tables and sources survive.
 
     Update by element_id; add with add=true and a name. Allowed fields: name, units,
-    equation, position; stocks also initial_value; flows also from_stock/to_stock.
+    equation, position; stocks also initial_value; flows also from_stock/to_stock; variables also role (auxiliary or report).
     IDs cannot be overwritten. Rename dependent references explicitly in the same batch.
     Inspect returned validation before running. No deletions or persistent writes.
     """
     page_transport()
     result=workspaces.edit_elements(workspace_key,[edit.model_dump() for edit in edits],expected_revision,
-                                    time_settings.model_dump() if time_settings else None)
+                                    time_settings.model_dump(exclude_unset=True) if time_settings is not None else None)
     from app.core.validation import inspect_inputs
     result['validation']=inspect_inputs(Model.model_validate(result['model']))
     return result
@@ -119,7 +130,7 @@ def run_workspace(workspace_key: str,expected_revision: Annotated[int,Field(ge=1
     state=workspaces.snapshot(workspace_key)
     if state['revision']!=expected_revision:
         raise workspaces.WorkspaceConflict(f"Revision conflict: current revision is {state['revision']}")
-    result=simulate(Model.model_validate(state['model']))
+    result=checked_simulation(Model.model_validate(state['model']))
     updated=workspaces.publish_result(workspace_key,result,expected_revision)
     updated['statistics']=summarize(result)
     updated['time_points']=len(result.time)
@@ -228,13 +239,14 @@ def simulate_model(model_id: Optional[str] = None, model_json: Optional[dict] = 
     """
     model = resolve_model(model_id, model_json)
     settings = settings_for(model, start_time, end_time, dt, integration_method, random_seed, rtol, atol)
-    result = simulate(model, settings)
+    result = checked_simulation(model, settings)
     n = len(result.time)
     count = min(max_points, n)
     indices = sorted({round(i * (n - 1) / (count - 1)) for i in range(count)})
     return {'model': model.name, 'time_points': n, 'time_range': [result.time[0], result.time[-1]],
             'settings': settings.model_dump(), 'integration_diagnostics': result.integration_diagnostics, 'random_seed': result.random_seed, 'variables': list(result.values),
             'summary': summarize(result), 'sampled': count < n,
+            'report_values': {name: [values[i] for i in indices] for name, values in result.report_values.items()},
             'data': {'time': [result.time[i] for i in indices],
                      **{k: [v[i] for i in indices] for k, v in result.values.items()}}}
 
@@ -278,7 +290,7 @@ def compare_scenarios(model_id: str, scenarios: str | list[dict],
                 element.initial_value, element.equation = value, ''
             else:
                 element.equation = str(value)
-        run = simulate(mod)
+        run = checked_simulation(mod)
         results[name] = summarize(run)
         seeds[name] = run.random_seed
     return {'model': model.name, 'settings': {**model.time_settings.model_dump(), 'random_seed': seed}, 'scenarios': results,
@@ -290,7 +302,7 @@ def analyze_model(model_id: Optional[str] = None, model_json: Optional[dict] = N
                   include_descriptive: bool = True) -> dict:
     """Compute full default-run statistics without calling a paid AI provider."""
     model = resolve_model(model_id, model_json)
-    result = simulate(model)
+    result = checked_simulation(model)
     report = {'model': model.name, 'settings': model.time_settings.model_dump(),
               'time_points': len(result.time), 'random_seed': result.random_seed, 'statistics': summarize(result)}
     if include_descriptive and result.values:
@@ -329,10 +341,12 @@ def engine_contract() -> str:
     """Machine-readable capabilities for planning compatible, reproducible models."""
     from app.core.equations import SAFE_FUNCTIONS, CONTEXT_FUNCTIONS
     return json.dumps({
-        'version': '1.8.0',
+        'version': '1.9.0',
         'test_inputs': 'STEP/PULSE/RAMP and their arguments are evaluated at accepted times and held over each timestep for Euler and RK4. Other time-dependent equations retain normal stage evaluation. Reduce DT to resolve off-grid events.',
         'pulse': 'PULSE(magnitude, first_time[, interval]): magnitude/DT for one DT; zero or omitted interval means one event. Not the Vensim start/width signature.',
         'integration_methods': ['euler', 'rk4', 'radau'],
+        'reports': {'role': 'variable.role=report', 'results': 'report_values; separate from numeric values', 'labels': 'single-quoted literals, up to512 characters', 'dependencies': 'numeric inputs only; no report feedback, random or stateful calls', 'timing': 'retained output times; strict conditions use actual computed values'},
+        'discrete_period': 'Optional time_settings.discrete_period declares a fixed-period recurrence; requires Euler, dt equal to period and a whole number of periods. Overrides cannot erase the model contract. JSON only.',
         'random_binomial': {'signature': 'RANDOM_BINOMIAL(n,p[,seed])', 'scope': 'explicit extension; Euler only',
                             'trials': 'integer0..1000000; exact bounded Bernoulli summation',
                             'probability': '[0,1]', 'cost': 'n work units per new callsite/accepted-time sample, combined with integration budget',
@@ -341,8 +355,8 @@ def engine_contract() -> str:
         'radau': {'selection': 'explicit only; never automatic', 'dt': 'retained output spacing; internal steps are adaptive',
                   'rtol': {'default': 1e-6, 'minimum': 1e-12, 'maximum': 0.1},
                   'atol': {'default': 1e-9, 'minimum': 'positive finite'},
-                  'unsupported': ['random functions', 'delay/smooth', 'STEP/PULSE/RAMP', 'time-triggered conditionals/comparisons/discrete functions including TIME aliases', 'time-driven lookups across all interpolation modes, including TIME aliases and inline points', 'standard XMILE export'],
-                  'work': 'All model evaluations including RHS/Jacobian probes and retained outputs count toward the 1,000,000 work limit'},
+                  'unsupported': ['random functions', 'delay/smooth', 'STEP/PULSE/RAMP', 'time-triggered conditionals/comparisons/discrete functions including TIME aliases', 'time-driven lookups across all interpolation modes, including TIME aliases and inline points', 'uncertified state-triggered jumps in the RHS dependency closure', 'state-driven lookup forcing in the RHS dependency closure', 'standard XMILE export'],
+                  'work': 'All model evaluations including dependency retries, RHS/Jacobian probes and retained outputs count toward the 1,000,000 work limit'},
         'source_review': 'Known citation mismatches are warnings in validate_model; corrected citations do not establish equation fidelity. Read the model description and source evidence.',
         'syntax': ['lazy IF THEN ELSE(condition, yes, no)', 'XMILE brace comments',
                    'XMILE left-associated comparisons with relational precedence above equality'],
@@ -407,7 +421,7 @@ def create_sse_app():
     app.routes.extend(mcp.sse_app().routes)
     async def info(request):
         tools = await mcp.list_tools()
-        return JSONResponse({'name': 'systems-modeler', 'version': '1.8.0',
+        return JSONResponse({'name': 'systems-modeler', 'version': '1.9.0',
             'streamable_http': 'https://stockandflow.live/mcp/',
             'sse': 'https://stockandflow.live/mcp/sse', 'tools': [t.name for t in tools],
             'documentation': 'https://stockandflow.live/guide'})

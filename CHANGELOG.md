@@ -1,3 +1,17 @@
+# Version 1.9
+
+- Fix silent flow cancellation, RK4 intermediate overflow, delayed-history phase shifts, hidden non-finite intermediates, initializer constant shadowing and uncharged dependency retries.
+- Preserve partial REST settings and structured MCP failures; export exact failed-run inputs and engine fingerprints.
+- Reject uncertified Radau state events and state lookup forcing; repair five defaults with independently tested explicit grids, preserving equations.
+- Translate supported XMILE functions and syntax; reject invalid namespaces, unsupported functions and seeded-stream-changing conversions.
+
+- Investigate all 47 previous failures; repair 19 definitions with original-source evidence and independent mathematical checks. Full corpus: 1,050 completed / 28 failed, no new failures.
+- Restore native Beer Game, urban dynamics, workforce and 351-town population models; reconstruct physical, climate and financial examples with explicit source mappings and limitations.
+- Add report-only numeric/text results without allowing labels into integration or charts. Preserve authored categorical diagnostics.
+- Enforce fixed-period Euler recurrence contracts across API, MCP edits and UI; reject fractional periods and misleading refinement comparisons.
+- Independently review source tables, all native urban balances and engine boundaries. Fix recurrence rounding and targeted-edit contract preservation found by review.
+- Start large chart selections with stocks; retain all series, report outputs, existing navigation and numerical controls.
+
 # Version 1.8
 
 - Diagnose all86 previous public failures;39 now complete,47 remain explicitly explained, no new failures.

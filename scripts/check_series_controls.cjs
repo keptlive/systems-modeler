@@ -23,3 +23,11 @@ const appScope={document:{addEventListener(){}},window:{}};vm.createContext(appS
 vm.runInContext(fs.readFileSync(path.join(__dirname,'../static/js/app.js'),'utf8')+';this.app=App;',appScope);
 for(const [input,expected] of [[0,'0'],[.01,'0.01'],[-.01,'-0.01'],[.1234,'0.123'],[.0001,'1.0e-4']])assert.equal(appScope.app.formatNumShort(input),expected);
 console.log('Mobile numerical labels preserve small nonzero values.');
+
+const large={time:[0,1],values:Object.fromEntries(Array.from({length:352},(_,i)=>[i===0?'Population':'Town '+i,[10,11]]))};
+c.setResults(large,{stocks:[{name:'Population'}]});
+assert.deepEqual(Array.from(c.getVisibleVariables()),['Population']);
+assert.equal(Object.keys(c.options.variables).length,352);
+c.selectVariables(['Town 351']);assert.deepEqual(Array.from(c.getVisibleVariables()),['Town 351']);
+assert.equal(c.results,large);
+console.log('Large corpus models begin with stocks; every individual member series remains selectable.');

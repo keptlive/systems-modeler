@@ -6,7 +6,7 @@ import secrets
 import time
 from copy import deepcopy
 from threading import RLock
-from app.core.model import Model
+from app.core.model import Model, SimulationResult, TimeSettings, TimeSettingsPatch
 
 IDLE_SECONDS=3600
 MAX_WORKSPACES=16
@@ -88,7 +88,7 @@ def edit_elements(key,edits,expected_revision,time_settings=None):
     if not 1<=len(edits)<=100: raise WorkspaceError('Provide between one and 100 explicit element edits')
     allowed={'stock':{'name','units','initial_value','equation','position'},
              'flow':{'name','units','equation','position','from_stock','to_stock'},
-             'variable':{'name','units','equation','position'}}
+             'variable':{'name','units','equation','position','role'}}
     from app.core.model import Stock,Flow,Variable
     classes={'stock':Stock,'flow':Flow,'variable':Variable}
     for edit in edits:
@@ -101,16 +101,26 @@ def edit_elements(key,edits,expected_revision,time_settings=None):
             if not changes.get('name'): raise WorkspaceError('An added element requires a name')
             group.append(classes[kind].model_validate(changes).model_dump(mode='json'))
         else:
-            element=next((x for x in group if x['id']==identifier),None)
-            if element is None: raise WorkspaceError('Element not found; inspect the workspace before editing')
+            matches=[x for x in group if x['id']==identifier]
+            if not matches: raise WorkspaceError('Element not found; inspect the workspace before editing')
+            if len(matches)!=1: raise WorkspaceError('Ambiguous element ID; replace the model with unique IDs before editing')
+            element=matches[0]
             element.update(changes)
             classes[kind].model_validate(element)
-    if time_settings is not None:model['time_settings']=time_settings
+    if time_settings is not None:
+        # A targeted edit preserves the model's recurrence declaration. Removing
+        # it requires an explicit whole-model replacement, not a timing override.
+        current = TimeSettings.model_validate(model.get('time_settings', {}))
+        changes = time_settings.model_dump(exclude_unset=True) if isinstance(time_settings, (TimeSettings, TimeSettingsPatch)) else time_settings
+        model['time_settings'] = TimeSettingsPatch.model_validate(changes).apply_to(current).model_dump(mode='json')
     return replace_model(key,model,expected_revision)
 
 def publish_result(key,result,expected_revision):
-    data=result.model_dump(mode='json')
-    size=len(json.dumps(data).encode())
+    try:
+        data=SimulationResult.model_validate(result).model_dump(mode='json')
+        size=len(json.dumps(data,allow_nan=False).encode('utf-8'))
+    except (ValueError, TypeError) as exc:
+        raise WorkspaceError('Workspace results must be serializable finite JSON') from exc
     with _lock:
         row=_authorized(key)
         if row['revision']!=expected_revision:
@@ -128,8 +138,10 @@ def set_view(key,section=None,fit=False,selection=None,expected_revision=None):
         row=_authorized(key)
         if expected_revision is not None and row['revision']!=expected_revision:
             raise WorkspaceConflict(f"Revision conflict: current revision is {row['revision']}")
-        if selection is not None and selection not in {x['id'] for group in ('stocks','flows','variables') for x in row['model'][group]}:
-            raise WorkspaceError('Selected element does not exist')
+        if selection is not None:
+            matches=[x for group in ('stocks','flows','variables') for x in row['model'][group] if x['id']==selection]
+            if not matches: raise WorkspaceError('Selected element does not exist')
+            if len(matches)!=1: raise WorkspaceError('Ambiguous element ID; replace the model with unique IDs before selection')
         row['revision']+=1
         if section: row['view']['section']=section
         if fit: row['view']['fit']+=1

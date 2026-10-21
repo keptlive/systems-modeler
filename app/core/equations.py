@@ -223,6 +223,17 @@ class EquationError(Exception):
         self.details = dict(details or {})
 
 
+def _finite_real(value):
+    """A reached scalar expression cannot hide an invalid intermediate value."""
+    if isinstance(value, complex):
+        raise EquationError("result is complex; scalar equations require real numbers",
+                            code="non_real_result")
+    if not math.isfinite(value):
+        raise EquationError("result is not finite; check the reached scalar expression",
+                            code="non_finite_result")
+    return value
+
+
 
 def validate_random_seed(value):
     """XMILE seeds are integer-valued numbers in [0, 2**32)."""
@@ -403,7 +414,7 @@ class SafeEvaluator(ast.NodeVisitor):
 
     def visit_Constant(self, node: ast.Constant) -> float:
         if isinstance(node.value, (int, float)):
-            return float(node.value)
+            return _finite_real(float(node.value))
         raise EquationError(f"Invalid constant type: {type(node.value)}")
 
     # Note: visit_Num is not needed for Python 3.8+
@@ -413,9 +424,9 @@ class SafeEvaluator(ast.NodeVisitor):
         name = decode_identifier(node.id)
         # Check for TIME variable (case insensitive)
         if name.upper() == "TIME":
-            return self.context.time
+            return _finite_real(self.context.time)
         if name.upper() in ("DT", "TIME_STEP"):
-            return self.context.dt
+            return _finite_real(self.context.dt)
         # Then check user variables - try multiple name variations
         # to handle underscore vs space naming inconsistencies
         name_variations = [
@@ -425,12 +436,18 @@ class SafeEvaluator(ast.NodeVisitor):
         ]
         for var_name in name_variations:
             if var_name in self.variables:
-                return self.variables[var_name]
+                return _finite_real(self.variables[var_name])
         matched = [value for key, value in self.variables.items() if canonical_name(key) == canonical_name(name)]
         if len(matched) == 1:
-            return matched[0]
+            return _finite_real(matched[0])
         if len(matched) > 1:
             raise EquationError(f"Ambiguous variable alias: {name}")
+        # A declared but unresolved e/pi must wait for its initializer/equation.
+        # Otherwise dependency retries cache a mathematical constant as if it were
+        # the authored model quantity. Lazy branches remain evaluated on demand.
+        if canonical_name(name) in getattr(self.context, "declared_names", ()):
+            raise EquationError(f"Unknown variable: {name}", code="unknown_variable",
+                                details={"symbol": name})
         if name.lower() in SAFE_CONSTANTS:
             return SAFE_CONSTANTS[name.lower()]
         raise EquationError(f"Unknown variable: {name}", code="unknown_variable", details={"symbol": name})
@@ -442,7 +459,7 @@ class SafeEvaluator(ast.NodeVisitor):
         left = self.visit(node.left)
         right = self.visit(node.right)
         try:
-            return SAFE_OPERATORS[op_type](left, right)
+            return _finite_real(SAFE_OPERATORS[op_type](left, right))
         except ZeroDivisionError:
             raise EquationError("Division by zero", code="division_by_zero")
 
@@ -453,7 +470,7 @@ class SafeEvaluator(ast.NodeVisitor):
         if op_type not in SAFE_OPERATORS:
             raise EquationError(f"Unsupported unary operator: {op_type.__name__}")
         operand = self.visit(node.operand)
-        return SAFE_OPERATORS[op_type](operand)
+        return _finite_real(SAFE_OPERATORS[op_type](operand))
 
     def visit_Call(self, node: ast.Call) -> float:
         if not isinstance(node.func, ast.Name):
@@ -482,7 +499,7 @@ class SafeEvaluator(ast.NodeVisitor):
 
         # Handle context functions that need simulation state
         if func_name_upper in CONTEXT_FUNCTIONS:
-            return self._handle_context_function(func_name_upper, node.args)
+            return _finite_real(self._handle_context_function(func_name_upper, node.args))
 
         # Handle regular safe functions (case-insensitive for common ones)
         actual_func_name = func_name
@@ -498,7 +515,10 @@ class SafeEvaluator(ast.NodeVisitor):
 
         args = [self.visit(arg) for arg in node.args]
         try:
-            return SAFE_FUNCTIONS[actual_func_name](*args)
+            return _finite_real(SAFE_FUNCTIONS[actual_func_name](*args))
+        except ZeroDivisionError as e:
+            raise EquationError(f"Function error in {func_name}: {e}", code="division_by_zero",
+                                details={"function": func_name}) from e
         except (ValueError, TypeError) as e:
             raise EquationError(f"Function error in {func_name}: {e}", code="domain_error" if isinstance(e, ValueError) else "function_signature", details={"function": func_name})
 
@@ -512,7 +532,11 @@ class SafeEvaluator(ast.NodeVisitor):
         if len(node.args) == 3:
             if isinstance(node.args[2], ast.Constant) and isinstance(node.args[2].value, bool):
                 raise EquationError("Random seed must be an integer, not a boolean")
-            seed = validate_random_seed(self.visit(node.args[2]))
+            try:
+                seed = validate_random_seed(self.visit(node.args[2]))
+            except EquationError as exc:
+                raise EquationError(f"Invalid random seed: {exc}", code=exc.code,
+                                    details=exc.details) from exc
         if function == "RANDOM_BINOMIAL":
             trials, probability = parameters
             if isinstance(node.args[0], ast.Constant) and isinstance(node.args[0].value, bool):
@@ -681,13 +705,25 @@ class SafeEvaluator(ast.NodeVisitor):
         if is_fixed:
             if duration != state["duration"]:
                 raise EquationError("Changing fixed delay time is unsupported")
-            target = self.context.time - duration
             # Left-continuous sample-and-hold history is deterministic for delays
             # that are not exact multiples of dt; no fabricated future samples.
-            from bisect import bisect_right
             history = state["history"]
-            tolerance = 4 * max(math.ulp(self.context.time), math.ulp(duration), math.ulp(target))
-            index = bisect_right(history, (target + tolerance, math.inf)) - 1
+            # Compare elapsed durations, not absolute timestamps: adding an ULP
+            # tolerance to a large calendar origin can skip several real samples.
+            # Binary search preserves logarithmic history lookup and permits only
+            # local roundoff at an event boundary, capped below a timestep.
+            lo, hi = 0, len(history)
+            while lo < hi:
+                middle = (lo + hi) // 2
+                elapsed = self.context.time - history[middle][0]
+                tolerance = min(self.context.dt / 4, 4 * max(
+                    math.ulp(elapsed), math.ulp(duration), math.ulp(self.context.dt),
+                    math.ulp(self.context.time), math.ulp(history[middle][0])))
+                if elapsed + tolerance >= duration:
+                    lo = middle + 1
+                else:
+                    hi = middle
+            index = lo - 1
             return history[index][1] if index >= 0 else state["initial"]
         if function.startswith("DELAY") and duration != state["duration"]:
             raise EquationError("Changing material delay time is unsupported; use SMOOTH for information")
@@ -927,7 +963,11 @@ def safe_eval(equation: str, variables: dict[str, float],
 
     # Handle simple numeric values
     try:
-        return float(equation)
+        value = float(equation)
+        if math.isfinite(value):
+            return value
+        # Python's float parser also accepts the ordinary identifiers inf/nan.
+        # Let the AST distinguish those names from a nonfinite numeric literal.
     except ValueError:
         pass
 

@@ -64,6 +64,15 @@ async def exercise(read, write, pages=True):
         one = payload(await session.call_tool("simulate_model", {"model_json":bins}))
         two = payload(await session.call_tool("simulate_model", {"model_json":bins}))
         assert one["data"] == two["data"] and all(v == int(v) and 0 <= v <= 20 for v in one["data"]["Draw"])
+        report_model = {**MODEL, "variables": [*MODEL["variables"], {"name":"Status","role":"report","equation":"IF(X > 105, 'Growing', 'Starting')"}]}
+        report_result = payload(await session.call_tool("simulate_model", {"model_json":report_model,"max_points":3}))
+        assert report_result['report_values']['Status'] == ['Starting','Growing','Growing']
+        assert 'Status' not in report_result['data'] and 'Status' not in report_result['summary']
+        discrete = {"stocks":[{"id":"x","name":"X","initial_value":8}],"flows":[{"name":"Change","equation":"X*.5-X","to_stock":"x"}],"time_settings":{"end":3,"dt":1,"discrete_period":1}}
+        exact = payload(await session.call_tool("simulate_model", {"model_json":discrete}))
+        assert exact['data']['X'] == [8,4,2,1]
+        invalid_period = await session.call_tool("simulate_model", {"model_json":discrete,"dt":.5})
+        assert invalid_period.isError
         analysis = payload(await session.call_tool("analyze_model", {"model_json": MODEL}))
         assert analysis["time_points"] == 5
         assert analysis['descriptive']['statistics']['X']['time_weighted_mean'] > 100

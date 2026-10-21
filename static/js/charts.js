@@ -56,7 +56,7 @@ const Charts = {
     /**
      * Set simulation results
      */
-    setResults(results) {
+    setResults(results, model = null) {
         this.results = results;
 
         // Clear old variable options when loading new results
@@ -65,10 +65,12 @@ const Charts = {
         // Initialize variable options if not set
         if (results && results.values) {
             const varNames = Object.keys(results.values);
+            const stockNames = new Set((model?.stocks || []).map(stock => stock.name));
+            const startWithStocks = varNames.length > 24 && varNames.some(name => stockNames.has(name));
             varNames.forEach((name, i) => {
                 if (!this.options.variables[name]) {
                     this.options.variables[name] = {
-                        visible: true,
+                        visible: !startWithStocks || stockNames.has(name),
                         color: this.colors[i % this.colors.length]
                     };
                 }

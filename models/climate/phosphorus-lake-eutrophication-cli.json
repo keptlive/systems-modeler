@@ -1,9 +1,9 @@
 {
   "id": "phosphorus-lake-eutrophication-cli",
   "name": "Phosphorus Lake Eutrophication Model",
-  "description": "Illustrative phosphorus-water, sediment and algae stock-flow model. Vollenweider (1968) is background on nutrient loading and trophic state; this file is not a verified reproduction of his loading model. Sediment release, anoxia feedback and algal kinetics are local assumptions; phosphorus uptake into algae and biomass stoichiometry are not represented.",
-  "source": "https://heronetnext.epa.gov/reference/37262/",
-  "reference": "Vollenweider, R.A. (1968). Scientific fundamentals of the eutrophication of lakes and flowing waters, with particular reference to nitrogen and phosphorus as factors in eutrophication. OECD Technical Report DAS/CSI/68.27. Paris.",
+  "description": "Illustrative phosphorus-water, sediment and algae model with restored nutrient accounting from the original MyLake1.2 phosphorus-phytoplankton code: algal growth removes dissolved phosphorus and loss returns it using Y_cp=1mgChl/mgP (published Vansjo parameter workbook,row35). Biomass is chlorophyll-equivalent concentration; sediment content is expressed per water volume. TotalP=water+sediment+algae/Y_cp changes only by external loading minus outflow. Original local rates, initial states, sediment/anoxia law, geometry and3650-day horizon are retained and remain uncalibrated; this is a reduced nutrient-accounting adaptation, not full MyLake or a verified Vollenweider model. Radau is explicitly selected for the increasingly stiff sediment release, without positivity clamps or dt-dependent flux caps.",
+  "source": "https://raw.githubusercontent.com/biogeochemistry/MyLake_public/d882070870bd0bd541376ee8b627282d3ae8d329/v12/v12/solvemodel_v12.m",
+  "reference": "Saloranta & Andersen (2007), MyLake1.2, Ecological Modelling207:45-60, doi:10.1016/j.ecolmodel.2007.03.018. Native solvemodel_v12.m growth/P coupling lines454-461 and VAN_para_v12.xls lake!B35 Y_cp=1; commit d882070870bd0bd541376ee8b627282d3ae8d329. Vollenweider1968 is loading-model background only.",
   "stocks": [
     {
       "id": "stock-p-water",
@@ -13,7 +13,8 @@
       "position": {
         "x": 150,
         "y": 200
-      }
+      },
+      "units": "mg P/m3 water-volume equivalent"
     },
     {
       "id": "stock-p-sediment",
@@ -23,7 +24,8 @@
       "position": {
         "x": 350,
         "y": 200
-      }
+      },
+      "units": "mg P/m3 water-volume equivalent"
     },
     {
       "id": "stock-algae",
@@ -33,7 +35,8 @@
       "position": {
         "x": 550,
         "y": 200
-      }
+      },
+      "units": "mg chlorophyll a/m3"
     }
   ],
   "flows": [
@@ -46,7 +49,8 @@
       "position": {
         "x": 100,
         "y": 200
-      }
+      },
+      "units": "mg P/m3/day"
     },
     {
       "id": "flow-outflow",
@@ -57,7 +61,8 @@
       "position": {
         "x": 200,
         "y": 200
-      }
+      },
+      "units": "mg P/m3/day"
     },
     {
       "id": "flow-sedimentation",
@@ -68,7 +73,8 @@
       "position": {
         "x": 250,
         "y": 200
-      }
+      },
+      "units": "mg P/m3/day"
     },
     {
       "id": "flow-release",
@@ -79,7 +85,8 @@
       "position": {
         "x": 250,
         "y": 250
-      }
+      },
+      "units": "mg P/m3/day"
     },
     {
       "id": "flow-algae-growth",
@@ -90,7 +97,8 @@
       "position": {
         "x": 500,
         "y": 200
-      }
+      },
+      "units": "mg chlorophyll a/m3/day"
     },
     {
       "id": "flow-algae-death",
@@ -101,7 +109,32 @@
       "position": {
         "x": 600,
         "y": 200
-      }
+      },
+      "units": "mg chlorophyll a/m3/day"
+    },
+    {
+      "id": "v19-phosphorus-uptake",
+      "name": "Algal Phosphorus Uptake",
+      "position": {
+        "x": 1060,
+        "y": 600
+      },
+      "equation": "Algae_Growth / Algal_Chlorophyll_Phosphorus_Ratio",
+      "from_stock": "stock-p-water",
+      "to_stock": null,
+      "units": "mg P/m3/day"
+    },
+    {
+      "id": "v19-phosphorus-recycling",
+      "name": "Algal Phosphorus Recycling",
+      "position": {
+        "x": 100,
+        "y": 700
+      },
+      "equation": "Algae_Death / Algal_Chlorophyll_Phosphorus_Ratio",
+      "from_stock": null,
+      "to_stock": "stock-p-water",
+      "units": "mg P/m3/day"
     }
   ],
   "variables": [
@@ -185,13 +218,26 @@
         "x": 450,
         "y": 350
       }
+    },
+    {
+      "id": "v19-phosphorus-yield",
+      "name": "Algal Chlorophyll Phosphorus Ratio",
+      "position": {
+        "x": 420,
+        "y": 700
+      },
+      "equation": "1",
+      "units": "mg chlorophyll a/mg P"
     }
   ],
   "connectors": [],
   "time_settings": {
     "start": 0,
     "end": 3650,
-    "dt": 1
+    "dt": 1,
+    "integration_method": "radau",
+    "rtol": 1e-08,
+    "atol": 1e-10
   },
   "created_at": "2026-01-11T21:34:33.049370+00:00",
   "updated_at": "2026-01-11T21:34:33.049370+00:00"

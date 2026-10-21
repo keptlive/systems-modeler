@@ -1,7 +1,7 @@
 {
   "id": "world2-forrester-original-cla",
   "name": "World2 Forrester Original Model",
-  "description": "Jay Forrester’s five-sector WORLD2 global dynamics model. Version 1.8 restores the 1970 primary D-1354 documentor (MIT archive PDF pp. 82–91), including its 22 piecewise-linear feedback tables, birth/death normals 0.045/0.025 and initial agricultural fraction 0.3. Existing element IDs and positions are preserved. Capital Generation Multiplier is the source CIPC table divided by the retained 0.05 normal, an algebraically identical rescaling. The documented baseline pre/post-1970 policy coefficients are equal. Explicit Radau integration preserves the 1900–2100 annual output grid. This historical scenario is not a contemporary population or climate calibration.",
+  "description": "Jay Forrester’s five-sector WORLD2 global dynamics equations. Version 1.8 restored the 1970 primary D-1354 documentor (MIT archive PDF pp. 82–91), including its 22 piecewise-linear feedback tables, birth/death normals 0.045/0.025 and initial agricultural fraction 0.3. Existing element IDs and positions are preserved. Capital Generation Multiplier is the source CIPC table divided by the retained 0.05 normal, an algebraically identical rescaling. The documented baseline pre/post-1970 policy coefficients are equal. Version 1.9 uses explicit RK4 at half-year DT over the unchanged 1900–2100 horizon, with half/quarter refinements inside the work budget. This is continuous-equation numerical integration, not an exact replay of the source DYNAMO Euler listing. Maximum stock error against an independent literal-source-table reference is below 5e-6 of each stock maximum. This historical scenario is not a contemporary population or climate calibration.",
   "source": "https://dome.mit.edu/bitstream/handle/1721.3/189645/39080024064039.pdf?isAllowed=y&sequence=1",
   "reference": "Forrester, J.W. (1970), WORLD2 D-1354 equation documentor, equations 1–43, MIT archive PDF pp. 82–91; explicitly the 1970 formulation, not the later 1973 book variant.",
   "stocks": [
@@ -404,8 +404,8 @@
   "time_settings": {
     "start": 1900,
     "end": 2100,
-    "dt": 1,
-    "integration_method": "radau",
+    "dt": 0.5,
+    "integration_method": "rk4",
     "rtol": 1e-08,
     "atol": 1e-10
   },

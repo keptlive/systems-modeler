@@ -136,6 +136,15 @@ def test_narrow_time_pulses_and_indirect_aliases_cannot_be_silently_skipped(equa
 
 def test_stock_dependent_conditional_is_not_confused_with_explicit_time_alias():
     model=manufactured()
-    model.flows[0].equation="IF(X<2,-1000*(X-COS(TIME))-SIN(TIME),0)"
+    # Both branches meet at X=2; the manufactured cosine stays below it.
+    model.flows[0].equation="IF(X<2,-1000*(X-COS(TIME))-SIN(TIME),-1000*(2-COS(TIME))-SIN(TIME))"
     result=simulate(model)
     assert max(abs(x-math.cos(t)) for t,x in zip(result.time,result.values["X"]))<2e-8
+
+
+def test_uncertified_state_branch_is_rejected_even_if_reference_never_crosses():
+    model=manufactured()
+    model.flows[0].equation="IF(X<2,-1000*(X-COS(TIME))-SIN(TIME),0)"
+    with pytest.raises(EquationError) as caught:simulate(model)
+    assert caught.value.code=="unsupported_method_features"
+    assert caught.value.details["state_discontinuities"]

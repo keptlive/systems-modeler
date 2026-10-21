@@ -42,14 +42,22 @@ def test_radau_rejects_time_dependent_inline_lookup_input_or_points(equation):
 
 @pytest.mark.parametrize('equation', ['-Forcing(X)', '-LOOKUP(Forcing,X)',
                                       '-WITH_LOOKUP(X,((0,0),(1,1)))'])
-def test_radau_preserves_stock_driven_graphical_functions(equation):
+def test_stock_driven_graphical_functions_reject_radau_and_preserve_rk4_accuracy(equation):
     import math
     m = Model(stocks=[{'id': 'x', 'name': 'X', 'initial_value': 1}],
               flows=[{'name': 'Change', 'equation': equation, 'to_stock': 'x'}],
               tables=[{'name': 'Forcing', 'points': [[0,0],[1,1]], 'interpolation': 'continuous'}],
               time_settings={'end': 3, 'dt': .3, 'integration_method': 'radau', 'rtol': 1e-9, 'atol': 1e-12})
-    r = simulate(m)
-    assert r.values['X'] == pytest.approx([math.exp(-t) for t in r.time], abs=2e-9)
+    # Adaptive output spacing cannot guarantee localization of arbitrary narrow
+    # stock-driven lookup features. Keep the explicit rejection and check this
+    # smooth fixture's original analytic contract using a supported fixed grid.
+    with pytest.raises(EquationError) as caught:
+        simulate(m)
+    assert caught.value.code == 'unsupported_method_features'
+    settings=m.time_settings.model_copy(update={'dt':.01,'integration_method':'rk4'})
+    r = simulate(m,settings)
+    assert r.time[0]==0 and r.time[-1]==3 and len(r.time)==301
+    assert r.values['X'] == pytest.approx([math.exp(-t) for t in r.time], rel=0, abs=2e-9)
 
 
 def test_radau_partial_final_interval_retains_authored_dt_meaning():

@@ -1,3 +1,4 @@
+from tests.model_history import v18_bytes
 """v1.8 C: portable preservation, primary-source balances and independent ODEs."""
 import hashlib,json,math
 from pathlib import Path
@@ -9,9 +10,17 @@ from app.core.simulator import simulate
 ROOT=Path(__file__).resolve().parents[1]
 RECEIPT=json.loads((ROOT/'operations/corpus-repairs-v18-c.json').read_text())
 ROWS={r['index']:r for r in RECEIPT['models']}
-def load(i):return Model.model_validate_json((ROOT/ROWS[i]['file']).read_text())
+def load(i):return Model.model_validate_json(v18_bytes(ROOT,ROWS[i]['file']).decode())
 def run(i,end=None,dt=None,**updates):
  m=load(i)
+ if i in [72,77,84]:
+  # Preserve v1.8 source/geometry receipts above; execute the reviewed solver
+  # revision only after confirming these source equations/parameters are equal.
+  current=Model.model_validate_json((ROOT/ROWS[i]['file']).read_text())
+  for field in ['stocks','flows','variables','tables','connectors']:
+   assert getattr(current,field)==getattr(m,field)
+  assert (current.time_settings.start,current.time_settings.end)==(m.time_settings.start,m.time_settings.end)
+  m=current
  if end is not None:updates['end']=end
  if dt is not None:updates['dt']=dt
  return simulate(m,m.time_settings.model_copy(update=updates))
@@ -108,9 +117,9 @@ def reference(i,times):
  return s.y
 @pytest.mark.parametrize('i',list(ROWS))
 def test_sha_bound_complete_baselines_and_original_identity_geometry_preserved(i):
- row=ROWS[i];before=row['before_text'].encode();old=json.loads(before);d=json.loads((ROOT/row['file']).read_text())
+ row=ROWS[i];before=row['before_text'].encode();old=json.loads(before);d=json.loads(v18_bytes(ROOT,row['file']).decode())
  assert hashlib.sha256(before).hexdigest()==row['before_sha256']==row['baseline_sha256']
- assert hashlib.sha256((ROOT/row['file']).read_bytes()).hexdigest()==row['after_sha256']
+ assert hashlib.sha256(v18_bytes(ROOT,row['file'])).hexdigest()==row['after_sha256']
  assert d['id']==old['id'] and d['name']==old['name']
  assert d['connectors']==old['connectors']
  assert {k:v for k,v in d['time_settings'].items() if k!='integration_method'}=={k:v for k,v in old['time_settings'].items() if k!='integration_method'}
@@ -131,7 +140,11 @@ def test_all43_cases_accounted_for_with_no_git_dependency():
  assert [r['file'] for r in RECEIPT['models']]==[r['file'] for r in failures[43:86]]
 @pytest.mark.parametrize('i',REFERENCE_CASES)
 def test_corrected_dynamics_against_independently_written_rhs_and_distinct_solver(i):
- out=run(i);ref=reference(i,out.time);actual=np.array([out.values[s.name] for s in load(i).stocks])
+ # These old accuracy bounds are tighter than the new explicit defaults.
+ # Check their independently reviewed quarter grids, without claiming the
+ # defaults meet adaptive-era thresholds (default errors live in v19 B tests).
+ dt=Model.model_validate_json((ROOT/ROWS[i]['file']).read_text()).time_settings.dt/4 if i in [77,84] else None
+ out=run(i,dt=dt);ref=reference(i,out.time);actual=np.array([out.values[s.name] for s in load(i).stocks])
  scale=1+np.max(np.abs(ref),axis=1,keepdims=True)
  error=np.max(np.abs(actual-ref)/scale)
  # Euler cases are checked for convergence separately; all adaptive/RK4
@@ -201,7 +214,10 @@ def test_kimura_linear_mutation_pool_exact_analytic_solution_on_original_million
  assert o.values['Fixed_Mutations']==pytest.approx(fixed,rel=2e-7,abs=1e-6)
  assert np.array(o.values['Neutral_Mutations'])+o.values['Fixed_Mutations']+o.values['Lost_Mutations']==pytest.approx(30*t,rel=2e-9,abs=1e-6)
 def test_milgram_logistic_exact_solution_cannot_overshoot_population():
- o=run(72);t=np.array(o.time);expected=3e8/(1+(3e8-1)*np.exp(-50*t))
+ # Retain the stringent v1.8 analytic bound on the reviewed quarter grid;
+ # default/half/quarter errors and the counter phase error are tested in v19 B.
+ dt=Model.model_validate_json((ROOT/ROWS[72]['file']).read_text()).time_settings.dt/4
+ o=run(72,dt=dt);t=np.array(o.time);expected=3e8/(1+(3e8-1)*np.exp(-50*t))
  assert o.values['People_Reached']==pytest.approx(expected,rel=2e-7,abs=1e-5)
  assert max(o.values['People_Reached'])<=3e8*(1+1e-8)
 def test_ai_job_population_balance_and_exponential_capability_are_independent_invariants():

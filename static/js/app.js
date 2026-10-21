@@ -84,6 +84,7 @@ const App = {
                 return;
             }
             const settings = this.model.time_settings;
+            if (settings.discrete_period != null) { this.syncStepCount(); return; }
             settings.dt = (settings.end - settings.start) / steps;
         });
         // Header buttons
@@ -309,6 +310,10 @@ const App = {
             `;
         }
 
+        if (this.selected.type === 'variable') {
+            html += `<div class="property-group"><label for="prop-role-mobile">Output role</label><select id="prop-role-mobile"><option value="auxiliary" ${element.role !== 'report' ? 'selected' : ''}>Numeric auxiliary</option><option value="report" ${element.role === 'report' ? 'selected' : ''}>Report only</option></select>${element.role === 'report' ? '<small>Use single quotes for text labels. Reports cannot feed equations.</small>' : ''}</div>`;
+        }
+
         if (this.selected.type === 'flow' || this.selected.type === 'variable') {
             html += `
                 <div class="property-group">
@@ -364,6 +369,9 @@ const App = {
             initialInput.addEventListener('change', e => this.commitInitialInput(e.target, true));
         }
 
+        const roleInput = document.getElementById('prop-role-mobile');
+        if (roleInput) roleInput.addEventListener('change', e => this.updateProperty('role', e.target.value));
+
         const equationInput = document.getElementById('prop-equation-mobile');
         if (equationInput) {
             equationInput.addEventListener('input', (e) => this.updateProperty('equation', e.target.value));
@@ -411,6 +419,7 @@ const App = {
 
         return `
             <div class="mobile-results-container">
+                ${hasResults && Charts.results.report_values ? Simulation.reportHTML(Charts.results) : ""}
                 ${hasResults && Charts.results.random_seed != null ? `<p class="run-seed-receipt">Random seed: ${this.escapeHtml(String(Charts.results.random_seed))} · Use this in Settings to replay.</p>` : ''}
                 <div class="mobile-results-tabs" id="results-tabs-mobile">
                     <button class="mobile-results-tab active" data-tab="chart-mobile">Chart</button>
@@ -1160,6 +1169,10 @@ const App = {
             `;
         }
 
+        if (this.selected.type === 'variable') {
+            html += `<div class="property-group"><label for="prop-role">Output role</label><select id="prop-role"><option value="auxiliary" ${element.role !== 'report' ? 'selected' : ''}>Numeric auxiliary</option><option value="report" ${element.role === 'report' ? 'selected' : ''}>Report only</option></select>${element.role === 'report' ? '<small>Use single quotes for text labels. Reports cannot feed equations.</small>' : ''}</div>`;
+        }
+
         if (this.selected.type === 'flow' || this.selected.type === 'variable') {
             html += `
                 <div class="property-group">
@@ -1209,6 +1222,9 @@ const App = {
             initialInput.addEventListener('input', e => this.commitInitialInput(e.target));
             initialInput.addEventListener('change', e => this.commitInitialInput(e.target, true));
         }
+
+        const roleInput = document.getElementById('prop-role');
+        if (roleInput) roleInput.addEventListener('change', e => this.updateProperty('role', e.target.value));
 
         const equationInput = document.getElementById('prop-equation');
         if (equationInput) {
@@ -1607,6 +1623,15 @@ const App = {
             startInput.value = ts.start ?? 0;
             endInput.value = ts.end ?? 100;
             dtInput.value = ts.dt ?? 0.25;
+            dtInput.disabled = ts.discrete_period != null;
+            document.querySelectorAll('.preset-btn').forEach(button => { button.disabled = ts.discrete_period != null; });
+            const periodNote = document.getElementById('sim-period-note');
+            if (periodNote) {
+                periodNote.hidden = ts.discrete_period == null;
+                periodNote.textContent = ts.discrete_period == null ? '' : `This model defines a discrete recurrence every ${ts.discrete_period} time unit${ts.discrete_period === 1 ? '' : 's'}. Its method and cadence are fixed; choose a whole number of periods.`;
+            }
+            document.getElementById('sim-method').disabled = ts.discrete_period != null;
+            dtInput.title = ts.discrete_period != null ? `This discrete model advances once every ${ts.discrete_period} time units.` : '';
             document.getElementById('sim-method').value = ts.integration_method || 'euler';
             document.getElementById('sim-seed').value = ts.random_seed ?? '';
             document.getElementById('sim-rtol').value = ts.rtol ?? 1e-6;
@@ -1658,6 +1683,7 @@ const App = {
         // Presets
         document.querySelectorAll('.preset-btn').forEach(btn => {
             btn.addEventListener('click', () => {
+                if (this.model.time_settings?.discrete_period != null) return;
                 const preset = btn.dataset.preset;
                 const start = parseFloat(startInput.value) || 0;
                 const end = parseFloat(endInput.value) || 100;
@@ -1715,6 +1741,10 @@ const App = {
             throw new Error('Random seed must be a whole number from 0 to 4,294,967,295.');
         }
         const integration_method = document.getElementById('sim-method').value;
+        const period = this.model.time_settings?.discrete_period;
+        const periods = period == null ? 0 : (end-start)/period;
+        const periodRoundoff = period == null ? 0 : Number.EPSILON * (8*Math.max(1,Math.abs(periods)) + 4*(Math.abs(start)+Math.abs(end))/period);
+        if (period != null && (dt !== period || integration_method !== 'euler' || Math.abs(periods - Math.round(periods)) > periodRoundoff)) throw new Error('This discrete model requires Euler at its declared period, with a whole number of periods.');
         if (!['euler','rk4','radau'].includes(integration_method)) throw new Error('Select a supported integration method.');
         const tolerance = {};
         if (integration_method === 'radau') {
@@ -1732,6 +1762,10 @@ const App = {
     syncStepCount() {
         const ts = this.model.time_settings;
         const steps = document.getElementById('sim-steps');
-        if (ts && steps) steps.value = Math.ceil((ts.end - ts.start) / ts.dt);
+        if (ts && steps) {
+            steps.value = Math.ceil((ts.end - ts.start) / ts.dt);
+            steps.disabled = ts.discrete_period != null;
+            steps.title = ts.discrete_period != null ? 'Fixed-period recurrence; adjust the horizon in Settings.' : 'Number of simulation steps';
+        }
     }
 };
