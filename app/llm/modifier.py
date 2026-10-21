@@ -3,12 +3,13 @@ LLM-based model modification.
 """
 import json
 from app.core.model import Model
+from app.llm.credentials import UserAI
 from app.llm.prompts import get_modify_messages
 from app.llm.generator import call_llm, parse_model_json, dict_to_model, LLMError
 from app.core.equations import canonical_name
 
 
-def modify_model(model: Model, modification: str) -> Model:
+def modify_model(model: Model, modification: str, options: UserAI | None = None) -> Model:
     """
     Modify an existing model based on a natural language request.
 
@@ -25,7 +26,7 @@ def modify_model(model: Model, modification: str) -> Model:
 
     # Get LLM response
     messages = get_modify_messages(model_json, modification)
-    response = call_llm(messages, json_mode=True)
+    response = call_llm(messages, json_mode=True, **({"options": options} if options else {}))
 
     # Parse response
     data = parse_model_json(response)

@@ -146,7 +146,27 @@ const Charts = {
     /**
      * Main render function
      */
+    syncControls() {
+        if (typeof document === 'undefined') return;
+        const mark = (button, active) => {
+            if (!button) return;
+            button.classList.toggle('active', !!active);
+            button.setAttribute('aria-pressed', String(!!active));
+        };
+        for (const button of document.querySelectorAll('[data-chart-type]')) mark(button, button.dataset.chartType === this.options.type);
+        for (const button of document.querySelectorAll('[data-scale]')) mark(button, button.dataset.scale === this.options.scale);
+        for (const id of ['btn-normalize','btn-normalize-mobile']) mark(document.getElementById(id), this.options.normalize);
+        mark(document.getElementById('btn-log-mobile'), this.options.scale === 'log');
+        for (const id of ['btn-compare','mobile-compare']) mark(document.getElementById(id), this.options.showComparison);
+        for (const id of ['btn-animate','mobile-animate']) {
+            const button = document.getElementById(id);
+            mark(button, this.isAnimating);
+            if (button) button.textContent = id === 'mobile-animate' ? `${this.isAnimating ? 'Pause' : 'Play'} animation` : this.isAnimating ? 'Pause' : 'Play';
+        }
+    },
+
     render() {
+        this.syncControls();
         if (!this.container || !this.results) return;
 
         // Clear previous chart
@@ -399,7 +419,9 @@ const Charts = {
      * Add tooltip
      */
     addTooltip(svg, g, xScale, yScale, dim, time, values) {
-        if (!this.options.showTooltip) return;
+        if (!this.options.showTooltip || !time.length) return;
+        const chartContainer = this.container;
+        let hideTimer;
 
         const visibleVars = this.getVisibleVariables();
 
@@ -414,9 +436,9 @@ const Charts = {
             .style('opacity', 0);
 
         // Tooltip div
-        let tooltip = d3.select(this.container).select('.chart-tooltip');
+        let tooltip = d3.select(chartContainer).select('.chart-tooltip');
         if (tooltip.empty()) {
-            tooltip = d3.select(this.container)
+            tooltip = d3.select(chartContainer)
                 .append('div')
                 .attr('class', 'chart-tooltip')
                 .style('opacity', 0);
@@ -445,10 +467,11 @@ const Charts = {
 
         // Unified handler for both mouse and touch
         const showTooltip = (event) => {
-            const [mx] = d3.pointer(event);
+            clearTimeout(hideTimer);
+            const [mx] = d3.pointer(event, overlay.node());
             const x0 = xScale.invert(mx);
-            const i = bisect(time, x0, 1);
-            const i0 = Math.max(0, Math.min(i, time.length - 1));
+            const i = Math.min(bisect(time, x0), time.length - 1);
+            const i0 = i > 0 && x0 - time[i - 1] <= time[i] - x0 ? i - 1 : i;
 
             const t = time[i0];
 
@@ -476,23 +499,22 @@ const Charts = {
                 }
             });
 
-            // Calculate tooltip position, keeping it within bounds
-            let tooltipX = event.offsetX + 15;
-            let tooltipY = event.offsetY - 10;
-
-            // Adjust for mobile - keep tooltip visible
-            const containerRect = this.container.getBoundingClientRect();
-            if (tooltipX + 200 > containerRect.width) {
-                tooltipX = event.offsetX - 180;
-            }
-            if (tooltipY < 10) {
-                tooltipY = 10;
-            }
-
+            // Touch objects have client coordinates but no offsetX/offsetY.
+            // Keep the rendered chart's owner: mobile rendering restores the
+            // shared Charts.container before these handlers execute.
+            tooltip.html(tooltipHtml);
+            const containerRect = chartContainer.getBoundingClientRect();
+            const tooltipNode = tooltip.node();
+            const tooltipWidth = tooltipNode.offsetWidth || 200;
+            const tooltipHeight = tooltipNode.offsetHeight || 40;
+            const pointerX = event.clientX - containerRect.left;
+            const pointerY = event.clientY - containerRect.top;
+            const desiredX = pointerX + tooltipWidth + 15 > containerRect.width ? pointerX - tooltipWidth - 15 : pointerX + 15;
+            const tooltipX = Math.max(0, Math.min(desiredX, Math.max(0, containerRect.width - tooltipWidth)));
+            const tooltipY = Math.max(0, Math.min(pointerY - 10, Math.max(0, containerRect.height - tooltipHeight)));
             tooltip
-                .html(tooltipHtml)
-                .style('left', `${tooltipX}px`)
-                .style('top', `${tooltipY}px`)
+                .style('left', `${tooltipX + (chartContainer.scrollLeft || 0)}px`)
+                .style('top', `${tooltipY + (chartContainer.scrollTop || 0)}px`)
                 .style('opacity', 1);
         };
 
@@ -508,23 +530,22 @@ const Charts = {
 
         // Touch events for mobile
         overlay.on('touchstart', (event) => {
-            event.preventDefault();
             if (event.touches.length === 1) {
                 showTooltip(event.touches[0]);
             }
-        });
+        }, { passive: true });
 
         overlay.on('touchmove', (event) => {
-            event.preventDefault();
             if (event.touches.length === 1) {
                 showTooltip(event.touches[0]);
             }
-        });
+        }, { passive: true });
 
         overlay.on('touchend', () => {
             // Keep tooltip visible for a moment on touch end
-            setTimeout(hideTooltip, 1500);
+            hideTimer = setTimeout(hideTooltip, 1500);
         });
+        overlay.on('touchcancel', hideTooltip);
     },
 
     /**
@@ -773,18 +794,24 @@ const Charts = {
     /**
      * Render phase diagram (variable vs variable)
      */
+    getPhaseVariables() {
+        const names = Object.keys(this.results?.values || {});
+        const visible = this.getVisibleVariables();
+        const x = names.includes(this.options.phaseX) ? this.options.phaseX : visible[0];
+        const y = names.includes(this.options.phaseY) && this.options.phaseY !== x ? this.options.phaseY : visible.find(name => name !== x);
+        return [x, y];
+    },
+
     renderPhaseChart() {
         const dim = this.getDimensions();
         const values = this.results.values;
-        const visibleVars = this.getVisibleVariables();
+        const [xVar, yVar] = this.getPhaseVariables();
 
-        if (visibleVars.length < 2) {
+        if (!xVar || !yVar) {
             this.container.innerHTML = '<div class="no-data">Select at least 2 variables for phase diagram</div>';
             return;
         }
 
-        const xVar = visibleVars[0];
-        const yVar = visibleVars[1];
         const xVals = values[xVar];
         const yVals = values[yVar];
 
@@ -1088,6 +1115,17 @@ const Charts = {
     },
 
     exportAs(format = 'png') {
+        if (format === 'csv') {
+            if (!this.results) return;
+            const names = this.getVisibleVariables();
+            const cell = value => '"' + String(value ?? '').replace(/"/g, '""') + '"';
+            const rows = [['Time', ...names], ...this.results.time.map((time, i) => [time, ...names.map(name => this.results.values[name]?.[i])])];
+            const blob = new Blob([rows.map(row => row.map(cell).join(',')).join('\r\n')], {type:'text/csv;charset=utf-8'});
+            const url = URL.createObjectURL(blob), link = document.createElement('a');
+            link.href = url; link.download = 'chart.csv'; link.click();
+            setTimeout(() => URL.revokeObjectURL(url), 0);
+            return;
+        }
         const exported = this.buildExportSvg();
         if (!exported) return;
         const {svg} = exported;
@@ -1162,10 +1200,13 @@ const Charts = {
     /**
      * Start animated playback of simulation
      */
-    startAnimation() {
+    startAnimation(container = this.container) {
         if (!this.results || this.isAnimating) return;
 
+        this.animationContainer = container;
         this.isAnimating = true;
+        this.syncControls();
+        this.onAnimationStateChanged?.();
         this.animationProgress = 0;
         this.animateFrame();
     },
@@ -1175,6 +1216,9 @@ const Charts = {
      */
     stopAnimation() {
         this.isAnimating = false;
+        this.animationContainer = null;
+        this.syncControls();
+        this.onAnimationStateChanged?.();
         if (this.animationFrame) {
             cancelAnimationFrame(this.animationFrame);
             this.animationFrame = null;
@@ -1184,11 +1228,11 @@ const Charts = {
     /**
      * Toggle animation play/pause
      */
-    toggleAnimation() {
+    toggleAnimation(container = this.container) {
         if (this.isAnimating) {
             this.stopAnimation();
         } else {
-            this.startAnimation();
+            this.startAnimation(container);
         }
         return this.isAnimating;
     },
@@ -1206,8 +1250,16 @@ const Charts = {
      * Animation frame update
      */
     animateFrame() {
-        if (!this.isAnimating || !this.results) return;
+        if (!this.isAnimating) return;
+        if (!this.results) { this.stopAnimation(); return; }
+        const owner = this.animationContainer;
+        if (!owner || owner.isConnected === false) { this.stopAnimation(); return; }
+        const previous = this.container;
+        this.container = owner;
+        try { this.animateOwnedFrame(); } finally { this.container = previous; }
+    },
 
+    animateOwnedFrame() {
         const totalSteps = this.results.time.length;
         const progressIncrement = (this.options.animationSpeed * 2) / totalSteps;
 
@@ -1218,6 +1270,8 @@ const Charts = {
             this.isAnimating = false;
             this.renderAnimatedFrame(1);
             this.onAnimationComplete();
+            this.syncControls();
+        this.onAnimationStateChanged?.();
             return;
         }
 

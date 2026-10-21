@@ -157,6 +157,8 @@ const App = {
      * Open a mobile slide-up panel
      */
     openSlidePanel(panelType) {
+        this.captureMobileChatDraft();
+        if (typeof Charts !== 'undefined' && Charts.animationContainer?.id === 'chart-container-mobile') Charts.stopAnimation();
         this.restoreResultPanels();
         const slidePanel = document.getElementById('slide-panel');
         const panelContent = document.getElementById('slide-panel-content');
@@ -215,7 +217,14 @@ const App = {
         this.movedResults = [];
     },
 
+    captureMobileChatDraft() {
+        const input = document.getElementById('chat-input-mobile');
+        if (input) this.mobileChatDraft = input.value;
+    },
+
     closeSlidePanel() {
+        this.captureMobileChatDraft();
+        if (typeof Charts !== 'undefined' && Charts.animationContainer?.id === 'chart-container-mobile') Charts.stopAnimation();
         this.restoreResultPanels();
         const slidePanel = document.getElementById('slide-panel');
         const overlay = document.getElementById('overlay');
@@ -245,12 +254,13 @@ const App = {
                 <div class="chat-header">
                     <span>AI Assistant</span>
                     <span class="${statusClass}">${statusText}</span>
+                    <button type="button" class="ai-settings-button" data-openrouter-settings>AI settings</button>
                 </div>
                 <div class="chat-messages" id="chat-messages-mobile">
                     ${messagesHTML}
                 </div>
                 <div class="chat-input-container">
-                    <textarea id="chat-input-mobile" class="chat-input" placeholder="Describe what you want..." rows="2"></textarea>
+                    <textarea id="chat-input-mobile" aria-label="Message to AI assistant" class="chat-input" placeholder="Describe what you want..." rows="2">${this.escapeHtml(this.mobileChatDraft || '')}</textarea>
                     <button id="btn-send-mobile" class="btn btn-primary btn-send">Send</button>
                 </div>
             </div>
@@ -449,6 +459,22 @@ const App = {
                             </div>
                         </div>
                         
+                        <details class="mobile-chart-tools">
+                            <summary>Compare, animate &amp; export</summary>
+                            <div class="series-actions">
+                                <button type="button" id="mobile-save-run">Save run</button>
+                                <button type="button" id="mobile-compare" aria-pressed="${!!Charts.options.showComparison}">Compare runs</button>
+                                <button type="button" id="mobile-animate" aria-pressed="${!!Charts.isAnimating}">${Charts.isAnimating ? 'Pause' : 'Play'} animation</button>
+                            </div>
+                            <p id="mobile-run-status" class="series-count" role="status"></p>
+                            <div class="property-group"><label for="mobile-export-format">Export format</label><select id="mobile-export-format"><option value="png">PNG preview (PNG and SVG downloads)</option><option value="svg">SVG image</option><option value="csv">CSV data</option></select></div>
+                            <button type="button" id="mobile-export-chart" class="chart-toggle-btn">Export chart</button>
+                            </details>
+                        <details class="mobile-chart-tools"><summary>Phase plot axes</summary>
+                            <div class="property-group"><label for="mobile-phase-x">Phase X axis</label><select id="mobile-phase-x">${Object.keys(Charts.results.values).map(name => `<option value="${this.escapeHtml(name)}">${this.escapeHtml(name)}</option>`).join('')}</select></div>
+                            <div class="property-group"><label for="mobile-phase-y">Phase Y axis</label><select id="mobile-phase-y">${Object.keys(Charts.results.values).map(name => `<option value="${this.escapeHtml(name)}">${this.escapeHtml(name)}</option>`).join('')}</select></div>
+                        </details>
+
                         <div class="mobile-chart-section">
                             <label class="section-label">Variables (tap to toggle)</label>
                             <div class="series-toolbar">
@@ -584,6 +610,43 @@ const App = {
                 }
             });
         }
+
+        const refreshActions = () => {
+            const count = Charts.previousRuns.length;
+            const status = document.getElementById('mobile-run-status');
+            if (status) status.textContent = `${count} saved ${count === 1 ? 'run' : 'runs'} · Comparison ${Charts.options.showComparison ? 'on' : 'off'} · Animation ${Charts.isAnimating ? 'playing' : 'paused'}`;
+            const compare = document.getElementById('mobile-compare');
+            compare?.setAttribute('aria-pressed', String(!!Charts.options.showComparison));
+            const animate = document.getElementById('mobile-animate');
+            if (animate) { animate.textContent = `${Charts.isAnimating ? 'Pause' : 'Play'} animation`; animate.setAttribute('aria-pressed', String(!!Charts.isAnimating)); }
+        };
+        Charts.onAnimationStateChanged = refreshActions;
+        document.getElementById('mobile-save-run')?.addEventListener('click', () => { Charts.saveRun(); refreshActions(); });
+        document.getElementById('mobile-compare')?.addEventListener('click', () => { Charts.options.showComparison = !Charts.options.showComparison; self.renderMobileChart(); refreshActions(); });
+        document.getElementById('mobile-animate')?.addEventListener('click', () => { Charts.toggleAnimation(document.getElementById('chart-container-mobile')); refreshActions(); });
+        document.getElementById('mobile-export-chart')?.addEventListener('click', () => {
+            const previous = Charts.container;
+            try { Charts.container = document.getElementById('chart-container-mobile'); Charts.exportAs(document.getElementById('mobile-export-format').value); }
+            finally { Charts.container = previous; }
+        });
+        const axes = Charts.getPhaseVariables();
+        for (const [id, option, initial] of [['mobile-phase-x','phaseX',axes[0]], ['mobile-phase-y','phaseY',axes[1]]]) {
+            const field = document.getElementById(id);
+            if (field) {
+                field.value = initial || '';
+                field.addEventListener('change', () => {
+                    Charts.options[option] = field.value;
+                    const [x, y] = Charts.getPhaseVariables();
+                    Charts.options.phaseX = x; Charts.options.phaseY = y;
+                    document.getElementById('mobile-phase-x').value = x || '';
+                    document.getElementById('mobile-phase-y').value = y || '';
+                    Charts.options.type = 'phase';
+                    document.querySelectorAll('.chart-type-btn[data-chart-type]').forEach(button => button.classList.toggle('active', button.dataset.chartType === 'phase'));
+                    self.renderMobileChart();
+                });
+            }
+        }
+        refreshActions();
 
         // Populate summary
         this.updateMobileResultsSummary();

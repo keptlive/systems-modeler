@@ -4,6 +4,7 @@ LLM-based model generation using Google Gemini Flash 2.0.
 import os
 import json
 from typing import Optional
+from app.llm.credentials import UserAI
 
 from app.core.model import Model, Stock, Flow, Variable, Connector, TimeSettings, Position
 from app.llm.prompts import get_generate_messages
@@ -11,7 +12,9 @@ from app.llm.prompts import get_generate_messages
 
 class LLMError(Exception):
     """Error in LLM operation."""
-    pass
+    def __init__(self, message, status_code=502):
+        super().__init__(message)
+        self.status_code = status_code
 
 
 def get_llm_client():
@@ -80,8 +83,42 @@ def _call_llm(messages: list[dict], json_mode: bool = True) -> str:
     raise LLMError("Unknown LLM provider")
 
 
-def call_llm(messages: list[dict], json_mode: bool = True) -> str:
+def call_user_llm(messages: list[dict], options: UserAI, json_mode=True, max_tokens=4096) -> str:
+    """One bounded request, no paid model or server-key fallback, no raw errors."""
+    import httpx
+    payload = {"model": options.model, "messages": messages, "max_tokens": max_tokens}
+    if json_mode:
+        payload["response_format"] = {"type": "json_object"}
+    try:
+        with httpx.Client(timeout=60.0, follow_redirects=False) as client:
+            response = client.post("https://openrouter.ai/api/v1/chat/completions",
+                                   headers={"Authorization": "Bearer " + options.key}, json=payload)
+        if response.status_code in (401, 403):
+            raise LLMError("OpenRouter rejected this key. Check its access and try again.", 401)
+        if response.status_code == 429:
+            raise LLMError("OpenRouter free-model rate limit reached. Try again later.", 429)
+        if response.status_code >= 400:
+            raise LLMError("OpenRouter free models are unavailable. Try again later.")
+        data = response.json()
+        choice = data["choices"][0]
+        if choice.get("finish_reason") != "stop":
+            raise LLMError("OpenRouter returned an incomplete response. Try a smaller request.")
+        content = choice["message"]["content"]
+        if not isinstance(content, str) or not content.strip():
+            raise LLMError("OpenRouter returned an empty response. Try again.")
+        return content
+    except LLMError:
+        raise
+    except httpx.TimeoutException:
+        raise LLMError("OpenRouter timed out. Try again later.", 504) from None
+    except Exception:
+        raise LLMError("OpenRouter returned an unavailable or malformed response. Try again later.") from None
+
+
+def call_llm(messages: list[dict], json_mode: bool = True, options: UserAI | None = None) -> str:
     """Optional legacy drafting; never expose a provider exception or credential URL."""
+    if options is not None:
+        return call_user_llm(messages, options, json_mode)
     try:
         return _call_llm(messages,json_mode)
     except LLMError:
@@ -92,18 +129,21 @@ def call_llm(messages: list[dict], json_mode: bool = True) -> str:
 
 def parse_model_json(json_str: str) -> dict:
     """Parse JSON from LLM response."""
-    if "```json" in json_str:
-        start = json_str.find("```json") + 7
-        end = json_str.find("```", start)
-        json_str = json_str[start:end].strip()
-    elif "```" in json_str:
-        start = json_str.find("```") + 3
-        end = json_str.find("```", start)
-        json_str = json_str[start:end].strip()
+    if not isinstance(json_str, str):
+        raise LLMError("AI returned no JSON object.")
+    text = json_str.strip()
+    if text.startswith("```"):
+        lines = text.splitlines()
+        if len(lines) < 3 or lines[-1].strip() != "```":
+            raise LLMError("AI returned incomplete JSON.")
+        text = "\n".join(lines[1:-1])
     try:
-        return json.loads(json_str)
-    except json.JSONDecodeError as e:
-        raise LLMError(f"Invalid JSON: {e}")
+        data = json.loads(text, parse_constant=lambda _: (_ for _ in ()).throw(ValueError()))
+        if not isinstance(data, dict):
+            raise ValueError()
+        return data
+    except (ValueError, TypeError):
+        raise LLMError("AI returned invalid JSON. Try again with a simpler request.") from None
 
 
 def dict_to_model(data: dict) -> Model:
@@ -177,10 +217,10 @@ def dict_to_model(data: dict) -> Model:
     )
 
 
-def generate_model(description: str) -> Model:
+def generate_model(description: str, options: UserAI | None = None) -> Model:
     """Generate a model from natural language."""
     messages = get_generate_messages(description)
-    response = call_llm(messages, json_mode=True)
+    response = call_llm(messages, json_mode=True, **({"options": options} if options else {}))
     data = parse_model_json(response)
     return dict_to_model(data)
 

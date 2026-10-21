@@ -1,12 +1,14 @@
 """
 API endpoints for LLM-powered model generation and modification.
 """
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel, Field
 from typing import Optional
 from app.core.model import LLMGenerateRequest, LLMModifyRequest, Model
 from app.llm.generator import generate_model, is_llm_available, LLMError
 from app.llm.modifier import modify_model
+from app.llm.credentials import user_ai, UserAI
+from app.llm.generator import call_user_llm
 from app.llm.feedback import find_equilibrium, fit_to_data, refine_model
 from app.storage import models as storage
 
@@ -34,43 +36,56 @@ class RefineModelRequest(BaseModel):
 
 
 @router.get("/status")
-def llm_status():
+def llm_status(options: UserAI | None = Depends(user_ai)):
+    if options is not None:
+        return {"available": True, "configured": True, "verified": False, "provider": "openrouter", "model": options.model, "message": "User OpenRouter key supplied; connection not tested"}
     """Check if LLM functionality is available."""
     configured=is_llm_available()
     return {"available":configured,"configured":configured,"verified":False,
             "message":"Optional server AI configuration; use your own agent through MCP without a server-side AI account"}
 
 
+@router.post("/test")
+def test_user_connection(options: UserAI | None = Depends(user_ai)):
+    if options is None:
+        raise HTTPException(400, "Supply your OpenRouter key to test the connection.")
+    try:
+        call_user_llm([{"role": "user", "content": "Reply with OK."}], options, json_mode=False, max_tokens=64)
+        return {"available": True, "verified": True, "provider": "openrouter", "model": options.model}
+    except LLMError as error:
+        raise HTTPException(error.status_code, str(error)) from None
+
+
 @router.post("/generate", response_model=Model)
-def generate_model_from_description(request: LLMGenerateRequest):
+def generate_model_from_description(request: LLMGenerateRequest, options: UserAI | None = Depends(user_ai)):
     """
     Generate a new model from a natural language description.
 
     Example: "Create a model of population growth with births and deaths"
     """
-    if not is_llm_available():
+    if options is None and not is_llm_available():
         raise HTTPException(
             status_code=503,
             detail="LLM not available. Set GEMINI_API_KEY or OPENROUTER_API_KEY."
         )
 
     try:
-        model = generate_model(request.description)
+        model = generate_model(request.description, **({"options": options} if options else {}))
         return model
     except LLMError as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=str(e)) from None
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")
+        raise HTTPException(status_code=502, detail="AI returned an invalid model. Try again with a simpler request.")
 
 
 @router.post("/modify", response_model=Model)
-def modify_existing_model(request: LLMModifyRequest):
+def modify_existing_model(request: LLMModifyRequest, options: UserAI | None = Depends(user_ai)):
     """
     Modify an existing model based on a natural language request.
 
     Example: "Add immigration flow to the population model"
     """
-    if not is_llm_available():
+    if options is None and not is_llm_available():
         raise HTTPException(
             status_code=503,
             detail="LLM not available. Set GEMINI_API_KEY or OPENROUTER_API_KEY."
@@ -87,12 +102,12 @@ def modify_existing_model(request: LLMModifyRequest):
         raise HTTPException(status_code=400, detail="Must provide model or model_id")
 
     try:
-        modified = modify_model(model, request.modification)
+        modified = modify_model(model, request.modification, **({"options": options} if options else {}))
         return modified
     except LLMError as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=e.status_code, detail=str(e)) from None
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Modification failed: {str(e)}")
+        raise HTTPException(status_code=502, detail="AI returned an invalid modification. Try again with a simpler request.")
 
 
 @router.post("/find-equilibrium")
@@ -161,7 +176,7 @@ def api_fit_to_data(request: FitToDataRequest):
 
 
 @router.post("/refine-model")
-def api_refine_model(request: RefineModelRequest):
+def api_refine_model(request: RefineModelRequest, options: UserAI | None = Depends(user_ai)):
     """
     Use AI to suggest model refinements based on user feedback.
 
@@ -179,6 +194,8 @@ def api_refine_model(request: RefineModelRequest):
         - modified_model: Model with suggested changes applied
         - explanation: AI's explanation of the changes
     """
+    if options is not None:
+        raise HTTPException(400, "User OpenRouter keys support generation, modification and analysis. Use Modify for this request.")
     try:
         result = refine_model(
             request.model,
@@ -203,8 +220,10 @@ class TuneModelRequest(BaseModel):
 
 
 @router.post("/tune")
-def tune_model_endpoint(request: TuneModelRequest):
+def tune_model_endpoint(request: TuneModelRequest, options: UserAI | None = Depends(user_ai)):
     """Multi-step AI tuning that iteratively adjusts parameters."""
+    if options is not None:
+        raise HTTPException(400, "User OpenRouter keys support generation, modification and analysis. Use Modify for this request.")
     from app.llm.tuner import tune_model
     
     result = tune_model(

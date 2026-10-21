@@ -1,9 +1,11 @@
 """Validated descriptive analytics and optional AI interpretation."""
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel, Field
 from typing import Optional
 
 from app.core.model import Model
+from app.llm.credentials import user_ai, UserAI
+from app.llm.generator import LLMError
 from app.llm.analyzer import analyze_results, is_analyzer_available, descriptive_analysis, validate_results
 from app.storage.models import get_model
 
@@ -40,18 +42,20 @@ def _model_info(request):
 
 
 @router.get("/analyze/status")
-def get_analyzer_status():
+def get_analyzer_status(options: UserAI | None = Depends(user_ai)):
+    if options is not None:
+        return {"available": True, "verified": False, "provider": "openrouter", "model": options.model, "message": "User OpenRouter key supplied; connection not tested"}
     available = is_analyzer_available()
     return {"available": available, "message": "Gemini configured; provider health not checked" if available else "Set GEMINI_API_KEY to enable AI interpretation"}
 
 
 @router.post("/analyze")
-def analyze_simulation(request: AnalyzeRequest):
+def analyze_simulation(request: AnalyzeRequest, options: UserAI | None = Depends(user_ai)):
     results = _validated(request.simulation_results)
     model_info = _model_info(request)
-    analysis = analyze_results(model_info, results, request.question)
+    analysis = _analysis(model_info, results, request.question, options)
     return {"summary": analysis.summary, "insights": analysis.insights, "recommendations": analysis.recommendations,
-            "patterns": analysis.patterns, "answer": analysis.answer, "ai_available": is_analyzer_available(), "ai_used": analysis.ai_used}
+            "patterns": analysis.patterns, "answer": analysis.answer, "ai_available": options is not None or is_analyzer_available(), "ai_used": analysis.ai_used}
 
 
 @router.post("/analyze/statistics")
@@ -61,12 +65,19 @@ def get_statistics(request: StatisticsRequest):
 
 
 @router.post("/analyze/ask")
-def ask_about_results(request: AnalyzeRequest):
+def ask_about_results(request: AnalyzeRequest, options: UserAI | None = Depends(user_ai)):
     results = _validated(request.simulation_results)
     if not request.question or not request.question.strip():
         raise HTTPException(status_code=400, detail="Question is required for this endpoint")
-    if not is_analyzer_available():
+    if options is None and not is_analyzer_available():
         raise HTTPException(status_code=503, detail="AI analysis not available. Set GEMINI_API_KEY to enable.")
-    analysis = analyze_results(_model_info(request), results, request.question)
+    analysis = _analysis(_model_info(request), results, request.question, options)
     return {"question": request.question, "answer": analysis.answer, "supporting_insights": analysis.insights[:3],
             "ai_available": True, "ai_used": analysis.ai_used}
+
+
+def _analysis(model_info, results, question, options):
+    try:
+        return analyze_results(model_info, results, question, **({"options": options} if options else {}))
+    except LLMError as error:
+        raise HTTPException(error.status_code, str(error)) from None

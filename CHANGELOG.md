@@ -1,3 +1,10 @@
+## 1.10.0 — Mobile workspace and personal OpenRouter
+
+- Compact phone navigation with preserved document actions, separate Run controls, responsive result sheets and tablet/landscape reflow.
+- Fixed mobile draft loss, delayed chat visibility, library focus races, touch chart coordinates and resize handling; added phone chart export, run comparison, animation and phase axes.
+- Optional personal OpenRouter key with explicit browser persistence choice, free router only, actual connection test and safe request-scoped credential handling. Existing agent/MCP and server provider paths remain.
+- Full regressions and corpus rerun; 28 pre-existing public model failures remain explicit. See docs/MOBILE-1.10.md and docs/OPENROUTER.md.
+
 # Version 1.9
 
 - Fix silent flow cancellation, RK4 intermediate overflow, delayed-history phase shifts, hidden non-finite intermediates, initializer constant shadowing and uncharged dependency retries.

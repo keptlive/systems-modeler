@@ -23,7 +23,7 @@ const AIAgent = {
      */
     async checkAvailability() {
         try {
-            const response = await fetch('/api/analyze/status');
+            const response = await OpenRouterUI.request('/api/analyze/status');
             if (response.ok) {
                 const data = await response.json();
                 this.isAvailable = data.available;
@@ -55,7 +55,7 @@ const AIAgent = {
         this.setLoading(true);
 
         try {
-            const response = await fetch('/api/analyze', {
+            const response = await OpenRouterUI.request('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -98,7 +98,7 @@ const AIAgent = {
         this.renderConversation();
 
         try {
-            const response = await fetch('/api/analyze/ask', {
+            const response = await OpenRouterUI.request('/api/analyze/ask', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -409,7 +409,7 @@ const AIAgent = {
         this.showFeedbackLoading('Finding equilibrium parameters...');
 
         try {
-            const response = await fetch('/api/llm/find-equilibrium', {
+            const response = await OpenRouterUI.request('/api/llm/find-equilibrium', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -446,7 +446,7 @@ const AIAgent = {
         this.showFeedbackLoading('Fitting model to data...');
 
         try {
-            const response = await fetch('/api/llm/fit-to-data', {
+            const response = await OpenRouterUI.request('/api/llm/fit-to-data', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -484,13 +484,19 @@ const AIAgent = {
         this.showFeedbackLoading('Getting AI suggestions...');
 
         try {
-            const response = await fetch('/api/llm/refine-model', {
+            // Keep the server refinement flow; personal free keys use modification.
+            const personalKey = OpenRouterUI.hasKey();
+            const response = await OpenRouterUI.request(personalKey ? '/api/llm/modify' : '/api/llm/refine-model', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     model: {...this.model,id:this.model.id||'draft'},
-                    simulation_results: this.results,
-                    feedback: feedback
+                    ...(personalKey ? {
+                        modification: `Refine this model using this feedback: ${feedback}\nSimulation results for context: ${JSON.stringify(this.results)}`
+                    } : {
+                        simulation_results: this.results,
+                        feedback: feedback
+                    })
                 })
             });
 
@@ -499,7 +505,13 @@ const AIAgent = {
                 throw new Error(error.detail || 'Refinement failed');
             }
 
-            const result = await response.json();
+            const payload = await response.json();
+            const result = personalKey ? {
+                success: true,
+                suggestions: [],
+                modified_model: payload,
+                explanation: 'A free model proposed a revised model using your feedback and simulation results. Review it before applying; AI output may contain errors.'
+            } : payload;
             this.renderRefinementResult(result);
             return result;
 

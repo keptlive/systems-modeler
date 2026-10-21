@@ -103,10 +103,13 @@ const Library = {
         const modal = document.createElement("div");
         modal.id = "library-modal";
         modal.className = "library-modal";
+        modal.setAttribute("role", "dialog");
+        modal.setAttribute("aria-modal", "true");
+        modal.setAttribute("aria-labelledby", "library-title");
         modal.innerHTML = `
             <div class="library-content">
                 <div class="library-header">
-                    <h2>Model Library</h2>
+                    <h2 id="library-title">Model Library</h2>
                     <span class="library-count" id="library-count">Loading...</span>
                     <button class="library-close" title="Close">&times;</button>
                 </div>
@@ -382,7 +385,17 @@ const Library = {
 
         // Escape key
         document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && this.isOpen) this.close();
+            if (!this.isOpen || document.querySelector('dialog[open]')) return;
+            if (e.key === "Escape") { e.preventDefault(); this.close(); }
+            if (e.key === "Tab") {
+                const modal = document.getElementById("library-modal");
+                const fields = [...modal.querySelectorAll('button,input,select,textarea,a[href],[tabindex]')]
+                    .filter(field => !field.disabled && field.tabIndex >= 0 && field.getClientRects().length);
+                const first = fields[0], last = fields[fields.length - 1];
+                if (!modal.contains(document.activeElement) || (e.shiftKey && document.activeElement === first)) {
+                    e.preventDefault(); (e.shiftKey ? last : first)?.focus();
+                } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
+            }
         });
 
         this.bindItemEvents();
@@ -481,14 +494,14 @@ const Library = {
     async open() {
         const modal = document.getElementById("library-modal");
         if (modal) {
+            if (!this.isOpen) this.opener = document.activeElement;
             modal.classList.add("open");
             this.isOpen = true;
+            document.getElementById("library-search")?.focus();
             
             // Load models when opening (with loading screen)
             await this.loadModels();
-            this.applyFilters();
-            
-            document.getElementById("library-search")?.focus();
+            if (this.isOpen) this.applyFilters();
         }
     },
 
@@ -498,8 +511,10 @@ const Library = {
     close() {
         const modal = document.getElementById("library-modal");
         if (modal) {
+            const wasOpen = this.isOpen;
             modal.classList.remove("open");
             this.isOpen = false;
+            if (wasOpen && !document.querySelector('dialog[open]')) this.opener?.focus();
             this.expandedModel = null;
         }
     },

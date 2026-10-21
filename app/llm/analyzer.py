@@ -5,6 +5,8 @@ import math
 from itertools import combinations
 from typing import Optional
 from dataclasses import dataclass
+from app.llm.credentials import UserAI
+from app.llm.generator import call_llm, parse_model_json, LLMError
 
 from app.core.limits import MAX_SAMPLES, MAX_ELEMENTS, MAX_RETAINED_VALUES
 
@@ -320,7 +322,7 @@ Respond with ONLY valid JSON, no markdown code blocks or other text."""
     return prompt
 
 
-def analyze_results(model_info: dict, results: dict, question: Optional[str] = None) -> AnalysisResult:
+def analyze_results(model_info: dict, results: dict, question: Optional[str] = None, options: UserAI | None = None) -> AnalysisResult:
     """Always compute verified descriptive metrics before optional AI interpretation."""
     report = descriptive_analysis(results)
     stats, patterns = report["statistics"], report["patterns"]
@@ -339,17 +341,18 @@ def analyze_results(model_info: dict, results: dict, question: Optional[str] = N
         patterns=pattern_records,
         answer="Natural-language interpretation requires a configured AI provider; descriptive statistics remain available." if question else None,
     )
-    client = get_gemini_client()
-    if not client:
+    client = get_gemini_client() if options is None else None
+    if not client and options is None:
         return fallback
     prompt = build_analysis_prompt(model_info, results, stats, patterns, report["correlations"], question)
     try:
-        model = client.GenerativeModel("gemini-2.5-flash")
-        response = model.generate_content(prompt, generation_config={"response_mime_type": "application/json", "max_output_tokens": 2048})
-        text = response.text.strip()
-        if text.startswith("```"):
-            text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
-        data = json.loads(text)
+        if options is not None:
+            text = call_llm([{"role": "user", "content": prompt}], options=options)
+        else:
+            model = client.GenerativeModel("gemini-2.5-flash")
+            response = model.generate_content(prompt, generation_config={"response_mime_type": "application/json", "max_output_tokens": 2048})
+            text = response.text
+        data = parse_model_json(text)
         if not isinstance(data, dict) or not isinstance(data.get("summary"), str):
             raise ValueError("Invalid analysis response")
         for field in ("insights", "recommendations"):
@@ -359,7 +362,11 @@ def analyze_results(model_info: dict, results: dict, question: Optional[str] = N
             raise ValueError("Invalid analysis answer")
         return AnalysisResult(summary=data["summary"], insights=data["insights"], recommendations=data["recommendations"],
                               patterns=pattern_records, answer=data.get("answer") if question else None, ai_used=True)
-    except Exception:
+    except Exception as error:
+        if options is not None:
+            if isinstance(error, LLMError):
+                raise
+            raise LLMError("OpenRouter returned invalid analysis JSON. Try again.") from None
         # Provider exceptions may include configuration details. Keep the public
         # fallback useful and avoid disclosing raw SDK/network exceptions.
         fallback.summary = "AI interpretation was unavailable. Showing descriptive analysis of the recorded samples."
