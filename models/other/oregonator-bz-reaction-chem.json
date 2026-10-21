@@ -1,7 +1,7 @@
 {
   "id": "oregonator-bz-reaction-chem",
   "name": "Oregonator BZ Reaction",
-  "description": "Incomplete Oregonator teaching scaffold. Field and Noyes (1974) is the original chemical-oscillator reference. This file contains three stocks and epsilon, q and f inputs but no flows or stock derivative equations, so it does not implement the published Oregonator or demonstrate chemical oscillations.",
+  "description": "Three-variable dimensionless Oregonator teaching adaptation implementing Field (2007), equations 4–6. HBrO2, Bromide and Ce4_plus represent scaled concentrations, not molar concentrations. The prior file contained no derivatives. All existing initial concentrations and epsilon=.01,q=.001,f=1 inputs are retained; the previously missing epsilon_prime=1.98e-5 is explicitly supplied from Field's illustrative kinetic scaling. These mixed teaching inputs are not a calibrated reproduction of a chemical experiment. Radau integrates the stiff bromide timescale. The default observation window is 30 scaled time units (formerly 300 in the inert shell) at output interval 0.01 to demonstrate several cycles within the service work budget; independent 300-unit stiff integration remains finite and positive, but a full 300-unit server run exceeds the current work budget.",
   "stocks": [
     {
       "id": "s1",
@@ -11,7 +11,8 @@
       "position": {
         "x": 150,
         "y": 200
-      }
+      },
+      "units": "dimensionless scaled concentration"
     },
     {
       "id": "s2",
@@ -21,7 +22,8 @@
       "position": {
         "x": 350,
         "y": 200
-      }
+      },
+      "units": "dimensionless scaled concentration"
     },
     {
       "id": "s3",
@@ -31,10 +33,48 @@
       "position": {
         "x": 550,
         "y": 200
+      },
+      "units": "dimensionless scaled concentration"
+    }
+  ],
+  "flows": [
+    {
+      "id": "oregonator-derivative-0",
+      "name": "HBrO2_Change",
+      "equation": "(q * Bromide - HBrO2 * Bromide + HBrO2 * (1 - HBrO2)) / epsilon",
+      "from_stock": null,
+      "to_stock": "s1",
+      "units": "dimensionless / scaled time",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "oregonator-derivative-1",
+      "name": "Bromide_Change",
+      "equation": "(-q * Bromide - HBrO2 * Bromide + f * Ce4_plus) / epsilon_prime",
+      "from_stock": null,
+      "to_stock": "s2",
+      "units": "dimensionless / scaled time",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "oregonator-derivative-2",
+      "name": "Ce4_Change",
+      "equation": "HBrO2 - Ce4_plus",
+      "from_stock": null,
+      "to_stock": "s3",
+      "units": "dimensionless / scaled time",
+      "position": {
+        "x": 550,
+        "y": 300
       }
     }
   ],
-  "flows": [],
   "variables": [
     {
       "id": "v1",
@@ -62,6 +102,16 @@
         "x": 360,
         "y": 50
       }
+    },
+    {
+      "id": "oregonator-epsilon-prime",
+      "name": "epsilon_prime",
+      "equation": "0.0000198",
+      "units": "dimensionless",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
     }
   ],
   "connectors": [
@@ -78,11 +128,14 @@
   ],
   "time_settings": {
     "start": 0.0,
-    "end": 300.0,
-    "dt": 0.01
+    "end": 30.0,
+    "dt": 0.01,
+    "integration_method": "radau",
+    "rtol": 1e-06,
+    "atol": 1e-09
   },
   "created_at": "2026-01-15T20:41:11.300934+00:00",
   "updated_at": "2026-01-15T20:41:11.300934+00:00",
   "source": "https://doi.org/10.1063/1.1681288",
-  "reference": "Field, R.J. and Noyes, R.M. (1974). Oscillations in chemical systems. IV. Limit cycle behavior in a model of a real chemical reaction. Journal of Chemical Physics 60(5):1877-1884. doi:10.1063/1.1681288."
+  "reference": "Field RJ (2007), Oregonator, Scholarpedia 2(5):1386, doi:10.4249/scholarpedia.1386, equations 4–6 and epsilon_prime scaling; https://www.scholarpedia.org/article/Oregonator . Model origin: Field RJ and Noyes RM (1974), J Chem Phys 60:1877-1884, doi:10.1063/1.1681288. Existing epsilon/q/initial values retained as explicit teaching parameters."
 }

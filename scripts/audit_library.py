@@ -8,6 +8,7 @@ from collections import Counter
 from pathlib import Path
 from app.core.model import Model, TimeSettings
 from app.core.simulator import simulate
+from app.core.failure_diagnostics import failure_payload
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--output", required=True)
@@ -36,9 +37,9 @@ for path in paths:
         if not args.full:
             ts = TimeSettings(**{**ts.model_dump(), "end": min(ts.end, ts.start + 4 * ts.dt)})
         result = simulate(model, ts)
-        row.update(status="passed", points=len(result.time), elements=len(result.values), random_seed=result.random_seed)
+        row.update(status="passed", points=len(result.time), elements=len(result.values), random_seed=result.random_seed, integration_diagnostics=result.integration_diagnostics)
     except Exception as exc:
-        row.update(status="failed", error=str(exc))
+        row.update(status="failed", error=str(exc), failure=failure_payload(exc))
     rows.append(row)
 report = {"scope": "full default runs" if args.full else "four-step numerical smoke checks",
           "library_scope": "Git-tracked public definitions" if args.tracked_only else "All definitions present in models/",

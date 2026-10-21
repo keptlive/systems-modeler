@@ -1,7 +1,7 @@
 {
   "id": "agricultural-water-demand-cli",
   "name": "Agricultural Water Demand Model",
-  "description": "A system dynamics model of agricultural water demand and irrigation. Models the interactions between crop production, water availability, irrigation efficiency, and the feedback effects of water stress on yield and farmer adaptation. Reference: FAO AQUASTAT. Water resources and agricultural water management. Source: https://www.fao.org/aquastat/",
+  "description": "A system dynamics model of agricultural water demand and irrigation. Models the interactions between crop production, water availability, irrigation efficiency, and the feedback effects of water stress on yield and farmer adaptation. Reference: FAO AQUASTAT. Water resources and agricultural water management. Source: https://www.fao.org/aquastat/\n\nVersion 1.8 corrects a reserved-name collision: the authored one-unit reservoir withdrawal period is now named Reservoir Withdrawal Period. Its value remains 1 and is distinct from solver DT=0.25. Local agricultural calibration is unverified.",
   "stocks": [
     {
       "id": "stock-soil-moisture",
@@ -69,7 +69,7 @@
     {
       "id": "flow-irrigation",
       "name": "Irrigation",
-      "equation": "MIN(Irrigation_Demand, MIN(Irrigation_Capacity, Water_Reservoir / Time_Step))",
+      "equation": "MIN(Irrigation_Demand, MIN(Irrigation_Capacity, Water_Reservoir / \"Reservoir Withdrawal Period\"))",
       "from_stock": "stock-water-reservoir",
       "to_stock": "stock-soil-moisture",
       "position": {
@@ -331,7 +331,7 @@
     },
     {
       "id": "var-time-step",
-      "name": "Time Step",
+      "name": "Reservoir Withdrawal Period",
       "equation": "1",
       "position": {
         "x": 550,

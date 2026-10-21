@@ -17,6 +17,7 @@ import random
 from typing import Callable, Any, Optional
 import re
 from functools import lru_cache
+from app.core.limits import MAX_WORK_UNITS
 
 
 SAFE_OPERATORS: dict[type, Callable] = {
@@ -199,7 +200,7 @@ SAFE_FUNCTIONS: dict[str, Callable] = {
 
 # Functions that require simulation context (time, dt)
 # These are handled specially by the evaluator
-STOCHASTIC_FUNCTIONS = {"RANDOM", "RANDOM_UNIFORM", "RANDOM_NORMAL", "NORMAL"}
+STOCHASTIC_FUNCTIONS = {"RANDOM_BINOMIAL", "RANDOM", "RANDOM_UNIFORM", "RANDOM_NORMAL", "NORMAL"}
 
 STATEFUL_ALIASES = {"SMTH1": "SMOOTH", "SMTH3": "SMOOTH3", "SMTHN": "SMOOTH_N",
                     "DELAYN": "DELAY_N", "DELAY": "DELAY_FIXED"}
@@ -214,8 +215,13 @@ SAFE_CONSTANTS: dict[str, float] = {
 
 
 class EquationError(Exception):
-    """Error in equation parsing or evaluation."""
-    pass
+    """Error in equation parsing/evaluation with optional machine-readable cause."""
+
+    def __init__(self, message, *, code=None, details=None):
+        super().__init__(message)
+        self.code = code
+        self.details = dict(details or {})
+
 
 
 def validate_random_seed(value):
@@ -239,6 +245,47 @@ class RandomRuntime:
         self.seed = random.SystemRandom().randrange(2**32) if seed is None else validate_random_seed(seed)
         self.epoch = 0
         self.streams = {}
+        self.binomial_streams = {}
+        self.binomial_trials = 0
+        self.binomial_budget = MAX_WORK_UNITS
+
+    def reserve_work(self, ordinary_work):
+        """Reserve integration work before any bounded Bernoulli trial draws."""
+        self.binomial_budget = MAX_WORK_UNITS - ordinary_work
+        if self.binomial_trials > self.binomial_budget:
+            raise EquationError("Simulation exceeds 1,000,000 work units including stochastic calls and binomial trials",
+                                code="capacity_exceeded",
+                                details={"category": "capacity", "resource": "work_units",
+                                         "requested": ordinary_work + self.binomial_trials, "limit": MAX_WORK_UNITS})
+
+    def binomial_sample(self, key, n, p, explicit_seed=None, at_time=None):
+        """Exactly n bounded Bernoulli trials; one cached sample per call/time."""
+        import hashlib
+        import numpy as np
+        seed = validate_random_seed(explicit_seed) if explicit_seed is not None else None
+        if key not in self.binomial_streams:
+            stream_seed = seed if seed is not None else int.from_bytes(
+                hashlib.sha256((str(self.seed) + ":" + key).encode("utf-8")).digest(), "big")
+            self.binomial_streams[key] = {"seed": seed, "generator": np.random.Generator(np.random.PCG64(stream_seed)),
+                                          "epoch": None, "sample": None, "parameters": None}
+        stream = self.binomial_streams[key]
+        if seed != stream["seed"]:
+            raise EquationError("Changing a random function's seed during a run is unsupported")
+        epoch = (self.epoch, at_time)
+        if stream["epoch"] != epoch:
+            if self.binomial_trials + n > self.binomial_budget:
+                raise EquationError("Simulation exceeds 1,000,000 work units including stochastic calls and binomial trials",
+                                    code="capacity_exceeded",
+                                    details={"category": "capacity", "resource": "work_units",
+                                             "requested": MAX_WORK_UNITS - self.binomial_budget + self.binomial_trials + n,
+                                             "limit": MAX_WORK_UNITS})
+            self.binomial_trials += n
+            stream["sample"] = float(np.count_nonzero(stream["generator"].random(n) < p))
+            stream["parameters"] = (n, p)
+            stream["epoch"] = epoch
+        elif stream["parameters"] != (n, p):
+            raise EquationError("Changing binomial parameters within one accepted time is unsupported")
+        return stream["sample"]
 
     def unit_sample(self, key, kind, explicit_seed=None, at_time=None):
         import hashlib
@@ -320,6 +367,13 @@ def restore_identifiers(expression):
 
 
 def canonical_name(value):
+    """Preserve legacy scalar alias semantics with bounded pure memoization."""
+    # Bound persistent key memory; long user identifiers still normalize exactly.
+    return _canonical_name(value) if len(value) <= 1024 else _canonical_name.__wrapped__(value)
+
+
+@lru_cache(maxsize=8192)
+def _canonical_name(value):
     """Unicode-preserving aliases, with XMILE whitespace equivalence.
 
     Retain historical punctuation aliases, but reject collisions at model entry.
@@ -379,7 +433,7 @@ class SafeEvaluator(ast.NodeVisitor):
             raise EquationError(f"Ambiguous variable alias: {name}")
         if name.lower() in SAFE_CONSTANTS:
             return SAFE_CONSTANTS[name.lower()]
-        raise EquationError(f"Unknown variable: {name}")
+        raise EquationError(f"Unknown variable: {name}", code="unknown_variable", details={"symbol": name})
 
     def visit_BinOp(self, node: ast.BinOp) -> float:
         op_type = type(node.op)
@@ -390,7 +444,7 @@ class SafeEvaluator(ast.NodeVisitor):
         try:
             return SAFE_OPERATORS[op_type](left, right)
         except ZeroDivisionError:
-            raise EquationError("Division by zero")
+            raise EquationError("Division by zero", code="division_by_zero")
 
     def visit_UnaryOp(self, node: ast.UnaryOp) -> float:
         op_type = type(node.op)
@@ -440,17 +494,17 @@ class SafeEvaluator(ast.NodeVisitor):
             elif func_name.lower() in SAFE_FUNCTIONS:
                 actual_func_name = func_name.lower()
             else:
-                raise EquationError(f"Unknown function: {func_name}")
+                raise EquationError(f"Unknown function: {func_name}", code="unknown_function", details={"function": func_name})
 
         args = [self.visit(arg) for arg in node.args]
         try:
             return SAFE_FUNCTIONS[actual_func_name](*args)
         except (ValueError, TypeError) as e:
-            raise EquationError(f"Function error in {func_name}: {e}")
+            raise EquationError(f"Function error in {func_name}: {e}", code="domain_error" if isinstance(e, ValueError) else "function_signature", details={"function": func_name})
 
     def _random_value(self, function, node):
         if not 2 <= len(node.args) <= 3:
-            raise EquationError(f"{function} requires 2 or 3 arguments; zero-argument RANDOM is unsupported")
+            raise EquationError(f"{function} requires 2 or 3 arguments; zero-argument RANDOM is unsupported", code="function_signature", details={"function": function, "argument_count": len(node.args)})
         parameters = [float(self.visit(argument)) for argument in node.args[:2]]
         if not all(math.isfinite(parameter) for parameter in parameters):
             raise EquationError("Random distribution parameters must be finite")
@@ -459,6 +513,16 @@ class SafeEvaluator(ast.NodeVisitor):
             if isinstance(node.args[2], ast.Constant) and isinstance(node.args[2].value, bool):
                 raise EquationError("Random seed must be an integer, not a boolean")
             seed = validate_random_seed(self.visit(node.args[2]))
+        if function == "RANDOM_BINOMIAL":
+            trials, probability = parameters
+            if isinstance(node.args[0], ast.Constant) and isinstance(node.args[0].value, bool):
+                raise EquationError("RANDOM_BINOMIAL trials must be an integer, not a boolean")
+            if trials != int(trials) or not 0 <= trials <= 1_000_000:
+                raise EquationError("RANDOM_BINOMIAL requires integer trials between 0 and 1,000,000")
+            if not 0 <= probability <= 1:
+                raise EquationError("RANDOM_BINOMIAL probability must be between 0 and 1")
+            key = f"{canonical_name(self.context.equation_key)}:{node.lineno}:{node.col_offset}:binomial"
+            return self.context.random_runtime.binomial_sample(key, int(trials), probability, seed, self.context.time)
         kind = "normal" if function in ("RANDOM_NORMAL", "NORMAL") else "uniform"
         first, second = parameters
         if kind == "uniform" and first > second:
@@ -545,7 +609,7 @@ class SafeEvaluator(ast.NodeVisitor):
         if func_name == "STEP":
             # STEP(height, step_time)
             if len(evaluated_args) != 2:
-                raise EquationError("STEP requires 2 arguments: height, step_time")
+                raise EquationError("STEP requires 2 arguments: height, step_time", code="function_signature", details={"function": "STEP", "argument_count": len(evaluated_args)})
             height, step_time = evaluated_args[0], evaluated_args[1]
             return step_function(height, step_time, self.context.input_time)
 
@@ -854,7 +918,8 @@ def safe_eval(equation: str, variables: dict[str, float],
     if not equation or equation.strip() == "":
         return 0.0
 
-    # Normalize and preprocess the equation
+    # Retain the authored form in errors; encoded parser tokens are internal.
+    original_equation = equation
     equation = preprocess_equation(equation)
     
     # Continue with normalization
@@ -873,9 +938,13 @@ def safe_eval(equation: str, variables: dict[str, float],
         evaluator = SafeEvaluator(variables, context)
         return evaluator.visit(tree)
     except SyntaxError as e:
-        raise EquationError(f"Syntax error in equation: {e}")
+        raise EquationError(f"Syntax error in equation: {e}", code="syntax_error") from e
     except Exception as e:
-        raise EquationError(f"Error evaluating equation '{equation}': {e}")
+        code = getattr(e, "code", None)
+        if code is None and isinstance(e, OverflowError):
+            code = "numeric_overflow"
+        raise EquationError(f"Error evaluating equation '{original_equation}': {e}",
+                            code=code, details=getattr(e, "details", None)) from e
 
 
 def discover_stateful(equation, variables, context):
@@ -951,7 +1020,7 @@ def advance_stateful(variables, context, h):
 def equation_features(equation, table_names=()):
     """Identify supported stochastic/fixed-delay calls, respecting table precedence."""
     if not equation.strip():
-        return {"random_calls": 0, "fixed_delay": False}
+        return {"random_calls": 0, "fixed_delay": False, "stateful_calls": [], "test_input_calls": []}
     try:
         tree = _parse_expression(preprocess_equation(equation))
     except SyntaxError as exc:
@@ -961,7 +1030,9 @@ def equation_features(equation, table_names=()):
              if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
              and canonical_name(decode_identifier(node.func.id)) not in tables]
     return {"random_calls": sum(name in STOCHASTIC_FUNCTIONS for name in calls),
-            "fixed_delay": any(name in ("DELAY", "DELAY_FIXED") for name in calls)}
+            "fixed_delay": any(name in ("DELAY", "DELAY_FIXED") for name in calls),
+            "stateful_calls": sorted(set(calls) & STATEFUL_FUNCTIONS),
+            "test_input_calls": sorted(set(calls) & {"STEP", "PULSE", "RAMP"})}
 
 
 def _reference_names(tree):

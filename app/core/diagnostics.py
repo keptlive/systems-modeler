@@ -16,9 +16,10 @@ from app.core.equations import (SAFE_CONSTANTS, canonical_name, decode_identifie
 from app.core.model import Model, TimeSettings
 from app.core.limits import MAX_INTERVALS, MAX_RETAINED_VALUES, MAX_WORK_UNITS
 from app.core.simulator import simulate
+from app.core.failure_diagnostics import failure_payload
 from app.core.validation import inspect_inputs
 
-CORE_FILES = ("model.py", "simulator.py", "integration.py", "equations.py", "limits.py")
+CORE_FILES = ("model.py", "simulator.py", "integration.py", "equations.py", "limits.py", "failure_diagnostics.py", "adaptive.py")
 MAX_RUNS = 3
 MAX_ELEMENT_INTERVALS_PER_RUN = MAX_WORK_UNITS
 
@@ -208,6 +209,8 @@ def investigate_model(model: Model, max_runs: int = 3) -> dict:
         report["warnings"].append("Stochastic calls detected: pathwise timestep convergence is inapplicable without a coupled-noise experiment; no refinement runs are attempted.")
     if equations["references_time_step"]:
         report["warnings"].append("Equations reference DT/TIME_STEP: refinement can change algebraic inputs or initial conditions as well as integration error.")
+    if model.time_settings.integration_method == "radau":
+        report["warnings"].append("Radau DT is retained output spacing. These runs refine output grids at unchanged adaptive tolerances; they do not refine internal solver steps or test tolerance convergence.")
     for index in range(max_runs):
         factor = 2 ** index
         ts = model.time_settings.model_copy(update={"dt": model.time_settings.dt / factor})
@@ -239,7 +242,7 @@ def investigate_model(model: Model, max_runs: int = 3) -> dict:
                 report["comparisons"].append({"coarse_run": other_index, "fine_run": index + 1, **compare_runs(previous, result, model)})
             completed.append((index + 1, result))
         except Exception as error:
-            row.update(status="failed", error=str(error))
+            row.update(status="failed", error=str(error), failure=failure_payload(error))
             # DT-dependent initial equations can genuinely change under refinement.
             # Other identical start-time failures cannot be cured by integration.
             initial_failure = f"at time {ts.start:g}:" in str(error)
@@ -260,6 +263,14 @@ def investigate_model(model: Model, max_runs: int = 3) -> dict:
         conclusion = "grid_sensitive_or_nonconvergent_on_checked_grids"
     report["timestep_assessment"] = {"status": conclusion, "threshold_for_small_scaled_difference": 1e-3,
                                      "interpretation": "Descriptive comparison of checked grids; no proof of convergence or scientific validity"}
+    if model.time_settings.integration_method == "radau":
+        report["timestep_assessment"].update(
+            status="output_grid_comparison_only" if differences else "insufficient_completed_output_grids",
+            grid_difference_status=conclusion,
+            scope="output grids at unchanged adaptive tolerances",
+            internal_tolerances_refined=False,
+            rtol=model.time_settings.rtol, atol=model.time_settings.atol,
+            interpretation="Radau DT controls retained output spacing. Differences include output interpolation at unchanged rtol/atol; internal adaptive steps were not explicitly refined. This is not an internal-step or tolerance convergence test and does not establish scientific validity.")
     if not model.stocks:
         report["warnings"].append("No stocks are present; stock-trajectory convergence has no dynamic state to assess.")
         report["timestep_assessment"]["status"] = "no_stocks_to_compare"

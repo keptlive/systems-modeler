@@ -2,6 +2,8 @@
 API endpoint for running simulations.
 """
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import JSONResponse
+from app.core.failure_diagnostics import failure_payload
 from app.core.model import SimulationRequest, SimulationResult, Model
 from app.core.simulator import simulate
 from app.storage import models as storage
@@ -69,9 +71,9 @@ def run_simulation(request: SimulationRequest):
         result = simulate(model, request.time_settings)
         return result
     except (ValueError, ArithmeticError) as e:
-        raise HTTPException(status_code=422, detail=str(e))
+        return JSONResponse(status_code=422, content={"detail": str(e), "failure": failure_payload(e)})
     except Exception as e:
         from app.core.equations import EquationError
         if isinstance(e, EquationError):
-            raise HTTPException(status_code=422, detail=str(e))
+            return JSONResponse(status_code=422, content={"detail": str(e), "failure": failure_payload(e)})
         raise HTTPException(status_code=500, detail="Unexpected simulation error")

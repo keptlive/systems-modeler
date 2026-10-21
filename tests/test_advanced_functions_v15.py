@@ -34,6 +34,7 @@ MATH_CASES = {
 }
 CONTEXT_ROWS = {
     "STEP","PULSE","RAMP","LOOKUP","WITH_LOOKUP","RANDOM","NORMAL",
+    "RANDOM_BINOMIAL", # v1.8 distribution/replay/budget oracles: test_binomial_v18.py
     "RANDOM_UNIFORM","RANDOM_NORMAL","DELAY1","DELAY3","DELAY_N",
     "DELAY_FIXED","SMOOTH","SMOOTH3","SMOOTH_N","SMTH1","SMTH3","SMTHN","DELAYN","DELAY",
 }

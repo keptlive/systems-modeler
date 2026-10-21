@@ -1,7 +1,7 @@
 {
   "id": "nordhaus-dice-integrated-assessment-cli",
   "name": "Nordhaus DICE Integrated Assessment Model",
-  "description": "Simplified version of Nordhaus's Dynamic Integrated Climate-Economy (DICE) model. Links economic growth, carbon emissions, and climate damages. Nobel Prize in Economics 2018. Source: Nordhaus (2017), PNAS. DOI: 10.1073/pnas.1609244114",
+  "description": "Simplified version of Nordhaus's Dynamic Integrated Climate-Economy (DICE) model. Links economic growth, carbon emissions, and climate damages. Nobel Prize in Economics 2018. Source: Nordhaus (2017), PNAS. DOI: 10.1073/pnas.1609244114\n\nVersion 1.8 repairs two source-unit defects. The 851 atmospheric stock is GtC, so CO2 forcing is logarithmic relative to preindustrial 588 GtC, not linear relative to 280 ppm. Sigma*output is GtCO2/year and is converted by 12/44 before entering the GtC stock. These relations are supported by the DICE-2016R GAMS source; 3.7 is the existing rounded forcing coefficient. The four-stock heat budget still omits native DICE climate-restoring terms and full carbon-cycle sectors; no DICE fidelity or empirical climate calibration is claimed.",
   "stocks": [
     {
       "id": "stock-k",
@@ -11,7 +11,8 @@
       "position": {
         "x": 100,
         "y": 100
-      }
+      },
+      "units": "trillion 2010 USD"
     },
     {
       "id": "stock-co2",
@@ -21,7 +22,8 @@
       "position": {
         "x": 100,
         "y": 300
-      }
+      },
+      "units": "GtC"
     },
     {
       "id": "stock-temp",
@@ -70,13 +72,14 @@
     {
       "id": "flow-emit",
       "name": "Emissions",
-      "equation": "Sigma * (1 - Abatement) * Gross_Output",
+      "equation": "Sigma * (1 - Abatement) * Gross_Output / (44 / 12)",
       "from_stock": null,
       "to_stock": "stock-co2",
       "position": {
         "x": 50,
         "y": 300
-      }
+      },
+      "units": "GtC/year"
     },
     {
       "id": "flow-absorb",
@@ -138,7 +141,8 @@
       "position": {
         "x": 50,
         "y": 250
-      }
+      },
+      "units": "GtCO2/(trillion 2010 USD)"
     },
     {
       "id": "var-abate",
@@ -206,11 +210,12 @@
     {
       "id": "var-force",
       "name": "Forcing",
-      "equation": "3.7 * (Atmospheric_CO2 / 280)",
+      "equation": "3.7 * LN(Atmospheric_CO2 / 588) / LN(2)",
       "position": {
         "x": 200,
         "y": 350
-      }
+      },
+      "units": "W/m^2"
     },
     {
       "id": "var-sens",

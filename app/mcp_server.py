@@ -153,8 +153,8 @@ def resolve_model(model_id=None, model_json=None):
         return model
     return Model.model_validate(model_json)
 
-def settings_for(model, start_time=None, end_time=None, dt=None, integration_method=None, random_seed=None):
-    changes = {'start': start_time, 'end': end_time, 'dt': dt, 'integration_method': integration_method, 'random_seed': random_seed}
+def settings_for(model, start_time=None, end_time=None, dt=None, integration_method=None, random_seed=None, rtol=None, atol=None):
+    changes = {'start': start_time, 'end': end_time, 'dt': dt, 'integration_method': integration_method, 'random_seed': random_seed, 'rtol': rtol, 'atol': atol}
     data = model.time_settings.model_dump()
     data.update({k: v for k, v in changes.items() if v is not None})
     return TimeSettings(**data)
@@ -215,8 +215,10 @@ def simulate_model(model_id: Optional[str] = None, model_json: Optional[dict] = 
                    start_time: Optional[float] = None, end_time: Optional[float] = None,
                    dt: Optional[float] = None, integration_method: Optional[str] = None,
                    max_points: Annotated[int, Field(ge=2, le=2000)] = 200,
-                   random_seed: Optional[Annotated[int, Field(strict=True, ge=0, le=4294967295)]] = None) -> dict:
-    """Run Euler or RK4, inheriting omitted settings from the model. No writes or paid AI.
+                   random_seed: Optional[Annotated[int, Field(strict=True, ge=0, le=4294967295)]] = None,
+                   rtol: Optional[Annotated[float, Field(ge=1e-12, le=0.1)]] = None,
+                   atol: Optional[Annotated[float, Field(gt=0)]] = None) -> dict:
+    """Run Euler, RK4 or explicitly selected Radau, inheriting omitted settings from the model. No writes or paid AI.
 
     Returns full-series statistics and sampled data including both endpoints.
     Limits: 100,000 intervals, 500 elements, 1,000,000 retained scalar values and 1,000,000 work units (including hidden stages, random calls and RK4 evaluations). Invalid equations fail.
@@ -225,13 +227,13 @@ def simulate_model(model_id: Optional[str] = None, model_json: Optional[dict] = 
     omitted seeds inherit the model, with the effective seed returned for replay.
     """
     model = resolve_model(model_id, model_json)
-    settings = settings_for(model, start_time, end_time, dt, integration_method, random_seed)
+    settings = settings_for(model, start_time, end_time, dt, integration_method, random_seed, rtol, atol)
     result = simulate(model, settings)
     n = len(result.time)
     count = min(max_points, n)
     indices = sorted({round(i * (n - 1) / (count - 1)) for i in range(count)})
     return {'model': model.name, 'time_points': n, 'time_range': [result.time[0], result.time[-1]],
-            'settings': settings.model_dump(), 'random_seed': result.random_seed, 'variables': list(result.values),
+            'settings': settings.model_dump(), 'integration_diagnostics': result.integration_diagnostics, 'random_seed': result.random_seed, 'variables': list(result.values),
             'summary': summarize(result), 'sampled': count < n,
             'data': {'time': [result.time[i] for i in indices],
                      **{k: [v[i] for i in indices] for k, v in result.values.items()}}}
@@ -327,10 +329,20 @@ def engine_contract() -> str:
     """Machine-readable capabilities for planning compatible, reproducible models."""
     from app.core.equations import SAFE_FUNCTIONS, CONTEXT_FUNCTIONS
     return json.dumps({
-        'version': '1.7.0',
+        'version': '1.8.0',
         'test_inputs': 'STEP/PULSE/RAMP and their arguments are evaluated at accepted times and held over each timestep for Euler and RK4. Other time-dependent equations retain normal stage evaluation. Reduce DT to resolve off-grid events.',
         'pulse': 'PULSE(magnitude, first_time[, interval]): magnitude/DT for one DT; zero or omitted interval means one event. Not the Vensim start/width signature.',
-        'integration_methods': ['euler', 'rk4'],
+        'integration_methods': ['euler', 'rk4', 'radau'],
+        'random_binomial': {'signature': 'RANDOM_BINOMIAL(n,p[,seed])', 'scope': 'explicit extension; Euler only',
+                            'trials': 'integer0..1000000; exact bounded Bernoulli summation',
+                            'probability': '[0,1]', 'cost': 'n work units per new callsite/accepted-time sample, combined with integration budget',
+                            'cache': 'One sample per callsite/time; unchanged parameters required on retry',
+                            'generator': 'NumPy PCG64; runtime/library version is part of reproducibility'},
+        'radau': {'selection': 'explicit only; never automatic', 'dt': 'retained output spacing; internal steps are adaptive',
+                  'rtol': {'default': 1e-6, 'minimum': 1e-12, 'maximum': 0.1},
+                  'atol': {'default': 1e-9, 'minimum': 'positive finite'},
+                  'unsupported': ['random functions', 'delay/smooth', 'STEP/PULSE/RAMP', 'time-triggered conditionals/comparisons/discrete functions including TIME aliases', 'time-driven lookups across all interpolation modes, including TIME aliases and inline points', 'standard XMILE export'],
+                  'work': 'All model evaluations including RHS/Jacobian probes and retained outputs count toward the 1,000,000 work limit'},
         'source_review': 'Known citation mismatches are warnings in validate_model; corrected citations do not establish equation fidelity. Read the model description and source evidence.',
         'syntax': ['lazy IF THEN ELSE(condition, yes, no)', 'XMILE brace comments',
                    'XMILE left-associated comparisons with relational precedence above equality'],
@@ -395,7 +407,7 @@ def create_sse_app():
     app.routes.extend(mcp.sse_app().routes)
     async def info(request):
         tools = await mcp.list_tools()
-        return JSONResponse({'name': 'systems-modeler', 'version': '1.7.0',
+        return JSONResponse({'name': 'systems-modeler', 'version': '1.8.0',
             'streamable_http': 'https://stockandflow.live/mcp/',
             'sse': 'https://stockandflow.live/mcp/sse', 'tools': [t.name for t in tools],
             'documentation': 'https://stockandflow.live/guide'})

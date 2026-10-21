@@ -1,7 +1,7 @@
 {
   "id": "labor-market-dynamics-model-eco",
   "name": "Labor Market Dynamics Model",
-  "description": "A system dynamics model of labor market dynamics including unemployment, job search, wage dynamics, and labor force participation. Based on search and matching theory and captures the natural dynamics of employment adjustment. Reference: BLS Employment Situation. Source: https://www.bls.gov/",
+  "description": "A system dynamics model of labor market dynamics including unemployment, job search, wage dynamics, and labor force participation. Based on search and matching theory and captures the natural dynamics of employment adjustment. Reference: BLS Employment Situation. Source: https://www.bls.gov/\n\nVersion 1.8 repairs the unmatched parenthesis and unambiguous local worker/entry/long-term fraction aliases. All population and wage stocks still initialize to zero; supplied target/initial inputs do not identify the omitted cohort initialization or an original source. Undefined labor-force ratios remain an explicit failure, not guessed away.",
   "stocks": [
     {
       "id": "stock-employed-workers",
@@ -68,7 +68,7 @@
     {
       "id": "flow-hiring",
       "name": "Hiring",
-      "equation": "Matching_Function * (1 - Long_Term_Fraction)",
+      "equation": "Matching_Function * (1 - \"Long-term Unemployed Fraction\")",
       "from_stock": "stock-unemployed-workers",
       "to_stock": "stock-employed-workers",
       "position": {
@@ -79,7 +79,7 @@
     {
       "id": "flow-job-separations",
       "name": "Job Separations",
-      "equation": "Employed * Separation_Rate",
+      "equation": "\"Employed Workers\" * Separation_Rate",
       "from_stock": "stock-employed-workers",
       "to_stock": "stock-unemployed-workers",
       "position": {
@@ -90,7 +90,7 @@
     {
       "id": "flow-vacancy-creation",
       "name": "Vacancy Creation",
-      "equation": "Target_Vacancies - Job_Vacancies + Hiring + Vacancy_Closing) / Vacancy_Adjustment_Time",
+      "equation": "(Target_Vacancies - Job_Vacancies + Hiring + Vacancy_Closing) / Vacancy_Adjustment_Time",
       "from_stock": null,
       "to_stock": "stock-job-vacancies",
       "position": {
@@ -123,7 +123,7 @@
     {
       "id": "flow-labor-force-entry",
       "name": "Labor Force Entry",
-      "equation": "Out_of_Labor_Force * Entry_Rate * Participation_Effect",
+      "equation": "Out_of_Labor_Force * \"Base Entry Rate\" * Participation_Effect",
       "from_stock": "stock-out-of-labor-force",
       "to_stock": "stock-unemployed-workers",
       "position": {
@@ -134,7 +134,7 @@
     {
       "id": "flow-labor-force-exit",
       "name": "Labor Force Exit",
-      "equation": "Unemployed * Discouragement_Rate",
+      "equation": "\"Unemployed Workers\" * Discouragement_Rate",
       "from_stock": "stock-unemployed-workers",
       "to_stock": "stock-out-of-labor-force",
       "position": {
@@ -145,7 +145,7 @@
     {
       "id": "flow-retirements-from-employment",
       "name": "Retirements from Employment",
-      "equation": "Employed * Retirement_Rate",
+      "equation": "\"Employed Workers\" * Retirement_Rate",
       "from_stock": "stock-employed-workers",
       "to_stock": "stock-out-of-labor-force",
       "position": {
@@ -200,7 +200,7 @@
     {
       "id": "flow-becoming-long-term-unemployed",
       "name": "Becoming Long-term Unemployed",
-      "equation": "(Unemployed - Long_Term_Unemployed) * Transition_to_Long_Term_Rate",
+      "equation": "(\"Unemployed Workers\" - Long_Term_Unemployed) * Transition_to_Long_Term_Rate",
       "from_stock": null,
       "to_stock": "stock-long-term-unemployed",
       "position": {
@@ -211,7 +211,7 @@
     {
       "id": "flow-long-term-unemployed-hiring",
       "name": "Long-term Unemployed Hiring",
-      "equation": "Matching_Function * Long_Term_Fraction * Long_Term_Matching_Penalty",
+      "equation": "Matching_Function * \"Long-term Unemployed Fraction\" * Long_Term_Matching_Penalty",
       "from_stock": "stock-long-term-unemployed",
       "to_stock": null,
       "position": {
@@ -280,7 +280,7 @@
     {
       "id": "var-labor-force",
       "name": "Labor Force",
-      "equation": "Employed + Unemployed",
+      "equation": "\"Employed Workers\" + \"Unemployed Workers\"",
       "position": {
         "x": 100,
         "y": 160
@@ -298,7 +298,7 @@
     {
       "id": "var-unemployment-rate",
       "name": "Unemployment Rate",
-      "equation": "Unemployed / Labor_Force",
+      "equation": "\"Unemployed Workers\" / Labor_Force",
       "position": {
         "x": 400,
         "y": 160
@@ -316,7 +316,7 @@
     {
       "id": "var-vacancy-rate",
       "name": "Vacancy Rate",
-      "equation": "Job_Vacancies / (Employed + Job_Vacancies)",
+      "equation": "Job_Vacancies / (\"Employed Workers\" + Job_Vacancies)",
       "position": {
         "x": 700,
         "y": 160
@@ -325,7 +325,7 @@
     {
       "id": "var-labor-market-tightness",
       "name": "Labor Market Tightness",
-      "equation": "Job_Vacancies / Unemployed",
+      "equation": "Job_Vacancies / \"Unemployed Workers\"",
       "position": {
         "x": 100,
         "y": 240
@@ -352,7 +352,7 @@
     {
       "id": "var-matching-function",
       "name": "Matching Function",
-      "equation": "Matching_Efficiency * Unemployed^Matching_Elasticity * Job_Vacancies^(1-Matching_Elasticity)",
+      "equation": "Matching_Efficiency * \"Unemployed Workers\"^Matching_Elasticity * Job_Vacancies^(1-Matching_Elasticity)",
       "position": {
         "x": 550,
         "y": 240
@@ -361,7 +361,7 @@
     {
       "id": "var-job-finding-rate",
       "name": "Job Finding Rate",
-      "equation": "Matching_Function / Unemployed",
+      "equation": "Matching_Function / \"Unemployed Workers\"",
       "position": {
         "x": 700,
         "y": 240
@@ -406,7 +406,7 @@
     {
       "id": "var-target-vacancies",
       "name": "Target Vacancies",
-      "equation": "Employed * Target_Vacancy_Rate",
+      "equation": "\"Employed Workers\" * Target_Vacancy_Rate",
       "position": {
         "x": 700,
         "y": 320
@@ -550,7 +550,7 @@
     {
       "id": "var-long-term-unemployed-fraction",
       "name": "Long-term Unemployed Fraction",
-      "equation": "Long_Term_Unemployed / Unemployed",
+      "equation": "Long_Term_Unemployed / \"Unemployed Workers\"",
       "position": {
         "x": 100,
         "y": 640
@@ -586,7 +586,7 @@
     {
       "id": "var-beveridge-curve-shift",
       "name": "Beveridge Curve Shift",
-      "equation": "1 + 0.5 * Long_Term_Fraction",
+      "equation": "1 + 0.5 * \"Long-term Unemployed Fraction\"",
       "position": {
         "x": 700,
         "y": 640

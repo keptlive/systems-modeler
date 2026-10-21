@@ -5,6 +5,7 @@ Invalid equations fail explicitly. No fallback engine or zero substitution.
 import math
 from app.core.model import Model, TimeSettings, SimulationResult
 from app.core.limits import MAX_INTERVALS, MAX_ELEMENTS, MAX_RETAINED_VALUES, MAX_WORK_UNITS
+from app.core.failure_diagnostics import stalled_evaluation, capacity_error
 from app.core.equations import (EquationError, safe_eval, SimulationContext,
                                 discover_stateful, advance_stateful, canonical_name,
                                 RandomRuntime, stateful_derivatives, equation_features)
@@ -30,17 +31,21 @@ def evaluate(model, stocks, t, dt, delay, smooth, initial=False, random_runtime=
         for name, equation in pending:
             context.equation_key = name
             try:
-                value = float(safe_eval(equation, values, context))
+                result = safe_eval(equation, values, context)
+                if isinstance(result, complex):
+                    raise EquationError("result is complex; scalar equations require real numbers", code="non_real_result")
+                value = float(result)
                 if not math.isfinite(value):
-                    raise EquationError("result is not finite")
+                    raise EquationError("result is not finite", code="non_finite_result")
             except (EquationError, ValueError, OverflowError, TypeError) as exc:
+                if getattr(exc, "code", None) == "capacity_exceeded":
+                    raise
                 remaining.append((name, equation))
-                errors[name] = str(exc)
+                errors[name] = exc
                 continue
             values[name] = value
         if len(remaining) == len(pending):
-            details = "; ".join(f"{name}: {errors[name]}" for name, _ in remaining)
-            raise EquationError(f"Unresolved or invalid equations at time {t:g}: {details}")
+            raise stalled_evaluation(model, remaining, errors, t, stocks)
         pending = remaining
     # A conditional controls its output, not the passage of time in hidden stocks.
     for element in ([*model.variables, *model.flows] if initial else []):
@@ -58,9 +63,9 @@ def integrate(model: Model, settings: TimeSettings):
     elements = [*model.stocks, *model.flows, *model.variables]
     names = [canonical_name(e.name) for e in elements]
     if len(set(names)) != len(names):
-        raise EquationError("Element names must be unique, including case/space/punctuation aliases")
+        raise EquationError("Element names must be unique, including case/space/punctuation aliases", code="name_collision", details={"category": "invalid_structure", "conflicting_names": [e.name for e in elements if names.count(canonical_name(e.name)) > 1]})
     if any(name in {"time", "dt", "time_step"} for name in names):
-        raise EquationError("TIME, DT and TIME_STEP are reserved simulation names")
+        raise EquationError("TIME, DT and TIME_STEP are reserved simulation names", code="reserved_name", details={"category": "invalid_structure", "names": [e.name for e in elements if canonical_name(e.name) in {"time", "dt", "time_step"}]})
     reference_owners = {}
     for stock in model.stocks:
         for reference in {stock.id, stock.name}:
@@ -70,7 +75,7 @@ def integrate(model: Model, settings: TimeSettings):
     if len({canonical_name(table.name) for table in model.tables}) != len(model.tables):
         raise EquationError("Lookup table names must be unique")
     if len(elements) > MAX_ELEMENTS:
-        raise EquationError("Models are limited to 500 elements per simulation")
+        raise capacity_error("Models are limited to 500 elements per simulation", resource="elements", requested=len(elements), limit=MAX_ELEMENTS)
     references = {s.id for s in model.stocks} | {s.name for s in model.stocks}
     for flow in model.flows:
         for endpoint in (flow.from_stock, flow.to_stock):
@@ -79,26 +84,51 @@ def integrate(model: Model, settings: TimeSettings):
 
     step_count = (settings.end - settings.start) / settings.dt
     if not math.isfinite(step_count) or step_count > MAX_INTERVALS:
-        raise EquationError("Simulation exceeds 100,000 intervals; shorten the horizon or increase dt")
+        raise capacity_error("Simulation exceeds 100,000 intervals; shorten the horizon or increase dt", resource="intervals", requested=step_count, limit=MAX_INTERVALS)
     steps = math.ceil(step_count - 1e-10)
     if steps > MAX_INTERVALS:
-        raise EquationError("Simulation exceeds 100,000 intervals; shorten the horizon or increase dt")
+        raise capacity_error("Simulation exceeds 100,000 intervals; shorten the horizon or increase dt", resource="intervals", requested=step_count, limit=MAX_INTERVALS)
     if (steps + 1) * max(1, len(elements)) > MAX_RETAINED_VALUES:
-        raise EquationError("Simulation exceeds 1,000,000 retained scalar values; reduce elements or intervals")
-    features = [equation_features(element.equation, [table.name for table in model.tables])
-                for element in elements]
+        raise capacity_error("Simulation exceeds 1,000,000 retained scalar values; reduce elements or intervals", resource="retained_scalar_values", requested=(steps + 1) * max(1, len(elements)), limit=MAX_RETAINED_VALUES)
+    features = []
+    for element in elements:
+        try:
+            features.append(equation_features(element.equation, [table.name for table in model.tables]))
+        except EquationError as exc:
+            raise EquationError(f"{element.name}: {exc}", code=getattr(exc, "code", None) or "syntax_error",
+                                details={"category": "invalid_equations", "element": element.name,
+                                         "element_id": element.id, "equation": element.equation}) from exc
     random_calls = sum(feature["random_calls"] for feature in features)
     if settings.integration_method == "rk4" and (
         random_calls or any(feature["fixed_delay"] for feature in features)
     ):
-        raise EquationError("RK4 with fixed-history delays or random functions is unsupported; select Euler")
+        raise EquationError("RK4 with fixed-history delays or random functions is unsupported; select Euler", code="unsupported_method_features", details={"category": "unsupported_capability", "method": "rk4", "random_calls": random_calls, "fixed_delay": any(feature["fixed_delay"] for feature in features)})
+
+    if settings.integration_method == "radau":
+        unsupported = sorted({call for feature in features
+                              for call in feature["stateful_calls"] + feature["test_input_calls"]})
+        if random_calls or unsupported:
+            raise EquationError("Radau supports deterministic ODEs without random, delay/smooth or STEP/PULSE/RAMP primitives",
+                                code="unsupported_method_features",
+                                details={"category": "unsupported_capability", "method": "radau",
+                                         "random_calls": random_calls, "unsupported_functions": unsupported})
 
     time = [min(settings.end, settings.start + i * settings.dt) for i in range(steps + 1)]
     time[-1] = settings.end
     if any(later <= earlier for earlier, later in zip(time, time[1:])):
         raise EquationError("dt cannot be represented at this time scale; increase dt or shift the time origin")
+    if settings.integration_method == "radau":
+        from app.core.adaptive import integrate_radau, time_discontinuities
+        switches = time_discontinuities(model)
+        if switches:
+            raise EquationError("Radau does not support explicit time-triggered switches or time-driven lookup forcing, including algebraic aliases to TIME",
+                                code="unsupported_method_features",
+                                details={"category": "unsupported_capability", "method": "radau",
+                                         "time_discontinuities": switches})
+        return integrate_radau(model, settings, time, evaluate)
     delay, smooth = {}, {}
     random_runtime = RandomRuntime(getattr(settings, "random_seed", None))
+    random_runtime.reserve_work(steps * max(1, len(elements) + random_calls))
     stocks = {s.name: s.initial_value for s in model.stocks if not s.equation}
     values = evaluate(model, stocks, time[0], settings.dt, delay, smooth, initial=True, random_runtime=random_runtime)
     stocks = {s.name: values[s.name] for s in model.stocks}
@@ -123,7 +153,9 @@ def integrate(model: Model, settings: TimeSettings):
     work_per_step = max(1, len(elements) + hidden_stages + random_calls)
     work_per_step *= 5 if settings.integration_method == "rk4" else 1
     if steps * work_per_step > MAX_WORK_UNITS:
-        raise EquationError("Simulation exceeds 1,000,000 work units including delay/smooth stages, stochastic calls and RK4 evaluations")
+        raise capacity_error("Simulation exceeds 1,000,000 work units including delay/smooth stages, stochastic calls and RK4 evaluations", resource="work_units", requested=steps * work_per_step, limit=MAX_WORK_UNITS)
+
+    random_runtime.reserve_work(steps * work_per_step)
 
     for i in range(steps):
         t, h = time[i], time[i + 1] - time[i]
@@ -170,9 +202,14 @@ def integrate(model: Model, settings: TimeSettings):
                 for key, state in collection.items():
                     state["stages"] = changes[key]
         if not all(math.isfinite(v) for v in stocks.values()):
-            raise EquationError(f"Non-finite stock at time {time[i + 1]:g}; reduce dt or check equations")
+            raise EquationError(f"Non-finite stock at time {time[i + 1]:g}; reduce dt or check equations", code="non_finite_stock", details={"category": "invalid_equations", "time": time[i + 1], "stocks": [name for name, value in stocks.items() if not math.isfinite(value)], "previous_stock_values": {s.name: values[s.name] for s in model.stocks}})
         random_runtime.epoch = i + 1
         values = evaluate(model, stocks, time[i + 1], settings.dt, delay, smooth, random_runtime=random_runtime)
         for name in results:
             results[name].append(values[name])
-    return SimulationResult(time=time, values=results, random_seed=random_runtime.seed if random_calls else None)
+    return SimulationResult(time=time, values=results, random_seed=random_runtime.seed if random_calls else None,
+                            integration_diagnostics={"method": settings.integration_method,
+                                                     "binomial_trials": random_runtime.binomial_trials,
+                                                     "work_units": steps * work_per_step + random_runtime.binomial_trials,
+                                                     "work_unit_limit": MAX_WORK_UNITS}
+                            if random_runtime.binomial_streams else None)

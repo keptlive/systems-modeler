@@ -1,6 +1,6 @@
 # Stock & Flow
 
-Agent-driven stock-and-flow pages, explicit Euler/RK4 simulation, a browsable example library and a Model Context Protocol server.
+Agent-driven stock-and-flow pages, explicit Euler/RK4/Radau simulation, a browsable example library and a Model Context Protocol server.
 
 [Simulator](https://stockandflow.live) · [Library](https://stockandflow.org) · [Usage and MCP guide](https://stockandflow.live/guide)
 
@@ -21,7 +21,7 @@ Optional provider configuration is described in `.env.example` and `app/llm/`. K
 
 Use **Settings → Check inputs** or `POST /api/validate` with `{"model_id":"..."}` or `{"model":{...}}`. Inspection covers names, references, syntax, initial values, flow endpoints, tables, settings and a short numerical run. Units and provenance are retained. Scientific validity is not established by these checks or by finite simulation output.
 
-The current 1.7 audit runs all 1,078 checked-in definitions at their full default horizons: 992 complete and 86 fail explicitly, with no new numerical failures. All 134 previous failures have individual diagnosis and source-review receipts; 64 definitions received reviewed equation, reference or limitation corrections. Two newly completing models remain inert because their derivatives are missing. Completion is not scientific validation. See [release evidence and limitations](docs/RELEASE-1.7.md) and the [A](docs/CORPUS-RECONCILIATION-1.7-A.md), [B](docs/CORPUS-RECONCILIATION-1.7-B.md), and [C](docs/CORPUS-RECONCILIATION-1.7-C.md) investigations. Public status badges apply only to the exact model bytes audited. Production also has additional user models; preserve them during release.
+The current 1.8 audit runs all 1,078 checked-in definitions at their full default horizons: **1,031 complete and 47 fail explicitly**, with no newly failing defaults. Every one of the previous 86 failures has a causal diagnosis, original-source boundary and repair or missing-evidence record. Forty-three definitions changed: 39 previously failing runs now complete, two receive partial repairs while still failing, and two formerly inert models have restored dynamics. Completion is not scientific validation. See the [complete failure register](docs/FAILURE-REGISTER-1.8.md), [release evidence](docs/RELEASE-1.8.md), and source partitions [B](docs/CORPUS-REPAIRS-1.8-B.md) and [C](docs/CORPUS-REPAIRS-1.8-C.md). Public status badges apply only to the exact model bytes audited. Preserve additional user models during release.
 
 ## API and MCP
 
@@ -42,6 +42,8 @@ Version 1.4 reconciled 63 public definitions through source restoration, mathema
 Version 1.6 refines diagram elements and the studio interface, makes element renames preserve dependent equations, restores three source-backed lookup definitions, and fixes mobile fullscreen and input-focus behavior. The regression run passes 595 tests plus 18 subtests, with three documented identifier-compatibility expected failures. See [1.6 evidence and limitations](docs/RELEASE-1.6.md).
 
 Version 1.7 reconciles all 134 prior public failures, refines Analytics and exports, and supports bounded fine time grids. The clean public regression suite passes 673 tests plus 18 preservation subtests, with three documented expected failures. See [1.7 evidence](docs/RELEASE-1.7.md).
+
+Version 1.8 adds opt-in bounded Radau for stiff continuous systems, exact bounded binomial sampling, and readable root/blocked failure diagnostics. Independent review found and fixed missed time-driven lookup pulses; unsupported inputs fail explicitly. Radau output-grid comparisons are distinguished from tolerance convergence. See [engine contracts](docs/ENGINE-CAPABILITIES-1.8.md) and [independent review](docs/INDEPENDENT-REVIEW-1.8.md).
 
 ## Development and operations
 

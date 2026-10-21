@@ -462,8 +462,8 @@ const App = {
                         </div>
                     ` : `
                         <div class="no-results-mobile">
-                            <div class="no-results-icon">📊</div>
-                            <p>${Simulation.lastError ? 'Simulation failed: '+this.escapeHtml(Simulation.lastError) : 'Run a simulation to see results'}</p>
+                            ${Simulation.lastError ? '' : '<div class="no-results-icon">📊</div>'}
+                            ${Simulation.lastError ? Simulation.failureHTML() : '<p>Run a simulation to see results</p>'}
                         </div>
                     `}
                 </div>
@@ -1594,6 +1594,13 @@ const App = {
             stepsInfo.textContent = `Steps: ${steps}${steps > 100000 ? ' · exceeds the 100,000-interval limit' : ''}`;
         };
 
+        const updateMethod = () => {
+            const adaptive = document.getElementById('sim-method').value === 'radau';
+            document.getElementById('sim-adaptive-settings').hidden = !adaptive;
+            document.querySelector('label[for="sim-dt"]').textContent = adaptive ? 'Output interval' : 'Time Step (dt)';
+        };
+        document.getElementById('sim-method').addEventListener('change', updateMethod);
+
         // Sync inputs with current model settings
         const syncInputs = () => {
             const ts = this.model?.time_settings || { start: 0, end: 100, dt: 0.25 };
@@ -1602,6 +1609,9 @@ const App = {
             dtInput.value = ts.dt ?? 0.25;
             document.getElementById('sim-method').value = ts.integration_method || 'euler';
             document.getElementById('sim-seed').value = ts.random_seed ?? '';
+            document.getElementById('sim-rtol').value = ts.rtol ?? 1e-6;
+            document.getElementById('sim-atol').value = ts.atol ?? 1e-9;
+            updateMethod();
             updateSteps();
         };
 
@@ -1704,8 +1714,19 @@ const App = {
         if (random_seed !== null && (!Number.isInteger(random_seed) || random_seed<0 || random_seed>4294967295)) {
             throw new Error('Random seed must be a whole number from 0 to 4,294,967,295.');
         }
-        return {...this.model.time_settings,start,end,dt,random_seed,
-                integration_method:document.getElementById('sim-method').value};
+        const integration_method = document.getElementById('sim-method').value;
+        if (!['euler','rk4','radau'].includes(integration_method)) throw new Error('Select a supported integration method.');
+        const tolerance = {};
+        if (integration_method === 'radau') {
+            const rt = document.getElementById('sim-rtol').value.trim();
+            const at = document.getElementById('sim-atol').value.trim();
+            const rtol = Number(rt), atol = Number(at);
+            if (!rt || !at || !Number.isFinite(rtol) || rtol<1e-12 || rtol>.1 || !Number.isFinite(atol) || atol<=0) {
+                throw new Error('Radau needs a relative tolerance from 1e-12 to 0.1 and a positive absolute tolerance.');
+            }
+            Object.assign(tolerance,{rtol,atol});
+        }
+        return {...this.model.time_settings,start,end,dt,random_seed,integration_method,...tolerance};
     },
 
     syncStepCount() {

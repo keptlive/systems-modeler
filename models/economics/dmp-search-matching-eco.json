@@ -1,7 +1,7 @@
 {
   "id": "dmp-search-matching-eco",
   "name": "DMP Search and Matching Model",
-  "description": "Illustrative labor-market search and matching stock-flow model. Mortensen and Pissarides (1994) is conceptual background; the job-specific shock process, endogenous destruction threshold, wage bargaining and equilibrium conditions of that paper have not been mapped to this file. Local equations and parameters are unverified.",
+  "description": "Illustrative labor-market search and matching stock-flow model. Mortensen and Pissarides (1994) is conceptual background; the job-specific shock process, endogenous destruction threshold, wage bargaining and equilibrium conditions of that paper have not been mapped to this file. Local equations and parameters are unverified.\n\nVersion 1.8 preserves equations, parameters and output grid but selects explicit Radau integration. The positive matching ODE has a fast near-zero-unemployment timescale as vacancies accumulate; explicit Euler overshoots unemployment below zero. Independent integration and unemployment/employment boundary balances distinguish this stiffness from source fidelity: the local wage/vacancy closure is not a verified Mortensen-Pissarides equilibrium model.",
   "stocks": [
     {
       "id": "stock-unemployment",
@@ -214,7 +214,10 @@
   "time_settings": {
     "start": 0,
     "end": 100,
-    "dt": 0.25
+    "dt": 0.25,
+    "integration_method": "radau",
+    "rtol": 1e-08,
+    "atol": 1e-10
   },
   "created_at": "2026-01-12T07:39:15.413520+00:00",
   "updated_at": "2026-01-12T07:39:15.413529+00:00",

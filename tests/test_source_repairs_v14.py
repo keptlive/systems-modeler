@@ -118,5 +118,6 @@ def test_atmospheric_default_stays_zero_but_missing_dynamics_are_restored():
 
 def test_full_beer_is_preserved_until_the_source_ambiguity_is_resolved():
     import hashlib
-    raw=(ROOT/'models/other/full-beer-model.json').read_bytes()
+    from tests.model_history import v17_bytes
+    raw=v17_bytes(ROOT,'models/other/full-beer-model.json')
     assert hashlib.sha256(raw).hexdigest()=='9e9b203c19351c67d1c5f7aa155198a36b7e48994ca9c713b106ee63824f5452'

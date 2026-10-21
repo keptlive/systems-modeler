@@ -52,6 +52,18 @@ async def exercise(read, write, pages=True):
         sim = payload(await session.call_tool("simulate_model", {"model_json": MODEL, "max_points": 3}))
         assert sim["time_range"] == [5, 6] and sim["data"]["time"] == [5, 5.5, 6]
         assert abs(sim["summary"]["X"]["final"] - 110.5170918) < .00001
+        stiff = {"stocks":[{"id":"x","name":"X","initial_value":1}],
+                 "flows":[{"name":"Decay","equation":"1000*X","from_stock":"x"}],
+                 "time_settings":{"start":0,"end":1,"dt":.25}}
+        solved = payload(await session.call_tool("simulate_model", {"model_json":stiff,
+            "integration_method":"radau","rtol":1e-8,"atol":1e-11}))
+        assert abs(solved["summary"]["X"]["final"]) < 1e-9
+        assert solved["settings"]["rtol"] == 1e-8 and solved["integration_diagnostics"]["work_units"] > 0
+        bins = {"variables":[{"name":"Draw","equation":"RANDOM_BINOMIAL(20,0.25)"}],
+                "time_settings":{"end":4,"dt":1,"random_seed":42}}
+        one = payload(await session.call_tool("simulate_model", {"model_json":bins}))
+        two = payload(await session.call_tool("simulate_model", {"model_json":bins}))
+        assert one["data"] == two["data"] and all(v == int(v) and 0 <= v <= 20 for v in one["data"]["Draw"])
         analysis = payload(await session.call_tool("analyze_model", {"model_json": MODEL}))
         assert analysis["time_points"] == 5
         assert analysis['descriptive']['statistics']['X']['time_weighted_mean'] > 100

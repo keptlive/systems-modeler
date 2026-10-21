@@ -3,6 +3,7 @@
 No network access or application-generated expected trajectories. General
 scientific validity and unsupported source nonnegative constraints are separate.
 """
+from tests.model_history import v17_bytes
 import csv
 import hashlib
 import io
@@ -22,7 +23,7 @@ FILES = {"hares": "models/economics/hares-and-lynxes-population-model-eco.json",
 
 
 def load(name):
-    return Model.model_validate_json((ROOT / FILES[name]).read_text())
+    return Model.model_validate_json(v17_bytes(ROOT,FILES[name]).decode())
 
 
 def linear_clamped(x, points):
@@ -47,7 +48,7 @@ def structure(data):
 
 @pytest.mark.parametrize("row", RECEIPT["models"], ids=lambda r: r["id"])
 def test_receipt_preserves_every_existing_node_link_setting_and_input(row):
-    raw = (ROOT / row["file"]).read_bytes()
+    raw = v17_bytes(ROOT,row["file"])
     data = json.loads(raw)
     assert hashlib.sha256(raw).hexdigest() == row["after_sha256"]
     assert structure(data) == row["before_preserved_structure_sha256"]

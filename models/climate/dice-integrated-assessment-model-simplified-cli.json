@@ -1,17 +1,18 @@
 {
   "id": "dice-integrated-assessment-model-simplified-cli",
   "name": "DICE Integrated Assessment Model (Simplified)",
-  "description": "A simplified version of Nordhaus' Dynamic Integrated Climate-Economy (DICE) model. Links economic production, CO2 emissions, climate change, and climate damages in an integrated framework for policy analysis. Reference: Nordhaus, W. D. (2008). A question of balance. Yale University Press. DOI: https://doi.org/10.1093/reep/ren023",
+  "description": "A simplified version of Nordhaus' Dynamic Integrated Climate-Economy (DICE) model. Links economic production, CO2 emissions, climate change, and climate damages in an integrated framework for policy analysis. Reference: Nordhaus, W. D. (2008). A question of balance. Yale University Press. DOI: https://doi.org/10.1093/reep/ren023\n\nVersion 1.8 repairs source quantity scaling: native DICE-2016R k0=223 is trillion 2010 USD, not 223 trillion entered as unscaled dollars. Capital initial value is therefore 223 in the production function's trillion-dollar units. Industrial and land-use CO2 emissions are converted to carbon-stock GtC with 12/44; the displayed social-cost denominator converts its GtC industrial flow back to GtCO2. Native GAMS source defines K in trillions, MAT/MU/ML/CCA in GtC, and emissions in GtCO2/year. Authored continuous dynamics now use explicit Radau integration on the unchanged five-year output grid to resolve the one-year temperature response. Carbon exchange, exogenous growth, climate capacities and SCC remain simplified local constructions, not a reproduction or policy-calibrated DICE model.",
   "stocks": [
     {
       "id": "stock-capital-stock",
       "name": "Capital Stock",
-      "initial_value": 223000000000000.0,
+      "initial_value": 223,
       "equation": "",
       "position": {
         "x": 150,
         "y": 200
-      }
+      },
+      "units": "trillion 2010 USD"
     },
     {
       "id": "stock-atmospheric-co2",
@@ -21,7 +22,8 @@
       "position": {
         "x": 350,
         "y": 200
-      }
+      },
+      "units": "GtC"
     },
     {
       "id": "stock-upper-ocean-co2",
@@ -31,7 +33,8 @@
       "position": {
         "x": 550,
         "y": 200
-      }
+      },
+      "units": "GtC"
     },
     {
       "id": "stock-deep-ocean-co2",
@@ -41,7 +44,8 @@
       "position": {
         "x": 750,
         "y": 200
-      }
+      },
+      "units": "GtC"
     },
     {
       "id": "stock-atmospheric-temperature",
@@ -71,7 +75,8 @@
       "position": {
         "x": 550,
         "y": 350
-      }
+      },
+      "units": "GtC"
     }
   ],
   "flows": [
@@ -100,24 +105,26 @@
     {
       "id": "flow-industrial-emissions",
       "name": "Industrial Emissions",
-      "equation": "Carbon_Intensity * Gross_Output * (1 - Emissions_Control_Rate)",
+      "equation": "Carbon_Intensity * Gross_Output * (1 - Emissions_Control_Rate) / (44 / 12)",
       "from_stock": null,
       "to_stock": "stock-cumulative-industrial-emissions",
       "position": {
         "x": 650,
         "y": 200
-      }
+      },
+      "units": "GtC/year"
     },
     {
       "id": "flow-emissions-to-atmosphere",
       "name": "Emissions to Atmosphere",
-      "equation": "Industrial_Emissions + Land_Use_Emissions",
+      "equation": "Industrial_Emissions + Land_Use_Emissions / (44 / 12)",
       "from_stock": null,
       "to_stock": "stock-atmospheric-co2",
       "position": {
         "x": 250,
         "y": 350
-      }
+      },
+      "units": "GtC/year"
     },
     {
       "id": "flow-atmosphere-to-upper-ocean",
@@ -226,7 +233,8 @@
       "position": {
         "x": 250,
         "y": 160
-      }
+      },
+      "units": "GtCO2/(trillion 2010 USD)"
     },
     {
       "id": "var-emissions-control-rate",
@@ -244,7 +252,8 @@
       "position": {
         "x": 550,
         "y": 160
-      }
+      },
+      "units": "GtCO2/year"
     },
     {
       "id": "var-radiative-forcing",
@@ -375,18 +384,22 @@
     {
       "id": "var-social-cost-of-carbon",
       "name": "Social Cost of Carbon",
-      "equation": "Gross_Output * Damage_Coefficient * 2 * \"Atmospheric Temperature\" / Industrial_Emissions * 1000",
+      "equation": "Gross_Output * Damage_Coefficient * 2 * \"Atmospheric Temperature\" / (Industrial_Emissions * (44 / 12)) * 1000",
       "position": {
         "x": 550,
         "y": 400
-      }
+      },
+      "units": "USD/tCO2"
     }
   ],
   "connectors": [],
   "time_settings": {
     "start": 2015,
     "end": 2100,
-    "dt": 5
+    "dt": 5,
+    "integration_method": "radau",
+    "rtol": 1e-08,
+    "atol": 1e-10
   },
   "created_at": "2026-01-11T20:04:50.703015Z",
   "updated_at": "2026-01-11T20:04:50.703015Z",

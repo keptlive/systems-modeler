@@ -11,6 +11,8 @@ ET.register_namespace('sf', PROVENANCE_NS)
 
 
 def generate_xmile(model: Model) -> str:
+    if model.time_settings.integration_method == "radau":
+        raise ValueError("Radau settings are unsupported by this XMILE 1.0 exporter; use JSON to preserve the method and tolerances")
     root = ET.Element('xmile', {'version': '1.0', 'xmlns': NS})
     header = ET.SubElement(root, 'header')
     ET.SubElement(header, 'name').text = model.name

@@ -1,7 +1,7 @@
 {
   "id": "npz-ocean-ecosystem-eco",
   "name": "NPZ Ocean Ecosystem Model",
-  "description": "Nutrient-Phytoplankton-Zooplankton model for marine ecosystem dynamics. Source: Franks (2002), J Marine Research.",
+  "description": "Nutrient-Phytoplankton-Zooplankton model for marine ecosystem dynamics. Source: Franks (2002), J Marine Research.\n\nVersion 1.8 preserves all local equations and coefficients and uses explicit Radau on the unchanged output grid to prevent nutrient positivity overshoot. No egestion recycling term has been invented: summed nitrogen changes by -(1-gamma)*grazing, so the local system has an unspecified unassimilated-grazing loss. Whether that loss represents export or a missing closed-cycle return remains unresolved; numerical convergence does not certify Franks source fidelity or nutrient accounting.",
   "stocks": [
     {
       "id": "s1",
@@ -144,7 +144,10 @@
   "time_settings": {
     "start": 0,
     "end": 365,
-    "dt": 1
+    "dt": 1,
+    "integration_method": "radau",
+    "rtol": 1e-08,
+    "atol": 1e-10
   },
   "created_at": "2026-01-15T14:38:02.261947+00:00",
   "updated_at": "2026-01-15T14:38:02.261951+00:00",

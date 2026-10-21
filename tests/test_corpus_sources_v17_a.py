@@ -1,4 +1,5 @@
 """Independent literal native-source recurrences; no application-generated oracle."""
+from tests.model_history import v17_bytes
 import hashlib
 import json
 import math
@@ -11,7 +12,7 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 def load(path):
-    return Model.model_validate_json((ROOT/path).read_text())
+    return Model.model_validate_json(v17_bytes(ROOT,path).decode())
 
 
 def linear(x):
@@ -66,8 +67,8 @@ def test_repair_receipt_preserves_every_existing_identity_layout_input_and_time_
     receipt=json.loads((ROOT/"operations/corpus-reconciliation-v17-a.json").read_text())
     for row in receipt["models"]:
         if not row["changed_fields"]:continue
-        current=json.loads((ROOT/row["file"]).read_text())
-        raw=(ROOT/row["file"]).read_bytes()
+        current=json.loads(v17_bytes(ROOT,row["file"]).decode())
+        raw=v17_bytes(ROOT,row["file"])
         assert hashlib.sha256(raw).hexdigest()==row["after_sha256"]
         for field in ["id","name","connectors","time_settings"]:
             if field in row["preserved_fields"]:assert current.get(field)==row["preserved_fields"][field]

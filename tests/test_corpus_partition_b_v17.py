@@ -3,6 +3,7 @@
 Source-concept references do not certify calibration. In particular a completed
 Euler pendulum run still has unacceptable energy drift, recorded in the ledger.
 """
+from tests.model_history import v17_bytes
 import copy
 import hashlib
 import json
@@ -22,7 +23,7 @@ LEDGER = ROOT / 'operations/corpus-reconciliation-v17-b.json'
 def load(stem):
     paths = list((ROOT / 'models').rglob(stem + '.json'))
     assert len(paths) == 1
-    return Model.model_validate_json(paths[0].read_text())
+    return Model.model_validate_json(v17_bytes(ROOT,str(paths[0].relative_to(ROOT))).decode())
 
 
 def initial(model):
@@ -51,10 +52,10 @@ def test_partition_b_receipt_complete_and_preserves_model_structure():
     assert [r['file'] for r in ledger['models']] == [r['file'] for r in assigned]
     assert len(assigned) == 45
     for row, old in zip(ledger['models'], assigned):
-        current = json.loads((ROOT / row['file']).read_text())
+        current = json.loads(v17_bytes(ROOT,row['file']).decode())
         original = reconstruct_original(current, row)
         assert row['original_sha256'] == old['sha256']
-        assert row['current_sha256'] == hashlib.sha256((ROOT / row['file']).read_bytes()).hexdigest()
+        assert row['current_sha256'] == hashlib.sha256(v17_bytes(ROOT,row['file'])).hexdigest()
         assert row['diagnosis'] and row['source_scope'] and row['validation_status']
         assert row['current_run']['status'] in ('passed', 'failed')
         assert current['id'] == original['id']

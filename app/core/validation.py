@@ -28,6 +28,20 @@ def inspect_inputs(model: Model, numerical_check=True) -> dict:
                 issue("error", "missing_flow_endpoint", f"Unknown stock endpoint: {endpoint}", flow.name)
         if flow.from_stock is None and flow.to_stock is None:
             issue("warning", "unconnected_flow", "This flow changes no stock; confirm that it is intentionally diagnostic", flow.name)
+    stock_owners = {reference: id(stock) for stock in model.stocks for reference in (stock.id, stock.name)}
+    attached = set()
+    for flow in model.flows:
+        source, destination = stock_owners.get(flow.from_stock), stock_owners.get(flow.to_stock)
+        if source != destination:
+            attached.update(owner for owner in (source, destination) if owner is not None)
+    disconnected = [s for s in model.stocks if id(s) not in attached]
+    for stock in disconnected:
+        issue("warning", "disconnected_stock",
+              "No stock-changing flow is attached; this stock remains constant after initialization. Confirm whether it is intentionally fixed. A stock equation initializes it; it does not define a derivative.",
+              stock.name)
+    if model.stocks and len(disconnected) == len(model.stocks):
+        issue("warning", "no_dynamic_stocks",
+              "No stock has an attached stock-changing flow; numerical completion cannot demonstrate the claimed dynamics.")
     for table in model.tables:
         xs = [x for x, _ in table.points]
         if not xs or len(set(xs)) != len(xs) or any(not math.isfinite(v) for point in table.points for v in point):

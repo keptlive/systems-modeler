@@ -1,4 +1,5 @@
 """Partition C preservation, independent arithmetic and missing-dynamics checks."""
+from tests.model_history import v17_bytes
 import base64,gzip,hashlib,json,math
 from pathlib import Path
 import pytest
@@ -9,7 +10,7 @@ RECEIPT=json.loads((ROOT/'operations/corpus-reconciliation-v17-c.json').read_tex
 ROWS={r['partition_index']:r for r in RECEIPT['models']}
 BASELINE_FIXTURE=json.loads((ROOT/'tests/fixtures/corpus-baseline-v17-c.json').read_text())
 BASELINES={r['file']:r for r in BASELINE_FIXTURE['models']}
-def load(i):return Model.model_validate_json((ROOT/ROWS[i]['file']).read_text())
+def load(i):return Model.model_validate_json(v17_bytes(ROOT,ROWS[i]['file']).decode())
 def run(i,end=None,dt=None):
  m=load(i);u={}
  if end is not None:u['end']=end
@@ -25,7 +26,7 @@ def test_partition_c_exhaustively_accounts_for_exact_baseline_slice():
  assert all(r['diagnosis'] and r['source_evidence'] and r['scientific_validation'] for r in ROWS.values())
 @pytest.mark.parametrize('i',list(ROWS))
 def test_partition_c_preserves_every_original_node_layout_link_input_and_time_setting(i):
- r=ROWS[i];raw=(ROOT/r['file']).read_bytes();d=json.loads(raw)
+ r=ROWS[i];raw=v17_bytes(ROOT,r['file']);d=json.loads(raw)
  fixture=BASELINES[r['file']]
  original=gzip.decompress(base64.b64decode(fixture['gzip_base64'],validate=True));old=json.loads(original)
  assert len(original)==fixture['original_bytes']

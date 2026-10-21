@@ -1,3 +1,12 @@
+# Version 1.8
+
+- Diagnose all86 previous public failures;39 now complete,47 remain explicitly explained, no new failures.
+- Review43 model revisions, including source-backed World2/FullBeer restorations and actual Morris–Lecar/Oregonator dynamics.
+- Add explicit bounded Radau, exact binomial sampling, root-versus-blocked error reports, tolerance controls and method-aware investigation interpretation.
+- Reject adaptive time-driven lookup pulses after independent review reproduced silent misses.
+- Preserve prior revision assertions through exact SHA-bound historical snapshots; new tests check current repairs separately.
+- Retain all existing editor, analytics, saved-model, MCP and library paths; promotional footer links remain removed.
+
 # Changelog
 
 ## 1.7.0 — 2026-10-20

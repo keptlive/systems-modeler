@@ -1,7 +1,7 @@
 {
   "id": "sterman-commodity-cycles-ch20-eco",
   "name": "Sterman Commodity Cycles Ch20",
-  "description": "Commodity market cycles model from Sterman (2000) Business Dynamics Chapter 20. Shows how production capacity adjustments, inventory, and price dynamics create boom-bust commodity cycles. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/",
+  "description": "Commodity market cycles model from Sterman (2000) Business Dynamics Chapter 20. Shows how production capacity adjustments, inventory, and price dynamics create boom-bust commodity cycles. Reference: Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill. Source: https://systemdynamics.org/\n\nVersion 1.8 analytically eliminates the existing Demand-Market_Price algebraic loop. With D0=100, C=Inventory_Coverage, J=MAX(1,Inventory), and e=Price_Elasticity_Demand, the two authored relations imply D=D0*(J/(C*D0))^(e/(1+e)). This preserves both equations for positive C,J and e>-1; it does not establish reproduction of Sterman chapter 20 or empirical calibration.",
   "stocks": [
     {
       "id": "s1",
@@ -161,7 +161,7 @@
     {
       "id": "v6",
       "name": "Demand",
-      "equation": "100 * (Reference_Price / Market_Price)^Price_Elasticity_Demand",
+      "equation": "100 * (MAX(1, Inventory) / (100 * Inventory_Coverage))^(Price_Elasticity_Demand / (1 + Price_Elasticity_Demand))",
       "position": {
         "x": 500,
         "y": 100

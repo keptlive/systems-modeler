@@ -69,7 +69,9 @@ class TimeSettings(BaseModel):
     start: float = 0
     end: float = 100
     dt: float = Field(default=0.25, gt=0)
-    integration_method: Literal["euler", "rk4"] = "euler"
+    integration_method: Literal["euler", "rk4", "radau"] = "euler"
+    rtol: float = Field(default=1e-6, ge=1e-12, le=0.1)
+    atol: float = Field(default=1e-9, gt=0)
     random_seed: Optional[int] = Field(default=None, strict=True, ge=0, le=4294967295)
 
     @model_validator(mode="after")
@@ -169,6 +171,7 @@ class SimulationResult(BaseModel):
     time: list[float]
     values: dict[str, list[float]]  # variable_name -> list of values
     random_seed: Optional[int] = None  # Effective seed for replaying stochastic runs
+    integration_diagnostics: Optional[dict] = None  # Explicit adaptive-solver work/tolerance evidence
 
 
 class LLMGenerateRequest(BaseModel):

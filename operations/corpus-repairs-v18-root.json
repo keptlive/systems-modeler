@@ -1,0 +1,153 @@
+{
+  "baseline": "c3ac31b",
+  "models": [
+    {
+      "file": "models/neuroscience/morris-lecar-neuron-neu.json",
+      "before_sha256": "69372536a07aeb56a3f6b919281b314d234182ad61d883e7ba2f51d053859ff8",
+      "before_text": "{\n  \"id\": \"morris-lecar-neuron-neu\",\n  \"name\": \"Morris-Lecar Neuron Model\",\n  \"description\": \"Biophysically realistic model of barnacle muscle fiber, widely used in computational neuroscience\",\n  \"stocks\": [\n    {\n      \"id\": \"s1\",\n      \"name\": \"Membrane_Potential\",\n      \"initial_value\": -60.0,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 150,\n        \"y\": 200\n      }\n    },\n    {\n      \"id\": \"s2\",\n      \"name\": \"Potassium_Activation\",\n      \"initial_value\": 0.0,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 350,\n        \"y\": 200\n      }\n    }\n  ],\n  \"flows\": [],\n  \"variables\": [\n    {\n      \"id\": \"v1\",\n      \"name\": \"gCa\",\n      \"equation\": \"4.4\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"v2\",\n      \"name\": \"gK\",\n      \"equation\": \"8.0\",\n      \"position\": {\n        \"x\": 230,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"v3\",\n      \"name\": \"gL\",\n      \"equation\": \"2.0\",\n      \"position\": {\n        \"x\": 360,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"v4\",\n      \"name\": \"VCa\",\n      \"equation\": \"120.0\",\n      \"position\": {\n        \"x\": 490,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"v5\",\n      \"name\": \"VK\",\n      \"equation\": \"-84.0\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 130\n      }\n    },\n    {\n      \"id\": \"v6\",\n      \"name\": \"VL\",\n      \"equation\": \"-60.0\",\n      \"position\": {\n        \"x\": 230,\n        \"y\": 130\n      }\n    },\n    {\n      \"id\": \"v7\",\n      \"name\": \"I_app\",\n      \"equation\": \"100.0\",\n      \"position\": {\n        \"x\": 360,\n        \"y\": 130\n      }\n    },\n    {\n      \"id\": \"v8\",\n      \"name\": \"Capacitance\",\n      \"equation\": \"20.0\",\n      \"position\": {\n        \"x\": 490,\n        \"y\": 130\n      }\n    }\n  ],\n  \"connectors\": [\n    {\n      \"id\": \"c1\",\n      \"from_element\": \"Membrane_Potential\",\n      \"to_element\": \"Potassium_Activation\"\n    },\n    {\n      \"id\": \"c2\",\n      \"from_element\": \"gK\",\n      \"to_element\": \"Potassium_Activation\"\n    }\n  ],\n  \"time_settings\": {\n    \"start\": 0.0,\n    \"end\": 400.0,\n    \"dt\": 0.01\n  },\n  \"created_at\": \"2026-01-15T20:40:14.100252+00:00\",\n  \"updated_at\": \"2026-01-15T20:40:14.100258+00:00\",\n  \"source\": \"https://doi.org/10.1016/S0006-3495(81)84782-0\",\n  \"reference\": \"Morris, C. & Lecar, H. (1981) Voltage oscillations in the barnacle giant muscle fiber. Biophys. J. 35:193-213\"\n}",
+      "after_sha256": "381d096972bcc6b7548cd812bc41e84f0d04b96ecce06cc57272b44cf5219a4b",
+      "root_cause": "Two stocks had no attached flows; all recorded values were constant regardless of channel inputs. No voltage or gating dynamics were implemented.",
+      "classification": "incomplete_model",
+      "repair": "Restore signed voltage/gating balances with exact logistic/exponential identities for source tanh/cosh. Add explicit type-II gating parameters; retain all existing numeric inputs, initial conditions, names and default grid. Correct misleading conductance connector target.",
+      "evidence": [
+        {
+          "url": "https://sites.pitt.edu/~phase/bard/bardware/tut/newstyle.html",
+          "section": "Morris-Lecar Equations",
+          "supports": "Reduced voltage/gating equations and type-II V1,V2,V3,V4,phi constants; original library gCa4.4/I100/initials retained as an explicit adaptation."
+        },
+        {
+          "url": "https://brian2.readthedocs.io/en/stable/examples/frompapers.Morris_Lecar_1981.html",
+          "supports": "Independent official implementation confirms voltage/gate balance form and time units; its experimental parameters differ and are not claimed reproduced."
+        }
+      ],
+      "verification": {
+        "reference_method": "SciPy DOP853 with literal tanh/cosh RHS independent of equation evaluator; rtol1e-11 atol1e-13 max_step0.1ms",
+        "runs": [
+          {
+            "end": 400,
+            "dt": 0.01,
+            "max_abs_voltage_error": 0.347612282899707,
+            "max_abs_gating_error": 0.0009399105630355509,
+            "voltage_range": [
+              -60.0,
+              41.93006742930294
+            ],
+            "gating_range": [
+              0.0,
+              0.5124253081238404
+            ]
+          },
+          {
+            "end": 100,
+            "dt": 0.01,
+            "max_abs_voltage_error": 0.04923718230872076,
+            "max_abs_gating_error": 0.0001853931695936506,
+            "voltage_range": [
+              -60.0,
+              41.93006742930294
+            ],
+            "gating_range": [
+              0.0,
+              0.5124253081238404
+            ]
+          },
+          {
+            "end": 100,
+            "dt": 0.005,
+            "max_abs_voltage_error": 0.024636460691375817,
+            "max_abs_gating_error": 9.271226783247322e-05,
+            "voltage_range": [
+              -60.0,
+              41.911993116827375
+            ],
+            "gating_range": [
+              0.0,
+              0.5123964005172611
+            ]
+          },
+          {
+            "end": 100,
+            "dt": 0.0025,
+            "max_abs_voltage_error": 0.01232265546888911,
+            "max_abs_gating_error": 4.636006524907921e-05,
+            "voltage_range": [
+              -60.0,
+              41.90296562541612
+            ],
+            "gating_range": [
+              0.0,
+              0.5123819541466298
+            ]
+          }
+        ]
+      },
+      "scientific_status": "Source-form teaching ODE implemented; independent trajectory convergence verified, not calibrated to a biological specimen."
+    },
+    {
+      "file": "models/other/oregonator-bz-reaction-chem.json",
+      "before_sha256": "72f144ac53f8a0fdf898305e9940a148f83c9bb48a8a51b83d9bb4cbb706e493",
+      "before_text": "{\n  \"id\": \"oregonator-bz-reaction-chem\",\n  \"name\": \"Oregonator BZ Reaction\",\n  \"description\": \"Incomplete Oregonator teaching scaffold. Field and Noyes (1974) is the original chemical-oscillator reference. This file contains three stocks and epsilon, q and f inputs but no flows or stock derivative equations, so it does not implement the published Oregonator or demonstrate chemical oscillations.\",\n  \"stocks\": [\n    {\n      \"id\": \"s1\",\n      \"name\": \"HBrO2\",\n      \"initial_value\": 0.01,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 150,\n        \"y\": 200\n      }\n    },\n    {\n      \"id\": \"s2\",\n      \"name\": \"Bromide\",\n      \"initial_value\": 0.1,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 350,\n        \"y\": 200\n      }\n    },\n    {\n      \"id\": \"s3\",\n      \"name\": \"Ce4_plus\",\n      \"initial_value\": 0.01,\n      \"equation\": \"\",\n      \"position\": {\n        \"x\": 550,\n        \"y\": 200\n      }\n    }\n  ],\n  \"flows\": [],\n  \"variables\": [\n    {\n      \"id\": \"v1\",\n      \"name\": \"epsilon\",\n      \"equation\": \"0.01\",\n      \"position\": {\n        \"x\": 100,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"v2\",\n      \"name\": \"q\",\n      \"equation\": \"0.001\",\n      \"position\": {\n        \"x\": 230,\n        \"y\": 50\n      }\n    },\n    {\n      \"id\": \"v3\",\n      \"name\": \"f\",\n      \"equation\": \"1.0\",\n      \"position\": {\n        \"x\": 360,\n        \"y\": 50\n      }\n    }\n  ],\n  \"connectors\": [\n    {\n      \"id\": \"c1\",\n      \"from_element\": \"HBrO2\",\n      \"to_element\": \"Bromide\"\n    },\n    {\n      \"id\": \"c2\",\n      \"from_element\": \"Bromide\",\n      \"to_element\": \"Ce4_plus\"\n    }\n  ],\n  \"time_settings\": {\n    \"start\": 0.0,\n    \"end\": 300.0,\n    \"dt\": 0.01\n  },\n  \"created_at\": \"2026-01-15T20:41:11.300934+00:00\",\n  \"updated_at\": \"2026-01-15T20:41:11.300934+00:00\",\n  \"source\": \"https://doi.org/10.1063/1.1681288\",\n  \"reference\": \"Field, R.J. and Noyes, R.M. (1974). Oscillations in chemical systems. IV. Limit cycle behavior in a model of a real chemical reaction. Journal of Chemical Physics 60(5):1877-1884. doi:10.1063/1.1681288.\"\n}\n",
+      "after_sha256": "8f71676c0ae8294bb07749cce439d53c85201026f6c5fd9bf6e397034ea30a05",
+      "root_cause": "Three stocks had no derivatives. The epsilon-prime bromide timescale was missing; adding physical kinetics exposes stiffness far faster than the old Euler grid.",
+      "classification": "incomplete_model_and_solver_capability",
+      "repair": "Implement all three Field dimensionless balances, add declared epsilon_prime from primary source scaling, retain original initial states and epsilon/q/f, choose explicit Radau. Change default observation window from300 to30 scaled units for bounded service demo; whole300 independent reference remains positive and finite, so truncation does not conceal divergence.",
+      "evidence": [
+        {
+          "url": "https://www.scholarpedia.org/article/Oregonator",
+          "author": "Richard J. Field",
+          "section": "Dynamic Equations4\u20136",
+          "supports": "Three-state balances and epsilon_prime=1.98e-5 illustrative scaling. Original library epsilon/q retained as teaching choices, not claimed calibrated experimental conditions."
+        }
+      ],
+      "verification": {
+        "reference": "Independent literal balances, SciPy BDF rtol1e-10 atol1e-12",
+        "samples": 3001,
+        "solver": {
+          "method": "radau",
+          "output_grid": "exact requested times",
+          "internal_steps": "adaptive; dt is output spacing",
+          "rtol": 1e-06,
+          "atol": 1e-09,
+          "nfev": 20391,
+          "njev": 1302,
+          "nlu": 2986,
+          "model_evaluations": 27298,
+          "work_units": 272980,
+          "work_unit_limit": 1000000,
+          "work_scope": "Initial equations, every RHS/Jacobian probe, and all retained algebraic outputs"
+        },
+        "max_abs_error": [
+          3.933044273596309e-07,
+          0.0001665797716157158,
+          4.732533367968195e-08
+        ],
+        "max_scaled_error": [
+          2.6098322305993414e-07,
+          5.250652026303809e-06,
+          3.868795239565534e-08
+        ],
+        "minimum": [
+          0.0010076090421489393,
+          0.024251976075930513,
+          0.005340404780531408
+        ],
+        "maximum": [
+          0.9467530862838522,
+          132.2882586616463,
+          0.28026982063891986
+        ],
+        "spikes": 7,
+        "full300_independent_reference": {
+          "solver": "SciPy Radau rtol1e-6 atol1e-9",
+          "completed": true,
+          "nfev": 185854,
+          "njev": 11832,
+          "positive": true,
+          "spikes": 62,
+          "engine_budget_would_be_exceeded": true
+        }
+      },
+      "scientific_status": "Implemented three-state teaching adaptation, independent solver agreement and positive-domain checks; not calibrated chemistry."
+    }
+  ]
+}

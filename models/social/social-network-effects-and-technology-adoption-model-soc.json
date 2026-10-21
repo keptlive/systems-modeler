@@ -7,7 +7,7 @@
       "id": "stock-potential-users",
       "name": "Potential Users",
       "initial_value": 0,
-      "equation": "",
+      "equation": "\"Total Addressable Market\" - Initial_Users - Initial_Competitor_Users",
       "position": {
         "x": 150,
         "y": 200
@@ -17,7 +17,7 @@
       "id": "stock-active-users",
       "name": "Active Users",
       "initial_value": 0,
-      "equation": "",
+      "equation": "Initial_Users",
       "position": {
         "x": 350,
         "y": 200
@@ -37,7 +37,7 @@
       "id": "stock-content-volume",
       "name": "Content Volume",
       "initial_value": 0,
-      "equation": "",
+      "equation": "Initial_Content",
       "position": {
         "x": 750,
         "y": 200
@@ -57,7 +57,7 @@
       "id": "stock-competitor-users",
       "name": "Competitor Users",
       "initial_value": 0,
-      "equation": "",
+      "equation": "Initial_Competitor_Users",
       "position": {
         "x": 350,
         "y": 350
@@ -146,7 +146,7 @@
       "id": "flow-competitor-adoption",
       "name": "Competitor Adoption",
       "equation": "(\"Total Addressable Market\" - Active_Users - Churned_Users - Competitor_Users) * Competitor_Adoption_Rate",
-      "from_stock": null,
+      "from_stock": "stock-potential-users",
       "to_stock": "stock-competitor-users",
       "position": {
         "x": 450,
@@ -158,7 +158,7 @@
       "name": "Competitor Churn",
       "equation": "Competitor_Users * Competitor_Churn_Rate",
       "from_stock": "stock-competitor-users",
-      "to_stock": null,
+      "to_stock": "stock-potential-users",
       "position": {
         "x": 650,
         "y": 500
@@ -169,7 +169,7 @@
       "name": "Switching to Our Platform",
       "equation": "Competitor_Users * Switching_Rate",
       "from_stock": "stock-competitor-users",
-      "to_stock": null,
+      "to_stock": "stock-active-users",
       "position": {
         "x": 250,
         "y": 650

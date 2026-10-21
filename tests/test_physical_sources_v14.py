@@ -1,4 +1,5 @@
 """Narrow provenance and independent mathematical checks; no fidelity claim."""
+from tests.model_history import v17_bytes
 import hashlib
 import json
 import pathlib
@@ -12,7 +13,7 @@ class PhysicalSourceReviewTests(unittest.TestCase):
         review = json.loads((ROOT / "operations/physical-source-reconciliation-v14.json").read_text())
         for item in review["models"]:
             with self.subTest(model=item["file"]):
-                raw = (ROOT / item["file"]).read_bytes()
+                raw = v17_bytes(ROOT,item["file"])
                 if hashlib.sha256(raw).hexdigest() != item["after_sha256"]:
                     chain = json.loads((ROOT / "operations/model-revision-chain-v17.json").read_text())
                     revision = next(row for row in chain["models"] if row["file"] == item["file"])

@@ -1,7 +1,7 @@
 {
   "id": "age-structured-epidemic-who-epi",
   "name": "Age-Structured Epidemic Model",
-  "description": "Illustrative Age-Structured Epidemic Model.\n\nSource reconciliation 2026-10-20: Illustrative two-age SIR system inspired by age-assortative contact concepts. Mossong et al. is an empirical contact-diary study; no extraction, aggregation or reciprocity adjustment supports the hard-coded contacts 15, 5 and 10, Beta 0.3, infectious duration 7 or the initial populations. The same cross-contact value is used in both directions despite different group sizes; empirical matrix fidelity is not established. Equations, initial values, flow topology and layout are unchanged. Scientific/source fidelity remains unverified.",
+  "description": "Illustrative Age-Structured Epidemic Model.\n\nSource reconciliation 2026-10-20: Illustrative two-age SIR system inspired by age-assortative contact concepts. Mossong et al. is an empirical contact-diary study; no extraction, aggregation or reciprocity adjustment supports the hard-coded contacts 15, 5 and 10, Beta 0.3, infectious duration 7 or the initial populations. The same cross-contact value is used in both directions despite different group sizes; empirical matrix fidelity is not established. The preceding source-only reconciliation preserved equations, initial values, flow topology and layout. Scientific/source fidelity remains unverified.\n\nVersion 1.8 changes only the numerical method to explicit Radau on the existing one-day output grid. The unchanged two-age SIR ODE preserves each age population and nonnegative compartments, but daily Euler steps violate the infection depletion timescale and create negative susceptibles. Independent reference/convergence and age-specific mass-balance checks validate numerical integration; the contact matrix, reciprocity and empirical calibration remain unverified.",
   "stocks": [
     {
       "id": "s1",
@@ -203,7 +203,10 @@
   "time_settings": {
     "start": 0,
     "end": 180,
-    "dt": 1
+    "dt": 1,
+    "integration_method": "radau",
+    "rtol": 1e-08,
+    "atol": 1e-10
   },
   "created_at": "2026-01-15T14:39:40.986721+00:00",
   "updated_at": "2026-01-15T14:39:40.986724+00:00",

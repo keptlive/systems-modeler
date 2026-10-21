@@ -18,7 +18,7 @@ const Simulation = {
         const start = ts.start ?? 0;
         const end = ts.end ?? 100;
         const dt = ts.dt ?? 0.25;
-        return { start, end, dt, integration_method: ts.integration_method || 'euler', random_seed:ts.random_seed ?? null };
+        return { start, end, dt, integration_method: ts.integration_method || 'euler', random_seed:ts.random_seed ?? null, rtol:ts.rtol ?? 1e-6, atol:ts.atol ?? 1e-9 };
     },
 
     init() {
@@ -66,7 +66,9 @@ const Simulation = {
             }
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.detail || 'Simulation failed');
+                const failure = new Error(typeof error.detail === 'string' ? error.detail : 'Invalid simulation inputs');
+                failure.diagnostics = error.failure || null;
+                throw failure;
             }
 
             const result = await response.json();
@@ -79,13 +81,10 @@ const Simulation = {
         } catch (error) {
             if (generation !== this.generation || snapshot !== JSON.stringify(App.modelSnapshot())) return;
             this.lastError=error.message;
+            this.lastFailure=error.diagnostics || null;
             console.error("Simulation error:", error);
             if (this.resultsContent) {
-                this.resultsContent.innerHTML = `
-                    <p class="error" style="color: var(--accent-secondary);">
-                        Simulation error: ${App.escapeHtml(error.message)}
-                    </p>
-                `;
+                this.resultsContent.innerHTML = this.failureHTML();
             }
         } finally {
             if (btn) {
@@ -102,12 +101,27 @@ const Simulation = {
         }
     },
 
+    failureHTML() {
+        const escape = value => App.escapeHtml(String(value ?? ''));
+        const failure = this.lastFailure || {};
+        const roots = failure.root_errors || [];
+        const title = failure.category === 'capacity' ? 'Run exceeds its budget' : 'Run stopped';
+        const when = Number.isFinite(failure.time) ? ` at t = ${failure.time}` : '';
+        const messages = {division_by_zero:'Division by zero', non_finite:'The equation produced a non-finite value', domain_error:'The equation left its valid numerical domain'};
+        const rootMessage = root => messages[root.code] || root.message;
+        const causes = roots.length ? roots.map(root => `<li><strong>${escape(root.element || (root.elements || []).join(' → '))}</strong><p>${escape(rootMessage(root))}</p>${root.equation ? `<code>${escape(root.equation)}</code>` : ''}</li>`).join('') : `<li>${escape(this.lastError || 'Simulation failed')}</li>`;
+        const blocked = failure.blocked_errors || [];
+        const dependents = blocked.length ? `<details><summary>${blocked.length} dependent ${blocked.length===1?'value is':'values are'} blocked</summary><ul>${blocked.map(row=>`<li>${escape(row.element)} waits for ${escape(row.waiting_for)}.</li>`).join('')}</ul></details>` : '';
+        return `<section class="simulation-failure" role="alert"><h3>${escape(title+when)}</h3><ul>${causes}</ul>${dependents}<p class="failure-help">Inspect the named inputs and equations before running again.</p></section>`;
+    },
+
     async acceptResults(results) {
         this.generation = (this.generation || 0) + 1;
         const generation = this.generation;
         const model = JSON.parse(JSON.stringify(App.modelSnapshot()));
         this.resultModel = model;
         this.lastError=null;
+        this.lastFailure=null;
         this.results = results;
         this.displayResults();
         let receipt = document.getElementById('run-seed-receipt');
@@ -177,6 +191,7 @@ const Simulation = {
         this.results = null;
         this.resultModel = null;
         this.lastError=null;
+        this.lastFailure=null;
         const receipt = document.getElementById('run-seed-receipt');
         if (receipt) receipt.hidden = true;
         document.querySelector('.mobile-results-container .run-seed-receipt')?.remove();

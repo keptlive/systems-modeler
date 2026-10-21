@@ -1,7 +1,7 @@
 {
   "id": "bartlett-measles-fade-out-epi",
   "name": "Bartlett Measles Fade-Out Model",
-  "description": "Illustrative deterministic measles SEIR model inspired by persistence research.\n\nSource reconciliation 2026-10-20: Illustrative deterministic SEIR system; it does not implement Bartlett's stochastic extinction process or establish a critical community size. The Critical Community Size value is a constant diagnostic. Birth_Rate is Population/(70*365), but Births multiplies it by Population again: dimensional and numerical plausibility remain unresolved. Initial stocks sum to 250010 while Population is fixed at 250000. Equations, initial values, flow topology and layout are unchanged. Scientific/source fidelity remains unverified.",
+  "description": "Illustrative deterministic measles SEIR model inspired by persistence research.\n\nSource reconciliation 2026-10-20: Illustrative deterministic SEIR system; it does not implement Bartlett's stochastic extinction process or establish a critical community size. The Critical Community Size value is a constant diagnostic. Birth_Rate is Population/(70*365), but Births multiplies it by Population again: dimensional and numerical plausibility remain unresolved. Initial stocks sum to 250010 while Population is fixed at 250000. Equations, initial values, flow topology and layout are unchanged. Scientific/source fidelity remains unverified.\n\nVersion 1.8 removes duplicate population multiplication: Birth Rate already equals Population/(70*365), an absolute persons/day flow, so Births now uses that value directly. This preserves the existing demographic parameters. The file remains a deterministic illustrative SEIR model without stochastic fade-out or a verified Bartlett calibration.",
   "stocks": [
     {
       "id": "stock-susceptible",
@@ -48,7 +48,7 @@
     {
       "id": "flow-births",
       "name": "Births",
-      "equation": "Birth_Rate * Population",
+      "equation": "Birth_Rate",
       "from_stock": null,
       "to_stock": "stock-susceptible",
       "position": {
