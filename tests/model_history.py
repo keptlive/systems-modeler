@@ -28,8 +28,27 @@ def find_model_path(root, stem):
     assert len(rows) == 1, stem
     return model_path(root, rows[0]['file'])
 
+def before_quality_followup_bytes(root, relative):
+    """Verify today's bytes, then recover the reviewed pre-follow-up version."""
+    manifest = json.loads((root / 'operations/library-quality-followup-20261024.json').read_text())
+    name = str(relative)
+    replaced = next((row for row in manifest['replaced'] if row['file'] == name), None)
+    retired = next((row for row in manifest['retired'] if row['file'] == name), None)
+    row = replaced or retired
+    if row is None:
+        return model_path(root, relative).read_bytes()
+    current = root / relative
+    if replaced is not None:
+        assert hashlib.sha256(current.read_bytes()).hexdigest() == row['after_sha256'], name
+    else:
+        assert not current.exists(), name
+    archived = (root / row['archive']).read_bytes()
+    assert hashlib.sha256(archived).hexdigest() == row['before_sha256'], name
+    return archived
+
+
 def v18_bytes(root,relative):
-    raw=model_path(root,relative).read_bytes()
+    raw=before_quality_followup_bytes(root,relative)
     chain=json.loads((root/'operations/model-revision-chain-v19.json').read_text())
     row=next((r for r in chain['models'] if r['file']==str(relative)),None)
     if row is None:return raw
