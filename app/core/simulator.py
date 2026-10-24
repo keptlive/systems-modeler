@@ -8,7 +8,17 @@ def simulate(model: Model, time_settings: Optional[TimeSettings] = None) -> Simu
     """Run the requested method with explicit equation errors and bounded work."""
     settings = time_settings or model.time_settings
     try:
-        return integrate(model, settings)
+        from app.core.structured import compile_structured_model
+        compiled = compile_structured_model(model.model_dump(mode="json")) if model.has_structure() else {"source_map": {}}
+        execution_model = Model(**compiled["model"]) if compiled["source_map"] else model
+        result = integrate(execution_model, settings)
+        if compiled["source_map"]:
+            result.integration_diagnostics = {
+                **(result.integration_diagnostics or {}),
+                "structured_source_map": compiled["source_map"],
+                "structured_diagnostics": compiled["diagnostics"],
+            }
+        return result
     except Exception as error:
         # Preserve the original failure and its causal diagnostics. Add enough
         # context to reproduce the exact numerical request without dumping user

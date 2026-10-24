@@ -36,7 +36,7 @@ const Simulation = {
      * Run simulation on current model
      */
     async run() {
-        if (App.model.stocks.length === 0 && App.model.flows.length === 0 && App.model.variables.length === 0) {
+        if (App.model.stocks.length === 0 && App.model.flows.length === 0 && App.model.variables.length === 0 && !App.model.modules?.length) {
             alert('No model to simulate. Add some stocks and flows first.');
             return;
         }
@@ -202,9 +202,10 @@ const Simulation = {
     modelSignature(model) {
         // Moving nodes or changing the title does not change a trajectory.
         return JSON.stringify({
-            stocks:(model.stocks || []).map(({id,name,equation,initial_value})=>({id,name,equation,initial_value})),
-            flows:(model.flows || []).map(({id,name,equation,from_stock,to_stock})=>({id,name,equation,from_stock,to_stock})),
-            variables:(model.variables || []).map(({id,name,equation,role})=>({id,name,equation,role:role || "auxiliary"})),
+            stocks:(model.stocks || []).map(({id,name,equation,initial_value,dimensions,equations,initial_values})=>({id,name,equation,initial_value,dimensions,equations,initial_values})),
+            flows:(model.flows || []).map(({id,name,equation,from_stock,to_stock,dimensions,equations})=>({id,name,equation,from_stock,to_stock,dimensions,equations})),
+            variables:(model.variables || []).map(({id,name,equation,role,dimensions,equations})=>({id,name,equation,role:role || "auxiliary",dimensions,equations})),
+            dimensions:model.dimensions||[], modules:model.modules||[], module_definitions:model.module_definitions||{},
             tables:model.tables || [], time_settings:model.time_settings
         });
     },

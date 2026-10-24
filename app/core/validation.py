@@ -8,6 +8,19 @@ from app.core.source_review import citation_reviews
 
 
 def inspect_inputs(model: Model, numerical_check=True) -> dict:
+    from app.core.structured import compile_structured_model, StructuredModelError
+    try:
+        compiled = compile_structured_model(model.model_dump(mode="json"))
+    except StructuredModelError as exc:
+        return {"model": model.name, "valid": False, "numerical_check": "not_run",
+                "scientific_validation": "not established", "issues": exc.diagnostics,
+                "source_reviews": [], "inputs": {"initial_stocks": [], "flows": [],
+                    "parameters_and_auxiliaries": [], "time_settings": model.time_settings.model_dump(),
+                    "description": model.description, "source": model.source, "reference": model.reference}}
+    if compiled["source_map"]:
+        report = inspect_inputs(Model(**compiled["model"]), numerical_check)
+        report["structured_source_map"] = compiled["source_map"]
+        return report
     issues = []
     def issue(severity, code, message, element=None, **details):
         issues.append({"severity": severity, "code": code, "element": element, "message": message, **details})
@@ -85,6 +98,10 @@ def inspect_inputs(model: Model, numerical_check=True) -> dict:
         issue("warning", "empty_model", "This model contains no stocks, flows or variables")
     if elements and not all(e.units for e in elements):
         issue("warning", "units_unverified", "Units are missing for one or more elements; dimensional consistency has not been established")
+    from app.core.units import analyze_units
+    dimensional_analysis = analyze_units(model)
+    for mismatch in dimensional_analysis["errors"]:
+        issue("warning", "dimensional_inconsistency", mismatch["message"], mismatch["element"])
     if not model.source and not model.reference:
         issue("warning", "missing_provenance", "No source/reference metadata is supplied")
     reviewed_sources = citation_reviews(model)
@@ -107,6 +124,7 @@ def inspect_inputs(model: Model, numerical_check=True) -> dict:
     return {"model": model.name, "valid": not any(i["severity"] == "error" for i in issues),
             "numerical_check": numerical, "scientific_validation": "not established",
             "issues": issues,
+            "dimensional_analysis": dimensional_analysis,
             "source_reviews": reviewed_sources,
             "inputs": {"initial_stocks": [{"name": s.name, "initial_value": s.initial_value,
                                              "initial_equation": s.equation, "units": s.units} for s in model.stocks],

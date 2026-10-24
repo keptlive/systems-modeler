@@ -6,6 +6,8 @@ Agent-driven stock-and-flow pages, explicit Euler/RK4/Radau simulation, a browsa
 
 The editor retains AI generation/modification, saved models, JSON/XMILE import and export, diagrams, scenario comparison, four chart types, statistics and mobile panels. Numerical tools work without an AI provider. AI drafts need input and source review before use.
 
+Native engine improvements add bounded [arrays and reusable modules](docs/STRUCTURED-MODELS.md), [dimensional checks](docs/DIMENSIONAL-ANALYSIS.md), conservative [MDL import](docs/MDL-IMPORT.md), and [local feedback analysis](docs/FEEDBACK-ANALYSIS.md). Use **Source** to edit structured JSON without flattening the saved project. Inspect displays units evidence and can analyze a completed run. The [measured comparison](docs/ENGINE-COMPARISON.md) records a 32–35% improvement over our earlier scalar execution, while Simlin remains faster on those workloads. No Simlin runtime dependency was introduced.
+
 ## Run locally
 
 ```bash
@@ -27,6 +29,7 @@ The curated public library contains **923 examples: 920 dynamic models and three
 
 - `GET /api/models/catalog` is the small searchable index; `GET /api/models/{id}` fetches definitions. Legacy `GET /api/models` remains available.
 - Model CRUD and XMILE import/export remain available under `/api/models`.
+- `POST /api/models/import/mdl` retains the original MDL source and import caveats. `/api/compile` previews structured expansion, `/api/units` checks dimensions, and `/api/feedback` analyzes explicitly supplied results without rerunning or saving. [Equivalent read-only MCP tools](docs/NATIVE-ENGINE-MCP.md) are available.
 - `POST /api/simulate`, `/api/validate`, `/api/analyze/statistics`, `/api/analyze` and `/api/llm/{generate,modify}` serve the workbench.
 - Connect an HTTP-capable MCP client to **https://stockandflow.live/mcp/**. Legacy SSE remains **https://stockandflow.live/mcp/sse**. `/mcp/info` reports transports.
 - Local stdio: `.venv/bin/python -m app.mcp_server` from the repository directory.

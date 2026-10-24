@@ -421,23 +421,18 @@ class SafeEvaluator(ast.NodeVisitor):
     # ast.Constant handles all numeric literals
 
     def visit_Name(self, node: ast.Name) -> float:
-        name = decode_identifier(node.id)
+        name, name_upper, name_variations, canonical = _name_metadata(node.id)
         # Check for TIME variable (case insensitive)
-        if name.upper() == "TIME":
+        if name_upper == "TIME":
             return _finite_real(self.context.time)
-        if name.upper() in ("DT", "TIME_STEP"):
+        if name_upper in ("DT", "TIME_STEP"):
             return _finite_real(self.context.dt)
         # Then check user variables - try multiple name variations
         # to handle underscore vs space naming inconsistencies
-        name_variations = [
-            name,
-            name.replace("_", " "),  # Growth_Rate -> Growth Rate
-            name.replace(" ", "_"),  # Growth Rate -> Growth_Rate
-        ]
         for var_name in name_variations:
             if var_name in self.variables:
                 return _finite_real(self.variables[var_name])
-        matched = [value for key, value in self.variables.items() if canonical_name(key) == canonical_name(name)]
+        matched = [value for key, value in self.variables.items() if canonical_name(key) == canonical]
         if len(matched) == 1:
             return _finite_real(matched[0])
         if len(matched) > 1:
@@ -445,7 +440,7 @@ class SafeEvaluator(ast.NodeVisitor):
         # A declared but unresolved e/pi must wait for its initializer/equation.
         # Otherwise dependency retries cache a mathematical constant as if it were
         # the authored model quantity. Lazy branches remain evaluated on demand.
-        if canonical_name(name) in getattr(self.context, "declared_names", ()):
+        if canonical in getattr(self.context, "declared_names", ()):
             raise EquationError(f"Unknown variable: {name}", code="unknown_variable",
                                 details={"symbol": name})
         if name.lower() in SAFE_CONSTANTS:
@@ -935,6 +930,43 @@ def _parse_expression(equation):
     return tree
 
 
+@lru_cache(maxsize=8192)
+def _name_metadata(identifier):
+    """Immutable symbol spelling data; values always come from this evaluation."""
+    name = decode_identifier(identifier)
+    return name, name.upper(), (name, name.replace("_", " "), name.replace(" ", "_")), canonical_name(name)
+
+
+@lru_cache(maxsize=8192)
+def _execution_plan(equation):
+    """Compile safe arithmetic dispatch without Python eval or mutable run state.
+
+    Complex/function nodes use the established visitor so laziness, hidden-state
+    identity, stochastic order and diagnostics keep exactly the same contracts.
+    """
+    def build(node):
+        if isinstance(node, ast.Expression):
+            return build(node.body)
+        if isinstance(node, ast.Constant):
+            return lambda evaluator: evaluator.visit_Constant(node)
+        if isinstance(node, ast.Name):
+            return lambda evaluator: evaluator.visit_Name(node)
+        if isinstance(node, ast.BinOp) and type(node.op) in SAFE_OPERATORS:
+            left, right, operation = build(node.left), build(node.right), SAFE_OPERATORS[type(node.op)]
+            def binary(evaluator):
+                a, b = left(evaluator), right(evaluator)
+                try:
+                    return _finite_real(operation(a, b))
+                except ZeroDivisionError:
+                    raise EquationError("Division by zero", code="division_by_zero")
+            return binary
+        if isinstance(node, ast.UnaryOp) and type(node.op) in SAFE_OPERATORS:
+            operand, operation = build(node.operand), SAFE_OPERATORS[type(node.op)]
+            return lambda evaluator: _finite_real(operation(operand(evaluator)))
+        # Preserve visitor behavior for unsupported syntax as well as functions.
+        return lambda evaluator: evaluator.visit(node)
+    return build(_parse_expression(equation))
+
 def safe_eval(equation: str, variables: dict[str, float],
               context: Optional[SimulationContext] = None) -> float:
     """
@@ -973,10 +1005,10 @@ def safe_eval(equation: str, variables: dict[str, float],
 
     try:
         # Parse the expression
-        tree = _parse_expression(equation)
+        plan = _execution_plan(equation)
         # Evaluate safely
         evaluator = SafeEvaluator(variables, context)
-        return evaluator.visit(tree)
+        return plan(evaluator)
     except SyntaxError as e:
         raise EquationError(f"Syntax error in equation: {e}", code="syntax_error") from e
     except Exception as e:

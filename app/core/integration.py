@@ -5,6 +5,9 @@ Invalid equations fail explicitly. No fallback engine or zero substitution.
 import math
 import sys
 from fractions import Fraction
+from contextvars import ContextVar
+from dataclasses import dataclass
+from types import MappingProxyType
 from app.core.model import Model, TimeSettings, SimulationResult, discrete_interval_count
 from app.core.limits import MAX_INTERVALS, MAX_ELEMENTS, MAX_RETAINED_VALUES, MAX_WORK_UNITS
 from app.core.failure_diagnostics import stalled_evaluation, capacity_error
@@ -27,13 +30,42 @@ def _rk4_increment(h, a, b, c, d):
     return float(Fraction(h)*exact/6)
 
 
+@dataclass(frozen=True)
+class _EvaluationPlan:
+    """Immutable metadata snapshot scoped to a single synchronous simulation."""
+    model_identity: int
+    equations: tuple
+    initial_equations: tuple
+    declared_names: frozenset
+    tables: object
+    table_types: object
+
+
+_active_plan = ContextVar("systems_modeler_evaluation_plan", default=None)
+
+
+def _make_evaluation_plan(model):
+    equations = tuple((e.name, e.equation) for e in (*model.variables, *model.flows))
+    return _EvaluationPlan(
+        id(model), equations,
+        equations + tuple((s.name, s.equation) for s in model.stocks if s.equation),
+        frozenset(canonical_name(e.name) for e in (*model.stocks, *model.flows, *model.variables)),
+        MappingProxyType({table.name: tuple(tuple(point) for point in table.to_list()) for table in model.tables}),
+        MappingProxyType({table.name: table.interpolation for table in model.tables}),
+    )
+
+
+def _plan_for(model):
+    plan = _active_plan.get()
+    return plan if plan is not None and plan.model_identity == id(model) else None
+
 def simulation_context(model, t, dt, delay, smooth, random_runtime=None, input_time=None, input_snapshot=None):
-    context = SimulationContext(t, dt, {table.name: table.to_list() for table in model.tables}, delay, smooth, random_runtime)
-    # A declared e/pi may be awaiting its initializer or a forward auxiliary.
-    # It must not temporarily fall back to the mathematical constant.
-    context.declared_names = {canonical_name(element.name)
-                              for element in [*model.stocks, *model.flows, *model.variables]}
-    context.table_types = {table.name: table.interpolation for table in model.tables}
+    plan = _plan_for(model)
+    context = SimulationContext(t, dt, plan.tables if plan else {table.name: table.to_list() for table in model.tables}, delay, smooth, random_runtime)
+    # Declared e/pi must wait for authored initializers, never constant fallback.
+    context.declared_names = plan.declared_names if plan else frozenset(canonical_name(element.name)
+                              for element in (*model.stocks, *model.flows, *model.variables))
+    context.table_types = plan.table_types if plan else {table.name: table.interpolation for table in model.tables}
     context.input_time = t if input_time is None else input_time
     context.input_snapshot = input_snapshot
     return context
@@ -41,9 +73,13 @@ def simulation_context(model, t, dt, delay, smooth, random_runtime=None, input_t
 
 def evaluate(model, stocks, t, dt, delay, smooth, initial=False, random_runtime=None, input_time=None, input_snapshot=None, retry_work=None):
     values = dict(stocks)
-    pending = [(e.name, e.equation) for e in [*model.variables, *model.flows]]
-    if initial:
-        pending += [(s.name, s.equation) for s in model.stocks if s.equation]
+    plan = _plan_for(model)
+    if plan is not None:
+        pending = plan.initial_equations if initial else plan.equations
+    else:
+        pending = [(e.name, e.equation) for e in (*model.variables, *model.flows)]
+        if initial:
+            pending += [(s.name, s.equation) for s in model.stocks if s.equation]
     context = simulation_context(model, t, dt, delay, smooth, random_runtime, input_time, input_snapshot)
     errors = {}
     attempted = set()
@@ -131,6 +167,14 @@ def integrate(model: Model, settings: TimeSettings):
 
 
 def _integrate_numeric(model: Model, settings: TimeSettings, report_work=0):
+    token = _active_plan.set(_make_evaluation_plan(model))
+    try:
+        return _integrate_numeric_planned(model, settings, report_work)
+    finally:
+        _active_plan.reset(token)
+
+
+def _integrate_numeric_planned(model: Model, settings: TimeSettings, report_work=0):
     elements = [*model.stocks, *model.flows, *model.variables]
     names = [canonical_name(e.name) for e in elements]
     if len(set(names)) != len(names):

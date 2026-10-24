@@ -7,8 +7,15 @@ from app.core.failure_diagnostics import failure_payload
 from app.core.model import SimulationRequest, SimulationResult
 from app.core.simulator import simulate
 from app.storage import models as storage
+from pydantic import Field
 
 router = APIRouter()
+
+
+class FeedbackRequest(SimulationRequest):
+    result: SimulationResult
+    sample_count: int = Field(default=8, ge=1, le=16, strict=True)
+    relative_step: float = Field(default=1e-4, ge=1e-7, le=1e-2, allow_inf_nan=False)
 
 
 def requested_model(request, apply_time_settings=True):
@@ -44,6 +51,48 @@ def validate_inputs(request: SimulationRequest):
     from app.core.validation import inspect_inputs
     model = requested_model(request)
     return inspect_inputs(model)
+
+
+@router.post("/units")
+def inspect_units(request: SimulationRequest):
+    """Advisory dimensional evidence without changing or executing equations."""
+    from app.core.units import analyze_units
+    from app.core.structured import compile_structured_model
+    from app.core.model import Model
+    model = requested_model(request)
+    try:
+        compiled = compile_structured_model(model.model_dump(mode="json"))
+        return analyze_units(Model(**compiled["model"]))
+    except ValueError as exc:
+        return JSONResponse(status_code=422, content={"detail": str(exc), "failure": failure_payload(exc)})
+
+
+@router.post("/compile")
+def compile_model(request: SimulationRequest):
+    """Preview scalar execution and source mapping without replacing the source."""
+    from app.core.structured import compile_structured_model
+    model = requested_model(request)
+    try:
+        source = model.model_dump(mode="json")
+        return {**compile_structured_model(source), "source_model": source}
+    except ValueError as exc:
+        return JSONResponse(status_code=422, content={"detail": str(exc), "failure": failure_payload(exc)})
+
+
+@router.post("/feedback")
+def inspect_feedback(request: FeedbackRequest):
+    """Bounded local response at explicitly supplied states; never saves a model."""
+    from app.core.feedback_analysis import analyze_feedback
+    from app.core.structured import compile_structured_model
+    from app.core.model import Model
+    from app.core.equations import EquationError
+    model = requested_model(request)
+    try:
+        compiled = compile_structured_model(model.model_dump(mode="json"))
+        return analyze_feedback(Model(**compiled["model"]), request.result,
+                                request.sample_count, request.relative_step)
+    except (ValueError, ArithmeticError, EquationError) as exc:
+        return JSONResponse(status_code=422, content={"detail": str(exc), "failure": failure_payload(exc)})
 
 
 @router.post("/simulate", response_model=SimulationResult)

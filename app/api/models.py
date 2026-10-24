@@ -84,6 +84,25 @@ async def import_xmile(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail=f"Failed to parse XMILE file: {str(e)}")
 
 
+@router.post("/import/mdl", response_model=Model)
+async def import_mdl(file: UploadFile = File(...)):
+    """Import the supported native MDL subset, retaining exact source and caveats."""
+    from app.core.mdl_parser import parse_mdl, MDLImportError
+    try:
+        content = await file.read(2 * 1024 * 1024 + 1)
+        if len(content) > 2 * 1024 * 1024:
+            raise HTTPException(status_code=413, detail="MDL uploads are limited to 2 MiB")
+        source = content.decode("utf-8-sig")
+        parsed = parse_mdl(source)
+        model = Model(**{**parsed["model"], "source_document": {
+            "format": "vensim_mdl", "text": source, "diagnostics": parsed["diagnostics"]}})
+        return storage.create_model(model)
+    except HTTPException:
+        raise
+    except (MDLImportError, ValueError, UnicodeError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
 @router.get("/{model_id}/export/xmile")
 def export_xmile(model_id: ModelId):
     """Export a model to XMILE format."""
