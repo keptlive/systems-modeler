@@ -40,7 +40,9 @@ def test_current_fourth_admission_extends_exact_historical_ledger():
     original=(ROOT/'tests/fixtures/fourth-admissions-20261024/ledger-before.json').read_bytes()
     assert hashlib.sha256(original).hexdigest()=='9b28aa91078e2f151a4be915c62672ba80640f7a7c6cb9000f9d5c0751f77010'
     historical=json.loads(original)
-    adm=json.loads((ROOT/'operations/library-admissions-20261024.json').read_text())
+    frozen=(ROOT/'tests/fixtures/fifth-sixth-admissions-20261024/ledger-before.json').read_bytes()
+    assert hashlib.sha256(frozen).hexdigest()=='9cbb8c583e3aa369828616a3481f88e444ce47a01876d7ea7eb5828905224812'
+    adm=json.loads(frozen)
     fourth=json.loads((ROOT/'operations/library-admissions-fourth-20261024.json').read_text())
     assert len(fourth['models'])==fourth['admitted_count']==3
     assert adm['models']==historical['models']+fourth['models']
@@ -55,7 +57,10 @@ def test_current_fourth_admission_extends_exact_historical_ledger():
         assert hashlib.sha256((ROOT/row['file']).read_bytes()).hexdigest()==row['sha256']
         assert row['sha256'] in (ROOT/row['review']).read_text()
     assert set(fourth['all_993_before_hashes']).isdisjoint({row['file'] for row in fourth['models']})
+    latest=json.loads((ROOT/'operations/library-admissions-fifth-sixth-20261024.json').read_text())
     current={str(p.relative_to(ROOT)) for p in (ROOT/'models').rglob('*.json')}
+    assert current==set(latest['all_996_before_hashes'])|{r['file'] for r in latest['models']}
+    current-= {r['file'] for r in latest['models']}
     assert current==set(fourth['all_993_before_hashes'])|{row['file'] for row in fourth['models']}
     assert len(current)==996
 

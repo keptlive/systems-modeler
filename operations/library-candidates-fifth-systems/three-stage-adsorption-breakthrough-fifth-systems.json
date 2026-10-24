@@ -1,0 +1,537 @@
+{
+  "id": "three-stage-adsorption-breakthrough-fifth-systems",
+  "name": "Three-stage adsorption breakthrough with finite-rate sorbent equilibration",
+  "description": "Original three well-mixed equal-volume cells in series with one dissolved species and finite-rate Langmuir q*-based LDF uptake/desorption. CADET v5.1.1 CSTR and binding equations are mathematical references, not copied implementation or fixtures. Coarse network, not a plug-flow/PDE solver or calibrated industrial column. Solute stocks in milligrams, liquid volumes liters, sorbent masses grams, time seconds. Positive volume; nonnegative flow, capacity, affinity, solid mass, kinetic coefficient and liquid masses; sorbed masses initially within finite capacity. Defaults initially zero. Reversible uptake and internal advection transfer equal mass between stocks; effluent accumulation closes the feed budget. No explicit axial dispersion term, thermal feedback, pore diffusion, multicomponent competition, depletion clamp or parameter estimation.",
+  "category": "engineering",
+  "source": "https://cadet.github.io/v5.1.1/modelling/binding/multi_component_langmuir_ldf.html",
+  "reference": "CADET v5.1.1 official documentation: Binding models, Linear Driving Force; Multi Component Langmuir LDF; Continuous stirred tank reactor model. q*-based LDF, not native kinetic Langmuir or liquid-phase LDF. Original network/defaults, not a bundled example.",
+  "stocks": [
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Aqueous_Mass_1",
+      "name": "Aqueous_Mass_1",
+      "initial_value": 0,
+      "equation": "",
+      "units": "milligram",
+      "position": {
+        "x": 170,
+        "y": 390
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Sorbed_Mass_1",
+      "name": "Sorbed_Mass_1",
+      "initial_value": 0,
+      "equation": "",
+      "units": "milligram",
+      "position": {
+        "x": 170,
+        "y": 570
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Aqueous_Mass_2",
+      "name": "Aqueous_Mass_2",
+      "initial_value": 0,
+      "equation": "",
+      "units": "milligram",
+      "position": {
+        "x": 470,
+        "y": 390
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Sorbed_Mass_2",
+      "name": "Sorbed_Mass_2",
+      "initial_value": 0,
+      "equation": "",
+      "units": "milligram",
+      "position": {
+        "x": 470,
+        "y": 570
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Aqueous_Mass_3",
+      "name": "Aqueous_Mass_3",
+      "initial_value": 0,
+      "equation": "",
+      "units": "milligram",
+      "position": {
+        "x": 770,
+        "y": 390
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Sorbed_Mass_3",
+      "name": "Sorbed_Mass_3",
+      "initial_value": 0,
+      "equation": "",
+      "units": "milligram",
+      "position": {
+        "x": 770,
+        "y": 570
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Effluent_Mass",
+      "name": "Effluent_Mass",
+      "initial_value": 0,
+      "equation": "",
+      "units": "milligram",
+      "position": {
+        "x": 1100,
+        "y": 390
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Feed_Mass_Rate",
+      "name": "Feed_Mass_Rate",
+      "equation": "Flow_Rate * Feed_Concentration",
+      "units": "milligram/second",
+      "from_stock": null,
+      "to_stock": "three-stage-adsorption-breakthrough-fifth-systems:Aqueous_Mass_1",
+      "position": {
+        "x": 100,
+        "y": 720
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Advected_Mass_1",
+      "name": "Advected_Mass_1",
+      "equation": "Flow_Rate * Concentration_1",
+      "units": "milligram/second",
+      "from_stock": "three-stage-adsorption-breakthrough-fifth-systems:Aqueous_Mass_1",
+      "to_stock": "three-stage-adsorption-breakthrough-fifth-systems:Aqueous_Mass_2",
+      "position": {
+        "x": 320,
+        "y": 720
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Reversible_Uptake_1",
+      "name": "Reversible_Uptake_1",
+      "equation": "Kinetic_Rate * (Solid_Mass * Equilibrium_Loading_1 - Sorbed_Mass_1)",
+      "units": "milligram/second",
+      "from_stock": "three-stage-adsorption-breakthrough-fifth-systems:Aqueous_Mass_1",
+      "to_stock": "three-stage-adsorption-breakthrough-fifth-systems:Sorbed_Mass_1",
+      "position": {
+        "x": 540,
+        "y": 720
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Advected_Mass_2",
+      "name": "Advected_Mass_2",
+      "equation": "Flow_Rate * Concentration_2",
+      "units": "milligram/second",
+      "from_stock": "three-stage-adsorption-breakthrough-fifth-systems:Aqueous_Mass_2",
+      "to_stock": "three-stage-adsorption-breakthrough-fifth-systems:Aqueous_Mass_3",
+      "position": {
+        "x": 760,
+        "y": 720
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Reversible_Uptake_2",
+      "name": "Reversible_Uptake_2",
+      "equation": "Kinetic_Rate * (Solid_Mass * Equilibrium_Loading_2 - Sorbed_Mass_2)",
+      "units": "milligram/second",
+      "from_stock": "three-stage-adsorption-breakthrough-fifth-systems:Aqueous_Mass_2",
+      "to_stock": "three-stage-adsorption-breakthrough-fifth-systems:Sorbed_Mass_2",
+      "position": {
+        "x": 980,
+        "y": 720
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Advected_Mass_3",
+      "name": "Advected_Mass_3",
+      "equation": "Flow_Rate * Concentration_3",
+      "units": "milligram/second",
+      "from_stock": "three-stage-adsorption-breakthrough-fifth-systems:Aqueous_Mass_3",
+      "to_stock": "three-stage-adsorption-breakthrough-fifth-systems:Effluent_Mass",
+      "position": {
+        "x": 100,
+        "y": 830
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Reversible_Uptake_3",
+      "name": "Reversible_Uptake_3",
+      "equation": "Kinetic_Rate * (Solid_Mass * Equilibrium_Loading_3 - Sorbed_Mass_3)",
+      "units": "milligram/second",
+      "from_stock": "three-stage-adsorption-breakthrough-fifth-systems:Aqueous_Mass_3",
+      "to_stock": "three-stage-adsorption-breakthrough-fifth-systems:Sorbed_Mass_3",
+      "position": {
+        "x": 320,
+        "y": 830
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Liquid_Volume",
+      "name": "Liquid_Volume",
+      "equation": "1",
+      "units": "liter",
+      "position": {
+        "x": 80,
+        "y": 60
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Flow_Rate",
+      "name": "Flow_Rate",
+      "equation": "0.5",
+      "units": "liter/second",
+      "position": {
+        "x": 300,
+        "y": 60
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Feed_Concentration",
+      "name": "Feed_Concentration",
+      "equation": "1",
+      "units": "milligram/liter",
+      "position": {
+        "x": 520,
+        "y": 60
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Solid_Mass",
+      "name": "Solid_Mass",
+      "equation": "1",
+      "units": "gram",
+      "position": {
+        "x": 740,
+        "y": 60
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Capacity",
+      "name": "Capacity",
+      "equation": "2",
+      "units": "milligram/gram",
+      "position": {
+        "x": 960,
+        "y": 60
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Affinity",
+      "name": "Affinity",
+      "equation": "1",
+      "units": "liter/milligram",
+      "position": {
+        "x": 1180,
+        "y": 60
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Kinetic_Rate",
+      "name": "Kinetic_Rate",
+      "equation": "0.5",
+      "units": "1/second",
+      "position": {
+        "x": 80,
+        "y": 155
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Concentration_1",
+      "name": "Concentration_1",
+      "equation": "Aqueous_Mass_1 / Liquid_Volume",
+      "units": "milligram/liter",
+      "position": {
+        "x": 300,
+        "y": 155
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Equilibrium_Loading_1",
+      "name": "Equilibrium_Loading_1",
+      "equation": "Capacity * Affinity * Concentration_1 / (1 + Affinity * Concentration_1)",
+      "units": "milligram/gram",
+      "position": {
+        "x": 520,
+        "y": 155
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Concentration_2",
+      "name": "Concentration_2",
+      "equation": "Aqueous_Mass_2 / Liquid_Volume",
+      "units": "milligram/liter",
+      "position": {
+        "x": 740,
+        "y": 155
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Equilibrium_Loading_2",
+      "name": "Equilibrium_Loading_2",
+      "equation": "Capacity * Affinity * Concentration_2 / (1 + Affinity * Concentration_2)",
+      "units": "milligram/gram",
+      "position": {
+        "x": 960,
+        "y": 155
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Concentration_3",
+      "name": "Concentration_3",
+      "equation": "Aqueous_Mass_3 / Liquid_Volume",
+      "units": "milligram/liter",
+      "position": {
+        "x": 1180,
+        "y": 155
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Equilibrium_Loading_3",
+      "name": "Equilibrium_Loading_3",
+      "equation": "Capacity * Affinity * Concentration_3 / (1 + Affinity * Concentration_3)",
+      "units": "milligram/gram",
+      "position": {
+        "x": 80,
+        "y": 250
+      }
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:Tracked_Mass",
+      "name": "Tracked_Mass",
+      "equation": "Aqueous_Mass_1 + Sorbed_Mass_1 + Aqueous_Mass_2 + Sorbed_Mass_2 + Aqueous_Mass_3 + Sorbed_Mass_3 + Effluent_Mass",
+      "units": "milligram",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c0",
+      "from_element": "Aqueous_Mass_1",
+      "to_element": "Concentration_1"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c1",
+      "from_element": "Liquid_Volume",
+      "to_element": "Concentration_1"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c2",
+      "from_element": "Affinity",
+      "to_element": "Equilibrium_Loading_1"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c3",
+      "from_element": "Capacity",
+      "to_element": "Equilibrium_Loading_1"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c4",
+      "from_element": "Concentration_1",
+      "to_element": "Equilibrium_Loading_1"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c5",
+      "from_element": "Aqueous_Mass_2",
+      "to_element": "Concentration_2"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c6",
+      "from_element": "Liquid_Volume",
+      "to_element": "Concentration_2"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c7",
+      "from_element": "Affinity",
+      "to_element": "Equilibrium_Loading_2"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c8",
+      "from_element": "Capacity",
+      "to_element": "Equilibrium_Loading_2"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c9",
+      "from_element": "Concentration_2",
+      "to_element": "Equilibrium_Loading_2"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c10",
+      "from_element": "Aqueous_Mass_3",
+      "to_element": "Concentration_3"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c11",
+      "from_element": "Liquid_Volume",
+      "to_element": "Concentration_3"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c12",
+      "from_element": "Affinity",
+      "to_element": "Equilibrium_Loading_3"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c13",
+      "from_element": "Capacity",
+      "to_element": "Equilibrium_Loading_3"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c14",
+      "from_element": "Concentration_3",
+      "to_element": "Equilibrium_Loading_3"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c15",
+      "from_element": "Aqueous_Mass_1",
+      "to_element": "Tracked_Mass"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c16",
+      "from_element": "Aqueous_Mass_2",
+      "to_element": "Tracked_Mass"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c17",
+      "from_element": "Aqueous_Mass_3",
+      "to_element": "Tracked_Mass"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c18",
+      "from_element": "Effluent_Mass",
+      "to_element": "Tracked_Mass"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c19",
+      "from_element": "Sorbed_Mass_1",
+      "to_element": "Tracked_Mass"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c20",
+      "from_element": "Sorbed_Mass_2",
+      "to_element": "Tracked_Mass"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c21",
+      "from_element": "Sorbed_Mass_3",
+      "to_element": "Tracked_Mass"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c22",
+      "from_element": "Feed_Concentration",
+      "to_element": "Feed_Mass_Rate"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c23",
+      "from_element": "Flow_Rate",
+      "to_element": "Feed_Mass_Rate"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c24",
+      "from_element": "Concentration_1",
+      "to_element": "Advected_Mass_1"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c25",
+      "from_element": "Flow_Rate",
+      "to_element": "Advected_Mass_1"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c26",
+      "from_element": "Equilibrium_Loading_1",
+      "to_element": "Reversible_Uptake_1"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c27",
+      "from_element": "Kinetic_Rate",
+      "to_element": "Reversible_Uptake_1"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c28",
+      "from_element": "Solid_Mass",
+      "to_element": "Reversible_Uptake_1"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c29",
+      "from_element": "Sorbed_Mass_1",
+      "to_element": "Reversible_Uptake_1"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c30",
+      "from_element": "Concentration_2",
+      "to_element": "Advected_Mass_2"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c31",
+      "from_element": "Flow_Rate",
+      "to_element": "Advected_Mass_2"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c32",
+      "from_element": "Equilibrium_Loading_2",
+      "to_element": "Reversible_Uptake_2"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c33",
+      "from_element": "Kinetic_Rate",
+      "to_element": "Reversible_Uptake_2"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c34",
+      "from_element": "Solid_Mass",
+      "to_element": "Reversible_Uptake_2"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c35",
+      "from_element": "Sorbed_Mass_2",
+      "to_element": "Reversible_Uptake_2"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c36",
+      "from_element": "Concentration_3",
+      "to_element": "Advected_Mass_3"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c37",
+      "from_element": "Flow_Rate",
+      "to_element": "Advected_Mass_3"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c38",
+      "from_element": "Equilibrium_Loading_3",
+      "to_element": "Reversible_Uptake_3"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c39",
+      "from_element": "Kinetic_Rate",
+      "to_element": "Reversible_Uptake_3"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c40",
+      "from_element": "Solid_Mass",
+      "to_element": "Reversible_Uptake_3"
+    },
+    {
+      "id": "three-stage-adsorption-breakthrough-fifth-systems:c41",
+      "from_element": "Sorbed_Mass_3",
+      "to_element": "Reversible_Uptake_3"
+    }
+  ],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.02,
+    "integration_method": "rk4",
+    "units": "second"
+  },
+  "created_at": "2026-10-24T12:00:00",
+  "updated_at": "2026-10-24T12:00:00"
+}
