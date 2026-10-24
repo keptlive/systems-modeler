@@ -1,0 +1,77 @@
+{
+  "id": "green-ampt-ponded-infiltration-environment",
+  "name": "Green-Ampt ponded wetting-front infiltration",
+  "category": "environment",
+  "description": "Ponded infiltration capacity with homogeneous soil and a sharp saturated front. Water supply is maintained at the surface; there is no finite rainfall constraint, redistribution or evapotranspiration. Initial F=.001m represents an already wetted profile and avoids the genuine dry-front singularity F=0; it is not an epsilon inserted in a denominator. All numerical parameters, initial values, horizon and solver settings are illustrative teaching choices; not fitted to a field site. Signed net-rate flows encode state equations, not material transport claims. No numerical clipping or arbitrary domain clamps.",
+  "source": "https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.2/overview-of-optional-capabilities/modeling-precipitation-and-infiltration/green-ampt",
+  "reference": "Green and Ampt(1911), Studies on Soil Physics; primary HEC-RAS technical reference Green-Ampt Eqs1,3.",
+  "stocks": [
+    {
+      "id": "green-ampt-ponded-infiltration-environment:Cumulative_Infiltration",
+      "name": "Cumulative_Infiltration",
+      "initial_value": 0.001,
+      "units": "meter",
+      "equation": "",
+      "position": {
+        "x": 120,
+        "y": 240
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "green-ampt-ponded-infiltration-environment:rate:Cumulative_Infiltration",
+      "name": "Cumulative_Infiltration_net_rate",
+      "equation": "conductivity*(1+suction*water_content_deficit/Cumulative_Infiltration)",
+      "to_stock": "green-ampt-ponded-infiltration-environment:Cumulative_Infiltration",
+      "units": "(meter)/hour",
+      "position": {
+        "x": 120,
+        "y": 340
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "green-ampt-ponded-infiltration-environment:parameter:conductivity",
+      "name": "conductivity",
+      "equation": "0.005",
+      "units": "meter/hour",
+      "position": {
+        "x": 80,
+        "y": 80
+      }
+    },
+    {
+      "id": "green-ampt-ponded-infiltration-environment:parameter:suction",
+      "name": "suction",
+      "equation": "0.1",
+      "units": "meter",
+      "position": {
+        "x": 180,
+        "y": 80
+      }
+    },
+    {
+      "id": "green-ampt-ponded-infiltration-environment:parameter:water_content_deficit",
+      "name": "water_content_deficit",
+      "equation": "0.3",
+      "units": "1",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 10,
+    "dt": 0.05,
+    "integration_method": "radau",
+    "units": "hour",
+    "rtol": 1e-08,
+    "atol": 1e-11
+  }
+}

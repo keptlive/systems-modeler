@@ -1,0 +1,115 @@
+{
+  "id": "candidate-applied-active-opamp-bandpass",
+  "name": "Active Op-Amp RC Band-Pass Step Response",
+  "category": "engineering",
+  "description": "Author two-RC active filter state-space matrices and component values. Our zero-state1V step/3s test probes DC rejection and negative transient; source file plots frequency response only. Distinct from passive RLC resonance. Primary model: \u00c5str\u00f6m and Murray, Feedback Systems, second edition, author BSD 3-Clause Python source pinned dbbc2e1b4233dc148a3dc52c10d08e87881c1f15. Numerical grid is our explicit choice. No empirical calibration or safety-control guarantee. Units not supplied where a coherent physical annotation has not been established.",
+  "source": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/example-6.8-opamp_bandpass.py",
+  "reference": "\u00c5str\u00f6m and Murray, Feedback Systems, second edition; author example code example-6.8-opamp_bandpass.py",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "State1",
+      "initial_value": 0.0,
+      "position": {
+        "x": 240,
+        "y": 200
+      },
+      "units": "volt"
+    },
+    {
+      "id": "s1",
+      "name": "Output",
+      "initial_value": 0.0,
+      "position": {
+        "x": 410,
+        "y": 200
+      },
+      "units": "volt"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_State1",
+      "equation": "(-State1+Voltage)/(R1*C1)",
+      "to_stock": "s0",
+      "position": {
+        "x": 150,
+        "y": 200
+      },
+      "units": "volt/second"
+    },
+    {
+      "id": "f1",
+      "name": "Change_Output",
+      "equation": "State1/(R1*C2)-Output/(R2*C2)-Voltage/(R1*C2)",
+      "to_stock": "s1",
+      "position": {
+        "x": 320,
+        "y": 200
+      },
+      "units": "volt/second"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "R1",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 650
+      },
+      "units": "volt/ampere"
+    },
+    {
+      "id": "p1",
+      "name": "R2",
+      "equation": "5000",
+      "position": {
+        "x": 240,
+        "y": 650
+      },
+      "units": "volt/ampere"
+    },
+    {
+      "id": "p2",
+      "name": "C1",
+      "equation": "0.0001",
+      "position": {
+        "x": 380,
+        "y": 650
+      },
+      "units": "ampere*second/volt"
+    },
+    {
+      "id": "p3",
+      "name": "C2",
+      "equation": "0.0001",
+      "position": {
+        "x": 520,
+        "y": 650
+      },
+      "units": "ampere*second/volt"
+    },
+    {
+      "id": "p4",
+      "name": "Voltage",
+      "equation": "1",
+      "position": {
+        "x": 660,
+        "y": 650
+      },
+      "units": "volt"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 3,
+    "dt": 0.0005,
+    "integration_method": "rk4",
+    "units": "second"
+  }
+}

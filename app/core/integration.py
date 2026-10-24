@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from types import MappingProxyType
 from app.core.model import Model, TimeSettings, SimulationResult, discrete_interval_count
 from app.core.limits import MAX_INTERVALS, MAX_ELEMENTS, MAX_RETAINED_VALUES, MAX_WORK_UNITS
+from app.core.execution_order import derive_execution_order
 from app.core.failure_diagnostics import stalled_evaluation, capacity_error
 from app.core.equations import (EquationError, safe_eval, SimulationContext,
                                 discover_stateful, advance_stateful, canonical_name,
@@ -46,9 +47,12 @@ _active_plan = ContextVar("systems_modeler_evaluation_plan", default=None)
 
 def _make_evaluation_plan(model):
     equations = tuple((e.name, e.equation) for e in (*model.variables, *model.flows))
+    initial_equations = equations + tuple((s.name, s.equation) for s in model.stocks if s.equation)
+    scheduled = derive_execution_order(model)
+    scheduled_initial = derive_execution_order(model, initial=True)
     return _EvaluationPlan(
-        id(model), equations,
-        equations + tuple((s.name, s.equation) for s in model.stocks if s.equation),
+        id(model), scheduled if scheduled is not None else equations,
+        scheduled_initial if scheduled_initial is not None else initial_equations,
         frozenset(canonical_name(e.name) for e in (*model.stocks, *model.flows, *model.variables)),
         MappingProxyType({table.name: tuple(tuple(point) for point in table.to_list()) for table in model.tables}),
         MappingProxyType({table.name: table.interpolation for table in model.tables}),
@@ -108,6 +112,13 @@ def evaluate(model, stocks, t, dt, delay, smooth, initial=False, random_runtime=
                 continue
             values[name] = value
         if len(remaining) == len(pending):
+            # Scheduling changes successful evaluation work, not the authored
+            # ordering of causal evidence returned for failed equations.
+            authored = [e.name for e in (*model.variables, *model.flows)]
+            if initial:
+                authored += [s.name for s in model.stocks if s.equation]
+            positions = {name: index for index, name in enumerate(authored)}
+            remaining.sort(key=lambda item: positions[item[0]])
             raise stalled_evaluation(model, remaining, errors, t, stocks)
         pending = remaining
     # A conditional controls its output, not the passage of time in hidden stocks.

@@ -1,0 +1,87 @@
+{
+  "id": "goldbeter-koshland-dynamic-switch-biology",
+  "name": "Goldbeter-Koshland dynamic covalent modification switch",
+  "description": "Dynamic reduced phosphorylation/dephosphorylation cycle with normalized total substrate1 and two saturated opposing enzymes. This teaches zero-order ultrasensitivity rather than a two-gene transcriptional toggle. Assumes quasi-steady enzyme kinetics; fractions remain in[0,1] by boundary rates without clamps. Illustrative parameter values, initial conditions and horizon selected for this teaching example; not fitted observations. Signed net-rate flows encode equations, not material transfer claims. No clamps or hidden state resets.",
+  "source": "https://doi.org/10.1073/pnas.78.11.6840",
+  "reference": "Goldbeter and Koshland (1981), An amplified sensitivity arising from covalent modification in biological systems, PNAS78:6840-6844.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "goldbeter-koshland-dynamic-switch-biology:Modified_Fraction",
+      "name": "Modified_Fraction",
+      "initial_value": 0.2,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 140,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "goldbeter-koshland-dynamic-switch-biology:rate:Modified_Fraction",
+      "name": "Modified_Fraction_net_rate",
+      "equation": "forward_capacity*(1-Modified_Fraction)/(forward_saturation+1-Modified_Fraction)-reverse_capacity*Modified_Fraction/(reverse_saturation+Modified_Fraction)",
+      "to_stock": "goldbeter-koshland-dynamic-switch-biology:Modified_Fraction",
+      "units": "(1)/time",
+      "position": {
+        "x": 140,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "goldbeter-koshland-dynamic-switch-biology:parameter:forward_capacity",
+      "name": "forward_capacity",
+      "equation": "0.1",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "goldbeter-koshland-dynamic-switch-biology:parameter:reverse_capacity",
+      "name": "reverse_capacity",
+      "equation": "0.09",
+      "units": "1/time",
+      "position": {
+        "x": 190,
+        "y": 80
+      }
+    },
+    {
+      "id": "goldbeter-koshland-dynamic-switch-biology:parameter:forward_saturation",
+      "name": "forward_saturation",
+      "equation": "0.01",
+      "units": "1",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "goldbeter-koshland-dynamic-switch-biology:parameter:reverse_saturation",
+      "name": "reverse_saturation",
+      "equation": "0.01",
+      "units": "1",
+      "position": {
+        "x": 370,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 300,
+    "dt": 0.05,
+    "integration_method": "rk4",
+    "units": "time",
+    "rtol": 1e-08,
+    "atol": 1e-10
+  }
+}

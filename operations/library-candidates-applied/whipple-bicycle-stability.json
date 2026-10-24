@@ -1,0 +1,97 @@
+{
+  "id": "candidate-applied-whipple-bicycle-stability",
+  "name": "Whipple Bicycle Self-Stability at 7 m/s",
+  "category": "transportation",
+  "description": "Author mass/geometry/inertia matrices, chosen stable speed7m/s; our illustrative small roll0.01rad, zero steer/rates and10s horizon. Four-state roll/steer feedback is distinct from passive pendulum dynamics. Primary model: \u00c5str\u00f6m and Murray, Feedback Systems, second edition, author BSD 3-Clause Python source pinned dbbc2e1b4233dc148a3dc52c10d08e87881c1f15. Numerical grid is our explicit choice. No empirical calibration or safety-control guarantee. Units not supplied where a coherent physical annotation has not been established.",
+  "source": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/bicycle.py",
+  "reference": "\u00c5str\u00f6m and Murray, Feedback Systems, second edition; author example code bicycle.py, example-5.17-bicycle_stability.py",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Roll",
+      "initial_value": 0.01,
+      "position": {
+        "x": 240,
+        "y": 200
+      }
+    },
+    {
+      "id": "s1",
+      "name": "Steer",
+      "initial_value": 0.0,
+      "position": {
+        "x": 410,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "RollRate",
+      "initial_value": 0.0,
+      "position": {
+        "x": 580,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "SteerRate",
+      "initial_value": 0.0,
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Roll",
+      "equation": "(1.0)*RollRate",
+      "to_stock": "s0",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "f1",
+      "name": "Change_Steer",
+      "equation": "(1.0)*SteerRate",
+      "to_stock": "s1",
+      "position": {
+        "x": 320,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Change_RollRate",
+      "equation": "(8.761069792271886)*Roll+(42.830892580733924)*Steer+(-0.8918013001360405)*RollRate+(3.008064068481498)*SteerRate",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Change_SteerRate",
+      "equation": "(-14.947682398203803)*Roll+(-24.34747526279181)*Steer+(-24.14516362174167)*RollRate+(-18.072483267201797)*SteerRate",
+      "to_stock": "s3",
+      "position": {
+        "x": 660,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 10,
+    "dt": 0.005,
+    "integration_method": "rk4"
+  }
+}

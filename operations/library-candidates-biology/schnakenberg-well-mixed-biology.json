@@ -1,0 +1,109 @@
+{
+  "id": "schnakenberg-well-mixed-biology",
+  "name": "Schnakenberg autocatalytic morphogen reaction core",
+  "description": "Well-mixed two-species reaction core with activator autocatalysis and substrate depletion. No diffusion or spatial Turing pattern is claimed. Unlike the active Brusselator, it uses direct feed into the second species and a three-reaction autocatalytic scheme. Illustrative parameter values, initial conditions and horizon selected for this teaching example; not fitted observations. Signed net-rate flows encode equations, not material transfer claims. No clamps or hidden state resets.",
+  "source": "https://doi.org/10.1016/0022-5193(79)90042-0",
+  "reference": "Schnakenberg (1979), Simple chemical reaction systems with limit cycle behaviour, Journal of Theoretical Biology81:389-400.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "schnakenberg-well-mixed-biology:Activator",
+      "name": "Activator",
+      "initial_value": 1.1,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 140,
+        "y": 250
+      }
+    },
+    {
+      "id": "schnakenberg-well-mixed-biology:Substrate",
+      "name": "Substrate",
+      "initial_value": 0.8,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 320,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "schnakenberg-well-mixed-biology:rate:Activator",
+      "name": "Activator_net_rate",
+      "equation": "activator_feed-linear_loss*Activator+autocatalytic_rate*Activator^2*Substrate",
+      "to_stock": "schnakenberg-well-mixed-biology:Activator",
+      "units": "(1)/time",
+      "position": {
+        "x": 140,
+        "y": 350
+      }
+    },
+    {
+      "id": "schnakenberg-well-mixed-biology:rate:Substrate",
+      "name": "Substrate_net_rate",
+      "equation": "substrate_feed-autocatalytic_rate*Activator^2*Substrate",
+      "to_stock": "schnakenberg-well-mixed-biology:Substrate",
+      "units": "(1)/time",
+      "position": {
+        "x": 320,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "schnakenberg-well-mixed-biology:parameter:activator_feed",
+      "name": "activator_feed",
+      "equation": "0.1",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "schnakenberg-well-mixed-biology:parameter:substrate_feed",
+      "name": "substrate_feed",
+      "equation": "0.9",
+      "units": "1/time",
+      "position": {
+        "x": 190,
+        "y": 80
+      }
+    },
+    {
+      "id": "schnakenberg-well-mixed-biology:parameter:linear_loss",
+      "name": "linear_loss",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "schnakenberg-well-mixed-biology:parameter:autocatalytic_rate",
+      "name": "autocatalytic_rate",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 370,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.02,
+    "integration_method": "rk4",
+    "units": "time",
+    "rtol": 1e-08,
+    "atol": 1e-10
+  }
+}

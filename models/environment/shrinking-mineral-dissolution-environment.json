@@ -1,0 +1,109 @@
+{
+  "id": "shrinking-mineral-dissolution-environment",
+  "name": "Shrinking spherical mineral dissolution into a finite water volume",
+  "category": "environment",
+  "description": "A single spherical particle shrinks while a finite well-mixed water volume approaches saturation. Constant transfer coefficient, uniform density and no precipitation/reaction speciation. Initial solid exceeds dissolved saturation capacity, so radius stays positive; total dissolved mass plus(4PI/3)*density*radius^3 is conserved. The saved default does not extend past complete dissolution and has no zero-radius clamp. All numerical parameters, initial values, horizon and solver settings are illustrative teaching choices; not fitted to a field site. Signed net-rate flows encode state equations, not material transport claims. No numerical clipping or arbitrary domain clamps.",
+  "source": "https://doi.org/10.1021/ja02086a003",
+  "reference": "Noyes and Whitney(1897), The rate of solution of solid substances in their own solutions, JACS19:930-934; spherical-area/mass balance derived explicitly for this example.",
+  "stocks": [
+    {
+      "id": "shrinking-mineral-dissolution-environment:Particle_Radius",
+      "name": "Particle_Radius",
+      "initial_value": 0.001,
+      "units": "meter",
+      "equation": "",
+      "position": {
+        "x": 120,
+        "y": 240
+      }
+    },
+    {
+      "id": "shrinking-mineral-dissolution-environment:Dissolved_Concentration",
+      "name": "Dissolved_Concentration",
+      "initial_value": 0,
+      "units": "kilogram/meter^3",
+      "equation": "",
+      "position": {
+        "x": 280,
+        "y": 240
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "shrinking-mineral-dissolution-environment:rate:Particle_Radius",
+      "name": "Particle_Radius_net_rate",
+      "equation": "-mass_transfer/solid_density*(saturation-Dissolved_Concentration)",
+      "to_stock": "shrinking-mineral-dissolution-environment:Particle_Radius",
+      "units": "(meter)/day",
+      "position": {
+        "x": 120,
+        "y": 340
+      }
+    },
+    {
+      "id": "shrinking-mineral-dissolution-environment:rate:Dissolved_Concentration",
+      "name": "Dissolved_Concentration_net_rate",
+      "equation": "4*PI*Particle_Radius^2*mass_transfer*(saturation-Dissolved_Concentration)/water_volume",
+      "to_stock": "shrinking-mineral-dissolution-environment:Dissolved_Concentration",
+      "units": "(kilogram/meter^3)/day",
+      "position": {
+        "x": 280,
+        "y": 340
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "shrinking-mineral-dissolution-environment:parameter:mass_transfer",
+      "name": "mass_transfer",
+      "equation": "1",
+      "units": "meter/day",
+      "position": {
+        "x": 80,
+        "y": 80
+      }
+    },
+    {
+      "id": "shrinking-mineral-dissolution-environment:parameter:solid_density",
+      "name": "solid_density",
+      "equation": "2500",
+      "units": "kilogram/meter^3",
+      "position": {
+        "x": 180,
+        "y": 80
+      }
+    },
+    {
+      "id": "shrinking-mineral-dissolution-environment:parameter:saturation",
+      "name": "saturation",
+      "equation": "0.005",
+      "units": "kilogram/meter^3",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "shrinking-mineral-dissolution-environment:parameter:water_volume",
+      "name": "water_volume",
+      "equation": "0.001",
+      "units": "meter^3",
+      "position": {
+        "x": 380,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 2000,
+    "dt": 1,
+    "integration_method": "rk4",
+    "units": "day",
+    "rtol": 1e-08,
+    "atol": 1e-11
+  }
+}

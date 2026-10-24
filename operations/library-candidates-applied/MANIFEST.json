@@ -1,0 +1,829 @@
+{
+  "source_repository": "https://github.com/murrayrm/fbs2e-python",
+  "source_revision": "dbbc2e1b4233dc148a3dc52c10d08e87881c1f15",
+  "candidates": [
+    {
+      "file": "sensor-consensus-five-node.json",
+      "id": "candidate-applied-sensor-consensus-five-node",
+      "source_revision": "dbbc2e1b4233dc148a3dc52c10d08e87881c1f15",
+      "license": "BSD-3-Clause",
+      "copyright": "Copyright (c) 2021, Richard Murray",
+      "sources": [
+        {
+          "file": "example-3.17-consensus.py",
+          "url": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/example-3.17-consensus.py",
+          "sha256": "962d2ca785fccd9a07f48beeb86b57ad161938d66d8463cbe89e9af1deb94d5a"
+        }
+      ],
+      "scenario": "Exact author graph, gain0.1, measurements and40 iterations. Synchronous average consensus differs from scalar social voter fractions.",
+      "parameters": {},
+      "initials": {
+        "Node1": 10.0,
+        "Node2": 15.0,
+        "Node3": 25.0,
+        "Node4": 35.0,
+        "Node5": 40.0
+      },
+      "equations": {
+        "Node1": "-0.1*Node1+0.1*Node2",
+        "Node2": "0.1*Node1+-0.4*Node2+0.1*Node3+0.1*Node4+0.1*Node5",
+        "Node3": "0.1*Node2+-0.2*Node3+0.1*Node4",
+        "Node4": "0.1*Node2+0.1*Node3+-0.2*Node4",
+        "Node5": "0.1*Node2+-0.1*Node5"
+      },
+      "settings": {
+        "start": 0,
+        "end": 40,
+        "dt": 1,
+        "integration_method": "euler",
+        "discrete_period": 1,
+        "units": "1"
+      },
+      "reference_data": {
+        "laplacian": [
+          [
+            1,
+            -1,
+            0,
+            0,
+            0
+          ],
+          [
+            -1,
+            4,
+            -1,
+            -1,
+            -1
+          ],
+          [
+            0,
+            -1,
+            2,
+            -1,
+            0
+          ],
+          [
+            0,
+            -1,
+            -1,
+            2,
+            0
+          ],
+          [
+            0,
+            -1,
+            0,
+            0,
+            1
+          ]
+        ],
+        "gain": 0.1
+      },
+      "status": "not active; independent admission review required",
+      "candidate_sha256": "3ef61072ab7038b4b0e738e34661ca1b9b65faa5f84514ec492b682f53987285"
+    },
+    {
+      "file": "tcp-red-router.json",
+      "id": "candidate-applied-tcp-red-router",
+      "source_revision": "dbbc2e1b4233dc148a3dc52c10d08e87881c1f15",
+      "license": "BSD-3-Clause",
+      "copyright": "Copyright (c) 2021, Richard Murray",
+      "sources": [
+        {
+          "file": "congctrl.py",
+          "url": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/congctrl.py",
+          "sha256": "90c353cf9d512fba1e89febcfe10c719dec4259aaa546396266a6746a32a6492"
+        },
+        {
+          "file": "figure-4.13-congctrl_tcpsim.py",
+          "url": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/figure-4.13-congctrl_tcpsim.py",
+          "sha256": "07c320686e66dd113bc1826714b64a6e9608409e53b7eb81ebdd77694c8909a0"
+        }
+      ],
+      "scenario": "Exact first500ms source phase: six aggregated windows representing60sources, equilibrium-derived seed6 perturbations, half-equilibrium queue. Later source-count change is outside this fixed-dimension model. Positive-queue domain is checked, not clamped.",
+      "parameters": {
+        "Capacity": 10,
+        "Rho": 0.0002
+      },
+      "initials": {
+        "Window1": 8.539656583102424,
+        "Window2": 8.847662423939779,
+        "Window3": 5.221000726199899,
+        "Window4": 2.816141103719344,
+        "Window5": 0.00486234096945104,
+        "Window6": 7.13469925418935,
+        "Queue": 161.46272118152407
+      },
+      "equations": {
+        "Window1": "Capacity/Queue-Rho*Capacity*(1+Window1^2/2)",
+        "Window2": "Capacity/Queue-Rho*Capacity*(1+Window2^2/2)",
+        "Window3": "Capacity/Queue-Rho*Capacity*(1+Window3^2/2)",
+        "Window4": "Capacity/Queue-Rho*Capacity*(1+Window4^2/2)",
+        "Window5": "Capacity/Queue-Rho*Capacity*(1+Window5^2/2)",
+        "Window6": "Capacity/Queue-Rho*Capacity*(1+Window6^2/2)",
+        "Queue": "10*(Window1+Window2+Window3+Window4+Window5+Window6)*Capacity/Queue-Capacity"
+      },
+      "settings": {
+        "start": 0,
+        "end": 500,
+        "dt": 0.1,
+        "integration_method": "rk4"
+      },
+      "reference_data": {
+        "weq": 5.3820907060508025
+      },
+      "status": "not active; independent admission review required",
+      "candidate_sha256": "4120299c8c5b464e447e96abf1d2d0ed0e89b0631447d2683610f33ca490fdf6"
+    },
+    {
+      "file": "ship-turning-path.json",
+      "id": "candidate-applied-ship-turning-path",
+      "source_revision": "dbbc2e1b4233dc148a3dc52c10d08e87881c1f15",
+      "license": "BSD-3-Clause",
+      "copyright": "Copyright (c) 2021, Richard Murray",
+      "sources": [
+        {
+          "file": "example-5.8-tanker_stabilty.py",
+          "url": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/example-5.8-tanker_stabilty.py",
+          "sha256": "b357244d2b8afad0aef54d1ba9b7c9948c20fdf8f8ff68bd49dbf07d2a49f2ec"
+        }
+      ],
+      "scenario": "Author five-state path model, zero rudder, initial yaw0.1 and100normalized time units. Nonlinear sway drag yields a curved path from a small turning perturbation, not fixed-speed point-mass transport.",
+      "parameters": {
+        "a1": -0.6,
+        "a2": -0.3,
+        "a3": -5,
+        "a4": -2,
+        "alpha": -2,
+        "b1": 0.1,
+        "b2": -0.8,
+        "Rudder": 0
+      },
+      "initials": {
+        "PosX": 0.0,
+        "PosY": 0.0,
+        "Heading": 0.0,
+        "Sway": 0.0,
+        "Yaw": 0.1
+      },
+      "equations": {
+        "PosX": "COS(Heading)+Sway*SIN(Heading)",
+        "PosY": "-SIN(Heading)+Sway*COS(Heading)",
+        "Heading": "Yaw",
+        "Sway": "a1*Sway+a2*Yaw+alpha*Sway*ABS(Sway)+b1*Rudder",
+        "Yaw": "a3*Sway+a4*Yaw+b2*Rudder"
+      },
+      "settings": {
+        "start": 0,
+        "end": 100,
+        "dt": 0.02,
+        "integration_method": "rk4"
+      },
+      "reference_data": null,
+      "status": "not active; independent admission review required",
+      "candidate_sha256": "ccc74a62621d060388a6d58684d495d129142b80c5722933e842ec4507ce9f74"
+    },
+    {
+      "file": "whipple-bicycle-stability.json",
+      "id": "candidate-applied-whipple-bicycle-stability",
+      "source_revision": "dbbc2e1b4233dc148a3dc52c10d08e87881c1f15",
+      "license": "BSD-3-Clause",
+      "copyright": "Copyright (c) 2021, Richard Murray",
+      "sources": [
+        {
+          "file": "bicycle.py",
+          "url": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/bicycle.py",
+          "sha256": "68b1db99eaa8e6564cac26616cc5c420a4a01249a5adabe36a61a4d4bfea257f"
+        },
+        {
+          "file": "example-5.17-bicycle_stability.py",
+          "url": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/example-5.17-bicycle_stability.py",
+          "sha256": "81daef3adb9b68c8f5812146eb3915e1f30a3348239124c7ef65d70e58893f62"
+        }
+      ],
+      "scenario": "Author mass/geometry/inertia matrices, chosen stable speed7m/s; our illustrative small roll0.01rad, zero steer/rates and10s horizon. Four-state roll/steer feedback is distinct from passive pendulum dynamics.",
+      "parameters": {},
+      "initials": {
+        "Roll": 0.01,
+        "Steer": 0.0,
+        "RollRate": 0.0,
+        "SteerRate": 0.0
+      },
+      "equations": {
+        "Roll": "(1.0)*RollRate",
+        "Steer": "(1.0)*SteerRate",
+        "RollRate": "(8.761069792271886)*Roll+(42.830892580733924)*Steer+(-0.8918013001360405)*RollRate+(3.008064068481498)*SteerRate",
+        "SteerRate": "(-14.947682398203803)*Roll+(-24.34747526279181)*Steer+(-24.14516362174167)*RollRate+(-18.072483267201797)*SteerRate"
+      },
+      "settings": {
+        "start": 0,
+        "end": 10,
+        "dt": 0.005,
+        "integration_method": "rk4"
+      },
+      "reference_data": {
+        "speed": 7,
+        "M": [
+          [
+            96.75001199282798,
+            -3.573460417791019
+          ],
+          [
+            -3.573460417791019,
+            0.2583928763798249
+          ]
+        ],
+        "C": [
+          [
+            0.0,
+            -50.801648329616555
+          ],
+          [
+            0.43601737604466156,
+            2.2027141168052244
+          ]
+        ],
+        "K0": [
+          [
+            -901.0485588600003,
+            35.16971077027211
+          ],
+          [
+            35.16971077027211,
+            -12.028749518370786
+          ]
+        ],
+        "K2": [
+          [
+            0.0,
+            -87.06252695397015
+          ],
+          [
+            0.0,
+            3.4974380200004456
+          ]
+        ],
+        "A": [
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          [
+            8.761069792271886,
+            42.830892580733924,
+            -0.8918013001360405,
+            3.008064068481498
+          ],
+          [
+            -14.947682398203803,
+            -24.34747526279181,
+            -24.14516362174167,
+            -18.072483267201797
+          ]
+        ]
+      },
+      "status": "not active; independent admission review required",
+      "candidate_sha256": "2249402002639df9a2fd41e04114655d103f44d3b2c5054fb22de8bc6d57bbf7"
+    },
+    {
+      "file": "nonlinear-cruise-pi.json",
+      "id": "candidate-applied-nonlinear-cruise-pi",
+      "source_revision": "dbbc2e1b4233dc148a3dc52c10d08e87881c1f15",
+      "license": "BSD-3-Clause",
+      "copyright": "Copyright (c) 2021, Richard Murray",
+      "sources": [
+        {
+          "file": "cruise.py",
+          "url": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/cruise.py",
+          "sha256": "8da0330599fc736470bc094762d20d39b0376f542c36fe8e74376c0420331b0c"
+        },
+        {
+          "file": "figure-1.11-cruise_robustness.py",
+          "url": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/figure-1.11-cruise_robustness.py",
+          "sha256": "3eddae045775fb508bf55c20e1303a12c43c1dd6597dc52492afc5c4c3fc1098"
+        }
+      ],
+      "scenario": "Source1600kg vehicle, gear4,20m/s reference,4degree slope ramp5\u20136s and25s horizon. Initial state is the computed exact closed-loop equilibrium for fixed20m/s command, rather than the source find_eqpt routine allowed to adjust that command. Retains author throttle/torque saturation and controller leak.",
+      "parameters": {
+        "Mass": 1600,
+        "g": 9.8,
+        "Cr": 0.01,
+        "Cd": 0.32,
+        "rho": 1.3,
+        "Area": 2.4,
+        "GearFactor": 12,
+        "TorquePeak": 190,
+        "OmegaPeak": 420,
+        "Rolloff": 0.4,
+        "Reference": 20
+      },
+      "initials": {
+        "Speed": 19.99662554259098,
+        "ControllerState": 1.687228704509991
+      },
+      "equations": {
+        "Speed": "(EngineForce-GravityForce-RollForce-DragForce)/Mass",
+        "ControllerState": "Reference-Speed-Leak*ControllerState"
+      },
+      "settings": {
+        "start": 0,
+        "end": 25,
+        "dt": 0.005,
+        "integration_method": "rk4",
+        "units": "second"
+      },
+      "reference_data": null,
+      "status": "not active; independent admission review required",
+      "candidate_sha256": "d84f8a26ccd9d568f0b3d6ac6b729c7f7a6404bfdd7c9ff228293306135ca8dc",
+      "derived_numerical_parameters": {
+        "PIGain": {
+          "value": 0.5,
+          "units": "second/meter"
+        },
+        "IntegralGain": {
+          "value": 0.1,
+          "units": "1/meter"
+        },
+        "Leak": {
+          "value": 0.002,
+          "units": "1/second"
+        },
+        "HillAngle": {
+          "value": 0.06981317007977318,
+          "units": "1"
+        },
+        "HillStart": {
+          "value": 5,
+          "units": "second"
+        },
+        "HillRamp": {
+          "value": 1,
+          "units": "second"
+        }
+      }
+    },
+    {
+      "file": "airfuel-cross-limit.json",
+      "id": "candidate-applied-airfuel-cross-limit",
+      "source_revision": "dbbc2e1b4233dc148a3dc52c10d08e87881c1f15",
+      "license": "BSD-3-Clause",
+      "copyright": "Copyright (c) 2021, Richard Murray",
+      "sources": [
+        {
+          "file": "figure-1.18-airfuel_selectors.py",
+          "url": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/figure-1.18-airfuel_selectors.py",
+          "sha256": "e1c493f947d81ffcd4099da5b16d12f8b2132844278d72c9e767224a37b10318"
+        }
+      ],
+      "scenario": "Exact author air/oil transfer blocks expanded into output and output-rate states. Author101 sampled command values and linear interpolation are retained, including sample-grid ramps around nominal1s/15s steps. Cross-limit selectors preserve air lead during load changes.",
+      "parameters": {},
+      "initials": {
+        "Air": 0.0,
+        "AirRate": 0.0,
+        "Fuel": 0.0,
+        "FuelRate": 0.0
+      },
+      "equations": {
+        "Air": "AirRate",
+        "AirRate": "-8*AirRate-4*Air+4*MAX(CommandValue,Fuel)",
+        "Fuel": "FuelRate",
+        "FuelRate": "-3*FuelRate-4*Fuel+4*MIN(CommandValue,Air)"
+      },
+      "settings": {
+        "start": 0,
+        "end": 30,
+        "dt": 0.0025,
+        "integration_method": "rk4"
+      },
+      "reference_data": {
+        "command_times": [
+          0.0,
+          0.3,
+          0.6,
+          0.8999999999999999,
+          1.2,
+          1.5,
+          1.7999999999999998,
+          2.1,
+          2.4,
+          2.6999999999999997,
+          3.0,
+          3.3,
+          3.5999999999999996,
+          3.9,
+          4.2,
+          4.5,
+          4.8,
+          5.1,
+          5.3999999999999995,
+          5.7,
+          6.0,
+          6.3,
+          6.6,
+          6.8999999999999995,
+          7.199999999999999,
+          7.5,
+          7.8,
+          8.1,
+          8.4,
+          8.7,
+          9.0,
+          9.299999999999999,
+          9.6,
+          9.9,
+          10.2,
+          10.5,
+          10.799999999999999,
+          11.1,
+          11.4,
+          11.7,
+          12.0,
+          12.299999999999999,
+          12.6,
+          12.9,
+          13.2,
+          13.5,
+          13.799999999999999,
+          14.1,
+          14.399999999999999,
+          14.7,
+          15.0,
+          15.299999999999999,
+          15.6,
+          15.899999999999999,
+          16.2,
+          16.5,
+          16.8,
+          17.099999999999998,
+          17.4,
+          17.7,
+          18.0,
+          18.3,
+          18.599999999999998,
+          18.9,
+          19.2,
+          19.5,
+          19.8,
+          20.099999999999998,
+          20.4,
+          20.7,
+          21.0,
+          21.3,
+          21.599999999999998,
+          21.9,
+          22.2,
+          22.5,
+          22.8,
+          23.099999999999998,
+          23.4,
+          23.7,
+          24.0,
+          24.3,
+          24.599999999999998,
+          24.9,
+          25.2,
+          25.5,
+          25.8,
+          26.099999999999998,
+          26.4,
+          26.7,
+          27.0,
+          27.3,
+          27.599999999999998,
+          27.9,
+          28.2,
+          28.5,
+          28.799999999999997,
+          29.099999999999998,
+          29.4,
+          29.7,
+          30.0
+        ],
+        "command_values": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "status": "not active; independent admission review required",
+      "candidate_sha256": "e1428b02d15022bf2cdf520b177db20e0974b0b0f72af39fd7fc4e6c2d547652"
+    },
+    {
+      "file": "adaptive-noise-cancel.json",
+      "id": "candidate-applied-adaptive-noise-cancel",
+      "source_revision": "dbbc2e1b4233dc148a3dc52c10d08e87881c1f15",
+      "license": "BSD-3-Clause",
+      "copyright": "Copyright (c) 2021, Richard Murray",
+      "sources": [
+        {
+          "file": "example-5.18-noise_cancel.py",
+          "url": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/example-5.18-noise_cancel.py",
+          "sha256": "f7e7afe7f92925059be43c12728107fd386de98d9964de1b8139b9d5c6664d25"
+        }
+      ],
+      "scenario": "Author coupled headphone/filter/gradient adaptation equations. Our reproducible identification scenario uses two-tone noise sin0.7t+0.5sin1.3t and zero desired signal, initial filtera=-0.5,b=0. Replaces source sampled unseeded white noise explicitly; not a pixel reproduction of its noisy figure.",
+      "parameters": {
+        "Adaptation": 0.01
+      },
+      "initials": {
+        "Headphone": 0.0,
+        "Filter": 0.0,
+        "FilterA": -0.5,
+        "FilterB": 0.0
+      },
+      "equations": {
+        "Headphone": "-0.75*Headphone+0.9*Noise",
+        "Filter": "FilterA*Filter+FilterB*Noise",
+        "FilterA": "Adaptation*Filter*Error",
+        "FilterB": "Adaptation*Noise*Error"
+      },
+      "settings": {
+        "start": 0,
+        "end": 200,
+        "dt": 0.02,
+        "integration_method": "rk4"
+      },
+      "reference_data": null,
+      "status": "not active; independent admission review required",
+      "candidate_sha256": "63059fffe7d637267266946d71642255419bb8243ed92092a0013d07f6150b89"
+    },
+    {
+      "file": "active-opamp-bandpass.json",
+      "id": "candidate-applied-active-opamp-bandpass",
+      "source_revision": "dbbc2e1b4233dc148a3dc52c10d08e87881c1f15",
+      "license": "BSD-3-Clause",
+      "copyright": "Copyright (c) 2021, Richard Murray",
+      "sources": [
+        {
+          "file": "example-6.8-opamp_bandpass.py",
+          "url": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/example-6.8-opamp_bandpass.py",
+          "sha256": "b08dfd93e52ecc7531973e21b17350998265a1fa100c4f1cd1ac51e5994f3eaa"
+        }
+      ],
+      "scenario": "Author two-RC active filter state-space matrices and component values. Our zero-state1V step/3s test probes DC rejection and negative transient; source file plots frequency response only. Distinct from passive RLC resonance.",
+      "parameters": {
+        "R1": 100,
+        "R2": 5000,
+        "C1": 0.0001,
+        "C2": 0.0001,
+        "Voltage": 1
+      },
+      "initials": {
+        "State1": 0.0,
+        "Output": 0.0
+      },
+      "equations": {
+        "State1": "(-State1+Voltage)/(R1*C1)",
+        "Output": "State1/(R1*C2)-Output/(R2*C2)-Voltage/(R1*C2)"
+      },
+      "settings": {
+        "start": 0,
+        "end": 3,
+        "dt": 0.0005,
+        "integration_method": "rk4",
+        "units": "second"
+      },
+      "reference_data": {
+        "A": [
+          [
+            -100,
+            0
+          ],
+          [
+            100,
+            -2
+          ]
+        ],
+        "B": [
+          100,
+          -100
+        ]
+      },
+      "status": "not active; independent admission review required",
+      "candidate_sha256": "968a906b64413f3a28df71e97efa07847cb61fd23e2dce84c2a9342c4e147915"
+    },
+    {
+      "file": "afm-piezo-modes.json",
+      "id": "candidate-applied-afm-piezo-modes",
+      "source_revision": "dbbc2e1b4233dc148a3dc52c10d08e87881c1f15",
+      "license": "BSD-3-Clause",
+      "copyright": "Copyright (c) 2021, Richard Murray",
+      "sources": [
+        {
+          "file": "example-6.9-afm_freqresp.py",
+          "url": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/example-6.9-afm_freqresp.py",
+          "sha256": "4a0d4a5b437bb99beb5f2a051c06a93030c27220488051bded2870c951dd226d"
+        }
+      ],
+      "scenario": "Author AFMpiezo four-state matrices with masses0.15g/1g and modal frequencies40.9/41.6/120kHz. Our zero-state unit input over300microseconds probes coupled modal transient. These source states are a realization, not all direct displacements; no invented physical units or force softening.",
+      "parameters": {},
+      "initials": {
+        "Mode1": 0.0,
+        "Rate1": 0.0,
+        "Mode2": 0.0,
+        "Rate2": 0.0
+      },
+      "equations": {
+        "Mode1": "(1.0)*Rate1",
+        "Rate1": "(-59408495973.38851)*Mode1+(-22346.285135969138)*Rate1+(1000.0)*Mode2",
+        "Mode2": "(1.0)*Rate2",
+        "Rate2": "(-568489213502.7471)*Mode2+(-150796.44737231007)*Rate2+568489213502.7471"
+      },
+      "settings": {
+        "start": 0,
+        "end": 0.0003,
+        "dt": 5e-08,
+        "integration_method": "rk4"
+      },
+      "reference_data": {
+        "A": [
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            -59408495973.38851,
+            -22346.285135969138,
+            1000.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          [
+            0.0,
+            0.0,
+            -568489213502.7471,
+            -150796.44737231007
+          ]
+        ],
+        "B": [
+          0,
+          0,
+          0,
+          568489213502.7471
+        ],
+        "m1": 0.00015,
+        "m2": 0.001,
+        "f1": 40900,
+        "f2": 41600,
+        "f3": 120000,
+        "C": [
+          7748934.257398502,
+          2.9147328438220614,
+          0.8695652173913044,
+          0
+        ]
+      },
+      "status": "not active; independent admission review required",
+      "candidate_sha256": "18307e3c1504406322761f981645f1ff26f2e163edb68c332ba2e22c40d26233"
+    },
+    {
+      "file": "nonlinear-pendulum-feedback.json",
+      "id": "candidate-applied-nonlinear-pendulum-feedback",
+      "source_revision": "dbbc2e1b4233dc148a3dc52c10d08e87881c1f15",
+      "license": "BSD-3-Clause",
+      "copyright": "Copyright (c) 2021, Richard Murray",
+      "sources": [
+        {
+          "file": "example-5.14-invpend_stabilized.py",
+          "url": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/example-5.14-invpend_stabilized.py",
+          "sha256": "3113b123e5656d763803a7c8491cd7d11794b7f826fc774c5c09e4cef18388bc"
+        }
+      ],
+      "scenario": "Author nonlinear force feedback law with gain2; our illustrative0.5rad perturbation, zero rate and20normalized time units. Demonstrates feedback stabilization and a dissipating Lyapunov quantity rather than another passive oscillator.",
+      "parameters": {
+        "Gain": 2
+      },
+      "initials": {
+        "Angle": 0.5,
+        "AngularRate": 0.0
+      },
+      "equations": {
+        "Angle": "AngularRate",
+        "AngularRate": "SIN(Angle)+Control*COS(Angle)"
+      },
+      "settings": {
+        "start": 0,
+        "end": 20,
+        "dt": 0.005,
+        "integration_method": "rk4",
+        "units": "1"
+      },
+      "reference_data": null,
+      "status": "not active; independent admission review required",
+      "candidate_sha256": "16805ee3e668ac2398aeae3d8afcb807a21eac4641221dc0f9b5ae79dd866322"
+    }
+  ]
+}

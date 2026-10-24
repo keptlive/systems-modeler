@@ -1,0 +1,189 @@
+{
+  "id": "candidate-applied-ship-turning-path",
+  "name": "Nonlinear Tanker Turning and Path Instability",
+  "category": "transportation",
+  "description": "Author five-state path model, zero rudder, initial yaw0.1 and100normalized time units. Nonlinear sway drag yields a curved path from a small turning perturbation, not fixed-speed point-mass transport. Primary model: \u00c5str\u00f6m and Murray, Feedback Systems, second edition, author BSD 3-Clause Python source pinned dbbc2e1b4233dc148a3dc52c10d08e87881c1f15. Numerical grid is our explicit choice. No empirical calibration or safety-control guarantee. Units not supplied where a coherent physical annotation has not been established.",
+  "source": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/example-5.8-tanker_stabilty.py",
+  "reference": "\u00c5str\u00f6m and Murray, Feedback Systems, second edition; author example code example-5.8-tanker_stabilty.py",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "PosX",
+      "initial_value": 0.0,
+      "position": {
+        "x": 240,
+        "y": 200
+      }
+    },
+    {
+      "id": "s1",
+      "name": "PosY",
+      "initial_value": 0.0,
+      "position": {
+        "x": 410,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Heading",
+      "initial_value": 0.0,
+      "position": {
+        "x": 580,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Sway",
+      "initial_value": 0.0,
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Yaw",
+      "initial_value": 0.1,
+      "position": {
+        "x": 920,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_PosX",
+      "equation": "COS(Heading)+Sway*SIN(Heading)",
+      "to_stock": "s0",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "f1",
+      "name": "Change_PosY",
+      "equation": "-SIN(Heading)+Sway*COS(Heading)",
+      "to_stock": "s1",
+      "position": {
+        "x": 320,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Change_Heading",
+      "equation": "Yaw",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Change_Sway",
+      "equation": "a1*Sway+a2*Yaw+alpha*Sway*ABS(Sway)+b1*Rudder",
+      "to_stock": "s3",
+      "position": {
+        "x": 660,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Change_Yaw",
+      "equation": "a3*Sway+a4*Yaw+b2*Rudder",
+      "to_stock": "s4",
+      "position": {
+        "x": 830,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "a1",
+      "equation": "-0.6",
+      "position": {
+        "x": 100,
+        "y": 650
+      }
+    },
+    {
+      "id": "p1",
+      "name": "a2",
+      "equation": "-0.3",
+      "position": {
+        "x": 240,
+        "y": 650
+      }
+    },
+    {
+      "id": "p2",
+      "name": "a3",
+      "equation": "-5",
+      "position": {
+        "x": 380,
+        "y": 650
+      }
+    },
+    {
+      "id": "p3",
+      "name": "a4",
+      "equation": "-2",
+      "position": {
+        "x": 520,
+        "y": 650
+      }
+    },
+    {
+      "id": "p4",
+      "name": "alpha",
+      "equation": "-2",
+      "position": {
+        "x": 660,
+        "y": 650
+      }
+    },
+    {
+      "id": "p5",
+      "name": "b1",
+      "equation": "0.1",
+      "position": {
+        "x": 800,
+        "y": 650
+      }
+    },
+    {
+      "id": "p6",
+      "name": "b2",
+      "equation": "-0.8",
+      "position": {
+        "x": 940,
+        "y": 650
+      }
+    },
+    {
+      "id": "p7",
+      "name": "Rudder",
+      "equation": "0",
+      "position": {
+        "x": 100,
+        "y": 750
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.02,
+    "integration_method": "rk4"
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "id": "streeter-phelps-river-sag-environment",
+  "name": "Streeter-Phelps oxygen-deficit sag in a river parcel",
+  "category": "environment",
+  "description": "A Lagrangian stream parcel loses ultimate biochemical oxygen demand while atmospheric exchange reduces the saturation deficit. Time is travel time, not an assumed distance. Constant natural-exponential rate coefficients are used explicitly; original base10 coefficients would require conversion by LN(10). No sediment demand, photosynthesis, nitrification, dispersion or oxygen-limited BOD kinetics are included. All numerical parameters, initial values, horizon and solver settings are illustrative teaching choices; not fitted to a field site. Signed net-rate flows encode state equations, not material transport claims. No numerical clipping or arbitrary domain clamps.",
+  "source": "https://usbr.gov/tsc/techreferences/hydraulics_lab/pubs/EM/EM04.pdf",
+  "reference": "Streeter and Phelps(1925), US Public Health Bulletin146; US Bureau of Reclamation Engineering Monograph4 AppendixA gives the natural-exponential differential equation and sag solution.",
+  "stocks": [
+    {
+      "id": "streeter-phelps-river-sag-environment:Oxygen_Demand",
+      "name": "Oxygen_Demand",
+      "initial_value": 20,
+      "units": "milligram/liter",
+      "equation": "",
+      "position": {
+        "x": 120,
+        "y": 240
+      }
+    },
+    {
+      "id": "streeter-phelps-river-sag-environment:Oxygen_Deficit",
+      "name": "Oxygen_Deficit",
+      "initial_value": 1,
+      "units": "milligram/liter",
+      "equation": "",
+      "position": {
+        "x": 280,
+        "y": 240
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "streeter-phelps-river-sag-environment:rate:Oxygen_Demand",
+      "name": "Oxygen_Demand_net_rate",
+      "equation": "-deoxygenation*Oxygen_Demand",
+      "to_stock": "streeter-phelps-river-sag-environment:Oxygen_Demand",
+      "units": "(milligram/liter)/day",
+      "position": {
+        "x": 120,
+        "y": 340
+      }
+    },
+    {
+      "id": "streeter-phelps-river-sag-environment:rate:Oxygen_Deficit",
+      "name": "Oxygen_Deficit_net_rate",
+      "equation": "deoxygenation*Oxygen_Demand-reaeration*Oxygen_Deficit",
+      "to_stock": "streeter-phelps-river-sag-environment:Oxygen_Deficit",
+      "units": "(milligram/liter)/day",
+      "position": {
+        "x": 280,
+        "y": 340
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "streeter-phelps-river-sag-environment:parameter:deoxygenation",
+      "name": "deoxygenation",
+      "equation": "0.2",
+      "units": "1/day",
+      "position": {
+        "x": 80,
+        "y": 80
+      }
+    },
+    {
+      "id": "streeter-phelps-river-sag-environment:parameter:reaeration",
+      "name": "reaeration",
+      "equation": "0.5",
+      "units": "1/day",
+      "position": {
+        "x": 180,
+        "y": 80
+      }
+    },
+    {
+      "id": "streeter-phelps-river-sag-environment:parameter:oxygen_saturation",
+      "name": "oxygen_saturation",
+      "equation": "9",
+      "units": "milligram/liter",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "streeter-phelps-river-sag-environment:parameter:Dissolved_Oxygen",
+      "name": "Dissolved_Oxygen",
+      "equation": "oxygen_saturation-Oxygen_Deficit",
+      "units": "milligram/liter",
+      "position": {
+        "x": 380,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.01,
+    "integration_method": "rk4",
+    "units": "day",
+    "rtol": 1e-08,
+    "atol": 1e-11
+  }
+}

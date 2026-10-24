@@ -181,6 +181,8 @@ def test_failed_forward_dependency_attempts_are_bounded_work(monkeypatch,method)
     import app.core.adaptive as adaptive
     monkeypatch.setattr(integration,"MAX_WORK_UNITS",1000)
     monkeypatch.setattr(adaptive,"MAX_WORK_UNITS",1000)
+    # Exercise the authored retry fallback, not the eligible DAG scheduler.
+    monkeypatch.setattr(integration,"derive_execution_order",lambda model,initial=False:None)
     attempts=0
     original=integration.safe_eval
     def counted(*args,**kwargs):
@@ -195,7 +197,10 @@ def test_failed_forward_dependency_attempts_are_bounded_work(monkeypatch,method)
     assert simulate(dependency_chain(40,reverse=False,method=method)).values["V0"]==[1,1]
 
 
-def test_retry_accounting_matches_actual_scalar_attempts():
+def test_retry_accounting_matches_actual_scalar_attempts(monkeypatch):
+    import app.core.integration as integration
+    # Unsupported stages still charge their real forward-dependency retries.
+    monkeypatch.setattr(integration,"derive_execution_order",lambda model,initial=False:None)
     result=simulate(dependency_chain(8))
     assert result.integration_diagnostics["work_units"]==2*sum(range(1,9))
     assert result.integration_diagnostics["dependency_retries"]==2*sum(range(8))

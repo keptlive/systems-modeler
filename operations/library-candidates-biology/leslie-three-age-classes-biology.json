@@ -1,0 +1,142 @@
+{
+  "id": "leslie-three-age-classes-biology",
+  "name": "Leslie three-age female population projection",
+  "description": "A genuine discrete census projection x[n+1]=Lx[n], implemented as Euler with declared discrete_period1. Young have no fecundity; old class has no survival into a fourth class. Counts represent females; no automatic doubling. Continuous solver interpolation is inappropriate. Illustrative parameter values, initial conditions and horizon selected for this teaching example; not fitted observations. Signed net-rate flows encode equations, not material transfer claims. No clamps or hidden state resets.",
+  "source": "https://doi.org/10.1093/biomet/33.3.183",
+  "reference": "Leslie (1945), On the use of matrices in certain population mathematics, Biometrika33:183-212.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "leslie-three-age-classes-biology:Young",
+      "name": "Young",
+      "initial_value": 100,
+      "units": "person",
+      "equation": "",
+      "position": {
+        "x": 140,
+        "y": 250
+      }
+    },
+    {
+      "id": "leslie-three-age-classes-biology:Adult",
+      "name": "Adult",
+      "initial_value": 40,
+      "units": "person",
+      "equation": "",
+      "position": {
+        "x": 320,
+        "y": 250
+      }
+    },
+    {
+      "id": "leslie-three-age-classes-biology:Old",
+      "name": "Old",
+      "initial_value": 10,
+      "units": "person",
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "leslie-three-age-classes-biology:rate:Young",
+      "name": "Young_net_rate",
+      "equation": "(adult_fertility*Adult+old_fertility*Old-Young)/census_interval",
+      "to_stock": "leslie-three-age-classes-biology:Young",
+      "units": "(person)/year",
+      "position": {
+        "x": 140,
+        "y": 350
+      }
+    },
+    {
+      "id": "leslie-three-age-classes-biology:rate:Adult",
+      "name": "Adult_net_rate",
+      "equation": "(young_survival*Young-Adult)/census_interval",
+      "to_stock": "leslie-three-age-classes-biology:Adult",
+      "units": "(person)/year",
+      "position": {
+        "x": 320,
+        "y": 350
+      }
+    },
+    {
+      "id": "leslie-three-age-classes-biology:rate:Old",
+      "name": "Old_net_rate",
+      "equation": "(adult_survival*Adult-Old)/census_interval",
+      "to_stock": "leslie-three-age-classes-biology:Old",
+      "units": "(person)/year",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "leslie-three-age-classes-biology:parameter:adult_fertility",
+      "name": "adult_fertility",
+      "equation": "1.2",
+      "units": "1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "leslie-three-age-classes-biology:parameter:old_fertility",
+      "name": "old_fertility",
+      "equation": "0.8",
+      "units": "1",
+      "position": {
+        "x": 190,
+        "y": 80
+      }
+    },
+    {
+      "id": "leslie-three-age-classes-biology:parameter:young_survival",
+      "name": "young_survival",
+      "equation": "0.5",
+      "units": "1",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "leslie-three-age-classes-biology:parameter:adult_survival",
+      "name": "adult_survival",
+      "equation": "0.7",
+      "units": "1",
+      "position": {
+        "x": 370,
+        "y": 80
+      }
+    },
+    {
+      "id": "leslie-three-age-classes-biology:parameter:census_interval",
+      "name": "census_interval",
+      "equation": "1",
+      "units": "year",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 1,
+    "integration_method": "euler",
+    "units": "year",
+    "rtol": 1e-08,
+    "atol": 1e-10,
+    "discrete_period": 1
+  }
+}

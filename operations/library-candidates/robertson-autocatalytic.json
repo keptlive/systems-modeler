@@ -1,0 +1,116 @@
+{
+  "id": "candidate-robertson-autocatalytic",
+  "name": "Robertson Stiff Autocatalytic Chemistry",
+  "category": "physics",
+  "description": "Highly separated reaction timescales and conserved total; distinct from existing generic chemical A/B model. Uniform saved grid omits fast initial transient; source horizon retained. Reconstructed from the pinned MIT SciML problem definition, preserving source equations, parameters, initial state and horizon. Solver and output grid are our explicit numerical choices. Normalized benchmark coordinates/time; not calibrated physical units or a forecast. No positivity clamps.",
+  "source": "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/e5c3f5aff3b6921ca79b0862ebae896c7580666e/lib/ODEProblemLibrary/src/ode_simple_nonlinear_prob.jl",
+  "reference": "Robertson (1966), The solution of a set of reaction rate equations; Hairer and Wanner stiff testset ROBER. https://www.unige.ch/~hairer/testset/testset.html",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "A",
+      "initial_value": 1,
+      "units": "1",
+      "position": {
+        "x": 220,
+        "y": 160
+      }
+    },
+    {
+      "id": "s1",
+      "name": "B",
+      "initial_value": 0,
+      "units": "1",
+      "position": {
+        "x": 370,
+        "y": 160
+      }
+    },
+    {
+      "id": "s2",
+      "name": "C",
+      "initial_value": 0,
+      "units": "1",
+      "position": {
+        "x": 520,
+        "y": 160
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_A",
+      "equation": "-k1*A+k3*B*C",
+      "to_stock": "s0",
+      "units": "1",
+      "position": {
+        "x": 130,
+        "y": 160
+      }
+    },
+    {
+      "id": "f1",
+      "name": "Change_B",
+      "equation": "k1*A-k2*B^2-k3*B*C",
+      "to_stock": "s1",
+      "units": "1",
+      "position": {
+        "x": 280,
+        "y": 160
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Change_C",
+      "equation": "k2*B^2",
+      "to_stock": "s2",
+      "units": "1",
+      "position": {
+        "x": 430,
+        "y": 160
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "k1",
+      "equation": "0.04",
+      "units": "1",
+      "position": {
+        "x": 100,
+        "y": 650
+      }
+    },
+    {
+      "id": "p1",
+      "name": "k2",
+      "equation": "30000000.0",
+      "units": "1",
+      "position": {
+        "x": 240,
+        "y": 650
+      }
+    },
+    {
+      "id": "p2",
+      "name": "k3",
+      "equation": "10000.0",
+      "units": "1",
+      "position": {
+        "x": 380,
+        "y": 650
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100000000000.0,
+    "dt": 1000000000.0,
+    "integration_method": "radau",
+    "units": "1"
+  }
+}

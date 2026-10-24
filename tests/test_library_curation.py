@@ -32,7 +32,9 @@ def test_invalid_definitions_still_produce_the_recorded_causal_failure(row):
 
 def test_active_library_has_no_unreviewed_inert_structure():
     paths = list((ROOT / 'models').rglob('*.json'))
-    assert len(paths) == MANIFEST['active_count']
+    admission_path = ROOT / 'operations/library-admissions-20261024.json'
+    added = json.loads(admission_path.read_text())['admitted_count'] if admission_path.exists() else 0
+    assert len(paths) == MANIFEST['active_count'] + added
     calculators = set(MANIFEST['static_calculators'])
     for path in paths:
         model = Model.model_validate_json(path.read_bytes())

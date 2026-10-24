@@ -1,0 +1,116 @@
+{
+  "id": "candidate-euler-rigid-body",
+  "name": "Torque-Free Euler Rigid-Body Benchmark",
+  "category": "physics",
+  "description": "Three coupled rotational coordinates preserve two quadratic invariants; distinct from translational spring or pendulum oscillators. Coefficients are effective Euler coefficients, not moments of inertia. Reconstructed from the pinned MIT SciML problem definition, preserving source equations, parameters, initial state and horizon. Solver and output grid are our explicit numerical choices. Normalized benchmark coordinates/time; not calibrated physical units or a forecast. No positivity clamps.",
+  "source": "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/e5c3f5aff3b6921ca79b0862ebae896c7580666e/lib/ODEProblemLibrary/src/ode_simple_nonlinear_prob.jl",
+  "reference": "Hairer, N\u00f8rsett and Wanner, Solving Ordinary Differential Equations I, p.244; numerical definition from pinned SciML rigidbody problem.",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "X",
+      "initial_value": 1,
+      "units": "1",
+      "position": {
+        "x": 220,
+        "y": 160
+      }
+    },
+    {
+      "id": "s1",
+      "name": "Y",
+      "initial_value": 0,
+      "units": "1",
+      "position": {
+        "x": 370,
+        "y": 160
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Z",
+      "initial_value": 0.9,
+      "units": "1",
+      "position": {
+        "x": 520,
+        "y": 160
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_X",
+      "equation": "a*Y*Z",
+      "to_stock": "s0",
+      "units": "1",
+      "position": {
+        "x": 130,
+        "y": 160
+      }
+    },
+    {
+      "id": "f1",
+      "name": "Change_Y",
+      "equation": "b*X*Z",
+      "to_stock": "s1",
+      "units": "1",
+      "position": {
+        "x": 280,
+        "y": 160
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Change_Z",
+      "equation": "c*X*Y",
+      "to_stock": "s2",
+      "units": "1",
+      "position": {
+        "x": 430,
+        "y": 160
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "a",
+      "equation": "-2",
+      "units": "1",
+      "position": {
+        "x": 100,
+        "y": 650
+      }
+    },
+    {
+      "id": "p1",
+      "name": "b",
+      "equation": "1.25",
+      "units": "1",
+      "position": {
+        "x": 240,
+        "y": 650
+      }
+    },
+    {
+      "id": "p2",
+      "name": "c",
+      "equation": "-0.5",
+      "units": "1",
+      "position": {
+        "x": 380,
+        "y": 650
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.01,
+    "integration_method": "rk4",
+    "units": "1"
+  }
+}

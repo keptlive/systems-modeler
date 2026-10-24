@@ -1,0 +1,85 @@
+{
+  "id": "candidate-applied-nonlinear-pendulum-feedback",
+  "name": "Nonlinear Inverted Pendulum State Feedback",
+  "category": "engineering",
+  "description": "Author nonlinear force feedback law with gain2; our illustrative0.5rad perturbation, zero rate and20normalized time units. Demonstrates feedback stabilization and a dissipating Lyapunov quantity rather than another passive oscillator. Primary model: \u00c5str\u00f6m and Murray, Feedback Systems, second edition, author BSD 3-Clause Python source pinned dbbc2e1b4233dc148a3dc52c10d08e87881c1f15. Numerical grid is our explicit choice. No empirical calibration or safety-control guarantee. Units not supplied where a coherent physical annotation has not been established.",
+  "source": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/example-5.14-invpend_stabilized.py",
+  "reference": "\u00c5str\u00f6m and Murray, Feedback Systems, second edition; author example code example-5.14-invpend_stabilized.py",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Angle",
+      "initial_value": 0.5,
+      "position": {
+        "x": 240,
+        "y": 200
+      },
+      "units": "1"
+    },
+    {
+      "id": "s1",
+      "name": "AngularRate",
+      "initial_value": 0.0,
+      "position": {
+        "x": 410,
+        "y": 200
+      },
+      "units": "1"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Angle",
+      "equation": "AngularRate",
+      "to_stock": "s0",
+      "position": {
+        "x": 150,
+        "y": 200
+      },
+      "units": "1"
+    },
+    {
+      "id": "f1",
+      "name": "Change_AngularRate",
+      "equation": "SIN(Angle)+Control*COS(Angle)",
+      "to_stock": "s1",
+      "position": {
+        "x": 320,
+        "y": 200
+      },
+      "units": "1"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Gain",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 650
+      },
+      "units": "1"
+    },
+    {
+      "id": "a0",
+      "name": "Control",
+      "equation": "-2*Gain*SIN(Angle)-AngularRate*COS(Angle)",
+      "position": {
+        "x": 200,
+        "y": 900
+      },
+      "units": "1"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.005,
+    "integration_method": "rk4",
+    "units": "1"
+  }
+}

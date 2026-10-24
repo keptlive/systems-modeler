@@ -1,4 +1,4 @@
-"""Metadata plans preserve authored order, retries and all solver contracts."""
+"""Plans preserve trajectories/errors and report truthful reduced DAG work."""
 import pytest
 from app.core import integration
 from app.core.equations import EquationError
@@ -27,7 +27,31 @@ def test_planned_and_live_metadata_are_identical(monkeypatch, method, variables,
                   time_settings={"end":2,"dt":.25,"integration_method":method,"random_seed":123})
     planned = outcome(model)
     monkeypatch.setattr(integration, "_make_evaluation_plan", lambda model: None)
-    assert outcome(model) == planned
+    live = outcome(model)
+    if planned[0] == "error":
+        assert live == planned
+    else:
+        assert live[0] == "ok"
+        planned_data, live_data = planned[1], live[1]
+        planned_diagnostics = planned_data.pop("integration_diagnostics") or {}
+        live_diagnostics = live_data.pop("integration_diagnostics") or {}
+        assert planned_data == live_data
+        planned_retries = planned_diagnostics.get("dependency_retries", 0)
+        live_retries = live_diagnostics.get("dependency_retries", 0)
+        assert planned_retries <= live_retries
+        if planned_diagnostics and live_diagnostics:
+            assert planned_diagnostics["work_units"] <= live_diagnostics["work_units"]
+            assert live_diagnostics["work_units"] - planned_diagnostics["work_units"] == live_retries - planned_retries
+            for key in ("work_units", "dependency_retries"):
+                planned_diagnostics.pop(key)
+                live_diagnostics.pop(key)
+            assert planned_diagnostics == live_diagnostics
+        elif live_diagnostics:
+            # Ordinary deterministic zero-retry runs omit the optional receipt.
+            assert not planned_diagnostics and planned_retries == 0 and live_retries > 0
+            assert live_diagnostics["binomial_trials"] == live_diagnostics["report_evaluations"] == 0
+        else:
+            assert not planned_diagnostics
     assert integration._active_plan.get() is None
 
 

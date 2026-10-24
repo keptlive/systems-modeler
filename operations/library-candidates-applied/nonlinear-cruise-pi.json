@@ -1,0 +1,305 @@
+{
+  "id": "candidate-applied-nonlinear-cruise-pi",
+  "name": "Nonlinear Vehicle Cruise with Leaky PI and Hill",
+  "category": "transportation",
+  "description": "Source1600 kg vehicle, gear4,20 m/s reference,4-degree slope ramp5\u20136s and25 s horizon. Initial state is the computed exact closed-loop equilibrium for fixed20 m/s command, rather than the source find_eqpt routine allowed to adjust that command. Retains author throttle/torque saturation and controller leak. Primary model: \u00c5str\u00f6m and Murray, Feedback Systems, second edition, author BSD 3-Clause Python source pinned dbbc2e1b4233dc148a3dc52c10d08e87881c1f15. Numerical grid is our explicit choice. No empirical calibration or safety-control guarantee. Units not supplied where a coherent physical annotation has not been established.",
+  "source": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/cruise.py",
+  "reference": "\u00c5str\u00f6m and Murray, Feedback Systems, second edition; author example code cruise.py, figure-1.11-cruise_robustness.py",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Speed",
+      "initial_value": 19.99662554259098,
+      "position": {
+        "x": 240,
+        "y": 200
+      },
+      "units": "meter/second"
+    },
+    {
+      "id": "s1",
+      "name": "ControllerState",
+      "initial_value": 1.687228704509991,
+      "position": {
+        "x": 410,
+        "y": 200
+      },
+      "units": "meter"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Speed",
+      "equation": "(EngineForce-GravityForce-RollForce-DragForce)/Mass",
+      "to_stock": "s0",
+      "position": {
+        "x": 150,
+        "y": 200
+      },
+      "units": "meter/second^2"
+    },
+    {
+      "id": "f1",
+      "name": "Change_ControllerState",
+      "equation": "Reference-Speed-Leak*ControllerState",
+      "to_stock": "s1",
+      "position": {
+        "x": 320,
+        "y": 200
+      },
+      "units": "meter/second"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Mass",
+      "equation": "1600",
+      "position": {
+        "x": 100,
+        "y": 650
+      },
+      "units": "kg"
+    },
+    {
+      "id": "p1",
+      "name": "g",
+      "equation": "9.8",
+      "position": {
+        "x": 240,
+        "y": 650
+      },
+      "units": "meter/second^2"
+    },
+    {
+      "id": "p2",
+      "name": "Cr",
+      "equation": "0.01",
+      "position": {
+        "x": 380,
+        "y": 650
+      },
+      "units": "1"
+    },
+    {
+      "id": "p3",
+      "name": "Cd",
+      "equation": "0.32",
+      "position": {
+        "x": 520,
+        "y": 650
+      },
+      "units": "1"
+    },
+    {
+      "id": "p4",
+      "name": "rho",
+      "equation": "1.3",
+      "position": {
+        "x": 660,
+        "y": 650
+      },
+      "units": "kg/meter^3"
+    },
+    {
+      "id": "p5",
+      "name": "Area",
+      "equation": "2.4",
+      "position": {
+        "x": 800,
+        "y": 650
+      },
+      "units": "meter^2"
+    },
+    {
+      "id": "p6",
+      "name": "GearFactor",
+      "equation": "12",
+      "position": {
+        "x": 940,
+        "y": 650
+      },
+      "units": "1/meter"
+    },
+    {
+      "id": "p7",
+      "name": "TorquePeak",
+      "equation": "190",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "kg*meter^2/second^2"
+    },
+    {
+      "id": "p8",
+      "name": "OmegaPeak",
+      "equation": "420",
+      "position": {
+        "x": 240,
+        "y": 750
+      },
+      "units": "1/second"
+    },
+    {
+      "id": "p9",
+      "name": "Rolloff",
+      "equation": "0.4",
+      "position": {
+        "x": 380,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p10",
+      "name": "Reference",
+      "equation": "20",
+      "position": {
+        "x": 520,
+        "y": 750
+      },
+      "units": "meter/second"
+    },
+    {
+      "id": "a0",
+      "name": "Throttle",
+      "equation": "MIN(1,MAX(0,PIGain*(Reference-Speed)+(IntegralGain-PIGain*Leak)*ControllerState))",
+      "position": {
+        "x": 200,
+        "y": 900
+      },
+      "units": "1"
+    },
+    {
+      "id": "a1",
+      "name": "EngineTorque",
+      "equation": "MAX(0,TorquePeak*(1-Rolloff*(GearFactor*Speed/OmegaPeak-1)^2))",
+      "position": {
+        "x": 340,
+        "y": 900
+      },
+      "units": "kg*meter^2/second^2"
+    },
+    {
+      "id": "a2",
+      "name": "EngineForce",
+      "equation": "GearFactor*EngineTorque*Throttle",
+      "position": {
+        "x": 480,
+        "y": 900
+      },
+      "units": "kg*meter/second^2"
+    },
+    {
+      "id": "a3",
+      "name": "Slope",
+      "equation": "IF(TIME<=HillStart,0,IF(TIME<=HillStart+HillRamp,HillAngle*(TIME-HillStart)/HillRamp,HillAngle))",
+      "position": {
+        "x": 620,
+        "y": 900
+      },
+      "units": "1"
+    },
+    {
+      "id": "a4",
+      "name": "GravityForce",
+      "equation": "Mass*g*SIN(Slope)",
+      "position": {
+        "x": 760,
+        "y": 900
+      },
+      "units": "kg*meter/second^2"
+    },
+    {
+      "id": "a5",
+      "name": "RollForce",
+      "equation": "Mass*g*Cr*IF(Speed>=0,1,-1)",
+      "position": {
+        "x": 900,
+        "y": 900
+      },
+      "units": "kg*meter/second^2"
+    },
+    {
+      "id": "a6",
+      "name": "DragForce",
+      "equation": "0.5*rho*Cd*Area*ABS(Speed)*Speed",
+      "position": {
+        "x": 200,
+        "y": 1000
+      },
+      "units": "kg*meter/second^2"
+    },
+    {
+      "id": "derived0",
+      "name": "PIGain",
+      "equation": "0.5",
+      "units": "second/meter",
+      "position": {
+        "x": 100,
+        "y": 1150
+      }
+    },
+    {
+      "id": "derived1",
+      "name": "IntegralGain",
+      "equation": "0.1",
+      "units": "1/meter",
+      "position": {
+        "x": 240,
+        "y": 1150
+      }
+    },
+    {
+      "id": "derived2",
+      "name": "Leak",
+      "equation": "0.002",
+      "units": "1/second",
+      "position": {
+        "x": 380,
+        "y": 1150
+      }
+    },
+    {
+      "id": "derived3",
+      "name": "HillAngle",
+      "equation": "0.06981317007977318",
+      "units": "1",
+      "position": {
+        "x": 520,
+        "y": 1150
+      }
+    },
+    {
+      "id": "derived4",
+      "name": "HillStart",
+      "equation": "5",
+      "units": "second",
+      "position": {
+        "x": 660,
+        "y": 1150
+      }
+    },
+    {
+      "id": "derived5",
+      "name": "HillRamp",
+      "equation": "1",
+      "units": "second",
+      "position": {
+        "x": 800,
+        "y": 1150
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 25,
+    "dt": 0.005,
+    "integration_method": "rk4",
+    "units": "second"
+  }
+}

@@ -1,0 +1,248 @@
+[
+  {
+    "file": "green-ampt-ponded-infiltration-environment.json",
+    "source": "https://www.hec.usace.army.mil/confluence/rasdocs/ras1dtechref/6.2/overview-of-optional-capabilities/modeling-precipitation-and-infiltration/green-ampt",
+    "reference": "Green and Ampt(1911), Studies on Soil Physics; primary HEC-RAS technical reference Green-Ampt Eqs1,3.",
+    "parameter_provenance": "All numerical parameters, initial values, horizon and solver settings are illustrative teaching choices; not fitted to a field site.",
+    "notes": "Ponded infiltration capacity with homogeneous soil and a sharp saturated front. Water supply is maintained at the surface; there is no finite rainfall constraint, redistribution or evapotranspiration. Initial F=.001m represents an already wetted profile and avoids the genuine dry-front singularity F=0; it is not an epsilon inserted in a denominator.",
+    "signed_states": [],
+    "rights": "Original mathematical transcription/idealization and prose; no article text, figures, third-party code or data reproduced. Source articles retain their rights.",
+    "candidate_sha256": "ac2e62e404a21e891ffe224ca24636bf3ffdb21402ddd938d5aedc0c73317d40",
+    "numerical_choice": {
+      "start": 0,
+      "end": 10,
+      "dt": 0.05,
+      "integration_method": "radau",
+      "units": "hour",
+      "rtol": 1e-08,
+      "atol": 1e-11
+    },
+    "source_initials": {
+      "Cumulative_Infiltration": 0.001
+    }
+  },
+  {
+    "file": "streeter-phelps-river-sag-environment.json",
+    "source": "https://usbr.gov/tsc/techreferences/hydraulics_lab/pubs/EM/EM04.pdf",
+    "reference": "Streeter and Phelps(1925), US Public Health Bulletin146; US Bureau of Reclamation Engineering Monograph4 AppendixA gives the natural-exponential differential equation and sag solution.",
+    "parameter_provenance": "All numerical parameters, initial values, horizon and solver settings are illustrative teaching choices; not fitted to a field site.",
+    "notes": "A Lagrangian stream parcel loses ultimate biochemical oxygen demand while atmospheric exchange reduces the saturation deficit. Time is travel time, not an assumed distance. Constant natural-exponential rate coefficients are used explicitly; original base10 coefficients would require conversion by LN(10). No sediment demand, photosynthesis, nitrification, dispersion or oxygen-limited BOD kinetics are included.",
+    "signed_states": [],
+    "rights": "Original mathematical transcription/idealization and prose; no article text, figures, third-party code or data reproduced. Source articles retain their rights.",
+    "candidate_sha256": "9499b49c5cd73900be947504ed4f3907135ec409eac782404eb38bad54c6e7a8",
+    "numerical_choice": {
+      "start": 0,
+      "end": 20,
+      "dt": 0.01,
+      "integration_method": "rk4",
+      "units": "day",
+      "rtol": 1e-08,
+      "atol": 1e-11
+    },
+    "source_initials": {
+      "Oxygen_Demand": 20,
+      "Oxygen_Deficit": 1
+    }
+  },
+  {
+    "file": "rietkerk-homogeneous-water-vegetation-environment.json",
+    "source": "https://doi.org/10.1086/342078",
+    "reference": "Rietkerk et al.(2002), Self-Organization of Vegetation in Arid Ecosystems, American Naturalist160:524-530, Eqs1a-c with spatial derivatives zero; primary PDF https://pure.rug.nl/ws/portalfiles/portal/65227728/342078.pdf .",
+    "parameter_provenance": "Coefficients c10,gmax.05,k1=5,alpha.2,k2=5,W0=.2,rw.2 and mortality.25 follow the primary paper text/figure2. Rainfall1.5mm/day is an illustrative choice within its0-3 range. Initial(5,4,2), horizon500day and dt.25 are our illustrative homogeneous scenario, not the paper spatial initial conditions.",
+    "notes": "Homogeneous reaction core only: no diffusion, lateral runoff, seed dispersal or spatial vegetation patterns. Plants enhance infiltration; soil water uptake supports biomass. The positive homogeneous equilibrium at stated rainfall is P20,W5,O8.928571. Unlike a generic logistic stock, two distinct water pools mediate the feedback.",
+    "signed_states": [],
+    "rights": "Original mathematical transcription/idealization and prose; no article text, figures, third-party code or data reproduced. Source articles retain their rights.",
+    "candidate_sha256": "1ec4e194630db5190feb55593fbc32c45ac40abfc4482095368fda7a28c5b68a",
+    "numerical_choice": {
+      "start": 0,
+      "end": 500,
+      "dt": 0.25,
+      "integration_method": "rk4",
+      "units": "day",
+      "rtol": 1e-08,
+      "atol": 1e-11
+    },
+    "source_initials": {
+      "Vegetation": 5,
+      "Soil_Water": 4,
+      "Surface_Water": 2
+    }
+  },
+  {
+    "file": "competitive-langmuir-closed-sorption-environment.json",
+    "source": "https://doi.org/10.1021/ja02242a004",
+    "reference": "Langmuir(1918), The adsorption of gases on plane surfaces of glass, mica and platinum, JACS40:1361-1403. Reversible site-occupancy law applied here to an explicitly specified finite aqueous batch.",
+    "parameter_provenance": "All numerical parameters, initial values, horizon and solver settings are illustrative teaching choices; not fitted to a field site.",
+    "notes": "Two solutes compete for one finite set of noninteracting sites in a closed well-mixed batch. Site vacancy is capacity minus the two sorbed inventories; each aqueous-plus-sorbed solute total is conserved. Equal single-site occupancy and ideal mass-action rates are assumptions, not a calibrated contaminant isotherm. This is a finite-reservoir extension of the elementary Langmuir law, not copied source code.",
+    "signed_states": [],
+    "rights": "Original mathematical transcription/idealization and prose; no article text, figures, third-party code or data reproduced. Source articles retain their rights.",
+    "candidate_sha256": "3713439d50f2ad97702326b81d2e36721c4a938b8014a0529bef00d72f9d4e68",
+    "numerical_choice": {
+      "start": 0,
+      "end": 100,
+      "dt": 0.02,
+      "integration_method": "rk4",
+      "units": "day",
+      "rtol": 1e-08,
+      "atol": 1e-11
+    },
+    "source_initials": {
+      "Dissolved_A": 2,
+      "Dissolved_B": 1,
+      "Sorbed_A": 0,
+      "Sorbed_B": 0
+    }
+  },
+  {
+    "file": "shrinking-mineral-dissolution-environment.json",
+    "source": "https://doi.org/10.1021/ja02086a003",
+    "reference": "Noyes and Whitney(1897), The rate of solution of solid substances in their own solutions, JACS19:930-934; spherical-area/mass balance derived explicitly for this example.",
+    "parameter_provenance": "All numerical parameters, initial values, horizon and solver settings are illustrative teaching choices; not fitted to a field site.",
+    "notes": "A single spherical particle shrinks while a finite well-mixed water volume approaches saturation. Constant transfer coefficient, uniform density and no precipitation/reaction speciation. Initial solid exceeds dissolved saturation capacity, so radius stays positive; total dissolved mass plus(4PI/3)*density*radius^3 is conserved. The saved default does not extend past complete dissolution and has no zero-radius clamp.",
+    "signed_states": [],
+    "rights": "Original mathematical transcription/idealization and prose; no article text, figures, third-party code or data reproduced. Source articles retain their rights.",
+    "candidate_sha256": "929148caf221705be996dfa771e54bc4c9031a3434cf3b7ee20ba8664b47f193",
+    "numerical_choice": {
+      "start": 0,
+      "end": 2000,
+      "dt": 1,
+      "integration_method": "rk4",
+      "units": "day",
+      "rtol": 1e-08,
+      "atol": 1e-11
+    },
+    "source_initials": {
+      "Particle_Radius": 0.001,
+      "Dissolved_Concentration": 0
+    }
+  },
+  {
+    "file": "paired-cosmogenic-burial-environment.json",
+    "source": "https://doi.org/10.1029/2006GC001530",
+    "reference": "Vermeesch(2007), CosmoCalc: An Excel add-in for cosmogenic nuclide calculations, Geochemistry Geophysics Geosystems; author mathematical manual https://pieter-vermeesch.es.ucl.ac.uk/cosmocalc/manual/ .",
+    "parameter_provenance": "Rounded illustrative half-lives1387kyr(10Be),705kyr(26Al); production4000/27000atoms/g/kyr, attenuation.6m, burial.005m/kyr, no inherited nuclides. These are an explicitly simplified teaching scenario, not a precision geochronology calibration. Horizon1000kyr,dt1kyr.",
+    "notes": "One-exponential spallation production attenuates as a material parcel is continuously buried; the two radionuclides decay at different rates. This is a derived continuous-burial scenario, not the standard instantaneous-burial exposure formula or the full four-exponential muon model. Production rates, effective attenuation depth and burial velocity are illustrative, not site-specific scaling.",
+    "signed_states": [],
+    "rights": "Original mathematical transcription/idealization and prose; no article text, figures, third-party code or data reproduced. Source articles retain their rights.",
+    "candidate_sha256": "823158cac0a422026f64543b101310338a486944c2ebdd7bd8431ac47f9f2574",
+    "numerical_choice": {
+      "start": 0,
+      "end": 1000,
+      "dt": 1,
+      "integration_method": "rk4",
+      "units": "kiloyear",
+      "rtol": 1e-08,
+      "atol": 1e-11
+    },
+    "source_initials": {
+      "Depth": 0,
+      "Beryllium_10": 0,
+      "Aluminium_26": 0
+    }
+  },
+  {
+    "file": "uranium-series-lineage-disequilibrium-environment.json",
+    "source": "https://doi.org/10.1016/j.epsl.2013.04.006",
+    "reference": "Cheng et al.(2013), Improvements in230Th dating,230Th and234U half-life values, and U-Th isotopic measurements by multi-collector inductively coupled plasma mass spectrometry. Bateman(1910) serial-decay equations; primary teaching equations https://ocw.mit.edu/courses/12-744-marine-isotope-chemistry-fall-2012/c9d4092797c06068611c0cfb0903a7d9_MIT12_744F12_Lec4.pdf .",
+    "parameter_provenance": "Half-lives U2384.468e9yr(rounded),U234245620yr,Th23075584yr; illustrative initial pure-U238 lineage fraction1 with no daughters, horizon1e6yr. Rounded constants and absent inherited daughters preclude precision sample dating. Outputdt1000yr is a numerical choice.",
+    "notes": "Closed nuclear-lineage fractions, not conserved mass or released alpha energy. The short-lived Th234/Pa234 intermediates are treated as instantaneous on the1000year output scale; downstream descendants are a cumulative lineage sink, not one physical stable isotope. No chemical transport, recoil loss or inherited daughters. Daughter activities approach secular equilibrium; abundance equality is not equilibrium.",
+    "signed_states": [],
+    "rights": "Original mathematical transcription/idealization and prose; no article text, figures, third-party code or data reproduced. Source articles retain their rights.",
+    "candidate_sha256": "0c5c67d8fdb499fc6c551c98919c94d1434a0103bc8ca195ef5f1c65dee67f95",
+    "numerical_choice": {
+      "start": 0,
+      "end": 1000000,
+      "dt": 1000,
+      "integration_method": "rk4",
+      "units": "year",
+      "rtol": 1e-08,
+      "atol": 1e-11
+    },
+    "source_initials": {
+      "Uranium_238": 1,
+      "Uranium_234": 0,
+      "Thorium_230": 0,
+      "Downstream_Lineages": 0
+    }
+  },
+  {
+    "file": "ekman-three-layer-momentum-environment.json",
+    "source": "https://hdl.handle.net/1969.1/160216",
+    "reference": "Stewart, Introduction to Physical Oceanography, author textbook momentum and Ekman-layer equations8.15,9.7-9.8; Ekman(1905), On the influence of the Earth rotation on ocean-currents. Own three-layer finite-volume transient discretization.",
+    "parameter_provenance": "All numerical parameters, initial values, horizon and solver settings are illustrative teaching choices; not fitted to a field site.",
+    "notes": "Equal-thickness finite-volume layers exchange both momentum components; surface wind forcing, Coriolis rotation and bottom drag close the column budget. Internal mixing conserves vertically summed momentum and dissipates shear energy. This is a deliberately coarse six-state discretization, not the exact infinite-depth steady Ekman spiral or a weather forecast.",
+    "signed_states": [
+      "U_Surface",
+      "V_Surface",
+      "U_Middle",
+      "V_Middle",
+      "U_Bottom",
+      "V_Bottom"
+    ],
+    "rights": "Original mathematical transcription/idealization and prose; no article text, figures, third-party code or data reproduced. Source articles retain their rights.",
+    "candidate_sha256": "e753deacb913452317b567d88336c1ffbdee582096b2525000a8e209ffe98877",
+    "numerical_choice": {
+      "start": 0,
+      "end": 120,
+      "dt": 0.025,
+      "integration_method": "rk4",
+      "units": "hour",
+      "rtol": 1e-08,
+      "atol": 1e-11
+    },
+    "source_initials": {
+      "U_Surface": 0,
+      "V_Surface": 0,
+      "U_Middle": 0,
+      "V_Middle": 0,
+      "U_Bottom": 0,
+      "V_Bottom": 0
+    }
+  },
+  {
+    "file": "glen-fixed-slope-ice-outlet-environment.json",
+    "source": "https://doi.org/10.1098/rspa.1955.0066",
+    "reference": "Glen(1955), The creep of polycrystalline ice; first-party OGGM shallow-ice formulation https://docs.oggm.org/en/v1.5.1/ice-dynamics.html Eqs volume conservation,ud,fd,driving stress.",
+    "parameter_provenance": "All numerical parameters, initial values, horizon and solver settings are illustrative teaching choices; not fitted to a field site.",
+    "notes": "Own one-cell rectangular fixed-slope/no-sliding specialization: q=2A/(n+2)*(rho*g*slope)^n*H^(n+2), n3, and dH/dt=accumulation-q/L. Geometry, thermal softness and accumulation are fixed, with no calving, elevation feedback or spatial solution. Coefficient has unitsm^-4/year and was chosen for a150m equilibrium, not fitted to Greenland. Distinct from existing temperature-driven ice-volume balance.",
+    "signed_states": [],
+    "rights": "Original mathematical transcription/idealization and prose; no article text, figures, third-party code or data reproduced. Source articles retain their rights.",
+    "candidate_sha256": "f3a6ba5fe71a862dc067c65e18f5f29debba35caf44c83c1c8954f9d5129c425",
+    "numerical_choice": {
+      "start": 0,
+      "end": 1500,
+      "dt": 2,
+      "integration_method": "rk4",
+      "units": "year",
+      "rtol": 1e-08,
+      "atol": 1e-11
+    },
+    "source_initials": {
+      "Ice_Thickness": 80
+    }
+  },
+  {
+    "file": "dupuit-two-cell-aquifer-environment.json",
+    "source": "https://pubs.usgs.gov/sir/2016/5134/sir20165134.pdf",
+    "reference": "USGS Scientific Investigations Report2016-5134, Quantification of Groundwater Flow, p20, q=K(h1^2-h2^2)/(2L), after Dupuit; own two-storage-cell transient closure.",
+    "parameter_provenance": "All numerical parameters, initial values, horizon and solver settings are illustrative teaching choices; not fitted to a field site.",
+    "notes": "Homogeneous horizontal-base unconfined aquifer; each finite cell stores Sy*L*h water per width. A dry-base river head0 is a fixed outlet boundary. Internal Dupuit flux is signed and can reverse; it is not clamped. Recharge is a boundary inflow. Total storage plus accumulated river discharge equals initial storage plus cumulative recharge. This is an explicit low-order storage approximation using a quasi-steady hydraulic closure, not a full transient groundwater PDE or pumping forecast.",
+    "signed_states": [],
+    "rights": "Original mathematical transcription/idealization and prose; no article text, figures, third-party code or data reproduced. Source articles retain their rights.",
+    "candidate_sha256": "f5c4bb7af6ed6b54164ba1421aab5f62f0421038d439000db303994e4e30e05c",
+    "numerical_choice": {
+      "start": 0,
+      "end": 200000,
+      "dt": 200,
+      "integration_method": "rk4",
+      "units": "day",
+      "rtol": 1e-08,
+      "atol": 1e-11
+    },
+    "source_initials": {
+      "Upgradient_Head": 12,
+      "Downstream_Head": 8,
+      "River_Discharge": 0
+    }
+  }
+]

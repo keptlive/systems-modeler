@@ -1,0 +1,109 @@
+{
+  "id": "gierer-meinhardt-well-mixed-biology",
+  "name": "Gierer-Meinhardt well-mixed activator-inhibitor core",
+  "description": "Homogeneous reaction core only: no diffusion, tissue geometry or spatial pattern formation is simulated. Local autocatalysis with inhibitor-dependent suppression differs from repressor Hill feedback. Reconstructs a retired flowless concept. Illustrative normalized source/degradation coefficients(1,1,1,2), initial(1.2,1), horizon30. They give positive stable equilibrium(2,2). No claim these values are a fitted Hydra experiment or the full original spatial model. Signed net-rate flows encode equations, not material transfer claims. No clamps or hidden state resets.",
+  "source": "https://doi.org/10.1007/BF00289234",
+  "reference": "Gierer and Meinhardt (1972), A theory of biological pattern formation, Kybernetik12:30-39.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "gierer-meinhardt-well-mixed-biology:Activator",
+      "name": "Activator",
+      "initial_value": 1.2,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 140,
+        "y": 250
+      }
+    },
+    {
+      "id": "gierer-meinhardt-well-mixed-biology:Inhibitor",
+      "name": "Inhibitor",
+      "initial_value": 1,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 320,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "gierer-meinhardt-well-mixed-biology:rate:Activator",
+      "name": "Activator_net_rate",
+      "equation": "autocatalysis*Activator^2/Inhibitor-activator_decay*Activator",
+      "to_stock": "gierer-meinhardt-well-mixed-biology:Activator",
+      "units": "(1)/time",
+      "position": {
+        "x": 140,
+        "y": 350
+      }
+    },
+    {
+      "id": "gierer-meinhardt-well-mixed-biology:rate:Inhibitor",
+      "name": "Inhibitor_net_rate",
+      "equation": "inhibitor_source*Activator^2-inhibitor_decay*Inhibitor",
+      "to_stock": "gierer-meinhardt-well-mixed-biology:Inhibitor",
+      "units": "(1)/time",
+      "position": {
+        "x": 320,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "gierer-meinhardt-well-mixed-biology:parameter:autocatalysis",
+      "name": "autocatalysis",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "gierer-meinhardt-well-mixed-biology:parameter:activator_decay",
+      "name": "activator_decay",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 190,
+        "y": 80
+      }
+    },
+    {
+      "id": "gierer-meinhardt-well-mixed-biology:parameter:inhibitor_source",
+      "name": "inhibitor_source",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "gierer-meinhardt-well-mixed-biology:parameter:inhibitor_decay",
+      "name": "inhibitor_decay",
+      "equation": "2",
+      "units": "1/time",
+      "position": {
+        "x": 370,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.01,
+    "integration_method": "rk4",
+    "units": "time",
+    "rtol": 1e-08,
+    "atol": 1e-10
+  }
+}

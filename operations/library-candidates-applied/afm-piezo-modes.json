@@ -1,0 +1,107 @@
+{
+  "id": "candidate-applied-afm-piezo-modes",
+  "name": "AFM Piezo Four-State Resonance Transient",
+  "category": "engineering",
+  "description": "Author AFM piezo four-state matrices with masses0.15 g / 1 g and modal frequencies40.9/41.6/120 kHz. Our zero-state unit input over300 microseconds probes coupled modal transient. These source states are a realization, not all direct displacements; no invented physical units or force softening. Primary model: \u00c5str\u00f6m and Murray, Feedback Systems, second edition, author BSD 3-Clause Python source pinned dbbc2e1b4233dc148a3dc52c10d08e87881c1f15. Numerical grid is our explicit choice. No empirical calibration or safety-control guarantee. Units not supplied where a coherent physical annotation has not been established.",
+  "source": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/example-6.9-afm_freqresp.py",
+  "reference": "\u00c5str\u00f6m and Murray, Feedback Systems, second edition; author example code example-6.9-afm_freqresp.py",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Mode1",
+      "initial_value": 0.0,
+      "position": {
+        "x": 240,
+        "y": 200
+      }
+    },
+    {
+      "id": "s1",
+      "name": "Rate1",
+      "initial_value": 0.0,
+      "position": {
+        "x": 410,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Mode2",
+      "initial_value": 0.0,
+      "position": {
+        "x": 580,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Rate2",
+      "initial_value": 0.0,
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Mode1",
+      "equation": "(1.0)*Rate1",
+      "to_stock": "s0",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "f1",
+      "name": "Change_Rate1",
+      "equation": "(-59408495973.38851)*Mode1+(-22346.285135969138)*Rate1+(1000.0)*Mode2",
+      "to_stock": "s1",
+      "position": {
+        "x": 320,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Change_Mode2",
+      "equation": "(1.0)*Rate2",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Change_Rate2",
+      "equation": "(-568489213502.7471)*Mode2+(-150796.44737231007)*Rate2+568489213502.7471",
+      "to_stock": "s3",
+      "position": {
+        "x": 660,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "physical-output",
+      "name": "PiezoOutput",
+      "equation": "(7748934.257398502)*Mode1+(2.9147328438220614)*Rate1+(0.8695652173913044)*Mode2",
+      "position": {
+        "x": 350,
+        "y": 650
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 0.0003,
+    "dt": 5e-08,
+    "integration_method": "rk4"
+  }
+}

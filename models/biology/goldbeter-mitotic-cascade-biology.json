@@ -1,0 +1,191 @@
+{
+  "id": "goldbeter-mitotic-cascade-biology",
+  "name": "Goldbeter cyclin-kinase-protease mitotic cascade",
+  "description": "Cyclin concentration drives two conserved active/inactive enzyme fractions. Fractions are not clipped. Uses adaptive Radau because small enzyme saturation produces sharp transitions. Coefficients and all initial states0.01 independently transcribed from the primary-model exposure: https://models.physiomeproject.org/e/4c/goldbeter_annotated_1991.cellml . K1=K2=K3=K4=.005 share one equivalent parameter. Horizon100min, outputdt.25 and solver tolerances are our verification choices; no CellML code or article prose copied. Signed net-rate flows encode equations, not material transfer claims. No clamps or hidden state resets.",
+  "source": "https://doi.org/10.1073/pnas.88.20.9107",
+  "reference": "Goldbeter (1991), A minimal cascade model for the mitotic oscillator involving cyclin and cdc2 kinase. Parameter/state cross-check: Physiome Goldbeter1991 exposure4c, changeset930898d5d5f4.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "goldbeter-mitotic-cascade-biology:Cyclin",
+      "name": "Cyclin",
+      "initial_value": 0.01,
+      "units": "micromolar",
+      "equation": "",
+      "position": {
+        "x": 140,
+        "y": 250
+      }
+    },
+    {
+      "id": "goldbeter-mitotic-cascade-biology:Active_Kinase",
+      "name": "Active_Kinase",
+      "initial_value": 0.01,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 320,
+        "y": 250
+      }
+    },
+    {
+      "id": "goldbeter-mitotic-cascade-biology:Active_Protease",
+      "name": "Active_Protease",
+      "initial_value": 0.01,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "goldbeter-mitotic-cascade-biology:rate:Cyclin",
+      "name": "Cyclin_net_rate",
+      "equation": "cyclin_input-proteolysis_max*Active_Protease*Cyclin/(cyclin_saturation+Cyclin)-basal_decay*Cyclin",
+      "to_stock": "goldbeter-mitotic-cascade-biology:Cyclin",
+      "units": "(micromolar)/minute",
+      "position": {
+        "x": 140,
+        "y": 350
+      }
+    },
+    {
+      "id": "goldbeter-mitotic-cascade-biology:rate:Active_Kinase",
+      "name": "Active_Kinase_net_rate",
+      "equation": "kinase_on_max*Cyclin/(activation_saturation+Cyclin)*(1-Active_Kinase)/(enzyme_saturation+1-Active_Kinase)-kinase_off_max*Active_Kinase/(enzyme_saturation+Active_Kinase)",
+      "to_stock": "goldbeter-mitotic-cascade-biology:Active_Kinase",
+      "units": "(1)/minute",
+      "position": {
+        "x": 320,
+        "y": 350
+      }
+    },
+    {
+      "id": "goldbeter-mitotic-cascade-biology:rate:Active_Protease",
+      "name": "Active_Protease_net_rate",
+      "equation": "protease_on_max*Active_Kinase*(1-Active_Protease)/(enzyme_saturation+1-Active_Protease)-protease_off_max*Active_Protease/(enzyme_saturation+Active_Protease)",
+      "to_stock": "goldbeter-mitotic-cascade-biology:Active_Protease",
+      "units": "(1)/minute",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "goldbeter-mitotic-cascade-biology:parameter:cyclin_input",
+      "name": "cyclin_input",
+      "equation": "0.025",
+      "units": "micromolar/minute",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "goldbeter-mitotic-cascade-biology:parameter:proteolysis_max",
+      "name": "proteolysis_max",
+      "equation": "0.25",
+      "units": "micromolar/minute",
+      "position": {
+        "x": 190,
+        "y": 80
+      }
+    },
+    {
+      "id": "goldbeter-mitotic-cascade-biology:parameter:basal_decay",
+      "name": "basal_decay",
+      "equation": "0.01",
+      "units": "1/minute",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "goldbeter-mitotic-cascade-biology:parameter:cyclin_saturation",
+      "name": "cyclin_saturation",
+      "equation": "0.02",
+      "units": "micromolar",
+      "position": {
+        "x": 370,
+        "y": 80
+      }
+    },
+    {
+      "id": "goldbeter-mitotic-cascade-biology:parameter:activation_saturation",
+      "name": "activation_saturation",
+      "equation": "0.5",
+      "units": "micromolar",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "goldbeter-mitotic-cascade-biology:parameter:kinase_on_max",
+      "name": "kinase_on_max",
+      "equation": "3",
+      "units": "1/minute",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "goldbeter-mitotic-cascade-biology:parameter:kinase_off_max",
+      "name": "kinase_off_max",
+      "equation": "1.5",
+      "units": "1/minute",
+      "position": {
+        "x": 640,
+        "y": 80
+      }
+    },
+    {
+      "id": "goldbeter-mitotic-cascade-biology:parameter:protease_on_max",
+      "name": "protease_on_max",
+      "equation": "1",
+      "units": "1/minute",
+      "position": {
+        "x": 730,
+        "y": 80
+      }
+    },
+    {
+      "id": "goldbeter-mitotic-cascade-biology:parameter:protease_off_max",
+      "name": "protease_off_max",
+      "equation": "0.5",
+      "units": "1/minute",
+      "position": {
+        "x": 820,
+        "y": 80
+      }
+    },
+    {
+      "id": "goldbeter-mitotic-cascade-biology:parameter:enzyme_saturation",
+      "name": "enzyme_saturation",
+      "equation": "0.005",
+      "units": "1",
+      "position": {
+        "x": 910,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.25,
+    "integration_method": "radau",
+    "units": "minute",
+    "rtol": 1e-08,
+    "atol": 1e-10
+  }
+}
