@@ -1,0 +1,222 @@
+{
+  "id": "foucault-coriolis-pendulum-fourth-science",
+  "name": "Foucault pendulum: small-angle gyroscopic precession",
+  "category": "physics",
+  "description": "Two horizontal small-angle displacement components with restoring acceleration and velocity-coupled Coriolis terms. Omega_vertical is the signed vertical rotation frequency; restoring frequency omega0. Centrifugal and vertical motion terms are omitted in the source approximation. Default normalized omega0=1/s,Omega_vertical=0.05/s,x0=1m,all other states0; end60 RK4step0.02. Rotation is deliberately accelerated for a visible illustration, not an Earth latitude or calibrated apparatus. Small angle requires displacement much smaller than pendulum length; g/L=omega0^2 alone does not fix g or L. Energy per unit mass is conserved. Reverse rotation reverses precession; zero rotation recovers planar harmonic motion. Original mathematical transcription/derivation; parameters are illustrative, not empirical calibration. Signed net-rate flows represent derivatives, not nonnegative physical transfers. No clamps or hidden resets.",
+  "source": "https://theory.physics.manchester.ac.uk/~mikeb/lecture/pc167/noninertial/foucault.html",
+  "reference": "Mike Birse, PC1672 Advanced dynamics section2.5 Foucault pendulum, Manchester (17 May2000): coupled horizontal equations and frequency roots. Original first-order transcription; not copied lecture text/figures.",
+  "stocks": [
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:Displacement_X",
+      "name": "Displacement_X",
+      "initial_value": 1,
+      "equation": "",
+      "units": "meter",
+      "position": {
+        "x": 140,
+        "y": 200
+      }
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:Displacement_Y",
+      "name": "Displacement_Y",
+      "initial_value": 0,
+      "equation": "",
+      "units": "meter",
+      "position": {
+        "x": 320,
+        "y": 200
+      }
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:Velocity_X",
+      "name": "Velocity_X",
+      "initial_value": 0,
+      "equation": "",
+      "units": "meter/second",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:Velocity_Y",
+      "name": "Velocity_Y",
+      "initial_value": 0,
+      "equation": "",
+      "units": "meter/second",
+      "position": {
+        "x": 680,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:rate:Displacement_X",
+      "name": "Displacement_X_Rate",
+      "equation": "Velocity_X",
+      "from_stock": null,
+      "to_stock": "foucault-coriolis-pendulum-fourth-science:Displacement_X",
+      "units": "meter/second",
+      "position": {
+        "x": 140,
+        "y": 300
+      }
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:rate:Displacement_Y",
+      "name": "Displacement_Y_Rate",
+      "equation": "Velocity_Y",
+      "from_stock": null,
+      "to_stock": "foucault-coriolis-pendulum-fourth-science:Displacement_Y",
+      "units": "meter/second",
+      "position": {
+        "x": 320,
+        "y": 300
+      }
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:rate:Velocity_X",
+      "name": "Velocity_X_Rate",
+      "equation": "2 * Vertical_Rotation * Velocity_Y - Natural_Frequency^2 * Displacement_X",
+      "from_stock": null,
+      "to_stock": "foucault-coriolis-pendulum-fourth-science:Velocity_X",
+      "units": "meter/second/second",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:rate:Velocity_Y",
+      "name": "Velocity_Y_Rate",
+      "equation": "-2 * Vertical_Rotation * Velocity_X - Natural_Frequency^2 * Displacement_Y",
+      "from_stock": null,
+      "to_stock": "foucault-coriolis-pendulum-fourth-science:Velocity_Y",
+      "units": "meter/second/second",
+      "position": {
+        "x": 680,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:Vertical_Rotation",
+      "name": "Vertical_Rotation",
+      "equation": "0.05",
+      "units": "1/second",
+      "position": {
+        "x": 140,
+        "y": 70
+      }
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:Natural_Frequency",
+      "name": "Natural_Frequency",
+      "equation": "1",
+      "units": "1/second",
+      "position": {
+        "x": 300,
+        "y": 70
+      }
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:Energy_Per_Mass",
+      "name": "Energy_Per_Mass",
+      "equation": "0.5 * (Velocity_X^2 + Velocity_Y^2 + Natural_Frequency^2 * (Displacement_X^2 + Displacement_Y^2))",
+      "units": "meter^2/second^2",
+      "position": {
+        "x": 460,
+        "y": 70
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c0",
+      "from_element": "Velocity_X",
+      "to_element": "Displacement_X_Rate"
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c1",
+      "from_element": "Velocity_Y",
+      "to_element": "Displacement_Y_Rate"
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c2",
+      "from_element": "Displacement_X",
+      "to_element": "Velocity_X_Rate"
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c3",
+      "from_element": "Natural_Frequency",
+      "to_element": "Velocity_X_Rate"
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c4",
+      "from_element": "Velocity_Y",
+      "to_element": "Velocity_X_Rate"
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c5",
+      "from_element": "Vertical_Rotation",
+      "to_element": "Velocity_X_Rate"
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c6",
+      "from_element": "Displacement_Y",
+      "to_element": "Velocity_Y_Rate"
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c7",
+      "from_element": "Natural_Frequency",
+      "to_element": "Velocity_Y_Rate"
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c8",
+      "from_element": "Velocity_X",
+      "to_element": "Velocity_Y_Rate"
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c9",
+      "from_element": "Vertical_Rotation",
+      "to_element": "Velocity_Y_Rate"
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c10",
+      "from_element": "Displacement_X",
+      "to_element": "Energy_Per_Mass"
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c11",
+      "from_element": "Displacement_Y",
+      "to_element": "Energy_Per_Mass"
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c12",
+      "from_element": "Natural_Frequency",
+      "to_element": "Energy_Per_Mass"
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c13",
+      "from_element": "Velocity_X",
+      "to_element": "Energy_Per_Mass"
+    },
+    {
+      "id": "foucault-coriolis-pendulum-fourth-science:c14",
+      "from_element": "Velocity_Y",
+      "to_element": "Energy_Per_Mass"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.02,
+    "integration_method": "rk4",
+    "units": "second"
+  },
+  "created_at": "2026-10-24T12:00:00",
+  "updated_at": "2026-10-24T12:00:00"
+}
