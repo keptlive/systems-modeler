@@ -53,6 +53,14 @@ const ModelValidation = {
         const errors=report.issues.filter(i=>i.severity==='error').length;
         add('p',`${errors} errors · ${report.issues.length-errors} review notes · ${report.numerical_check==='completed_one_step'?'One numerical step completed':'Numerical check incomplete'}`,status);
         add('p','A completed run does not verify the assumptions, units or source equations.',status,'inspection-note');
+        if(report.dimensional_analysis){
+            const dimensional=add('section',null,body), evidence=report.dimensional_analysis;
+            add('h3','Dimensional consistency: '+evidence.status,dimensional);
+            add('p','Symbolic checks compare declared units; they do not convert scales or establish scientific validity.',dimensional,'inspection-note');
+            const notes=add('ul',null,dimensional);
+            for(const item of [...(evidence.errors||[]),...(evidence.unknown||[])].slice(0,30)) add('li',`${item.element}: ${item.message}`,notes);
+            if((evidence.errors?.length||0)+(evidence.unknown?.length||0)>30) add('p','Download the report for all dimensional findings.',dimensional);
+        }
         if(report.issues.length){
             const section=add('section',null,body);add('h3','What to review',section);
             const issues=add('ul',null,section,'inspection-issues');
@@ -64,6 +72,12 @@ const ModelValidation = {
             }
         }
         const investigation=add('section',null,body,'inspection-investigate');
+        if(typeof EngineTools!=='undefined' && Simulation.results){
+            const feedback=add('section',null,body);add('h3','Local feedback response',feedback);
+            add('p','Analyze small stock perturbations at states from the last run. Up to 16 stocks; delays and stochastic equations are unsupported.',feedback);
+            const button=add('button','Analyze feedback',feedback),result=add('div',null,feedback);result.setAttribute('aria-live','polite');
+            button.addEventListener('click',()=>EngineTools.feedback(button,result));
+        }
         add('h3','Does the result depend on the time step?',investigation);
         add('p','Compare complete runs at the current step, half step and quarter step. Your model stays unchanged.',investigation);
         const investigate=add('button','Investigate numerical behavior',investigation);

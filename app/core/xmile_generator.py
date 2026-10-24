@@ -1,5 +1,6 @@
 """Export the supported scalar XMILE subset without discarding tables or geometry."""
 import ast
+import json
 import io
 import tokenize
 import math
@@ -155,6 +156,8 @@ def xmile_equation(text, tables, random_seed=None, original_text=None, declared_
 
 
 def generate_xmile(model: Model) -> str:
+    if model.has_structure():
+        raise ValueError('Structured arrays/modules require JSON export to preserve authored structure; scalar XMILE export would lose it')
     reserved = {canonical_name(name) for name in CORE_RESERVED}
     if any(canonical_name(element.name.strip()) in reserved for element in
            [*model.stocks, *model.flows, *model.variables, *model.tables]):
@@ -172,12 +175,16 @@ def generate_xmile(model: Model) -> str:
     ET.SubElement(header, 'product', {'version': '1.1.0'}).text = 'Systems Modeler'
     ET.SubElement(header, 'created').text = datetime.now(timezone.utc).isoformat()
     specs = ET.SubElement(root, 'sim_specs', {'method': model.time_settings.integration_method})
+    if model.time_settings.units:
+        specs.set('time_units', model.time_settings.units)
     if model.time_settings.random_seed is not None:
         specs.set('{' + PROVENANCE_NS + '}random_seed', str(model.time_settings.random_seed))
     for tag, value in [('start', model.time_settings.start), ('stop', model.time_settings.end), ('dt', model.time_settings.dt)]:
         ET.SubElement(specs, tag).text = str(value)
     model_node = ET.SubElement(root, 'model')
     provenance = ET.SubElement(root, '{' + PROVENANCE_NS + '}provenance')
+    if model.source_document is not None:
+        ET.SubElement(provenance, '{' + PROVENANCE_NS + '}source_document').text = json.dumps(model.source_document.model_dump(mode='json'), ensure_ascii=False)
     for field in ('description', 'source', 'reference', 'category'):
         value = getattr(model, field)
         if value:
@@ -192,6 +199,9 @@ def generate_xmile(model: Model) -> str:
         if name is not None:
             attrs['name'] = name
         gf = ET.SubElement(parent, 'gf', attrs)
+        for field in ('input_units', 'output_units'):
+            if getattr(table, field):
+                gf.set('{' + PROVENANCE_NS + '}' + field, getattr(table, field))
         ET.SubElement(gf, 'xpts').text = ','.join(str(x) for x, _ in table.points)
         ET.SubElement(gf, 'ypts').text = ','.join(str(y) for _, y in table.points)
 

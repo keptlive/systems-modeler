@@ -1,0 +1,318 @@
+{
+  "stockflow_engine_sha256": {
+    "app/core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+    "app/core/diagnostics.py": "ae4eb5db8909abcb505d93eff1a8e3b14d469739fdc4e39e5be206d0a0cf7d79",
+    "app/core/equations.py": "7c7dff75a0a4c00ec62d347788e7dde32197a68c38b5140ca57f11df2e74e612",
+    "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+    "app/core/feedback_analysis.py": "4d85d163a7fea0766d752804320661ca821fa0e5a59a5950da2455bb260c5ab8",
+    "app/core/integration.py": "8866e3c7036571285d5b843708d94accd1dd9dca09715fcd5f9688eb9ce6bffc",
+    "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+    "app/core/mdl_parser.py": "93cb252aa1d29357fe3c4cbc04bdc276695e0b6d2684ab7d541cab75a64976c2",
+    "app/core/model.py": "bf3ccdf20c8e0902686561241d2c27cce8e871e00a93e80c23655a38fbf3eaeb",
+    "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e",
+    "app/core/simulator.py": "dffe1dc1aa2b937a6076ad9c869ae115281ab17f11ddc2e57bc1eaab435a8679",
+    "app/core/source_review.py": "fbb87641cefc9b2ab5f66becffa197993a107522a8d68750b09ae1f0167840ec",
+    "app/core/structured.py": "e40fbc7c03b9ff15e99e27d17de3fcf6784807c7a7e80a28d45c31596ddf4f5f",
+    "app/core/units.py": "7e0cd72b87dfabcdd0341074d71d16df85d54e8863fbd5c6f80f5f5402e0667f",
+    "app/core/validation.py": "fff2e905ea1b581492c4499843bf87a55e810b0ea15ae37c3a46c0e58bd857ff",
+    "app/core/validator.py": "18ae2762241eebe32f96f603879bca1b716e6c6fc32f3729d85749408dca4a86",
+    "app/core/xmile_generator.py": "bdc5f8023c6429442a6f9564f5e17dd0b1ce7e70b92a8d9126d567b6dd0bab19",
+    "app/core/xmile_parser.py": "a104f0790cec7976208a0813227e46d757e96af8df5cb9043b93f388b03d6087"
+  },
+  "reference_distribution": "pysimlin",
+  "reference_version": "0.8.5",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "dependencies": {
+    "numpy": "2.5.4",
+    "pandas": "3.1.0",
+    "pydantic": "2.14.1",
+    "scipy": "1.18.1"
+  },
+  "methodology": "Original scalar SDXorg XMILE; matched method/time grid; loop analysis disabled; parse/cold/warm timings separated; complete output comparisons. Timings include result materialization, exclude process startup. Warm Simlin may reuse compilation; Stock & Flow currently rebuilds each simulation.",
+  "cases": [
+    {
+      "input": "tests/fixtures/sdxorg/teacup/teacup.xmile",
+      "sha256": "fe46dbda3c71bf99db52e6547c51c36a9b6920be35463904090ce1769da99eff",
+      "settings": {
+        "units": "Minute",
+        "start": 0.0,
+        "end": 30.0,
+        "dt": 0.125,
+        "integration_method": "rk4",
+        "discrete_period": null,
+        "rtol": 1e-06,
+        "atol": 1e-09,
+        "random_seed": 0
+      },
+      "rows": 241,
+      "simlin_rows": 241,
+      "time_matches": true,
+      "columns": {
+        "Teacup Temperature": {
+          "max_abs_error": 7.105427357601002e-14,
+          "allclose": true
+        },
+        "Heat Loss to Room": {
+          "max_abs_error": 7.105427357601002e-15,
+          "allclose": true
+        },
+        "Room Temperature": {
+          "max_abs_error": 0.0,
+          "allclose": true
+        },
+        "Characteristic Time": {
+          "max_abs_error": 0.0,
+          "allclose": true
+        }
+      },
+      "stockflow": {
+        "parse": {
+          "median_seconds": 0.00019731599604710937,
+          "samples_seconds": [
+            0.0014785120147280395,
+            0.0004970809677615762,
+            0.00036825297866016626,
+            0.00025567400734871626,
+            0.00021029997151345015,
+            0.0001915150205604732,
+            0.00017751898849382997,
+            0.00025404099142178893,
+            0.0002137059927918017,
+            0.00019731599604710937,
+            0.0001873070141300559,
+            0.0001787120127119124,
+            0.0001819669851101935,
+            0.00018242798978462815,
+            0.00017742899945005774
+          ]
+        },
+        "cold_run": {
+          "median_seconds": 0.009120369970332831,
+          "samples_seconds": [
+            0.009120369970332831
+          ]
+        },
+        "warm_run": {
+          "median_seconds": 0.007469508971553296,
+          "samples_seconds": [
+            0.00728500698460266,
+            0.0072492180042900145,
+            0.007219956023618579,
+            0.008149329980369657,
+            0.007326334016397595,
+            0.008123038976918906,
+            0.010981329018250108,
+            0.008244106022175401,
+            0.006953401956707239,
+            0.007708088029175997,
+            0.007469508971553296,
+            0.008859345980454236,
+            0.0072914689662866294,
+            0.007721673988271505,
+            0.007396613014861941
+          ]
+        }
+      },
+      "simlin": {
+        "parse": {
+          "median_seconds": 0.00037807103944942355,
+          "samples_seconds": [
+            0.0012310519814491272,
+            0.001048362988512963,
+            0.0005147140473127365,
+            0.0003953319974243641,
+            0.00036235200241208076,
+            0.0003944209893234074,
+            0.0003539660247042775,
+            0.00042048998875543475,
+            0.0003645560354925692,
+            0.000317719008307904,
+            0.0003918759757652879,
+            0.0003630329738371074,
+            0.00037807103944942355,
+            0.00034253502963110805,
+            0.000319813028909266
+          ]
+        },
+        "cold_run": {
+          "median_seconds": 0.0010095720062963665,
+          "samples_seconds": [
+            0.0010095720062963665
+          ]
+        },
+        "warm_run": {
+          "median_seconds": 0.00021050998475402594,
+          "samples_seconds": [
+            0.0006220740033313632,
+            0.00026148499455302954,
+            0.00024713901802897453,
+            0.00024078699061647058,
+            0.00021050998475402594,
+            0.0001998899970203638,
+            0.0001957229687832296,
+            0.0001914449967443943,
+            0.00022102997172623873,
+            0.00024912197841331363,
+            0.00021036004181951284,
+            0.00019457098096609116,
+            0.00025342998560518026,
+            0.0002035780344158411,
+            0.00020229502115398645
+          ]
+        }
+      },
+      "warm_stockflow_over_simlin": 35.48292011080222
+    },
+    {
+      "input": "tests/fixtures/sdxorg/SIR/SIR.xmile",
+      "sha256": "a263e672f8391e11aef6a3d668d8bfe1ab383b27cad31cedcaed78735e28a92e",
+      "settings": {
+        "units": "Time",
+        "start": 0.0,
+        "end": 100.0,
+        "dt": 0.03125,
+        "integration_method": "rk4",
+        "discrete_period": null,
+        "rtol": 1e-06,
+        "atol": 1e-09,
+        "random_seed": 0
+      },
+      "rows": 3201,
+      "simlin_rows": 3201,
+      "time_matches": true,
+      "columns": {
+        "susceptible": {
+          "max_abs_error": 2.2737367544323206e-12,
+          "allclose": true
+        },
+        "infectious": {
+          "max_abs_error": 3.765876499528531e-13,
+          "allclose": true
+        },
+        "recovered": {
+          "max_abs_error": 2.3874235921539366e-12,
+          "allclose": true
+        },
+        "succumbing": {
+          "max_abs_error": 8.526512829121202e-14,
+          "allclose": true
+        },
+        "recovering": {
+          "max_abs_error": 7.638334409421077e-14,
+          "allclose": true
+        },
+        "total_population": {
+          "max_abs_error": 0.0,
+          "allclose": true
+        },
+        "duration": {
+          "max_abs_error": 0.0,
+          "allclose": true
+        },
+        "contact_infectivity": {
+          "max_abs_error": 0.0,
+          "allclose": true
+        }
+      },
+      "stockflow": {
+        "parse": {
+          "median_seconds": 0.0003109859535470605,
+          "samples_seconds": [
+            0.0014047049917280674,
+            0.0006860310095362365,
+            0.0005881399847567081,
+            0.00048042996786534786,
+            0.00033881800482049584,
+            0.00029984599677845836,
+            0.0002941959537565708,
+            0.00027927797054871917,
+            0.0003925180062651634,
+            0.00029090000316500664,
+            0.00027540099108591676,
+            0.0003109859535470605,
+            0.00027027097530663013,
+            0.00026269699446856976,
+            0.0003519220044836402
+          ]
+        },
+        "cold_run": {
+          "median_seconds": 0.17102324997540563,
+          "samples_seconds": [
+            0.17102324997540563
+          ]
+        },
+        "warm_run": {
+          "median_seconds": 0.15768826502608135,
+          "samples_seconds": [
+            0.17340127500938252,
+            0.17190461995778605,
+            0.16006518399808556,
+            0.17185129900462925,
+            0.16227637004340068,
+            0.16640075197210535,
+            0.15733110904693604,
+            0.15425767900887877,
+            0.15688712999690324,
+            0.15319976099999622,
+            0.16308080701855943,
+            0.15768826502608135,
+            0.1528286139946431,
+            0.1561416499898769,
+            0.15675591601757333
+          ]
+        }
+      },
+      "simlin": {
+        "parse": {
+          "median_seconds": 0.0003351820050738752,
+          "samples_seconds": [
+            0.001311180996708572,
+            0.0009245839901268482,
+            0.0005016300128772855,
+            0.0004975629854016006,
+            0.0003823090228252113,
+            0.0003891420201398432,
+            0.0003351820050738752,
+            0.00031367200426757336,
+            0.0003102049813605845,
+            0.0003219369682483375,
+            0.00030776101630181074,
+            0.0003529550158418715,
+            0.00032535300124436617,
+            0.0003109060344286263,
+            0.0003039630246348679
+          ]
+        },
+        "cold_run": {
+          "median_seconds": 0.0024782430264167488,
+          "samples_seconds": [
+            0.0024782430264167488
+          ]
+        },
+        "warm_run": {
+          "median_seconds": 0.0010099930223077536,
+          "samples_seconds": [
+            0.0026040379889309406,
+            0.0012673289747908711,
+            0.0009913579560816288,
+            0.0014895820058882236,
+            0.0011399530339986086,
+            0.0010099930223077536,
+            0.000997879949864,
+            0.0009191639837808907,
+            0.008143527957145125,
+            0.0013095680042169988,
+            0.0012236890033818781,
+            0.0009524059714749455,
+            0.000969036016613245,
+            0.000917730969376862,
+            0.0009916379931382835
+          ]
+        }
+      },
+      "warm_stockflow_over_simlin": 156.12807370270363
+    }
+  ]
+}

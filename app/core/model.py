@@ -50,10 +50,22 @@ class Stock(BaseModel):
     units: Optional[str] = None
     initial_value: float = 0
     equation: str = ""  # For computed initial values
+    dimensions: list[str] = Field(default_factory=list)
+    initial_values: dict[str, float] = Field(default_factory=dict)
+    equations: dict[str, str] = Field(default_factory=dict)
     position: Position = Field(default_factory=Position)
 
 
-class Flow(BaseModel):
+class NonStockElement(BaseModel):
+    @model_validator(mode="before")
+    @classmethod
+    def reject_stock_only_fields(cls, value):
+        if isinstance(value, dict) and value.get("initial_values"):
+            raise ValueError("initial_values is supported only on stocks")
+        return value
+
+
+class Flow(NonStockElement):
     """
     Rate of change between stocks.
     Examples: births, sales, depreciation
@@ -62,12 +74,14 @@ class Flow(BaseModel):
     name: str
     units: Optional[str] = None
     equation: str = "0"
+    dimensions: list[str] = Field(default_factory=list)
+    equations: dict[str, str] = Field(default_factory=dict)
     from_stock: Optional[str] = None  # Source stock ID
     to_stock: Optional[str] = None    # Destination stock ID
     position: Position = Field(default_factory=Position)
 
 
-class Variable(BaseModel):
+class Variable(NonStockElement):
     """
     Auxiliary calculation or parameter.
     Examples: birth_rate, contact_rate, constants
@@ -77,6 +91,8 @@ class Variable(BaseModel):
     units: Optional[str] = None
     role: Literal["auxiliary", "report"] = "auxiliary"
     equation: str = "0"
+    dimensions: list[str] = Field(default_factory=list)
+    equations: dict[str, str] = Field(default_factory=dict)
     position: Position = Field(default_factory=Position)
 
 
@@ -106,6 +122,7 @@ def discrete_interval_count(start, end, period):
 class TimeSettings(BaseModel):
     """Simulation time configuration."""
     model_config = ConfigDict(allow_inf_nan=False)
+    units: Optional[str] = None
     start: float = 0
     end: float = 100
     dt: float = Field(default=0.25, gt=0)
@@ -143,6 +160,8 @@ class LookupTable(BaseModel):
     """
     model_config = ConfigDict(allow_inf_nan=False)
     name: str
+    input_units: Optional[str] = None
+    output_units: Optional[str] = None
     points: list[tuple[float, float]] = Field(default_factory=list)
     # Preserve historical JSON lookup behavior; XMILE imports explicitly set
     # their standard's default (continuous/clamped).
@@ -153,7 +172,26 @@ class LookupTable(BaseModel):
         return [(p[0], p[1]) for p in self.points]
 
 
-class Model(BaseModel):
+class SourceDocument(BaseModel):
+    format: Literal["vensim_mdl"]
+    text: str = Field(max_length=2 * 1024 * 1024)
+    diagnostics: list[dict] = Field(default_factory=list, max_length=1000)
+
+
+class StructuredFields(BaseModel):
+    """Preserved source structure; scalar execution uses a bounded lowering pass."""
+    dimensions: list[dict] = Field(default_factory=list)
+    module_definitions: dict[str, dict] = Field(default_factory=dict)
+    modules: list[dict] = Field(default_factory=list)
+    source_document: Optional[SourceDocument] = None
+
+    def has_structure(self):
+        return bool(self.dimensions or self.modules or self.module_definitions or any(
+            e.dimensions or e.equations or getattr(e, "initial_values", {})
+            for e in [*getattr(self, "stocks", []), *getattr(self, "flows", []), *getattr(self, "variables", [])]))
+
+
+class Model(StructuredFields):
     """
     Complete systems dynamics model.
     Contains stocks, flows, variables, connectors, lookup tables, and settings.
@@ -187,7 +225,7 @@ class Model(BaseModel):
             self.updated_at = now
 
 
-class ModelCreate(BaseModel):
+class ModelCreate(StructuredFields):
     """Request body for creating a new model."""
     name: str = "Untitled Model"
     description: str = ""
@@ -205,6 +243,10 @@ class ModelCreate(BaseModel):
 class ModelUpdate(BaseModel):
     """Request body for updating a model."""
     name: Optional[str] = None
+    dimensions: Optional[list[dict]] = None
+    module_definitions: Optional[dict[str, dict]] = None
+    modules: Optional[list[dict]] = None
+    source_document: Optional[SourceDocument] = None
     description: Optional[str] = None
     source: Optional[str] = None
     reference: Optional[str] = None
@@ -219,6 +261,7 @@ class ModelUpdate(BaseModel):
 class TimeSettingsPatch(BaseModel):
     """Explicit timing edits; validate the grid only after inheriting its model."""
     model_config = ConfigDict(allow_inf_nan=False, extra="forbid")
+    units: Optional[str] = None
     start: Optional[float] = None
     end: Optional[float] = None
     dt: Optional[float] = Field(default=None, gt=0)
@@ -230,7 +273,7 @@ class TimeSettingsPatch(BaseModel):
 
     @model_validator(mode="after")
     def validate_explicit_nulls(self):
-        for name in self.model_fields_set - {"random_seed", "discrete_period"}:
+        for name in self.model_fields_set - {"random_seed", "discrete_period", "units"}:
             if getattr(self, name) is None:
                 raise ValueError(f"{name} cannot be null")
         return self
@@ -317,6 +360,8 @@ def generate_connectors_from_equations(model: Model) -> list[Connector]:
     Returns:
         List of Connector objects representing equation dependencies
     """
+    if model.has_structure():
+        return list(model.connectors)
     from app.core.equations import get_equation_variables, canonical_name
 
     # Build a lookup map for all element names (normalized to handle variations)

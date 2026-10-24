@@ -12,7 +12,7 @@ function updateVariableToggles() {
     search.value=Charts.seriesQuery||'';
     const actions=document.createElement('div');actions.className='series-actions';
     const names=Object.keys(Charts.options.variables);
-    const stocks=(Simulation.resultModel?.stocks||[]).map(stock=>stock.name).filter(name=>names.includes(name));
+    const stocks=Charts.getStockSeries();
     for(const [label,selection] of [['Stocks',stocks],['All',names],['Clear',[]]]){
         const button=document.createElement('button');button.type='button';button.textContent=label;
         button.setAttribute('aria-label',label==='Stocks'?'Plot only stocks':label==='All'?'Plot all series':'Clear plotted series');

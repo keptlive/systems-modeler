@@ -27,6 +27,9 @@ left-endpoint rates; RK4 integrates ordinary and hidden smoothing/material-delay
 Fixed history delays and random functions require Euler. Set time_settings.random_seed
 to replay stochastic runs; an automatically chosen effective seed is returned.
 Use investigate_model for bounded full-horizon timestep comparisons and input evidence.
+Native tools compile_model_structure and check_model_units inspect source without simulation.
+analyze_model_feedback requires an explicitly supplied trajectory and does no hidden full run.
+import_mdl_model returns a source-preserving draft and semantic warnings; it never saves.
 Results describe assumptions, not independently verified forecasts.
 To drive a visible page, connect over HTTP/SSE and call open_workspace. Open its
 private page_url, then inspect_workspace, update_workspace_model, run_workspace and
@@ -163,6 +166,110 @@ def resolve_model(model_id=None, model_json=None):
             raise ValueError(f"Model '{model_id}' not found")
         return model
     return Model.model_validate(model_json)
+
+# These additive native tools use the same model selector as existing tools,
+# with explicit transport budgets for object and string JSON forms.
+NATIVE_MODEL_BYTES = 2 * 1024 * 1024
+NATIVE_RESULT_BYTES = 8 * 1024 * 1024
+
+def bounded_native_json(value, label, limit):
+    if isinstance(value, str):
+        if len(value.encode("utf-8")) > limit:
+            raise ValueError(f"{label} exceeds {limit} UTF-8 bytes")
+        value = json.loads(value, parse_constant=lambda token: (_ for _ in ()).throw(ValueError("Nonfinite JSON constant")))
+    if not isinstance(value, dict):
+        raise ValueError(f"{label} must be a JSON object")
+    encoded = json.dumps(value, ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+    if len(encoded.encode("utf-8")) > limit:
+        raise ValueError(f"{label} exceeds {limit} UTF-8 bytes")
+    return value
+
+def native_model(model_id=None, model_json=None):
+    if model_json is not None:
+        model_json = bounded_native_json(model_json, "model_json", NATIVE_MODEL_BYTES)
+    model = resolve_model(model_id, model_json)
+    bounded_native_json(model.model_dump(mode="json"), "Resolved model", NATIVE_MODEL_BYTES)
+    return model
+
+def native_failure(error):
+    from app.core.failure_diagnostics import failure_payload
+    payload = {"failure": failure_payload(error)}
+    if getattr(error, "diagnostics", None):
+        payload["failure"]["diagnostics"] = error.diagnostics
+    raise ToolError(json.dumps(payload, allow_nan=False)) from error
+
+@mcp.tool(annotations=READ)
+def compile_model_structure(model_id: Optional[str] = None,
+                            model_json: Optional[dict | str] = None) -> dict:
+    """Preview bounded native array/module expansion and source mapping; no simulation or writes.
+
+    Provide exactly one selector. model_json accepts an object or JSON string, up to 2 MiB.
+    The returned scalar model is an execution artifact; preserve the original project separately.
+    """
+    from app.core.structured import compile_structured_model
+    try:
+        return compile_structured_model(native_model(model_id, model_json).model_dump(mode="json"))
+    except (ValueError, TypeError, ArithmeticError, RecursionError) as error:
+        native_failure(error)
+
+@mcp.tool(annotations=READ)
+def check_model_units(model_id: Optional[str] = None,
+                      model_json: Optional[dict | str] = None) -> dict:
+    """Inspect advisory unit consistency after native expansion; no simulation or writes.
+
+    Unknown or incomplete units remain explicit evidence, never scientific certification.
+    """
+    from app.core.structured import compile_structured_model
+    from app.core.units import analyze_units
+    try:
+        compiled = compile_structured_model(native_model(model_id, model_json).model_dump(mode="json"))
+        return analyze_units(Model.model_validate(compiled["model"]))
+    except (ValueError, TypeError, ArithmeticError, RecursionError) as error:
+        native_failure(error)
+
+@mcp.tool(annotations=READ)
+def analyze_model_feedback(result_json: dict | str,
+                           model_id: Optional[str] = None,
+                           model_json: Optional[dict | str] = None,
+                           sample_count: Annotated[int, Field(ge=1, le=16)] = 8,
+                           relative_step: Annotated[float, Field(ge=1e-7, le=1e-2)] = 1e-4) -> dict:
+    """Estimate bounded local feedback from explicitly supplied SimulationResult JSON.
+
+    No full simulation runs. Supply the exact model/effective settings that produced the trajectory.
+    Results report local response and provenance limits, not Loops That Matter dominance.
+    result_json is an object or string (8 MiB maximum, one million numeric values).
+    """
+    from app.core.structured import compile_structured_model
+    from app.core.feedback_analysis import analyze_feedback
+    from app.core.model import SimulationResult
+    from app.core.equations import EquationError
+    try:
+        raw = bounded_native_json(result_json, "result_json", NATIVE_RESULT_BYTES)
+        result = SimulationResult.model_validate(raw)
+        if sum(len(series) for series in result.values.values()) > 1_000_000:
+            raise ValueError("Feedback trajectory exceeds one million numeric values")
+        compiled = compile_structured_model(native_model(model_id, model_json).model_dump(mode="json"))
+        return analyze_feedback(Model.model_validate(compiled["model"]), result, sample_count, relative_step)
+    except (ValueError, TypeError, ArithmeticError, RecursionError, EquationError) as error:
+        native_failure(error)
+
+@mcp.tool(annotations=READ)
+def import_mdl_model(mdl_text: Annotated[str, Field(min_length=1, max_length=2_000_000)]) -> dict:
+    """Parse the supported native MDL subset into a source-preserving draft; never saves.
+
+    Returns model and diagnostics. Read all semantic warnings before simulation.
+    Unsupported constructs return tool errors rather than a partially imported model.
+    Source is bounded to two million UTF-8 bytes, including non-ASCII text.
+    """
+    from app.core.mdl_parser import parse_mdl
+    try:
+        parsed = parse_mdl(mdl_text)
+        model = Model.model_validate({**parsed["model"], "source_document": {
+            "format": parsed["source_format"], "text": parsed["original_source"],
+            "diagnostics": parsed["diagnostics"]}})
+        return {"model": model.model_dump(mode="json"), "diagnostics": parsed["diagnostics"]}
+    except (ValueError, TypeError, ArithmeticError, RecursionError) as error:
+        native_failure(error)
 
 def settings_for(model, start_time=None, end_time=None, dt=None, integration_method=None, random_seed=None, rtol=None, atol=None):
     changes = {'start': start_time, 'end': end_time, 'dt': dt, 'integration_method': integration_method, 'random_seed': random_seed, 'rtol': rtol, 'atol': atol}
@@ -371,7 +478,15 @@ def engine_contract() -> str:
         'investigation': {'tool': 'investigate_model', 'max_runs': 3,
                           'grids': ['dt', 'dt/2', 'dt/4'], 'changes_inputs': False,
                           'stochastic_path_convergence': 'not evaluated'},
-        'unsupported': ['arrays', 'nested models', 'queues', 'conveyors', 'macros',
+        'native_structure': {'tool': 'compile_model_structure', 'format': 'bounded JSON dimensions and reusable modules',
+                             'preservation': 'source model retained separately from scalar execution artifact',
+                             'unsupported': 'XMILE arrays/modules, mappings, module arrays and cross-module stock flows'},
+        'unit_analysis': {'tool': 'check_model_units', 'scope': 'advisory expression-level dimensional evidence; unknowns explicit'},
+        'feedback_analysis': {'tool': 'analyze_model_feedback', 'trajectory': 'explicit SimulationResult required; no hidden full simulation',
+                              'scope': 'bounded local stock-rate Jacobian; not Loops That Matter dominance'},
+        'mdl_import': {'tool': 'import_mdl_model', 'writes': False, 'source_retention': 'model.source_document',
+                       'scope': 'bounded scalar subset with semantic-loss diagnostics'},
+        'unsupported': ['XMILE arrays and nested models', 'queues', 'conveyors', 'macros',
                         'nonnegative stock constraints', 'changing material/fixed delay duration',
                         'changing stateful order', 'algebraic loop solvers'],
         'interpretation': 'Numerical completion and convergence evidence do not establish scientific validity'

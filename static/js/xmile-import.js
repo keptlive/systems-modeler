@@ -29,7 +29,8 @@
             } else {
                 const formData = new FormData();
                 formData.append('file', file);
-                response = await fetch('/api/models/import/xmile', {method:'POST',body:formData});
+                const format=file.name.toLowerCase().endsWith('.mdl')?'mdl':'xmile';
+                response = await fetch('/api/models/import/'+format, {method:'POST',body:formData});
             }
             
             if (!response.ok) {
@@ -54,6 +55,7 @@
             // Update model list
             UserModels.save(model);
             UserModels.populateDropdown();
+            if(model.source_document?.diagnostics?.length) App.showToast('Imported with notes: '+model.source_document.diagnostics.map(d=>d.message).join(' '),'info');
             
             if (modeIndicator) {
                 modeIndicator.textContent = 'Model imported successfully!';

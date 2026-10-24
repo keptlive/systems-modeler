@@ -334,11 +334,11 @@ const App = {
         }
 
         if (this.selected.type === 'flow') {
-            const stockOptions = this.model.stocks.map(s =>
+            const stockOptions = this.mappedStockOption(element.from_stock) + this.model.stocks.map(s =>
                 `<option value="${this.escapeHtml(s.name)}" ${element.from_stock === s.name || element.from_stock === s.id ? 'selected' : ''}>${this.escapeHtml(s.name)}</option>`
             ).join('');
 
-            const toStockOptions = this.model.stocks.map(s =>
+            const toStockOptions = this.mappedStockOption(element.to_stock) + this.model.stocks.map(s =>
                 `<option value="${this.escapeHtml(s.name)}" ${element.to_stock === s.name || element.to_stock === s.id ? 'selected' : ''}>${this.escapeHtml(s.name)}</option>`
             ).join('');
 
@@ -520,6 +520,16 @@ const App = {
 
     modelSnapshot() {
         return {...this.model,id:this.model.id||'draft'};
+    },
+
+    hasStructure() {
+        return !!(this.model.dimensions?.length || this.model.modules?.length || Object.keys(this.model.module_definitions||{}).length ||
+            [...this.model.stocks,...this.model.flows,...this.model.variables].some(e=>e.dimensions?.length || Object.keys(e.equations||{}).length || Object.keys(e.initial_values||{}).length));
+    },
+
+    mappedStockOption(reference) {
+        if(!reference || this.model.stocks.some(s=>s.name===reference||s.id===reference)) return '';
+        return `<option value="${this.escapeHtml(reference)}" selected>${this.escapeHtml(reference)} (mapped reference)</option>`;
     },
 
     /**
@@ -796,6 +806,10 @@ const App = {
                 variables: this.model.variables,
                 connectors: this.model.connectors,
                 tables: this.model.tables || [],
+                dimensions: this.model.dimensions || [],
+                modules: this.model.modules || [],
+                module_definitions: this.model.module_definitions || {},
+                source_document: this.model.source_document || null,
                 time_settings: this.model.time_settings
             };
 
@@ -911,6 +925,10 @@ const App = {
             variables: modelData.variables || [],
             connectors: modelData.connectors || [],
             tables: modelData.tables || [],
+            dimensions: modelData.dimensions || [],
+            modules: modelData.modules || [],
+            module_definitions: modelData.module_definitions || {},
+            source_document: modelData.source_document || null,
             time_settings: modelData.time_settings || { start: 0, end: 100, dt: 0.25 }
         };
         // Auto-generate missing connectors based on equation dependencies
@@ -1046,6 +1064,7 @@ const App = {
      * Handles both underscore and space variations in names (e.g., "birth_rate" matches "birth rate").
      */
     generateMissingConnectors() {
+        if (this.hasStructure()) return;
         // Build a map of element names to their IDs with normalization
         // Store multiple variants: original, lowercase, with underscores, with spaces
         const nameToId = new Map();
@@ -1246,11 +1265,11 @@ const App = {
         }
 
         if (this.selected.type === 'flow') {
-            const stockOptions = this.model.stocks.map(s =>
+            const stockOptions = this.mappedStockOption(element.from_stock) + this.model.stocks.map(s =>
                 `<option value="${this.escapeHtml(s.name)}" ${element.from_stock === s.name || element.from_stock === s.id ? 'selected' : ''}>${this.escapeHtml(s.name)}</option>`
             ).join('');
 
-            const toStockOptions = this.model.stocks.map(s =>
+            const toStockOptions = this.mappedStockOption(element.to_stock) + this.model.stocks.map(s =>
                 `<option value="${this.escapeHtml(s.name)}" ${element.to_stock === s.name || element.to_stock === s.id ? 'selected' : ''}>${this.escapeHtml(s.name)}</option>`
             ).join('');
 
@@ -1426,6 +1445,7 @@ const App = {
     },
 
     renameElement(element, requestedName) {
+        if(this.hasStructure() && requestedName!==element.name) throw new Error('Rename structured elements and their mappings together in Source.');
         const name=String(requestedName).trim(), oldName=element.name;
         if (name === oldName) return;
         const key=this.identifierKey(name), oldKey=this.identifierKey(oldName);
@@ -1697,6 +1717,7 @@ const App = {
             dtInput.title = ts.discrete_period != null ? `This discrete model advances once every ${ts.discrete_period} time units.` : '';
             document.getElementById('sim-method').value = ts.integration_method || 'euler';
             document.getElementById('sim-seed').value = ts.random_seed ?? '';
+            if(document.getElementById('sim-time-units')) document.getElementById('sim-time-units').value = ts.units ?? '';
             document.getElementById('sim-rtol').value = ts.rtol ?? 1e-6;
             document.getElementById('sim-atol').value = ts.atol ?? 1e-9;
             updateMethod();
@@ -1819,7 +1840,8 @@ const App = {
             }
             Object.assign(tolerance,{rtol,atol});
         }
-        return {...this.model.time_settings,start,end,dt,random_seed,integration_method,...tolerance};
+        const units = document.getElementById('sim-time-units')?.value.trim() || null;
+        return {...this.model.time_settings,start,end,dt,random_seed,integration_method,...tolerance,units};
     },
 
     syncStepCount() {

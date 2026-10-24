@@ -8,6 +8,7 @@ const Charts = {
     container: null,
     svg: null,
     results: null,
+    resultModel: null,
     previousRuns: [],
 
     margin: { top: 30, right: 120, bottom: 50, left: 70 },
@@ -58,6 +59,7 @@ const Charts = {
      */
     setResults(results, model = null) {
         this.results = results;
+        this.resultModel = model;
 
         // Clear old variable options when loading new results
         this.options.variables = {};
@@ -65,7 +67,7 @@ const Charts = {
         // Initialize variable options if not set
         if (results && results.values) {
             const varNames = Object.keys(results.values);
-            const stockNames = new Set((model?.stocks || []).map(stock => stock.name));
+            const stockNames = new Set(this.getStockSeries(results, model));
             const startWithStocks = varNames.length > 24 && varNames.some(name => stockNames.has(name));
             varNames.forEach((name, i) => {
                 if (!this.options.variables[name]) {
@@ -76,6 +78,29 @@ const Charts = {
                 }
             });
         }
+    },
+
+    /**
+     * Classify the numeric output names, preserving the source project.
+     * Structured execution names come from the server's source map, never
+     * from a display-name prefix guess. Path fallback supports older results.
+     */
+    getStockSeries(results = this.results, model = this.resultModel) {
+        const values = results?.values || {};
+        const names = Object.keys(values);
+        const declared = new Set((model?.stocks || []).map(stock => stock.name));
+        const mapped = new Set();
+        const sourceMap = results?.integration_diagnostics?.structured_source_map;
+        if (sourceMap && typeof sourceMap === 'object' && !Array.isArray(sourceMap)) {
+            for (const record of Object.values(sourceMap)) {
+                if (!record || typeof record !== 'object' || typeof record.name !== 'string') continue;
+                const kind = record.kind;
+                const stock = kind === 'stock' || kind === 'stocks' ||
+                    (kind == null && typeof record.path === 'string' && /(?:^|\.)stocks\[\d+\]$/.test(record.path));
+                if (stock && Object.hasOwn(values, record.name)) mapped.add(record.name);
+            }
+        }
+        return names.filter(name => mapped.has(name) || declared.has(name));
     },
 
     /**

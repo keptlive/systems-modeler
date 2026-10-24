@@ -106,7 +106,8 @@ def parse_xmile(xml_content: str) -> Model:
         seed = int(seed) if seed is not None else None
     except ValueError as exc:
         raise ValueError("Invalid Stock & Flow random seed") from exc
-    time_settings = TimeSettings(start=start, end=end, dt=dt, integration_method=method, random_seed=seed)
+    time_settings = TimeSettings(start=start, end=end, dt=dt, integration_method=method, random_seed=seed,
+                                 units=sim_specs.get('time_units') if sim_specs is not None else None)
 
     # Parse variables - preserve underscores in names for equation compatibility
     stocks, flows, variables, tables = [], [], [], []
@@ -123,6 +124,8 @@ def parse_xmile(xml_content: str) -> Model:
             if not name_value:
                 raise ValueError("A standalone graphical function requires a name")
             tables.append(LookupTable(name=name_value, points=parse_graphical_function(gf),
+                                      input_units=gf.get('{https://stockandflow.live/ns/model}input_units'),
+                                      output_units=gf.get('{https://stockandflow.live/ns/model}output_units'),
                                       interpolation=gf.get("type", "continuous")))
 
         def import_graph(element, name_value, equation):
@@ -134,6 +137,8 @@ def parse_xmile(xml_content: str) -> Model:
                 raise ValueError(f"Graphical function '{name_value}' has no valid points")
             table_name = gf.get("name", name_value)
             tables.append(LookupTable(name=table_name, points=points,
+                                      input_units=gf.get('{https://stockandflow.live/ns/model}input_units'),
+                                      output_units=gf.get('{https://stockandflow.live/ns/model}output_units'),
                                       interpolation=gf.get("type", "continuous")))
             return f"LOOKUP({table_name!r}, ({equation}))" if equation else None
 
@@ -237,7 +242,10 @@ def parse_xmile(xml_content: str) -> Model:
     # Create the model first, then auto-generate connectors
     from app.core.model import generate_connectors_from_equations
 
+    import json
+    retained_source = metadata.findtext('source_document') if metadata is not None else None
     model = Model(
+        source_document=json.loads(retained_source) if retained_source else None,
         name=name,
         description=metadata.findtext("description", "") if metadata is not None else "",
         source=metadata.findtext("source") if metadata is not None else None,

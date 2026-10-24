@@ -19,7 +19,7 @@ from app.core.simulator import simulate
 from app.core.failure_diagnostics import failure_payload
 from app.core.validation import inspect_inputs
 
-CORE_FILES = ("model.py", "simulator.py", "integration.py", "equations.py", "limits.py", "failure_diagnostics.py", "adaptive.py", "reports.py")
+CORE_FILES = ("model.py", "simulator.py", "integration.py", "equations.py", "limits.py", "failure_diagnostics.py", "adaptive.py", "reports.py", "structured.py")
 MAX_RUNS = 3
 MAX_ELEMENT_INTERVALS_PER_RUN = MAX_WORK_UNITS
 

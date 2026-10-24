@@ -1,0 +1,215 @@
+{
+  "reference_distribution": "pysimlin",
+  "reference_version": "0.8.5",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "dependencies": {
+    "numpy": "2.5.4",
+    "pandas": "3.1.0",
+    "pydantic": "2.14.1",
+    "scipy": "1.18.1"
+  },
+  "methodology": "Original scalar SDXorg XMILE; matched method/time grid; loop analysis disabled; parse/cold/warm timings separated; complete output comparisons. Timings include result materialization, exclude process startup. Warm Simlin may reuse compilation; Stock & Flow currently rebuilds each simulation.",
+  "cases": [
+    {
+      "input": "tests/fixtures/sdxorg/teacup/teacup.xmile",
+      "sha256": "fe46dbda3c71bf99db52e6547c51c36a9b6920be35463904090ce1769da99eff",
+      "settings": {
+        "start": 0.0,
+        "end": 30.0,
+        "dt": 0.125,
+        "integration_method": "rk4",
+        "discrete_period": null,
+        "rtol": 1e-06,
+        "atol": 1e-09,
+        "random_seed": 0
+      },
+      "rows": 241,
+      "simlin_rows": 241,
+      "time_matches": true,
+      "columns": {
+        "Teacup Temperature": {
+          "max_abs_error": 7.105427357601002e-14,
+          "allclose": true
+        },
+        "Heat Loss to Room": {
+          "max_abs_error": 7.105427357601002e-15,
+          "allclose": true
+        },
+        "Room Temperature": {
+          "max_abs_error": 0.0,
+          "allclose": true
+        },
+        "Characteristic Time": {
+          "max_abs_error": 0.0,
+          "allclose": true
+        }
+      },
+      "stockflow": {
+        "parse": {
+          "median_seconds": 0.00019034300930798054,
+          "samples_seconds": [
+            0.0009863100131042302,
+            0.0002608340000733733,
+            0.00019034300930798054,
+            0.00017126795137301087,
+            0.0001623610151000321
+          ]
+        },
+        "cold_run": {
+          "median_seconds": 0.011119698989205062,
+          "samples_seconds": [
+            0.011119698989205062
+          ]
+        },
+        "warm_run": {
+          "median_seconds": 0.011051009991206229,
+          "samples_seconds": [
+            0.011051009991206229,
+            0.012096411024685949,
+            0.010926770977675915,
+            0.010804543970152736,
+            0.011337330972310156
+          ]
+        }
+      },
+      "simlin": {
+        "parse": {
+          "median_seconds": 0.0004417099989950657,
+          "samples_seconds": [
+            0.001394928025547415,
+            0.0008274250430986285,
+            0.0004417099989950657,
+            0.0003773909993469715,
+            0.0003449000068940222
+          ]
+        },
+        "cold_run": {
+          "median_seconds": 0.00162940303562209,
+          "samples_seconds": [
+            0.00162940303562209
+          ]
+        },
+        "warm_run": {
+          "median_seconds": 0.00025276903761550784,
+          "samples_seconds": [
+            0.0006730890017934144,
+            0.00026042404351755977,
+            0.00025276903761550784,
+            0.00021806498989462852,
+            0.00019919004989787936
+          ]
+        }
+      },
+      "warm_stockflow_over_simlin": 43.719792959832944
+    },
+    {
+      "input": "tests/fixtures/sdxorg/SIR/SIR.xmile",
+      "sha256": "a263e672f8391e11aef6a3d668d8bfe1ab383b27cad31cedcaed78735e28a92e",
+      "settings": {
+        "start": 0.0,
+        "end": 100.0,
+        "dt": 0.03125,
+        "integration_method": "rk4",
+        "discrete_period": null,
+        "rtol": 1e-06,
+        "atol": 1e-09,
+        "random_seed": 0
+      },
+      "rows": 3201,
+      "simlin_rows": 3201,
+      "time_matches": true,
+      "columns": {
+        "susceptible": {
+          "max_abs_error": 2.2737367544323206e-12,
+          "allclose": true
+        },
+        "infectious": {
+          "max_abs_error": 3.765876499528531e-13,
+          "allclose": true
+        },
+        "recovered": {
+          "max_abs_error": 2.3874235921539366e-12,
+          "allclose": true
+        },
+        "succumbing": {
+          "max_abs_error": 8.526512829121202e-14,
+          "allclose": true
+        },
+        "recovering": {
+          "max_abs_error": 7.638334409421077e-14,
+          "allclose": true
+        },
+        "total_population": {
+          "max_abs_error": 0.0,
+          "allclose": true
+        },
+        "duration": {
+          "max_abs_error": 0.0,
+          "allclose": true
+        },
+        "contact_infectivity": {
+          "max_abs_error": 0.0,
+          "allclose": true
+        }
+      },
+      "stockflow": {
+        "parse": {
+          "median_seconds": 0.0003535259747877717,
+          "samples_seconds": [
+            0.0008320529595948756,
+            0.0014849440194666386,
+            0.0003535259747877717,
+            0.0003023109748028219,
+            0.000285989954136312
+          ]
+        },
+        "cold_run": {
+          "median_seconds": 0.24368993402458727,
+          "samples_seconds": [
+            0.24368993402458727
+          ]
+        },
+        "warm_run": {
+          "median_seconds": 0.24302020703908056,
+          "samples_seconds": [
+            0.2389384739799425,
+            0.24302020703908056,
+            0.24719672097126022,
+            0.25324608996743336,
+            0.23881331202574074
+          ]
+        }
+      },
+      "simlin": {
+        "parse": {
+          "median_seconds": 0.0004694800009019673,
+          "samples_seconds": [
+            0.0006491450476460159,
+            0.0006102620391175151,
+            0.0004694800009019673,
+            0.00043466698843985796,
+            0.0003790930495597422
+          ]
+        },
+        "cold_run": {
+          "median_seconds": 0.0026032390305772424,
+          "samples_seconds": [
+            0.0026032390305772424
+          ]
+        },
+        "warm_run": {
+          "median_seconds": 0.0011653010151349008,
+          "samples_seconds": [
+            0.0023207259946502745,
+            0.001435943995602429,
+            0.0011653010151349008,
+            0.0010157040087506175,
+            0.0009825730230659246
+          ]
+        }
+      },
+      "warm_stockflow_over_simlin": 208.54715123623862
+    }
+  ]
+}
