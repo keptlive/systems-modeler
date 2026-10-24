@@ -1,0 +1,254 @@
+{
+  "id": "optical-bloch-two-level-fourth-science",
+  "name": "Driven two-level atom: optical Bloch relaxation",
+  "category": "physics",
+  "description": "Rotating-frame two-level density matrix in ordered basis(g,e): rho=[[1-p,x+i*y],[x-i*y,p]]. Hamiltonian/hbar=[[-Delta/2,Omega/2],[Omega/2,Delta/2]], collapse operator sqrt(Gamma)*|g><e|. Real coherence x, imaginary coherence y and excited probability p evolve under coherent drive and spontaneous emission. Rotating-wave, weak-coupling Markov/secular approximation; no cavity, propagation, many atoms or extra pure dephasing. Default Gamma1,Omega2,Delta0.5 per second, initially ground; end20 step0.02. Physical initial density matrices require0<=p<=1 and x^2+y^2<=p*(1-p); Gamma>=0. Step selection is numerical, not a positivity repair. Original mathematical transcription/derivation; parameters are illustrative, not empirical calibration. Signed net-rate flows represent derivatives, not nonnegative physical transfers. No clamps or hidden resets.",
+  "source": "https://qutip.readthedocs.io/en/stable/guide/dynamics/dynamics-master.html",
+  "reference": "QuTiP documentation, Lindblad Master Equation Solver equation3. Original real-component derivation for the explicitly stated Hamiltonian/collapse operator; not copied QuTiP code or a QuTiP execution/parity receipt.",
+  "stocks": [
+    {
+      "id": "optical-bloch-two-level-fourth-science:Excited_Probability",
+      "name": "Excited_Probability",
+      "initial_value": 0,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 140,
+        "y": 200
+      }
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:Coherence_Real",
+      "name": "Coherence_Real",
+      "initial_value": 0,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 320,
+        "y": 200
+      }
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:Coherence_Imaginary",
+      "name": "Coherence_Imaginary",
+      "initial_value": 0,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "optical-bloch-two-level-fourth-science:rate:Excited_Probability",
+      "name": "Excited_Probability_Rate",
+      "equation": "Rabi_Frequency * Coherence_Imaginary - Decay_Rate * Excited_Probability",
+      "from_stock": null,
+      "to_stock": "optical-bloch-two-level-fourth-science:Excited_Probability",
+      "units": "1/second",
+      "position": {
+        "x": 140,
+        "y": 300
+      }
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:rate:Coherence_Real",
+      "name": "Coherence_Real_Rate",
+      "equation": "-Decay_Rate * Coherence_Real / 2 - Detuning * Coherence_Imaginary",
+      "from_stock": null,
+      "to_stock": "optical-bloch-two-level-fourth-science:Coherence_Real",
+      "units": "1/second",
+      "position": {
+        "x": 320,
+        "y": 300
+      }
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:rate:Coherence_Imaginary",
+      "name": "Coherence_Imaginary_Rate",
+      "equation": "Detuning * Coherence_Real - Decay_Rate * Coherence_Imaginary / 2 + Rabi_Frequency * (0.5 - Excited_Probability)",
+      "from_stock": null,
+      "to_stock": "optical-bloch-two-level-fourth-science:Coherence_Imaginary",
+      "units": "1/second",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "optical-bloch-two-level-fourth-science:Rabi_Frequency",
+      "name": "Rabi_Frequency",
+      "equation": "2",
+      "units": "1/second",
+      "position": {
+        "x": 140,
+        "y": 70
+      }
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:Decay_Rate",
+      "name": "Decay_Rate",
+      "equation": "1",
+      "units": "1/second",
+      "position": {
+        "x": 300,
+        "y": 70
+      }
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:Detuning",
+      "name": "Detuning",
+      "equation": "0.5",
+      "units": "1/second",
+      "position": {
+        "x": 460,
+        "y": 70
+      }
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:Ground_Probability",
+      "name": "Ground_Probability",
+      "equation": "1 - Excited_Probability",
+      "units": "1",
+      "position": {
+        "x": 620,
+        "y": 70
+      }
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:Density_Determinant",
+      "name": "Density_Determinant",
+      "equation": "Excited_Probability * (1 - Excited_Probability) - Coherence_Real^2 - Coherence_Imaginary^2",
+      "units": "1",
+      "position": {
+        "x": 780,
+        "y": 70
+      }
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:Emission_Rate",
+      "name": "Emission_Rate",
+      "equation": "Decay_Rate * Excited_Probability",
+      "units": "1/second",
+      "position": {
+        "x": 940,
+        "y": 70
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "optical-bloch-two-level-fourth-science:c0",
+      "from_element": "Coherence_Imaginary",
+      "to_element": "Excited_Probability_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c1",
+      "from_element": "Decay_Rate",
+      "to_element": "Excited_Probability_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c2",
+      "from_element": "Excited_Probability",
+      "to_element": "Excited_Probability_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c3",
+      "from_element": "Rabi_Frequency",
+      "to_element": "Excited_Probability_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c4",
+      "from_element": "Coherence_Imaginary",
+      "to_element": "Coherence_Real_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c5",
+      "from_element": "Coherence_Real",
+      "to_element": "Coherence_Real_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c6",
+      "from_element": "Decay_Rate",
+      "to_element": "Coherence_Real_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c7",
+      "from_element": "Detuning",
+      "to_element": "Coherence_Real_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c8",
+      "from_element": "Coherence_Imaginary",
+      "to_element": "Coherence_Imaginary_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c9",
+      "from_element": "Coherence_Real",
+      "to_element": "Coherence_Imaginary_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c10",
+      "from_element": "Decay_Rate",
+      "to_element": "Coherence_Imaginary_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c11",
+      "from_element": "Detuning",
+      "to_element": "Coherence_Imaginary_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c12",
+      "from_element": "Excited_Probability",
+      "to_element": "Coherence_Imaginary_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c13",
+      "from_element": "Rabi_Frequency",
+      "to_element": "Coherence_Imaginary_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c14",
+      "from_element": "Excited_Probability",
+      "to_element": "Ground_Probability"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c15",
+      "from_element": "Coherence_Imaginary",
+      "to_element": "Density_Determinant"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c16",
+      "from_element": "Coherence_Real",
+      "to_element": "Density_Determinant"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c17",
+      "from_element": "Excited_Probability",
+      "to_element": "Density_Determinant"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c18",
+      "from_element": "Decay_Rate",
+      "to_element": "Emission_Rate"
+    },
+    {
+      "id": "optical-bloch-two-level-fourth-science:c19",
+      "from_element": "Excited_Probability",
+      "to_element": "Emission_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.02,
+    "integration_method": "rk4",
+    "units": "second"
+  },
+  "created_at": "2026-10-24T12:00:00",
+  "updated_at": "2026-10-24T12:00:00"
+}
