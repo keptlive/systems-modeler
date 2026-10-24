@@ -31,12 +31,20 @@ MATH_CASES = {
     "IF":("IF(0,1/0,7)", 7),
     "RANDOM_UNIFORM":("RANDOM_UNIFORM(7,7,17)", 7),
     "RANDOM_NORMAL":("RANDOM_NORMAL(7,0,17)", 7),
+    "arcsin":("ARCSIN(.5)", math.pi/6),
+    "arccos":("ARCCOS(.5)", math.pi/3),
+    "arctan":("ARCTAN(1)", math.pi/4),
+    "int":("INT(-1.2)", -2), "trunc":("TRUNC(-1.2)", -1),
+    "quantum":("QUANTUM(-5,2)", -4), "safediv":("SAFEDIV(1,0,7)", 7),
+    "zidz":("ZIDZ(1,1e-9)", 0), "xidz":("XIDZ(1,1e-9,7)", 7),
+    "modulo":("MODULO(-7,4)", -3),
 }
 CONTEXT_ROWS = {
     "STEP","PULSE","RAMP","LOOKUP","WITH_LOOKUP","RANDOM","NORMAL",
     "RANDOM_BINOMIAL", # v1.8 distribution/replay/budget oracles: test_binomial_v18.py
     "RANDOM_UNIFORM","RANDOM_NORMAL","DELAY1","DELAY3","DELAY_N",
     "DELAY_FIXED","SMOOTH","SMOOTH3","SMOOTH_N","SMTH1","SMTH3","SMTHN","DELAYN","DELAY",
+    "STARTTIME", "STOPTIME",  # Nonzero bounds/overrides/roundtrips: test_function_compatibility_roundtrip.py
 }
 
 def run(equation, start=0, end=4, dt=.125, method="euler", variables=(), tables=()):

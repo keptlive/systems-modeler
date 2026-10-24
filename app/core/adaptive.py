@@ -15,6 +15,10 @@ from app.core.model import SimulationResult
 from app.core.limits import MAX_WORK_UNITS
 
 
+DISCRETE_FUNCTIONS = {'FLOOR', 'CEIL', 'ROUND', 'SIGN', 'MOD', 'MODULO', 'INT', 'TRUNC', 'QUANTUM'}
+SAFE_DIVISION_FUNCTIONS = {'SAFEDIV', 'ZIDZ', 'XIDZ'}
+
+
 class _UncertifiedBoundary(Exception):
     pass
 
@@ -270,7 +274,9 @@ def state_discontinuities(model):
                     findings.append({"element":elements[name].name,"operation":"state-dependent lookup forcing"})
                 elif function in {"IF", "IF_THEN_ELSE"} and len(node.args) == 3:
                     condition,yes,no = node.args
-                elif function in {"FLOOR", "CEIL", "ROUND", "SIGN", "MOD"} and references(node) & state_names:
+                elif function in DISCRETE_FUNCTIONS and references(node) & state_names:
+                    findings.append({"element":elements[name].name,"operation":function})
+                elif function in SAFE_DIVISION_FUNCTIONS and len(node.args) >= 2 and references(node.args[1]) & state_names:
                     findings.append({"element":elements[name].name,"operation":function})
             if condition is not None:
                 condition_nodes.update(id(n) for n in ast.walk(condition))
@@ -336,7 +342,9 @@ def time_discontinuities(model):
                 if table_key(function) not in table_names:
                     if function in {"IF", "IF_THEN_ELSE"} and node.args:
                         condition = node.args[0]
-                    elif function in {"FLOOR", "CEIL", "ROUND", "SIGN", "MOD"} and references(node) & time_names:
+                    elif function in DISCRETE_FUNCTIONS and references(node) & time_names:
+                        findings.append({"element": name, "operation": function})
+                    elif function in SAFE_DIVISION_FUNCTIONS and len(node.args) >= 2 and references(node.args[1]) & time_names:
                         findings.append({"element": name, "operation": function})
             if isinstance(node, (ast.Compare, ast.BoolOp)):
                 condition = node

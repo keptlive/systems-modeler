@@ -32,11 +32,15 @@ def xmile_equation(text, tables, random_seed=None, original_text=None, declared_
         raise ValueError('Unsupported equation syntax in XMILE export; use JSON') from exc
     aliases = {'SMOOTH': 'SMTH1', 'SMOOTH3': 'SMTH3', 'SMOOTH_N': 'SMTHN',
                'DELAY_FIXED': 'DELAY', 'DELAY_N': 'DELAYN',
-               'RANDOM_UNIFORM': 'RANDOM', 'RANDOM_NORMAL': 'NORMAL'}
+               'RANDOM_UNIFORM': 'RANDOM', 'RANDOM_NORMAL': 'NORMAL',
+               'ASIN': 'ARCSIN', 'ACOS': 'ARCCOS', 'ATAN': 'ARCTAN'}
     arities = {**{name: (2, 3) for name in ('DELAY', 'DELAY1', 'DELAY3', 'SMTH1', 'SMTH3', 'RANDOM', 'NORMAL', 'PULSE')},
                'DELAYN': (3, 4), 'SMTHN': (3, 4), 'RAMP': (2,), 'STEP': (2,),
                'LN': (1,), 'LOG10': (1,), 'ABS': (1,), 'EXP': (1,), 'SQRT': (1,),
-               'SIN': (1,), 'COS': (1,), 'TAN': (1,), 'MIN': (2,), 'MAX': (2,)}
+               'SIN': (1,), 'COS': (1,), 'TAN': (1,), 'MIN': (2,), 'MAX': (2,),
+               'ARCSIN': (1,), 'ARCCOS': (1,), 'ARCTAN': (1,)}
+    arities.update({'INT': (1,), 'TRUNC': (1,), 'QUANTUM': (2,), 'SAFEDIV': (2, 3),
+                    'STARTTIME': (0,), 'STOPTIME': (0,)})
     table_names = {canonical_name(name) for name in tables}
     declared = {canonical_name(name) for name in declared_names}
     supported_nodes = (ast.Expression, ast.Constant, ast.Name, ast.Load,
@@ -85,8 +89,14 @@ def xmile_equation(text, tables, random_seed=None, original_text=None, declared_
             # Runtime graphical-function resolution precedes built-ins. In
             # particular a table named LOG or SMOOTH must keep that meaning.
             if resolve_name(decode_identifier(node.func.id), tables) is not None:
-                if len(args) != 1 or name in arities or name in {'IF', 'THEN', 'ELSE'}:
+                if len(args) != 1 or name in {'IF', 'THEN', 'ELSE'}:
                     raise ValueError('Graphical function conflicts with XMILE built-ins or has unsupported arity; use JSON')
+                if name in arities:
+                    if resolve_name('LOOKUP', tables) is not None:
+                        raise ValueError('Graphical function requires explicit LOOKUP but that name is also a table; use JSON')
+                    changed = True
+                    table = resolve_name(decode_identifier(node.func.id), tables)
+                    return f'LOOKUP({json.dumps(table, ensure_ascii=False)}, {args[0]})'
                 return splice(node)
             if name == 'LOG':
                 if len(args) not in (1, 2):

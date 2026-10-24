@@ -70,6 +70,8 @@ def _plan_for(model):
 def simulation_context(model, t, dt, delay, smooth, random_runtime=None, input_time=None, input_snapshot=None):
     plan = _plan_for(model)
     context = SimulationContext(t, dt, plan.tables if plan else {table.name: table.to_list() for table in model.tables}, delay, smooth, random_runtime)
+    context.start_time = model.time_settings.start
+    context.stop_time = model.time_settings.end
     # Declared e/pi must wait for authored initializers, never constant fallback.
     context.declared_names = plan.declared_names if plan else frozenset(canonical_name(element.name)
                               for element in (*model.stocks, *model.flows, *model.variables))
@@ -151,6 +153,9 @@ def integrate(model: Model, settings: TimeSettings):
         except ValueError as exc:
             raise EquationError(str(exc), code="discrete_period_mismatch", details={"period": period}) from exc
         settings = settings.model_copy(update={"discrete_period": period})
+    # Context-bound time constants must reflect this run's overrides without
+    # mutating the saved model or leaking settings into concurrent simulations.
+    model = model.model_copy(update={"time_settings": settings})
     numeric_model, reports = prepare_reports(model)
     if not reports:
         return _integrate_numeric(model, settings)

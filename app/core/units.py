@@ -162,7 +162,7 @@ def analyze_units(model, time_units=None):
             element = exact.get(owner)
             if element is not None:
                 return units[element.id]
-            if name.upper() in {'TIME', 'DT', 'TIME_STEP'}:
+            if name.upper() in {'TIME', 'DT', 'TIME_STEP', 'STARTTIME', 'STOPTIME'}:
                 return clock
             if name.lower() in {'pi', 'e', 'true', 'false'}:
                 return {}
@@ -231,10 +231,18 @@ def analyze_units(model, time_units=None):
                 note('unknown', 'lookup_axis_units', 'Inline or unresolved lookup has no declared input/output axis units')
                 return None
             args = [visit(n) for n in node.args]
+            if upper in {'STARTTIME', 'STOPTIME'}:
+                if args or node.keywords:
+                    note('unknown', 'function_signature', f'{upper} requires no arguments')
+                    return None
+                return clock
             counts = {'SIN':(1,1),'COS':(1,1),'TAN':(1,1),'ASIN':(1,1),'ACOS':(1,1),'ATAN':(1,1),
+                      'ARCSIN':(1,1),'ARCCOS':(1,1),'ARCTAN':(1,1),
+                      'INT':(1,1),'TRUNC':(1,1),'QUANTUM':(2,2),
+                      'SAFEDIV':(2,3),'ZIDZ':(2,2),'XIDZ':(3,3),
                       'ATAN2':(2,2),'EXP':(1,1),'LOG':(1,2),'LN':(1,2),'LOG10':(1,1),'SQRT':(1,1),
                       'ABS':(1,1),'FLOOR':(1,1),'CEIL':(1,1),'ROUND':(1,2),'SIGN':(1,1),
-                      'POW':(2,3),'MOD':(2,2),'IF':(3,3),'IF_THEN_ELSE':(3,3),
+                      'POW':(2,3),'MOD':(2,2),'MODULO':(2,2),'IF':(3,3),'IF_THEN_ELSE':(3,3),
                       'STEP':(2,2),'PULSE':(2,3),'RAMP':(2,3),
                       'RANDOM':(2,3),'RANDOM_UNIFORM':(2,3),'RANDOM_NORMAL':(2,3),'NORMAL':(2,3),
                       'RANDOM_BINOMIAL':(2,3),'MIN':(2,1000),'MAX':(2,1000)}
@@ -250,8 +258,13 @@ def analyze_units(model, time_units=None):
                     note('unknown','unsupported_function','Three-argument POW units are not established')
                     return None
                 return visit(ast.BinOp(left=node.args[0], op=ast.Pow(), right=node.args[1]))
-            if upper == 'MOD':
+            if upper in {'MOD', 'MODULO'}:
                 return match(args[0],args[1],'MOD arguments')
+            if upper == 'QUANTUM':
+                return match(args[0], args[1], 'QUANTUM arguments')
+            if upper in {'SAFEDIV', 'ZIDZ', 'XIDZ'}:
+                quotient = _LITERAL if args[0] is _LITERAL and args[1] is _LITERAL else _combine(args[0], args[1], -1)
+                return match(quotient, args[2], f'{upper} fallback') if len(args) == 3 else quotient
             if upper == 'RANDOM_BINOMIAL':
                 for value in args:
                     match(value, {}, 'Binomial argument')
@@ -259,7 +272,7 @@ def analyze_units(model, time_units=None):
             if upper in {'IF', 'IF_THEN_ELSE'} and len(args) == 3:
                 match(args[0], {}, 'Condition')
                 return match(args[1], args[2], 'Conditional branches')
-            if upper in {'SIN','COS','TAN','ASIN','ACOS','ATAN','EXP','LOG','LN','LOG10'}:
+            if upper in {'SIN','COS','TAN','ASIN','ACOS','ATAN','ARCSIN','ARCCOS','ARCTAN','EXP','LOG','LN','LOG10'}:
                 for value in args:
                     match(value, {}, f'{upper} argument')
                 return {}
@@ -268,7 +281,7 @@ def analyze_units(model, time_units=None):
                 return {}
             if upper == 'SQRT' and len(args) == 1:
                 return args[0] if args[0] is None or args[0] is _LITERAL else _combine({}, {k:v/2 for k,v in args[0].items()})
-            if upper in {'ABS','FLOOR','CEIL','ROUND'} and args:
+            if upper in {'ABS','FLOOR','CEIL','ROUND','INT','TRUNC'} and args:
                 if upper == 'ROUND' and len(args)>1:
                     match(args[1], {}, 'ROUND precision')
                 return args[0]

@@ -151,7 +151,7 @@ def parse_mdl(text):
         legacy.setdefault(canonical_name(name), []).append(name)
     candidates.update({key: names[0] for key,names in legacy.items()
                        if len(names) == 1 and key not in candidates})
-    candidates.update({"time":"TIME","time_step":"DT","initial_time":str(start),"final_time":str(end)})
+    candidates.update({"time":"TIME","time_step":"DT","initial_time":"STARTTIME","final_time":"STOPTIME"})
     patterns=[]
     for key,name in candidates.items():
         pattern=r"[ _\n\u00a0]+".join(re.escape(part) for part in key.split("_"))
@@ -159,7 +159,24 @@ def parse_mdl(text):
     patterns.sort(key=lambda x:len(x[1]),reverse=True)
     funcs={"IF THEN ELSE":"IF_THEN_ELSE",
         "SIN":"sin","COS":"cos","TAN":"tan","ARCSIN":"asin","ARCCOS":"acos","ARCTAN":"atan",
-        "EXP":"exp","LN":"ln","SQRT":"sqrt","ABS":"abs","MIN":"min","MAX":"max","STEP":"STEP"}
+        "EXP":"exp","LN":"ln","SQRT":"sqrt","ABS":"abs","MIN":"min","MAX":"max","STEP":"STEP",
+        "LOG":"log","POWER":"pow","INTEGER":"TRUNC","MODULO":"MODULO","ZIDZ":"ZIDZ","XIDZ":"XIDZ","SMOOTH":"SMOOTH","SMOOTHI":"SMOOTH",
+        "SMOOTH3":"SMOOTH3","SMOOTH3I":"SMOOTH3"}
+    # Vensim function contracts, not spelling-based aliases. LOG has an explicit
+    # base; information smooths share the engine's continuous hidden-stock law.
+    # https://vensim.com/documentation/fn_log.html (x, base)
+    # https://vensim.com/documentation/fn_power.html (base, exponent)
+    # https://vensim.com/documentation/fn_smooth.html and fn_smooth3.html
+    # https://vensim.com/documentation/fn_integer.html truncates toward zero, not floor.
+    # https://vensim.com/documentation/fn_xidz.html and fn_zidz.html require
+    # abs(denominator)<1e-6; never translate these into exact-zero SAFEDIV.
+    # Simlin0.8.5 MDL currently translates them to SAFEDIV: that dialect mismatch
+    # is intentional here in favor of the documented Vensim source semantics.
+    # MODULO uses its distinct C-remainder primitive, never Python mod.
+    # https://vensim.com/documentation/fn_modulo.html
+    # Deliberately no PULSE (width/height), RANDOM (seed /
+    # truncation), SMOOTH N (discrete/order reduction), or material DELAY aliases.
+    strict_arities={"LOG":2,"POWER":2,"INTEGER":1,"MODULO":2,"ZIDZ":2,"XIDZ":3,"SMOOTH":2,"SMOOTHI":3,"SMOOTH3":2,"SMOOTH3I":3}
     function_patterns=[(re.compile(r"[ _\s]+".join(k.split()),re.I),v) for k,v in sorted(funcs.items(),key=lambda x:-len(x[0]))]
     translation_work = 0
     def charge_translation(record):
@@ -177,6 +194,25 @@ def parse_mdl(text):
                 charge_translation(record)
                 m=pattern.match(expr,pos)
                 if m and expr[m.end():].lstrip().startswith("("):
+                    spelling=re.sub(r"[ _\s]+"," ",m.group()).upper()
+                    if spelling in strict_arities:
+                        begin=m.end()
+                        while expr[begin].isspace():begin+=1
+                        depth=0;quoted=False;escaped=False;end=None
+                        for index in range(begin,len(expr)):
+                            charge_translation(record)
+                            char=expr[index]
+                            if char=='"' and not escaped:quoted=not quoted
+                            if not quoted:
+                                if char=='(':depth+=1
+                                elif char==')':
+                                    depth-=1
+                                    if depth==0:end=index;break
+                            escaped=char=='\\' and not escaped if quoted else False
+                        if end is None:fail("Unbalanced function arguments","invalid_syntax",record)
+                        arguments=split_args(expr[begin+1:end],record)
+                        if len(arguments)!=strict_arities[spelling] or not all(arguments):
+                            fail(spelling+" requires "+str(strict_arities[spelling])+" arguments","invalid_syntax",record)
                     output.append(fn);pos=m.end();matched=True;break
             if matched:continue
             if expr[pos]=='"':
@@ -196,6 +232,9 @@ def parse_mdl(text):
                 charge_translation(record)
                 m=pattern.match(expr,pos)
                 if m and (m.end()==len(expr) or not (expr[m.end()].isalnum() or expr[m.end()]=="_")):
+                    if key in ("initial_time","final_time"):
+                        if resolve_name(name,model_names.values()) is not None:
+                            fail("Dynamic simulation control "+key+" conflicts with declared "+name,record=record)
                     output.append(json.dumps(name) if key in model_names else name)
                     pos=m.end();matched=True;break
             if matched:continue

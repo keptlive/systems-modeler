@@ -175,6 +175,9 @@ SAFE_FUNCTIONS: dict[str, Callable] = {
     "asin": math.asin,
     "acos": math.acos,
     "atan": math.atan,
+    "arcsin": math.asin,
+    "arccos": math.acos,
+    "arctan": math.atan,
     "atan2": math.atan2,
     "sign": lambda value: float((value > 0) - (value < 0)),
     "exp": math.exp,
@@ -187,9 +190,18 @@ SAFE_FUNCTIONS: dict[str, Callable] = {
     "max": max,
     "pow": pow,
     "floor": math.floor,
+    # INT is XMILE floor; TRUNC is the distinct toward-zero operation.
+    "int": math.floor,
+    "trunc": math.trunc,
+    "quantum": lambda x, q: x if q <= 0 else math.trunc(_finite_real(x / q)) * q,
+    # Keep exact-zero SAFEDIV separate from Vensim near-zero aliases.
+    "safediv": lambda a, b, fallback=0.0: fallback if b == 0 else a / b,
+    "zidz": lambda a, b: 0.0 if abs(b) < 1e-6 else a / b,
+    "xidz": lambda a, b, fallback: fallback if abs(b) < 1e-6 else a / b,
     "ceil": math.ceil,
     "round": round,
     "mod": operator.mod,
+    "modulo": math.fmod,  # Vensim/C remainder keeps the dividend's sign.
     # Conditional function
     "IF_THEN_ELSE": if_then_else,
     "IF": if_then_else,  # Alias for IF_THEN_ELSE
@@ -206,7 +218,7 @@ STATEFUL_ALIASES = {"SMTH1": "SMOOTH", "SMTH3": "SMOOTH3", "SMTHN": "SMOOTH_N",
                     "DELAYN": "DELAY_N", "DELAY": "DELAY_FIXED"}
 STATEFUL_FUNCTIONS = {"DELAY1", "DELAY3", "DELAY_N", "DELAY_FIXED",
                       "SMOOTH", "SMOOTH3", "SMOOTH_N"} | set(STATEFUL_ALIASES)
-CONTEXT_FUNCTIONS = {"STEP", "PULSE", "RAMP", "LOOKUP", "WITH_LOOKUP"} | STATEFUL_FUNCTIONS | STOCHASTIC_FUNCTIONS
+CONTEXT_FUNCTIONS = {"STEP", "PULSE", "RAMP", "LOOKUP", "WITH_LOOKUP", "STARTTIME", "STOPTIME"} | STATEFUL_FUNCTIONS | STOCHASTIC_FUNCTIONS
 
 SAFE_CONSTANTS: dict[str, float] = {
     "pi": math.pi,
@@ -328,7 +340,10 @@ class SimulationContext:
     def __init__(self, time: float = 0.0, dt: float = 0.25,
                  tables: Optional[dict[str, list[tuple[float, float]]]] = None,
                  delay_state: Optional[dict] = None,
-                 smooth_state: Optional[dict] = None, random_runtime=None):
+                 smooth_state: Optional[dict] = None, random_runtime=None,
+                 start_time: float = 0.0, stop_time: float = 100.0):
+        self.start_time = start_time
+        self.stop_time = stop_time
         self.time = time
         # RK4 holds declared test-input primitives at the accepted left time.
         # Ordinary TIME and algebra still use the current RK stage time.
@@ -474,6 +489,11 @@ class SafeEvaluator(ast.NodeVisitor):
         if canonical in getattr(self.context, "declared_names", ()):
             raise EquationError(f"Unknown variable: {name}", code="unknown_variable",
                                 details={"symbol": name})
+        # Bounds are defaults only: authored declarations retain ownership.
+        if name_upper == "STARTTIME":
+            return _finite_real(self.context.start_time)
+        if name_upper == "STOPTIME":
+            return _finite_real(self.context.stop_time)
         if name.lower() in SAFE_CONSTANTS:
             return SAFE_CONSTANTS[name.lower()]
         raise EquationError(f"Unknown variable: {name}", code="unknown_variable", details={"symbol": name})
@@ -605,6 +625,11 @@ class SafeEvaluator(ast.NodeVisitor):
         # This provides a stable identifier across repeated evaluations
         call_key = getattr(self.context, "equation_key", "") + ":" + str(
             (getattr(args[0], "col_offset", 0) if args else 0)) + ":" + (ast.dump(args[0]) if args else "")
+
+        if func_name in {"STARTTIME", "STOPTIME"}:
+            if args:
+                raise EquationError(f"{func_name} requires no arguments")
+            return _finite_real(self.context.start_time if func_name == "STARTTIME" else self.context.stop_time)
 
         if func_name == "LOOKUP":
             # LOOKUP(table_name, input) - table_name must be a string literal or name
@@ -1186,7 +1211,7 @@ def validate_equation(equation: str, available_variables: list[str],
         tree = _parse_expression(preprocess_equation(equation))
         known = {canonical_name(name) for name in available_variables}
         known |= {canonical_name(name) for name in SAFE_CONSTANTS}
-        known |= {"time", "dt", "time_step"}
+        known |= {"time", "dt", "time_step", "starttime", "stoptime"}
         tables = {canonical_name(name) for name in (table_names or [])}
         functions = {name.upper() for name in SAFE_FUNCTIONS} | CONTEXT_FUNCTIONS
         allowed_nodes = (ast.Expression, ast.Constant, ast.Name, ast.Load, ast.BinOp,
@@ -1211,7 +1236,7 @@ def validate_equation(equation: str, available_variables: list[str],
                         return False, f"Unknown lookup table: {table}"
         unknown = {name for name in _reference_names(tree)
                    if resolve_name(name, available_variables) is None
-                   and symbol_identity(name) not in {*SAFE_CONSTANTS, "time", "dt", "time_step"}}
+                   and symbol_identity(name) not in {*SAFE_CONSTANTS, "time", "dt", "time_step", "starttime", "stoptime"}}
         if unknown:
             return False, f"Unknown variables: {', '.join(sorted(unknown))}"
         return True, ""
