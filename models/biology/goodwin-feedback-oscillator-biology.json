@@ -1,0 +1,161 @@
+{
+  "id": "goodwin-feedback-oscillator-biology",
+  "name": "Goodwin three-stage gene feedback oscillator",
+  "description": "Dimensionless three-stage negative feedback, not a calibrated circadian clock. Reconstructs a retired flowless concept with complete dynamics. Initial state [0.0054,0.053,1.93], coefficients [2,4,0.12,0.08,0.1], Hill exponent10 and 0-100 horizon follow PINTS documented mathematical benchmark; our RK4 output step0.05 is a verification choice. https://pints.readthedocs.io/en/stable/toy/goodwin_oscillator_model.html Signed net-rate flows encode equations, not material transfer claims. No clamps or hidden state resets.",
+  "source": "https://doi.org/10.1016/0065-2571(65)90067-1",
+  "reference": "Goodwin (1965), Oscillatory behavior in enzymatic control processes; Griffith (1968), doi:10.1016/0022-5193(68)90189-6. Numerical benchmark: PINTS GoodwinOscillatorModel.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "goodwin-feedback-oscillator-biology:Transcript",
+      "name": "Transcript",
+      "initial_value": 0.0054,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 140,
+        "y": 250
+      }
+    },
+    {
+      "id": "goodwin-feedback-oscillator-biology:Protein",
+      "name": "Protein",
+      "initial_value": 0.053,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 320,
+        "y": 250
+      }
+    },
+    {
+      "id": "goodwin-feedback-oscillator-biology:Repressor",
+      "name": "Repressor",
+      "initial_value": 1.93,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "goodwin-feedback-oscillator-biology:rate:Transcript",
+      "name": "Transcript_net_rate",
+      "equation": "synthesis/(1+Repressor^cooperativity)-transcript_decay*Transcript",
+      "to_stock": "goodwin-feedback-oscillator-biology:Transcript",
+      "units": "(1)/time",
+      "position": {
+        "x": 140,
+        "y": 350
+      }
+    },
+    {
+      "id": "goodwin-feedback-oscillator-biology:rate:Protein",
+      "name": "Protein_net_rate",
+      "equation": "translation*Transcript-protein_decay*Protein",
+      "to_stock": "goodwin-feedback-oscillator-biology:Protein",
+      "units": "(1)/time",
+      "position": {
+        "x": 320,
+        "y": 350
+      }
+    },
+    {
+      "id": "goodwin-feedback-oscillator-biology:rate:Repressor",
+      "name": "Repressor_net_rate",
+      "equation": "conversion*Protein-repressor_decay*Repressor",
+      "to_stock": "goodwin-feedback-oscillator-biology:Repressor",
+      "units": "(1)/time",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "goodwin-feedback-oscillator-biology:parameter:synthesis",
+      "name": "synthesis",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "goodwin-feedback-oscillator-biology:parameter:translation",
+      "name": "translation",
+      "equation": "2",
+      "units": "1/time",
+      "position": {
+        "x": 190,
+        "y": 80
+      }
+    },
+    {
+      "id": "goodwin-feedback-oscillator-biology:parameter:conversion",
+      "name": "conversion",
+      "equation": "4",
+      "units": "1/time",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "goodwin-feedback-oscillator-biology:parameter:transcript_decay",
+      "name": "transcript_decay",
+      "equation": "0.12",
+      "units": "1/time",
+      "position": {
+        "x": 370,
+        "y": 80
+      }
+    },
+    {
+      "id": "goodwin-feedback-oscillator-biology:parameter:protein_decay",
+      "name": "protein_decay",
+      "equation": "0.08",
+      "units": "1/time",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    },
+    {
+      "id": "goodwin-feedback-oscillator-biology:parameter:repressor_decay",
+      "name": "repressor_decay",
+      "equation": "0.1",
+      "units": "1/time",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "goodwin-feedback-oscillator-biology:parameter:cooperativity",
+      "name": "cooperativity",
+      "equation": "10",
+      "units": "1",
+      "position": {
+        "x": 640,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.05,
+    "integration_method": "rk4",
+    "units": "time",
+    "rtol": 1e-08,
+    "atol": 1e-10
+  }
+}

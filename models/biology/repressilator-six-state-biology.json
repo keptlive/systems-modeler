@@ -1,0 +1,207 @@
+{
+  "id": "repressilator-six-state-biology",
+  "name": "Repressilator with explicit mRNA and protein stages",
+  "description": "Six dimensionless states retain transcription/translation stages; this is not the distinct two-gene toggle switch already in the library. Reconstructs a retired flowless concept. Dimensionless Box1 form; alpha216, alpha0=0.216,beta5,n2 are illustrative choices in the customary repressilator regime, explicitly not claimed to reproduce a particular experimental figure. Asymmetric initial protein [0,0,1] and horizon80 chosen to excite and inspect cyclic response. Signed net-rate flows encode equations, not material transfer claims. No clamps or hidden state resets. Adaptive Radau resolves the initial rapid mRNA/protein transient; a coarse fixed RK4 step failed independent-reference accuracy screening.",
+  "source": "https://doi.org/10.1038/35002125",
+  "reference": "Elowitz and Leibler (2000), A synthetic oscillatory network of transcriptional regulators, Nature403:335-338, Box1.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "repressilator-six-state-biology:RNA_A",
+      "name": "RNA_A",
+      "initial_value": 0,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 140,
+        "y": 250
+      }
+    },
+    {
+      "id": "repressilator-six-state-biology:RNA_B",
+      "name": "RNA_B",
+      "initial_value": 0,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 320,
+        "y": 250
+      }
+    },
+    {
+      "id": "repressilator-six-state-biology:RNA_C",
+      "name": "RNA_C",
+      "initial_value": 0,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "repressilator-six-state-biology:Protein_A",
+      "name": "Protein_A",
+      "initial_value": 0,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 680,
+        "y": 250
+      }
+    },
+    {
+      "id": "repressilator-six-state-biology:Protein_B",
+      "name": "Protein_B",
+      "initial_value": 0,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 860,
+        "y": 250
+      }
+    },
+    {
+      "id": "repressilator-six-state-biology:Protein_C",
+      "name": "Protein_C",
+      "initial_value": 1,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 1040,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "repressilator-six-state-biology:rate:RNA_A",
+      "name": "RNA_A_net_rate",
+      "equation": "max_transcription/(1+Protein_C^hill)+leak_transcription-rna_decay*RNA_A",
+      "to_stock": "repressilator-six-state-biology:RNA_A",
+      "units": "(1)/time",
+      "position": {
+        "x": 140,
+        "y": 350
+      }
+    },
+    {
+      "id": "repressilator-six-state-biology:rate:RNA_B",
+      "name": "RNA_B_net_rate",
+      "equation": "max_transcription/(1+Protein_A^hill)+leak_transcription-rna_decay*RNA_B",
+      "to_stock": "repressilator-six-state-biology:RNA_B",
+      "units": "(1)/time",
+      "position": {
+        "x": 320,
+        "y": 350
+      }
+    },
+    {
+      "id": "repressilator-six-state-biology:rate:RNA_C",
+      "name": "RNA_C_net_rate",
+      "equation": "max_transcription/(1+Protein_B^hill)+leak_transcription-rna_decay*RNA_C",
+      "to_stock": "repressilator-six-state-biology:RNA_C",
+      "units": "(1)/time",
+      "position": {
+        "x": 500,
+        "y": 350
+      }
+    },
+    {
+      "id": "repressilator-six-state-biology:rate:Protein_A",
+      "name": "Protein_A_net_rate",
+      "equation": "protein_turnover*(RNA_A-Protein_A)",
+      "to_stock": "repressilator-six-state-biology:Protein_A",
+      "units": "(1)/time",
+      "position": {
+        "x": 680,
+        "y": 350
+      }
+    },
+    {
+      "id": "repressilator-six-state-biology:rate:Protein_B",
+      "name": "Protein_B_net_rate",
+      "equation": "protein_turnover*(RNA_B-Protein_B)",
+      "to_stock": "repressilator-six-state-biology:Protein_B",
+      "units": "(1)/time",
+      "position": {
+        "x": 860,
+        "y": 350
+      }
+    },
+    {
+      "id": "repressilator-six-state-biology:rate:Protein_C",
+      "name": "Protein_C_net_rate",
+      "equation": "protein_turnover*(RNA_C-Protein_C)",
+      "to_stock": "repressilator-six-state-biology:Protein_C",
+      "units": "(1)/time",
+      "position": {
+        "x": 1040,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "repressilator-six-state-biology:parameter:max_transcription",
+      "name": "max_transcription",
+      "equation": "216",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "repressilator-six-state-biology:parameter:leak_transcription",
+      "name": "leak_transcription",
+      "equation": "0.216",
+      "units": "1/time",
+      "position": {
+        "x": 190,
+        "y": 80
+      }
+    },
+    {
+      "id": "repressilator-six-state-biology:parameter:rna_decay",
+      "name": "rna_decay",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "repressilator-six-state-biology:parameter:protein_turnover",
+      "name": "protein_turnover",
+      "equation": "5",
+      "units": "1/time",
+      "position": {
+        "x": 370,
+        "y": 80
+      }
+    },
+    {
+      "id": "repressilator-six-state-biology:parameter:hill",
+      "name": "hill",
+      "equation": "2",
+      "units": "1",
+      "position": {
+        "x": 460,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 80,
+    "dt": 0.1,
+    "integration_method": "radau",
+    "units": "time",
+    "rtol": 1e-08,
+    "atol": 1e-10
+  }
+}

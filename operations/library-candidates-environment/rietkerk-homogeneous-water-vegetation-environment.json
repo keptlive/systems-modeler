@@ -1,0 +1,181 @@
+{
+  "id": "rietkerk-homogeneous-water-vegetation-environment",
+  "name": "Rietkerk homogeneous vegetation and water-infiltration feedback",
+  "category": "environment",
+  "description": "Homogeneous reaction core only: no diffusion, lateral runoff, seed dispersal or spatial vegetation patterns. Plants enhance infiltration; soil water uptake supports biomass. The positive homogeneous equilibrium at stated rainfall is P20,W5,O8.928571. Unlike a generic logistic stock, two distinct water pools mediate the feedback. Coefficients c10,gmax.05,k1=5,alpha.2,k2=5,W0=.2,rw.2 and mortality.25 follow the primary paper text/figure2. Rainfall1.5mm/day is an illustrative choice within its0-3 range. Initial(5,4,2), horizon500day and dt.25 are our illustrative homogeneous scenario, not the paper spatial initial conditions. Signed net-rate flows encode state equations, not material transport claims. No numerical clipping or arbitrary domain clamps.",
+  "source": "https://doi.org/10.1086/342078",
+  "reference": "Rietkerk et al.(2002), Self-Organization of Vegetation in Arid Ecosystems, American Naturalist160:524-530, Eqs1a-c with spatial derivatives zero; primary PDF https://pure.rug.nl/ws/portalfiles/portal/65227728/342078.pdf .",
+  "stocks": [
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:Vegetation",
+      "name": "Vegetation",
+      "initial_value": 5,
+      "units": "biomass/area",
+      "equation": "",
+      "position": {
+        "x": 120,
+        "y": 240
+      }
+    },
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:Soil_Water",
+      "name": "Soil_Water",
+      "initial_value": 4,
+      "units": "millimeter",
+      "equation": "",
+      "position": {
+        "x": 280,
+        "y": 240
+      }
+    },
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:Surface_Water",
+      "name": "Surface_Water",
+      "initial_value": 2,
+      "units": "millimeter",
+      "equation": "",
+      "position": {
+        "x": 440,
+        "y": 240
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:rate:Vegetation",
+      "name": "Vegetation_net_rate",
+      "equation": "conversion*uptake_max*Soil_Water/(Soil_Water+water_saturation)*Vegetation-mortality*Vegetation",
+      "to_stock": "rietkerk-homogeneous-water-vegetation-environment:Vegetation",
+      "units": "(biomass/area)/day",
+      "position": {
+        "x": 120,
+        "y": 340
+      }
+    },
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:rate:Soil_Water",
+      "name": "Soil_Water_net_rate",
+      "equation": "infiltration_max*Surface_Water*(Vegetation+biomass_saturation*bare_infiltration)/(Vegetation+biomass_saturation)-uptake_max*Soil_Water/(Soil_Water+water_saturation)*Vegetation-water_loss*Soil_Water",
+      "to_stock": "rietkerk-homogeneous-water-vegetation-environment:Soil_Water",
+      "units": "(millimeter)/day",
+      "position": {
+        "x": 280,
+        "y": 340
+      }
+    },
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:rate:Surface_Water",
+      "name": "Surface_Water_net_rate",
+      "equation": "rainfall-infiltration_max*Surface_Water*(Vegetation+biomass_saturation*bare_infiltration)/(Vegetation+biomass_saturation)",
+      "to_stock": "rietkerk-homogeneous-water-vegetation-environment:Surface_Water",
+      "units": "(millimeter)/day",
+      "position": {
+        "x": 440,
+        "y": 340
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:parameter:conversion",
+      "name": "conversion",
+      "equation": "10",
+      "units": "biomass/area/millimeter",
+      "position": {
+        "x": 80,
+        "y": 80
+      }
+    },
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:parameter:uptake_max",
+      "name": "uptake_max",
+      "equation": "0.05",
+      "units": "millimeter*area/biomass/day",
+      "position": {
+        "x": 180,
+        "y": 80
+      }
+    },
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:parameter:water_saturation",
+      "name": "water_saturation",
+      "equation": "5",
+      "units": "millimeter",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:parameter:mortality",
+      "name": "mortality",
+      "equation": "0.25",
+      "units": "1/day",
+      "position": {
+        "x": 380,
+        "y": 80
+      }
+    },
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:parameter:infiltration_max",
+      "name": "infiltration_max",
+      "equation": "0.2",
+      "units": "1/day",
+      "position": {
+        "x": 480,
+        "y": 80
+      }
+    },
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:parameter:biomass_saturation",
+      "name": "biomass_saturation",
+      "equation": "5",
+      "units": "biomass/area",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    },
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:parameter:bare_infiltration",
+      "name": "bare_infiltration",
+      "equation": "0.2",
+      "units": "1",
+      "position": {
+        "x": 680,
+        "y": 80
+      }
+    },
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:parameter:water_loss",
+      "name": "water_loss",
+      "equation": "0.2",
+      "units": "1/day",
+      "position": {
+        "x": 780,
+        "y": 80
+      }
+    },
+    {
+      "id": "rietkerk-homogeneous-water-vegetation-environment:parameter:rainfall",
+      "name": "rainfall",
+      "equation": "1.5",
+      "units": "millimeter/day",
+      "position": {
+        "x": 880,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 500,
+    "dt": 0.25,
+    "integration_method": "rk4",
+    "units": "day",
+    "rtol": 1e-08,
+    "atol": 1e-11
+  }
+}

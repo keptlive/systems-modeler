@@ -1,0 +1,197 @@
+{
+  "id": "ekman-three-layer-momentum-environment",
+  "name": "Three-layer Ekman momentum mixing under steady wind",
+  "category": "environment",
+  "description": "Equal-thickness finite-volume layers exchange both momentum components; surface wind forcing, Coriolis rotation and bottom drag close the column budget. Internal mixing conserves vertically summed momentum and dissipates shear energy. This is a deliberately coarse six-state discretization, not the exact infinite-depth steady Ekman spiral or a weather forecast. All numerical parameters, initial values, horizon and solver settings are illustrative teaching choices; not fitted to a field site. Signed net-rate flows encode state equations, not material transport claims. No numerical clipping or arbitrary domain clamps.",
+  "source": "https://hdl.handle.net/1969.1/160216",
+  "reference": "Stewart, Introduction to Physical Oceanography, author textbook momentum and Ekman-layer equations8.15,9.7-9.8; Ekman(1905), On the influence of the Earth rotation on ocean-currents. Own three-layer finite-volume transient discretization.",
+  "stocks": [
+    {
+      "id": "ekman-three-layer-momentum-environment:U_Surface",
+      "name": "U_Surface",
+      "initial_value": 0,
+      "units": "meter/second",
+      "equation": "",
+      "position": {
+        "x": 120,
+        "y": 240
+      }
+    },
+    {
+      "id": "ekman-three-layer-momentum-environment:V_Surface",
+      "name": "V_Surface",
+      "initial_value": 0,
+      "units": "meter/second",
+      "equation": "",
+      "position": {
+        "x": 280,
+        "y": 240
+      }
+    },
+    {
+      "id": "ekman-three-layer-momentum-environment:U_Middle",
+      "name": "U_Middle",
+      "initial_value": 0,
+      "units": "meter/second",
+      "equation": "",
+      "position": {
+        "x": 440,
+        "y": 240
+      }
+    },
+    {
+      "id": "ekman-three-layer-momentum-environment:V_Middle",
+      "name": "V_Middle",
+      "initial_value": 0,
+      "units": "meter/second",
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 240
+      }
+    },
+    {
+      "id": "ekman-three-layer-momentum-environment:U_Bottom",
+      "name": "U_Bottom",
+      "initial_value": 0,
+      "units": "meter/second",
+      "equation": "",
+      "position": {
+        "x": 760,
+        "y": 240
+      }
+    },
+    {
+      "id": "ekman-three-layer-momentum-environment:V_Bottom",
+      "name": "V_Bottom",
+      "initial_value": 0,
+      "units": "meter/second",
+      "equation": "",
+      "position": {
+        "x": 920,
+        "y": 240
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "ekman-three-layer-momentum-environment:rate:U_Surface",
+      "name": "U_Surface_net_rate",
+      "equation": "coriolis*V_Surface+mixing*(U_Middle-U_Surface)+wind_acceleration",
+      "to_stock": "ekman-three-layer-momentum-environment:U_Surface",
+      "units": "(meter/second)/hour",
+      "position": {
+        "x": 120,
+        "y": 340
+      }
+    },
+    {
+      "id": "ekman-three-layer-momentum-environment:rate:V_Surface",
+      "name": "V_Surface_net_rate",
+      "equation": "-coriolis*U_Surface+mixing*(V_Middle-V_Surface)",
+      "to_stock": "ekman-three-layer-momentum-environment:V_Surface",
+      "units": "(meter/second)/hour",
+      "position": {
+        "x": 280,
+        "y": 340
+      }
+    },
+    {
+      "id": "ekman-three-layer-momentum-environment:rate:U_Middle",
+      "name": "U_Middle_net_rate",
+      "equation": "coriolis*V_Middle+mixing*(U_Surface-2*U_Middle+U_Bottom)",
+      "to_stock": "ekman-three-layer-momentum-environment:U_Middle",
+      "units": "(meter/second)/hour",
+      "position": {
+        "x": 440,
+        "y": 340
+      }
+    },
+    {
+      "id": "ekman-three-layer-momentum-environment:rate:V_Middle",
+      "name": "V_Middle_net_rate",
+      "equation": "-coriolis*U_Middle+mixing*(V_Surface-2*V_Middle+V_Bottom)",
+      "to_stock": "ekman-three-layer-momentum-environment:V_Middle",
+      "units": "(meter/second)/hour",
+      "position": {
+        "x": 600,
+        "y": 340
+      }
+    },
+    {
+      "id": "ekman-three-layer-momentum-environment:rate:U_Bottom",
+      "name": "U_Bottom_net_rate",
+      "equation": "coriolis*V_Bottom+mixing*(U_Middle-U_Bottom)-bottom_drag*U_Bottom",
+      "to_stock": "ekman-three-layer-momentum-environment:U_Bottom",
+      "units": "(meter/second)/hour",
+      "position": {
+        "x": 760,
+        "y": 340
+      }
+    },
+    {
+      "id": "ekman-three-layer-momentum-environment:rate:V_Bottom",
+      "name": "V_Bottom_net_rate",
+      "equation": "-coriolis*U_Bottom+mixing*(V_Middle-V_Bottom)-bottom_drag*V_Bottom",
+      "to_stock": "ekman-three-layer-momentum-environment:V_Bottom",
+      "units": "(meter/second)/hour",
+      "position": {
+        "x": 920,
+        "y": 340
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "ekman-three-layer-momentum-environment:parameter:coriolis",
+      "name": "coriolis",
+      "equation": "0.36",
+      "units": "1/hour",
+      "position": {
+        "x": 80,
+        "y": 80
+      }
+    },
+    {
+      "id": "ekman-three-layer-momentum-environment:parameter:mixing",
+      "name": "mixing",
+      "equation": "0.1",
+      "units": "1/hour",
+      "position": {
+        "x": 180,
+        "y": 80
+      }
+    },
+    {
+      "id": "ekman-three-layer-momentum-environment:parameter:bottom_drag",
+      "name": "bottom_drag",
+      "equation": "0.1",
+      "units": "1/hour",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "ekman-three-layer-momentum-environment:parameter:wind_acceleration",
+      "name": "wind_acceleration",
+      "equation": "0.02",
+      "units": "meter/second/hour",
+      "position": {
+        "x": 380,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 0.025,
+    "integration_method": "rk4",
+    "units": "hour",
+    "rtol": 1e-08,
+    "atol": 1e-11
+  }
+}

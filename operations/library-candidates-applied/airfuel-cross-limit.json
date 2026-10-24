@@ -1,0 +1,518 @@
+{
+  "id": "candidate-applied-airfuel-cross-limit",
+  "name": "Air\u2013Fuel Cross-Limiting Selector Control",
+  "category": "engineering",
+  "description": "Exact author air/oil transfer blocks expanded into output and output-rate states. Author101 sampled command values and linear interpolation are retained, including sample-grid ramps around nominal1s/15s steps. Cross-limit selectors preserve air lead during load changes. Primary model: \u00c5str\u00f6m and Murray, Feedback Systems, second edition, author BSD 3-Clause Python source pinned dbbc2e1b4233dc148a3dc52c10d08e87881c1f15. Numerical grid is our explicit choice. No empirical calibration or safety-control guarantee. Units not supplied where a coherent physical annotation has not been established.",
+  "source": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/figure-1.18-airfuel_selectors.py",
+  "reference": "\u00c5str\u00f6m and Murray, Feedback Systems, second edition; author example code figure-1.18-airfuel_selectors.py",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Air",
+      "initial_value": 0.0,
+      "position": {
+        "x": 240,
+        "y": 200
+      }
+    },
+    {
+      "id": "s1",
+      "name": "AirRate",
+      "initial_value": 0.0,
+      "position": {
+        "x": 410,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Fuel",
+      "initial_value": 0.0,
+      "position": {
+        "x": 580,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "FuelRate",
+      "initial_value": 0.0,
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Air",
+      "equation": "AirRate",
+      "to_stock": "s0",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "f1",
+      "name": "Change_AirRate",
+      "equation": "-8*AirRate-4*Air+4*MAX(CommandValue,Fuel)",
+      "to_stock": "s1",
+      "position": {
+        "x": 320,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Change_Fuel",
+      "equation": "FuelRate",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Change_FuelRate",
+      "equation": "-3*FuelRate-4*Fuel+4*MIN(CommandValue,Air)",
+      "to_stock": "s3",
+      "position": {
+        "x": 660,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "a0",
+      "name": "CommandValue",
+      "equation": "Command(TIME)",
+      "position": {
+        "x": 200,
+        "y": 900
+      }
+    }
+  ],
+  "tables": [
+    {
+      "name": "Command",
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.3,
+          0.0
+        ],
+        [
+          0.6,
+          0.0
+        ],
+        [
+          0.8999999999999999,
+          0.0
+        ],
+        [
+          1.2,
+          1.0
+        ],
+        [
+          1.5,
+          1.0
+        ],
+        [
+          1.7999999999999998,
+          1.0
+        ],
+        [
+          2.1,
+          1.0
+        ],
+        [
+          2.4,
+          1.0
+        ],
+        [
+          2.6999999999999997,
+          1.0
+        ],
+        [
+          3.0,
+          1.0
+        ],
+        [
+          3.3,
+          1.0
+        ],
+        [
+          3.5999999999999996,
+          1.0
+        ],
+        [
+          3.9,
+          1.0
+        ],
+        [
+          4.2,
+          1.0
+        ],
+        [
+          4.5,
+          1.0
+        ],
+        [
+          4.8,
+          1.0
+        ],
+        [
+          5.1,
+          1.0
+        ],
+        [
+          5.3999999999999995,
+          1.0
+        ],
+        [
+          5.7,
+          1.0
+        ],
+        [
+          6.0,
+          1.0
+        ],
+        [
+          6.3,
+          1.0
+        ],
+        [
+          6.6,
+          1.0
+        ],
+        [
+          6.8999999999999995,
+          1.0
+        ],
+        [
+          7.199999999999999,
+          1.0
+        ],
+        [
+          7.5,
+          1.0
+        ],
+        [
+          7.8,
+          1.0
+        ],
+        [
+          8.1,
+          1.0
+        ],
+        [
+          8.4,
+          1.0
+        ],
+        [
+          8.7,
+          1.0
+        ],
+        [
+          9.0,
+          1.0
+        ],
+        [
+          9.299999999999999,
+          1.0
+        ],
+        [
+          9.6,
+          1.0
+        ],
+        [
+          9.9,
+          1.0
+        ],
+        [
+          10.2,
+          1.0
+        ],
+        [
+          10.5,
+          1.0
+        ],
+        [
+          10.799999999999999,
+          1.0
+        ],
+        [
+          11.1,
+          1.0
+        ],
+        [
+          11.4,
+          1.0
+        ],
+        [
+          11.7,
+          1.0
+        ],
+        [
+          12.0,
+          1.0
+        ],
+        [
+          12.299999999999999,
+          1.0
+        ],
+        [
+          12.6,
+          1.0
+        ],
+        [
+          12.9,
+          1.0
+        ],
+        [
+          13.2,
+          1.0
+        ],
+        [
+          13.5,
+          1.0
+        ],
+        [
+          13.799999999999999,
+          1.0
+        ],
+        [
+          14.1,
+          1.0
+        ],
+        [
+          14.399999999999999,
+          1.0
+        ],
+        [
+          14.7,
+          1.0
+        ],
+        [
+          15.0,
+          1.0
+        ],
+        [
+          15.299999999999999,
+          0.5
+        ],
+        [
+          15.6,
+          0.5
+        ],
+        [
+          15.899999999999999,
+          0.5
+        ],
+        [
+          16.2,
+          0.5
+        ],
+        [
+          16.5,
+          0.5
+        ],
+        [
+          16.8,
+          0.5
+        ],
+        [
+          17.099999999999998,
+          0.5
+        ],
+        [
+          17.4,
+          0.5
+        ],
+        [
+          17.7,
+          0.5
+        ],
+        [
+          18.0,
+          0.5
+        ],
+        [
+          18.3,
+          0.5
+        ],
+        [
+          18.599999999999998,
+          0.5
+        ],
+        [
+          18.9,
+          0.5
+        ],
+        [
+          19.2,
+          0.5
+        ],
+        [
+          19.5,
+          0.5
+        ],
+        [
+          19.8,
+          0.5
+        ],
+        [
+          20.099999999999998,
+          0.5
+        ],
+        [
+          20.4,
+          0.5
+        ],
+        [
+          20.7,
+          0.5
+        ],
+        [
+          21.0,
+          0.5
+        ],
+        [
+          21.3,
+          0.5
+        ],
+        [
+          21.599999999999998,
+          0.5
+        ],
+        [
+          21.9,
+          0.5
+        ],
+        [
+          22.2,
+          0.5
+        ],
+        [
+          22.5,
+          0.5
+        ],
+        [
+          22.8,
+          0.5
+        ],
+        [
+          23.099999999999998,
+          0.5
+        ],
+        [
+          23.4,
+          0.5
+        ],
+        [
+          23.7,
+          0.5
+        ],
+        [
+          24.0,
+          0.5
+        ],
+        [
+          24.3,
+          0.5
+        ],
+        [
+          24.599999999999998,
+          0.5
+        ],
+        [
+          24.9,
+          0.5
+        ],
+        [
+          25.2,
+          0.5
+        ],
+        [
+          25.5,
+          0.5
+        ],
+        [
+          25.8,
+          0.5
+        ],
+        [
+          26.099999999999998,
+          0.5
+        ],
+        [
+          26.4,
+          0.5
+        ],
+        [
+          26.7,
+          0.5
+        ],
+        [
+          27.0,
+          0.5
+        ],
+        [
+          27.3,
+          0.5
+        ],
+        [
+          27.599999999999998,
+          0.5
+        ],
+        [
+          27.9,
+          0.5
+        ],
+        [
+          28.2,
+          0.5
+        ],
+        [
+          28.5,
+          0.5
+        ],
+        [
+          28.799999999999997,
+          0.5
+        ],
+        [
+          29.099999999999998,
+          0.5
+        ],
+        [
+          29.4,
+          0.5
+        ],
+        [
+          29.7,
+          0.5
+        ],
+        [
+          30.0,
+          0.5
+        ]
+      ],
+      "interpolation": "continuous"
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.0025,
+    "integration_method": "rk4"
+  }
+}

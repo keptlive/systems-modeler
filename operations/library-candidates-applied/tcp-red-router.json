@@ -1,0 +1,173 @@
+{
+  "id": "candidate-applied-tcp-red-router",
+  "name": "TCP/RED Windows and Shared Router Queue",
+  "category": "technology",
+  "description": "Exact first500 ms source phase: six aggregated windows representing60 sources, equilibrium-derived seed6 perturbations, half-equilibrium queue. Later source-count change is outside this fixed-dimension model. Positive-queue domain is checked, not clamped. Primary model: \u00c5str\u00f6m and Murray, Feedback Systems, second edition, author BSD 3-Clause Python source pinned dbbc2e1b4233dc148a3dc52c10d08e87881c1f15. Numerical grid is our explicit choice. No empirical calibration or safety-control guarantee. Units not supplied where a coherent physical annotation has not been established.",
+  "source": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/congctrl.py",
+  "reference": "\u00c5str\u00f6m and Murray, Feedback Systems, second edition; author example code congctrl.py, figure-4.13-congctrl_tcpsim.py",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Window1",
+      "initial_value": 8.539656583102424,
+      "position": {
+        "x": 240,
+        "y": 200
+      }
+    },
+    {
+      "id": "s1",
+      "name": "Window2",
+      "initial_value": 8.847662423939779,
+      "position": {
+        "x": 410,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Window3",
+      "initial_value": 5.221000726199899,
+      "position": {
+        "x": 580,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Window4",
+      "initial_value": 2.816141103719344,
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Window5",
+      "initial_value": 0.00486234096945104,
+      "position": {
+        "x": 920,
+        "y": 200
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Window6",
+      "initial_value": 7.13469925418935,
+      "position": {
+        "x": 240,
+        "y": 380
+      }
+    },
+    {
+      "id": "s6",
+      "name": "Queue",
+      "initial_value": 161.46272118152407,
+      "position": {
+        "x": 410,
+        "y": 380
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Window1",
+      "equation": "Capacity/Queue-Rho*Capacity*(1+Window1^2/2)",
+      "to_stock": "s0",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "f1",
+      "name": "Change_Window2",
+      "equation": "Capacity/Queue-Rho*Capacity*(1+Window2^2/2)",
+      "to_stock": "s1",
+      "position": {
+        "x": 320,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Change_Window3",
+      "equation": "Capacity/Queue-Rho*Capacity*(1+Window3^2/2)",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Change_Window4",
+      "equation": "Capacity/Queue-Rho*Capacity*(1+Window4^2/2)",
+      "to_stock": "s3",
+      "position": {
+        "x": 660,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Change_Window5",
+      "equation": "Capacity/Queue-Rho*Capacity*(1+Window5^2/2)",
+      "to_stock": "s4",
+      "position": {
+        "x": 830,
+        "y": 200
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Change_Window6",
+      "equation": "Capacity/Queue-Rho*Capacity*(1+Window6^2/2)",
+      "to_stock": "s5",
+      "position": {
+        "x": 150,
+        "y": 380
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Change_Queue",
+      "equation": "10*(Window1+Window2+Window3+Window4+Window5+Window6)*Capacity/Queue-Capacity",
+      "to_stock": "s6",
+      "position": {
+        "x": 320,
+        "y": 380
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Capacity",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 650
+      }
+    },
+    {
+      "id": "p1",
+      "name": "Rho",
+      "equation": "0.0002",
+      "position": {
+        "x": 240,
+        "y": 650
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 500,
+    "dt": 0.1,
+    "integration_method": "rk4"
+  }
+}

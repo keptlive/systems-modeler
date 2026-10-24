@@ -1,0 +1,173 @@
+{
+  "id": "competitive-langmuir-closed-sorption-environment",
+  "name": "Closed competitive Langmuir sorption to a finite shared surface",
+  "category": "environment",
+  "description": "Two solutes compete for one finite set of noninteracting sites in a closed well-mixed batch. Site vacancy is capacity minus the two sorbed inventories; each aqueous-plus-sorbed solute total is conserved. Equal single-site occupancy and ideal mass-action rates are assumptions, not a calibrated contaminant isotherm. This is a finite-reservoir extension of the elementary Langmuir law, not copied source code. All numerical parameters, initial values, horizon and solver settings are illustrative teaching choices; not fitted to a field site. Signed net-rate flows encode state equations, not material transport claims. No numerical clipping or arbitrary domain clamps.",
+  "source": "https://doi.org/10.1021/ja02242a004",
+  "reference": "Langmuir(1918), The adsorption of gases on plane surfaces of glass, mica and platinum, JACS40:1361-1403. Reversible site-occupancy law applied here to an explicitly specified finite aqueous batch.",
+  "stocks": [
+    {
+      "id": "competitive-langmuir-closed-sorption-environment:Dissolved_A",
+      "name": "Dissolved_A",
+      "initial_value": 2,
+      "units": "amount",
+      "equation": "",
+      "position": {
+        "x": 120,
+        "y": 240
+      }
+    },
+    {
+      "id": "competitive-langmuir-closed-sorption-environment:Dissolved_B",
+      "name": "Dissolved_B",
+      "initial_value": 1,
+      "units": "amount",
+      "equation": "",
+      "position": {
+        "x": 280,
+        "y": 240
+      }
+    },
+    {
+      "id": "competitive-langmuir-closed-sorption-environment:Sorbed_A",
+      "name": "Sorbed_A",
+      "initial_value": 0,
+      "units": "amount",
+      "equation": "",
+      "position": {
+        "x": 440,
+        "y": 240
+      }
+    },
+    {
+      "id": "competitive-langmuir-closed-sorption-environment:Sorbed_B",
+      "name": "Sorbed_B",
+      "initial_value": 0,
+      "units": "amount",
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 240
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "competitive-langmuir-closed-sorption-environment:rate:Dissolved_A",
+      "name": "Dissolved_A_net_rate",
+      "equation": "-adsorption_A*Dissolved_A/fluid_volume*(surface_capacity-Sorbed_A-Sorbed_B)+desorption_A*Sorbed_A",
+      "to_stock": "competitive-langmuir-closed-sorption-environment:Dissolved_A",
+      "units": "(amount)/day",
+      "position": {
+        "x": 120,
+        "y": 340
+      }
+    },
+    {
+      "id": "competitive-langmuir-closed-sorption-environment:rate:Dissolved_B",
+      "name": "Dissolved_B_net_rate",
+      "equation": "-adsorption_B*Dissolved_B/fluid_volume*(surface_capacity-Sorbed_A-Sorbed_B)+desorption_B*Sorbed_B",
+      "to_stock": "competitive-langmuir-closed-sorption-environment:Dissolved_B",
+      "units": "(amount)/day",
+      "position": {
+        "x": 280,
+        "y": 340
+      }
+    },
+    {
+      "id": "competitive-langmuir-closed-sorption-environment:rate:Sorbed_A",
+      "name": "Sorbed_A_net_rate",
+      "equation": "adsorption_A*Dissolved_A/fluid_volume*(surface_capacity-Sorbed_A-Sorbed_B)-desorption_A*Sorbed_A",
+      "to_stock": "competitive-langmuir-closed-sorption-environment:Sorbed_A",
+      "units": "(amount)/day",
+      "position": {
+        "x": 440,
+        "y": 340
+      }
+    },
+    {
+      "id": "competitive-langmuir-closed-sorption-environment:rate:Sorbed_B",
+      "name": "Sorbed_B_net_rate",
+      "equation": "adsorption_B*Dissolved_B/fluid_volume*(surface_capacity-Sorbed_A-Sorbed_B)-desorption_B*Sorbed_B",
+      "to_stock": "competitive-langmuir-closed-sorption-environment:Sorbed_B",
+      "units": "(amount)/day",
+      "position": {
+        "x": 600,
+        "y": 340
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "competitive-langmuir-closed-sorption-environment:parameter:fluid_volume",
+      "name": "fluid_volume",
+      "equation": "1",
+      "units": "volume",
+      "position": {
+        "x": 80,
+        "y": 80
+      }
+    },
+    {
+      "id": "competitive-langmuir-closed-sorption-environment:parameter:surface_capacity",
+      "name": "surface_capacity",
+      "equation": "1",
+      "units": "amount",
+      "position": {
+        "x": 180,
+        "y": 80
+      }
+    },
+    {
+      "id": "competitive-langmuir-closed-sorption-environment:parameter:adsorption_A",
+      "name": "adsorption_A",
+      "equation": "2",
+      "units": "volume/amount/day",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "competitive-langmuir-closed-sorption-environment:parameter:adsorption_B",
+      "name": "adsorption_B",
+      "equation": "0.5",
+      "units": "volume/amount/day",
+      "position": {
+        "x": 380,
+        "y": 80
+      }
+    },
+    {
+      "id": "competitive-langmuir-closed-sorption-environment:parameter:desorption_A",
+      "name": "desorption_A",
+      "equation": "0.1",
+      "units": "1/day",
+      "position": {
+        "x": 480,
+        "y": 80
+      }
+    },
+    {
+      "id": "competitive-langmuir-closed-sorption-environment:parameter:desorption_B",
+      "name": "desorption_B",
+      "equation": "0.05",
+      "units": "1/day",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.02,
+    "integration_method": "rk4",
+    "units": "day",
+    "rtol": 1e-08,
+    "atol": 1e-11
+  }
+}

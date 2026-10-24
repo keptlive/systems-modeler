@@ -1,0 +1,151 @@
+{
+  "id": "paired-cosmogenic-burial-environment",
+  "name": "Paired cosmogenic nuclides during constant-rate burial",
+  "category": "environment",
+  "description": "One-exponential spallation production attenuates as a material parcel is continuously buried; the two radionuclides decay at different rates. This is a derived continuous-burial scenario, not the standard instantaneous-burial exposure formula or the full four-exponential muon model. Production rates, effective attenuation depth and burial velocity are illustrative, not site-specific scaling. Rounded illustrative half-lives1387kyr(10Be),705kyr(26Al); production4000/27000atoms/g/kyr, attenuation.6m, burial.005m/kyr, no inherited nuclides. These are an explicitly simplified teaching scenario, not a precision geochronology calibration. Horizon1000kyr,dt1kyr. Signed net-rate flows encode state equations, not material transport claims. No numerical clipping or arbitrary domain clamps.",
+  "source": "https://doi.org/10.1029/2006GC001530",
+  "reference": "Vermeesch(2007), CosmoCalc: An Excel add-in for cosmogenic nuclide calculations, Geochemistry Geophysics Geosystems; author mathematical manual https://pieter-vermeesch.es.ucl.ac.uk/cosmocalc/manual/ .",
+  "stocks": [
+    {
+      "id": "paired-cosmogenic-burial-environment:Depth",
+      "name": "Depth",
+      "initial_value": 0,
+      "units": "meter",
+      "equation": "",
+      "position": {
+        "x": 120,
+        "y": 240
+      }
+    },
+    {
+      "id": "paired-cosmogenic-burial-environment:Beryllium_10",
+      "name": "Beryllium_10",
+      "initial_value": 0,
+      "units": "atom/gram",
+      "equation": "",
+      "position": {
+        "x": 280,
+        "y": 240
+      }
+    },
+    {
+      "id": "paired-cosmogenic-burial-environment:Aluminium_26",
+      "name": "Aluminium_26",
+      "initial_value": 0,
+      "units": "atom/gram",
+      "equation": "",
+      "position": {
+        "x": 440,
+        "y": 240
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "paired-cosmogenic-burial-environment:rate:Depth",
+      "name": "Depth_net_rate",
+      "equation": "burial_velocity",
+      "to_stock": "paired-cosmogenic-burial-environment:Depth",
+      "units": "(meter)/kiloyear",
+      "position": {
+        "x": 120,
+        "y": 340
+      }
+    },
+    {
+      "id": "paired-cosmogenic-burial-environment:rate:Beryllium_10",
+      "name": "Beryllium_10_net_rate",
+      "equation": "production_be*EXP(-Depth/attenuation_depth)-LN(2)/half_life_be*Beryllium_10",
+      "to_stock": "paired-cosmogenic-burial-environment:Beryllium_10",
+      "units": "(atom/gram)/kiloyear",
+      "position": {
+        "x": 280,
+        "y": 340
+      }
+    },
+    {
+      "id": "paired-cosmogenic-burial-environment:rate:Aluminium_26",
+      "name": "Aluminium_26_net_rate",
+      "equation": "production_al*EXP(-Depth/attenuation_depth)-LN(2)/half_life_al*Aluminium_26",
+      "to_stock": "paired-cosmogenic-burial-environment:Aluminium_26",
+      "units": "(atom/gram)/kiloyear",
+      "position": {
+        "x": 440,
+        "y": 340
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "paired-cosmogenic-burial-environment:parameter:burial_velocity",
+      "name": "burial_velocity",
+      "equation": "0.005",
+      "units": "meter/kiloyear",
+      "position": {
+        "x": 80,
+        "y": 80
+      }
+    },
+    {
+      "id": "paired-cosmogenic-burial-environment:parameter:attenuation_depth",
+      "name": "attenuation_depth",
+      "equation": "0.6",
+      "units": "meter",
+      "position": {
+        "x": 180,
+        "y": 80
+      }
+    },
+    {
+      "id": "paired-cosmogenic-burial-environment:parameter:production_be",
+      "name": "production_be",
+      "equation": "4000",
+      "units": "atom/gram/kiloyear",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "paired-cosmogenic-burial-environment:parameter:production_al",
+      "name": "production_al",
+      "equation": "27000",
+      "units": "atom/gram/kiloyear",
+      "position": {
+        "x": 380,
+        "y": 80
+      }
+    },
+    {
+      "id": "paired-cosmogenic-burial-environment:parameter:half_life_be",
+      "name": "half_life_be",
+      "equation": "1387",
+      "units": "kiloyear",
+      "position": {
+        "x": 480,
+        "y": 80
+      }
+    },
+    {
+      "id": "paired-cosmogenic-burial-environment:parameter:half_life_al",
+      "name": "half_life_al",
+      "equation": "705",
+      "units": "kiloyear",
+      "position": {
+        "x": 580,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 1000,
+    "dt": 1,
+    "integration_method": "rk4",
+    "units": "kiloyear",
+    "rtol": 1e-08,
+    "atol": 1e-11
+  }
+}

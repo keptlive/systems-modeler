@@ -1,0 +1,125 @@
+{
+  "id": "candidate-applied-adaptive-noise-cancel",
+  "name": "Adaptive Dynamic Noise-Cancellation Identifier",
+  "category": "engineering",
+  "description": "Author coupled headphone/filter/gradient adaptation equations. Our reproducible identification scenario uses two-tone noise sin0.7t+0.5sin1.3t and zero desired signal, initial filtera=-0.5,b=0. Replaces source sampled unseeded white noise explicitly; not a pixel reproduction of its noisy figure. Primary model: \u00c5str\u00f6m and Murray, Feedback Systems, second edition, author BSD 3-Clause Python source pinned dbbc2e1b4233dc148a3dc52c10d08e87881c1f15. Numerical grid is our explicit choice. No empirical calibration or safety-control guarantee. Units not supplied where a coherent physical annotation has not been established.",
+  "source": "https://github.com/murrayrm/fbs2e-python/blob/dbbc2e1b4233dc148a3dc52c10d08e87881c1f15/example-5.18-noise_cancel.py",
+  "reference": "\u00c5str\u00f6m and Murray, Feedback Systems, second edition; author example code example-5.18-noise_cancel.py",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Headphone",
+      "initial_value": 0.0,
+      "position": {
+        "x": 240,
+        "y": 200
+      }
+    },
+    {
+      "id": "s1",
+      "name": "Filter",
+      "initial_value": 0.0,
+      "position": {
+        "x": 410,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "FilterA",
+      "initial_value": -0.5,
+      "position": {
+        "x": 580,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "FilterB",
+      "initial_value": 0.0,
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Headphone",
+      "equation": "-0.75*Headphone+0.9*Noise",
+      "to_stock": "s0",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "f1",
+      "name": "Change_Filter",
+      "equation": "FilterA*Filter+FilterB*Noise",
+      "to_stock": "s1",
+      "position": {
+        "x": 320,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Change_FilterA",
+      "equation": "Adaptation*Filter*Error",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Change_FilterB",
+      "equation": "Adaptation*Noise*Error",
+      "to_stock": "s3",
+      "position": {
+        "x": 660,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Adaptation",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 650
+      }
+    },
+    {
+      "id": "a0",
+      "name": "Noise",
+      "equation": "SIN(0.7*TIME)+0.5*SIN(1.3*TIME)",
+      "position": {
+        "x": 200,
+        "y": 900
+      }
+    },
+    {
+      "id": "a1",
+      "name": "Error",
+      "equation": "Headphone-Filter",
+      "position": {
+        "x": 340,
+        "y": 900
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.02,
+    "integration_method": "rk4"
+  }
+}

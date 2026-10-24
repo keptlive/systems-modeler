@@ -1,0 +1,166 @@
+{
+  "id": "candidate-hindmarsh-rose-source",
+  "name": "Hindmarsh\u2013Rose Three-State Neuron \u2014 Source Transient",
+  "category": "neuroscience",
+  "description": "Adds slow adaptation Z beyond existing two-state FitzHugh\u2013Nagumo. Source one-unit transient does not demonstrate full bursting or fit a real neuron. Reconstructed from the pinned MIT SciML problem definition, preserving source equations, parameters, initial state and horizon. Solver and output grid are our explicit numerical choices. Normalized benchmark coordinates/time; not calibrated physical units or a forecast. No positivity clamps.",
+  "source": "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/e5c3f5aff3b6921ca79b0862ebae896c7580666e/lib/ODEProblemLibrary/src/strange_attractors.jl",
+  "reference": "Hindmarsh and Rose (1984), A model of neuronal bursting using three coupled first order differential equations. doi:10.1098/rspb.1984.0024. Numerical defaults from pinned SciML problem.",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "X",
+      "initial_value": 1,
+      "units": "1",
+      "position": {
+        "x": 220,
+        "y": 160
+      }
+    },
+    {
+      "id": "s1",
+      "name": "Y",
+      "initial_value": 0,
+      "units": "1",
+      "position": {
+        "x": 370,
+        "y": 160
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Z",
+      "initial_value": 0,
+      "units": "1",
+      "position": {
+        "x": 520,
+        "y": 160
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_X",
+      "equation": "Y-a*X^3+b*X^2-Z+i",
+      "to_stock": "s0",
+      "units": "1",
+      "position": {
+        "x": 130,
+        "y": 160
+      }
+    },
+    {
+      "id": "f1",
+      "name": "Change_Y",
+      "equation": "c-d*X^2-Y",
+      "to_stock": "s1",
+      "units": "1",
+      "position": {
+        "x": 280,
+        "y": 160
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Change_Z",
+      "equation": "r*(s*(X-xr)-Z)",
+      "to_stock": "s2",
+      "units": "1",
+      "position": {
+        "x": 430,
+        "y": 160
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "a",
+      "equation": "1",
+      "units": "1",
+      "position": {
+        "x": 100,
+        "y": 650
+      }
+    },
+    {
+      "id": "p1",
+      "name": "b",
+      "equation": "3",
+      "units": "1",
+      "position": {
+        "x": 240,
+        "y": 650
+      }
+    },
+    {
+      "id": "p2",
+      "name": "c",
+      "equation": "1",
+      "units": "1",
+      "position": {
+        "x": 380,
+        "y": 650
+      }
+    },
+    {
+      "id": "p3",
+      "name": "d",
+      "equation": "5",
+      "units": "1",
+      "position": {
+        "x": 520,
+        "y": 650
+      }
+    },
+    {
+      "id": "p4",
+      "name": "r",
+      "equation": "0.01",
+      "units": "1",
+      "position": {
+        "x": 660,
+        "y": 650
+      }
+    },
+    {
+      "id": "p5",
+      "name": "s",
+      "equation": "4",
+      "units": "1",
+      "position": {
+        "x": 800,
+        "y": 650
+      }
+    },
+    {
+      "id": "p6",
+      "name": "xr",
+      "equation": "-1.6",
+      "units": "1",
+      "position": {
+        "x": 100,
+        "y": 750
+      }
+    },
+    {
+      "id": "p7",
+      "name": "i",
+      "equation": "5",
+      "units": "1",
+      "position": {
+        "x": 240,
+        "y": 750
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 1,
+    "dt": 0.001,
+    "integration_method": "rk4",
+    "units": "1"
+  }
+}

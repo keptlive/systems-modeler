@@ -1,0 +1,85 @@
+{
+  "id": "candidate-nonlinear-sequential-chemistry",
+  "name": "Nonlinear Sequential Chemistry with Exact Mass Balance",
+  "category": "physics",
+  "description": "Sequential first-order then second-order reaction; differs from existing reversible A/B and Michaelis\u2013Menten enzyme kinetics. Reconstructed from the pinned MIT SciML problem definition, preserving source equations, parameters, initial state and horizon. Solver and output grid are our explicit numerical choices. Normalized benchmark coordinates/time; not calibrated physical units or a forecast. No positivity clamps.",
+  "source": "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/e5c3f5aff3b6921ca79b0862ebae896c7580666e/lib/ODEProblemLibrary/src/nonlinchem.jl",
+  "reference": "Liu, Tian, Xue, Wang and Liu (2012), Analytic solution for a nonlinear chemistry system of ordinary differential equations. Nonlinear Dynamics 68:17\u201321. Source implementation provides Bessel-function reference.",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "A",
+      "initial_value": 1,
+      "units": "1",
+      "position": {
+        "x": 220,
+        "y": 160
+      }
+    },
+    {
+      "id": "s1",
+      "name": "B",
+      "initial_value": 0,
+      "units": "1",
+      "position": {
+        "x": 370,
+        "y": 160
+      }
+    },
+    {
+      "id": "s2",
+      "name": "C",
+      "initial_value": 0,
+      "units": "1",
+      "position": {
+        "x": 520,
+        "y": 160
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_A",
+      "equation": "-A",
+      "to_stock": "s0",
+      "units": "1",
+      "position": {
+        "x": 130,
+        "y": 160
+      }
+    },
+    {
+      "id": "f1",
+      "name": "Change_B",
+      "equation": "A-B^2",
+      "to_stock": "s1",
+      "units": "1",
+      "position": {
+        "x": 280,
+        "y": 160
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Change_C",
+      "equation": "B^2",
+      "to_stock": "s2",
+      "units": "1",
+      "position": {
+        "x": 430,
+        "y": 160
+      }
+    }
+  ],
+  "variables": [],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.02,
+    "integration_method": "rk4",
+    "units": "1"
+  }
+}

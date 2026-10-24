@@ -1,0 +1,109 @@
+{
+  "id": "selkov-basic-glycolysis-biology",
+  "name": "Basic Selkov glycolysis near a stable positive state",
+  "description": "Normalized basic Selkov system, distinct from the saturated five-species derivation. Here alpha0.8<1/(gamma-1) and the local positive equilibrium is stable. The source proves unbounded behavior for other regimes; no universal boundedness claim. Illustrative gamma2,alpha0.8 and initial(1.2,0.8) chosen near stable(1,1); normalized coefficients1. Horizon50 and RK4dt0.025 are verification choices. Mathematical source article CC BY4.0: https://creativecommons.org/licenses/by/4.0/. Signed net-rate flows encode equations, not material transfer claims. No clamps or hidden state resets.",
+  "source": "https://doi.org/10.1007/s00285-021-01560-y",
+  "reference": "Brechmann and Rendall (2021), Unbounded solutions of models for glycolysis, Eqs9-10; original Selkov (1968), doi:10.1111/j.1432-1033.1968.tb00175.x.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "selkov-basic-glycolysis-biology:Substrate",
+      "name": "Substrate",
+      "initial_value": 1.2,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 140,
+        "y": 250
+      }
+    },
+    {
+      "id": "selkov-basic-glycolysis-biology:Activator",
+      "name": "Activator",
+      "initial_value": 0.8,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 320,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "selkov-basic-glycolysis-biology:rate:Substrate",
+      "name": "Substrate_net_rate",
+      "equation": "feed-reaction*Substrate*Activator^power",
+      "to_stock": "selkov-basic-glycolysis-biology:Substrate",
+      "units": "(1)/time",
+      "position": {
+        "x": 140,
+        "y": 350
+      }
+    },
+    {
+      "id": "selkov-basic-glycolysis-biology:rate:Activator",
+      "name": "Activator_net_rate",
+      "equation": "response*(Substrate*Activator^power-Activator)",
+      "to_stock": "selkov-basic-glycolysis-biology:Activator",
+      "units": "(1)/time",
+      "position": {
+        "x": 320,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "selkov-basic-glycolysis-biology:parameter:feed",
+      "name": "feed",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "selkov-basic-glycolysis-biology:parameter:reaction",
+      "name": "reaction",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 190,
+        "y": 80
+      }
+    },
+    {
+      "id": "selkov-basic-glycolysis-biology:parameter:response",
+      "name": "response",
+      "equation": "0.8",
+      "units": "1/time",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "selkov-basic-glycolysis-biology:parameter:power",
+      "name": "power",
+      "equation": "2",
+      "units": "1",
+      "position": {
+        "x": 370,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.025,
+    "integration_method": "rk4",
+    "units": "time",
+    "rtol": 1e-08,
+    "atol": 1e-10
+  }
+}

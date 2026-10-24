@@ -1,0 +1,131 @@
+{
+  "id": "dupuit-two-cell-aquifer-environment",
+  "name": "Two-cell unconfined aquifer with Dupuit squared-head exchange",
+  "category": "environment",
+  "description": "Homogeneous horizontal-base unconfined aquifer; each finite cell stores Sy*L*h water per width. A dry-base river head0 is a fixed outlet boundary. Internal Dupuit flux is signed and can reverse; it is not clamped. Recharge is a boundary inflow. Total storage plus accumulated river discharge equals initial storage plus cumulative recharge. This is an explicit low-order storage approximation using a quasi-steady hydraulic closure, not a full transient groundwater PDE or pumping forecast. All numerical parameters, initial values, horizon and solver settings are illustrative teaching choices; not fitted to a field site. Signed net-rate flows encode state equations, not material transport claims. No numerical clipping or arbitrary domain clamps.",
+  "source": "https://pubs.usgs.gov/sir/2016/5134/sir20165134.pdf",
+  "reference": "USGS Scientific Investigations Report2016-5134, Quantification of Groundwater Flow, p20, q=K(h1^2-h2^2)/(2L), after Dupuit; own two-storage-cell transient closure.",
+  "stocks": [
+    {
+      "id": "dupuit-two-cell-aquifer-environment:Upgradient_Head",
+      "name": "Upgradient_Head",
+      "initial_value": 12,
+      "units": "meter",
+      "equation": "",
+      "position": {
+        "x": 120,
+        "y": 240
+      }
+    },
+    {
+      "id": "dupuit-two-cell-aquifer-environment:Downstream_Head",
+      "name": "Downstream_Head",
+      "initial_value": 8,
+      "units": "meter",
+      "equation": "",
+      "position": {
+        "x": 280,
+        "y": 240
+      }
+    },
+    {
+      "id": "dupuit-two-cell-aquifer-environment:River_Discharge",
+      "name": "River_Discharge",
+      "initial_value": 0,
+      "units": "meter^2",
+      "equation": "",
+      "position": {
+        "x": 440,
+        "y": 240
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "dupuit-two-cell-aquifer-environment:rate:Upgradient_Head",
+      "name": "Upgradient_Head_net_rate",
+      "equation": "(recharge_per_width-conductivity*(Upgradient_Head^2-Downstream_Head^2)/(2*flow_length))/(specific_yield*flow_length)",
+      "to_stock": "dupuit-two-cell-aquifer-environment:Upgradient_Head",
+      "units": "(meter)/day",
+      "position": {
+        "x": 120,
+        "y": 340
+      }
+    },
+    {
+      "id": "dupuit-two-cell-aquifer-environment:rate:Downstream_Head",
+      "name": "Downstream_Head_net_rate",
+      "equation": "(conductivity*(Upgradient_Head^2-Downstream_Head^2)/(2*flow_length)-conductivity*Downstream_Head^2/(2*flow_length))/(specific_yield*flow_length)",
+      "to_stock": "dupuit-two-cell-aquifer-environment:Downstream_Head",
+      "units": "(meter)/day",
+      "position": {
+        "x": 280,
+        "y": 340
+      }
+    },
+    {
+      "id": "dupuit-two-cell-aquifer-environment:rate:River_Discharge",
+      "name": "River_Discharge_net_rate",
+      "equation": "conductivity*Downstream_Head^2/(2*flow_length)",
+      "to_stock": "dupuit-two-cell-aquifer-environment:River_Discharge",
+      "units": "(meter^2)/day",
+      "position": {
+        "x": 440,
+        "y": 340
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "dupuit-two-cell-aquifer-environment:parameter:conductivity",
+      "name": "conductivity",
+      "equation": "1",
+      "units": "meter/day",
+      "position": {
+        "x": 80,
+        "y": 80
+      }
+    },
+    {
+      "id": "dupuit-two-cell-aquifer-environment:parameter:flow_length",
+      "name": "flow_length",
+      "equation": "1000",
+      "units": "meter",
+      "position": {
+        "x": 180,
+        "y": 80
+      }
+    },
+    {
+      "id": "dupuit-two-cell-aquifer-environment:parameter:specific_yield",
+      "name": "specific_yield",
+      "equation": "0.2",
+      "units": "1",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    },
+    {
+      "id": "dupuit-two-cell-aquifer-environment:parameter:recharge_per_width",
+      "name": "recharge_per_width",
+      "equation": "0.01",
+      "units": "meter^2/day",
+      "position": {
+        "x": 380,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200000,
+    "dt": 200,
+    "integration_method": "rk4",
+    "units": "day",
+    "rtol": 1e-08,
+    "atol": 1e-11
+  }
+}

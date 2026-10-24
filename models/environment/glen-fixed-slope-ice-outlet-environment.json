@@ -1,0 +1,67 @@
+{
+  "id": "glen-fixed-slope-ice-outlet-environment",
+  "name": "Glen shallow-ice outlet with nonlinear thickness-dependent discharge",
+  "category": "environment",
+  "description": "Own one-cell rectangular fixed-slope/no-sliding specialization: q=2A/(n+2)*(rho*g*slope)^n*H^(n+2), n3, and dH/dt=accumulation-q/L. Geometry, thermal softness and accumulation are fixed, with no calving, elevation feedback or spatial solution. Coefficient has unitsm^-4/year and was chosen for a150m equilibrium, not fitted to Greenland. Distinct from existing temperature-driven ice-volume balance. All numerical parameters, initial values, horizon and solver settings are illustrative teaching choices; not fitted to a field site. Signed net-rate flows encode state equations, not material transport claims. No numerical clipping or arbitrary domain clamps.",
+  "source": "https://doi.org/10.1098/rspa.1955.0066",
+  "reference": "Glen(1955), The creep of polycrystalline ice; first-party OGGM shallow-ice formulation https://docs.oggm.org/en/v1.5.1/ice-dynamics.html Eqs volume conservation,ud,fd,driving stress.",
+  "stocks": [
+    {
+      "id": "glen-fixed-slope-ice-outlet-environment:Ice_Thickness",
+      "name": "Ice_Thickness",
+      "initial_value": 80,
+      "units": "meter",
+      "equation": "",
+      "position": {
+        "x": 120,
+        "y": 240
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "glen-fixed-slope-ice-outlet-environment:rate:Ice_Thickness",
+      "name": "Ice_Thickness_net_rate",
+      "equation": "accumulation-outlet_coefficient*Ice_Thickness^5",
+      "to_stock": "glen-fixed-slope-ice-outlet-environment:Ice_Thickness",
+      "units": "(meter)/year",
+      "position": {
+        "x": 120,
+        "y": 340
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "glen-fixed-slope-ice-outlet-environment:parameter:accumulation",
+      "name": "accumulation",
+      "equation": "0.3",
+      "units": "meter/year",
+      "position": {
+        "x": 80,
+        "y": 80
+      }
+    },
+    {
+      "id": "glen-fixed-slope-ice-outlet-environment:parameter:outlet_coefficient",
+      "name": "outlet_coefficient",
+      "equation": "3.950617283950617e-12",
+      "units": "1/meter^4/year",
+      "position": {
+        "x": 180,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 1500,
+    "dt": 2,
+    "integration_method": "rk4",
+    "units": "year",
+    "rtol": 1e-08,
+    "atol": 1e-11
+  }
+}

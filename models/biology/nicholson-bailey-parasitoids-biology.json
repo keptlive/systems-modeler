@@ -1,0 +1,100 @@
+{
+  "id": "nicholson-bailey-parasitoids-biology",
+  "name": "Nicholson-Bailey discrete host-parasitoid interaction",
+  "description": "Discrete non-overlapping generations, Poisson escape probability and one parasitoid offspring per parasitized host. The coexistence equilibrium is unstable for lambda2; divergence is a model lesson, not hidden by clipping. Short horizon20 inspects initial divergence without claiming ecological realism. Illustrative parameter values, initial conditions and horizon selected for this teaching example; not fitted observations. Signed net-rate flows encode equations, not material transfer claims. No clamps or hidden state resets.",
+  "source": "https://doi.org/10.1111/j.1096-3642.1935.tb01680.x",
+  "reference": "Nicholson and Bailey (1935), The balance of animal populations, PartI, Proceedings of the Zoological Society of London. Classical random-search recurrence, not an ODE.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "nicholson-bailey-parasitoids-biology:Hosts",
+      "name": "Hosts",
+      "initial_value": 140,
+      "units": "individual",
+      "equation": "",
+      "position": {
+        "x": 140,
+        "y": 250
+      }
+    },
+    {
+      "id": "nicholson-bailey-parasitoids-biology:Parasitoids",
+      "name": "Parasitoids",
+      "initial_value": 70,
+      "units": "individual",
+      "equation": "",
+      "position": {
+        "x": 320,
+        "y": 250
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "nicholson-bailey-parasitoids-biology:rate:Hosts",
+      "name": "Hosts_net_rate",
+      "equation": "(host_multiplication*Hosts*EXP(-attack*Parasitoids)-Hosts)/generation_interval",
+      "to_stock": "nicholson-bailey-parasitoids-biology:Hosts",
+      "units": "(individual)/generation",
+      "position": {
+        "x": 140,
+        "y": 350
+      }
+    },
+    {
+      "id": "nicholson-bailey-parasitoids-biology:rate:Parasitoids",
+      "name": "Parasitoids_net_rate",
+      "equation": "(Hosts*(1-EXP(-attack*Parasitoids))-Parasitoids)/generation_interval",
+      "to_stock": "nicholson-bailey-parasitoids-biology:Parasitoids",
+      "units": "(individual)/generation",
+      "position": {
+        "x": 320,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "nicholson-bailey-parasitoids-biology:parameter:host_multiplication",
+      "name": "host_multiplication",
+      "equation": "2",
+      "units": "1",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "nicholson-bailey-parasitoids-biology:parameter:attack",
+      "name": "attack",
+      "equation": "0.01",
+      "units": "1/individual",
+      "position": {
+        "x": 190,
+        "y": 80
+      }
+    },
+    {
+      "id": "nicholson-bailey-parasitoids-biology:parameter:generation_interval",
+      "name": "generation_interval",
+      "equation": "1",
+      "units": "generation",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 1,
+    "integration_method": "euler",
+    "units": "generation",
+    "rtol": 1e-08,
+    "atol": 1e-10,
+    "discrete_period": 1
+  }
+}

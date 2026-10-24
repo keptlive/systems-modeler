@@ -1,0 +1,143 @@
+{
+  "id": "uranium-series-lineage-disequilibrium-environment",
+  "name": "Uranium-series lineage disequilibrium in a closed mineral",
+  "category": "environment",
+  "description": "Closed nuclear-lineage fractions, not conserved mass or released alpha energy. The short-lived Th234/Pa234 intermediates are treated as instantaneous on the1000year output scale; downstream descendants are a cumulative lineage sink, not one physical stable isotope. No chemical transport, recoil loss or inherited daughters. Daughter activities approach secular equilibrium; abundance equality is not equilibrium. Half-lives U2384.468e9yr(rounded),U234245620yr,Th23075584yr; illustrative initial pure-U238 lineage fraction1 with no daughters, horizon1e6yr. Rounded constants and absent inherited daughters preclude precision sample dating. Outputdt1000yr is a numerical choice. Signed net-rate flows encode state equations, not material transport claims. No numerical clipping or arbitrary domain clamps.",
+  "source": "https://doi.org/10.1016/j.epsl.2013.04.006",
+  "reference": "Cheng et al.(2013), Improvements in230Th dating,230Th and234U half-life values, and U-Th isotopic measurements by multi-collector inductively coupled plasma mass spectrometry. Bateman(1910) serial-decay equations; primary teaching equations https://ocw.mit.edu/courses/12-744-marine-isotope-chemistry-fall-2012/c9d4092797c06068611c0cfb0903a7d9_MIT12_744F12_Lec4.pdf .",
+  "stocks": [
+    {
+      "id": "uranium-series-lineage-disequilibrium-environment:Uranium_238",
+      "name": "Uranium_238",
+      "initial_value": 1,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 120,
+        "y": 240
+      }
+    },
+    {
+      "id": "uranium-series-lineage-disequilibrium-environment:Uranium_234",
+      "name": "Uranium_234",
+      "initial_value": 0,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 280,
+        "y": 240
+      }
+    },
+    {
+      "id": "uranium-series-lineage-disequilibrium-environment:Thorium_230",
+      "name": "Thorium_230",
+      "initial_value": 0,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 440,
+        "y": 240
+      }
+    },
+    {
+      "id": "uranium-series-lineage-disequilibrium-environment:Downstream_Lineages",
+      "name": "Downstream_Lineages",
+      "initial_value": 0,
+      "units": "1",
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 240
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "uranium-series-lineage-disequilibrium-environment:rate:Uranium_238",
+      "name": "Uranium_238_net_rate",
+      "equation": "-LN(2)/half_life_parent*Uranium_238",
+      "to_stock": "uranium-series-lineage-disequilibrium-environment:Uranium_238",
+      "units": "(1)/year",
+      "position": {
+        "x": 120,
+        "y": 340
+      }
+    },
+    {
+      "id": "uranium-series-lineage-disequilibrium-environment:rate:Uranium_234",
+      "name": "Uranium_234_net_rate",
+      "equation": "LN(2)/half_life_parent*Uranium_238-LN(2)/half_life_middle*Uranium_234",
+      "to_stock": "uranium-series-lineage-disequilibrium-environment:Uranium_234",
+      "units": "(1)/year",
+      "position": {
+        "x": 280,
+        "y": 340
+      }
+    },
+    {
+      "id": "uranium-series-lineage-disequilibrium-environment:rate:Thorium_230",
+      "name": "Thorium_230_net_rate",
+      "equation": "LN(2)/half_life_middle*Uranium_234-LN(2)/half_life_daughter*Thorium_230",
+      "to_stock": "uranium-series-lineage-disequilibrium-environment:Thorium_230",
+      "units": "(1)/year",
+      "position": {
+        "x": 440,
+        "y": 340
+      }
+    },
+    {
+      "id": "uranium-series-lineage-disequilibrium-environment:rate:Downstream_Lineages",
+      "name": "Downstream_Lineages_net_rate",
+      "equation": "LN(2)/half_life_daughter*Thorium_230",
+      "to_stock": "uranium-series-lineage-disequilibrium-environment:Downstream_Lineages",
+      "units": "(1)/year",
+      "position": {
+        "x": 600,
+        "y": 340
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "uranium-series-lineage-disequilibrium-environment:parameter:half_life_parent",
+      "name": "half_life_parent",
+      "equation": "4468000000",
+      "units": "year",
+      "position": {
+        "x": 80,
+        "y": 80
+      }
+    },
+    {
+      "id": "uranium-series-lineage-disequilibrium-environment:parameter:half_life_middle",
+      "name": "half_life_middle",
+      "equation": "245620",
+      "units": "year",
+      "position": {
+        "x": 180,
+        "y": 80
+      }
+    },
+    {
+      "id": "uranium-series-lineage-disequilibrium-environment:parameter:half_life_daughter",
+      "name": "half_life_daughter",
+      "equation": "75584",
+      "units": "year",
+      "position": {
+        "x": 280,
+        "y": 80
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 1000000,
+    "dt": 1000,
+    "integration_method": "rk4",
+    "units": "year",
+    "rtol": 1e-08,
+    "atol": 1e-11
+  }
+}
