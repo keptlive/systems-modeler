@@ -102,7 +102,7 @@ TIME STEP=1 ~ year ~ |
     "x=1 ~~| X=2 ~~|",
     "P=INTEG(1,2) ~~| MDL net derivative P=2 ~~|",
     "x=__import__(3) ~~|",
-    "x=SMOOTH(1,2) ~~|",
+    "x=SMOOTH N(1,2,0,3) ~~|",
     "x=1e999 ~~|",
     "x=1+WITH LOOKUP(TIME,((0,0),(1,1))) ~~|",
     "x=INTEG(WITH LOOKUP(TIME,((0,0),(1,1))),0) ~~|",

@@ -56,6 +56,13 @@ Version 1.9 adds explicit report-only categorical outputs and fixed-period recur
 
 ## Development and operations
 
+Scalar compatibility includes run-bound STARTTIME/STOPTIME values and calls,
+inverse-trigonometric XMILE spellings, safe division and integer operations, and
+[additional source-preserving MDL functions](docs/MDL-FUNCTION-COMPATIBILITY.md).
+[Pinned Simlin observations](docs/COMPATIBILITY-REFERENCE-2026-10.md) distinguish
+verified agreement from source-dialect differences and unsupported constructs;
+these additions do not establish full Simlin/Vensim parity.
+
 [Architecture](docs/ARCHITECTURE.md) · [Analytics](docs/ANALYTICS.md) · [Testing](docs/TESTING.md) · [UI direction](docs/UI-DIRECTION.md) · [UI QA](docs/UI-QA.md)
 
 ```bash
