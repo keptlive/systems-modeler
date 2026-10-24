@@ -66,7 +66,9 @@ def parse_xmile(xml_content: str) -> Model:
         elem.tag = elem.tag.rsplit("}", 1)[-1]
     if root.tag != "xmile":
         raise ValueError("Expected an XMILE document")
-    if len(root.findall(".//model")) > 1 or root.find(".//dimensions") is not None:
+    # Scalar XMILE exporters may emit an empty dimensions container. Only
+    # declarations carry array semantics; do not reject harmless metadata.
+    if len(root.findall(".//model")) > 1 or any(len(dimensions) for dimensions in root.findall(".//dimensions")):
         raise ValueError("Nested models and arrays are not supported; import a scalar root model")
     unsupported = {"conveyor", "queue", "non_negative", "macro", "macros", "leak", "overflow"}
     found = sorted({element.tag for element in root.iter()} & unsupported)

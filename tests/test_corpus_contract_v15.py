@@ -95,7 +95,9 @@ def test_absent_present_historical_and_invoked_coverage_are_separate():
 
 def test_corpus_scope_is_tracked_and_reference_contract_is_portable():
     paths = tracked_models(ROOT)
-    assert len(paths) == 1078
+    manifest = json.loads((ROOT / 'operations/library-curation.json').read_text())
+    assert len(paths) == manifest['active_count']
+    assert len(paths) + len(manifest['retired']) == manifest['baseline_count']
     assert len(set(paths)) == len(paths)
     evidence = reference_evidence(ROOT, ROOT / "tests/fixtures/corpus-contract-v15.json")
     assert evidence["case_count"] == 8

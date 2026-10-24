@@ -55,7 +55,7 @@ def test_empty_wrong_document_is_rejected():
 
 def test_unsupported_arrays_do_not_silently_disappear():
     with pytest.raises(ValueError, match="arrays"):
-        parse_xmile("<xmile><dimensions/><model><variables/></model></xmile>")
+        parse_xmile("<xmile><dimensions><dim name='Region' size='2'/></dimensions><model><variables/></model></xmile>")
 
 
 def test_provenance_and_units_survive_native_xmile_roundtrip():

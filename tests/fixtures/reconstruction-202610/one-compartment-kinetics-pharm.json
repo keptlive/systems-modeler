@@ -1,0 +1,96 @@
+{
+  "id": "one-compartment-kinetics-pharm",
+  "name": "One-Compartment Pharmacokinetics",
+  "description": "Basic first-order drug elimination model",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Drug_Amount",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Volume",
+      "equation": "5.0",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Clearance",
+      "equation": "0.5",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Concentration",
+      "equation": "Drug_Amount/Volume",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Elimination_Rate",
+      "equation": "Clearance*Concentration",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Half_Life",
+      "equation": "0.693*Volume/Clearance",
+      "position": {
+        "x": 620,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Drug_Amount",
+      "to_element": "Concentration"
+    },
+    {
+      "id": "c2",
+      "from_element": "Volume",
+      "to_element": "Concentration"
+    },
+    {
+      "id": "c3",
+      "from_element": "Concentration",
+      "to_element": "Elimination_Rate"
+    },
+    {
+      "id": "c4",
+      "from_element": "Clearance",
+      "to_element": "Elimination_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 24.0,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T20:45:21.051601+00:00",
+  "updated_at": "2026-01-15T20:45:21.051601+00:00",
+  "source": "https://doi.org/10.1007/978-1-4419-9326-1",
+  "reference": "Rowland, M. & Tozer, T.N. (2011) Clinical Pharmacokinetics and Pharmacodynamics. 4th ed. Lippincott"
+}

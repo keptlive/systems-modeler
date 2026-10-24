@@ -1,3 +1,4 @@
+from tests.model_history import model_path, find_model_path
 """Primary-source v1.9-C reconstructions, with portable independent references."""
 import copy,functools,hashlib,json,math,re
 from pathlib import Path
@@ -15,7 +16,7 @@ FILES={
  'reactor':'models/physics/nuclear-power-plant-operations-phy.json',
  'lorenz':'models/physics/rayleigh-benard-convection-phy.json',
  'urban':'models/social/urban-development-feedback-soc.json'}
-def load(key):return Model.model_validate_json((ROOT/FILES[key]).read_text())
+def load(key):return Model.model_validate_json(model_path(ROOT,FILES[key]).read_text())
 @functools.lru_cache(None)
 def run(key,level=0):
  m=load(key)
@@ -251,7 +252,7 @@ def test_receipt_before_after_hashes_and_complete_field_diffs():
  assert len(receipt['models'])==15
  for row in receipt['models']:
   assert hashlib.sha256(row['before_text'].encode()).hexdigest()==row['before_sha256']
-  after=(ROOT/row['file']).read_bytes();assert hashlib.sha256(after).hexdigest()==row['after_sha256']
+  after=model_path(ROOT,row['file']).read_bytes();assert hashlib.sha256(after).hexdigest()==row['after_sha256']
   assert row['source_evidence'] and row['root_cause_chain'] and row['missing_evidence'] is not None
 
 def test_native_fixtures_are_hash_bound_and_urban_declaration_coverage_complete():

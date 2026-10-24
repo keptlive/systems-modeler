@@ -1,3 +1,4 @@
+from tests.model_history import model_path, find_model_path
 """Source equations, independent references and conservation checks for v1.9 A."""
 import hashlib
 import json
@@ -24,7 +25,7 @@ REPAIRED = [
 ]
 
 def model(name):
-    return Model.model_validate_json(next(ROOT.glob('models/*/'+name+'.json')).read_text())
+    return Model.model_validate_json(find_model_path(ROOT,name).read_text())
 
 @lru_cache(None)
 def run(name, divisor=1, strict=False):
@@ -85,7 +86,7 @@ def test_portable_before_after_receipts_and_preserved_geometry():
     ledger=json.loads((ROOT/'operations/corpus-repairs-v19-a.json').read_text())
     assert len(ledger['models'])==16
     for row in ledger['models']:
-        before=row['before_text'].encode();after=(ROOT/row['file']).read_bytes()
+        before=row['before_text'].encode();after=model_path(ROOT,row['file']).read_bytes()
         assert hashlib.sha256(before).hexdigest()==row['before_sha256']
         assert hashlib.sha256(after).hexdigest()==row['after_sha256']
         old,new=json.loads(before),json.loads(after)

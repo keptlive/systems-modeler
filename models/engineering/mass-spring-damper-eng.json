@@ -1,7 +1,7 @@
 {
   "id": "mass-spring-damper-eng",
   "name": "Mass-Spring-Damper System",
-  "description": "Fundamental mechanical vibration model",
+  "description": "Fundamental mechanical vibration model Literature-equation reconstruction (October 2026); illustrative, uncalibrated scenario with inherited parameters and initial values, not an original author model file or empirical validation. See docs/MODEL-RECONSTRUCTIONS-2026-10.md.",
   "stocks": [
     {
       "id": "s1",
@@ -24,7 +24,30 @@
       }
     }
   ],
-  "flows": [],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Position_Change",
+      "equation": "Velocity",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 270,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Velocity_Change",
+      "equation": "Acceleration",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 410,
+        "y": 300
+      }
+    }
+  ],
   "variables": [
     {
       "id": "v1",
@@ -110,10 +133,11 @@
   "time_settings": {
     "start": 0.0,
     "end": 20.0,
-    "dt": 0.01
+    "dt": 0.01,
+    "integration_method": "rk4"
   },
   "created_at": "2026-01-15T20:50:11.589128+00:00",
   "updated_at": "2026-01-15T20:50:11.589128+00:00",
-  "source": "https://doi.org/10.1007/978-3-319-29939-6",
-  "reference": "Thomson, W.T. & Dahleh, M.D. (1998) Theory of Vibration with Applications. Prentice Hall"
+  "source": "https://ocw.mit.edu/courses/2-003j-dynamics-and-control-i-fall-2007/2cdba03827d012dc69402e8bb8828815_system_behavior.pdf",
+  "reference": "Sanjay Sarma (2007), MIT 2.003J The Behavior of Dynamic Systems, spring-mass-damper system; reconstruction using inherited uncalibrated values."
 }

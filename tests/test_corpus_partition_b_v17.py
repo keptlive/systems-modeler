@@ -22,6 +22,9 @@ LEDGER = ROOT / 'operations/corpus-reconciliation-v17-b.json'
 
 def load(stem):
     paths = list((ROOT / 'models').rglob(stem + '.json'))
+    if not paths:
+        manifest=json.loads((ROOT/'operations/library-curation.json').read_text())
+        paths=[ROOT/r['file'] for r in manifest['retired'] if r['id']==stem]
     assert len(paths) == 1
     return Model.model_validate_json(v17_bytes(ROOT,str(paths[0].relative_to(ROOT))).decode())
 

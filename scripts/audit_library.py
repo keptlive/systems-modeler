@@ -9,6 +9,7 @@ from pathlib import Path
 from app.core.model import Model, TimeSettings
 from app.core.simulator import simulate
 from app.core.failure_diagnostics import failure_payload
+from app.core.validation import inspect_inputs
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--output", required=True)
@@ -25,11 +26,14 @@ paths = sorted((root / "models").rglob("*.json"))
 if args.tracked_only:
     tracked = set(subprocess.check_output(['git', 'ls-files', '-z', 'models'], cwd=root).decode().split('\0'))
     paths = [p for p in paths if p.relative_to(root).as_posix() in tracked]
+if not paths:
+    raise ValueError('No model JSON files found; an empty audit cannot pass')
 for path in paths:
     row = {"file": str(path.relative_to(root)), "id": path.stem,
            "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
     try:
         model = Model.model_validate_json(path.read_text())
+        row['input_issues'] = inspect_inputs(model, numerical_check=False)['issues']
         row["id"] = model.id
         ts = model.time_settings
         if ts.random_seed is None:
@@ -37,7 +41,11 @@ for path in paths:
         if not args.full:
             ts = TimeSettings(**{**ts.model_dump(), "end": min(ts.end, ts.start + 4 * ts.dt)})
         result = simulate(model, ts)
+        if not result.time or not result.values:
+            raise ValueError('Empty simulation output cannot pass a library audit')
         row.update(status="passed", points=len(result.time), elements=len(result.values), random_seed=result.random_seed, integration_diagnostics=result.integration_diagnostics)
+        row['changing_stocks'] = [s.name for s in model.stocks
+                                  if min(result.values[s.name]) != max(result.values[s.name])]
     except Exception as exc:
         row.update(status="failed", error=str(exc), failure=failure_payload(exc))
     rows.append(row)

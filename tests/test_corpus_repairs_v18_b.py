@@ -1,3 +1,4 @@
+from tests.model_history import model_path, find_model_path
 from tests.model_history import v18_bytes
 """Portable receipts and independent equation/math checks for corpus partition B, v1.8."""
 import hashlib
@@ -23,7 +24,7 @@ def run(index):
     if index == 1:
         # The historical receipt remains bound to v1.8. Numerical checks use
         # the reviewed explicit solver; its source equations/tables are equal.
-        current = Model.model_validate_json((ROOT / ROWS[index]["file"]).read_text())
+        current = Model.model_validate_json(model_path(ROOT,ROWS[index]["file"]).read_text())
         for field in ("stocks", "flows", "variables", "tables", "connectors"):
             assert getattr(current,field) == getattr(model,field)
         assert (current.time_settings.start,current.time_settings.end) == (model.time_settings.start,model.time_settings.end)
