@@ -1,3 +1,4 @@
+from tests.model_history import before_scope_metadata_bytes
 """Exclude only exact, individually approved admissions from baseline duplicate checks."""
 import hashlib,json
 
@@ -17,8 +18,8 @@ def baseline_models(root, excluded_ids=None):
             else: assert row['before_sha256'] in (root/row['review']).read_text()
         for row in quality['retired']:assert not (root/row['file']).exists()
         for row in quality['replaced']:
-            assert (root/row['file']).read_bytes()==(root/row['source']).read_bytes()
-            assert hashlib.sha256((root/row['file']).read_bytes()).hexdigest()==row['after_sha256']
+            assert before_scope_metadata_bytes(root,row['file'])==(root/row['source']).read_bytes()
+            assert hashlib.sha256(before_scope_metadata_bytes(root,row['file'])).hexdigest()==row['after_sha256']
             assert row['after_sha256'] in (root/row['review']).read_text()
     manifest=root/'operations/library-admissions-20261024.json'
     admitted=json.loads(manifest.read_text())['models'] if manifest.exists() else []

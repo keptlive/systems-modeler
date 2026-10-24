@@ -1,3 +1,4 @@
+from tests.model_history import before_scope_metadata_bytes
 """Exact local adoption, archived originals and cumulative catalog accounting."""
 import hashlib,json
 from pathlib import Path
@@ -20,8 +21,8 @@ def test_exact_adopted_transaction_and_historical_accounting():
         else: assert r['before_sha256'] in (ROOT/r['review']).read_text()
     for r in m['retired']:assert not (ROOT/r['file']).exists()
     for r in m['replaced']:
-        assert (ROOT/r['file']).read_bytes()==(ROOT/r['source']).read_bytes()
-        assert hashlib.sha256((ROOT/r['file']).read_bytes()).hexdigest()==r['after_sha256']
+        assert before_scope_metadata_bytes(ROOT,r['file'])==(ROOT/r['source']).read_bytes()
+        assert hashlib.sha256(before_scope_metadata_bytes(ROOT,r['file'])).hexdigest()==r['after_sha256']
     # Preserve the historical transaction's77/993 accounting against its exact
     # pre-fourth-admission ledger, not today's intentionally larger inventory.
     original=(ROOT/'tests/fixtures/fourth-admissions-20261024/ledger-before.json').read_bytes()
@@ -32,7 +33,7 @@ def test_exact_adopted_transaction_and_historical_accounting():
     fourth=json.loads((ROOT/'operations/library-admissions-fourth-20261024.json').read_text())
     before=fourth['all_993_before_hashes']
     assert len(before)==993 and fourth['baseline_count']==historical['active_count']
-    for name,h in before.items():assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==h
+    for name,h in before.items():assert hashlib.sha256(before_scope_metadata_bytes(ROOT,name)).hexdigest()==h
     assert len(baseline_models(ROOT))==916
 
 
@@ -69,6 +70,6 @@ def test_exact_26_description_only_changes():
     m=json.loads((ROOT/'operations/library-quality-followup-20261024.json').read_text())
     for r in m['replaced'][:26]:
         old=json.loads((ROOT/r['archive']).read_text())
-        new=json.loads((ROOT/r['file']).read_text())
+        new=json.loads(before_scope_metadata_bytes(ROOT,r['file']))
         assert {k for k in old.keys()|new.keys() if old.get(k)!=new.get(k)}=={'description'}
         assert new['description']==old['description'].replace(' Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/','')

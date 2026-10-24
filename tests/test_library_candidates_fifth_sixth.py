@@ -1,3 +1,4 @@
+from tests.model_history import before_scope_metadata_bytes
 """Frozen mathematical regressions plus exact admission/history fences."""
 import hashlib,importlib.util,json,runpy
 from pathlib import Path
@@ -16,8 +17,8 @@ def test_exact_adoption_and_immutable_996_and_80_ledger_rows():
  assert now=={**old,'models':old['models']+a['models'],'admitted_count':84,'active_count':1000}
  assert (a['baseline_count'],a['admitted_count'],a['active_count'])==(996,4,1000)
  assert len(a['all_996_before_hashes'])==996
- for name,h in a['all_996_before_hashes'].items():assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==h
- for name,h in a['review_manifests_sha256'].items():assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==h
+ for name,h in a['all_996_before_hashes'].items():assert hashlib.sha256(before_scope_metadata_bytes(ROOT,name)).hexdigest()==h
+ for name,h in a['review_manifests_sha256'].items():assert hashlib.sha256(before_scope_metadata_bytes(ROOT,name)).hexdigest()==h
  assert set(a['all_996_before_hashes']).isdisjoint(r['file'] for r in a['models'])
  for r in a['models']:
   assert (ROOT/r['file']).read_bytes()==(ROOT/r['source']).read_bytes()

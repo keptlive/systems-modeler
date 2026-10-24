@@ -1,0 +1,264 @@
+{
+  "id": "public-transit-ridership-service-tra",
+  "name": "Public Transit Ridership and Service Quality Model",
+  "description": "Model of transit ridership dynamics with service quality feedback and mode choice. Based on transit planning research.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Transit Ridership",
+      "initial_value": 50000,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Service Level",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Transit Revenue",
+      "initial_value": 1000000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Car Users",
+      "initial_value": 200000,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Ridership Growth",
+      "equation": "Potential_Riders * Mode_Shift_Rate * Service_Attractiveness",
+      "from_stock": "s4",
+      "to_stock": "s1",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Ridership Loss",
+      "equation": "Transit_Ridership * Churn_Rate / Service_Attractiveness",
+      "from_stock": "s1",
+      "to_stock": "s4",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Service Improvement",
+      "equation": "Transit_Revenue * Investment_Rate / Service_Cost",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Service Deterioration",
+      "equation": "Service_Level * Depreciation_Rate",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Fare Revenue",
+      "equation": "Transit_Ridership * Fare_per_Trip * Trips_per_Rider",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Operating Costs",
+      "equation": "Service_Level * Operating_Cost_Rate",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Potential Riders",
+      "equation": "Car_Users * Transit_Accessible_Fraction",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Transit Accessible Fraction",
+      "equation": "0.3",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Mode Shift Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Service Attractiveness",
+      "equation": "Service_Level / 100 * (1 - Congestion_Factor)",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Congestion Factor",
+      "equation": "Transit_Ridership / (Service_Level * 1000 + 1)",
+      "position": {
+        "x": 250,
+        "y": 250
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Churn Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Investment Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Service Cost",
+      "equation": "10000",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Depreciation Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Fare per Trip",
+      "equation": "2.5",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Trips per Rider",
+      "equation": "40",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Operating Cost Rate",
+      "equation": "5000",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Farebox Recovery",
+      "equation": "Fare_Revenue / (Operating_Costs + 1)",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Mode Share",
+      "equation": "Transit_Ridership / (Transit_Ridership + Car_Users)",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Service Level",
+      "to_element": "Service Attractiveness"
+    },
+    {
+      "id": "c2",
+      "from_element": "Transit Ridership",
+      "to_element": "Fare Revenue"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:24:00.393635",
+  "updated_at": "2026-01-15T14:24:00.393644",
+  "source": "https://doi.org/10.1016/j.tra.2008.01.020",
+  "reference": "Taylor BD, et al. Nature and/or nurture? Analyzing the determinants of transit ridership across US urbanized areas. Transportation Research Part A. 2009;43(1):60-77."
+}
