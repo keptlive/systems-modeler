@@ -97,3 +97,43 @@ exactly within this engine. Boolean literal seeds, already invalid in the
 numerical evaluator, remain rejected rather than being repaired by conversion to
 numeric literals. Independent review spot-checked the final emitted syntax,
 lookup seed behavior, and unchanged explicit-seed trajectories.
+
+## Namespace-aware scalar import (2026-10-24)
+
+Import selects one exact element vocabulary from the root: OASIS
+(http://docs.oasis-open.org/xmile/ns/XMILE/v1.0), the existing legacy
+http://www.systemdynamics.org/XMILE URI, or namespace-free compatibility.
+Prefixes are aliases for a URI, not a separate vocabulary. Mixed vocabularies,
+namespace resets, unknown foreign elements and qualified attribute lookalikes
+fail with a bounded actionable error before the model is saved. A foreign
+dimensions tag is an unsupported extension, not a declaration of core arrays.
+
+This follows expanded-name rules in the
+[W3C XML Namespaces specification](https://www.w3.org/TR/2009/REC-xml-names-20091208/)
+and the declared namespace in
+[OASIS XMILE 1.0](https://docs.oasis-open.org/xmile/xmile/v1.0/os/xmile-v1.0-os.html).
+Core array/nested-model and other existing simulation-feature rejections remain.
+
+Two existing fixture compatibility profiles remain non-executable editor
+annotations: empty root isee:prefs in http://iseesystems.com/XMILE with only
+show_module_prefix/layer attributes, and empty root equation_prefs in the
+literal isee URI with only order_by. These preferences were already omitted
+from Model/export and remain omitted; no arbitrary child content is accepted.
+The existing isee:sim_duration attribute on sim_specs remains ignored.
+Known Stock & Flow provenance fields, MDL source_document, random_seed and
+graphical-function unit attributes retain their existing behavior.
+
+Valid import still returns and saves Model. Unsupported uploads return the
+existing HTTP400 error shape without saving; callers retain their original
+file/string. Ordinary XML is not added to the MDL-only source field, and no
+general lossless vendor-XML roundtrip is promised. Direct parsing now shares
+the 2 MiB bound and allows at most20000 visited elements/128 nesting levels.
+Diagnostics stop at the first unsupported item and bound names and paths.
+Namespace URIs are never fetched. These checks do not claim complete XML
+security or support for every vendor dialect.
+
+Standard xml:lang/xml:space labels and xsi:schemaLocation/
+xsi:noNamespaceSchemaLocation hints retain their prior non-executable,
+ignored behavior; they are omitted from Model/export and never fetched.
+Unimplemented qualified behavior such as xsi:type/xml:base remains an explicit
+unsupported extension.
