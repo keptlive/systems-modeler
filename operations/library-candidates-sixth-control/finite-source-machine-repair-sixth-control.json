@@ -1,0 +1,337 @@
+{
+  "id": "finite-source-machine-repair-sixth-control",
+  "name": "Finite-source machine repair with a shared repairer",
+  "description": "Original four-state probability model for three identical machines sharing one repairer. Each operating machine fails independently at exponential rate Failure_Rate; one busy repairer completes repairs at exponential rate Repair_Rate. Probability stocks describe an ensemble distribution, not a sampled failure path or a continuous number of broken machines. Three-machine topology is fixed: changing population requires rebuilding states, not editing a population parameter. Nonnegative rates and probability initial conditions summing to one. No spares, common-cause failures, aging, travel time, repairer vacations or empirical calibration. Defaults illustrative. Coarse numerical steps can violate probability positivity; no clipping or renormalization.",
+  "category": "engineering",
+  "source": "https://www.kent.ac.uk/smsas/personal/lb209/files/sp14.pdf",
+  "reference": "Lothar Breuer, Introduction to Stochastic Processes, section3.3.6 printed pp53-54, finite-source transition rates and machine-repair interpretation. Original JSON/equation implementation, no source text/code/figures copied.",
+  "stocks": [
+    {
+      "id": "finite-source-machine-repair-sixth-control:Probability_0_Down",
+      "name": "Probability_0_Down",
+      "initial_value": 1,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:Probability_1_Down",
+      "name": "Probability_1_Down",
+      "initial_value": 0,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 470,
+        "y": 400
+      }
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:Probability_2_Down",
+      "name": "Probability_2_Down",
+      "initial_value": 0,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 740,
+        "y": 400
+      }
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:Probability_3_Down",
+      "name": "Probability_3_Down",
+      "initial_value": 0,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 1010,
+        "y": 400
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "finite-source-machine-repair-sixth-control:Failure_0_to_1",
+      "name": "Failure_0_to_1",
+      "equation": "3 * Failure_Rate * Probability_0_Down",
+      "units": "1/hour",
+      "from_stock": "finite-source-machine-repair-sixth-control:Probability_0_Down",
+      "to_stock": "finite-source-machine-repair-sixth-control:Probability_1_Down",
+      "position": {
+        "x": 100,
+        "y": 720
+      }
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:Repair_1_to_0",
+      "name": "Repair_1_to_0",
+      "equation": "Repair_Rate * Probability_1_Down",
+      "units": "1/hour",
+      "from_stock": "finite-source-machine-repair-sixth-control:Probability_1_Down",
+      "to_stock": "finite-source-machine-repair-sixth-control:Probability_0_Down",
+      "position": {
+        "x": 320,
+        "y": 720
+      }
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:Failure_1_to_2",
+      "name": "Failure_1_to_2",
+      "equation": "2 * Failure_Rate * Probability_1_Down",
+      "units": "1/hour",
+      "from_stock": "finite-source-machine-repair-sixth-control:Probability_1_Down",
+      "to_stock": "finite-source-machine-repair-sixth-control:Probability_2_Down",
+      "position": {
+        "x": 540,
+        "y": 720
+      }
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:Repair_2_to_1",
+      "name": "Repair_2_to_1",
+      "equation": "Repair_Rate * Probability_2_Down",
+      "units": "1/hour",
+      "from_stock": "finite-source-machine-repair-sixth-control:Probability_2_Down",
+      "to_stock": "finite-source-machine-repair-sixth-control:Probability_1_Down",
+      "position": {
+        "x": 760,
+        "y": 720
+      }
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:Failure_2_to_3",
+      "name": "Failure_2_to_3",
+      "equation": "1 * Failure_Rate * Probability_2_Down",
+      "units": "1/hour",
+      "from_stock": "finite-source-machine-repair-sixth-control:Probability_2_Down",
+      "to_stock": "finite-source-machine-repair-sixth-control:Probability_3_Down",
+      "position": {
+        "x": 980,
+        "y": 720
+      }
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:Repair_3_to_2",
+      "name": "Repair_3_to_2",
+      "equation": "Repair_Rate * Probability_3_Down",
+      "units": "1/hour",
+      "from_stock": "finite-source-machine-repair-sixth-control:Probability_3_Down",
+      "to_stock": "finite-source-machine-repair-sixth-control:Probability_2_Down",
+      "position": {
+        "x": 100,
+        "y": 830
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "finite-source-machine-repair-sixth-control:Failure_Rate",
+      "name": "Failure_Rate",
+      "equation": "0.2",
+      "units": "1/hour",
+      "position": {
+        "x": 80,
+        "y": 60
+      }
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:Repair_Rate",
+      "name": "Repair_Rate",
+      "equation": "1",
+      "units": "1/hour",
+      "position": {
+        "x": 300,
+        "y": 60
+      }
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:Probability_Total",
+      "name": "Probability_Total",
+      "equation": "Probability_0_Down + Probability_1_Down + Probability_2_Down + Probability_3_Down",
+      "units": "1",
+      "position": {
+        "x": 520,
+        "y": 60
+      }
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:Expected_Down",
+      "name": "Expected_Down",
+      "equation": "Probability_1_Down + 2 * Probability_2_Down + 3 * Probability_3_Down",
+      "units": "1",
+      "position": {
+        "x": 740,
+        "y": 60
+      }
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:Expected_Operating",
+      "name": "Expected_Operating",
+      "equation": "3 - Expected_Down",
+      "units": "1",
+      "position": {
+        "x": 960,
+        "y": 60
+      }
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:Repairer_Busy",
+      "name": "Repairer_Busy",
+      "equation": "Probability_1_Down + Probability_2_Down + Probability_3_Down",
+      "units": "1",
+      "position": {
+        "x": 1180,
+        "y": 60
+      }
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:Expected_Waiting",
+      "name": "Expected_Waiting",
+      "equation": "Probability_2_Down + 2 * Probability_3_Down",
+      "units": "1",
+      "position": {
+        "x": 80,
+        "y": 155
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "finite-source-machine-repair-sixth-control:c0",
+      "from_element": "Probability_0_Down",
+      "to_element": "Probability_Total"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c1",
+      "from_element": "Probability_1_Down",
+      "to_element": "Probability_Total"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c2",
+      "from_element": "Probability_2_Down",
+      "to_element": "Probability_Total"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c3",
+      "from_element": "Probability_3_Down",
+      "to_element": "Probability_Total"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c4",
+      "from_element": "Probability_1_Down",
+      "to_element": "Expected_Down"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c5",
+      "from_element": "Probability_2_Down",
+      "to_element": "Expected_Down"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c6",
+      "from_element": "Probability_3_Down",
+      "to_element": "Expected_Down"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c7",
+      "from_element": "Expected_Down",
+      "to_element": "Expected_Operating"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c8",
+      "from_element": "Probability_1_Down",
+      "to_element": "Repairer_Busy"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c9",
+      "from_element": "Probability_2_Down",
+      "to_element": "Repairer_Busy"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c10",
+      "from_element": "Probability_3_Down",
+      "to_element": "Repairer_Busy"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c11",
+      "from_element": "Probability_2_Down",
+      "to_element": "Expected_Waiting"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c12",
+      "from_element": "Probability_3_Down",
+      "to_element": "Expected_Waiting"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c13",
+      "from_element": "Failure_Rate",
+      "to_element": "Failure_0_to_1"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c14",
+      "from_element": "Probability_0_Down",
+      "to_element": "Failure_0_to_1"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c15",
+      "from_element": "Probability_1_Down",
+      "to_element": "Repair_1_to_0"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c16",
+      "from_element": "Repair_Rate",
+      "to_element": "Repair_1_to_0"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c17",
+      "from_element": "Failure_Rate",
+      "to_element": "Failure_1_to_2"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c18",
+      "from_element": "Probability_1_Down",
+      "to_element": "Failure_1_to_2"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c19",
+      "from_element": "Probability_2_Down",
+      "to_element": "Repair_2_to_1"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c20",
+      "from_element": "Repair_Rate",
+      "to_element": "Repair_2_to_1"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c21",
+      "from_element": "Failure_Rate",
+      "to_element": "Failure_2_to_3"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c22",
+      "from_element": "Probability_2_Down",
+      "to_element": "Failure_2_to_3"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c23",
+      "from_element": "Probability_3_Down",
+      "to_element": "Repair_3_to_2"
+    },
+    {
+      "id": "finite-source-machine-repair-sixth-control:c24",
+      "from_element": "Repair_Rate",
+      "to_element": "Repair_3_to_2"
+    }
+  ],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.02,
+    "integration_method": "rk4",
+    "units": "hour"
+  },
+  "created_at": "2026-10-24T12:00:00",
+  "updated_at": "2026-10-24T12:00:00"
+}

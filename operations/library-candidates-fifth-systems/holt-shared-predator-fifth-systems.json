@@ -1,0 +1,390 @@
+{
+  "id": "holt-shared-predator-fifth-systems",
+  "name": "Shared-predator apparent competition between independent prey",
+  "description": "Original illustrative normalized-density implementation of Holt1977 equations8-9 page204. Two prey have separate logistic resource bases and share a food-limited predator; no direct interspecific competition. Densities are divided by fixed reference densities, so capacities and conversion/nutritional coefficients use the same normalized convention. Nonnegative parameters and initial densities, positive capacities, time in days. Original defaults, no empirical fit. No adaptive diet, handling-time saturation, spatial structure, stochastic extinction or positivity clamp. Solver/step changes can break numerical positivity.",
+  "category": "ecology",
+  "source": "https://people.clas.ufl.edu/rdholt/files/001.pdf",
+  "reference": "Holt,R.D.(1977). Predation, apparent competition, and the structure of prey communities. Theoretical Population Biology12:197-229. doi:10.1016/0040-5809(77)90042-9. Original authored equations/JSON; no paper text/figures/code copied.",
+  "stocks": [
+    {
+      "id": "holt-shared-predator-fifth-systems:Prey_1",
+      "name": "Prey_1",
+      "initial_value": 0.9,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 200,
+        "y": 410
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Prey_2",
+      "name": "Prey_2",
+      "initial_value": 0.6,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 550,
+        "y": 410
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Predator",
+      "name": "Predator",
+      "initial_value": 0.2,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 900,
+        "y": 410
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "holt-shared-predator-fifth-systems:Prey_1_Births",
+      "name": "Prey_1_Births",
+      "equation": "Growth_1 * Prey_1",
+      "units": "1/day",
+      "from_stock": null,
+      "to_stock": "holt-shared-predator-fifth-systems:Prey_1",
+      "position": {
+        "x": 100,
+        "y": 720
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Prey_1_Crowding",
+      "name": "Prey_1_Crowding",
+      "equation": "Growth_1 * Prey_1^2 / Capacity_1",
+      "units": "1/day",
+      "from_stock": "holt-shared-predator-fifth-systems:Prey_1",
+      "to_stock": null,
+      "position": {
+        "x": 320,
+        "y": 720
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Prey_1_Predation",
+      "name": "Prey_1_Predation",
+      "equation": "Capture_1 * Prey_1 * Predator",
+      "units": "1/day",
+      "from_stock": "holt-shared-predator-fifth-systems:Prey_1",
+      "to_stock": null,
+      "position": {
+        "x": 540,
+        "y": 720
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Prey_2_Births",
+      "name": "Prey_2_Births",
+      "equation": "Growth_2 * Prey_2",
+      "units": "1/day",
+      "from_stock": null,
+      "to_stock": "holt-shared-predator-fifth-systems:Prey_2",
+      "position": {
+        "x": 760,
+        "y": 720
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Prey_2_Crowding",
+      "name": "Prey_2_Crowding",
+      "equation": "Growth_2 * Prey_2^2 / Capacity_2",
+      "units": "1/day",
+      "from_stock": "holt-shared-predator-fifth-systems:Prey_2",
+      "to_stock": null,
+      "position": {
+        "x": 980,
+        "y": 720
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Prey_2_Predation",
+      "name": "Prey_2_Predation",
+      "equation": "Capture_2 * Prey_2 * Predator",
+      "units": "1/day",
+      "from_stock": "holt-shared-predator-fifth-systems:Prey_2",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 830
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Predator_Recruitment",
+      "name": "Predator_Recruitment",
+      "equation": "Conversion * (Capture_1 * Food_Value_1 * Prey_1 + Capture_2 * Food_Value_2 * Prey_2) * Predator",
+      "units": "1/day",
+      "from_stock": null,
+      "to_stock": "holt-shared-predator-fifth-systems:Predator",
+      "position": {
+        "x": 320,
+        "y": 830
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Predator_Mortality",
+      "name": "Predator_Mortality",
+      "equation": "Conversion * Maintenance * Predator",
+      "units": "1/day",
+      "from_stock": "holt-shared-predator-fifth-systems:Predator",
+      "to_stock": null,
+      "position": {
+        "x": 540,
+        "y": 830
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "holt-shared-predator-fifth-systems:Growth_1",
+      "name": "Growth_1",
+      "equation": "1",
+      "units": "1/day",
+      "position": {
+        "x": 80,
+        "y": 60
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Growth_2",
+      "name": "Growth_2",
+      "equation": "0.8",
+      "units": "1/day",
+      "position": {
+        "x": 300,
+        "y": 60
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Capacity_1",
+      "name": "Capacity_1",
+      "equation": "1.5",
+      "units": "1",
+      "position": {
+        "x": 520,
+        "y": 60
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Capacity_2",
+      "name": "Capacity_2",
+      "equation": "1.2",
+      "units": "1",
+      "position": {
+        "x": 740,
+        "y": 60
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Capture_1",
+      "name": "Capture_1",
+      "equation": "0.8",
+      "units": "1/day",
+      "position": {
+        "x": 960,
+        "y": 60
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Capture_2",
+      "name": "Capture_2",
+      "equation": "0.6",
+      "units": "1/day",
+      "position": {
+        "x": 1180,
+        "y": 60
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Food_Value_1",
+      "name": "Food_Value_1",
+      "equation": "1",
+      "units": "1",
+      "position": {
+        "x": 80,
+        "y": 155
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Food_Value_2",
+      "name": "Food_Value_2",
+      "equation": "0.8",
+      "units": "1",
+      "position": {
+        "x": 300,
+        "y": 155
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Conversion",
+      "name": "Conversion",
+      "equation": "0.5",
+      "units": "1",
+      "position": {
+        "x": 520,
+        "y": 155
+      }
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:Maintenance",
+      "name": "Maintenance",
+      "equation": "0.5",
+      "units": "1/day",
+      "position": {
+        "x": 740,
+        "y": 155
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "holt-shared-predator-fifth-systems:c0",
+      "from_element": "Growth_1",
+      "to_element": "Prey_1_Births"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c1",
+      "from_element": "Prey_1",
+      "to_element": "Prey_1_Births"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c2",
+      "from_element": "Capacity_1",
+      "to_element": "Prey_1_Crowding"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c3",
+      "from_element": "Growth_1",
+      "to_element": "Prey_1_Crowding"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c4",
+      "from_element": "Prey_1",
+      "to_element": "Prey_1_Crowding"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c5",
+      "from_element": "Capture_1",
+      "to_element": "Prey_1_Predation"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c6",
+      "from_element": "Predator",
+      "to_element": "Prey_1_Predation"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c7",
+      "from_element": "Prey_1",
+      "to_element": "Prey_1_Predation"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c8",
+      "from_element": "Growth_2",
+      "to_element": "Prey_2_Births"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c9",
+      "from_element": "Prey_2",
+      "to_element": "Prey_2_Births"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c10",
+      "from_element": "Capacity_2",
+      "to_element": "Prey_2_Crowding"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c11",
+      "from_element": "Growth_2",
+      "to_element": "Prey_2_Crowding"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c12",
+      "from_element": "Prey_2",
+      "to_element": "Prey_2_Crowding"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c13",
+      "from_element": "Capture_2",
+      "to_element": "Prey_2_Predation"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c14",
+      "from_element": "Predator",
+      "to_element": "Prey_2_Predation"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c15",
+      "from_element": "Prey_2",
+      "to_element": "Prey_2_Predation"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c16",
+      "from_element": "Capture_1",
+      "to_element": "Predator_Recruitment"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c17",
+      "from_element": "Capture_2",
+      "to_element": "Predator_Recruitment"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c18",
+      "from_element": "Conversion",
+      "to_element": "Predator_Recruitment"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c19",
+      "from_element": "Food_Value_1",
+      "to_element": "Predator_Recruitment"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c20",
+      "from_element": "Food_Value_2",
+      "to_element": "Predator_Recruitment"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c21",
+      "from_element": "Predator",
+      "to_element": "Predator_Recruitment"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c22",
+      "from_element": "Prey_1",
+      "to_element": "Predator_Recruitment"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c23",
+      "from_element": "Prey_2",
+      "to_element": "Predator_Recruitment"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c24",
+      "from_element": "Conversion",
+      "to_element": "Predator_Mortality"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c25",
+      "from_element": "Maintenance",
+      "to_element": "Predator_Mortality"
+    },
+    {
+      "id": "holt-shared-predator-fifth-systems:c26",
+      "from_element": "Predator",
+      "to_element": "Predator_Mortality"
+    }
+  ],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 80,
+    "dt": 0.025,
+    "integration_method": "rk4",
+    "units": "day"
+  },
+  "created_at": "2026-10-24T12:00:00",
+  "updated_at": "2026-10-24T12:00:00"
+}

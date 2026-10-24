@@ -1,0 +1,279 @@
+{
+  "id": "pi-back-calculation-sixth-control",
+  "name": "PI control with actuator saturation and back-calculation",
+  "description": "Original normalized first-order plant with PI controller and finite-gain back-calculation anti-windup. Integral_Output is the signed integral contribution to actuator command; it is not accumulated error and can be negative. Command=Proportional_Gain*(Setpoint-Output)+Integral_Output; actual actuator is explicitly bounded. Integral derivative adds Integral_Gain*error and Tracking_Rate*(Actuator-Command). Time seconds; output, reference, actuator and integral contribution normalized dimensionless. Positive Plant_Time; nonnegative plant gain, proportional/integral/tracking gains; Actuator_Min < Actuator_Max. Original illustrative defaults, no delay, derivative control, rate limit, noise, feedforward or tuning/stability guarantee. Tracking_Rate=0 disables anti-windup. Numerical steps must resolve plant and tracking time scales.",
+  "category": "engineering",
+  "source": "https://cse.lab.imtlucca.it/~bemporad/teaching/controllodigitale/pdf/Astrom-ACC89.pdf",
+  "reference": "Astrom,K.J. and Rundqwist,L.(1989), Integrator Windup and How to Avoid It, American Control Conference pp1693-1698, doi:10.23919/ACC.1989.4790464, printed p1694 Figure2. Original normalized plant/defaults; PI specialization of back-calculation, no paper text/code/figures redistributed.",
+  "stocks": [
+    {
+      "id": "pi-back-calculation-sixth-control:Output",
+      "name": "Output",
+      "initial_value": 0,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 320,
+        "y": 430
+      }
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:Integral_Output",
+      "name": "Integral_Output",
+      "initial_value": 0,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 760,
+        "y": 430
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "pi-back-calculation-sixth-control:Plant_Response",
+      "name": "Plant_Response",
+      "equation": "(Plant_Gain * Actuator - Output) / Plant_Time",
+      "units": "1/second",
+      "from_stock": null,
+      "to_stock": "pi-back-calculation-sixth-control:Output",
+      "position": {
+        "x": 100,
+        "y": 720
+      }
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:Error_Integration",
+      "name": "Error_Integration",
+      "equation": "Integral_Gain * Error",
+      "units": "1/second",
+      "from_stock": null,
+      "to_stock": "pi-back-calculation-sixth-control:Integral_Output",
+      "position": {
+        "x": 320,
+        "y": 720
+      }
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:Tracking_Correction",
+      "name": "Tracking_Correction",
+      "equation": "Tracking_Rate * (Actuator - Command)",
+      "units": "1/second",
+      "from_stock": null,
+      "to_stock": "pi-back-calculation-sixth-control:Integral_Output",
+      "position": {
+        "x": 540,
+        "y": 720
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "pi-back-calculation-sixth-control:Setpoint",
+      "name": "Setpoint",
+      "equation": "0.8",
+      "units": "1",
+      "position": {
+        "x": 80,
+        "y": 60
+      }
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:Proportional_Gain",
+      "name": "Proportional_Gain",
+      "equation": "3",
+      "units": "1",
+      "position": {
+        "x": 300,
+        "y": 60
+      }
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:Integral_Gain",
+      "name": "Integral_Gain",
+      "equation": "1",
+      "units": "1/second",
+      "position": {
+        "x": 520,
+        "y": 60
+      }
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:Tracking_Rate",
+      "name": "Tracking_Rate",
+      "equation": "2",
+      "units": "1/second",
+      "position": {
+        "x": 740,
+        "y": 60
+      }
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:Plant_Gain",
+      "name": "Plant_Gain",
+      "equation": "1",
+      "units": "1",
+      "position": {
+        "x": 960,
+        "y": 60
+      }
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:Plant_Time",
+      "name": "Plant_Time",
+      "equation": "2",
+      "units": "second",
+      "position": {
+        "x": 1180,
+        "y": 60
+      }
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:Actuator_Min",
+      "name": "Actuator_Min",
+      "equation": "0",
+      "units": "1",
+      "position": {
+        "x": 80,
+        "y": 155
+      }
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:Actuator_Max",
+      "name": "Actuator_Max",
+      "equation": "1",
+      "units": "1",
+      "position": {
+        "x": 300,
+        "y": 155
+      }
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:Error",
+      "name": "Error",
+      "equation": "Setpoint - Output",
+      "units": "1",
+      "position": {
+        "x": 520,
+        "y": 155
+      }
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:Command",
+      "name": "Command",
+      "equation": "Proportional_Gain * Error + Integral_Output",
+      "units": "1",
+      "position": {
+        "x": 740,
+        "y": 155
+      }
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:Actuator",
+      "name": "Actuator",
+      "equation": "MIN(Actuator_Max, MAX(Actuator_Min, Command))",
+      "units": "1",
+      "position": {
+        "x": 960,
+        "y": 155
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "pi-back-calculation-sixth-control:c0",
+      "from_element": "Output",
+      "to_element": "Error"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c1",
+      "from_element": "Setpoint",
+      "to_element": "Error"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c2",
+      "from_element": "Error",
+      "to_element": "Command"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c3",
+      "from_element": "Integral_Output",
+      "to_element": "Command"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c4",
+      "from_element": "Proportional_Gain",
+      "to_element": "Command"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c5",
+      "from_element": "Actuator_Max",
+      "to_element": "Actuator"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c6",
+      "from_element": "Actuator_Min",
+      "to_element": "Actuator"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c7",
+      "from_element": "Command",
+      "to_element": "Actuator"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c8",
+      "from_element": "Actuator",
+      "to_element": "Plant_Response"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c9",
+      "from_element": "Output",
+      "to_element": "Plant_Response"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c10",
+      "from_element": "Plant_Gain",
+      "to_element": "Plant_Response"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c11",
+      "from_element": "Plant_Time",
+      "to_element": "Plant_Response"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c12",
+      "from_element": "Error",
+      "to_element": "Error_Integration"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c13",
+      "from_element": "Integral_Gain",
+      "to_element": "Error_Integration"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c14",
+      "from_element": "Actuator",
+      "to_element": "Tracking_Correction"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c15",
+      "from_element": "Command",
+      "to_element": "Tracking_Correction"
+    },
+    {
+      "id": "pi-back-calculation-sixth-control:c16",
+      "from_element": "Tracking_Rate",
+      "to_element": "Tracking_Correction"
+    }
+  ],
+  "tables": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.01,
+    "integration_method": "rk4",
+    "units": "second"
+  },
+  "created_at": "2026-10-24T12:00:00",
+  "updated_at": "2026-10-24T12:00:00"
+}
