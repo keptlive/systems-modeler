@@ -821,6 +821,16 @@ const App = {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
+                // Preserve a locally saved retired May copy when its server ID is gone.
+                // Only an explicit Save and a definite missing-ID response create a copy.
+                if (response.status === 404 &&
+                    ["may-logistic-chaos", "may-ecological-chaos-eco"].includes(this.model.id)) {
+                    response = await fetch('/api/models', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                }
             } else {
                 // Create new
                 response = await fetch('/api/models', {
@@ -881,7 +891,8 @@ const App = {
                 model = idOrModel;
             }
             // Check UserModels (localStorage) first  
-            else if (typeof idOrModel === "string" && idOrModel.startsWith("user-")) {
+            else if (typeof idOrModel === "string" && (idOrModel.startsWith("user-") ||
+                (["may-logistic-chaos", "may-ecological-chaos-eco"].includes(idOrModel) && UserModels.get(idOrModel)))) {
                 model = UserModels.get(idOrModel);
                 if (!model) throw new Error("Model not found in saved models");
             }
@@ -890,6 +901,8 @@ const App = {
                 const response = await fetch(`/api/models/${idOrModel}`);
                 if (!response.ok) throw new Error("Load failed");
                 model = await response.json();
+                const migrationNotice = response.headers.get('X-Model-Migration');
+                if (migrationNotice) this.showToast(migrationNotice);
             }
             
             this.model = model;

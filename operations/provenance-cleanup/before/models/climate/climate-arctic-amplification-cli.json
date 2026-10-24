@@ -1,0 +1,199 @@
+{
+  "id": "climate-arctic-amplification-cli",
+  "name": "Arctic Amplification and Sea Ice Feedback",
+  "description": "Models the ice-albedo feedback driving accelerated Arctic warming. Based on Screen & Simmonds (2010) Nature. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "category": "climate",
+  "stocks": [
+    {
+      "id": "stock-ice",
+      "name": "Sea_Ice_Extent_M_km2",
+      "initial_value": 7,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-temp",
+      "name": "Arctic_Temperature_Anomaly",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-heat",
+      "name": "Ocean_Heat_Content",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-melt",
+      "name": "Ice_Melt",
+      "equation": "Sea_Ice_Extent_M_km2 * Melt_Rate * MAX(0, Arctic_Temperature_Anomaly)",
+      "from_stock": "stock-ice",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-freeze",
+      "name": "Ice_Formation",
+      "equation": "MAX(0, (Max_Ice_Extent - Sea_Ice_Extent_M_km2)) * Freeze_Rate * MAX(0, -Arctic_Temperature_Anomaly + 1)",
+      "from_stock": null,
+      "to_stock": "stock-ice",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-warm",
+      "name": "Arctic_Warming",
+      "equation": "Global_Forcing + Albedo_Feedback_Strength * (1 - Sea_Ice_Extent_M_km2/Max_Ice_Extent)",
+      "from_stock": null,
+      "to_stock": "stock-temp",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-cool",
+      "name": "Heat_Loss",
+      "equation": "Arctic_Temperature_Anomaly * Heat_Loss_Rate",
+      "from_stock": "stock-temp",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-heat-in",
+      "name": "Ocean_Heat_Uptake",
+      "equation": "Solar_Absorbed * (1 - Sea_Ice_Extent_M_km2/Max_Ice_Extent) * Water_Heat_Capacity",
+      "from_stock": null,
+      "to_stock": "stock-heat",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-heat-out",
+      "name": "Heat_Release",
+      "equation": "Ocean_Heat_Content * Heat_Release_Rate",
+      "from_stock": "stock-heat",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-melt-rate",
+      "name": "Melt_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-max-ice",
+      "name": "Max_Ice_Extent",
+      "equation": "8",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-freeze-rate",
+      "name": "Freeze_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-forcing",
+      "name": "Global_Forcing",
+      "equation": "0.03",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-albedo-str",
+      "name": "Albedo_Feedback_Strength",
+      "equation": "0.15",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-heat-loss",
+      "name": "Heat_Loss_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-solar",
+      "name": "Solar_Absorbed",
+      "equation": "5",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-water-cap",
+      "name": "Water_Heat_Capacity",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-release",
+      "name": "Heat_Release_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1038/nature09051",
+  "reference": "Screen JA, Simmonds I (2010) The central role of diminishing sea ice in recent Arctic temperature amplification. Nature 464:1334-1337.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:32:44.851842+00:00",
+  "updated_at": "2026-01-12T06:32:44.851842+00:00"
+}

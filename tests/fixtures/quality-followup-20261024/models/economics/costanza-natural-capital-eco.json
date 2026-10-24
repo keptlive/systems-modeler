@@ -1,0 +1,180 @@
+{
+  "id": "costanza-natural-capital-eco",
+  "name": "Costanza Natural Capital Valuation",
+  "description": "Based on Costanza et al.'s 1997 landmark study valuing global ecosystem services at $33 trillion/year. Models relationship between ecosystem area and service provision. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "stock-forest",
+      "name": "Forest_Area",
+      "initial_value": 40,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-wetland",
+      "name": "Wetland_Area",
+      "initial_value": 5,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "stock-ocean",
+      "name": "Ocean_Area",
+      "initial_value": 360,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-grass",
+      "name": "Grassland_Area",
+      "initial_value": 30,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-deforest",
+      "name": "Deforestation",
+      "equation": "Forest_Area * deforestation_rate",
+      "from_stock": "stock-forest",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-wetland-loss",
+      "name": "Wetland_Loss",
+      "equation": "Wetland_Area * wetland_loss_rate",
+      "from_stock": "stock-wetland",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 250
+      }
+    },
+    {
+      "id": "flow-ocean-degrade",
+      "name": "Ocean_Degradation",
+      "equation": "Ocean_Area * ocean_degradation_rate",
+      "from_stock": "stock-ocean",
+      "to_stock": null,
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-forest-value",
+      "name": "Forest_Services",
+      "equation": "Forest_Area * 969",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-wetland-value",
+      "name": "Wetland_Services",
+      "equation": "Wetland_Area * 14785",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-ocean-value",
+      "name": "Ocean_Services",
+      "equation": "Ocean_Area * 577",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-grass-value",
+      "name": "Grassland_Services",
+      "equation": "Grassland_Area * 232",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-total",
+      "name": "Total_Ecosystem_Services",
+      "equation": "Forest_Services + Wetland_Services + Ocean_Services + Grassland_Services",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-deforest-rate",
+      "name": "deforestation_rate",
+      "equation": "0.005",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-wetland-rate",
+      "name": "wetland_loss_rate",
+      "equation": "0.01",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-ocean-rate",
+      "name": "ocean_degradation_rate",
+      "equation": "0.001",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Forest_Area",
+      "to_element": "Forest_Services"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Wetland_Area",
+      "to_element": "Wetland_Services"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Ocean_Area",
+      "to_element": "Ocean_Services"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.5
+  },
+  "source": "https://doi.org/10.1038/387253a0",
+  "reference": "Costanza R, et al. The value of the world's ecosystem services and natural capital. Nature. 1997;387:253-260."
+}

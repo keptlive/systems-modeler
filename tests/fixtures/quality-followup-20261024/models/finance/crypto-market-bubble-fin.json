@@ -1,0 +1,343 @@
+{
+  "id": "crypto-market-bubble-fin",
+  "name": "Sellers_Exit",
+  "description": "Model of cryptocurrency price bubbles and crashes. Shows speculative dynamics, FOMO effects, and market cycles. Based on behavioral finance and crypto market analysis. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Crypto_Price",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Holders",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Market_Sentiment",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Price_Change",
+      "equation": "Crypto_Price * (Buy_Pressure - Sell_Pressure) / Market_Depth",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f2",
+      "name": "New_Buyers",
+      "equation": "Potential_Buyers * Adoption_Rate * FOMO_Effect",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Sellers_Exit",
+      "equation": "Holders * Exit_Rate * Fear_Effect",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Sentiment_Change",
+      "equation": "(Target_Sentiment - Market_Sentiment) / Sentiment_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Fundamental_Value",
+      "equation": "500 * (1 + 0.1 * TIME / 365)",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Price_vs_Fundamental",
+      "equation": "Crypto_Price / Fundamental_Value",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Buy_Pressure",
+      "equation": "Market_Sentiment * 0.5 * (1 + Returns_30d)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Sell_Pressure",
+      "equation": "(1 - Market_Sentiment) * 0.3 + 0.2 * MAX(0, Price_vs_Fundamental - 2)",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Market_Depth",
+      "equation": "Holders * 0.01",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Returns_30d",
+      "equation": "SMOOTH((Crypto_Price - DELAY(Crypto_Price, 30)) / MAX(1, DELAY(Crypto_Price, 30)), 5)",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Potential_Buyers",
+      "equation": "10000000 - Holders",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Adoption_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "v9",
+      "name": "FOMO_Effect",
+      "equation": "1 + 2 * MAX(0, Returns_30d)",
+      "position": {
+        "x": 350,
+        "y": 400
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Exit_Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Fear_Effect",
+      "equation": "1 + 3 * MAX(0, -Returns_30d)",
+      "position": {
+        "x": 450,
+        "y": 400
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Target_Sentiment",
+      "equation": "0.5 + 0.3 * Returns_30d - 0.2 * (Price_vs_Fundamental - 1)",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Sentiment_Adjustment_Time",
+      "equation": "7",
+      "position": {
+        "x": 300,
+        "y": 450
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Buy_Pressure",
+      "to_element": "Price_Change"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Sell_Pressure",
+      "to_element": "Price_Change"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Crypto_Price",
+      "to_element": "Price_Change"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Market_Depth",
+      "to_element": "Price_Change"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Adoption_Rate",
+      "to_element": "New_Buyers"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "FOMO_Effect",
+      "to_element": "New_Buyers"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Potential_Buyers",
+      "to_element": "New_Buyers"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Fear_Effect",
+      "to_element": "Sellers_Exit"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Holders",
+      "to_element": "Sellers_Exit"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Exit_Rate",
+      "to_element": "Sellers_Exit"
+    },
+    {
+      "id": "conn-11",
+      "from_element": "Market_Sentiment",
+      "to_element": "Sentiment_Change"
+    },
+    {
+      "id": "conn-12",
+      "from_element": "Sentiment_Adjustment_Time",
+      "to_element": "Sentiment_Change"
+    },
+    {
+      "id": "conn-13",
+      "from_element": "Target_Sentiment",
+      "to_element": "Sentiment_Change"
+    },
+    {
+      "id": "conn-14",
+      "from_element": "Crypto_Price",
+      "to_element": "Price_vs_Fundamental"
+    },
+    {
+      "id": "conn-15",
+      "from_element": "Fundamental_Value",
+      "to_element": "Price_vs_Fundamental"
+    },
+    {
+      "id": "conn-16",
+      "from_element": "Market_Sentiment",
+      "to_element": "Buy_Pressure"
+    },
+    {
+      "id": "conn-17",
+      "from_element": "Returns_30d",
+      "to_element": "Buy_Pressure"
+    },
+    {
+      "id": "conn-18",
+      "from_element": "Price_vs_Fundamental",
+      "to_element": "Sell_Pressure"
+    },
+    {
+      "id": "conn-19",
+      "from_element": "Market_Sentiment",
+      "to_element": "Sell_Pressure"
+    },
+    {
+      "id": "conn-20",
+      "from_element": "Holders",
+      "to_element": "Market_Depth"
+    },
+    {
+      "id": "conn-21",
+      "from_element": "Crypto_Price",
+      "to_element": "Returns_30d"
+    },
+    {
+      "id": "conn-22",
+      "from_element": "Holders",
+      "to_element": "Potential_Buyers"
+    },
+    {
+      "id": "conn-23",
+      "from_element": "Returns_30d",
+      "to_element": "FOMO_Effect"
+    },
+    {
+      "id": "conn-24",
+      "from_element": "Returns_30d",
+      "to_element": "Fear_Effect"
+    },
+    {
+      "id": "conn-25",
+      "from_element": "Price_vs_Fundamental",
+      "to_element": "Target_Sentiment"
+    },
+    {
+      "id": "conn-26",
+      "from_element": "Returns_30d",
+      "to_element": "Target_Sentiment"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 730,
+    "dt": 1
+  },
+  "created_at": "2026-01-12T07:26:33.407544+00:00",
+  "updated_at": "2026-01-12T07:26:33.407544+00:00",
+  "source": "https://doi.org/10.1093/rfs/hhaa113",
+  "reference": "Liu & Tsyvinski (2021). Risks and Returns of Cryptocurrency. Review of Financial Studies."
+}

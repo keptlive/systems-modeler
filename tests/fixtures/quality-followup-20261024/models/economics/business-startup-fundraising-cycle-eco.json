@@ -1,0 +1,238 @@
+{
+  "id": "business-startup-fundraising-cycle-eco",
+  "name": "Startup Fundraising and Burn Rate",
+  "description": "Models startup cash dynamics including runway calculation, burn rate management, and fundraising cycles. Based on startup finance literature and VC best practices. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "category": "economics",
+  "stocks": [
+    {
+      "id": "stock-cash",
+      "name": "Cash_Balance",
+      "initial_value": 2000000.0,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-employees",
+      "name": "Employee_Count",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-customers",
+      "name": "Customers",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-arr",
+      "name": "ARR",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-revenue",
+      "name": "Monthly_Revenue",
+      "equation": "ARR / 12",
+      "from_stock": null,
+      "to_stock": "stock-cash",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-expenses",
+      "name": "Monthly_Expenses",
+      "equation": "Employee_Count * Salary_Cost + Fixed_Costs + Marketing_Spend",
+      "from_stock": "stock-cash",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-hiring",
+      "name": "Hiring",
+      "equation": "IF Cash_Balance > Hiring_Threshold THEN Target_Hire_Rate ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-employees",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-attrition",
+      "name": "Attrition",
+      "equation": "Employee_Count * Attrition_Rate",
+      "from_stock": "stock-employees",
+      "to_stock": null,
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-cust-acq",
+      "name": "Customer_Acquisition",
+      "equation": "Marketing_Spend / CAC * Sales_Efficiency",
+      "from_stock": null,
+      "to_stock": "stock-customers",
+      "position": {
+        "x": 525,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-churn",
+      "name": "Customer_Churn",
+      "equation": "Customers * Churn_Rate",
+      "from_stock": "stock-customers",
+      "to_stock": null,
+      "position": {
+        "x": 675,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-arr-growth",
+      "name": "ARR_Growth",
+      "equation": "(Customer_Acquisition - Customer_Churn) * ARPC * 12",
+      "from_stock": null,
+      "to_stock": "stock-arr",
+      "position": {
+        "x": 600,
+        "y": 275
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-salary",
+      "name": "Salary_Cost",
+      "equation": "12000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fixed",
+      "name": "Fixed_Costs",
+      "equation": "50000",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-marketing",
+      "name": "Marketing_Spend",
+      "equation": "30000",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-hire-thresh",
+      "name": "Hiring_Threshold",
+      "equation": "1e6",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-hire-rate",
+      "name": "Target_Hire_Rate",
+      "equation": "2",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-attrition",
+      "name": "Attrition_Rate",
+      "equation": "0.15",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cac",
+      "name": "CAC",
+      "equation": "500",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-sales-eff",
+      "name": "Sales_Efficiency",
+      "equation": "1.2",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-churn-rate",
+      "name": "Churn_Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-arpc",
+      "name": "ARPC",
+      "equation": "100",
+      "position": {
+        "x": 450,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-runway",
+      "name": "Runway_Months",
+      "equation": "Cash_Balance / Monthly_Expenses",
+      "position": {
+        "x": 200,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 36,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1111/j.1540-6261.2004.00625.x",
+  "reference": "Gompers P & Lerner J (2001) The Venture Capital Revolution. JEP.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:07:51.753458Z",
+  "updated_at": "2026-01-12T06:07:51.753458Z"
+}

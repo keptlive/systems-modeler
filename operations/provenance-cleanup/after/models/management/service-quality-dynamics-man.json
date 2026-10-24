@@ -1,0 +1,308 @@
+{
+  "id": "service-quality-dynamics-man",
+  "name": "Service Quality Dynamics",
+  "description": "Models the dynamics of service quality in organizations. Quality depends on workload (demand relative to capacity), employee experience, and process improvement. High workload leads to shortcuts and burnout, degrading quality. Quality affects demand through reputation. Shows how service industries can spiral into quality traps or virtuous cycles.",
+  "stocks": [
+    {
+      "id": "stock-service-quality",
+      "name": "Service Quality",
+      "initial_value": 0.8,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-demand",
+      "name": "Demand",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-capacity",
+      "name": "Capacity",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-staff-experience",
+      "name": "Staff Experience",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-quality-improvement",
+      "name": "Quality Improvement",
+      "equation": "(Potential_Quality - Service_Quality) * Improvement_Rate",
+      "from_stock": null,
+      "to_stock": "stock-service-quality",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-quality-degradation",
+      "name": "Quality Degradation",
+      "equation": "Workload_Pressure * Service_Quality",
+      "from_stock": "stock-service-quality",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-demand-growth",
+      "name": "Demand Growth",
+      "equation": "Base_Demand_Growth * Quality_Reputation",
+      "from_stock": null,
+      "to_stock": "stock-demand",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-demand-loss",
+      "name": "Demand Loss",
+      "equation": "Demand * (1 - Quality_Reputation) * 0.05",
+      "from_stock": "stock-demand",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-hiring",
+      "name": "Hiring",
+      "equation": "IF Utilization > 0.9 THEN Hiring_Rate ELSE 0",
+      "from_stock": null,
+      "to_stock": "stock-capacity",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-attrition",
+      "name": "Attrition",
+      "equation": "Capacity * Base_Turnover * (1 + Burnout_Factor)",
+      "from_stock": "stock-capacity",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-experience-gain",
+      "name": "Experience Gain",
+      "equation": "Learning_Rate * (Max_Experience - Staff_Experience)",
+      "from_stock": null,
+      "to_stock": "stock-staff-experience",
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-experience-loss",
+      "name": "Experience Loss",
+      "equation": "Staff_Experience * Base_Turnover * (1 + Burnout_Factor)",
+      "from_stock": "stock-staff-experience",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-utilization",
+      "name": "Utilization",
+      "equation": "MIN(1.5, Demand / MAX(1, Capacity))",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-workload-pressure",
+      "name": "Workload Pressure",
+      "equation": "MAX(0, (Utilization - 0.8) / 0.2) * 0.1",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-burnout-factor",
+      "name": "Burnout Factor",
+      "equation": "MAX(0, Utilization - 1)",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-potential-quality",
+      "name": "Potential Quality",
+      "equation": "MIN(1, Staff_Experience * (1 - Workload_Pressure))",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-improvement-rate",
+      "name": "Improvement Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-quality-reputation",
+      "name": "Quality Reputation",
+      "equation": "SMOOTH(Service_Quality, Reputation_Delay)",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-reputation-delay",
+      "name": "Reputation Delay",
+      "equation": "12",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-base-demand-growth",
+      "name": "Base Demand Growth",
+      "equation": "2",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-hiring-rate",
+      "name": "Hiring Rate",
+      "equation": "5",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-base-turnover",
+      "name": "Base Turnover",
+      "equation": "0.02",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-learning-rate",
+      "name": "Learning Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-max-experience",
+      "name": "Max Experience",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Utilization",
+      "to_element": "Workload Pressure"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Workload Pressure",
+      "to_element": "Quality Degradation"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Service Quality",
+      "to_element": "Quality Degradation"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Potential Quality",
+      "to_element": "Quality Improvement"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Service Quality",
+      "to_element": "Quality Improvement"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Service Quality",
+      "to_element": "Quality Reputation"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Quality Reputation",
+      "to_element": "Demand Growth"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Quality Reputation",
+      "to_element": "Demand Loss"
+    },
+    {
+      "id": "conn-9",
+      "from_element": "Utilization",
+      "to_element": "Hiring"
+    },
+    {
+      "id": "conn-10",
+      "from_element": "Burnout Factor",
+      "to_element": "Attrition"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 156,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T20:04:50.825817Z",
+  "updated_at": "2026-01-11T20:04:50.825817Z",
+  "source": "https://doi.org/10.1287/mnsc.35.3.321",
+  "reference": "Sterman JD. Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill, 2000."
+}

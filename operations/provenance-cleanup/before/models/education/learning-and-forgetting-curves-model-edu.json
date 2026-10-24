@@ -1,0 +1,241 @@
+{
+  "id": "learning-and-forgetting-curves-model-edu",
+  "name": "Learning and Forgetting Curves Model",
+  "description": "Models skill acquisition and decay based on Ebbinghaus forgetting curve and power law of practice. Demonstrates learning dynamics, retention, and the effects of spaced repetition. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "stock-knowledge-level",
+      "name": "Knowledge Level",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-memory-strength",
+      "name": "Memory Strength",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cumulative-study-hours",
+      "name": "Cumulative Study Hours",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-learning-rate",
+      "name": "Learning Rate",
+      "equation": "\"Daily Study Rate\" * Learning_Efficiency * (100 - Knowledge_Level) / 100",
+      "from_stock": null,
+      "to_stock": "stock-knowledge-level",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-forgetting-rate",
+      "name": "Forgetting Rate",
+      "equation": "Knowledge_Level * Forgetting_Constant / (Memory_Strength + 1)",
+      "from_stock": "stock-knowledge-level",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-memory-reinforcement",
+      "name": "Memory Reinforcement",
+      "equation": "\"Daily Study Rate\" * (1 + Spaced_Repetition_Bonus)",
+      "from_stock": null,
+      "to_stock": "stock-memory-strength",
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-memory-decay",
+      "name": "Memory Decay",
+      "equation": "Memory_Strength * Memory_Decay_Rate",
+      "from_stock": "stock-memory-strength",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-studying",
+      "name": "Studying",
+      "equation": "\"Daily Study Rate\"",
+      "from_stock": null,
+      "to_stock": "stock-cumulative-study-hours",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-daily-study-rate",
+      "name": "Daily Study Rate",
+      "equation": "IF Study_Schedule_Active THEN Target_Daily_Hours ELSE 0",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-target-daily-hours",
+      "name": "Target Daily Hours",
+      "equation": "2",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-study-schedule-active",
+      "name": "Study Schedule Active",
+      "equation": "IF MOD(Time, 7) < 5 THEN 1 ELSE 0",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-learning-efficiency",
+      "name": "Learning Efficiency",
+      "equation": "\"Base Learning Efficiency\" * (1 - Fatigue_Effect) * Attention_Factor * Method_Multiplier",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-base-learning-efficiency",
+      "name": "Base Learning Efficiency",
+      "equation": "5",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-fatigue-effect",
+      "name": "Fatigue Effect",
+      "equation": "MIN(0.5, \"Daily Study Rate\" * 0.1)",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-attention-factor",
+      "name": "Attention Factor",
+      "equation": "0.8",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-method-multiplier",
+      "name": "Method Multiplier",
+      "equation": "1 + Active_Learning_Bonus + Testing_Effect",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-active-learning-bonus",
+      "name": "Active Learning Bonus",
+      "equation": "0.3",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-testing-effect",
+      "name": "Testing Effect",
+      "equation": "0.2",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-forgetting-constant",
+      "name": "Forgetting Constant",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-spaced-repetition-bonus",
+      "name": "Spaced Repetition Bonus",
+      "equation": "0.5",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-memory-decay-rate",
+      "name": "Memory Decay Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-retention-rate",
+      "name": "Retention Rate",
+      "equation": "Knowledge_Level / MAX(1, \"Cumulative Study Hours\" * \"Base Learning Efficiency\")",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-time-to-mastery",
+      "name": "Time to Mastery",
+      "equation": "IF Knowledge_Level > 90 THEN Time ELSE 0",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 365,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T20:04:50.785220Z",
+  "updated_at": "2026-01-11T20:04:50.785220Z",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "System Dynamics Educational Models - PySD Cookbook"
+}

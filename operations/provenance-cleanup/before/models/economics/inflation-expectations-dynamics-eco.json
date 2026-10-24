@@ -1,0 +1,261 @@
+{
+  "id": "inflation-expectations-dynamics-eco",
+  "name": "Inflation Expectations Dynamics Model",
+  "description": "System dynamics model of inflation expectations formation and their impact on actual inflation. Captures adaptive and rational expectations, central bank credibility, and wage-price spirals. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "source": "https://doi.org/10.1162/003355302760193887",
+  "reference": "Mankiw NG, Reis R. (2002). Sticky Information Versus Sticky Prices: A Proposal to Replace the New Keynesian Phillips Curve. QJE, 117(4), 1295-1328.",
+  "stocks": [
+    {
+      "id": "stock-actual-inflation",
+      "name": "Actual Inflation",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-expected-inflation",
+      "name": "Expected Inflation",
+      "initial_value": 2,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-wages",
+      "name": "Wage Level",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-cb-credibility",
+      "name": "Central Bank Credibility",
+      "initial_value": 80,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-output-gap",
+      "name": "Output Gap",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-inflation-change",
+      "name": "Inflation Change",
+      "equation": "(Inflation_Pressure - Actual_Inflation) / Inflation_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-actual-inflation",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-expectation-update",
+      "name": "Expectation Update",
+      "equation": "(Inflation_Anchor - Expected_Inflation) / Expectation_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-expected-inflation",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-wage-growth",
+      "name": "Wage Growth",
+      "equation": "Wage_Level * (Expected_Inflation / 100 + Productivity_Growth + Labor_Market_Tightness * 0.01)",
+      "from_stock": null,
+      "to_stock": "stock-wages",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-credibility-change",
+      "name": "Credibility Change",
+      "equation": "(Target_Credibility - Central_Bank_Credibility) / Credibility_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-cb-credibility",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-output-change",
+      "name": "Output Change",
+      "equation": "(Potential_Output_Gap - Output_Gap) / Output_Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-output-gap",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-inflation-pressure",
+      "name": "Inflation Pressure",
+      "equation": "Expected_Inflation + Output_Gap * 0.3 + Supply_Shock + Cost_Push",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-supply-shock",
+      "name": "Supply Shock",
+      "equation": "IF(TIME > 10, IF(TIME < 15, 3, 0), 0)",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cost-push",
+      "name": "Cost Push",
+      "equation": "(Wage_Level / 100 - 1) * 0.5",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-inflation-adj",
+      "name": "Inflation Adjustment Time",
+      "equation": "4",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-anchor",
+      "name": "Inflation Anchor",
+      "equation": "Inflation_Target * Central_Bank_Credibility / 100 + Actual_Inflation * (1 - Central_Bank_Credibility / 100)",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-target",
+      "name": "Inflation Target",
+      "equation": "2",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-expect-adj",
+      "name": "Expectation Adjustment Time",
+      "equation": "6",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-productivity",
+      "name": "Productivity Growth",
+      "equation": "0.02",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-labor-tight",
+      "name": "Labor Market Tightness",
+      "equation": "Output_Gap",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "var-target-cred",
+      "name": "Target Credibility",
+      "equation": "100 - ABS(Actual_Inflation - Inflation_Target) * 10",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-cred-adj",
+      "name": "Credibility Adjustment Time",
+      "equation": "12",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-potential-gap",
+      "name": "Potential Output Gap",
+      "equation": "-Policy_Rate_Effect + Demand_Shock",
+      "position": {
+        "x": 50,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-policy-rate",
+      "name": "Policy Rate Effect",
+      "equation": "(Actual_Inflation - Inflation_Target) * 0.5",
+      "position": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-demand-shock",
+      "name": "Demand Shock",
+      "equation": "0",
+      "position": {
+        "x": 150,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-output-adj",
+      "name": "Output Adjustment Time",
+      "equation": "4",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T03:15:51.643572+00:00",
+  "updated_at": "2026-01-12T03:15:51.643572+00:00"
+}

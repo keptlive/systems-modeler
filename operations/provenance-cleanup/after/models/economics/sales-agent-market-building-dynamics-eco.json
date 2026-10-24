@@ -1,0 +1,591 @@
+{
+  "id": "sales-agent-market-building-dynamics-eco",
+  "name": "Sales Agent Market Building Dynamics",
+  "description": "A comprehensive model of sales agent career dynamics including lead generation through referrals, client acquisition and maintenance, effort allocation, and financial sustainability. Models the two-tier client system common in financial services (e.g., insurance sales), where agents balance time between acquiring new leads, servicing existing clients, and maintaining financial viability through a startup subsidy period.",
+  "stocks": [
+    {
+      "id": "stock-tier-1-leads",
+      "name": "Tier 1 Leads",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-tier-1-clients",
+      "name": "Tier 1 Clients",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-tier-2-leads",
+      "name": "Tier 2 Leads",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-tier-2-clients",
+      "name": "Tier 2 Clients",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-months-of-buffer",
+      "name": "Months of Buffer",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-tenure",
+      "name": "Tenure",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-total-cumulative-sales",
+      "name": "Total Cumulative Sales",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 350
+      }
+    },
+    {
+      "id": "stock-total-cumulative-income",
+      "name": "Total Cumulative Income",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 750,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-tier-1-lead-acquisition",
+      "name": "Tier 1 Lead Acquisition",
+      "equation": "Qualification_Rate * (Tier_1_Referrals + Tier_1_Referrals_from_Tier_2)",
+      "from_stock": null,
+      "to_stock": "stock-tier-1-leads",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-tier-1-sales",
+      "name": "Tier 1 Sales",
+      "equation": "Success_Rate * MIN(Effort_Devoted_to_Tier_1_Leads / Effort_Required_to_Make_a_Sale, Tier_1_Leads / Minimum_Time_to_Make_a_Sale)",
+      "from_stock": "stock-tier-1-leads",
+      "to_stock": "stock-tier-1-clients",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-tier-1-leads-going-stale",
+      "name": "Tier 1 Leads Going Stale",
+      "equation": "Tier_1_Leads / Lead_Shelf_Life",
+      "from_stock": "stock-tier-1-leads",
+      "to_stock": null,
+      "position": {
+        "x": 650,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-tier-1-client-turnover",
+      "name": "Tier 1 Client Turnover",
+      "equation": "Tier_1_Clients / Client_Lifetime",
+      "from_stock": "stock-tier-1-clients",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-tier-2-lead-acquisition",
+      "name": "Tier 2 Lead Acquisition",
+      "equation": "Qualification_Rate * (Tier_2_Referrals + Tier_2_Referrals_from_Tier_1)",
+      "from_stock": null,
+      "to_stock": "stock-tier-2-leads",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-tier-2-sales",
+      "name": "Tier 2 Sales",
+      "equation": "Success_Rate * MIN(Effort_Devoted_to_Tier_2_Leads / Effort_Required_to_Make_a_Sale, Tier_2_Leads / Minimum_Time_to_Make_a_Sale)",
+      "from_stock": "stock-tier-2-leads",
+      "to_stock": "stock-tier-2-clients",
+      "position": {
+        "x": 650,
+        "y": 350
+      }
+    },
+    {
+      "id": "flow-tier-2-leads-going-stale",
+      "name": "Tier 2 Leads Going Stale",
+      "equation": "Tier_2_Leads / Lead_Shelf_Life",
+      "from_stock": "stock-tier-2-leads",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-tier-2-client-turnover",
+      "name": "Tier 2 Client Turnover",
+      "equation": "Tier_2_Clients / Client_Lifetime",
+      "from_stock": "stock-tier-2-clients",
+      "to_stock": null,
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-income",
+      "name": "Income",
+      "equation": "Tier_1_Income + Tier_2_Income + IF_THEN_ELSE(Time < Startup_Subsidy_Length, Startup_Subsidy, 0)",
+      "from_stock": null,
+      "to_stock": "stock-months-of-buffer",
+      "position": {
+        "x": 650,
+        "y": 500
+      }
+    },
+    {
+      "id": "flow-expenses",
+      "name": "Expenses",
+      "equation": "1",
+      "from_stock": "stock-months-of-buffer",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-accumulating-tenure",
+      "name": "Accumulating Tenure",
+      "equation": "Still_Employed",
+      "from_stock": null,
+      "to_stock": "stock-tenure",
+      "position": {
+        "x": 450,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-accumulating-sales",
+      "name": "Accumulating Sales",
+      "equation": "Tier_1_Sales + Tier_2_Sales",
+      "from_stock": null,
+      "to_stock": "stock-total-cumulative-sales",
+      "position": {
+        "x": 650,
+        "y": 650
+      }
+    },
+    {
+      "id": "flow-accumulating-income",
+      "name": "Accumulating Income",
+      "equation": "Income",
+      "from_stock": null,
+      "to_stock": "stock-total-cumulative-income",
+      "position": {
+        "x": 250,
+        "y": 800
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-initial-buffer",
+      "name": "Initial Buffer",
+      "equation": "6",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-startup-subsidy",
+      "name": "Startup Subsidy",
+      "equation": "0.75",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-startup-subsidy-length",
+      "name": "Startup Subsidy Length",
+      "equation": "3",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-success-rate",
+      "name": "Success Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 550,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-qualification-rate",
+      "name": "Qualification Rate",
+      "equation": "1",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-lead-shelf-life",
+      "name": "Lead Shelf Life",
+      "equation": "3",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-client-lifetime",
+      "name": "Client Lifetime",
+      "equation": "120",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-effort-required-to-make-a-sale",
+      "name": "Effort Required to Make a Sale",
+      "equation": "4",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-minimum-time-to-make-a-sale",
+      "name": "Minimum Time to Make a Sale",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-total-effort-available",
+      "name": "Total Effort Available",
+      "equation": "200",
+      "position": {
+        "x": 700,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-fraction-of-effort-for-sales",
+      "name": "Fraction of Effort for Sales",
+      "equation": "0.25",
+      "position": {
+        "x": 100,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-frequency-of-meetings",
+      "name": "Frequency of Meetings",
+      "equation": "0.0833",
+      "position": {
+        "x": 250,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-time-per-client-meeting",
+      "name": "Time per Client Meeting",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-referrals-per-meeting",
+      "name": "Referrals per Meeting",
+      "equation": "2",
+      "position": {
+        "x": 550,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-up-referral-fraction",
+      "name": "Up Referral Fraction",
+      "equation": "0.15",
+      "position": {
+        "x": 700,
+        "y": 240
+      }
+    },
+    {
+      "id": "var-down-referral-fraction",
+      "name": "Down Referral Fraction",
+      "equation": "0.2",
+      "position": {
+        "x": 100,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-months-of-expenses-per-tier-1-sale",
+      "name": "Months of Expenses per Tier 1 Sale",
+      "equation": "0.04",
+      "position": {
+        "x": 250,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-months-of-expenses-per-tier-2-sale",
+      "name": "Months of Expenses per Tier 2 Sale",
+      "equation": "0.4",
+      "position": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-still-employed",
+      "name": "Still Employed",
+      "equation": "IF_THEN_ELSE(Months_of_Buffer < 0, 0, 1)",
+      "position": {
+        "x": 550,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-sales-effort-available",
+      "name": "Sales Effort Available",
+      "equation": "Fraction_of_Effort_for_Sales * Total_Effort_Available * Still_Employed",
+      "position": {
+        "x": 700,
+        "y": 320
+      }
+    },
+    {
+      "id": "var-referrals-from-tier-1-clients",
+      "name": "Referrals from Tier 1 Clients",
+      "equation": "Tier_1_Clients * Frequency_of_Meetings * Referrals_per_Meeting",
+      "position": {
+        "x": 100,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-referrals-from-tier-2-clients",
+      "name": "Referrals from Tier 2 Clients",
+      "equation": "Tier_2_Clients * Frequency_of_Meetings * Referrals_per_Meeting",
+      "position": {
+        "x": 250,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-tier-1-referrals",
+      "name": "Tier 1 Referrals",
+      "equation": "Referrals_from_Tier_1_Clients * (1 - Up_Referral_Fraction)",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-tier-2-referrals",
+      "name": "Tier 2 Referrals",
+      "equation": "Referrals_from_Tier_2_Clients * (1 - Down_Referral_Fraction)",
+      "position": {
+        "x": 550,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-tier-1-referrals-from-tier-2",
+      "name": "Tier 1 Referrals from Tier 2",
+      "equation": "Referrals_from_Tier_2_Clients * Down_Referral_Fraction",
+      "position": {
+        "x": 700,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-tier-2-referrals-from-tier-1",
+      "name": "Tier 2 Referrals from Tier 1",
+      "equation": "Referrals_from_Tier_1_Clients * Up_Referral_Fraction",
+      "position": {
+        "x": 100,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-effort-devoted-to-tier-1-clients",
+      "name": "Effort Devoted to Tier 1 Clients",
+      "equation": "Tier_1_Clients * Time_per_Client_Meeting * Frequency_of_Meetings",
+      "position": {
+        "x": 250,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-effort-devoted-to-tier-2-clients",
+      "name": "Effort Devoted to Tier 2 Clients",
+      "equation": "Tier_2_Clients * Time_per_Client_Meeting * Frequency_of_Meetings",
+      "position": {
+        "x": 400,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-effort-remaining-after-servicing-existing-clients",
+      "name": "Effort Remaining After Servicing Existing Clients",
+      "equation": "MAX(Sales_Effort_Available - (Effort_Devoted_to_Tier_1_Clients + Effort_Devoted_to_Tier_2_Clients), 0)",
+      "position": {
+        "x": 550,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-effort-devoted-to-tier-2-leads",
+      "name": "Effort Devoted to Tier 2 Leads",
+      "equation": "MIN(Effort_Remaining_After_Servicing_Existing_Clients, Effort_Required_to_Make_a_Sale * Tier_2_Leads / Minimum_Time_to_Make_a_Sale)",
+      "position": {
+        "x": 700,
+        "y": 480
+      }
+    },
+    {
+      "id": "var-effort-remaining-after-servicing-tier-2-leads",
+      "name": "Effort Remaining After Servicing Tier 2 Leads",
+      "equation": "MAX(Effort_Remaining_After_Servicing_Existing_Clients - Effort_Devoted_to_Tier_2_Leads, 0)",
+      "position": {
+        "x": 100,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-effort-devoted-to-tier-1-leads",
+      "name": "Effort Devoted to Tier 1 Leads",
+      "equation": "Effort_Remaining_After_Servicing_Tier_2_Leads",
+      "position": {
+        "x": 250,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-tier-1-income",
+      "name": "Tier 1 Income",
+      "equation": "Tier_1_Sales * Months_of_Expenses_per_Tier_1_Sale",
+      "position": {
+        "x": 400,
+        "y": 560
+      }
+    },
+    {
+      "id": "var-tier-2-income",
+      "name": "Tier 2 Income",
+      "equation": "Tier_2_Sales * Months_of_Expenses_per_Tier_2_Sale",
+      "position": {
+        "x": 550,
+        "y": 560
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Tier 1 Clients",
+      "to_element": "Referrals from Tier 1 Clients"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Tier 2 Clients",
+      "to_element": "Referrals from Tier 2 Clients"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Referrals from Tier 1 Clients",
+      "to_element": "Tier 1 Referrals"
+    },
+    {
+      "id": "conn-4",
+      "from_element": "Referrals from Tier 1 Clients",
+      "to_element": "Tier 2 Referrals from Tier 1"
+    },
+    {
+      "id": "conn-5",
+      "from_element": "Referrals from Tier 2 Clients",
+      "to_element": "Tier 2 Referrals"
+    },
+    {
+      "id": "conn-6",
+      "from_element": "Referrals from Tier 2 Clients",
+      "to_element": "Tier 1 Referrals from Tier 2"
+    },
+    {
+      "id": "conn-7",
+      "from_element": "Months of Buffer",
+      "to_element": "Still Employed"
+    },
+    {
+      "id": "conn-8",
+      "from_element": "Still Employed",
+      "to_element": "Sales Effort Available"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.0625
+  },
+  "created_at": "2026-01-11T20:04:50.770636Z",
+  "updated_at": "2026-01-11T20:04:50.770636Z",
+  "source": "https://github.com/SDXorg/test-models",
+  "reference": "SDXorg Test Models Repository"
+}
