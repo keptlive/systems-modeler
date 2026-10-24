@@ -1,0 +1,146 @@
+{
+  "id": "chemotaxis-integral-adaptation-second-biology",
+  "name": "Cooperative chemotaxis receptor methylation and perfect adaptation",
+  "description": "Cooperative receptor activity feeds back onto methylation; the same equilibrium activity1/3 is recovered for different constant ligand inputs while methylation changes. Unbounded mean methylation is a local approximation, not an explicit finite-site receptor network or cell-motion model. Our illustrative linear F(a)=0.01*(1-a)-0.02*a specialization, team6,energy slope2,methylation reference1,ligand10,inactive/active affinities1/100,initialm1, time seconds,horizon500,RK4step0.1. Parameters are not an experimental fit. https://pmc.ncbi.nlm.nih.gov/articles/PMC2551628/ Signed net-rate flows encode the stated differential equations. No clamps or resets. These educational equations are not fitted biological forecasts.",
+  "source": "https://doi.org/10.1073/pnas.0807569105",
+  "reference": "Tu, Shimizu and Berg (2008), Modeling the chemotactic response of Escherichia coli to time-varying stimuli, PNAS105:14855-14860, receptor-team free energy and activity-dependent methylation framework.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "chemotaxis-integral-adaptation-second-biology:Methylation",
+      "name": "Methylation",
+      "initial_value": 1,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 120,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "chemotaxis-integral-adaptation-second-biology:rate:Methylation",
+      "name": "Methylation_net_rate",
+      "equation": "methylation_rate*(1-Receptor_Activity)-demethylation_rate*Receptor_Activity",
+      "to_stock": "chemotaxis-integral-adaptation-second-biology:Methylation",
+      "units": "(1)/time",
+      "position": {
+        "x": 120,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "chemotaxis-integral-adaptation-second-biology:team_size",
+      "name": "team_size",
+      "equation": "6",
+      "units": "1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "chemotaxis-integral-adaptation-second-biology:energy_slope",
+      "name": "energy_slope",
+      "equation": "2",
+      "units": "1",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "chemotaxis-integral-adaptation-second-biology:reference_methylation",
+      "name": "reference_methylation",
+      "equation": "1",
+      "units": "1",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "chemotaxis-integral-adaptation-second-biology:ligand",
+      "name": "ligand",
+      "equation": "10",
+      "units": "concentration",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    },
+    {
+      "id": "chemotaxis-integral-adaptation-second-biology:inactive_affinity",
+      "name": "inactive_affinity",
+      "equation": "1",
+      "units": "concentration",
+      "position": {
+        "x": 740,
+        "y": 50
+      }
+    },
+    {
+      "id": "chemotaxis-integral-adaptation-second-biology:active_affinity",
+      "name": "active_affinity",
+      "equation": "100",
+      "units": "concentration",
+      "position": {
+        "x": 900,
+        "y": 50
+      }
+    },
+    {
+      "id": "chemotaxis-integral-adaptation-second-biology:methylation_rate",
+      "name": "methylation_rate",
+      "equation": "0.01",
+      "units": "1/time",
+      "position": {
+        "x": 1060,
+        "y": 50
+      }
+    },
+    {
+      "id": "chemotaxis-integral-adaptation-second-biology:demethylation_rate",
+      "name": "demethylation_rate",
+      "equation": "0.02",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 120
+      }
+    },
+    {
+      "id": "chemotaxis-integral-adaptation-second-biology:Free_Energy",
+      "name": "Free_Energy",
+      "equation": "team_size*(energy_slope*(reference_methylation-Methylation)+LN((1+ligand/inactive_affinity)/(1+ligand/active_affinity)))",
+      "units": "1",
+      "position": {
+        "x": 260,
+        "y": 120
+      }
+    },
+    {
+      "id": "chemotaxis-integral-adaptation-second-biology:Receptor_Activity",
+      "name": "Receptor_Activity",
+      "equation": "1/(1+EXP(Free_Energy))",
+      "units": "1",
+      "position": {
+        "x": 420,
+        "y": 120
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 500,
+    "dt": 0.1,
+    "integration_method": "rk4",
+    "units": "time",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

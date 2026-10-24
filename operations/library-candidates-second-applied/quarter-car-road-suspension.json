@@ -1,0 +1,207 @@
+{
+  "id": "candidate-second-applied-quarter-car-road-suspension",
+  "name": "Quarter-Car Suspension with Smooth Road Rise",
+  "category": "engineering",
+  "description": "Exact source quarter-bus parameters, zero actuator force. Authored10-cm half-cosine road rise over0.2s avoids discontinuous road velocity; tire damping includes road velocity. Full10-second ring-down. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://www.ece.ualberta.ca/~tchen/ctm/examples/susp/susp.html",
+  "reference": "Control Tutorials for MATLAB, Bus Suspension Modeling",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Body",
+      "initial_value": 0.0,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "meter"
+    },
+    {
+      "id": "s1",
+      "name": "Wheel",
+      "initial_value": 0.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "meter"
+    },
+    {
+      "id": "s2",
+      "name": "BodySpeed",
+      "initial_value": 0.0,
+      "position": {
+        "x": 580,
+        "y": 150
+      },
+      "units": "meter/second"
+    },
+    {
+      "id": "s3",
+      "name": "WheelSpeed",
+      "initial_value": 0.0,
+      "position": {
+        "x": 760,
+        "y": 150
+      },
+      "units": "meter/second"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Body",
+      "equation": "BodySpeed",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "(meter)/second"
+    },
+    {
+      "id": "f1",
+      "name": "Change_Wheel",
+      "equation": "WheelSpeed",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "(meter)/second"
+    },
+    {
+      "id": "f2",
+      "name": "Change_BodySpeed",
+      "equation": "(-Spring*(Body-Wheel)-Damper*(BodySpeed-WheelSpeed))/BodyMass",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      },
+      "units": "(meter/second)/second"
+    },
+    {
+      "id": "f3",
+      "name": "Change_WheelSpeed",
+      "equation": "(Spring*(Body-Wheel)+Damper*(BodySpeed-WheelSpeed)-TireSpring*(Wheel-Road)-TireDamper*(WheelSpeed-RoadSpeed))/WheelMass",
+      "to_stock": "s3",
+      "position": {
+        "x": 670,
+        "y": 150
+      },
+      "units": "(meter/second)/second"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "BodyMass",
+      "equation": "2500",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "kg"
+    },
+    {
+      "id": "p1",
+      "name": "WheelMass",
+      "equation": "320",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "kg"
+    },
+    {
+      "id": "p2",
+      "name": "Spring",
+      "equation": "80000",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "kg/second^2"
+    },
+    {
+      "id": "p3",
+      "name": "TireSpring",
+      "equation": "500000",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "kg/second^2"
+    },
+    {
+      "id": "p4",
+      "name": "Damper",
+      "equation": "350",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "kg/second"
+    },
+    {
+      "id": "p5",
+      "name": "TireDamper",
+      "equation": "15020",
+      "position": {
+        "x": 950,
+        "y": 750
+      },
+      "units": "kg/second"
+    },
+    {
+      "id": "p6",
+      "name": "Rise",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 850
+      },
+      "units": "meter"
+    },
+    {
+      "id": "p7",
+      "name": "RiseTime",
+      "equation": "0.2",
+      "position": {
+        "x": 270,
+        "y": 850
+      },
+      "units": "second"
+    },
+    {
+      "id": "p8",
+      "name": "Road",
+      "equation": "IF(TIME<RiseTime,Rise*(1-cos(pi*TIME/RiseTime))/2,Rise)",
+      "position": {
+        "x": 440,
+        "y": 850
+      },
+      "units": "meter"
+    },
+    {
+      "id": "p9",
+      "name": "RoadSpeed",
+      "equation": "IF(TIME<RiseTime,Rise*pi*sin(pi*TIME/RiseTime)/(2*RiseTime),0)",
+      "position": {
+        "x": 610,
+        "y": 850
+      },
+      "units": "meter/second"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 10,
+    "dt": 0.002,
+    "integration_method": "rk4",
+    "units": "second"
+  }
+}

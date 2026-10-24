@@ -1,0 +1,222 @@
+{
+  "id": "candidate-second-applied-kalman-bucy-riccati-tracker",
+  "name": "Kalman-Bucy Tracker and Riccati Covariance",
+  "category": "engineering",
+  "description": "Source continuous estimator/Riccati laws specialized to constant velocity. All numerical choices and deterministic multisine measurement error are authored. P is design covariance under assumed stochastic model, not an empirical uncertainty interval or proof of stochastic optimality. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://hankyang.seas.harvard.edu/OptimalControlEstimation/output-feedback.html",
+  "reference": "Hank Yang, Harvard Optimal Control and Estimation, equations6.31\u20136.32",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Position",
+      "initial_value": 0.0,
+      "position": {
+        "x": 220,
+        "y": 150
+      }
+    },
+    {
+      "id": "s1",
+      "name": "Velocity",
+      "initial_value": 1.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "EstimatePosition",
+      "initial_value": -1.0,
+      "position": {
+        "x": 580,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "EstimateVelocity",
+      "initial_value": 0.0,
+      "position": {
+        "x": 760,
+        "y": 150
+      }
+    },
+    {
+      "id": "s4",
+      "name": "P11",
+      "initial_value": 1.0,
+      "position": {
+        "x": 940,
+        "y": 150
+      }
+    },
+    {
+      "id": "s5",
+      "name": "P12",
+      "initial_value": 0.0,
+      "position": {
+        "x": 220,
+        "y": 300
+      }
+    },
+    {
+      "id": "s6",
+      "name": "P22",
+      "initial_value": 1.0,
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Position",
+      "equation": "Velocity",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      }
+    },
+    {
+      "id": "f1",
+      "name": "Change_Velocity",
+      "equation": "Acceleration",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Change_EstimatePosition",
+      "equation": "EstimateVelocity+P11/Noise*(Measurement-EstimatePosition)",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Change_EstimateVelocity",
+      "equation": "Acceleration+P12/Noise*(Measurement-EstimatePosition)",
+      "to_stock": "s3",
+      "position": {
+        "x": 670,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Change_P11",
+      "equation": "2*P12-P11*P11/Noise",
+      "to_stock": "s4",
+      "position": {
+        "x": 850,
+        "y": 150
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Change_P12",
+      "equation": "P22-P11*P12/Noise",
+      "to_stock": "s5",
+      "position": {
+        "x": 130,
+        "y": 300
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Change_P22",
+      "equation": "Process-P12*P12/Noise",
+      "to_stock": "s6",
+      "position": {
+        "x": 310,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Noise",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 750
+      }
+    },
+    {
+      "id": "p1",
+      "name": "Process",
+      "equation": "0.1",
+      "position": {
+        "x": 270,
+        "y": 750
+      }
+    },
+    {
+      "id": "p2",
+      "name": "Acceleration",
+      "equation": "0.1*sin(AccelerationFrequency*TIME)",
+      "position": {
+        "x": 440,
+        "y": 750
+      }
+    },
+    {
+      "id": "p3",
+      "name": "Measurement",
+      "equation": "Position+0.2*sin(NoiseFrequency1*TIME)+0.1*sin(NoiseFrequency2*TIME)",
+      "position": {
+        "x": 610,
+        "y": 750
+      }
+    },
+    {
+      "id": "frequency0",
+      "name": "AccelerationFrequency",
+      "equation": "0.4",
+      "units": "1/second",
+      "position": {
+        "x": 100,
+        "y": 950
+      }
+    },
+    {
+      "id": "frequency1",
+      "name": "NoiseFrequency1",
+      "equation": "5",
+      "units": "1/second",
+      "position": {
+        "x": 250,
+        "y": 950
+      }
+    },
+    {
+      "id": "frequency2",
+      "name": "NoiseFrequency2",
+      "equation": "13",
+      "units": "1/second",
+      "position": {
+        "x": 400,
+        "y": 950
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.01,
+    "integration_method": "rk4",
+    "units": "second"
+  }
+}

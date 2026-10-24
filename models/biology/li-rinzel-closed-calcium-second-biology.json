@@ -1,0 +1,198 @@
+{
+  "id": "li-rinzel-closed-calcium-second-biology",
+  "name": "Li-Rinzel closed-store calcium and receptor inactivation",
+  "description": "IP3- and calcium-dependent release competes with saturating ER pumping and slow receptor inactivation. No plasma-membrane flux, spatial calcium waves or stochastic channel claims. Uses the documented Physiome parameters and initial C0.2,h0.8, with our explicit epsilon=0 closed-store specialization and constant total calcium2. Time is seconds: the source millisecond factors0.001 are removed consistently. Horizon200 and RK4step0.02 are illustrative verification choices. https://models.cellml.org/exposure/be7a891ac95b45c9b651f88821b6d2b4/li_rinzel_1994.cellml Signed net-rate flows encode the stated differential equations. No clamps or resets. These educational equations are not fitted biological forecasts.",
+  "source": "https://doi.org/10.1006/jtbi.1994.1041",
+  "reference": "Li and Rinzel (1994), Equations for InsP3 receptor-mediated intracellular calcium oscillations derived from a detailed kinetic model, J Theor Biol166:461-473. Physiome exposurebe7a891ac95b45c9b651f88821b6d2b4.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:Cytosolic_Calcium",
+      "name": "Cytosolic_Calcium",
+      "initial_value": 0.2,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 120,
+        "y": 200
+      }
+    },
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:Available_Receptors",
+      "name": "Available_Receptors",
+      "initial_value": 0.8,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 280,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:rate:Cytosolic_Calcium",
+      "name": "Cytosolic_Calcium_net_rate",
+      "equation": "(release_rate*Channel_Open+leak_rate)*ER_Gradient-pump_capacity*Cytosolic_Calcium^2/(pump_half^2+Cytosolic_Calcium^2)",
+      "to_stock": "li-rinzel-closed-calcium-second-biology:Cytosolic_Calcium",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 120,
+        "y": 300
+      }
+    },
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:rate:Available_Receptors",
+      "name": "Available_Receptors_net_rate",
+      "equation": "inactivation_rate*(inhibition_half-Available_Receptors*(Cytosolic_Calcium+inhibition_half))",
+      "to_stock": "li-rinzel-closed-calcium-second-biology:Available_Receptors",
+      "units": "(1)/time",
+      "position": {
+        "x": 280,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:release_rate",
+      "name": "release_rate",
+      "equation": "40",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:leak_rate",
+      "name": "leak_rate",
+      "equation": "0.02",
+      "units": "1/time",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:pump_capacity",
+      "name": "pump_capacity",
+      "equation": "0.6",
+      "units": "concentration/time",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:pump_half",
+      "name": "pump_half",
+      "equation": "0.18",
+      "units": "concentration",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    },
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:IP3",
+      "name": "IP3",
+      "equation": "0.6",
+      "units": "concentration",
+      "position": {
+        "x": 740,
+        "y": 50
+      }
+    },
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:IP3_half",
+      "name": "IP3_half",
+      "equation": "0.2",
+      "units": "concentration",
+      "position": {
+        "x": 900,
+        "y": 50
+      }
+    },
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:activation_half",
+      "name": "activation_half",
+      "equation": "0.4",
+      "units": "concentration",
+      "position": {
+        "x": 1060,
+        "y": 50
+      }
+    },
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:inhibition_half",
+      "name": "inhibition_half",
+      "equation": "0.4",
+      "units": "concentration",
+      "position": {
+        "x": 100,
+        "y": 120
+      }
+    },
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:inactivation_rate",
+      "name": "inactivation_rate",
+      "equation": "1",
+      "units": "1/(concentration*time)",
+      "position": {
+        "x": 260,
+        "y": 120
+      }
+    },
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:Total_Free_Calcium",
+      "name": "Total_Free_Calcium",
+      "equation": "2",
+      "units": "concentration",
+      "position": {
+        "x": 420,
+        "y": 120
+      }
+    },
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:volume_ratio",
+      "name": "volume_ratio",
+      "equation": "0.185",
+      "units": "1",
+      "position": {
+        "x": 580,
+        "y": 120
+      }
+    },
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:ER_Gradient",
+      "name": "ER_Gradient",
+      "equation": "Total_Free_Calcium-(1+volume_ratio)*Cytosolic_Calcium",
+      "units": "concentration",
+      "position": {
+        "x": 740,
+        "y": 120
+      }
+    },
+    {
+      "id": "li-rinzel-closed-calcium-second-biology:Channel_Open",
+      "name": "Channel_Open",
+      "equation": "(IP3/(IP3+IP3_half))^3*(Cytosolic_Calcium/(Cytosolic_Calcium+activation_half))^3*Available_Receptors^3",
+      "units": "1",
+      "position": {
+        "x": 900,
+        "y": 120
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.02,
+    "integration_method": "rk4",
+    "units": "time",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

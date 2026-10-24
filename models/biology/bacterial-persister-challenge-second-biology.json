@@ -1,0 +1,108 @@
+{
+  "id": "bacterial-persister-challenge-second-biology",
+  "name": "Reversible bacterial persister switching under antibiotic challenge",
+  "description": "A reversible phenotype mixture produces a fast killing phase and a slower surviving tail. This is transient persistence, not genetic antibiotic resistance, and does not infer individual-cell survival probabilities. Wild-type antibiotic Table1 rates perhour: normal-4,persister-0.4,forward1.2e-6,reverse0.1. Initial normal0.9999994,persister6e-7 and horizon8 are illustrative normalized population choices. RK4step0.002 resolves both decay modes. https://pmc.ncbi.nlm.nih.gov/articles/PMC1449587/ Signed net-rate flows encode the stated differential equations. No clamps or resets. These educational equations are not fitted biological forecasts.",
+  "source": "https://doi.org/10.1534/genetics.104.035352",
+  "reference": "Kussell, Kishony, Balaban and Leibler (2005), Bacterial persistence: a model of survival in changing environments, Genetics169:1807-1814, Eq1-3 and Table1; Balaban et al (2004), doi:10.1126/science.1099390.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "bacterial-persister-challenge-second-biology:Normal_Cells",
+      "name": "Normal_Cells",
+      "initial_value": 0.9999994,
+      "equation": "",
+      "units": "cell",
+      "position": {
+        "x": 120,
+        "y": 200
+      }
+    },
+    {
+      "id": "bacterial-persister-challenge-second-biology:Persister_Cells",
+      "name": "Persister_Cells",
+      "initial_value": 6e-07,
+      "equation": "",
+      "units": "cell",
+      "position": {
+        "x": 280,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "bacterial-persister-challenge-second-biology:rate:Normal_Cells",
+      "name": "Normal_Cells_net_rate",
+      "equation": "(normal_net_growth-switch_to_persister)*Normal_Cells+switch_to_normal*Persister_Cells",
+      "to_stock": "bacterial-persister-challenge-second-biology:Normal_Cells",
+      "units": "(cell)/time",
+      "position": {
+        "x": 120,
+        "y": 300
+      }
+    },
+    {
+      "id": "bacterial-persister-challenge-second-biology:rate:Persister_Cells",
+      "name": "Persister_Cells_net_rate",
+      "equation": "switch_to_persister*Normal_Cells+(persister_net_growth-switch_to_normal)*Persister_Cells",
+      "to_stock": "bacterial-persister-challenge-second-biology:Persister_Cells",
+      "units": "(cell)/time",
+      "position": {
+        "x": 280,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "bacterial-persister-challenge-second-biology:normal_net_growth",
+      "name": "normal_net_growth",
+      "equation": "-4",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "bacterial-persister-challenge-second-biology:persister_net_growth",
+      "name": "persister_net_growth",
+      "equation": "-0.4",
+      "units": "1/time",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "bacterial-persister-challenge-second-biology:switch_to_persister",
+      "name": "switch_to_persister",
+      "equation": "1.2e-06",
+      "units": "1/time",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "bacterial-persister-challenge-second-biology:switch_to_normal",
+      "name": "switch_to_normal",
+      "equation": "0.1",
+      "units": "1/time",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 8,
+    "dt": 0.002,
+    "integration_method": "rk4",
+    "units": "time",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

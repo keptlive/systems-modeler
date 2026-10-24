@@ -1,0 +1,157 @@
+{
+  "id": "candidate-second-applied-van-de-vusse-selectivity",
+  "name": "Van de Vusse CSTR Competing Reaction Selectivity",
+  "category": "engineering",
+  "description": "Authored isothermal130C specialization of source Arrhenius rates and feed5.1mol/L. Dilution20/hour and initially pure feed authored. Added C/dimer balances close source untracked products: Rate3 is A disappearance, dimer production half that rate. Not source thermal/jacket controller. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://github.com/do-mpc/do-mpc/blob/9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc/examples/CSTR/template_model.py",
+  "reference": "do-mpc CSTR benchmark, pinned9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc; Klatt and Engell mechanism",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Reactant",
+      "initial_value": 5.1,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "mole/litre"
+    },
+    {
+      "id": "s1",
+      "name": "Product",
+      "initial_value": 0.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "mole/litre"
+    },
+    {
+      "id": "s2",
+      "name": "Byproduct",
+      "initial_value": 0.0,
+      "position": {
+        "x": 580,
+        "y": 150
+      },
+      "units": "mole/litre"
+    },
+    {
+      "id": "s3",
+      "name": "Dimer",
+      "initial_value": 0.0,
+      "position": {
+        "x": 760,
+        "y": 150
+      },
+      "units": "mole/litre"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Reactant",
+      "equation": "Dilution*(Feed-Reactant)-Rate1*Reactant-Rate3*Reactant^2",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "(mole/litre)/hour"
+    },
+    {
+      "id": "f1",
+      "name": "Change_Product",
+      "equation": "Rate1*Reactant-(Dilution+Rate2)*Product",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "(mole/litre)/hour"
+    },
+    {
+      "id": "f2",
+      "name": "Change_Byproduct",
+      "equation": "Rate2*Product-Dilution*Byproduct",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      },
+      "units": "(mole/litre)/hour"
+    },
+    {
+      "id": "f3",
+      "name": "Change_Dimer",
+      "equation": "0.5*Rate3*Reactant^2-Dilution*Dimer",
+      "to_stock": "s3",
+      "position": {
+        "x": 670,
+        "y": 150
+      },
+      "units": "(mole/litre)/hour"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Dilution",
+      "equation": "20",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "1/hour"
+    },
+    {
+      "id": "p1",
+      "name": "Feed",
+      "equation": "5.1",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "mole/litre"
+    },
+    {
+      "id": "p2",
+      "name": "Rate1",
+      "equation": "39.57511371802298",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "1/hour"
+    },
+    {
+      "id": "p3",
+      "name": "Rate2",
+      "equation": "39.57511371802298",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "1/hour"
+    },
+    {
+      "id": "p4",
+      "name": "Rate3",
+      "equation": "5.43285647444248",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "litre/(mole*hour)"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 1,
+    "dt": 0.001,
+    "integration_method": "rk4",
+    "units": "hour"
+  }
+}

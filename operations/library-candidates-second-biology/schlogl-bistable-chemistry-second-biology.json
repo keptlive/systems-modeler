@@ -1,0 +1,86 @@
+{
+  "id": "schlogl-bistable-chemistry-second-biology",
+  "name": "Schloegl chemostatted autocatalytic chemical bistability",
+  "description": "Two reservoirs maintain an open autocatalytic reaction network with two stable deterministic equilibria. No stochastic switching, probability distribution or equilibrium-thermodynamics claim. Original Fig1 bistable case a=b=1, k1=3,k2=0.6,k3=0.25,k4=2.95 gives these effective deterministic coefficients. Initial0.2, horizon20 and RK4step0.005 are illustrative choices. https://pmc.ncbi.nlm.nih.gov/articles/PMC2838355/ Signed net-rate flows encode the stated differential equations. No clamps or resets. These educational equations are not fitted biological forecasts.",
+  "source": "https://doi.org/10.1098/rsif.2008.0476",
+  "reference": "Vellela and Qian (2009), Stochastic dynamics and non-equilibrium thermodynamics of a bistable chemical system: the Schloegl model revisited, J R Soc Interface6:925-940, Eq2.3 and Fig1.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "schlogl-bistable-chemistry-second-biology:Autocatalyst",
+      "name": "Autocatalyst",
+      "initial_value": 0.2,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 120,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "schlogl-bistable-chemistry-second-biology:rate:Autocatalyst",
+      "name": "Autocatalyst_net_rate",
+      "equation": "quadratic_rate*Autocatalyst^2-cubic_rate*Autocatalyst^3+inflow-linear_loss*Autocatalyst",
+      "to_stock": "schlogl-bistable-chemistry-second-biology:Autocatalyst",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 120,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "schlogl-bistable-chemistry-second-biology:quadratic_rate",
+      "name": "quadratic_rate",
+      "equation": "3",
+      "units": "1/(concentration*time)",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "schlogl-bistable-chemistry-second-biology:cubic_rate",
+      "name": "cubic_rate",
+      "equation": "0.6",
+      "units": "1/(concentration^2*time)",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "schlogl-bistable-chemistry-second-biology:inflow",
+      "name": "inflow",
+      "equation": "0.25",
+      "units": "concentration/time",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "schlogl-bistable-chemistry-second-biology:linear_loss",
+      "name": "linear_loss",
+      "equation": "2.95",
+      "units": "1/time",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.005,
+    "integration_method": "rk4",
+    "units": "time",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

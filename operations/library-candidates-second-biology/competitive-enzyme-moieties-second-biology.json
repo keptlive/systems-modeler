@@ -1,0 +1,226 @@
+{
+  "id": "competitive-enzyme-moieties-second-biology",
+  "name": "Competitive enzyme inhibition with explicit binding and moiety budgets",
+  "description": "Substrate and inhibitor compete for the same free enzyme. Six species retain inhibitor sequestration and all three conserved moieties, beyond the active uninhibited Michaelis-Menten example; no quasi-steady-state approximation. Illustrative five rates(2,0.5,0.4,5,0.1), initial substrate2,enzyme0.1,inhibitor0.4,complexes/product0. Horizon100 and RK4step0.02 are our choices. Signed net-rate flows encode the stated differential equations. No clamps or resets. These educational equations are not fitted biological forecasts.",
+  "source": "https://doi.org/10.1080/25765299.2020.1844369",
+  "reference": "Mathematical modeling for enzyme inhibitors with slow and fast subsystems (2020), Competitive inhibition, Eqs10-11.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "competitive-enzyme-moieties-second-biology:Substrate",
+      "name": "Substrate",
+      "initial_value": 2,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 120,
+        "y": 200
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:Free_Enzyme",
+      "name": "Free_Enzyme",
+      "initial_value": 0.1,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 280,
+        "y": 200
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:Inhibitor",
+      "name": "Inhibitor",
+      "initial_value": 0.4,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 440,
+        "y": 200
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:Substrate_Complex",
+      "name": "Substrate_Complex",
+      "initial_value": 0,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:Product",
+      "name": "Product",
+      "initial_value": 0,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 760,
+        "y": 200
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:Inhibitor_Complex",
+      "name": "Inhibitor_Complex",
+      "initial_value": 0,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 920,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "competitive-enzyme-moieties-second-biology:rate:Substrate",
+      "name": "Substrate_net_rate",
+      "equation": "-Substrate_Association",
+      "to_stock": "competitive-enzyme-moieties-second-biology:Substrate",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 120,
+        "y": 300
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:rate:Free_Enzyme",
+      "name": "Free_Enzyme_net_rate",
+      "equation": "-Substrate_Association+catalysis*Substrate_Complex-Inhibitor_Association",
+      "to_stock": "competitive-enzyme-moieties-second-biology:Free_Enzyme",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 280,
+        "y": 300
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:rate:Inhibitor",
+      "name": "Inhibitor_net_rate",
+      "equation": "-Inhibitor_Association",
+      "to_stock": "competitive-enzyme-moieties-second-biology:Inhibitor",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 440,
+        "y": 300
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:rate:Substrate_Complex",
+      "name": "Substrate_Complex_net_rate",
+      "equation": "Substrate_Association-catalysis*Substrate_Complex",
+      "to_stock": "competitive-enzyme-moieties-second-biology:Substrate_Complex",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:rate:Product",
+      "name": "Product_net_rate",
+      "equation": "catalysis*Substrate_Complex",
+      "to_stock": "competitive-enzyme-moieties-second-biology:Product",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 760,
+        "y": 300
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:rate:Inhibitor_Complex",
+      "name": "Inhibitor_Complex_net_rate",
+      "equation": "Inhibitor_Association",
+      "to_stock": "competitive-enzyme-moieties-second-biology:Inhibitor_Complex",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 920,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "competitive-enzyme-moieties-second-biology:substrate_binding",
+      "name": "substrate_binding",
+      "equation": "2",
+      "units": "1/(concentration*time)",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:substrate_release",
+      "name": "substrate_release",
+      "equation": "0.5",
+      "units": "1/time",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:catalysis",
+      "name": "catalysis",
+      "equation": "0.4",
+      "units": "1/time",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:inhibitor_binding",
+      "name": "inhibitor_binding",
+      "equation": "5",
+      "units": "1/(concentration*time)",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:inhibitor_release",
+      "name": "inhibitor_release",
+      "equation": "0.1",
+      "units": "1/time",
+      "position": {
+        "x": 740,
+        "y": 50
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:Substrate_Association",
+      "name": "Substrate_Association",
+      "equation": "substrate_binding*Substrate*Free_Enzyme-substrate_release*Substrate_Complex",
+      "units": "concentration/time",
+      "position": {
+        "x": 900,
+        "y": 50
+      }
+    },
+    {
+      "id": "competitive-enzyme-moieties-second-biology:Inhibitor_Association",
+      "name": "Inhibitor_Association",
+      "equation": "inhibitor_binding*Inhibitor*Free_Enzyme-inhibitor_release*Inhibitor_Complex",
+      "units": "concentration/time",
+      "position": {
+        "x": 1060,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.02,
+    "integration_method": "rk4",
+    "units": "time",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

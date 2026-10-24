@@ -1,0 +1,372 @@
+{
+  "id": "vilar-sequestration-oscillator-second-biology",
+  "name": "Vilar promoter-binding and protein-sequestration oscillator",
+  "description": "Deterministic nine-state model retains both promoter occupancies and sequestration. It does not simulate intrinsic noise or establish noise resistance; distinct from a three-gene repressilator and Hill-function clock models. All15 rates and nine initial states follow the original Fig1 caption. Time is hours and cellular volume is unity. Horizon60 and Radau outputstep0.1 are our choices. https://computableplant.ics.uci.edu/emj/classes/277C_04/papers/networks/villar_barkai.pdf Signed net-rate flows encode the stated differential equations. No clamps or resets. These educational equations are not fitted biological forecasts.",
+  "source": "https://doi.org/10.1073/pnas.092133899",
+  "reference": "Vilar, Kueh, Barkai and Leibler (2002), Mechanisms of noise-resistance in genetic oscillators, PNAS99:5988-5992, Eq1 and Fig1 caption.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:Free_Activator_Gene",
+      "name": "Free_Activator_Gene",
+      "initial_value": 1,
+      "equation": "",
+      "units": "molecule",
+      "position": {
+        "x": 120,
+        "y": 200
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:Bound_Activator_Gene",
+      "name": "Bound_Activator_Gene",
+      "initial_value": 0,
+      "equation": "",
+      "units": "molecule",
+      "position": {
+        "x": 280,
+        "y": 200
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:Free_Repressor_Gene",
+      "name": "Free_Repressor_Gene",
+      "initial_value": 1,
+      "equation": "",
+      "units": "molecule",
+      "position": {
+        "x": 440,
+        "y": 200
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:Bound_Repressor_Gene",
+      "name": "Bound_Repressor_Gene",
+      "initial_value": 0,
+      "equation": "",
+      "units": "molecule",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:Activator_mRNA",
+      "name": "Activator_mRNA",
+      "initial_value": 0,
+      "equation": "",
+      "units": "molecule",
+      "position": {
+        "x": 760,
+        "y": 200
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:Activator",
+      "name": "Activator",
+      "initial_value": 0,
+      "equation": "",
+      "units": "molecule",
+      "position": {
+        "x": 920,
+        "y": 200
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:Repressor_mRNA",
+      "name": "Repressor_mRNA",
+      "initial_value": 0,
+      "equation": "",
+      "units": "molecule",
+      "position": {
+        "x": 1080,
+        "y": 200
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:Repressor",
+      "name": "Repressor",
+      "initial_value": 0,
+      "equation": "",
+      "units": "molecule",
+      "position": {
+        "x": 1240,
+        "y": 200
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:Sequestered_Complex",
+      "name": "Sequestered_Complex",
+      "initial_value": 0,
+      "equation": "",
+      "units": "molecule",
+      "position": {
+        "x": 1400,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:rate:Free_Activator_Gene",
+      "name": "Free_Activator_Gene_net_rate",
+      "equation": "unbind_A*Bound_Activator_Gene-bind_A*Free_Activator_Gene*Activator",
+      "to_stock": "vilar-sequestration-oscillator-second-biology:Free_Activator_Gene",
+      "units": "(molecule)/time",
+      "position": {
+        "x": 120,
+        "y": 300
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:rate:Bound_Activator_Gene",
+      "name": "Bound_Activator_Gene_net_rate",
+      "equation": "bind_A*Free_Activator_Gene*Activator-unbind_A*Bound_Activator_Gene",
+      "to_stock": "vilar-sequestration-oscillator-second-biology:Bound_Activator_Gene",
+      "units": "(molecule)/time",
+      "position": {
+        "x": 280,
+        "y": 300
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:rate:Free_Repressor_Gene",
+      "name": "Free_Repressor_Gene_net_rate",
+      "equation": "unbind_R*Bound_Repressor_Gene-bind_R*Free_Repressor_Gene*Activator",
+      "to_stock": "vilar-sequestration-oscillator-second-biology:Free_Repressor_Gene",
+      "units": "(molecule)/time",
+      "position": {
+        "x": 440,
+        "y": 300
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:rate:Bound_Repressor_Gene",
+      "name": "Bound_Repressor_Gene_net_rate",
+      "equation": "bind_R*Free_Repressor_Gene*Activator-unbind_R*Bound_Repressor_Gene",
+      "to_stock": "vilar-sequestration-oscillator-second-biology:Bound_Repressor_Gene",
+      "units": "(molecule)/time",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:rate:Activator_mRNA",
+      "name": "Activator_mRNA_net_rate",
+      "equation": "active_A*Bound_Activator_Gene+basal_A*Free_Activator_Gene-mRNA_loss_A*Activator_mRNA",
+      "to_stock": "vilar-sequestration-oscillator-second-biology:Activator_mRNA",
+      "units": "(molecule)/time",
+      "position": {
+        "x": 760,
+        "y": 300
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:rate:Activator",
+      "name": "Activator_net_rate",
+      "equation": "translation_A*Activator_mRNA+unbind_A*Bound_Activator_Gene+unbind_R*Bound_Repressor_Gene-Activator*(bind_A*Free_Activator_Gene+bind_R*Free_Repressor_Gene+sequester*Repressor+protein_loss_A)",
+      "to_stock": "vilar-sequestration-oscillator-second-biology:Activator",
+      "units": "(molecule)/time",
+      "position": {
+        "x": 920,
+        "y": 300
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:rate:Repressor_mRNA",
+      "name": "Repressor_mRNA_net_rate",
+      "equation": "active_R*Bound_Repressor_Gene+basal_R*Free_Repressor_Gene-mRNA_loss_R*Repressor_mRNA",
+      "to_stock": "vilar-sequestration-oscillator-second-biology:Repressor_mRNA",
+      "units": "(molecule)/time",
+      "position": {
+        "x": 1080,
+        "y": 300
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:rate:Repressor",
+      "name": "Repressor_net_rate",
+      "equation": "translation_R*Repressor_mRNA-sequester*Activator*Repressor+protein_loss_A*Sequestered_Complex-protein_loss_R*Repressor",
+      "to_stock": "vilar-sequestration-oscillator-second-biology:Repressor",
+      "units": "(molecule)/time",
+      "position": {
+        "x": 1240,
+        "y": 300
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:rate:Sequestered_Complex",
+      "name": "Sequestered_Complex_net_rate",
+      "equation": "sequester*Activator*Repressor-protein_loss_A*Sequestered_Complex",
+      "to_stock": "vilar-sequestration-oscillator-second-biology:Sequestered_Complex",
+      "units": "(molecule)/time",
+      "position": {
+        "x": 1400,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:basal_A",
+      "name": "basal_A",
+      "equation": "50",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:active_A",
+      "name": "active_A",
+      "equation": "500",
+      "units": "1/time",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:basal_R",
+      "name": "basal_R",
+      "equation": "0.01",
+      "units": "1/time",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:active_R",
+      "name": "active_R",
+      "equation": "50",
+      "units": "1/time",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:translation_A",
+      "name": "translation_A",
+      "equation": "50",
+      "units": "1/time",
+      "position": {
+        "x": 740,
+        "y": 50
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:translation_R",
+      "name": "translation_R",
+      "equation": "5",
+      "units": "1/time",
+      "position": {
+        "x": 900,
+        "y": 50
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:mRNA_loss_A",
+      "name": "mRNA_loss_A",
+      "equation": "10",
+      "units": "1/time",
+      "position": {
+        "x": 1060,
+        "y": 50
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:mRNA_loss_R",
+      "name": "mRNA_loss_R",
+      "equation": "0.5",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 120
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:protein_loss_A",
+      "name": "protein_loss_A",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 260,
+        "y": 120
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:protein_loss_R",
+      "name": "protein_loss_R",
+      "equation": "0.2",
+      "units": "1/time",
+      "position": {
+        "x": 420,
+        "y": 120
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:bind_A",
+      "name": "bind_A",
+      "equation": "1",
+      "units": "1/(molecule*time)",
+      "position": {
+        "x": 580,
+        "y": 120
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:bind_R",
+      "name": "bind_R",
+      "equation": "1",
+      "units": "1/(molecule*time)",
+      "position": {
+        "x": 740,
+        "y": 120
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:sequester",
+      "name": "sequester",
+      "equation": "2",
+      "units": "1/(molecule*time)",
+      "position": {
+        "x": 900,
+        "y": 120
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:unbind_A",
+      "name": "unbind_A",
+      "equation": "50",
+      "units": "1/time",
+      "position": {
+        "x": 1060,
+        "y": 120
+      }
+    },
+    {
+      "id": "vilar-sequestration-oscillator-second-biology:unbind_R",
+      "name": "unbind_R",
+      "equation": "100",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 190
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.1,
+    "integration_method": "radau",
+    "units": "time",
+    "rtol": 1e-07,
+    "atol": 1e-10
+  }
+}

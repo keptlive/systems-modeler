@@ -1,0 +1,447 @@
+{
+  "candidates": [
+    {
+      "file": "planar-vtol-coupled-flight.json",
+      "id": "candidate-second-applied-planar-vtol-coupled-flight",
+      "candidate_sha256": "8785c2792b29e898ac4a8cf1b6b7cfa716e77b4a373762765c0d2328af96cb29",
+      "source": "https://github.com/python-control/python-control/blob/b4cf7360138985f84afe299337ef9ee6c25e9c38/examples/pvtol.py",
+      "citation": "Murray, python-control planar VTOL model, BSD3, pinned b4cf7360138985f84afe299337ef9ee6c25e9c38",
+      "scenario": "Exact source physical parameters and force limits; authored small-angle recovery feedback, constant hover lift and8-second experiment. Not the source optimal controller.",
+      "parameters": {
+        "Mass": 4,
+        "Inertia": 0.0475,
+        "Arm": 0.25,
+        "Gravity": 9.8,
+        "Drag": 0.05
+      },
+      "initials": {
+        "X": 0.0,
+        "Y": 0.0,
+        "Angle": 0.05,
+        "VX": 0.0,
+        "VY": 0.0,
+        "Spin": 0.0
+      },
+      "equations": {
+        "X": "VX",
+        "Y": "VY",
+        "Angle": "Spin",
+        "VX": "(Fside*cos(Angle)-Lift*sin(Angle)-Drag*VX)/Mass",
+        "VY": "(Fside*sin(Angle)+Lift*cos(Angle)-Mass*Gravity-Drag*VY)/Mass",
+        "Spin": "Arm*Fside/Inertia"
+      },
+      "settings": {
+        "start": 0,
+        "end": 8,
+        "dt": 0.005,
+        "integration_method": "rk4",
+        "units": "second"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "dc-motor-armature-speed.json",
+      "id": "candidate-second-applied-dc-motor-armature-speed",
+      "candidate_sha256": "a7cc858348a010cd0033eed4403d2cb960d454854beadfb5ef6d485da19452f1",
+      "source": "https://www.ece.ualberta.ca/~tchen/ctm/examples/motor/motor.html",
+      "citation": "Control Tutorials for MATLAB, DC Motor Speed Modeling, university mirror",
+      "scenario": "Source physical constants, zero state and1-volt step; authored finer grid. Torque and back-EMF exchange electrical and mechanical energy.",
+      "parameters": {
+        "TorqueConstant": 0.01,
+        "Friction": 0.1,
+        "Inertia": 0.01,
+        "Voltage": 1,
+        "Resistance": 1,
+        "Inductance": 0.5
+      },
+      "initials": {
+        "Speed": 0.0,
+        "Current": 0.0
+      },
+      "equations": {
+        "Speed": "(TorqueConstant*Current-Friction*Speed)/Inertia",
+        "Current": "(Voltage-Resistance*Current-TorqueConstant*Speed)/Inductance"
+      },
+      "settings": {
+        "start": 0,
+        "end": 3,
+        "dt": 0.005,
+        "integration_method": "rk4",
+        "units": "second"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "quarter-car-road-suspension.json",
+      "id": "candidate-second-applied-quarter-car-road-suspension",
+      "candidate_sha256": "9ac4d42783759fa3d55b3b70f34f75a44495debb2c97e11a66fd1e1cd206ca66",
+      "source": "https://www.ece.ualberta.ca/~tchen/ctm/examples/susp/susp.html",
+      "citation": "Control Tutorials for MATLAB, Bus Suspension Modeling",
+      "scenario": "Exact source quarter-bus parameters, zero actuator force. Authored10-cm half-cosine road rise over0.2s avoids discontinuous road velocity; tire damping includes road velocity. Full10-second ring-down.",
+      "parameters": {
+        "BodyMass": 2500,
+        "WheelMass": 320,
+        "Spring": 80000,
+        "TireSpring": 500000,
+        "Damper": 350,
+        "TireDamper": 15020,
+        "Rise": 0.1,
+        "RiseTime": 0.2
+      },
+      "initials": {
+        "Body": 0.0,
+        "Wheel": 0.0,
+        "BodySpeed": 0.0,
+        "WheelSpeed": 0.0
+      },
+      "equations": {
+        "Body": "BodySpeed",
+        "Wheel": "WheelSpeed",
+        "BodySpeed": "(-Spring*(Body-Wheel)-Damper*(BodySpeed-WheelSpeed))/BodyMass",
+        "WheelSpeed": "(Spring*(Body-Wheel)+Damper*(BodySpeed-WheelSpeed)-TireSpring*(Wheel-Road)-TireDamper*(WheelSpeed-RoadSpeed))/WheelMass"
+      },
+      "settings": {
+        "start": 0,
+        "end": 10,
+        "dt": 0.002,
+        "integration_method": "rk4",
+        "units": "second"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "exothermic-cstr-cooling.json",
+      "id": "candidate-second-applied-exothermic-cstr-cooling",
+      "candidate_sha256": "33442a6193ae6db8210074ab5f139664413bacf5305222af1dce84a2304aea90",
+      "source": "https://apmonitor.com/pdc/index.php/Main/StirredReactor",
+      "citation": "Hedengren, APMonitor Process Dynamics and Control, Stirred Reactor",
+      "scenario": "Source equations/constants and initial coolant300K equilibrium; authored time origin is coolant295K cooling step. Consistent interpretation: litre, gram, mole, joule, kelvin, minute; source comments mix unit conventions.",
+      "parameters": {
+        "FeedRate": 100,
+        "Volume": 100,
+        "FeedConcentration": 1,
+        "FeedTemperature": 350,
+        "HeatRelease": 50000,
+        "Density": 1000,
+        "HeatCapacity": 0.239,
+        "Conductance": 50000,
+        "Coolant": 295,
+        "Preexponential": 72000000000.0,
+        "Activation": 8750
+      },
+      "initials": {
+        "Concentration": 0.87725294608097,
+        "Temperature": 324.475443431599
+      },
+      "equations": {
+        "Concentration": "FeedRate/Volume*(FeedConcentration-Concentration)-Reaction",
+        "Temperature": "FeedRate/Volume*(FeedTemperature-Temperature)+HeatRelease/(Density*HeatCapacity)*Reaction+Conductance/(Volume*Density*HeatCapacity)*(Coolant-Temperature)"
+      },
+      "settings": {
+        "start": 0,
+        "end": 10,
+        "dt": 0.005,
+        "integration_method": "rk4",
+        "units": "minute"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "binary-distillation-thirty-two.json",
+      "id": "candidate-second-applied-binary-distillation-thirty-two",
+      "candidate_sha256": "6241fbc62baf40a870f66da52591d14aa705e18440704ad6e18ee21e5c445aa7",
+      "source": "https://apmonitor.com/wiki/index.php/Apps/DistillationColumn",
+      "citation": "Hahn and Edgar (2002), Computers and Chemical Engineering26:1379\u20131397; APMonitor GEKKO example",
+      "scenario": "Exact GEKKO balances/holdups; source steady solve at ratio0.7 independently reproduced, then time shifted to ratio3 step. Legacy APM branch has different holdups/initials and is not mixed in. Constant relative volatility/equimolar flows; no tray energy/pressure dynamics.",
+      "parameters": {
+        "Volatility": 1.6,
+        "Feed": 2,
+        "FeedFraction": 0.5,
+        "Ratio": 3,
+        "CondenserHold": 0.5,
+        "TrayHold": 0.25,
+        "ReboilerHold": 0.1
+      },
+      "initials": {
+        "Liquid0": 0.6961002634864907,
+        "Liquid1": 0.58874803911124,
+        "Liquid2": 0.5392644670576815,
+        "Liquid3": 0.5171790007747259,
+        "Liquid4": 0.5074639341830167,
+        "Liquid5": 0.5032177419988006,
+        "Liquid6": 0.5013670509911243,
+        "Liquid7": 0.5005614199263871,
+        "Liquid8": 0.5002109047427115,
+        "Liquid9": 0.5000584374594631,
+        "Liquid10": 0.4999921238546289,
+        "Liquid11": 0.4999632829061265,
+        "Liquid12": 0.4999507397119383,
+        "Liquid13": 0.49994528460655346,
+        "Liquid14": 0.4999429121592482,
+        "Liquid15": 0.49994188037398013,
+        "Liquid16": 0.4999414316474225,
+        "Liquid17": 0.4998684630960617,
+        "Liquid18": 0.4997460747623928,
+        "Liquid19": 0.49954082690230955,
+        "Liquid20": 0.49919670912415637,
+        "Liquid21": 0.4986200078223251,
+        "Liquid22": 0.4976542119502503,
+        "Liquid23": 0.49603873145462263,
+        "Liquid24": 0.49334191170472597,
+        "Liquid25": 0.48885490075366317,
+        "Liquid26": 0.48143051057775726,
+        "Liquid27": 0.4692575027075186,
+        "Liquid28": 0.4495944767857269,
+        "Liquid29": 0.41858633609614126,
+        "Liquid30": 0.37149187778681536,
+        "Liquid31": 0.3038997365135094
+      },
+      "equations": {
+        "Liquid0": "VaporFlow*(Vapor1-Liquid0)/CondenserHold",
+        "Liquid1": "(Reflux*(Liquid0-Liquid1)-VaporFlow*(Vapor1-Vapor2))/TrayHold",
+        "Liquid2": "(Reflux*(Liquid1-Liquid2)-VaporFlow*(Vapor2-Vapor3))/TrayHold",
+        "Liquid3": "(Reflux*(Liquid2-Liquid3)-VaporFlow*(Vapor3-Vapor4))/TrayHold",
+        "Liquid4": "(Reflux*(Liquid3-Liquid4)-VaporFlow*(Vapor4-Vapor5))/TrayHold",
+        "Liquid5": "(Reflux*(Liquid4-Liquid5)-VaporFlow*(Vapor5-Vapor6))/TrayHold",
+        "Liquid6": "(Reflux*(Liquid5-Liquid6)-VaporFlow*(Vapor6-Vapor7))/TrayHold",
+        "Liquid7": "(Reflux*(Liquid6-Liquid7)-VaporFlow*(Vapor7-Vapor8))/TrayHold",
+        "Liquid8": "(Reflux*(Liquid7-Liquid8)-VaporFlow*(Vapor8-Vapor9))/TrayHold",
+        "Liquid9": "(Reflux*(Liquid8-Liquid9)-VaporFlow*(Vapor9-Vapor10))/TrayHold",
+        "Liquid10": "(Reflux*(Liquid9-Liquid10)-VaporFlow*(Vapor10-Vapor11))/TrayHold",
+        "Liquid11": "(Reflux*(Liquid10-Liquid11)-VaporFlow*(Vapor11-Vapor12))/TrayHold",
+        "Liquid12": "(Reflux*(Liquid11-Liquid12)-VaporFlow*(Vapor12-Vapor13))/TrayHold",
+        "Liquid13": "(Reflux*(Liquid12-Liquid13)-VaporFlow*(Vapor13-Vapor14))/TrayHold",
+        "Liquid14": "(Reflux*(Liquid13-Liquid14)-VaporFlow*(Vapor14-Vapor15))/TrayHold",
+        "Liquid15": "(Reflux*(Liquid14-Liquid15)-VaporFlow*(Vapor15-Vapor16))/TrayHold",
+        "Liquid16": "(Feed*FeedFraction+Reflux*Liquid15-FeedLiquid*Liquid16-VaporFlow*(Vapor16-Vapor17))/TrayHold",
+        "Liquid17": "(FeedLiquid*(Liquid16-Liquid17)-VaporFlow*(Vapor17-Vapor18))/TrayHold",
+        "Liquid18": "(FeedLiquid*(Liquid17-Liquid18)-VaporFlow*(Vapor18-Vapor19))/TrayHold",
+        "Liquid19": "(FeedLiquid*(Liquid18-Liquid19)-VaporFlow*(Vapor19-Vapor20))/TrayHold",
+        "Liquid20": "(FeedLiquid*(Liquid19-Liquid20)-VaporFlow*(Vapor20-Vapor21))/TrayHold",
+        "Liquid21": "(FeedLiquid*(Liquid20-Liquid21)-VaporFlow*(Vapor21-Vapor22))/TrayHold",
+        "Liquid22": "(FeedLiquid*(Liquid21-Liquid22)-VaporFlow*(Vapor22-Vapor23))/TrayHold",
+        "Liquid23": "(FeedLiquid*(Liquid22-Liquid23)-VaporFlow*(Vapor23-Vapor24))/TrayHold",
+        "Liquid24": "(FeedLiquid*(Liquid23-Liquid24)-VaporFlow*(Vapor24-Vapor25))/TrayHold",
+        "Liquid25": "(FeedLiquid*(Liquid24-Liquid25)-VaporFlow*(Vapor25-Vapor26))/TrayHold",
+        "Liquid26": "(FeedLiquid*(Liquid25-Liquid26)-VaporFlow*(Vapor26-Vapor27))/TrayHold",
+        "Liquid27": "(FeedLiquid*(Liquid26-Liquid27)-VaporFlow*(Vapor27-Vapor28))/TrayHold",
+        "Liquid28": "(FeedLiquid*(Liquid27-Liquid28)-VaporFlow*(Vapor28-Vapor29))/TrayHold",
+        "Liquid29": "(FeedLiquid*(Liquid28-Liquid29)-VaporFlow*(Vapor29-Vapor30))/TrayHold",
+        "Liquid30": "(FeedLiquid*(Liquid29-Liquid30)-VaporFlow*(Vapor30-Vapor31))/TrayHold",
+        "Liquid31": "(FeedLiquid*Liquid30-(Feed-Distillate)*Liquid31-VaporFlow*Vapor31)/ReboilerHold"
+      },
+      "settings": {
+        "start": 0,
+        "end": 60,
+        "dt": 0.1,
+        "integration_method": "radau",
+        "units": "minute"
+      },
+      "reference_data": {
+        "steady_ratio": 0.7,
+        "steady_residual": 1.5099006029847817e-15
+      },
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "averaged-boost-duty-response.json",
+      "id": "candidate-second-applied-averaged-boost-duty-response",
+      "candidate_sha256": "f1a92ded07523ec1c542ed58db480ad3b6533d19b7b7a913bc8be0e70ee8490a",
+      "source": "https://ctms.engin.umich.edu/CTMS/index.php?aux=Activities_BoostcircuitA",
+      "citation": "Control Tutorials for MATLAB and Simulink, Boost Circuit Activity5(a)",
+      "scenario": "Authored continuous-conduction ideal-switch period-averaged closure of source ON/OFF Kirchhoff balances including capacitor. Authored L10mH,C1mF,R10ohm,10V; start at duty0.5 equilibrium then change to0.6. Not a switching-ripple or discontinuous-conduction model.",
+      "parameters": {
+        "InputVoltage": 10,
+        "Inductance": 0.01,
+        "Capacitance": 0.001,
+        "Load": 10,
+        "Duty": 0.6
+      },
+      "initials": {
+        "InductorCurrent": 4.0,
+        "OutputVoltage": 20.0
+      },
+      "equations": {
+        "InductorCurrent": "(InputVoltage-(1-Duty)*OutputVoltage)/Inductance",
+        "OutputVoltage": "((1-Duty)*InductorCurrent-OutputVoltage/Load)/Capacitance"
+      },
+      "settings": {
+        "start": 0,
+        "end": 0.5,
+        "dt": 0.0001,
+        "integration_method": "rk4",
+        "units": "second"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "countercurrent-exchanger-wall-storage.json",
+      "id": "candidate-second-applied-countercurrent-exchanger-wall-storage",
+      "candidate_sha256": "58e9bded4109cc12aa752fa99c334b48f3e9c83241463766ff216b55a46c2eae",
+      "source": "https://github.com/casella/ScalableTestSuite/blob/2e288e71eb0a7834310827144462726180d10500/ScalableTestSuite/Thermal/HeatExchanger.mo",
+      "citation": "Politecnico di Milano, ScalableTestSuite countercurrent heat-exchanger equations, BSD3, pinned2e288e71eb0a7834310827144462726180d10500",
+      "scenario": "Source N4 upwind fluid balances, midpoint film temperatures,3 dynamic wall sections; authored constant flows/inlets and thermal capacities. WallCapacity is effective J/K per section, resolving source cpW dimension label. Existing two-temperature exchanger lacks spatial counterflow and wall storage. No claim of spatial grid convergence.",
+      "parameters": {
+        "ColdInlet": 300,
+        "HotInlet": 310,
+        "ColdCapacityFlow": 4000,
+        "HotCapacityFlow": 4000,
+        "ConductanceA": 2000,
+        "ConductanceB": 2000,
+        "FluidCapacity": 4000,
+        "WallCapacity": 1000
+      },
+      "initials": {
+        "A0": 300.0,
+        "A1": 300.0,
+        "A2": 300.0,
+        "B0": 300.0,
+        "B1": 300.0,
+        "B2": 300.0,
+        "Wall0": 300.0,
+        "Wall1": 300.0,
+        "Wall2": 300.0
+      },
+      "equations": {
+        "A0": "(ColdCapacityFlow*(ColdInlet-A0)+HeatA0)/FluidCapacity",
+        "A1": "(ColdCapacityFlow*(A0-A1)+HeatA1)/FluidCapacity",
+        "A2": "(ColdCapacityFlow*(A1-A2)+HeatA2)/FluidCapacity",
+        "B0": "(HotCapacityFlow*(B1-B0)-HeatB0)/FluidCapacity",
+        "B1": "(HotCapacityFlow*(B2-B1)-HeatB1)/FluidCapacity",
+        "B2": "(HotCapacityFlow*(HotInlet-B2)-HeatB2)/FluidCapacity",
+        "Wall0": "(HeatB0-HeatA0)/WallCapacity",
+        "Wall1": "(HeatB1-HeatA1)/WallCapacity",
+        "Wall2": "(HeatB2-HeatA2)/WallCapacity"
+      },
+      "settings": {
+        "start": 0,
+        "end": 20,
+        "dt": 0.01,
+        "integration_method": "rk4",
+        "units": "second"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "kalman-bucy-riccati-tracker.json",
+      "id": "candidate-second-applied-kalman-bucy-riccati-tracker",
+      "candidate_sha256": "073c738e5071464ba1d922a53c8e48333c3f833f95ad51963cec132cc29eae9a",
+      "source": "https://hankyang.seas.harvard.edu/OptimalControlEstimation/output-feedback.html",
+      "citation": "Hank Yang, Harvard Optimal Control and Estimation, equations6.31\u20136.32",
+      "scenario": "Source continuous estimator/Riccati laws specialized to constant velocity. All numerical choices and deterministic multisine measurement error are authored. P is design covariance under assumed stochastic model, not an empirical uncertainty interval or proof of stochastic optimality.",
+      "parameters": {
+        "Noise": 1,
+        "Process": 0.1
+      },
+      "initials": {
+        "Position": 0.0,
+        "Velocity": 1.0,
+        "EstimatePosition": -1.0,
+        "EstimateVelocity": 0.0,
+        "P11": 1.0,
+        "P12": 0.0,
+        "P22": 1.0
+      },
+      "equations": {
+        "Position": "Velocity",
+        "Velocity": "Acceleration",
+        "EstimatePosition": "EstimateVelocity+P11/Noise*(Measurement-EstimatePosition)",
+        "EstimateVelocity": "Acceleration+P12/Noise*(Measurement-EstimatePosition)",
+        "P11": "2*P12-P11*P11/Noise",
+        "P12": "P22-P11*P12/Noise",
+        "P22": "Process-P12*P12/Noise"
+      },
+      "settings": {
+        "start": 0,
+        "end": 30,
+        "dt": 0.01,
+        "integration_method": "rk4",
+        "units": "second"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "van-de-vusse-selectivity.json",
+      "id": "candidate-second-applied-van-de-vusse-selectivity",
+      "candidate_sha256": "9e9aa9dca65cde41a89d2e9f5fe4beee4208ef145168d0d2528359f3bcd3a825",
+      "source": "https://github.com/do-mpc/do-mpc/blob/9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc/examples/CSTR/template_model.py",
+      "citation": "do-mpc CSTR benchmark, pinned9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc; Klatt and Engell mechanism",
+      "scenario": "Authored isothermal130C specialization of source Arrhenius rates and feed5.1mol/L. Dilution20/hour and initially pure feed authored. Added C/dimer balances close source untracked products: Rate3 is A disappearance, dimer production half that rate. Not source thermal/jacket controller.",
+      "parameters": {
+        "Dilution": 20,
+        "Feed": 5.1,
+        "Rate1": 39.57511371802298,
+        "Rate2": 39.57511371802298,
+        "Rate3": 5.43285647444248
+      },
+      "initials": {
+        "Reactant": 5.1,
+        "Product": 0.0,
+        "Byproduct": 0.0,
+        "Dimer": 0.0
+      },
+      "equations": {
+        "Reactant": "Dilution*(Feed-Reactant)-Rate1*Reactant-Rate3*Reactant^2",
+        "Product": "Rate1*Reactant-(Dilution+Rate2)*Product",
+        "Byproduct": "Rate2*Product-Dilution*Byproduct",
+        "Dimer": "0.5*Rate3*Reactant^2-Dilution*Dimer"
+      },
+      "settings": {
+        "start": 0,
+        "end": 1,
+        "dt": 0.001,
+        "integration_method": "rk4",
+        "units": "hour"
+      },
+      "reference_data": {
+        "temperature_kelvin": 403.15
+      },
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "three-tank-nonlinear-hydraulics.json",
+      "id": "candidate-second-applied-three-tank-nonlinear-hydraulics",
+      "candidate_sha256": "54ed9e1b5218956f02cc8af21457e2db115c329245d2d42298617c4993f17367",
+      "source": "https://github.com/do-mpc/do-mpc/blob/9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc/examples/triple_tank_ekf/template_model.py",
+      "citation": "do-mpc triple-tank EKF source, pinned9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc",
+      "scenario": "Exact source synchronous1-second Euler plant map, hydraulic parameters, initial true state and inflows. Source drain modifiers fixed1; estimator and noise omitted. Signed square-root communication permits reversal; no positivity clamps.",
+      "parameters": {
+        "Area": 0.00154,
+        "Gravity": 9.81,
+        "Orifice": 5e-05,
+        "Discharge1": 1,
+        "Discharge2": 0.8,
+        "Discharge3": 1,
+        "Inflow1": 0.0001,
+        "Inflow2": 0.0001
+      },
+      "initials": {
+        "Height1": 2.0,
+        "Height2": 2.8,
+        "Height3": 2.7
+      },
+      "equations": {
+        "Height1": "(Inflow1-Flow13)/Area",
+        "Height2": "(Inflow2+Flow32-Outflow)/Area",
+        "Height3": "(Flow13-Flow32)/Area"
+      },
+      "settings": {
+        "start": 0,
+        "end": 200,
+        "dt": 1,
+        "integration_method": "euler",
+        "units": "second",
+        "discrete_period": 1
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    }
+  ]
+}
