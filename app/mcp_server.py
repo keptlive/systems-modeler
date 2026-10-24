@@ -16,10 +16,12 @@ from app.llm.generator import generate_model, is_llm_available
 from app.llm.modifier import modify_model
 from app.core.xmile_generator import generate_xmile
 from app.storage import workspaces
+from app.sensitivity_transport import (SensitivityParameter, SensitivityRequest, resolve_sensitivity_model,
+    run_sensitivity, decode_request_json, error_payload, SensitivityTransportError)
 
 GUIDE = """Search with list_models, inspect equations with get_model, validate, then simulate.
 Use compare_scenarios to test changes. Numerical tools use no paid AI service and never
-write files. AI draft tools call the configured provider and may incur charges.
+change saved models. AI draft tools call the configured provider and may incur charges.
 Library models are illustrative legacy examples, not scientifically certified. Inspect
 initial conditions, units, equations and source references before interpreting results.
 Invalid equations return tool errors rather than substituted zeros. Euler uses
@@ -30,6 +32,8 @@ Use investigate_model for bounded full-horizon timestep comparisons and input ev
 Native tools compile_model_structure and check_model_units inspect source without simulation.
 analyze_model_feedback requires an explicitly supplied trajectory and does no hidden full run.
 import_mdl_model returns a source-preserving draft and semantic warnings; it never saves.
+analyze_model_sensitivity runs bounded deterministic local final-stock derivatives with explicit absolute steps.
+It shares a host/process-wide admission slot with HTTP requests; busy requests are rejected.
 Results describe assumptions, not independently verified forecasts.
 To drive a visible page, connect over HTTP/SSE and call open_workspace. Open its
 private page_url, then inspect_workspace, update_workspace_model, run_workspace and
@@ -270,6 +274,39 @@ def import_mdl_model(mdl_text: Annotated[str, Field(min_length=1, max_length=2_0
         return {"model": model.model_dump(mode="json"), "diagnostics": parsed["diagnostics"]}
     except (ValueError, TypeError, ArithmeticError, RecursionError) as error:
         native_failure(error)
+
+@mcp.tool(annotations=READ)
+async def analyze_model_sensitivity(
+        parameters: Annotated[list[SensitivityParameter], Field(min_length=1,max_length=8)],
+        output_stock_id: Annotated[str, Field(min_length=1,max_length=128)],
+        model_id: Optional[str]=None, model_json: Optional[dict | str]=None,
+        time_settings: Optional[TimeSettingsPatch]=None,
+        timeout_seconds: Annotated[float,Field(gt=0,le=30,strict=True)]=10,
+        max_work_units: Annotated[int,Field(ge=1,le=2_000_000,strict=True)]=2_000_000) -> dict:
+    """Read-only deterministic local final-stock sensitivity, not global importance.
+
+    Select1–8 numeric constant variable IDs with explicit absolute steps and one stock ID.
+    Exactly one model selector; object/string JSON input is bounded to2MiB.
+    Pure scalar autonomous Euler/RK4 DAGs only; unsupported cases reject explicitly.
+    Results retain failures, numerical consistency warnings, reservation and provenance.
+    Uses the same deployment-wide slot as POST /api/sensitivity/local; no save/apply.
+    Cancellation waits for child cleanup before releasing that shared slot.
+    """
+    from app.core.local_sensitivity import LocalSensitivityError
+    try:
+        raw_model=decode_request_json(model_json) if model_json is not None else None
+        request=SensitivityRequest.model_validate(decode_request_json(dict(
+            model=raw_model,model_id=model_id,
+            parameters=[p.model_dump() if isinstance(p,SensitivityParameter) else p for p in parameters],
+            output_stock_id=output_stock_id,
+            time_settings=time_settings.model_dump(exclude_unset=True) if time_settings is not None else None,
+            timeout_seconds=timeout_seconds,max_work_units=max_work_units)))
+        model=resolve_sensitivity_model(request.model_id,request.model,request.time_settings)
+        return await run_sensitivity(model,[p.model_dump() for p in request.parameters],request.output_stock_id,
+                                     timeout_seconds=request.timeout_seconds,max_work_units=request.max_work_units)
+    except (SensitivityTransportError,LocalSensitivityError,ValueError,TypeError,RecursionError) as exc:
+        raise ToolError(json.dumps(error_payload(exc),allow_nan=False)) from exc
+
 
 def settings_for(model, start_time=None, end_time=None, dt=None, integration_method=None, random_seed=None, rtol=None, atol=None):
     changes = {'start': start_time, 'end': end_time, 'dt': dt, 'integration_method': integration_method, 'random_seed': random_seed, 'rtol': rtol, 'atol': atol}
