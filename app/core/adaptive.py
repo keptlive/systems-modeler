@@ -15,7 +15,7 @@ from app.core.model import SimulationResult
 from app.core.limits import MAX_WORK_UNITS
 
 
-DISCRETE_FUNCTIONS = {'FLOOR', 'CEIL', 'ROUND', 'SIGN', 'MOD', 'MODULO', 'INT', 'TRUNC', 'QUANTUM'}
+DISCRETE_FUNCTIONS = {'FLOOR', 'CEIL', 'ROUND', 'SIGN', 'MOD', 'MODULO', 'REM', 'INT', 'TRUNC', 'QUANTUM', 'RAMP', 'RAMP_VENSIM'}
 SAFE_DIVISION_FUNCTIONS = {'SAFEDIV', 'ZIDZ', 'XIDZ'}
 
 
@@ -26,9 +26,11 @@ class _UncertifiedBoundary(Exception):
 def _matching_branch_limits(condition, yes, no, aliases, resolve_key=canonical_name):
     """A bounded algebraic proof, never a numerical sampling heuristic.
 
-    Expand algebraic aliases, impose each comparison's equality boundary, and
-    compare exact polynomials there. Continuous elementary calls can be opaque
-    atoms; an unknown denominator or domain is deliberately not certified.
+    Expand algebraic aliases and require a Boolean combination of direct
+    comparisons, whose equality surfaces cover every possible switch. Impose
+    each surface and compare exact polynomials there. Continuous elementary
+    calls can be opaque atoms; an unknown denominator or domain is deliberately
+    not certified.
     This recognizes common zero-crossing feedback and piecewise friction laws
     without claiming to locate arbitrary hybrid events.
     """
@@ -196,7 +198,22 @@ def _matching_branch_limits(condition, yes, no, aliases, resolve_key=canonical_n
 
     try:
         condition, yes, no = [expand(node) for node in (condition, yes, no)]
-        comparisons = [node for node in ast.walk(condition) if isinstance(node, ast.Compare)]
+        def comparison_leaves(node):
+            # A Boolean combination switches only where one of its comparison
+            # leaves can switch. Arbitrary arithmetic, numeric truth operands,
+            # or conditional wrappers can introduce additional zeros that the
+            # descendant comparisons do not describe.
+            if isinstance(node, ast.Compare):
+                if len(node.ops) != 1:
+                    raise _UncertifiedBoundary
+                return [node]
+            if isinstance(node, ast.BoolOp) and isinstance(node.op, (ast.And, ast.Or)):
+                return [leaf for value in node.values for leaf in comparison_leaves(value)]
+            if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.Not, ast.Invert)):
+                return comparison_leaves(node.operand)
+            raise _UncertifiedBoundary
+
+        comparisons = comparison_leaves(condition)
         if not comparisons: return False
         for comparison in comparisons:
             # A chained XMILE comparison can switch when an intermediate

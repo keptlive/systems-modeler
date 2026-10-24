@@ -24,6 +24,8 @@ def xmile_equation(text, tables, random_seed=None, original_text=None, declared_
 
     See XMILE 1.0 sections 3.3.3, 3.5 and 3.6. Rewrites never duplicate
     arguments, so lazy branches and stochastic calls keep their evaluation count.
+    Scalar compatibility extensions may remain in the native vocabulary; this
+    is not a promise that every XMILE reader supports those extension calls.
     """
     source = preprocess_equation(text)
     try:
@@ -33,14 +35,20 @@ def xmile_equation(text, tables, random_seed=None, original_text=None, declared_
     aliases = {'SMOOTH': 'SMTH1', 'SMOOTH3': 'SMTH3', 'SMOOTH_N': 'SMTHN',
                'DELAY_FIXED': 'DELAY', 'DELAY_N': 'DELAYN',
                'RANDOM_UNIFORM': 'RANDOM', 'RANDOM_NORMAL': 'NORMAL',
-               'ASIN': 'ARCSIN', 'ACOS': 'ARCCOS', 'ATAN': 'ARCTAN'}
+               'ASIN': 'ARCSIN', 'ACOS': 'ARCCOS', 'ATAN': 'ARCTAN',
+               'MODULO': 'REM'}
     arities = {**{name: (2, 3) for name in ('DELAY', 'DELAY1', 'DELAY3', 'SMTH1', 'SMTH3', 'RANDOM', 'NORMAL', 'PULSE')},
-               'DELAYN': (3, 4), 'SMTHN': (3, 4), 'RAMP': (2,), 'STEP': (2,),
+               'DELAYN': (3, 4), 'SMTHN': (3, 4), 'RAMP': (2,3), 'STEP': (2,),
                'LN': (1,), 'LOG10': (1,), 'ABS': (1,), 'EXP': (1,), 'SQRT': (1,),
                'SIN': (1,), 'COS': (1,), 'TAN': (1,), 'MIN': (2,), 'MAX': (2,),
                'ARCSIN': (1,), 'ARCCOS': (1,), 'ARCTAN': (1,)}
     arities.update({'INT': (1,), 'TRUNC': (1,), 'QUANTUM': (2,), 'SAFEDIV': (2, 3),
-                    'STARTTIME': (0,), 'STOPTIME': (0,)})
+                    'STARTTIME': (0,), 'STOPTIME': (0,),
+                    # Explicit compatibility extensions, not universal XMILE.
+                    # Preserve C remainder and Vensim eager threshold division.
+                    'REM': (2,), 'ZIDZ': (2,), 'XIDZ': (3,),
+                    'FLOOR': (1,), 'CEIL': (1,), 'ROUND': (1,), 'SIGN': (1,),
+                    'ATAN2': (2,), 'RAMP_VENSIM': (3,), 'MOD': (2,), 'RANDOM_BINOMIAL': (2,3)})
     table_names = {canonical_name(name) for name in tables}
     declared = {canonical_name(name) for name in declared_names}
     supported_nodes = (ast.Expression, ast.Constant, ast.Name, ast.Load,
@@ -84,20 +92,47 @@ def xmile_equation(text, tables, random_seed=None, original_text=None, declared_
         if isinstance(node, ast.Call):
             if not isinstance(node.func, ast.Name) or node.keywords:
                 raise ValueError('Unsupported function syntax in XMILE export; use JSON')
-            name = node.func.id.upper()
+            name = decode_identifier(node.func.id).upper()
+            table_owner=resolve_name(decode_identifier(node.func.id), tables)
+            if name == 'LOOKUP' and table_owner is None:
+                if len(node.args)!=2:
+                    raise ValueError('LOOKUP requires table and input in XMILE export')
+                first=node.args[0]
+                table_name=(decode_identifier(first.id) if isinstance(first,ast.Name)
+                            else first.value if isinstance(first,ast.Constant) and isinstance(first.value,str) else None)
+                if table_name is None or resolve_name(table_name,tables) is None:
+                    raise ValueError('LOOKUP requires a declared graphical function; use JSON')
+                # The first argument is a table reference, never an evaluated
+                # numeric/string expression. Keep its original spelling and
+                # token spans so implicit random calls in the input do not move.
+                return splice(node,skip=(first,))
             args = [render(arg) for arg in node.args]
             # Runtime graphical-function resolution precedes built-ins. In
             # particular a table named LOG or SMOOTH must keep that meaning.
-            if resolve_name(decode_identifier(node.func.id), tables) is not None:
-                if len(args) != 1 or name in {'IF', 'THEN', 'ELSE'}:
+            if table_owner is not None:
+                if len(args) != 1:
                     raise ValueError('Graphical function conflicts with XMILE built-ins or has unsupported arity; use JSON')
-                if name in arities:
+                if name in arities or name in CORE_RESERVED:
                     if resolve_name('LOOKUP', tables) is not None:
                         raise ValueError('Graphical function requires explicit LOOKUP but that name is also a table; use JSON')
                     changed = True
                     table = resolve_name(decode_identifier(node.func.id), tables)
                     return f'LOOKUP({json.dumps(table, ensure_ascii=False)}, {args[0]})'
                 return splice(node)
+            if name == 'ZIDZ':
+                if len(args)!=2:
+                    raise ValueError('ZIDZ requires two arguments in XMILE export')
+                if resolve_name('XIDZ',tables) is not None:
+                    raise ValueError('ZIDZ translation conflicts with graphical function XIDZ; use JSON')
+                # The dedicated Vensim compatibility extension keeps its eager
+                # arguments and strict near-zero threshold, each evaluated once.
+                changed=True
+                return f'XIDZ({args[0]}, {args[1]}, 0)'
+            if name == 'POW':
+                if len(args)!=2:
+                    raise ValueError('POW requires two arguments in XMILE export')
+                changed=True
+                return f'(({args[0]}) ^ ({args[1]}))'
             if name == 'LOG':
                 if len(args) not in (1, 2):
                     raise ValueError('LOG requires one or two arguments in XMILE export')
@@ -111,10 +146,15 @@ def xmile_equation(text, tables, random_seed=None, original_text=None, declared_
                 changed = True
                 return f'(IF {args[0]} THEN {args[1]} ELSE {args[2]})'
             target = aliases.get(name, name)
-            if (target in {'RANDOM', 'NORMAL'} and len(node.args) == 3
+            if (target in {'RANDOM', 'NORMAL', 'RANDOM_BINOMIAL'} and len(node.args) == 3
                     and isinstance(node.args[2], ast.Constant) and isinstance(node.args[2].value, bool)):
                 raise ValueError('Boolean random seeds are unsupported by XMILE export; use an integer seed')
-            if target in arities:
+            if target=='RANDOM_BINOMIAL' and node.args and isinstance(node.args[0],ast.Constant) and isinstance(node.args[0].value,bool):
+                raise ValueError('Boolean binomial trials are unsupported; use an integer count')
+            if target in {'MIN','MAX'}:
+                if len(args)<2:
+                    raise ValueError(f'{name} requires at least two scalar arguments')
+            elif target in arities:
                 if len(args) not in arities[target]:
                     raise ValueError(f'{name} signature is unsupported by XMILE export; use JSON')
             elif resolve_name(decode_identifier(node.func.id), tables) is None or len(args) != 1:
@@ -126,10 +166,12 @@ def xmile_equation(text, tables, random_seed=None, original_text=None, declared_
                 return f'{target}({", ".join(args)})'
         return splice(node)
 
-    def splice(node):
+    def splice(node,skip=()):
         segment = encoded[node.col_offset:node.end_col_offset]
         replacements = []
         for child in ast.iter_child_nodes(node):
+            if any(child is item for item in skip):
+                continue
             if isinstance(node, ast.Call) and child is node.func:
                 continue  # A graphical function named e is not the constant e.
             if hasattr(child, 'end_col_offset'):
@@ -151,40 +193,54 @@ def xmile_equation(text, tables, random_seed=None, original_text=None, declared_
     converted = tokenize.untokenize(tokens)
     final = restore_identifiers(converted) if changed else converted.strip()
     if random_seed is not None:
-        stochastic = {'RANDOM', 'RANDOM_UNIFORM', 'NORMAL', 'RANDOM_NORMAL'}
+        stochastic = {'RANDOM', 'RANDOM_UNIFORM', 'NORMAL', 'RANDOM_NORMAL', 'RANDOM_BINOMIAL'}
         original_tree = ast.parse(preprocess_equation(original_text), mode='eval') if original_text is not None else tree
         before = [(n.lineno, n.col_offset) for n in ast.walk(original_tree)
                   if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
-                  and n.func.id.upper() in stochastic and len(n.args) == 2]
+                  and decode_identifier(n.func.id).upper() in stochastic and len(n.args) == 2
+                  and resolve_name(decode_identifier(n.func.id),tables) is None]
         after_tree = ast.parse(preprocess_equation(final), mode='eval')
         after = [(n.lineno, n.col_offset) for n in ast.walk(after_tree)
                  if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
-                 and n.func.id.upper() in stochastic and len(n.args) == 2]
+                 and decode_identifier(n.func.id).upper() in stochastic and len(n.args) == 2
+                  and resolve_name(decode_identifier(n.func.id),tables) is None]
         if before != after:
-            raise ValueError('XMILE translation would change implicit random stream identities; use explicit function seeds or JSON')
+            # The validated native scalar vocabulary is also an explicit
+            # compatibility dialect. Keep it when a portable alias rewrite
+            # would reseed implicit calls; do not fabricate function seeds.
+            fallback=original_text if original_text is not None else text
+            fallback_tree=ast.parse(preprocess_equation(fallback),mode='eval')
+            fallback_positions=[(n.lineno,n.col_offset) for n in ast.walk(fallback_tree)
+                if isinstance(n,ast.Call) and isinstance(n.func,ast.Name)
+                and decode_identifier(n.func.id).upper() in stochastic and len(n.args)==2
+                and resolve_name(decode_identifier(n.func.id),tables) is None]
+            if before != fallback_positions:
+                raise ValueError('XMILE translation would change implicit random stream identities; use explicit function seeds or JSON')
+            final=fallback
     return final
 
 
 def generate_xmile(model: Model) -> str:
     if model.has_structure():
         raise ValueError('Structured arrays/modules require JSON export to preserve authored structure; scalar XMILE export would lose it')
-    reserved = {canonical_name(name) for name in CORE_RESERVED}
-    if any(canonical_name(element.name.strip()) in reserved for element in
-           [*model.stocks, *model.flows, *model.variables, *model.tables]):
-        raise ValueError('Element or graphical function name conflicts with reserved XMILE built-ins; use JSON')
-    if model.time_settings.discrete_period is not None:
-        raise ValueError("Discrete-period contracts are unsupported by this XMILE exporter; use JSON to preserve the period")
-    if any(v.role == "report" for v in model.variables):
-        raise ValueError("Report-only outputs are unsupported by this XMILE exporter; use JSON to preserve their roles and labels")
-    if model.time_settings.integration_method == "radau":
-        raise ValueError("Radau settings are unsupported by this XMILE 1.0 exporter; use JSON to preserve the method and tolerances")
-    root = ET.Element('xmile', {'version': '1.0', 'xmlns': NS})
+    # Native scalar profile preserves authored namespace ownership, solver
+    # settings and report semantics. It is not universal XMILE portability.
+    if any(v.role=='report' for v in model.variables):
+        from app.core.reports import prepare_reports
+        from app.core.equations import EquationError
+        try:prepare_reports(model)
+        except EquationError as exc:raise ValueError('Invalid report export: '+str(exc)) from exc
+    root = ET.Element('xmile', {'version': '1.0', 'xmlns': NS, '{'+PROVENANCE_NS+'}compatibility':'native-scalar-v1'})
     header = ET.SubElement(root, 'header')
     ET.SubElement(header, 'name').text = model.name
     ET.SubElement(header, 'vendor').text = 'Systems Modeler'
     ET.SubElement(header, 'product', {'version': '1.1.0'}).text = 'Systems Modeler'
     ET.SubElement(header, 'created').text = datetime.now(timezone.utc).isoformat()
-    specs = ET.SubElement(root, 'sim_specs', {'method': model.time_settings.integration_method})
+    specs = ET.SubElement(root, 'sim_specs', {'method': model.time_settings.integration_method,
+        '{'+PROVENANCE_NS+'}rtol':str(model.time_settings.rtol),
+        '{'+PROVENANCE_NS+'}atol':str(model.time_settings.atol)})
+    if model.time_settings.discrete_period is not None:
+        specs.set('{'+PROVENANCE_NS+'}discrete_period',str(model.time_settings.discrete_period))
     if model.time_settings.units:
         specs.set('time_units', model.time_settings.units)
     if model.time_settings.random_seed is not None:
@@ -225,7 +281,16 @@ def generate_xmile(model: Model) -> str:
             if isinstance(expr, ast.Call) and isinstance(expr.func, ast.Name) and expr.func.id.upper() == 'LOOKUP' and len(expr.args) == 2:
                 first = expr.args[0]
                 table_name = decode_identifier(first.id) if isinstance(first, ast.Name) else first.value if isinstance(first, ast.Constant) else None
-                if table_name in tables:
+                table_name = resolve_name(table_name,tables) if isinstance(table_name,str) else None
+                implicit_random = any(isinstance(call,ast.Call) and isinstance(call.func,ast.Name)
+                    and decode_identifier(call.func.id).upper() in {'RANDOM','RANDOM_UNIFORM','NORMAL','RANDOM_NORMAL','RANDOM_BINOMIAL'}
+                    and resolve_name(decode_identifier(call.func.id),tables) is None and len(call.args)==2
+                    for call in ast.walk(expr))
+                if model.time_settings.random_seed is not None and implicit_random:
+                    table_name=None
+                # Moving an implicitly seeded input changes its stream identity.
+                # Keep the original LOOKUP plus a standalone table instead.
+                if table_name in tables and not (model.time_settings.random_seed is not None and implicit_random):
                     argument = restore_identifiers(ast.unparse(expr.args[1]))
                     text = argument if table_name == element_name else f'{json.dumps(table_name, ensure_ascii=False)}({argument})'
         except (SyntaxError, ValueError):
@@ -252,7 +317,11 @@ def generate_xmile(model: Model) -> str:
             ET.SubElement(node, 'units').text = flow.units
     for variable in model.variables:
         node = ET.SubElement(variables, 'aux', {'name': variable.name})
-        equation(node, variable.equation, variable.name)
+        if variable.role=='report':
+            node.set('{'+PROVENANCE_NS+'}role','report')
+            ET.SubElement(node,'eqn').text=variable.equation
+        else:
+            equation(node, variable.equation, variable.name)
         if variable.units:
             ET.SubElement(node, 'units').text = variable.units
     for table in model.tables:

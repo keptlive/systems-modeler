@@ -2,6 +2,7 @@
 import xml.etree.ElementTree as ET
 from typing import Optional
 import re
+import json
 from .model import Model, Stock, Flow, Variable, Connector, Position, TimeSettings, LookupTable
 from .equations import canonical_name, symbol_identity, resolve_name
 
@@ -44,10 +45,13 @@ def _prepare_namespaces(root):
     if namespace not in _XMILE_NAMESPACES:
         _namespace_error(root.tag, "/xmile")
     metadata = None
-    stack = [(root, "/xmile", 0)]
+    native_profile=root.get('{'+_PROVENANCE_NS+'}compatibility')
+    if native_profile is not None and native_profile!='native-scalar-v1':
+        raise XmileNamespaceError('Unsupported Stock & Flow scalar compatibility profile')
+    stack = [(root, "/xmile", 0, None)]
     count = 0
     while stack:
-        element, path, depth = stack.pop()
+        element, path, depth, parent_tag = stack.pop()
         count += 1
         if count > _MAX_XML_ELEMENTS or depth > _MAX_XML_DEPTH:
             raise ValueError("XMILE document exceeds element or nesting limits")
@@ -91,6 +95,16 @@ def _prepare_namespaces(root):
             known = known_annotation or (attr_uri == _PROVENANCE_NS and
                      ((tag == "sim_specs" and attr_tag == "random_seed") or
                       (tag == "gf" and attr_tag in {"input_units", "output_units"})))
+            known |= (attr_uri == _PROVENANCE_NS and (
+                (tag=='xmile' and depth==0 and attr_tag=='compatibility') or
+                (native_profile=='native-scalar-v1' and tag=='sim_specs' and parent_tag=='xmile' and depth==1
+                 and attr_tag in {'rtol','atol','discrete_period'}) or
+                (native_profile=='native-scalar-v1' and tag=='aux' and parent_tag=='variables'
+                 and re.fullmatch(r'/xmile/(?:model\[\d+\]/)?variables\[\d+\]/aux\[\d+\]',path) is not None
+                 and attr_tag=='role')))
+            if attr_uri==_PROVENANCE_NS and attr_tag=='role' and known:
+                if element.get(attr) not in {'report','auxiliary'}:
+                    raise ValueError('Invalid Stock & Flow auxiliary role')
             known |= (attr_uri == "http://iseesystems.com/XMILE"
                       and tag == "sim_specs" and attr_tag == "sim_duration")
             if not known:
@@ -100,7 +114,7 @@ def _prepare_namespaces(root):
             child_local = _expanded(child.tag)[1]
             # Truncate each step; error paths never grow with untrusted depth.
             child_path = (path + "/" + child_local[:60] + f"[{index + 1}]")[-160:]
-            stack.append((child, child_path, depth + 1))
+            stack.append((child, child_path, depth + 1, tag))
     return metadata
 
 
@@ -161,6 +175,14 @@ def parse_xmile(xml_content: str) -> Model:
         raise ValueError("XMILE inputs are limited to 2 MiB")
     root = ET.fromstring(xml_content)
     metadata = _prepare_namespaces(root)
+    native_profile=root.get('{'+_PROVENANCE_NS+'}compatibility')=='native-scalar-v1'
+    if native_profile and len(root.findall('.//sim_specs'))>1:
+        raise ValueError('Native scalar XMILE requires one unambiguous sim_specs element')
+    def authored_name(element):
+        value=element.get('name','')
+        return value if native_profile else value.strip()
+    def reference_text(value):
+        return value if native_profile else value.strip()
     # Scalar XMILE exporters may emit an empty dimensions container. Only
     # declarations carry array semantics; do not reject harmless metadata.
     if len(root.findall(".//model")) > 1 or any(len(dimensions) for dimensions in root.findall(".//dimensions")):
@@ -201,8 +223,16 @@ def parse_xmile(xml_content: str) -> Model:
         seed = int(seed) if seed is not None else None
     except ValueError as exc:
         raise ValueError("Invalid Stock & Flow random seed") from exc
+    native_settings={}
+    if sim_specs is not None:
+        for field in ('rtol','atol','discrete_period'):
+            value=sim_specs.get('{'+_PROVENANCE_NS+'}'+field)
+            if value is not None:
+                try:native_settings[field]=float(value)
+                except ValueError as exc:raise ValueError('Invalid Stock & Flow '+field) from exc
     time_settings = TimeSettings(start=start, end=end, dt=dt, integration_method=method, random_seed=seed,
-                                 units=sim_specs.get('time_units') if sim_specs is not None else None)
+                                 units=sim_specs.get('time_units') if sim_specs is not None else None,
+                                 **native_settings)
 
     # Parse variables - preserve underscores in names for equation compatibility
     stocks, flows, variables, tables = [], [], [], []
@@ -215,10 +245,13 @@ def parse_xmile(xml_content: str) -> Model:
 
     if vars_elem is not None:
         for gf in vars_elem.findall("gf"):
-            name_value = gf.get("name", "").strip()
+            name_value = authored_name(gf)
             if not name_value:
                 raise ValueError("A standalone graphical function requires a name")
-            tables.append(LookupTable(name=name_value, points=parse_graphical_function(gf),
+            points=parse_graphical_function(gf)
+            if not points:
+                raise ValueError(f"Graphical function '{name_value}' has no valid points")
+            tables.append(LookupTable(name=name_value, points=points,
                                       input_units=gf.get('{https://stockandflow.live/ns/model}input_units'),
                                       output_units=gf.get('{https://stockandflow.live/ns/model}output_units'),
                                       interpolation=gf.get("type", "continuous")))
@@ -235,10 +268,10 @@ def parse_xmile(xml_content: str) -> Model:
                                       input_units=gf.get('{https://stockandflow.live/ns/model}input_units'),
                                       output_units=gf.get('{https://stockandflow.live/ns/model}output_units'),
                                       interpolation=gf.get("type", "continuous")))
-            return f"LOOKUP({table_name!r}, ({equation}))" if equation else None
+            return f"LOOKUP({json.dumps(table_name, ensure_ascii=False)}, ({equation}))" if equation else None
 
         for s in vars_elem.findall("stock"):
-            n = s.get("name", "").strip()
+            n = authored_name(s)
             if n:
                 eqn = s.find("eqn")
                 val = 0.0
@@ -255,29 +288,34 @@ def parse_xmile(xml_content: str) -> Model:
                 stock_outflows[n] = []
                 for inflow in s.findall("inflow"):
                     if inflow.text:
-                        stock_inflows[n].append(inflow.text.strip())
+                        stock_inflows[n].append(reference_text(inflow.text))
                 for outflow in s.findall("outflow"):
                     if outflow.text:
-                        stock_outflows[n].append(outflow.text.strip())
+                        stock_outflows[n].append(reference_text(outflow.text))
 
         for f in vars_elem.findall("flow"):
-            n = f.get("name", "").strip()
+            n = authored_name(f)
             if n:
                 eqn = f.find("eqn")
                 eq = "0"
                 if eqn is not None and eqn.text:
                     eq = eqn.text.strip()
+                if f.find("gf") is not None and (eqn is None or not (eqn.text or "").strip()):
+                    raise ValueError(f"Flow '{n}' graphical function requires a nonempty input equation")
                 eq = import_graph(f, n, eq)
                 flows.append(Flow(name=n, equation=eq, units=f.findtext("units"), position=Position(x=150, y=100)))
 
         for a in vars_elem.findall("aux"):
-            n = a.get("name", "").strip()
+            n = authored_name(a)
             if n:
                 eqn = a.find("eqn")
-                eq = eqn.text.strip() if eqn is not None and eqn.text else ""
+                role=a.get('{'+_PROVENANCE_NS+'}role','auxiliary')
+                raw_equation=eqn.text if eqn is not None and eqn.text is not None else ""
+                eq=raw_equation if native_profile and role=='report' else raw_equation.strip()
                 eq = import_graph(a, n, eq)
                 if eq is not None:
-                    variables.append(Variable(name=n, equation=eq or "0", units=a.findtext("units"), position=Position(x=200, y=100)))
+                    variables.append(Variable(name=n, equation=eq or "0", units=a.findtext("units"),
+                        role=role,position=Position(x=200, y=100)))
 
     # Set flow connections based on stock inflows/outflows
     flow_map = {}
@@ -313,21 +351,21 @@ def parse_xmile(xml_content: str) -> Model:
         var_map = {v.name.lower(): v for v in variables}
 
         for elem in view.findall(".//stock"):
-            n = elem.get("name", "").strip().lower()
+            n = authored_name(elem).lower()
             if n in stock_map:
                 stock_map[n].position = Position(
                     x=float(elem.get("x", 100)),
                     y=float(elem.get("y", 100))
                 )
         for elem in view.findall(".//flow"):
-            n = elem.get("name", "").strip().lower()
+            n = authored_name(elem).lower()
             if n in flow_map:
                 flow_map[n].position = Position(
                     x=float(elem.get("x", 150)),
                     y=float(elem.get("y", 100))
                 )
         for elem in view.findall(".//aux"):
-            n = elem.get("name", "").strip().lower()
+            n = authored_name(elem).lower()
             if n in var_map:
                 var_map[n].position = Position(
                     x=float(elem.get("x", 200)),
@@ -337,7 +375,6 @@ def parse_xmile(xml_content: str) -> Model:
     # Create the model first, then auto-generate connectors
     from app.core.model import generate_connectors_from_equations
 
-    import json
     retained_source = metadata.findtext('source_document') if metadata is not None else None
     model = Model(
         source_document=json.loads(retained_source) if retained_source else None,
