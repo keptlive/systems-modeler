@@ -11,7 +11,7 @@ import math
 from collections import Counter
 from pathlib import Path
 
-from app.core.equations import (SAFE_CONSTANTS, canonical_name, decode_identifier,
+from app.core.equations import (SAFE_CONSTANTS, canonical_name, symbol_identity, resolve_name, decode_identifier,
                                 equation_features, get_equation_variables, preprocess_equation)
 from app.core.model import Model, TimeSettings
 from app.core.limits import MAX_INTERVALS, MAX_RETAINED_VALUES, MAX_WORK_UNITS
@@ -41,7 +41,7 @@ def _finite(value):
 def equation_evidence(model):
     """Find unresolved names, syntax and sensitive operations without guessing fixes."""
     elements = [*model.stocks, *model.flows, *model.variables]
-    originals = {canonical_name(e.name): e.name for e in elements}
+    originals = {symbol_identity(e.name): e.name for e in elements}
     defined = set(originals) | {canonical_name(n) for n in SAFE_CONSTANTS} | {"time", "dt", "time_step"}
     table_names = {canonical_name(t.name) for t in model.tables}
     missing, domains, syntax, functions = [], [], [], set()
@@ -69,7 +69,10 @@ def equation_evidence(model):
             stochastic = stochastic or bool(equation_features(equation, [t.name for t in model.tables])["random_calls"])
         except Exception as error:
             syntax.append({"element": element.name, "equation": equation, "error": str(error), "stage": "engine_feature_check"})
-        absent = sorted(n for n in get_equation_variables(equation) if canonical_name(n) not in defined and canonical_name(n) not in table_names)
+        absent = sorted(n for n in get_equation_variables(equation)
+                        if resolve_name(n, [e.name for e in elements]) is None
+                        and symbol_identity(n) not in {*SAFE_CONSTANTS, "time", "dt", "time_step"}
+                        and resolve_name(n, [t.name for t in model.tables]) is None)
         if absent:
             missing.append({"element": element.name, "equation": equation, "undefined_symbols": absent})
         operations = sorted(calls & {"LOG", "LN", "LOG10", "SQRT", "ASIN", "ACOS", "POWER", "EXP"})
@@ -79,7 +82,7 @@ def equation_evidence(model):
             operations.append("power")
         if operations:
             domains.append({"element": element.name, "equation": equation, "operations_to_review": operations})
-    duplicates = sorted(n for n, count in Counter(canonical_name(e.name) for e in elements).items() if count > 1)
+    duplicates = sorted(n for n, count in Counter(symbol_identity(e.name) for e in elements).items() if count > 1)
     return {"undefined_symbols": missing, "syntax": syntax, "ambiguous_names": duplicates,
             "domain_sensitive_equations": domains, "called_functions": sorted(functions),
             "stochastic": stochastic,

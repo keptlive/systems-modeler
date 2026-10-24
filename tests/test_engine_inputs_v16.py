@@ -1,7 +1,7 @@
 """Read-only v1.6 input-semantics findings; no engine/model repairs.
 
-Passing tests pin supported/current documented behavior. Strict xfails describe
-bounded XMILE identifier gaps; they must not silently weaken legacy alias rules.
+Passing tests pin supported/current documented behavior. Regression cases preserve literal identifier distinctions without weakening
+existing case/standard-whitespace alias rules.
 """
 import pytest
 from app.core.equations import EquationError, safe_eval
@@ -109,21 +109,18 @@ def test_signed_stocks_are_not_globally_clamped_to_zero():
       flows=[{"name":"Withdrawal","equation":"1","from_stock":"x"}])
     assert simulate(m).values["Signed Account"][-1]==-1
 
-@pytest.mark.xfail(strict=True,reason="Unresolved strict-XMILE gap: punctuation is literal in quoted identifiers; legacy aliases collapse it.")
 def test_strict_xmile_quoted_punctuation_identifiers_should_remain_distinct():
     m=output_model(variables=[
       {"name":"A-B","equation":"1"},{"name":"A_B","equation":"2"},
       {"name":"Output","equation":'"A-B"+"A_B"'}])
     assert simulate(m).values["Output"]==[3]*9
 
-@pytest.mark.xfail(strict=True,reason="Unresolved strict-XMILE gap: en-space must not be equivalent to underscore.")
 def test_strict_xmile_en_space_is_not_whitespace_alias():
     m=output_model(variables=[
       {"name":"A B","equation":"1"},{"name":"A_B","equation":"2"},
       {"name":"Output","equation":'"A B"+"A_B"'}])
     assert simulate(m).values["Output"]==[3]*9
 
-@pytest.mark.xfail(strict=True,reason="Unresolved strict-XMILE lexer gap: dollar is allowed after the first identifier character.")
 def test_strict_xmile_unquoted_internal_dollar_identifier():
     assert safe_eval("Cash$Balance+1",{"Cash$Balance":2})==3
 

@@ -8,7 +8,7 @@ import re
 from datetime import datetime, timezone
 import xml.etree.ElementTree as ET
 from app.core.model import Model
-from app.core.equations import preprocess_equation, canonical_name, decode_identifier, restore_identifiers
+from app.core.equations import preprocess_equation, canonical_name, resolve_name, decode_identifier, restore_identifiers
 
 NS = 'http://docs.oasis-open.org/xmile/ns/XMILE/v1.0'
 PROVENANCE_NS = 'https://stockandflow.live/ns/model'
@@ -61,8 +61,8 @@ def xmile_equation(text, tables, random_seed=None, original_text=None, declared_
             if name.upper() == 'TIME_STEP':
                 changed = True
                 return 'DT'
-            if name.lower() == 'e' and canonical_name(name) not in declared:
-                if canonical_name('EXP') in table_names:
+            if name.lower() == 'e' and resolve_name(name, declared_names) is None:
+                if resolve_name('EXP', tables) is not None:
                     raise ValueError('Constant e translation conflicts with graphical function EXP; use JSON')
                 changed = True
                 return 'EXP(1)'
@@ -84,7 +84,7 @@ def xmile_equation(text, tables, random_seed=None, original_text=None, declared_
             args = [render(arg) for arg in node.args]
             # Runtime graphical-function resolution precedes built-ins. In
             # particular a table named LOG or SMOOTH must keep that meaning.
-            if canonical_name(decode_identifier(node.func.id)) in table_names:
+            if resolve_name(decode_identifier(node.func.id), tables) is not None:
                 if len(args) != 1 or name in arities or name in {'IF', 'THEN', 'ELSE'}:
                     raise ValueError('Graphical function conflicts with XMILE built-ins or has unsupported arity; use JSON')
                 return splice(node)
@@ -92,7 +92,7 @@ def xmile_equation(text, tables, random_seed=None, original_text=None, declared_
                 if len(args) not in (1, 2):
                     raise ValueError('LOG requires one or two arguments in XMILE export')
                 changed = True
-                if canonical_name('LN') in table_names:
+                if resolve_name('LN', tables) is not None:
                     raise ValueError('LOG translation conflicts with a graphical function named LN; use JSON')
                 return f'LN({args[0]})' if len(args) == 1 else f'(LN({args[0]}) / LN({args[1]}))'
             if name in ('IF', 'IF_THEN_ELSE'):
@@ -107,10 +107,10 @@ def xmile_equation(text, tables, random_seed=None, original_text=None, declared_
             if target in arities:
                 if len(args) not in arities[target]:
                     raise ValueError(f'{name} signature is unsupported by XMILE export; use JSON')
-            elif canonical_name(decode_identifier(node.func.id)) not in table_names or len(args) != 1:
+            elif resolve_name(decode_identifier(node.func.id), tables) is None or len(args) != 1:
                 raise ValueError(f'{name} is unsupported by XMILE export; use JSON')
             if target != name:
-                if canonical_name(target) in table_names:
+                if resolve_name(target, tables) is not None:
                     raise ValueError(f'{name} translation conflicts with graphical function {target}; use JSON')
                 changed = True
                 return f'{target}({", ".join(args)})'
@@ -217,7 +217,7 @@ def generate_xmile(model: Model) -> str:
                 table_name = decode_identifier(first.id) if isinstance(first, ast.Name) else first.value if isinstance(first, ast.Constant) else None
                 if table_name in tables:
                     argument = restore_identifiers(ast.unparse(expr.args[1]))
-                    text = argument if table_name == element_name else f'{canonical_name(table_name)}({argument})'
+                    text = argument if table_name == element_name else f'{json.dumps(table_name, ensure_ascii=False)}({argument})'
         except (SyntaxError, ValueError):
             pass
         ET.SubElement(parent, 'eqn').text = xmile_equation(text, tables, model.time_settings.random_seed, original_text, declared_names)

@@ -43,6 +43,40 @@ assert.equal(rename('")" + 1',')','Right'),'"Right" + 1');
 assert.equal(app.identifierKey('Straße'),app.identifierKey('STRASSE'));
 assert.equal(app.identifierKey('Total__Population'),app.identifierKey('total population'));
 assert.equal(app.identifierKey('é'),app.identifierKey('e\u0301'));
+// Imported literal names remain separate throughout an editor rename.
+for (const literal of ['A-B','A\u2002B']) {
+ use({stocks:[],flows:[],tables:[],connectors:[],variables:[
+  {id:'literal',name:literal,equation:'1'},
+  {id:'underscore',name:'A_B',equation:'2'},
+  {id:'out',name:'Output',equation:JSON.stringify(literal)+'+A_B'}]},'variable','literal');
+ assert.equal(app.updateProperty('name','Renamed'),true);
+ assert.equal(app.model.variables[2].equation,'"Renamed"+A_B');
+ assert.equal(app.model.variables[1].name,'A_B');
+}
+assert.equal(rename('Cash$Balance+1','Cash$Balance','Cash Total'),'"Cash Total"+1');
+assert.equal(rename('Wall_R_Value+1','Wall R-Value','Insulation'),'"Insulation"+1');
+assert.throws(()=>rename('A__B','A-B','New',[],['A-B','A.B']),/Ambiguous/);
+assert.equal(rename('A_B+"A-B"','A-B','New',[],['A-B','A_B']),'A_B+"New"');
+// A rename cannot steal a reference that previously used another name's
+// unique legacy alias, or turn an unknown symbol into a different binding.
+for (const [existing,reference,renamed] of [
+ ['A-B','A_B','A_B'], ['A_B','"A-B"','A-B'],
+ ['A.B','A__B','A-B'], ['Existing','Missing','Missing']
+]) {
+ use({stocks:[],flows:[],tables:[],connectors:[],variables:[
+  {id:'x',name:'X',equation:'1'}, {id:'other',name:existing,equation:'2'},
+  {id:'out',name:'Output',equation:reference+'+X'}]},'variable','x');
+ const original=JSON.stringify(app.model);
+ assert.equal(app.updateProperty('name',renamed),false);
+ assert.equal(JSON.stringify(app.model),original);
+}
+// Real table arguments/functions stay in their own namespace even when a
+// variable would match their spelling through a legacy alias.
+use({stocks:[],flows:[],connectors:[],tables:[{name:'A-B',points:[[0,0],[1,1]]}],variables:[
+ {id:'x',name:'A_B',equation:'1'},
+ {id:'out',name:'Output',equation:'LOOKUP("A-B",A_B)+"A-B"(A_B)'}]},'variable','x');
+assert.equal(app.updateProperty('name','Renamed'),true);
+assert.equal(app.model.variables[1].equation,'LOOKUP("A-B","Renamed")+"A-B"("Renamed")');
 for(const name of ['', '  ', 'TIME','dt','Population Growth']){
  use();const original=JSON.stringify(app.model);
  assert.equal(app.updateProperty('name',name),false);

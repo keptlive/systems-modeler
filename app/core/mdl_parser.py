@@ -2,7 +2,7 @@
 import json
 import math
 import re
-from app.core.equations import canonical_name, validate_equation
+from app.core.equations import canonical_name, symbol_identity, resolve_name, validate_equation
 
 MAX_SOURCE_BYTES = 2_000_000
 MAX_RECORDS = 500
@@ -96,7 +96,7 @@ def parse_mdl(text):
             name=re.sub(r"\s+", " ", lhs).strip()
         if not name or any(c in name for c in "[]:~|=()\\") or name.startswith("*"):
             fail("Arrays, macros and non-scalar declarations are unsupported", record=number)
-        key=canonical_name(name)
+        key=symbol_identity(name)
         if key in {"time", "dt"}:
             fail("Variable name conflicts with reserved scalar execution symbol", "duplicate_name", number)
         if key in names:
@@ -143,12 +143,18 @@ def parse_mdl(text):
         "time_settings":{"start":start,"end":end,"dt":dt,"units":time_units,"integration_method":"euler"}}
     # Declared names are matched longest first, case-insensitively; spaces and
     # underscores share the engine's documented identifier alias convention.
-    model_names={canonical_name(e["name"]):e["name"] for e in entries}
+    model_names={symbol_identity(e["name"]):e["name"] for e in entries}
     candidates=dict(model_names)
+    # Retain only unambiguous legacy spellings; literal declarations win.
+    legacy = {}
+    for name in model_names.values():
+        legacy.setdefault(canonical_name(name), []).append(name)
+    candidates.update({key: names[0] for key,names in legacy.items()
+                       if len(names) == 1 and key not in candidates})
     candidates.update({"time":"TIME","time_step":"DT","initial_time":str(start),"final_time":str(end)})
     patterns=[]
     for key,name in candidates.items():
-        pattern=r"[ _\s]+".join(re.escape(part) for part in key.split("_"))
+        pattern=r"[ _\n\u00a0]+".join(re.escape(part) for part in key.split("_"))
         patterns.append((re.compile(pattern,re.I),key,name))
     patterns.sort(key=lambda x:len(x[1]),reverse=True)
     funcs={"IF THEN ELSE":"IF_THEN_ELSE",
@@ -176,10 +182,10 @@ def parse_mdl(text):
             if expr[pos]=='"':
                 m=re.match(r'"(?:[^"\\]|\\.)*"',expr[pos:])
                 if not m:fail("Unterminated identifier", "invalid_syntax",record)
-                try:key=canonical_name(json.loads(m.group()))
+                try:owner=resolve_name(json.loads(m.group()), model_names.values())
                 except ValueError:fail("Invalid quoted identifier","invalid_syntax",record)
-                if key not in model_names:fail("Unknown quoted reference",record=record)
-                output.append(json.dumps(model_names[key]));pos+=len(m.group());continue
+                if owner is None:fail("Unknown quoted reference",record=record)
+                output.append(json.dumps(owner));pos+=len(m.group());continue
             number=re.match(NUMBER,expr[pos:])
             # Signs are operators; retaining a signed numeric token is equivalent.
             if number:
@@ -272,7 +278,7 @@ def parse_mdl(text):
                 expression=translate(rhs,record)
             model["variables"].append({"id":"mdl:"+name,"name":name,"equation":expression,"units":units})
     all_names=[e["name"] for k in ("stocks","flows","variables") for e in model[k]]
-    canonical=[canonical_name(n) for n in all_names]
+    canonical=[symbol_identity(n) for n in all_names]
     if len(canonical)!=len(set(canonical)):
         fail("Generated net flow name conflicts with source variable","duplicate_name")
     for kind in ("stocks","flows","variables"):

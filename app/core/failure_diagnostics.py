@@ -1,7 +1,7 @@
 """Runtime failure causes without evaluating extra branches or repairing inputs."""
 import math
 from pydantic import ValidationError
-from app.core.equations import EquationError, canonical_name
+from app.core.equations import EquationError, resolve_name
 
 
 def error_code(error):
@@ -31,7 +31,7 @@ def stalled_evaluation(model, pending, errors, time, stocks):
     cycles are reported without assuming a solver or evaluating lazy branches.
     """
     elements = {e.name: e for e in [*model.stocks, *model.variables, *model.flows]}
-    names = {canonical_name(name): name for name, _ in pending}
+    names = {name for name, _ in pending}
     records = {}
     edges = {}
     for name, equation in pending:
@@ -42,8 +42,8 @@ def stalled_evaluation(model, pending, errors, time, stocks):
         records[name] = record
         symbol = record.get("symbol")
         if record["code"] == "unknown_variable" and symbol is not None:
-            dependency = names.get(canonical_name(symbol))
-            if dependency is not None:
+            dependency = resolve_name(symbol, elements)
+            if dependency in names:
                 edges[name] = dependency
     roots = [record for name, record in records.items() if name not in edges]
     cycles = {}

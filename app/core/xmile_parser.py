@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 from typing import Optional
 import re
 from .model import Model, Stock, Flow, Variable, Connector, Position, TimeSettings, LookupTable
-from .equations import canonical_name
+from .equations import canonical_name, symbol_identity, resolve_name
 
 
 
@@ -282,12 +282,12 @@ def parse_xmile(xml_content: str) -> Model:
     # Set flow connections based on stock inflows/outflows
     flow_map = {}
     for flow in flows:
-        key = canonical_name(flow.name)
+        key = symbol_identity(flow.name)
         if key in flow_map:
             raise ValueError(f"Ambiguous XMILE flow name: {flow.name}")
         flow_map[key] = flow
     def link_flow(flow_name, stock_name, endpoint):
-        flow = flow_map.get(canonical_name(flow_name))
+        flow = flow_map.get(symbol_identity(resolve_name(flow_name, [f.name for f in flows]) or flow_name))
         if flow is None:
             raise ValueError(f"Stock '{stock_name}' references missing flow '{flow_name}'")
         current = getattr(flow, endpoint)

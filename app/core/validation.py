@@ -26,16 +26,16 @@ def inspect_inputs(model: Model, numerical_check=True) -> dict:
         issues.append({"severity": severity, "code": code, "element": element, "message": message, **details})
     elements = [*model.stocks, *model.flows, *model.variables]
     names = [e.name for e in elements]
-    from app.core.equations import canonical_name
+    from app.core.equations import symbol_identity
     for identifier, count in Counter(e.id for e in elements).items():
         if count > 1:
             issue("error", "duplicate_element_id", "Element IDs must be unique for unambiguous edits and selection", identifier)
-    for name, count in Counter(canonical_name(e.name) for e in elements).items():
+    for name, count in Counter(symbol_identity(e.name) for e in elements).items():
         if count > 1:
-            issue("error", "name_collision", "Element names collide after case/space/punctuation normalization", name)
+            issue("error", "name_collision", "Element names collide after case and XMILE whitespace normalization", name)
         if name in {"time", "dt", "time_step"}:
             issue("error", "reserved_name", "TIME, DT and TIME_STEP are reserved simulation names", name)
-    for name, count in Counter(canonical_name(t.name) for t in model.tables).items():
+    for name, count in Counter(symbol_identity(t.name) for t in model.tables).items():
         if count > 1:
             issue("error", "duplicate_lookup_name", "Lookup names must be unique after normalization", name)
     stock_references = {}

@@ -8,6 +8,8 @@ The editor retains AI generation/modification, saved models, JSON/XMILE import a
 
 Native engine improvements add bounded [arrays and reusable modules](docs/STRUCTURED-MODELS.md), [dimensional checks](docs/DIMENSIONAL-ANALYSIS.md), conservative [MDL import](docs/MDL-IMPORT.md), and [local feedback analysis](docs/FEEDBACK-ANALYSIS.md). Use **Source** to edit structured JSON without flattening the saved project. Inspect displays units evidence and can analyze a completed run. The [measured comparison](docs/ENGINE-COMPARISON.md) records a 32–35% improvement over our earlier scalar execution, while Simlin remains faster on those workloads. No Simlin runtime dependency was introduced.
 
+The three previously recorded identifier/import failures are now repaired, with exact names preserved through import, simulation, rename and export. See the [identifier repair and compatibility evidence](docs/IDENTIFIER-IMPORT-FIX.md).
+
 ## Run locally
 
 ```bash
@@ -67,4 +69,4 @@ PYTHONPATH=. python scripts/check_mcp.py --stdio
 PYTHONPATH=. python scripts/audit_library.py --full --tracked-only --output operations/library-full.json
 ```
 
-Run the application before the MCP client check. Node.js is needed for JavaScript checks. API tests use disposable storage. Every active library model must pass; retired invalid inputs have separate causal-failure regression tests. Three existing XMILE identifier limitations remain expected failures. Offline pytest collection is restricted to tests/; root-level provider scripts are manual probes. Browser acceptance and alternate-engine/device limitations are recorded separately. Never synchronize model directories, databases, credentials or configuration over production. Reviewed per-file repairs and retirements require exact hashes and backups; preserve all other model data.
+Run the application before the MCP client check. Node.js is needed for JavaScript checks. API tests use disposable storage. Every active library model must pass; retired invalid inputs have separate causal-failure regression tests. [Literal punctuation, EN SPACE and internal-dollar identifiers](docs/IDENTIFIER-IMPORT-FIX.md) now have passing identity/import/export regressions while unique legacy aliases remain compatible. Offline pytest collection is restricted to tests/; root-level provider scripts are manual probes. Browser acceptance and alternate-engine/device limitations are recorded separately. Never synchronize model directories, databases, credentials or configuration over production. Reviewed per-file repairs and retirements require exact hashes and backups; preserve all other model data.

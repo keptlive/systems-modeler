@@ -1374,15 +1374,30 @@ const App = {
     identifierKey(name) {
         const folded = Array.from(String(name).normalize('NFC'),
             c => AppRenameCasefold[c] ?? c.toLowerCase()).join('');
-        return folded.replace(/[ _\n\u00a0]+/g, '_')
-            .replace(/[^\p{L}\p{N}_]/gu, '_').replace(/_+/g, '_');
+        return folded.replace(/[ _\n\u00a0]+/g, '_');
+    },
+
+    legacyIdentifierKey(name) {
+        return this.identifierKey(name).replace(/[^\p{L}\p{N}_]/gu, '_').replace(/_+/g, '_');
+    },
+
+    resolveIdentifier(name, declaredNames) {
+        const names = [...new Set(declaredNames)];
+        if (names.includes(name)) return name;
+        for (const key of [this.identifierKey.bind(this), this.legacyIdentifierKey.bind(this)]) {
+            const matches = names.filter(candidate => key(candidate) === key(name));
+            if (matches.length > 1) throw new Error('Ambiguous identifier “' + name + '”. Rename was cancelled.');
+            if (matches.length === 1) return matches[0];
+        }
+        return null;
     },
 
     // Supported scalar syntax with exact source spans; never global text replace.
-    renameEquationReferences(equation, oldName, newName, tableNames = []) {
+    renameEquationReferences(equation, oldName, newName, tableNames = [], declaredNames = [oldName]) {
         const source = String(equation || ''), tokens = [];
         const oldKey = this.identifierKey(oldName);
         const tableKeys = new Set(tableNames.map(name => this.identifierKey(name)));
+        const renamedNames = declaredNames.map(name => name === oldName ? newName : name);
         const keywords = new Set(['IF','THEN','ELSE','AND','OR','NOT','TRUE','FALSE']);
         const builtins = new Set(('SIN COS TAN ASIN ACOS ATAN ATAN2 SIGN EXP LOG LN LOG10 SQRT ABS MIN MAX POW FLOOR CEIL ROUND MOD IF IF_THEN_ELSE RANDOM RANDOM_UNIFORM NORMAL RANDOM_NORMAL STEP PULSE RAMP LOOKUP WITH_LOOKUP DELAY DELAY_FIXED DELAY1 DELAY3 DELAY_N DELAYN SMOOTH SMOOTH3 SMOOTH_N SMTH1 SMTH3 SMTHN').split(' '));
         let at = 0;
@@ -1430,8 +1445,7 @@ const App = {
                 if (stack.pop()?.close !== token.value) throw new Error('An equation has unmatched brackets. Rename was cancelled.');
             } else if (token.kind === 'op' && token.value === ',') {
                 if (stack.length) stack[stack.length-1].argument++;
-            } else if (token.kind === 'name' && this.identifierKey(token.value) === oldKey &&
-                       (token.quoted || !keywords.has(upper))) {
+            } else if (token.kind === 'name' && (token.quoted || !keywords.has(upper))) {
                 let tableArgument = false;
                 for (let j=stack.length-1;j>=0;j--) {
                     if (stack[j].functionName) {
@@ -1439,14 +1453,30 @@ const App = {
                         break;
                     }
                 }
-                if (tableArgument && !tableKeys.has(oldKey))
-                    throw new Error('“' + oldName + '” is used as an undeclared lookup table. Resolve that ambiguity before renaming.');
-                if (!tableArgument) {
-                    if (next?.value === '[') throw new Error('Array references cannot be safely renamed by this scalar editor.');
-                    if (next?.value === '(') {
-                        if (!tableKeys.has(oldKey) && !builtins.has(upper))
-                            throw new Error('“' + oldName + '” is also used as a function. Resolve that ambiguity before renaming.');
-                    } else edits.push({start:token.start,end:token.end,value:JSON.stringify(newName)});
+                // Lookup positions/functions belong to the table namespace, not
+                // a similarly spelled variable's legacy alias bucket.
+                if ((tableArgument || next?.value === '(') &&
+                    this.resolveIdentifier(token.value, tableNames) !== null) {
+                    previous=token;
+                    continue;
+                }
+                const owner = this.resolveIdentifier(token.value, declaredNames);
+                if (!tableArgument && next?.value !== '(') {
+                    const expected = owner === oldName ? newName : owner;
+                    const reference = owner === oldName ? newName : token.value;
+                    if (this.resolveIdentifier(reference, renamedNames) !== expected)
+                        throw new Error('Renaming would change another equation reference. Rename was cancelled.');
+                }
+                if (owner === oldName) {
+                    if (tableArgument && !tableKeys.has(oldKey))
+                        throw new Error('“' + oldName + '” is used as an undeclared lookup table. Resolve that ambiguity before renaming.');
+                    if (!tableArgument) {
+                        if (next?.value === '[') throw new Error('Array references cannot be safely renamed by this scalar editor.');
+                        if (next?.value === '(') {
+                            if (!tableKeys.has(oldKey) && !builtins.has(upper))
+                                throw new Error('“' + oldName + '” is also used as a function. Resolve that ambiguity before renaming.');
+                        } else edits.push({start:token.start,end:token.end,value:JSON.stringify(newName)});
+                    }
                 }
             }
             previous=token;
@@ -1478,7 +1508,7 @@ const App = {
         if (elements.some(other=>other!==element && other.id===oldName))
             throw new Error('The old name also identifies another element ID. Resolve that ambiguity before renaming.');
         const equations=elements.map(item=>({
-            item, equation:this.renameEquationReferences(item.equation,oldName,name,tableNames)
+            item, equation:this.renameEquationReferences(item.equation,oldName,name,tableNames,elements.map(item=>item.name))
         }));
         const endpoints=[];
         const renameReference=value=>!ids.has(value) && value===oldName ? name : value;

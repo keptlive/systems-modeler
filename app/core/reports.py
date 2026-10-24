@@ -7,7 +7,7 @@ import ast
 import math
 from app.core.equations import (EquationError, SafeEvaluator, _parse_expression,
     preprocess_equation, decode_identifier, canonical_name, equation_features,
-    get_equation_variables, validate_equation)
+    get_equation_variables, validate_equation, symbol_identity, resolve_name)
 
 
 def report_tree(equation, names, tables):
@@ -34,7 +34,7 @@ def report_tree(equation, names, tables):
                 raise EquationError("Report labels must contain valid Unicode scalar text", code="invalid_report") from exc
             if len(node.value) > 512:
                 raise EquationError("Report labels are limited to 512 characters", code="invalid_report")
-        elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and decode_identifier(node.func.id).upper() in {"IF", "IF_THEN_ELSE"} and canonical_name(decode_identifier(node.func.id)) not in {canonical_name(t) for t in tables}:
+        elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and decode_identifier(node.func.id).upper() in {"IF", "IF_THEN_ELSE"} and resolve_name(decode_identifier(node.func.id), tables) is None:
             if len(node.args) != 3:
                 raise EquationError("Report IF requires condition, true result and false result", code="invalid_report")
             numeric(node.args[0]); check(node.args[1]); check(node.args[2])
@@ -50,14 +50,15 @@ def prepare_reports(model):
     reports = [v for v in model.variables if v.role == "report"]
     if not reports:
         return model, []
-    report_names = {canonical_name(v.name) for v in reports}
+    report_names = {symbol_identity(v.name) for v in reports}
     elements = [*model.stocks, *model.flows, *model.variables]
-    names = [canonical_name(e.name) for e in elements]
+    names = [symbol_identity(e.name) for e in elements]
     if len(set(names)) != len(names):
-        raise EquationError("Element names must be unique, including case/space/punctuation aliases", code="name_collision")
-    numeric_names = [e.name for e in elements if canonical_name(e.name) not in report_names]
+        raise EquationError("Element names must be unique, including case and XMILE whitespace aliases", code="name_collision")
+    numeric_names = [e.name for e in elements if symbol_identity(e.name) not in report_names]
     for e in elements:
-        dependencies = {canonical_name(n) for n in get_equation_variables(e.equation)} & report_names
+        dependencies = {symbol_identity(resolve_name(n, [v.name for v in elements]) or n)
+                        for n in get_equation_variables(e.equation)} & report_names
         if dependencies:
             raise EquationError(f"{e.name}: report outputs cannot feed equations ({', '.join(sorted(dependencies))})", code="report_feedback", details={"element": e.name, "category": "invalid_equations"})
     prepared = [(v, report_tree(v.equation, numeric_names, [t.name for t in model.tables])) for v in reports]
@@ -72,7 +73,7 @@ def evaluate_report(tree, values, context, tables):
     def visit(node):
         if isinstance(node, ast.Constant) and isinstance(node.value, str):
             return node.value
-        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and decode_identifier(node.func.id).upper() in {"IF", "IF_THEN_ELSE"} and canonical_name(decode_identifier(node.func.id)) not in tables:
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and decode_identifier(node.func.id).upper() in {"IF", "IF_THEN_ELSE"} and resolve_name(decode_identifier(node.func.id), tables) is None:
             condition = float(evaluator.visit(node.args[0]))
             if not math.isfinite(condition):
                 raise EquationError("Report condition must be finite", code="invalid_report")
