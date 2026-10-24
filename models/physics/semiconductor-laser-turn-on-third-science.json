@@ -1,0 +1,160 @@
+{
+  "id": "semiconductor-laser-turn-on-third-science",
+  "name": "Semiconductor laser carrier-photon turn-on and relaxation",
+  "description": "Stimulated emission couples population inversion to photon growth, with a source threshold and relaxation transient. Single-mode density model; omits optical phase, spatial hole burning, thermal changes and stochastic emission. No actual laser calibration. Illustrative normalized pump1500,carrier lifetime1,photon lifetime0.02,differential gain0.05,transparency10,beta0.0001;initial carriers0,photons1e-6,loss0;horizon10,Radau output0.01. Confinement1 and gain compression0; added cumulative lost-quanta budget is our accounting variable. Original mathematical transcription/adaptation; not a calibrated forecast. Signed net-rate flows implement the stated equations. No numerical clamps or hidden resets.",
+  "category": "physics",
+  "source": "https://courses.ece.ucsb.edu/ECE228/228B_S09Blumenthal/Lecture4_228B_S09_Final.pdf",
+  "reference": "UCSB ECE228B2009, Laser Rate Equations; carrier/photon densities and stimulated/spontaneous terms. Also first-party https://docs.flexcompute.com/projects/photonforge/en/latest/guides/Directly_Modulated_Laser.html .",
+  "stocks": [
+    {
+      "id": "semiconductor-laser-turn-on-third-science:Carriers",
+      "name": "Carriers",
+      "initial_value": 0,
+      "equation": "",
+      "units": "population",
+      "position": {
+        "x": 140,
+        "y": 230
+      }
+    },
+    {
+      "id": "semiconductor-laser-turn-on-third-science:Photons",
+      "name": "Photons",
+      "initial_value": 1e-06,
+      "equation": "",
+      "units": "population",
+      "position": {
+        "x": 300,
+        "y": 230
+      }
+    },
+    {
+      "id": "semiconductor-laser-turn-on-third-science:Lost_Quanta",
+      "name": "Lost_Quanta",
+      "initial_value": 0,
+      "equation": "",
+      "units": "population",
+      "position": {
+        "x": 460,
+        "y": 230
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "semiconductor-laser-turn-on-third-science:rate:Carriers",
+      "name": "Carriers_net_rate",
+      "equation": "Pump-Carriers/Carrier_Lifetime-Stimulated_Emission",
+      "to_stock": "semiconductor-laser-turn-on-third-science:Carriers",
+      "units": "(population)/(time)",
+      "position": {
+        "x": 140,
+        "y": 330
+      }
+    },
+    {
+      "id": "semiconductor-laser-turn-on-third-science:rate:Photons",
+      "name": "Photons_net_rate",
+      "equation": "Stimulated_Emission-Photons/Photon_Lifetime+Spontaneous_Fraction*Carriers/Carrier_Lifetime",
+      "to_stock": "semiconductor-laser-turn-on-third-science:Photons",
+      "units": "(population)/(time)",
+      "position": {
+        "x": 300,
+        "y": 330
+      }
+    },
+    {
+      "id": "semiconductor-laser-turn-on-third-science:rate:Lost_Quanta",
+      "name": "Lost_Quanta_net_rate",
+      "equation": "(1-Spontaneous_Fraction)*Carriers/Carrier_Lifetime+Photons/Photon_Lifetime",
+      "to_stock": "semiconductor-laser-turn-on-third-science:Lost_Quanta",
+      "units": "(population)/(time)",
+      "position": {
+        "x": 460,
+        "y": 330
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "semiconductor-laser-turn-on-third-science:Pump",
+      "name": "Pump",
+      "equation": "1500",
+      "units": "population/time",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "semiconductor-laser-turn-on-third-science:Carrier_Lifetime",
+      "name": "Carrier_Lifetime",
+      "equation": "1",
+      "units": "time",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "semiconductor-laser-turn-on-third-science:Photon_Lifetime",
+      "name": "Photon_Lifetime",
+      "equation": "0.02",
+      "units": "time",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "semiconductor-laser-turn-on-third-science:Differential_Gain",
+      "name": "Differential_Gain",
+      "equation": "0.05",
+      "units": "1/(population*time)",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    },
+    {
+      "id": "semiconductor-laser-turn-on-third-science:Transparency",
+      "name": "Transparency",
+      "equation": "10",
+      "units": "population",
+      "position": {
+        "x": 740,
+        "y": 50
+      }
+    },
+    {
+      "id": "semiconductor-laser-turn-on-third-science:Spontaneous_Fraction",
+      "name": "Spontaneous_Fraction",
+      "equation": "0.0001",
+      "units": "1",
+      "position": {
+        "x": 900,
+        "y": 50
+      }
+    },
+    {
+      "id": "semiconductor-laser-turn-on-third-science:Stimulated_Emission",
+      "name": "Stimulated_Emission",
+      "equation": "Differential_Gain*(Carriers-Transparency)*Photons",
+      "units": "population/time",
+      "position": {
+        "x": 1060,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 10,
+    "dt": 0.01,
+    "integration_method": "radau",
+    "units": "time",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

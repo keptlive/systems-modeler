@@ -1,0 +1,51 @@
+# Independent third-engineering admission review
+
+Reviewer: dimensional_analysis; 2026-10-24. Approve the eleven exact candidate hashes below for educational-library admission with their present descriptions and limitations. No active catalog, runtime, database, candidate JSON, or candidate test was modified by this review. Approval is numerical/source/adaptation review, not empirical equipment validation or a controller safety certification.
+
+## Independent checks
+
+Re-ran `tests/test_library_candidates_third_engineering.py`: **17 passed in 18.75 seconds**. This covers all-stock full trajectories against separately written tight DOP853 references, step/tolerance refinement, matrix exponentials, conservation/passivity identities, crystal moment realizability and independent birth-cohort integrals, source receipts, identity and expanded derivative duplicate screening. The largest retained full-series stock-amplitude-scaled error is approximately 6.05e-7 for the vehicle; the common acceptance limit is 3e-6. Scaling by max(1, stock amplitude) is an absolute-error test for small stocks, not a relative-accuracy claim near zero.
+
+Separately evaluated every actual JSON's net stock derivatives at 100 independently perturbed states/times per candidate against the handwritten source-law functions: **1,100 comparisons**, maximum scaled discrepancy **1.78e-15**. Positive-gap, positive-mass and positive-supersaturation domains were respected. Reviewed analytic MRAC Lyapunov and generator energy derivatives, crystal mass closure and moment transport, and the local levitation and compressor Jacobians. These checks make an accidental transcription error substantially less likely; numerical agreement alone does not establish source assumptions or physical validity.
+
+Defaults are bounded: 501–6,001 output samples, two to nine stocks, no implicit upstream solver/runtime dependencies, and no clamps concealing invalid domains. All defaults and their finer runs pass existing engine work/retention limits. Recorded individual default runtimes are about 0.06–1.04 seconds on this checkout; these are observations, not performance guarantees. Radau for the nonsmooth Bouc–Wen case is supported by independent trajectory agreement; it is not a claim that absolute-value kinks are analytically smooth.
+
+## Source, adaptation and rights findings
+
+Pinned isolated upstream checkouts match the declared python-control, PyBaMM and do-mpc revisions. Independently byte-compared all seven retained BSD source/license files with those checkouts. Both BSD notices are retained. No LGPL do-mpc implementation is bundled; the candidates are linked mathematical transcriptions with authored scenarios, and no new upstream dependency. This is a provenance assessment, not a legal opinion about arbitrary future redistribution of upstream implementations.
+
+- MRAC: independently retrieved the [pinned source example](https://raw.githubusercontent.com/python-control/python-control/b4cf7360138985f84afe299337ef9ee6c25e9c38/examples/mrac_siso_lyapunov.py); plant/reference gains, sign and zero initials agree. The two-sine command and finer grid are correctly identified as authored. The exact Lyapunov law provides a meaningful mechanism test beyond matching one trajectory.
+- Levitation: retained notebook confirms inverse-square plant/constants. Local feedback, target and initial error are authored and explicitly local. Equilibrium and stable local poles hold; no contact/saturation/global safety claim is made.
+- Aircraft: retrieved [university CTM](https://www.ece.ualberta.ca/~tchen/ctm/examples/pitch/Mpitch.html) and independently corroborated numerical matrices in the [current university tutorial](https://ctms.engin.umich.edu/CTMS/?example=AircraftPitch&section=SystemModeling). Source decoupling/fixed-speed assumptions and authored smaller elevator input are clear. The reduced rate coordinate is retained rather than silently interpreting it as ordinary pitch rate. **Units remain incomplete**, and admission must preserve that status; the other ten candidates are symbolically consistent.
+- Kite, vehicle and polymerization: read pinned do-mpc equations directly, including the [polymerization source](https://raw.githubusercontent.com/do-mpc/do-mpc/9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc/examples/industrial_poly/template_model.py). Kite geometry and steering-efficiency reduction agree. Vehicle preserves the unusual longitudinal-force yaw term exactly as its source does; this is source conformance, not independent validation of that tire approximation. Polymer source masses, thermal coefficients and nine initials agree. Omitted T_adiab is a non-feedback diagnostic whose derivative is exactly that of T_R+950*m_A/(5*m_total); omission therefore does not alter retained physical dynamics. Constant inputs, coherent kg/kJ/hour interpretation and partial subsystem scope are explicit.
+- Battery: checked source parameter design and [RC submodel](https://raw.githubusercontent.com/pybamm-team/PyBaMM/5651a97ecc5dfd1a2de8c2a1af13368263ee12ed/packages/pybamm/src/pybamm/models/submodels/equivalent_circuit_elements/rc_element.py). Fixed nominal resistance, capacity and time constant are faithful declared simplifications. Source aggregate polarization heating is preserved; it is not mislabeled as a complete Joule-only energy decomposition. Undisclosed OCV/entropic datasets are omitted. Celsius offsets enter only linear temperature differences; no false absolute-temperature nonlinear law is used.
+- Compressor: retrieved [original 2020 paper](https://www.mic-journal.no/PDF/2020/MIC-2020-2-1.pdf), equations and Table 1. Shifted unstable point and polynomial coefficients agree; pressure remains positive over the demonstration. No neural controller or rotating-stall PDE is claimed.
+- Bouc–Wen: retrieved [primary ACC paper](https://skoge.folk.ntnu.no/prost/proceedings/acc04/Papers/0636_ThP09.1.pdf). The n=1 dissipative specialization and authored loading are identifiable. Internal hysteretic state and storage/passivity check provide distinct value beyond another elastic oscillator.
+- Crystals: retrieved [primary FOCAPD paper](https://www.netl.doe.gov/projects/files/OptimizingBatchCrystallizationwithModelbasedDesignofExperiments_071024.pdf), equations 17–19. The normalized isothermal primary-birth scenario is explicitly authored rather than presented as published kinetic data; size-independent moment transport and solute balance agree. Independent characteristic integrals strengthen the reference beyond a second ODE implementation.
+- Network: retrieved [author-hosted primary paper](https://www.control.utoronto.ca/~jwsimpson/papers/2017c/). Uses its nonlinear sine-power equations before DC linearization; topology, inertia, damping and disturbance are authored. It is not a real-grid or governor model.
+
+Articles with no established redistribution license contribute mathematical equations and citations only; publication prose/figures/code are not bundled. SOURCE-PROVENANCE.md correctly avoids asserting a blanket open-content license.
+
+## Novelty and admission scope
+
+Re-ran bounded expanded-derivative comparison against active and staged models; exact and constant-abstracted comparisons found no match. Receipt lists 1,026 files, 1,024 scalar expansions and two explicit unsupported active models; it does not silently classify unsupported expressions as unique. Reviewed related themes: MRAC state-gain learning differs from adaptive cancellation, vehicle tire slip differs from bicycle roll/cruise, rotor phase coupling differs from lumped grid frequency, polarization/thermal battery differs from capacity balances, hysteretic memory differs from elastic oscillators, and semibatch conversion-dependent thermal loops differ from earlier CSTR/batch chemistry. No parameter-only variant identified. Static normalization cannot prove equivalence under arbitrary state permutations or transformations; this remains a bounded screen plus mechanism review.
+
+No mandatory fix or deferred candidate identified. Keep all existing source/adaptation caveats and the aircraft incomplete-unit status on admission. Any candidate-byte change invalidates the corresponding approval below.
+
+| Candidate | SHA-256 | Decision |
+|---|---|---|
+| lyapunov-model-reference-adaptation.json | `2af257ee69ea0cba5a21137e796d13942afee3de001a438822b2c269ad405299` | Approve |
+| magnetic-levitation-inverse-square.json | `c8bbec99127524f2f87431581f34061d8767aae656144bff9000fc2f0b989074` | Approve |
+| aircraft-longitudinal-pitch.json | `95179d37f8c503f488bc86ccbfa1edfe2d4d9122359a3991f259576b9733df1a` | Approve |
+| tethered-kite-crosswind.json | `cf4f7f4c83a356a3b1198b730183928c5077f6e759c6b24758dc3bcca2bc55e0` | Approve |
+| tire-slip-dynamic-vehicle.json | `464bdce409dc162d6a66532509940f980003cb82fca3fae2d0be5094ab4abbf5` | Approve |
+| battery-polarization-thermal.json | `6fe243caf7f903c13c125c582063d2bbbc4c021e23f60c1b69231ec453e90092` | Approve |
+| compressor-plenum-surge.json | `ed6850f827350a313ea05507f065d184436c09a8e7b42a8b34c3d470d9616eb2` | Approve |
+| bouc-wen-hysteretic-isolator.json | `417dd921eeffd40b2e9806e37af83bf996fe5be8bfcc424040c19cea42f2d0ec` | Approve |
+| batch-crystallization-moments.json | `09b2f0c6448cfc56f5fc75d3e7d17293d3313da96604a64a8745075c2d739b36` | Approve |
+| three-generator-sine-network.json | `af0d83e79352f6368a39882b604a86c3d3f113b72a697192a127722b5b355149` | Approve |
+| industrial-polymerization-heat-loops.json | `f0a3f32241ccfe7acdeeb92517a3994b9e221818facc25ef57100ef795fa97b7` | Approve |
+
+## Post-review screening correction
+
+The legacy audit found that some active endpoints use stock names rather than IDs. The author corrected the bounded screen to resolve exact name/ID aliases and reject ambiguity, then added a regression and regenerated receipts. Independently reran all three focused duplicate/endpoint checks together with the four isolated repair tests: seven passed in1.82s. Corrected report covers1,049active/staged files,1,047expanded and two explicit unsupported definitions, with zero candidate exact/coefficient-abstracted matches. All eleven approved candidate JSON hashes remain unchanged. This supersedes the earlier raw-endpoint screening scope; candidate approval remains valid.

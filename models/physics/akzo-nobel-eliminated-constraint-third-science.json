@@ -1,0 +1,284 @@
+{
+  "id": "akzo-nobel-eliminated-constraint-third-science",
+  "name": "Akzo Nobel chemical benchmark with an eliminated algebraic equilibrium",
+  "description": "Stiff numerical chemistry benchmark with fictitious commercial species and source empirical reaction orders. It is not a full DAE solver demonstration, a validated industrial forecast or an elementary-stoichiometry conservation model. Negative CO2 is outside the square-root domain; no ABS or positivity clamp. Source rates18.7,0.58,0.09,0.42,K34.4,Ks115.83,transfer3.3,pCO2/H=0.9/737 and initial(0.444,0.00123,0,0.007,0),horizon180minutes. Our outputstep0.2,Radau rtol1e-9/atol1e-12. The uniquely solved algebraic variable is substituted exactly, not integrated. Original mathematical transcription/adaptation; not a calibrated forecast. Signed net-rate flows implement the stated equations. No numerical clamps or hidden resets.",
+  "category": "physics",
+  "source": "https://archimede.uniba.it/~testset/report/chemakzo.pdf",
+  "reference": "CWI Test Set for Initial Value Problem Solvers, Chemical Akzo Nobel benchmark, Section12; source complete five differential equations plus algebraic y6=Ks*y1*y4.",
+  "stocks": [
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:FLB",
+      "name": "FLB",
+      "initial_value": 0.444,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 140,
+        "y": 230
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Carbon_Dioxide",
+      "name": "Carbon_Dioxide",
+      "initial_value": 0.00123,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 300,
+        "y": 230
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:FLBT",
+      "name": "FLBT",
+      "initial_value": 0,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 460,
+        "y": 230
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:ZHU",
+      "name": "ZHU",
+      "initial_value": 0.007,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 620,
+        "y": 230
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:ZLA",
+      "name": "ZLA",
+      "initial_value": 0,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 780,
+        "y": 230
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:rate:FLB",
+      "name": "FLB_net_rate",
+      "equation": "-2*Reaction_One+Reaction_Two-Reaction_Reverse-Reaction_Three",
+      "to_stock": "akzo-nobel-eliminated-constraint-third-science:FLB",
+      "units": "(concentration)/(minute)",
+      "position": {
+        "x": 140,
+        "y": 330
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:rate:Carbon_Dioxide",
+      "name": "Carbon_Dioxide_net_rate",
+      "equation": "-0.5*Reaction_One-Reaction_Three-0.5*Reaction_Four+Gas_Inflow",
+      "to_stock": "akzo-nobel-eliminated-constraint-third-science:Carbon_Dioxide",
+      "units": "(concentration)/(minute)",
+      "position": {
+        "x": 300,
+        "y": 330
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:rate:FLBT",
+      "name": "FLBT_net_rate",
+      "equation": "Reaction_One-Reaction_Two+Reaction_Reverse",
+      "to_stock": "akzo-nobel-eliminated-constraint-third-science:FLBT",
+      "units": "(concentration)/(minute)",
+      "position": {
+        "x": 460,
+        "y": 330
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:rate:ZHU",
+      "name": "ZHU_net_rate",
+      "equation": "-Reaction_Two+Reaction_Reverse-2*Reaction_Three",
+      "to_stock": "akzo-nobel-eliminated-constraint-third-science:ZHU",
+      "units": "(concentration)/(minute)",
+      "position": {
+        "x": 620,
+        "y": 330
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:rate:ZLA",
+      "name": "ZLA_net_rate",
+      "equation": "Reaction_Two-Reaction_Reverse+Reaction_Four",
+      "to_stock": "akzo-nobel-eliminated-constraint-third-science:ZLA",
+      "units": "(concentration)/(minute)",
+      "position": {
+        "x": 780,
+        "y": 330
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Rate_One",
+      "name": "Rate_One",
+      "equation": "18.7",
+      "units": "1/(concentration^3.5*minute)",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Rate_Two",
+      "name": "Rate_Two",
+      "equation": "0.58",
+      "units": "1/(concentration*minute)",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Rate_Three",
+      "name": "Rate_Three",
+      "equation": "0.09",
+      "units": "1/(concentration^2*minute)",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Rate_Four",
+      "name": "Rate_Four",
+      "equation": "0.42",
+      "units": "1/(concentration^1.5*minute)",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Reaction_Equilibrium",
+      "name": "Reaction_Equilibrium",
+      "equation": "34.4",
+      "units": "1",
+      "position": {
+        "x": 740,
+        "y": 50
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Complex_Equilibrium",
+      "name": "Complex_Equilibrium",
+      "equation": "115.83",
+      "units": "1/concentration",
+      "position": {
+        "x": 900,
+        "y": 50
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Transfer",
+      "name": "Transfer",
+      "equation": "3.3",
+      "units": "1/minute",
+      "position": {
+        "x": 1060,
+        "y": 50
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Gas_Saturation",
+      "name": "Gas_Saturation",
+      "equation": "0.0012211668928086838",
+      "units": "concentration",
+      "position": {
+        "x": 100,
+        "y": 120
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Bound_Complex",
+      "name": "Bound_Complex",
+      "equation": "Complex_Equilibrium*FLB*ZHU",
+      "units": "concentration",
+      "position": {
+        "x": 260,
+        "y": 120
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Reaction_One",
+      "name": "Reaction_One",
+      "equation": "Rate_One*FLB^4*SQRT(Carbon_Dioxide)",
+      "units": "concentration/minute",
+      "position": {
+        "x": 420,
+        "y": 120
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Reaction_Two",
+      "name": "Reaction_Two",
+      "equation": "Rate_Two*FLBT*ZHU",
+      "units": "concentration/minute",
+      "position": {
+        "x": 580,
+        "y": 120
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Reaction_Reverse",
+      "name": "Reaction_Reverse",
+      "equation": "Rate_Two/Reaction_Equilibrium*FLB*ZLA",
+      "units": "concentration/minute",
+      "position": {
+        "x": 740,
+        "y": 120
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Reaction_Three",
+      "name": "Reaction_Three",
+      "equation": "Rate_Three*FLB*ZHU^2",
+      "units": "concentration/minute",
+      "position": {
+        "x": 900,
+        "y": 120
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Reaction_Four",
+      "name": "Reaction_Four",
+      "equation": "Rate_Four*Bound_Complex^2*SQRT(Carbon_Dioxide)",
+      "units": "concentration/minute",
+      "position": {
+        "x": 1060,
+        "y": 120
+      }
+    },
+    {
+      "id": "akzo-nobel-eliminated-constraint-third-science:Gas_Inflow",
+      "name": "Gas_Inflow",
+      "equation": "Transfer*(Gas_Saturation-Carbon_Dioxide)",
+      "units": "concentration/minute",
+      "position": {
+        "x": 100,
+        "y": 190
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 180,
+    "dt": 0.2,
+    "integration_method": "radau",
+    "units": "minute",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "id": "candidate-third-engineering-battery-polarization-thermal",
+  "name": "Battery Polarization and Cell-Jig Thermal Dynamics",
+  "category": "engineering",
+  "description": "Source illustrative100Ah,100A,30s RC design and cell/jig thermal masses/conductances. Authored fixed nominal R0/R1/C1 rather than source3D dependencies; entropic heat set0 and source undisclosed OCV table not copied. Temperature in Celsius differences; source aggregate overpotential heating retained. No particular commercial cell or full electrochemical energy balance claimed. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://github.com/pybamm-team/PyBaMM/blob/5651a97ecc5dfd1a2de8c2a1af13368263ee12ed/packages/pybamm/src/pybamm/input/parameters/ecm/example_set.py",
+  "reference": "PyBaMM Thevenin equivalent-circuit thermal/RC submodels, BSD3 pinned5651a97ecc5dfd1a2de8c2a1af13368263ee12ed",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "ChargeFraction",
+      "initial_value": 0.5,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s1",
+      "name": "Overpotential",
+      "initial_value": 0.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "volt"
+    },
+    {
+      "id": "s2",
+      "name": "CellTemperature",
+      "initial_value": 25.0,
+      "position": {
+        "x": 580,
+        "y": 150
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "s3",
+      "name": "JigTemperature",
+      "initial_value": 25.0,
+      "position": {
+        "x": 760,
+        "y": 150
+      },
+      "units": "kelvin"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_ChargeFraction",
+      "equation": "-Current/CapacityCharge",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "(1)/second"
+    },
+    {
+      "id": "f1",
+      "name": "Change_Overpotential",
+      "equation": "-Overpotential/(Resistance1*Capacitance1)-Current/Capacitance1",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "(volt)/second"
+    },
+    {
+      "id": "f2",
+      "name": "Change_CellTemperature",
+      "equation": "(Heating-CellJig*(CellTemperature-JigTemperature))/CellThermalMass",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      },
+      "units": "(kelvin)/second"
+    },
+    {
+      "id": "f3",
+      "name": "Change_JigTemperature",
+      "equation": "(CellJig*(CellTemperature-JigTemperature)-JigAir*(JigTemperature-Ambient))/JigThermalMass",
+      "to_stock": "s3",
+      "position": {
+        "x": 670,
+        "y": 150
+      },
+      "units": "(kelvin)/second"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Current",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "ampere"
+    },
+    {
+      "id": "p1",
+      "name": "CapacityCharge",
+      "equation": "360000",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "ampere*second"
+    },
+    {
+      "id": "p2",
+      "name": "Resistance0",
+      "equation": "0.0004",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "volt/ampere"
+    },
+    {
+      "id": "p3",
+      "name": "Resistance1",
+      "equation": "0.0006",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "volt/ampere"
+    },
+    {
+      "id": "p4",
+      "name": "Capacitance1",
+      "equation": "50000",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "ampere*second/volt"
+    },
+    {
+      "id": "p5",
+      "name": "CellJig",
+      "equation": "10",
+      "position": {
+        "x": 950,
+        "y": 750
+      },
+      "units": "ampere*volt/kelvin"
+    },
+    {
+      "id": "p6",
+      "name": "JigAir",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 850
+      },
+      "units": "ampere*volt/kelvin"
+    },
+    {
+      "id": "p7",
+      "name": "CellThermalMass",
+      "equation": "1000",
+      "position": {
+        "x": 270,
+        "y": 850
+      },
+      "units": "ampere*volt*second/kelvin"
+    },
+    {
+      "id": "p8",
+      "name": "JigThermalMass",
+      "equation": "500",
+      "position": {
+        "x": 440,
+        "y": 850
+      },
+      "units": "ampere*volt*second/kelvin"
+    },
+    {
+      "id": "p9",
+      "name": "Ambient",
+      "equation": "25",
+      "position": {
+        "x": 610,
+        "y": 850
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "p10",
+      "name": "Heating",
+      "equation": "Current^2*Resistance0-Current*Overpotential",
+      "position": {
+        "x": 780,
+        "y": 850
+      },
+      "units": "ampere*volt"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 600,
+    "dt": 0.5,
+    "integration_method": "rk4",
+    "units": "second"
+  }
+}

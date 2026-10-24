@@ -1,0 +1,198 @@
+{
+  "id": "candidate-third-engineering-bouc-wen-hysteretic-isolator",
+  "name": "Bouc-Wen Hysteretic Structural Isolator",
+  "category": "engineering",
+  "description": "Source constitutive law specialized to n1 limit with an explicitly authored normalized mass/spring/damper and sinusoidal force. Internal hysteresis memory creates dissipative loops beyond a Duffing/purely elastic oscillator. No degradation, pinching, seismic calibration or hardware certification. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://skoge.folk.ntnu.no/prost/proceedings/acc04/Papers/0636_ThP09.1.pdf",
+  "reference": "Ikhouane, Manosa and Rodellar, ACC2004, Bounded and dissipative solutions of the Bouc-Wen model",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Displacement",
+      "initial_value": 0.0,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "meter"
+    },
+    {
+      "id": "s1",
+      "name": "Velocity",
+      "initial_value": 0.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "meter/second"
+    },
+    {
+      "id": "s2",
+      "name": "Hysteresis",
+      "initial_value": 0.0,
+      "position": {
+        "x": 580,
+        "y": 150
+      },
+      "units": "1"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Displacement",
+      "equation": "Velocity",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "(meter)/second"
+    },
+    {
+      "id": "f1",
+      "name": "Change_Velocity",
+      "equation": "(Force-Damping*Velocity-ElasticFraction*Stiffness*Displacement-(1-ElasticFraction)*YieldLength*Stiffness*Hysteresis)/Mass",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "(meter/second)/second"
+    },
+    {
+      "id": "f2",
+      "name": "Change_Hysteresis",
+      "equation": "(Scale*Velocity-Beta*abs(Velocity)*Hysteresis-Gamma*Velocity*abs(Hysteresis))/YieldLength",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      },
+      "units": "(1)/second"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Mass",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "kg"
+    },
+    {
+      "id": "p1",
+      "name": "Damping",
+      "equation": "0.1",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "kg/second"
+    },
+    {
+      "id": "p2",
+      "name": "ElasticFraction",
+      "equation": "0.1",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p3",
+      "name": "Stiffness",
+      "equation": "1",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "kg/second^2"
+    },
+    {
+      "id": "p4",
+      "name": "YieldLength",
+      "equation": "1",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "meter"
+    },
+    {
+      "id": "p5",
+      "name": "Scale",
+      "equation": "1",
+      "position": {
+        "x": 950,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p6",
+      "name": "Beta",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 850
+      },
+      "units": "1"
+    },
+    {
+      "id": "p7",
+      "name": "Gamma",
+      "equation": "0.5",
+      "position": {
+        "x": 270,
+        "y": 850
+      },
+      "units": "1"
+    },
+    {
+      "id": "p8",
+      "name": "ForceAmplitude",
+      "equation": "1",
+      "position": {
+        "x": 440,
+        "y": 850
+      },
+      "units": "kg*meter/second^2"
+    },
+    {
+      "id": "p9",
+      "name": "Frequency",
+      "equation": "1.2",
+      "position": {
+        "x": 610,
+        "y": 850
+      },
+      "units": "1/second"
+    },
+    {
+      "id": "p10",
+      "name": "Force",
+      "equation": "ForceAmplitude*sin(Frequency*TIME)",
+      "position": {
+        "x": 780,
+        "y": 850
+      },
+      "units": "kg*meter/second^2"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 40,
+    "dt": 0.02,
+    "integration_method": "radau",
+    "units": "second",
+    "rtol": 1e-08,
+    "atol": 1e-10
+  }
+}

@@ -7,6 +7,6 @@ ROOT=Path(__file__).resolve().parents[1]
 def test_approved_admissions_match_source_hashes_and_preserve_baseline():
     manifest=json.loads((ROOT/'operations/library-admissions-20261024.json').read_text())
     baseline=baseline_models(ROOT)
-    assert len(baseline)==manifest['baseline_count']
+    assert len(baseline)==manifest['baseline_count']-manifest.get('retired_count',0)
     assert len(manifest['models'])==manifest['admitted_count']
     assert len(list((ROOT/'models').rglob('*.json')))==manifest['active_count']

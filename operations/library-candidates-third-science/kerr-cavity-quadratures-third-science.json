@@ -1,0 +1,118 @@
+{
+  "id": "kerr-cavity-quadratures-third-science",
+  "name": "Homogeneous driven Kerr cavity and optical bistability",
+  "description": "Complex cavity amplitude has intensity-dependent phase detuning; two quadratures retain optical bistability. No spatial modulation, frequency combs, solitons or full dispersive LLE simulation. Illustrative normalized loss1,detuning2,Kerr coefficient1,real drive1.4,initial field0; horizon50,RK4step0.01. Spatial derivatives are zero by the stated homogeneous specialization. https://bpb-us-e1.wpmucdn.com/blog.umd.edu/dist/3/661/files/2019/07/2014_PRA_Stability_Analysis_LLE.pdf Original mathematical transcription/adaptation; not a calibrated forecast. Signed net-rate flows implement the stated equations. No numerical clamps or hidden resets.",
+  "category": "physics",
+  "source": "https://doi.org/10.1103/PhysRevA.89.063814",
+  "reference": "Godey, Balakireva, Coillet and Chembo (2014), Stability analysis of the spatiotemporal Lugiato-Lefever model, Phys Rev A89:063814, homogeneous specialization of Eq4.",
+  "stocks": [
+    {
+      "id": "kerr-cavity-quadratures-third-science:Field_Real",
+      "name": "Field_Real",
+      "initial_value": 0,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 140,
+        "y": 230
+      }
+    },
+    {
+      "id": "kerr-cavity-quadratures-third-science:Field_Imaginary",
+      "name": "Field_Imaginary",
+      "initial_value": 0,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 300,
+        "y": 230
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "kerr-cavity-quadratures-third-science:rate:Field_Real",
+      "name": "Field_Real_net_rate",
+      "equation": "-Loss*Field_Real+(Detuning-Kerr_Coefficient*Intensity)*Field_Imaginary+Drive",
+      "to_stock": "kerr-cavity-quadratures-third-science:Field_Real",
+      "units": "(1)/(time)",
+      "position": {
+        "x": 140,
+        "y": 330
+      }
+    },
+    {
+      "id": "kerr-cavity-quadratures-third-science:rate:Field_Imaginary",
+      "name": "Field_Imaginary_net_rate",
+      "equation": "-Loss*Field_Imaginary-(Detuning-Kerr_Coefficient*Intensity)*Field_Real",
+      "to_stock": "kerr-cavity-quadratures-third-science:Field_Imaginary",
+      "units": "(1)/(time)",
+      "position": {
+        "x": 300,
+        "y": 330
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "kerr-cavity-quadratures-third-science:Loss",
+      "name": "Loss",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "kerr-cavity-quadratures-third-science:Detuning",
+      "name": "Detuning",
+      "equation": "2",
+      "units": "1/time",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "kerr-cavity-quadratures-third-science:Kerr_Coefficient",
+      "name": "Kerr_Coefficient",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "kerr-cavity-quadratures-third-science:Drive",
+      "name": "Drive",
+      "equation": "1.4",
+      "units": "1/time",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    },
+    {
+      "id": "kerr-cavity-quadratures-third-science:Intensity",
+      "name": "Intensity",
+      "equation": "Field_Real^2+Field_Imaginary^2",
+      "units": "1",
+      "position": {
+        "x": 740,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.01,
+    "integration_method": "rk4",
+    "units": "time",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

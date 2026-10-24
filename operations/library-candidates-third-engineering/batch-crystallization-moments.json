@@ -1,0 +1,198 @@
+{
+  "id": "candidate-third-engineering-batch-crystallization-moments",
+  "name": "Batch Crystallization Nucleation and Growth Moments",
+  "category": "engineering",
+  "description": "Source size-independent moment and solute-mass laws. Authored normalized isothermal seeded scenario: monodisperse0.5size seeds, first-order growth and second-order primary nucleation. Secondary nucleation omitted; coefficients/scales are illustrative, not claimed paper values or material calibration. No arbitrary supersaturation clamp; domain is verified through full horizon. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://www.netl.doe.gov/projects/files/OptimizingBatchCrystallizationwithModelbasedDesignofExperiments_071024.pdf",
+  "reference": "Lynch et al., FOCAPD2024, Optimizing Batch Crystallization with Model-based Design of Experiments, doi10.69997/sct.152239",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Moment0",
+      "initial_value": 0.1,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s1",
+      "name": "Moment1",
+      "initial_value": 0.05,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s2",
+      "name": "Moment2",
+      "initial_value": 0.025,
+      "position": {
+        "x": 580,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s3",
+      "name": "Moment3",
+      "initial_value": 0.0125,
+      "position": {
+        "x": 760,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s4",
+      "name": "Concentration",
+      "initial_value": 1.2,
+      "position": {
+        "x": 940,
+        "y": 150
+      },
+      "units": "1"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Moment0",
+      "equation": "Birth",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "f1",
+      "name": "Change_Moment1",
+      "equation": "Growth*Moment0",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "f2",
+      "name": "Change_Moment2",
+      "equation": "2*Growth*Moment1",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "f3",
+      "name": "Change_Moment3",
+      "equation": "3*Growth*Moment2",
+      "to_stock": "s3",
+      "position": {
+        "x": 670,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "f4",
+      "name": "Change_Concentration",
+      "equation": "-3*SolidScale*Growth*Moment2",
+      "to_stock": "s4",
+      "position": {
+        "x": 850,
+        "y": 150
+      },
+      "units": "1"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Saturation",
+      "equation": "1",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p1",
+      "name": "GrowthCoefficient",
+      "equation": "0.5",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p2",
+      "name": "BirthCoefficient",
+      "equation": "0.2",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p3",
+      "name": "SolidScale",
+      "equation": "1",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p4",
+      "name": "Supersaturation",
+      "equation": "(Concentration-Saturation)/Saturation",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p5",
+      "name": "Growth",
+      "equation": "GrowthCoefficient*Supersaturation",
+      "position": {
+        "x": 950,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p6",
+      "name": "Birth",
+      "equation": "BirthCoefficient*Supersaturation^2",
+      "position": {
+        "x": 100,
+        "y": 850
+      },
+      "units": "1"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 80,
+    "dt": 0.02,
+    "integration_method": "rk4",
+    "units": "1"
+  }
+}

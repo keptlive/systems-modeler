@@ -1,0 +1,88 @@
+{
+  "id": "lane-emden-polytrope-third-science",
+  "name": "Lane-Emden n3 stellar polytrope radial profile",
+  "description": "Stationary spherical Newtonian hydrostatic profile with a polytropic equation of state; not a time-evolving star, stellar evolution calculation or modified-gravity model. The simulator integrates an explicitly labelled radial initial-value problem. Standard n3 equation; our regular centre-series initialization at xi0.01 through sixth order and radial grid0.005 to6.8 avoid the singular centre and stop before surface6.89685. Theta and slope are dimensionless. The horizontal axis is radius coordinate xi, not physical time. Original mathematical transcription/adaptation; not a calibrated forecast. Signed net-rate flows implement the stated equations. No numerical clamps or hidden resets.",
+  "category": "physics",
+  "source": "https://doi.org/10.1103/PhysRevD.97.083505",
+  "reference": "Wright and Li (2018), Phys Rev D97:083505, AppendixB Newtonian Lane-Emden equation and n3 constants. Also https://archive.int.washington.edu/PHYS554/2011/chapter4_11.pdf Eqs62-63.",
+  "stocks": [
+    {
+      "id": "lane-emden-polytrope-third-science:Theta",
+      "name": "Theta",
+      "initial_value": 0.9999833335833296,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 140,
+        "y": 230
+      }
+    },
+    {
+      "id": "lane-emden-polytrope-third-science:Radial_Slope",
+      "name": "Radial_Slope",
+      "initial_value": -0.0033332333355952383,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 300,
+        "y": 230
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "lane-emden-polytrope-third-science:rate:Theta",
+      "name": "Theta_net_rate",
+      "equation": "Radial_Slope",
+      "to_stock": "lane-emden-polytrope-third-science:Theta",
+      "units": "(1)/(1)",
+      "position": {
+        "x": 140,
+        "y": 330
+      }
+    },
+    {
+      "id": "lane-emden-polytrope-third-science:rate:Radial_Slope",
+      "name": "Radial_Slope_net_rate",
+      "equation": "-2*Radial_Slope/TIME-Theta^Polytropic_Index",
+      "to_stock": "lane-emden-polytrope-third-science:Radial_Slope",
+      "units": "(1)/(1)",
+      "position": {
+        "x": 300,
+        "y": 330
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "lane-emden-polytrope-third-science:Polytropic_Index",
+      "name": "Polytropic_Index",
+      "equation": "3",
+      "units": "1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "lane-emden-polytrope-third-science:Enclosed_Mass",
+      "name": "Enclosed_Mass",
+      "equation": "-TIME^2*Radial_Slope",
+      "units": "1",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0.01,
+    "end": 6.8,
+    "dt": 0.005,
+    "integration_method": "rk4",
+    "units": "1",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

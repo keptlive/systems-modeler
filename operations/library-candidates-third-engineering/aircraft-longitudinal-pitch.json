@@ -1,0 +1,89 @@
+{
+  "id": "candidate-third-engineering-aircraft-longitudinal-pitch",
+  "name": "Aircraft Longitudinal Pitch Stability Derivatives",
+  "category": "engineering",
+  "description": "Exact source3-state longitudinal matrices, fixed-speed decoupling assumption. Authored0.01rad elevator step preserves small perturbations over10s instead of source0.2rad controller-design exercise. This is neither a full flight envelope nor nonlinear VTOL physics. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://www.ece.ualberta.ca/~tchen/ctm/examples/pitch/Mpitch.html",
+  "reference": "Control Tutorials for MATLAB, Modeling Pitch Controller, university-hosted primary tutorial",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "AttackAngle",
+      "initial_value": 0.0,
+      "position": {
+        "x": 220,
+        "y": 150
+      }
+    },
+    {
+      "id": "s1",
+      "name": "ReducedPitchRate",
+      "initial_value": 0.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "PitchAngle",
+      "initial_value": 0.0,
+      "position": {
+        "x": 580,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_AttackAngle",
+      "equation": "-0.313*AttackAngle+56.7*ReducedPitchRate+0.232*Elevator",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      }
+    },
+    {
+      "id": "f1",
+      "name": "Change_ReducedPitchRate",
+      "equation": "-0.0139*AttackAngle-0.426*ReducedPitchRate+0.0203*Elevator",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Change_PitchAngle",
+      "equation": "56.7*ReducedPitchRate",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Elevator",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 750
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 10,
+    "dt": 0.01,
+    "integration_method": "rk4",
+    "units": "second"
+  }
+}

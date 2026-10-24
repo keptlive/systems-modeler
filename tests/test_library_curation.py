@@ -34,7 +34,8 @@ def test_active_library_has_no_unreviewed_inert_structure():
     paths = list((ROOT / 'models').rglob('*.json'))
     admission_path = ROOT / 'operations/library-admissions-20261024.json'
     added = json.loads(admission_path.read_text())['admitted_count'] if admission_path.exists() else 0
-    assert len(paths) == MANIFEST['active_count'] + added
+    later_retired=json.loads(admission_path.read_text()).get('retired_count',0) if admission_path.exists() else 0
+    assert len(paths) == MANIFEST['active_count'] + added - later_retired
     calculators = set(MANIFEST['static_calculators'])
     for path in paths:
         model = Model.model_validate_json(path.read_bytes())

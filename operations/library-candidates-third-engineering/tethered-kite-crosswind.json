@@ -1,0 +1,186 @@
+{
+  "id": "candidate-third-engineering-tethered-kite-crosswind",
+  "name": "Tethered Kite Crosswind Steering Kinematics",
+  "category": "engineering",
+  "description": "Source three-angle kite plant,400m tether and steering efficiency penalty. Authored fixed wind10m/s, base efficiency6, initial angles and sinusoidal steering; source randomized wind/parameters and optimizing controller omitted. No gravity/tether elasticity or calibrated power-output prediction. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://github.com/do-mpc/do-mpc/blob/9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc/examples/kite/template_model.py",
+  "reference": "do-mpc tethered kite kinematic model, pinned9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Zenith",
+      "initial_value": 0.7,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s1",
+      "name": "Azimuth",
+      "initial_value": 0.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s2",
+      "name": "Heading",
+      "initial_value": 0.0,
+      "position": {
+        "x": 580,
+        "y": 150
+      },
+      "units": "1"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Zenith",
+      "equation": "Airspeed/Tether*(cos(Heading)-tan(Zenith)/Efficiency)",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "(1)/second"
+    },
+    {
+      "id": "f1",
+      "name": "Change_Azimuth",
+      "equation": "-Airspeed/(Tether*sin(Zenith))*sin(Heading)",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "(1)/second"
+    },
+    {
+      "id": "f2",
+      "name": "Change_Heading",
+      "equation": "Airspeed/Tether*Steering+AzimuthRate*cos(Zenith)",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      },
+      "units": "(1)/second"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Tether",
+      "equation": "400",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "meter"
+    },
+    {
+      "id": "p1",
+      "name": "BaseEfficiency",
+      "equation": "6",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p2",
+      "name": "DragPenalty",
+      "equation": "0.028",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p3",
+      "name": "Wind",
+      "equation": "10",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "meter/second"
+    },
+    {
+      "id": "p4",
+      "name": "SteeringAmplitude",
+      "equation": "0.5",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p5",
+      "name": "SteeringFrequency",
+      "equation": "0.1",
+      "position": {
+        "x": 950,
+        "y": 750
+      },
+      "units": "1/second"
+    },
+    {
+      "id": "p6",
+      "name": "Steering",
+      "equation": "SteeringAmplitude*sin(SteeringFrequency*TIME)",
+      "position": {
+        "x": 100,
+        "y": 850
+      },
+      "units": "1"
+    },
+    {
+      "id": "p7",
+      "name": "Efficiency",
+      "equation": "BaseEfficiency-DragPenalty*Steering^2",
+      "position": {
+        "x": 270,
+        "y": 850
+      },
+      "units": "1"
+    },
+    {
+      "id": "p8",
+      "name": "Airspeed",
+      "equation": "Wind*Efficiency*cos(Zenith)",
+      "position": {
+        "x": 440,
+        "y": 850
+      },
+      "units": "meter/second"
+    },
+    {
+      "id": "p9",
+      "name": "AzimuthRate",
+      "equation": "-Airspeed/(Tether*sin(Zenith))*sin(Heading)",
+      "position": {
+        "x": 610,
+        "y": 850
+      },
+      "units": "1/second"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 0.05,
+    "integration_method": "rk4",
+    "units": "second"
+  }
+}

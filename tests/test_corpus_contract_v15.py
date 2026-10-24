@@ -101,8 +101,9 @@ def test_corpus_scope_is_tracked_and_reference_contract_is_portable():
     assert admitted_paths <= set(paths)
     assert len(admitted_paths) == admissions['admitted_count']
     assert len(paths) == admissions['active_count']
-    assert len(paths) - len(admitted_paths) == manifest['active_count']
-    assert len(paths) - len(admitted_paths) + len(manifest['retired']) == manifest['baseline_count']
+    later_retired=admissions.get('retired_count',0)
+    assert len(paths) - len(admitted_paths) + later_retired == manifest['active_count']
+    assert len(paths) - len(admitted_paths) + later_retired + len(manifest['retired']) == manifest['baseline_count']
     assert len(set(paths)) == len(paths)
     evidence = reference_evidence(ROOT, ROOT / "tests/fixtures/corpus-contract-v15.json")
     assert evidence["case_count"] == 8

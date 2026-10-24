@@ -1,7 +1,7 @@
 {
   "id": "world3-capital-sector-cla",
-  "name": "World3 Capital Sector",
-  "description": "Industrial and service capital sector from World3 model. Includes capital accumulation, depreciation, and output generation dynamics. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "name": "World3-inspired capital with fixed allocation fractions",
+  "description": "Isolated industrial/service capital teaching subsystem using the World3 output-ratio and depreciation laws. Industrial and service output divide capital by their capital/output ratios. Initial stocks use the cited implementation defaults; allocation fractions and resource allocation are frozen illustrative controls from the prior library scenario, not the full World3 endogenous equations. Capacity utilization is fixed at 1. No population, labor, resources, agriculture, pollution or output-allocation feedbacks are reconstructed, and no Limits to Growth or recalibration trajectory is claimed.",
   "stocks": [
     {
       "id": "stock-industrial-cap",
@@ -11,7 +11,8 @@
       "position": {
         "x": 150,
         "y": 200
-      }
+      },
+      "units": "dollar"
     },
     {
       "id": "stock-service-cap",
@@ -21,7 +22,8 @@
       "position": {
         "x": 450,
         "y": 200
-      }
+      },
+      "units": "dollar"
     }
   ],
   "flows": [
@@ -34,7 +36,8 @@
       "position": {
         "x": 50,
         "y": 200
-      }
+      },
+      "units": "dollar/year"
     },
     {
       "id": "flow-ind-deprec",
@@ -45,7 +48,8 @@
       "position": {
         "x": 250,
         "y": 200
-      }
+      },
+      "units": "dollar/year"
     },
     {
       "id": "flow-serv-invest",
@@ -56,7 +60,8 @@
       "position": {
         "x": 350,
         "y": 200
-      }
+      },
+      "units": "dollar/year"
     },
     {
       "id": "flow-serv-deprec",
@@ -67,18 +72,20 @@
       "position": {
         "x": 550,
         "y": 200
-      }
+      },
+      "units": "dollar/year"
     }
   ],
   "variables": [
     {
       "id": "var-ind-output",
       "name": "Industrial Output",
-      "equation": "Industrial_Capital * Industrial_Capital_Output_Ratio * (1 - Fraction_Capital_Allocated_to_Resources)",
+      "equation": "Industrial_Capital * (1 - Fraction_Capital_Allocated_to_Resources) * Capacity_Utilization / Industrial_Capital_Output_Ratio",
       "position": {
         "x": 100,
         "y": 100
-      }
+      },
+      "units": "dollar/year"
     },
     {
       "id": "var-icor",
@@ -87,7 +94,8 @@
       "position": {
         "x": 300,
         "y": 100
-      }
+      },
+      "units": "year"
     },
     {
       "id": "var-frac-serv",
@@ -96,7 +104,8 @@
       "position": {
         "x": 500,
         "y": 100
-      }
+      },
+      "units": "1"
     },
     {
       "id": "var-frac-agr",
@@ -105,7 +114,8 @@
       "position": {
         "x": 100,
         "y": 300
-      }
+      },
+      "units": "1"
     },
     {
       "id": "var-frac-cons",
@@ -114,7 +124,8 @@
       "position": {
         "x": 300,
         "y": 300
-      }
+      },
+      "units": "1"
     },
     {
       "id": "var-ind-life",
@@ -123,7 +134,8 @@
       "position": {
         "x": 500,
         "y": 300
-      }
+      },
+      "units": "year"
     },
     {
       "id": "var-serv-life",
@@ -132,7 +144,8 @@
       "position": {
         "x": 150,
         "y": 400
-      }
+      },
+      "units": "year"
     },
     {
       "id": "var-fcar",
@@ -141,15 +154,37 @@
       "position": {
         "x": 350,
         "y": 400
-      }
+      },
+      "units": "1"
     },
     {
       "id": "var-serv-output",
       "name": "Service Output",
-      "equation": "Service_Capital * 1.0",
+      "equation": "Service_Capital * Capacity_Utilization / Service_Capital_Output_Ratio",
       "position": {
         "x": 550,
         "y": 400
+      },
+      "units": "dollar/year"
+    },
+    {
+      "id": "repair-capacity-utilization",
+      "name": "Capacity Utilization",
+      "equation": "1",
+      "units": "1",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "repair-service-output-ratio",
+      "name": "Service Capital Output Ratio",
+      "equation": "1",
+      "units": "year",
+      "position": {
+        "x": 600,
+        "y": 160
       }
     }
   ],
@@ -157,10 +192,12 @@
   "time_settings": {
     "start": 1900,
     "end": 2100,
-    "dt": 1
+    "dt": 0.25,
+    "units": "year",
+    "integration_method": "rk4"
   },
-  "source": "https://github.com/cvanwynsberghe/pyworld3",
-  "reference": "Meadows et al. Limits to Growth (1972); PyWorld3 implementation.",
+  "source": "https://github.com/cvanwynsberghe/pyworld3/blob/cdfd0a8f3675c514f27ddc0e00c8d8bd4d1fefb8/pyworld3/capital.py",
+  "reference": "Vanwynsberghe, pyworld3 capital.py, _update_io/_update_so/_update_icdr/_update_scdr; World3-inspired frozen-factor educational specialization, reviewed 2026-10-24. Source pinned cdfd0a8f3675c514f27ddc0e00c8d8bd4d1fefb8.",
   "created_at": "2026-01-12T08:11:11.789037+00:00",
   "updated_at": "2026-01-12T08:11:11.789037+00:00"
 }

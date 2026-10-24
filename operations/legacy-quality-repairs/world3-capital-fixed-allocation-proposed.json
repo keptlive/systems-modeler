@@ -1,0 +1,203 @@
+{
+  "id": "world3-capital-sector-cla",
+  "name": "World3-inspired capital with fixed allocation fractions",
+  "description": "Isolated industrial/service capital teaching subsystem using the World3 output-ratio and depreciation laws. Industrial and service output divide capital by their capital/output ratios. Initial stocks use the cited implementation defaults; allocation fractions and resource allocation are frozen illustrative controls from the prior library scenario, not the full World3 endogenous equations. Capacity utilization is fixed at 1. No population, labor, resources, agriculture, pollution or output-allocation feedbacks are reconstructed, and no Limits to Growth or recalibration trajectory is claimed.",
+  "stocks": [
+    {
+      "id": "stock-industrial-cap",
+      "name": "Industrial Capital",
+      "initial_value": 210000000000.0,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      },
+      "units": "dollar"
+    },
+    {
+      "id": "stock-service-cap",
+      "name": "Service Capital",
+      "initial_value": 144000000000.0,
+      "equation": "",
+      "position": {
+        "x": 450,
+        "y": 200
+      },
+      "units": "dollar"
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-ind-invest",
+      "name": "Industrial Investment",
+      "equation": "Industrial_Output * (1 - Fraction_Service - Fraction_Agriculture - Fraction_Consumption)",
+      "from_stock": null,
+      "to_stock": "stock-industrial-cap",
+      "position": {
+        "x": 50,
+        "y": 200
+      },
+      "units": "dollar/year"
+    },
+    {
+      "id": "flow-ind-deprec",
+      "name": "Industrial Depreciation",
+      "equation": "Industrial_Capital / Industrial_Capital_Lifetime",
+      "from_stock": "stock-industrial-cap",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 200
+      },
+      "units": "dollar/year"
+    },
+    {
+      "id": "flow-serv-invest",
+      "name": "Service Investment",
+      "equation": "Industrial_Output * Fraction_Service",
+      "from_stock": null,
+      "to_stock": "stock-service-cap",
+      "position": {
+        "x": 350,
+        "y": 200
+      },
+      "units": "dollar/year"
+    },
+    {
+      "id": "flow-serv-deprec",
+      "name": "Service Depreciation",
+      "equation": "Service_Capital / Service_Capital_Lifetime",
+      "from_stock": "stock-service-cap",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 200
+      },
+      "units": "dollar/year"
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-ind-output",
+      "name": "Industrial Output",
+      "equation": "Industrial_Capital * (1 - Fraction_Capital_Allocated_to_Resources) * Capacity_Utilization / Industrial_Capital_Output_Ratio",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "units": "dollar/year"
+    },
+    {
+      "id": "var-icor",
+      "name": "Industrial Capital Output Ratio",
+      "equation": "3",
+      "position": {
+        "x": 300,
+        "y": 100
+      },
+      "units": "year"
+    },
+    {
+      "id": "var-frac-serv",
+      "name": "Fraction Service",
+      "equation": "0.2",
+      "position": {
+        "x": 500,
+        "y": 100
+      },
+      "units": "1"
+    },
+    {
+      "id": "var-frac-agr",
+      "name": "Fraction Agriculture",
+      "equation": "0.1",
+      "position": {
+        "x": 100,
+        "y": 300
+      },
+      "units": "1"
+    },
+    {
+      "id": "var-frac-cons",
+      "name": "Fraction Consumption",
+      "equation": "0.43",
+      "position": {
+        "x": 300,
+        "y": 300
+      },
+      "units": "1"
+    },
+    {
+      "id": "var-ind-life",
+      "name": "Industrial Capital Lifetime",
+      "equation": "14",
+      "position": {
+        "x": 500,
+        "y": 300
+      },
+      "units": "year"
+    },
+    {
+      "id": "var-serv-life",
+      "name": "Service Capital Lifetime",
+      "equation": "20",
+      "position": {
+        "x": 150,
+        "y": 400
+      },
+      "units": "year"
+    },
+    {
+      "id": "var-fcar",
+      "name": "Fraction Capital Allocated to Resources",
+      "equation": "0.05",
+      "position": {
+        "x": 350,
+        "y": 400
+      },
+      "units": "1"
+    },
+    {
+      "id": "var-serv-output",
+      "name": "Service Output",
+      "equation": "Service_Capital * Capacity_Utilization / Service_Capital_Output_Ratio",
+      "position": {
+        "x": 550,
+        "y": 400
+      },
+      "units": "dollar/year"
+    },
+    {
+      "id": "repair-capacity-utilization",
+      "name": "Capacity Utilization",
+      "equation": "1",
+      "units": "1",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "repair-service-output-ratio",
+      "name": "Service Capital Output Ratio",
+      "equation": "1",
+      "units": "year",
+      "position": {
+        "x": 600,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 1900,
+    "end": 2100,
+    "dt": 0.25,
+    "units": "year",
+    "integration_method": "rk4"
+  },
+  "source": "https://github.com/cvanwynsberghe/pyworld3/blob/cdfd0a8f3675c514f27ddc0e00c8d8bd4d1fefb8/pyworld3/capital.py",
+  "reference": "Vanwynsberghe, pyworld3 capital.py, _update_io/_update_so/_update_icdr/_update_scdr; World3-inspired frozen-factor educational specialization, reviewed 2026-10-24. Source pinned cdfd0a8f3675c514f27ddc0e00c8d8bd4d1fefb8.",
+  "created_at": "2026-01-12T08:11:11.789037+00:00",
+  "updated_at": "2026-01-12T08:11:11.789037+00:00"
+}

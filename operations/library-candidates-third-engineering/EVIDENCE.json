@@ -1,0 +1,2848 @@
+{
+  "candidates": [
+    {
+      "file": "lyapunov-model-reference-adaptation.json",
+      "sha256": "2af257ee69ea0cba5a21137e796d13942afee3de001a438822b2c269ad405299",
+      "samples": 5001,
+      "end": 100.0,
+      "solver": "rk4",
+      "wall_seconds": 0.7130092220031656,
+      "max_scaled_reference_error": 2.300789836429118e-09,
+      "final": [
+        -0.01358688177806291,
+        0.09268454283115536,
+        2.8186541883192744,
+        -0.9841198568070663
+      ],
+      "stock_ranges": [
+        [
+          -1.6015712708636543,
+          1.5395127012880798
+        ],
+        [
+          -1.4433773454415557,
+          1.4596885946347236
+        ],
+        [
+          0.0,
+          2.9562700256367807
+        ],
+        [
+          -0.9841198568070663,
+          0.5728613754944173
+        ]
+      ],
+      "units": {
+        "errors": [],
+        "warnings": [
+          {
+            "element": "model",
+            "code": "symbolic_units_only",
+            "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+          }
+        ],
+        "unknown": [],
+        "inferred": [],
+        "status": "consistent",
+        "scientific_validity": "not_established"
+      },
+      "inspection": {
+        "model": "Lyapunov Model-Reference Adaptive Tracking",
+        "valid": true,
+        "numerical_check": "not_run",
+        "scientific_validation": "not established",
+        "issues": [
+          {
+            "severity": "warning",
+            "code": "all_stocks_zero",
+            "element": null,
+            "message": "All initial stocks are zero; confirm that the intended system can start from this state"
+          }
+        ],
+        "dimensional_analysis": {
+          "errors": [],
+          "warnings": [
+            {
+              "element": "model",
+              "code": "symbolic_units_only",
+              "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+            }
+          ],
+          "unknown": [],
+          "inferred": [],
+          "status": "consistent",
+          "scientific_validity": "not_established"
+        },
+        "source_reviews": [],
+        "inputs": {
+          "initial_stocks": [
+            {
+              "name": "Plant",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "Reference",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "FeedGain",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "StateGain",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "1"
+            }
+          ],
+          "parameters_and_auxiliaries": [
+            {
+              "name": "PlantA",
+              "equation": "-1",
+              "units": "1/second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "PlantB",
+              "equation": "0.5",
+              "units": "1/second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ReferenceA",
+              "equation": "-2",
+              "units": "1/second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ReferenceB",
+              "equation": "2",
+              "units": "1/second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Adaptation",
+              "equation": "1",
+              "units": "1/second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Frequency1",
+              "equation": "0.3141592653589793",
+              "units": "1/second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Frequency2",
+              "equation": "0.7",
+              "units": "1/second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Command",
+              "equation": "sin(Frequency1*TIME)+0.5*sin(Frequency2*TIME)",
+              "units": "1",
+              "role": "auxiliary"
+            }
+          ],
+          "flows": [
+            {
+              "name": "Change_Plant",
+              "equation": "PlantA*Plant+PlantB*(StateGain*Plant+FeedGain*Command)",
+              "from_stock": null,
+              "to_stock": "s0",
+              "units": "(1)/second"
+            },
+            {
+              "name": "Change_Reference",
+              "equation": "ReferenceA*Reference+ReferenceB*Command",
+              "from_stock": null,
+              "to_stock": "s1",
+              "units": "(1)/second"
+            },
+            {
+              "name": "Change_FeedGain",
+              "equation": "Adaptation*Command*(Reference-Plant)",
+              "from_stock": null,
+              "to_stock": "s2",
+              "units": "(1)/second"
+            },
+            {
+              "name": "Change_StateGain",
+              "equation": "Adaptation*Plant*(Reference-Plant)",
+              "from_stock": null,
+              "to_stock": "s3",
+              "units": "(1)/second"
+            }
+          ],
+          "time_settings": {
+            "units": "second",
+            "start": 0.0,
+            "end": 100.0,
+            "dt": 0.02,
+            "integration_method": "rk4",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": null
+          },
+          "description": "Exact source scalar plant/reference and Lyapunov adaptation equations with gamma1. Authored smooth persistently exciting two-sine command replaces source square wave; zero initial states retained. No claim of identifying arbitrary plants. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+          "source": "https://github.com/python-control/python-control/blob/b4cf7360138985f84afe299337ef9ee6c25e9c38/examples/mrac_siso_lyapunov.py",
+          "reference": "Kaisinger, python-control Lyapunov MRAC example; Astrom/Wittenmark Adaptive Control example5.7"
+        }
+      }
+    },
+    {
+      "file": "magnetic-levitation-inverse-square.json",
+      "sha256": "c8bbec99127524f2f87431581f34061d8767aae656144bff9000fc2f0b989074",
+      "samples": 2001,
+      "end": 2.0,
+      "solver": "rk4",
+      "wall_seconds": 0.2317804399644956,
+      "max_scaled_reference_error": 7.50025216087781e-11,
+      "final": [
+        0.02000000006725926,
+        -5.905317761775462e-10
+      ],
+      "stock_ranges": [
+        [
+          0.02000000006725926,
+          0.022
+        ],
+        [
+          -0.010352199042015155,
+          0.0
+        ]
+      ],
+      "units": {
+        "errors": [],
+        "warnings": [
+          {
+            "element": "model",
+            "code": "symbolic_units_only",
+            "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+          }
+        ],
+        "unknown": [],
+        "inferred": [],
+        "status": "consistent",
+        "scientific_validity": "not_established"
+      },
+      "inspection": {
+        "model": "Magnetic Levitation with Inverse-Square Attraction",
+        "valid": true,
+        "numerical_check": "not_run",
+        "scientific_validation": "not established",
+        "issues": [],
+        "dimensional_analysis": {
+          "errors": [],
+          "warnings": [
+            {
+              "element": "model",
+              "code": "symbolic_units_only",
+              "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+            }
+          ],
+          "unknown": [],
+          "inferred": [],
+          "status": "consistent",
+          "scientific_validity": "not_established"
+        },
+        "source_reviews": [],
+        "inputs": {
+          "initial_stocks": [
+            {
+              "name": "Gap",
+              "initial_value": 0.022,
+              "initial_equation": "",
+              "units": "meter"
+            },
+            {
+              "name": "Velocity",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "meter/second"
+            }
+          ],
+          "parameters_and_auxiliaries": [
+            {
+              "name": "Gravity",
+              "equation": "9.81",
+              "units": "meter/second^2",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ForceConstant",
+              "equation": "0.000313",
+              "units": "kg*meter^3/(second^2*ampere^2)",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Mass",
+              "equation": "0.2",
+              "units": "kg",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Conductance",
+              "equation": "1",
+              "units": "ampere/volt",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Damping",
+              "equation": "1",
+              "units": "1/second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Target",
+              "equation": "0.02",
+              "units": "meter",
+              "role": "auxiliary"
+            },
+            {
+              "name": "PositionGain",
+              "equation": "100",
+              "units": "volt/meter",
+              "role": "auxiliary"
+            },
+            {
+              "name": "VelocityGain",
+              "equation": "3",
+              "units": "volt*second/meter",
+              "role": "auxiliary"
+            },
+            {
+              "name": "EquilibriumVoltage",
+              "equation": "Target*sqrt(Mass*Gravity/ForceConstant)/Conductance",
+              "units": "volt",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Voltage",
+              "equation": "EquilibriumVoltage+PositionGain*(Gap-Target)+VelocityGain*Velocity",
+              "units": "volt",
+              "role": "auxiliary"
+            }
+          ],
+          "flows": [
+            {
+              "name": "Change_Gap",
+              "equation": "Velocity",
+              "from_stock": null,
+              "to_stock": "s0",
+              "units": "(meter)/second"
+            },
+            {
+              "name": "Change_Velocity",
+              "equation": "Gravity-ForceConstant/Mass*(Conductance*Voltage)^2/Gap^2-Damping*Velocity",
+              "from_stock": null,
+              "to_stock": "s1",
+              "units": "(meter/second)/second"
+            }
+          ],
+          "time_settings": {
+            "units": "second",
+            "start": 0.0,
+            "end": 2.0,
+            "dt": 0.001,
+            "integration_method": "rk4",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": null
+          },
+          "description": "Exact source inverse-square plant/parameters. Authored local voltage feedback around2cm equilibrium and2mm initial gap error; no actuator clipping, impact/contact dynamics or global stabilization claim. Source sensor voltage conversion omitted. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+          "source": "https://github.com/python-control/python-control/blob/b4cf7360138985f84afe299337ef9ee6c25e9c38/examples/cds110-L8a_maglev-limits.ipynb",
+          "reference": "Murray, CDS110 magnetic levitation notebook, python-control BSD3"
+        }
+      }
+    },
+    {
+      "file": "aircraft-longitudinal-pitch.json",
+      "sha256": "95179d37f8c503f488bc86ccbfa1edfe2d4d9122359a3991f259576b9733df1a",
+      "samples": 1001,
+      "end": 10.0,
+      "solver": "rk4",
+      "wall_seconds": 0.06136661703931168,
+      "max_scaled_reference_error": 1.6391710905283574e-11,
+      "final": [
+        0.013807794831146133,
+        3.753068272299212e-05,
+        0.030341014078533367
+      ],
+      "stock_ranges": [
+        [
+          0.0,
+          0.017285908173864446
+        ],
+        [
+          0.0,
+          0.00014918987505528516
+        ],
+        [
+          0.0,
+          0.030341014078533367
+        ]
+      ],
+      "units": {
+        "errors": [],
+        "warnings": [
+          {
+            "element": "model",
+            "code": "symbolic_units_only",
+            "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+          }
+        ],
+        "unknown": [
+          {
+            "element": "AttackAngle",
+            "code": "missing_units",
+            "message": "Units are not declared"
+          },
+          {
+            "element": "ReducedPitchRate",
+            "code": "missing_units",
+            "message": "Units are not declared"
+          },
+          {
+            "element": "PitchAngle",
+            "code": "missing_units",
+            "message": "Units are not declared"
+          },
+          {
+            "element": "Change_AttackAngle",
+            "code": "missing_units",
+            "message": "Units are not declared"
+          },
+          {
+            "element": "Change_ReducedPitchRate",
+            "code": "missing_units",
+            "message": "Units are not declared"
+          },
+          {
+            "element": "Change_PitchAngle",
+            "code": "missing_units",
+            "message": "Units are not declared"
+          },
+          {
+            "element": "Elevator",
+            "code": "missing_units",
+            "message": "Units are not declared"
+          }
+        ],
+        "inferred": [],
+        "status": "incomplete",
+        "scientific_validity": "not_established"
+      },
+      "inspection": {
+        "model": "Aircraft Longitudinal Pitch Stability Derivatives",
+        "valid": true,
+        "numerical_check": "not_run",
+        "scientific_validation": "not established",
+        "issues": [
+          {
+            "severity": "warning",
+            "code": "units_unverified",
+            "element": null,
+            "message": "Units are missing for one or more elements; dimensional consistency has not been established"
+          },
+          {
+            "severity": "warning",
+            "code": "all_stocks_zero",
+            "element": null,
+            "message": "All initial stocks are zero; confirm that the intended system can start from this state"
+          }
+        ],
+        "dimensional_analysis": {
+          "errors": [],
+          "warnings": [
+            {
+              "element": "model",
+              "code": "symbolic_units_only",
+              "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+            }
+          ],
+          "unknown": [
+            {
+              "element": "AttackAngle",
+              "code": "missing_units",
+              "message": "Units are not declared"
+            },
+            {
+              "element": "ReducedPitchRate",
+              "code": "missing_units",
+              "message": "Units are not declared"
+            },
+            {
+              "element": "PitchAngle",
+              "code": "missing_units",
+              "message": "Units are not declared"
+            },
+            {
+              "element": "Change_AttackAngle",
+              "code": "missing_units",
+              "message": "Units are not declared"
+            },
+            {
+              "element": "Change_ReducedPitchRate",
+              "code": "missing_units",
+              "message": "Units are not declared"
+            },
+            {
+              "element": "Change_PitchAngle",
+              "code": "missing_units",
+              "message": "Units are not declared"
+            },
+            {
+              "element": "Elevator",
+              "code": "missing_units",
+              "message": "Units are not declared"
+            }
+          ],
+          "inferred": [],
+          "status": "incomplete",
+          "scientific_validity": "not_established"
+        },
+        "source_reviews": [],
+        "inputs": {
+          "initial_stocks": [
+            {
+              "name": "AttackAngle",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": null
+            },
+            {
+              "name": "ReducedPitchRate",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": null
+            },
+            {
+              "name": "PitchAngle",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": null
+            }
+          ],
+          "parameters_and_auxiliaries": [
+            {
+              "name": "Elevator",
+              "equation": "0.01",
+              "units": null,
+              "role": "auxiliary"
+            }
+          ],
+          "flows": [
+            {
+              "name": "Change_AttackAngle",
+              "equation": "-0.313*AttackAngle+56.7*ReducedPitchRate+0.232*Elevator",
+              "from_stock": null,
+              "to_stock": "s0",
+              "units": null
+            },
+            {
+              "name": "Change_ReducedPitchRate",
+              "equation": "-0.0139*AttackAngle-0.426*ReducedPitchRate+0.0203*Elevator",
+              "from_stock": null,
+              "to_stock": "s1",
+              "units": null
+            },
+            {
+              "name": "Change_PitchAngle",
+              "equation": "56.7*ReducedPitchRate",
+              "from_stock": null,
+              "to_stock": "s2",
+              "units": null
+            }
+          ],
+          "time_settings": {
+            "units": "second",
+            "start": 0.0,
+            "end": 10.0,
+            "dt": 0.01,
+            "integration_method": "rk4",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": null
+          },
+          "description": "Exact source3-state longitudinal matrices, fixed-speed decoupling assumption. Authored0.01rad elevator step preserves small perturbations over10s instead of source0.2rad controller-design exercise. This is neither a full flight envelope nor nonlinear VTOL physics. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+          "source": "https://www.ece.ualberta.ca/~tchen/ctm/examples/pitch/Mpitch.html",
+          "reference": "Control Tutorials for MATLAB, Modeling Pitch Controller, university-hosted primary tutorial"
+        }
+      }
+    },
+    {
+      "file": "tethered-kite-crosswind.json",
+      "sha256": "cf4f7f4c83a356a3b1198b730183928c5077f6e759c6b24758dc3bcca2bc55e0",
+      "samples": 2401,
+      "end": 120.0,
+      "solver": "rk4",
+      "wall_seconds": 0.44688047404633835,
+      "max_scaled_reference_error": 2.2702358122120728e-10,
+      "final": [
+        1.4042237866486849,
+        -0.6598754923005604,
+        0.04042887907713773
+      ],
+      "stock_ranges": [
+        [
+          0.7,
+          1.4047850609668209
+        ],
+        [
+          -0.6598754923005604,
+          0.0
+        ],
+        [
+          0.0,
+          0.3564600711665474
+        ]
+      ],
+      "units": {
+        "errors": [],
+        "warnings": [
+          {
+            "element": "model",
+            "code": "symbolic_units_only",
+            "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+          }
+        ],
+        "unknown": [],
+        "inferred": [],
+        "status": "consistent",
+        "scientific_validity": "not_established"
+      },
+      "inspection": {
+        "model": "Tethered Kite Crosswind Steering Kinematics",
+        "valid": true,
+        "numerical_check": "not_run",
+        "scientific_validation": "not established",
+        "issues": [],
+        "dimensional_analysis": {
+          "errors": [],
+          "warnings": [
+            {
+              "element": "model",
+              "code": "symbolic_units_only",
+              "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+            }
+          ],
+          "unknown": [],
+          "inferred": [],
+          "status": "consistent",
+          "scientific_validity": "not_established"
+        },
+        "source_reviews": [],
+        "inputs": {
+          "initial_stocks": [
+            {
+              "name": "Zenith",
+              "initial_value": 0.7,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "Azimuth",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "Heading",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "1"
+            }
+          ],
+          "parameters_and_auxiliaries": [
+            {
+              "name": "Tether",
+              "equation": "400",
+              "units": "meter",
+              "role": "auxiliary"
+            },
+            {
+              "name": "BaseEfficiency",
+              "equation": "6",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "DragPenalty",
+              "equation": "0.028",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Wind",
+              "equation": "10",
+              "units": "meter/second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "SteeringAmplitude",
+              "equation": "0.5",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "SteeringFrequency",
+              "equation": "0.1",
+              "units": "1/second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Steering",
+              "equation": "SteeringAmplitude*sin(SteeringFrequency*TIME)",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Efficiency",
+              "equation": "BaseEfficiency-DragPenalty*Steering^2",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Airspeed",
+              "equation": "Wind*Efficiency*cos(Zenith)",
+              "units": "meter/second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "AzimuthRate",
+              "equation": "-Airspeed/(Tether*sin(Zenith))*sin(Heading)",
+              "units": "1/second",
+              "role": "auxiliary"
+            }
+          ],
+          "flows": [
+            {
+              "name": "Change_Zenith",
+              "equation": "Airspeed/Tether*(cos(Heading)-tan(Zenith)/Efficiency)",
+              "from_stock": null,
+              "to_stock": "s0",
+              "units": "(1)/second"
+            },
+            {
+              "name": "Change_Azimuth",
+              "equation": "-Airspeed/(Tether*sin(Zenith))*sin(Heading)",
+              "from_stock": null,
+              "to_stock": "s1",
+              "units": "(1)/second"
+            },
+            {
+              "name": "Change_Heading",
+              "equation": "Airspeed/Tether*Steering+AzimuthRate*cos(Zenith)",
+              "from_stock": null,
+              "to_stock": "s2",
+              "units": "(1)/second"
+            }
+          ],
+          "time_settings": {
+            "units": "second",
+            "start": 0.0,
+            "end": 120.0,
+            "dt": 0.05,
+            "integration_method": "rk4",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": null
+          },
+          "description": "Source three-angle kite plant,400m tether and steering efficiency penalty. Authored fixed wind10m/s, base efficiency6, initial angles and sinusoidal steering; source randomized wind/parameters and optimizing controller omitted. No gravity/tether elasticity or calibrated power-output prediction. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+          "source": "https://github.com/do-mpc/do-mpc/blob/9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc/examples/kite/template_model.py",
+          "reference": "do-mpc tethered kite kinematic model, pinned9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc"
+        }
+      }
+    },
+    {
+      "file": "tire-slip-dynamic-vehicle.json",
+      "sha256": "464bdce409dc162d6a66532509940f980003cb82fca3fae2d0be5094ab4abbf5",
+      "samples": 2401,
+      "end": 12.0,
+      "solver": "rk4",
+      "wall_seconds": 0.839106563013047,
+      "max_scaled_reference_error": 6.046012037685955e-07,
+      "final": [
+        5.005691648844074,
+        3.60225972966491,
+        7.544493736666589,
+        3.3619669313557137,
+        0.03210807425584591,
+        0.6338717542033547
+      ],
+      "stock_ranges": [
+        [
+          -5.365472716090406,
+          5.224928666285897
+        ],
+        [
+          -0.13467752399326857,
+          10.471366182185385
+        ],
+        [
+          0.0,
+          7.544493736666589
+        ],
+        [
+          3.0,
+          3.3619669313557137
+        ],
+        [
+          0.0,
+          0.04669738823859927
+        ],
+        [
+          0.0,
+          0.6338717542033547
+        ]
+      ],
+      "units": {
+        "errors": [],
+        "warnings": [
+          {
+            "element": "model",
+            "code": "symbolic_units_only",
+            "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+          }
+        ],
+        "unknown": [],
+        "inferred": [],
+        "status": "consistent",
+        "scientific_validity": "not_established"
+      },
+      "inspection": {
+        "model": "Tire-Slip Vehicle Cornering Dynamics",
+        "valid": true,
+        "numerical_check": "not_run",
+        "scientific_validation": "not established",
+        "issues": [],
+        "dimensional_analysis": {
+          "errors": [],
+          "warnings": [
+            {
+              "element": "model",
+              "code": "symbolic_units_only",
+              "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+            }
+          ],
+          "unknown": [],
+          "inferred": [],
+          "status": "consistent",
+          "scientific_validity": "not_established"
+        },
+        "source_reviews": [],
+        "inputs": {
+          "initial_stocks": [
+            {
+              "name": "X",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "meter"
+            },
+            {
+              "name": "Y",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "meter"
+            },
+            {
+              "name": "Yaw",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "ForwardSpeed",
+              "initial_value": 3.0,
+              "initial_equation": "",
+              "units": "meter/second"
+            },
+            {
+              "name": "SideSpeed",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "meter/second"
+            },
+            {
+              "name": "YawRate",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "1/second"
+            }
+          ],
+          "parameters_and_auxiliaries": [
+            {
+              "name": "Mass",
+              "equation": "5.692",
+              "units": "kg",
+              "role": "auxiliary"
+            },
+            {
+              "name": "YawInertia",
+              "equation": "0.204",
+              "units": "kg*meter^2",
+              "role": "auxiliary"
+            },
+            {
+              "name": "FrontArm",
+              "equation": "0.178",
+              "units": "meter",
+              "role": "auxiliary"
+            },
+            {
+              "name": "RearArm",
+              "equation": "0.147",
+              "units": "meter",
+              "role": "auxiliary"
+            },
+            {
+              "name": "FrontPeak",
+              "equation": "134.585",
+              "units": "kg*meter/second^2",
+              "role": "auxiliary"
+            },
+            {
+              "name": "RearPeak",
+              "equation": "159.919",
+              "units": "kg*meter/second^2",
+              "role": "auxiliary"
+            },
+            {
+              "name": "FrontShape",
+              "equation": "0.085",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "RearShape",
+              "equation": "0.133",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "FrontStiffness",
+              "equation": "9.242",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "RearStiffness",
+              "equation": "17.716",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "MotorGain",
+              "equation": "20",
+              "units": "kg*meter/second^2",
+              "role": "auxiliary"
+            },
+            {
+              "name": "MotorSpeedLoss",
+              "equation": "6.92e-07",
+              "units": "kg/second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Rolling",
+              "equation": "3.99",
+              "units": "kg*meter/second^2",
+              "role": "auxiliary"
+            },
+            {
+              "name": "QuadraticDrag",
+              "equation": "0.67",
+              "units": "kg/meter",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Steering",
+              "equation": "0.1",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Throttle",
+              "equation": "0.6",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "FrontSlip",
+              "equation": "-atan2(YawRate*FrontArm+SideSpeed,ForwardSpeed)+Steering",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "RearSlip",
+              "equation": "atan2(YawRate*RearArm-SideSpeed,ForwardSpeed)",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "FrontForce",
+              "equation": "FrontPeak*sin(FrontShape*atan(FrontStiffness*FrontSlip))",
+              "units": "kg*meter/second^2",
+              "role": "auxiliary"
+            },
+            {
+              "name": "RearForce",
+              "equation": "RearPeak*sin(RearShape*atan(RearStiffness*RearSlip))",
+              "units": "kg*meter/second^2",
+              "role": "auxiliary"
+            },
+            {
+              "name": "DriveForce",
+              "equation": "(MotorGain-MotorSpeedLoss*ForwardSpeed)*Throttle-QuadraticDrag*ForwardSpeed^2-Rolling",
+              "units": "kg*meter/second^2",
+              "role": "auxiliary"
+            }
+          ],
+          "flows": [
+            {
+              "name": "Change_X",
+              "equation": "ForwardSpeed*cos(Yaw)-SideSpeed*sin(Yaw)",
+              "from_stock": null,
+              "to_stock": "s0",
+              "units": "(meter)/second"
+            },
+            {
+              "name": "Change_Y",
+              "equation": "ForwardSpeed*sin(Yaw)+SideSpeed*cos(Yaw)",
+              "from_stock": null,
+              "to_stock": "s1",
+              "units": "(meter)/second"
+            },
+            {
+              "name": "Change_Yaw",
+              "equation": "YawRate",
+              "from_stock": null,
+              "to_stock": "s2",
+              "units": "(1)/second"
+            },
+            {
+              "name": "Change_ForwardSpeed",
+              "equation": "(DriveForce-FrontForce*sin(Steering)+Mass*SideSpeed*YawRate)/Mass",
+              "from_stock": null,
+              "to_stock": "s3",
+              "units": "(meter/second)/second"
+            },
+            {
+              "name": "Change_SideSpeed",
+              "equation": "(RearForce+FrontForce*cos(Steering)-Mass*ForwardSpeed*YawRate)/Mass",
+              "from_stock": null,
+              "to_stock": "s4",
+              "units": "(meter/second)/second"
+            },
+            {
+              "name": "Change_YawRate",
+              "equation": "(FrontForce*FrontArm*cos(Steering)-FrontArm*DriveForce*sin(Steering)-RearArm*RearForce)/YawInertia",
+              "from_stock": null,
+              "to_stock": "s5",
+              "units": "(1/second)/second"
+            }
+          ],
+          "time_settings": {
+            "units": "second",
+            "start": 0.0,
+            "end": 12.0,
+            "dt": 0.005,
+            "integration_method": "rk4",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": null
+          },
+          "description": "Exact source six-state tire-slip plant and parameter values, including its drive-force yaw moment. Authored constant0.1rad steer,0.6PWM and3m/s initial speed; source racecourse/MPC omitted. Distinct from Whipple bicycle roll stability and kinematic steering; no tire calibration claim beyond source values. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+          "source": "https://github.com/do-mpc/do-mpc/blob/9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc/examples/dynamic_bicycle_model/template_model.py",
+          "reference": "Cataffo et al., IEEE SMC2022; do-mpc dynamic bicycle adaptation"
+        }
+      }
+    },
+    {
+      "file": "battery-polarization-thermal.json",
+      "sha256": "6fe243caf7f903c13c125c582063d2bbbc4c021e23f60c1b69231ec453e90092",
+      "samples": 1201,
+      "end": 600.0,
+      "solver": "rk4",
+      "wall_seconds": 0.1467796720098704,
+      "max_scaled_reference_error": 1.6662650426102488e-11,
+      "final": [
+        0.3333333333333073,
+        -0.05999999987633078,
+        26.845196473516417,
+        25.91306964483564
+      ],
+      "stock_ranges": [
+        [
+          0.3333333333333073,
+          0.5
+        ],
+        [
+          -0.05999999987633078,
+          0.0
+        ],
+        [
+          25.0,
+          26.845196473516417
+        ],
+        [
+          25.0,
+          25.91306964483564
+        ]
+      ],
+      "units": {
+        "errors": [],
+        "warnings": [
+          {
+            "element": "model",
+            "code": "symbolic_units_only",
+            "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+          }
+        ],
+        "unknown": [],
+        "inferred": [],
+        "status": "consistent",
+        "scientific_validity": "not_established"
+      },
+      "inspection": {
+        "model": "Battery Polarization and Cell-Jig Thermal Dynamics",
+        "valid": true,
+        "numerical_check": "not_run",
+        "scientific_validation": "not established",
+        "issues": [],
+        "dimensional_analysis": {
+          "errors": [],
+          "warnings": [
+            {
+              "element": "model",
+              "code": "symbolic_units_only",
+              "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+            }
+          ],
+          "unknown": [],
+          "inferred": [],
+          "status": "consistent",
+          "scientific_validity": "not_established"
+        },
+        "source_reviews": [],
+        "inputs": {
+          "initial_stocks": [
+            {
+              "name": "ChargeFraction",
+              "initial_value": 0.5,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "Overpotential",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "volt"
+            },
+            {
+              "name": "CellTemperature",
+              "initial_value": 25.0,
+              "initial_equation": "",
+              "units": "kelvin"
+            },
+            {
+              "name": "JigTemperature",
+              "initial_value": 25.0,
+              "initial_equation": "",
+              "units": "kelvin"
+            }
+          ],
+          "parameters_and_auxiliaries": [
+            {
+              "name": "Current",
+              "equation": "100",
+              "units": "ampere",
+              "role": "auxiliary"
+            },
+            {
+              "name": "CapacityCharge",
+              "equation": "360000",
+              "units": "ampere*second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Resistance0",
+              "equation": "0.0004",
+              "units": "volt/ampere",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Resistance1",
+              "equation": "0.0006",
+              "units": "volt/ampere",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Capacitance1",
+              "equation": "50000",
+              "units": "ampere*second/volt",
+              "role": "auxiliary"
+            },
+            {
+              "name": "CellJig",
+              "equation": "10",
+              "units": "ampere*volt/kelvin",
+              "role": "auxiliary"
+            },
+            {
+              "name": "JigAir",
+              "equation": "10",
+              "units": "ampere*volt/kelvin",
+              "role": "auxiliary"
+            },
+            {
+              "name": "CellThermalMass",
+              "equation": "1000",
+              "units": "ampere*volt*second/kelvin",
+              "role": "auxiliary"
+            },
+            {
+              "name": "JigThermalMass",
+              "equation": "500",
+              "units": "ampere*volt*second/kelvin",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Ambient",
+              "equation": "25",
+              "units": "kelvin",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Heating",
+              "equation": "Current^2*Resistance0-Current*Overpotential",
+              "units": "ampere*volt",
+              "role": "auxiliary"
+            }
+          ],
+          "flows": [
+            {
+              "name": "Change_ChargeFraction",
+              "equation": "-Current/CapacityCharge",
+              "from_stock": null,
+              "to_stock": "s0",
+              "units": "(1)/second"
+            },
+            {
+              "name": "Change_Overpotential",
+              "equation": "-Overpotential/(Resistance1*Capacitance1)-Current/Capacitance1",
+              "from_stock": null,
+              "to_stock": "s1",
+              "units": "(volt)/second"
+            },
+            {
+              "name": "Change_CellTemperature",
+              "equation": "(Heating-CellJig*(CellTemperature-JigTemperature))/CellThermalMass",
+              "from_stock": null,
+              "to_stock": "s2",
+              "units": "(kelvin)/second"
+            },
+            {
+              "name": "Change_JigTemperature",
+              "equation": "(CellJig*(CellTemperature-JigTemperature)-JigAir*(JigTemperature-Ambient))/JigThermalMass",
+              "from_stock": null,
+              "to_stock": "s3",
+              "units": "(kelvin)/second"
+            }
+          ],
+          "time_settings": {
+            "units": "second",
+            "start": 0.0,
+            "end": 600.0,
+            "dt": 0.5,
+            "integration_method": "rk4",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": null
+          },
+          "description": "Source illustrative100Ah,100A,30s RC design and cell/jig thermal masses/conductances. Authored fixed nominal R0/R1/C1 rather than source3D dependencies; entropic heat set0 and source undisclosed OCV table not copied. Temperature in Celsius differences; source aggregate overpotential heating retained. No particular commercial cell or full electrochemical energy balance claimed. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+          "source": "https://github.com/pybamm-team/PyBaMM/blob/5651a97ecc5dfd1a2de8c2a1af13368263ee12ed/packages/pybamm/src/pybamm/input/parameters/ecm/example_set.py",
+          "reference": "PyBaMM Thevenin equivalent-circuit thermal/RC submodels, BSD3 pinned5651a97ecc5dfd1a2de8c2a1af13368263ee12ed"
+        }
+      }
+    },
+    {
+      "file": "compressor-plenum-surge.json",
+      "sha256": "ed6850f827350a313ea05507f065d184436c09a8e7b42a8b34c3d470d9616eb2",
+      "samples": 6001,
+      "end": 60.0,
+      "solver": "rk4",
+      "wall_seconds": 0.8542058449820615,
+      "max_scaled_reference_error": 1.183623241085563e-09,
+      "final": [
+        -0.3261945814874469,
+        -0.38682766228341564
+      ],
+      "stock_ranges": [
+        [
+          -0.4866111854141617,
+          0.3865517591226765
+        ],
+        [
+          -0.4105209519183829,
+          0.3286528773421634
+        ]
+      ],
+      "units": {
+        "errors": [],
+        "warnings": [
+          {
+            "element": "model",
+            "code": "symbolic_units_only",
+            "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+          }
+        ],
+        "unknown": [],
+        "inferred": [],
+        "status": "consistent",
+        "scientific_validity": "not_established"
+      },
+      "inspection": {
+        "model": "Moore-Greitzer Compressor and Plenum Surge",
+        "valid": true,
+        "numerical_check": "not_run",
+        "scientific_validation": "not established",
+        "issues": [],
+        "dimensional_analysis": {
+          "errors": [],
+          "warnings": [
+            {
+              "element": "model",
+              "code": "symbolic_units_only",
+              "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+            }
+          ],
+          "unknown": [],
+          "inferred": [],
+          "status": "consistent",
+          "scientific_validity": "not_established"
+        },
+        "source_reviews": [],
+        "inputs": {
+          "initial_stocks": [
+            {
+              "name": "PressureShift",
+              "initial_value": 0.03,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "FlowShift",
+              "initial_value": 0.02,
+              "initial_equation": "",
+              "units": "1"
+            }
+          ],
+          "parameters_and_auxiliaries": [
+            {
+              "name": "Greitzer",
+              "equation": "0.8319",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Throttle",
+              "equation": "0.411",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "BasePressure",
+              "equation": "0.533",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "BaseFlow",
+              "equation": "0.3",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Height",
+              "equation": "0.18",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Width",
+              "equation": "0.25",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Cubic",
+              "equation": "Height/(2*Width^3)",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Quadratic",
+              "equation": "3*Height/(2*Width^2)*(BaseFlow/Width-1)",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Linear",
+              "equation": "3*Height*BaseFlow/(2*Width^2)*(BaseFlow/Width-2)",
+              "units": "1",
+              "role": "auxiliary"
+            }
+          ],
+          "flows": [
+            {
+              "name": "Change_PressureShift",
+              "equation": "(FlowShift-Throttle*(sqrt(PressureShift+BasePressure)-sqrt(BasePressure)))/Greitzer",
+              "from_stock": null,
+              "to_stock": "s0",
+              "units": "1"
+            },
+            {
+              "name": "Change_FlowShift",
+              "equation": "Greitzer*(-Cubic*FlowShift^3-Quadratic*FlowShift^2-Linear*FlowShift-PressureShift)",
+              "from_stock": null,
+              "to_stock": "s1",
+              "units": "1"
+            }
+          ],
+          "time_settings": {
+            "units": "1",
+            "start": 0.0,
+            "end": 60.0,
+            "dt": 0.01,
+            "integration_method": "rk4",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": null
+          },
+          "description": "Source shifted unactuated surge subsystem, unstable operating-point coefficients and table values. Authored small perturbation and60 normalized-time horizon. No neural controller or full rotating-stall PDE; pressure must remain in the square-root domain. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+          "source": "https://www.mic-journal.no/PDF/2020/MIC-2020-2-1.pdf",
+          "reference": "Neverlien, Moe and Gravdahl2020, Compressor Surge Control Using Lyapunov Neural Networks, doi10.4173/mic.2020.2.1"
+        }
+      }
+    },
+    {
+      "file": "bouc-wen-hysteretic-isolator.json",
+      "sha256": "417dd921eeffd40b2e9806e37af83bf996fe5be8bfcc424040c19cea42f2d0ec",
+      "samples": 2001,
+      "end": 40.0,
+      "solver": "radau",
+      "wall_seconds": 1.115114216983784,
+      "max_scaled_reference_error": 2.4694141509407075e-08,
+      "final": [
+        1.1789864750616323,
+        0.43856493168049737,
+        0.8001569548145729
+      ],
+      "stock_ranges": [
+        [
+          -1.5909490454708557,
+          1.6054212595147606
+        ],
+        [
+          -1.6711691496829784,
+          1.6297516675715868
+        ],
+        [
+          -0.909010495968683,
+          0.8519054871882813
+        ]
+      ],
+      "units": {
+        "errors": [],
+        "warnings": [
+          {
+            "element": "model",
+            "code": "symbolic_units_only",
+            "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+          }
+        ],
+        "unknown": [],
+        "inferred": [],
+        "status": "consistent",
+        "scientific_validity": "not_established"
+      },
+      "inspection": {
+        "model": "Bouc-Wen Hysteretic Structural Isolator",
+        "valid": true,
+        "numerical_check": "not_run",
+        "scientific_validation": "not established",
+        "issues": [
+          {
+            "severity": "warning",
+            "code": "all_stocks_zero",
+            "element": null,
+            "message": "All initial stocks are zero; confirm that the intended system can start from this state"
+          }
+        ],
+        "dimensional_analysis": {
+          "errors": [],
+          "warnings": [
+            {
+              "element": "model",
+              "code": "symbolic_units_only",
+              "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+            }
+          ],
+          "unknown": [],
+          "inferred": [],
+          "status": "consistent",
+          "scientific_validity": "not_established"
+        },
+        "source_reviews": [],
+        "inputs": {
+          "initial_stocks": [
+            {
+              "name": "Displacement",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "meter"
+            },
+            {
+              "name": "Velocity",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "meter/second"
+            },
+            {
+              "name": "Hysteresis",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "1"
+            }
+          ],
+          "parameters_and_auxiliaries": [
+            {
+              "name": "Mass",
+              "equation": "1",
+              "units": "kg",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Damping",
+              "equation": "0.1",
+              "units": "kg/second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ElasticFraction",
+              "equation": "0.1",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Stiffness",
+              "equation": "1",
+              "units": "kg/second^2",
+              "role": "auxiliary"
+            },
+            {
+              "name": "YieldLength",
+              "equation": "1",
+              "units": "meter",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Scale",
+              "equation": "1",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Beta",
+              "equation": "0.5",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Gamma",
+              "equation": "0.5",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ForceAmplitude",
+              "equation": "1",
+              "units": "kg*meter/second^2",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Frequency",
+              "equation": "1.2",
+              "units": "1/second",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Force",
+              "equation": "ForceAmplitude*sin(Frequency*TIME)",
+              "units": "kg*meter/second^2",
+              "role": "auxiliary"
+            }
+          ],
+          "flows": [
+            {
+              "name": "Change_Displacement",
+              "equation": "Velocity",
+              "from_stock": null,
+              "to_stock": "s0",
+              "units": "(meter)/second"
+            },
+            {
+              "name": "Change_Velocity",
+              "equation": "(Force-Damping*Velocity-ElasticFraction*Stiffness*Displacement-(1-ElasticFraction)*YieldLength*Stiffness*Hysteresis)/Mass",
+              "from_stock": null,
+              "to_stock": "s1",
+              "units": "(meter/second)/second"
+            },
+            {
+              "name": "Change_Hysteresis",
+              "equation": "(Scale*Velocity-Beta*abs(Velocity)*Hysteresis-Gamma*Velocity*abs(Hysteresis))/YieldLength",
+              "from_stock": null,
+              "to_stock": "s2",
+              "units": "(1)/second"
+            }
+          ],
+          "time_settings": {
+            "units": "second",
+            "start": 0.0,
+            "end": 40.0,
+            "dt": 0.02,
+            "integration_method": "radau",
+            "discrete_period": null,
+            "rtol": 1e-08,
+            "atol": 1e-10,
+            "random_seed": null
+          },
+          "description": "Source constitutive law specialized to n1 limit with an explicitly authored normalized mass/spring/damper and sinusoidal force. Internal hysteresis memory creates dissipative loops beyond a Duffing/purely elastic oscillator. No degradation, pinching, seismic calibration or hardware certification. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+          "source": "https://skoge.folk.ntnu.no/prost/proceedings/acc04/Papers/0636_ThP09.1.pdf",
+          "reference": "Ikhouane, Manosa and Rodellar, ACC2004, Bounded and dissipative solutions of the Bouc-Wen model"
+        }
+      }
+    },
+    {
+      "file": "batch-crystallization-moments.json",
+      "sha256": "09b2f0c6448cfc56f5fc75d3e7d17293d3313da96604a64a8745075c2d739b36",
+      "samples": 4001,
+      "end": 80.0,
+      "solver": "rk4",
+      "wall_seconds": 0.4668604389880784,
+      "max_scaled_reference_error": 9.894890462547323e-12,
+      "final": [
+        0.1396599940768834,
+        0.14643199180477307,
+        0.17262634908395713,
+        0.2124999990889875,
+        1.0000000009110157
+      ],
+      "stock_ranges": [
+        [
+          0.1,
+          0.1396599940768834
+        ],
+        [
+          0.05,
+          0.14643199180477307
+        ],
+        [
+          0.025,
+          0.17262634908395713
+        ],
+        [
+          0.0125,
+          0.2124999990889875
+        ],
+        [
+          1.0000000009110157,
+          1.2
+        ]
+      ],
+      "units": {
+        "errors": [],
+        "warnings": [
+          {
+            "element": "model",
+            "code": "symbolic_units_only",
+            "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+          }
+        ],
+        "unknown": [],
+        "inferred": [],
+        "status": "consistent",
+        "scientific_validity": "not_established"
+      },
+      "inspection": {
+        "model": "Batch Crystallization Nucleation and Growth Moments",
+        "valid": true,
+        "numerical_check": "not_run",
+        "scientific_validation": "not established",
+        "issues": [],
+        "dimensional_analysis": {
+          "errors": [],
+          "warnings": [
+            {
+              "element": "model",
+              "code": "symbolic_units_only",
+              "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+            }
+          ],
+          "unknown": [],
+          "inferred": [],
+          "status": "consistent",
+          "scientific_validity": "not_established"
+        },
+        "source_reviews": [],
+        "inputs": {
+          "initial_stocks": [
+            {
+              "name": "Moment0",
+              "initial_value": 0.1,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "Moment1",
+              "initial_value": 0.05,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "Moment2",
+              "initial_value": 0.025,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "Moment3",
+              "initial_value": 0.0125,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "Concentration",
+              "initial_value": 1.2,
+              "initial_equation": "",
+              "units": "1"
+            }
+          ],
+          "parameters_and_auxiliaries": [
+            {
+              "name": "Saturation",
+              "equation": "1",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "GrowthCoefficient",
+              "equation": "0.5",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "BirthCoefficient",
+              "equation": "0.2",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "SolidScale",
+              "equation": "1",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Supersaturation",
+              "equation": "(Concentration-Saturation)/Saturation",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Growth",
+              "equation": "GrowthCoefficient*Supersaturation",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Birth",
+              "equation": "BirthCoefficient*Supersaturation^2",
+              "units": "1",
+              "role": "auxiliary"
+            }
+          ],
+          "flows": [
+            {
+              "name": "Change_Moment0",
+              "equation": "Birth",
+              "from_stock": null,
+              "to_stock": "s0",
+              "units": "1"
+            },
+            {
+              "name": "Change_Moment1",
+              "equation": "Growth*Moment0",
+              "from_stock": null,
+              "to_stock": "s1",
+              "units": "1"
+            },
+            {
+              "name": "Change_Moment2",
+              "equation": "2*Growth*Moment1",
+              "from_stock": null,
+              "to_stock": "s2",
+              "units": "1"
+            },
+            {
+              "name": "Change_Moment3",
+              "equation": "3*Growth*Moment2",
+              "from_stock": null,
+              "to_stock": "s3",
+              "units": "1"
+            },
+            {
+              "name": "Change_Concentration",
+              "equation": "-3*SolidScale*Growth*Moment2",
+              "from_stock": null,
+              "to_stock": "s4",
+              "units": "1"
+            }
+          ],
+          "time_settings": {
+            "units": "1",
+            "start": 0.0,
+            "end": 80.0,
+            "dt": 0.02,
+            "integration_method": "rk4",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": null
+          },
+          "description": "Source size-independent moment and solute-mass laws. Authored normalized isothermal seeded scenario: monodisperse0.5size seeds, first-order growth and second-order primary nucleation. Secondary nucleation omitted; coefficients/scales are illustrative, not claimed paper values or material calibration. No arbitrary supersaturation clamp; domain is verified through full horizon. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+          "source": "https://www.netl.doe.gov/projects/files/OptimizingBatchCrystallizationwithModelbasedDesignofExperiments_071024.pdf",
+          "reference": "Lynch et al., FOCAPD2024, Optimizing Batch Crystallization with Model-based Design of Experiments, doi10.69997/sct.152239"
+        }
+      }
+    },
+    {
+      "file": "three-generator-sine-network.json",
+      "sha256": "af0d83e79352f6368a39882b604a86c3d3f113b72a697192a127722b5b355149",
+      "samples": 4001,
+      "end": 40.0,
+      "solver": "rk4",
+      "wall_seconds": 0.7207590669859201,
+      "max_scaled_reference_error": 1.9858756306057046e-10,
+      "final": [
+        0.0011718874360088236,
+        0.004534735254091463,
+        -0.00570662269009965,
+        -0.004460471796651459,
+        0.002617652139976009,
+        0.0018428196566754567
+      ],
+      "stock_ranges": [
+        [
+          -0.2796272673389649,
+          0.4
+        ],
+        [
+          -0.2,
+          0.1609274696743349
+        ],
+        [
+          -0.2,
+          0.16095099410864064
+        ],
+        [
+          -0.35766707917006385,
+          0.24207066249169146
+        ],
+        [
+          -0.17684361872204718,
+          0.2156593704332181
+        ],
+        [
+          -0.14337456287655506,
+          0.1544040376916778
+        ]
+      ],
+      "units": {
+        "errors": [],
+        "warnings": [
+          {
+            "element": "model",
+            "code": "symbolic_units_only",
+            "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+          }
+        ],
+        "unknown": [],
+        "inferred": [],
+        "status": "consistent",
+        "scientific_validity": "not_established"
+      },
+      "inspection": {
+        "model": "Three-Generator Nonlinear Power-Angle Synchronization",
+        "valid": true,
+        "numerical_check": "not_run",
+        "scientific_validation": "not established",
+        "issues": [],
+        "dimensional_analysis": {
+          "errors": [],
+          "warnings": [
+            {
+              "element": "model",
+              "code": "symbolic_units_only",
+              "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+            }
+          ],
+          "unknown": [],
+          "inferred": [],
+          "status": "consistent",
+          "scientific_validity": "not_established"
+        },
+        "source_reviews": [],
+        "inputs": {
+          "initial_stocks": [
+            {
+              "name": "Angle0",
+              "initial_value": 0.4,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "Angle1",
+              "initial_value": -0.2,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "Angle2",
+              "initial_value": -0.2,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "Speed0",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "Speed1",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "1"
+            },
+            {
+              "name": "Speed2",
+              "initial_value": 0.0,
+              "initial_equation": "",
+              "units": "1"
+            }
+          ],
+          "parameters_and_auxiliaries": [
+            {
+              "name": "Inertia",
+              "equation": "2",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Damping",
+              "equation": "0.4",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Line01",
+              "equation": "1",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Line02",
+              "equation": "0.5",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Line12",
+              "equation": "0.8",
+              "units": "1",
+              "role": "auxiliary"
+            }
+          ],
+          "flows": [
+            {
+              "name": "Change_Angle0",
+              "equation": "Speed0",
+              "from_stock": null,
+              "to_stock": "s0",
+              "units": "1"
+            },
+            {
+              "name": "Change_Angle1",
+              "equation": "Speed1",
+              "from_stock": null,
+              "to_stock": "s1",
+              "units": "1"
+            },
+            {
+              "name": "Change_Angle2",
+              "equation": "Speed2",
+              "from_stock": null,
+              "to_stock": "s2",
+              "units": "1"
+            },
+            {
+              "name": "Change_Speed0",
+              "equation": "(-Damping*Speed0-Line01*sin(Angle0-Angle1)-Line02*sin(Angle0-Angle2))/Inertia",
+              "from_stock": null,
+              "to_stock": "s3",
+              "units": "1"
+            },
+            {
+              "name": "Change_Speed1",
+              "equation": "(-Damping*Speed1-Line01*sin(Angle1-Angle0)-Line12*sin(Angle1-Angle2))/Inertia",
+              "from_stock": null,
+              "to_stock": "s4",
+              "units": "1"
+            },
+            {
+              "name": "Change_Speed2",
+              "equation": "(-Damping*Speed2-Line02*sin(Angle2-Angle0)-Line12*sin(Angle2-Angle1))/Inertia",
+              "from_stock": null,
+              "to_stock": "s5",
+              "units": "1"
+            }
+          ],
+          "time_settings": {
+            "units": "1",
+            "start": 0.0,
+            "end": 40.0,
+            "dt": 0.01,
+            "integration_method": "rk4",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": null
+          },
+          "description": "Source lossless network sine-power swing laws before DC linearization. Authored balanced three-node topology, inertia/damping and initial phase disturbance; no turbine controller. Unlike existing lumped grid frequency-governor model, transmission topology, relative rotor phase and synchronization modes are explicit. Normalized units; no real grid calibration. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+          "source": "https://www.control.utoronto.ca/~jwsimpson/papers/2017c/",
+          "reference": "Pirani, Simpson-Porco and Fidan, CDC2017, System-Theoretic Performance Metrics for Low-Inertia Stability of Power Networks, equations1\u20132"
+        }
+      }
+    },
+    {
+      "file": "industrial-polymerization-heat-loops.json",
+      "sha256": "f0a3f32241ccfe7acdeeb92517a3994b9e221818facc25ef57100ef795fa97b7",
+      "samples": 501,
+      "end": 1.0,
+      "solver": "radau",
+      "wall_seconds": 0.13105467899003997,
+      "max_scaled_reference_error": 1.90861302347923e-07,
+      "final": [
+        10333.000000000005,
+        70.42500302148524,
+        1476.0749969785138,
+        328.1875577561045,
+        329.98478539535773,
+        331.76725558725786,
+        304.47894813115465,
+        303.8179604581697,
+        1300.0000000000005
+      ],
+      "stock_ranges": [
+        [
+          10000.0,
+          10333.000000000005
+        ],
+        [
+          70.42500302148524,
+          853.0
+        ],
+        [
+          26.5,
+          1476.0749969785138
+        ],
+        [
+          328.1875577561045,
+          363.15
+        ],
+        [
+          329.98478539535773,
+          363.15
+        ],
+        [
+          331.76725558725786,
+          363.15
+        ],
+        [
+          304.47894813115465,
+          311.28407917407225
+        ],
+        [
+          303.8179604581697,
+          309.91004602275876
+        ],
+        [
+          300.0,
+          1300.0000000000005
+        ]
+      ],
+      "units": {
+        "errors": [],
+        "warnings": [
+          {
+            "element": "model",
+            "code": "symbolic_units_only",
+            "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+          }
+        ],
+        "unknown": [],
+        "inferred": [],
+        "status": "consistent",
+        "scientific_validity": "not_established"
+      },
+      "inspection": {
+        "model": "Semibatch Polymerization with Jacket and External Heat Loops",
+        "valid": true,
+        "numerical_check": "not_run",
+        "scientific_validation": "not established",
+        "issues": [],
+        "dimensional_analysis": {
+          "errors": [],
+          "warnings": [
+            {
+              "element": "model",
+              "code": "symbolic_units_only",
+              "message": "Unit scale conversions, calibration and scientific validity are not established; numeric literals take contextual units."
+            }
+          ],
+          "unknown": [],
+          "inferred": [],
+          "status": "consistent",
+          "scientific_validity": "not_established"
+        },
+        "source_reviews": [],
+        "inputs": {
+          "initial_stocks": [
+            {
+              "name": "WaterMass",
+              "initial_value": 10000.0,
+              "initial_equation": "",
+              "units": "kg"
+            },
+            {
+              "name": "MonomerMass",
+              "initial_value": 853.0,
+              "initial_equation": "",
+              "units": "kg"
+            },
+            {
+              "name": "PolymerMass",
+              "initial_value": 26.5,
+              "initial_equation": "",
+              "units": "kg"
+            },
+            {
+              "name": "ReactorTemperature",
+              "initial_value": 363.15,
+              "initial_equation": "",
+              "units": "kelvin"
+            },
+            {
+              "name": "SteelTemperature",
+              "initial_value": 363.15,
+              "initial_equation": "",
+              "units": "kelvin"
+            },
+            {
+              "name": "JacketTemperature",
+              "initial_value": 363.15,
+              "initial_equation": "",
+              "units": "kelvin"
+            },
+            {
+              "name": "ExternalTemperature",
+              "initial_value": 308.15,
+              "initial_equation": "",
+              "units": "kelvin"
+            },
+            {
+              "name": "ExternalCoolantTemperature",
+              "initial_value": 308.15,
+              "initial_equation": "",
+              "units": "kelvin"
+            },
+            {
+              "name": "AccumulatedFeed",
+              "initial_value": 300.0,
+              "initial_equation": "",
+              "units": "kg"
+            }
+          ],
+          "parameters_and_auxiliaries": [
+            {
+              "name": "Gas",
+              "equation": "8.314",
+              "units": "joule/(mole*kelvin)",
+              "role": "auxiliary"
+            },
+            {
+              "name": "FeedTemperature",
+              "equation": "298.15",
+              "units": "kelvin",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Activation",
+              "equation": "8500",
+              "units": "joule/mole",
+              "role": "auxiliary"
+            },
+            {
+              "name": "HeatRelease",
+              "equation": "950",
+              "units": "kj/kg",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Surface",
+              "equation": "65",
+              "units": "meter^2",
+              "role": "auxiliary"
+            },
+            {
+              "name": "RateScale",
+              "equation": "7",
+              "units": "1/hour",
+              "role": "auxiliary"
+            },
+            {
+              "name": "UnconvertedRate",
+              "equation": "4",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ConvertedRate",
+              "equation": "32",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "FeedWater",
+              "equation": "0.333",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "FeedMonomer",
+              "equation": "0.667",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "JacketMass",
+              "equation": "5000",
+              "units": "kg",
+              "role": "auxiliary"
+            },
+            {
+              "name": "JacketFlow",
+              "equation": "300000",
+              "units": "kg/hour",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ExternalCoolantMass",
+              "equation": "1000",
+              "units": "kg",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ExternalCoolantFlow",
+              "equation": "100000",
+              "units": "kg/hour",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ExternalProductMass",
+              "equation": "200",
+              "units": "kg",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ExternalProductFlow",
+              "equation": "20000",
+              "units": "kg/hour",
+              "role": "auxiliary"
+            },
+            {
+              "name": "SteelMass",
+              "equation": "39000",
+              "units": "kg",
+              "role": "auxiliary"
+            },
+            {
+              "name": "WaterHeat",
+              "equation": "4.2",
+              "units": "kj/(kg*kelvin)",
+              "role": "auxiliary"
+            },
+            {
+              "name": "SteelHeat",
+              "equation": "0.47",
+              "units": "kj/(kg*kelvin)",
+              "role": "auxiliary"
+            },
+            {
+              "name": "FeedHeat",
+              "equation": "3",
+              "units": "kj/(kg*kelvin)",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ProductHeat",
+              "equation": "5",
+              "units": "kj/(kg*kelvin)",
+              "role": "auxiliary"
+            },
+            {
+              "name": "WaterTransfer",
+              "equation": "17280",
+              "units": "kj/(hour*meter^2*kelvin)",
+              "role": "auxiliary"
+            },
+            {
+              "name": "MonomerTransfer",
+              "equation": "3600",
+              "units": "kj/(hour*meter^2*kelvin)",
+              "role": "auxiliary"
+            },
+            {
+              "name": "PolymerTransfer",
+              "equation": "360",
+              "units": "kj/(hour*meter^2*kelvin)",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ExternalConductance",
+              "equation": "3600000",
+              "units": "kj/(hour*kelvin)",
+              "role": "auxiliary"
+            },
+            {
+              "name": "FeedFlow",
+              "equation": "1000",
+              "units": "kg/hour",
+              "role": "auxiliary"
+            },
+            {
+              "name": "JacketInlet",
+              "equation": "333.15",
+              "units": "kelvin",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ExternalInlet",
+              "equation": "298.15",
+              "units": "kelvin",
+              "role": "auxiliary"
+            },
+            {
+              "name": "TotalMass",
+              "equation": "WaterMass+MonomerMass+PolymerMass",
+              "units": "kg",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Conversion",
+              "equation": "PolymerMass/(MonomerMass+PolymerMass)",
+              "units": "1",
+              "role": "auxiliary"
+            },
+            {
+              "name": "RateReactor",
+              "equation": "RateScale*exp(-Activation/(Gas*ReactorTemperature))*(UnconvertedRate*(1-Conversion)+ConvertedRate*Conversion)",
+              "units": "1/hour",
+              "role": "auxiliary"
+            },
+            {
+              "name": "RateExternal",
+              "equation": "RateScale*exp(-Activation/(Gas*ExternalTemperature))*(UnconvertedRate*(1-Conversion)+ConvertedRate*Conversion)",
+              "units": "1/hour",
+              "role": "auxiliary"
+            },
+            {
+              "name": "Transfer",
+              "equation": "(WaterMass*WaterTransfer+MonomerMass*MonomerTransfer+PolymerMass*PolymerTransfer)/TotalMass",
+              "units": "kj/(hour*meter^2*kelvin)",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ReactionReactor",
+              "equation": "RateReactor*MonomerMass*(1-ExternalProductMass/TotalMass)",
+              "units": "kg/hour",
+              "role": "auxiliary"
+            },
+            {
+              "name": "ReactionExternal",
+              "equation": "RateExternal*MonomerMass/TotalMass*ExternalProductMass",
+              "units": "kg/hour",
+              "role": "auxiliary"
+            }
+          ],
+          "flows": [
+            {
+              "name": "Change_WaterMass",
+              "equation": "FeedFlow*FeedWater",
+              "from_stock": null,
+              "to_stock": "s0",
+              "units": "(kg)/hour"
+            },
+            {
+              "name": "Change_MonomerMass",
+              "equation": "FeedFlow*FeedMonomer-ReactionReactor-ReactionExternal",
+              "from_stock": null,
+              "to_stock": "s1",
+              "units": "(kg)/hour"
+            },
+            {
+              "name": "Change_PolymerMass",
+              "equation": "ReactionReactor+ReactionExternal",
+              "from_stock": null,
+              "to_stock": "s2",
+              "units": "(kg)/hour"
+            },
+            {
+              "name": "Change_ReactorTemperature",
+              "equation": "(FeedFlow*FeedHeat*(FeedTemperature-ReactorTemperature)-Transfer*Surface*(ReactorTemperature-SteelTemperature)-ExternalProductFlow*ProductHeat*(ReactorTemperature-ExternalTemperature)+HeatRelease*ReactionReactor)/(ProductHeat*TotalMass)",
+              "from_stock": null,
+              "to_stock": "s3",
+              "units": "(kelvin)/hour"
+            },
+            {
+              "name": "Change_SteelTemperature",
+              "equation": "Transfer*Surface*(ReactorTemperature-2*SteelTemperature+JacketTemperature)/(SteelHeat*SteelMass)",
+              "from_stock": null,
+              "to_stock": "s4",
+              "units": "(kelvin)/hour"
+            },
+            {
+              "name": "Change_JacketTemperature",
+              "equation": "(JacketFlow*WaterHeat*(JacketInlet-JacketTemperature)+Transfer*Surface*(SteelTemperature-JacketTemperature))/(WaterHeat*JacketMass)",
+              "from_stock": null,
+              "to_stock": "s5",
+              "units": "(kelvin)/hour"
+            },
+            {
+              "name": "Change_ExternalTemperature",
+              "equation": "(ExternalProductFlow*ProductHeat*(ReactorTemperature-ExternalTemperature)-ExternalConductance*(ExternalTemperature-ExternalCoolantTemperature)+HeatRelease*ReactionExternal)/(ProductHeat*ExternalProductMass)",
+              "from_stock": null,
+              "to_stock": "s6",
+              "units": "(kelvin)/hour"
+            },
+            {
+              "name": "Change_ExternalCoolantTemperature",
+              "equation": "(ExternalCoolantFlow*WaterHeat*(ExternalInlet-ExternalCoolantTemperature)+ExternalConductance*(ExternalTemperature-ExternalCoolantTemperature))/(WaterHeat*ExternalCoolantMass)",
+              "from_stock": null,
+              "to_stock": "s7",
+              "units": "(kelvin)/hour"
+            },
+            {
+              "name": "Change_AccumulatedFeed",
+              "equation": "FeedFlow",
+              "from_stock": null,
+              "to_stock": "s8",
+              "units": "(kg)/hour"
+            }
+          ],
+          "time_settings": {
+            "units": "hour",
+            "start": 0.0,
+            "end": 1.0,
+            "dt": 0.002,
+            "integration_method": "radau",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": null
+          },
+          "description": "Source physical9-state mass/thermal subsystem and initial states. Redundant adiabatic-temperature state omitted and its algebraic diagnostic can be reconstructed; no dynamics flattened. Authored fixed feed1000mass/hour, jacket333.15K and external coolant298.15K, not source MPC. Conversion-dependent rate and heat transfer retained. No industrial recipe or safety claim. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+          "source": "https://github.com/do-mpc/do-mpc/blob/9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc/examples/industrial_poly/template_model.py",
+          "reference": "do-mpc industrial polymerization benchmark, pinned9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc"
+        }
+      }
+    }
+  ],
+  "retained_sources": [
+    {
+      "file": "sources/PyBaMM-LICENSE",
+      "sha256": "e32e218b9184b0c498c1e13a8e66c1e67df9ef48ba9071bd2a5ebe04efdb303a"
+    },
+    {
+      "file": "sources/PyBaMM-example_set.py",
+      "sha256": "9363f5dffd8b19b2b1468a5b777127d41343a66f2eaa8066cf571cc18bd5c5de"
+    },
+    {
+      "file": "sources/PyBaMM-rc_element.py",
+      "sha256": "6a2c0f83a4203c8ef7eb32090c6b0a3c3ea6de76e0cb0e7dcf389991860611ad"
+    },
+    {
+      "file": "sources/PyBaMM-thermal.py",
+      "sha256": "bc7722064926f68a1f8b08c90132e219b3fc6d1c4fdfd2ceb2c6aff5a90762d8"
+    },
+    {
+      "file": "sources/cds110-L8a_maglev-limits.ipynb",
+      "sha256": "3943567c21bfb6ab398d3c47ab5f3c535843615a258fd7120314d971eb47efb8"
+    },
+    {
+      "file": "sources/mrac_siso_lyapunov.py",
+      "sha256": "2986493b6e04333246a0f30c0865af1b60732d62eac362c97acf5a9bf6157c8e"
+    },
+    {
+      "file": "sources/python-control-LICENSE",
+      "sha256": "c60bd121183225d2e215b8a582b11da6012da70fd7e1bc9d647cda4dc3c71aa6"
+    }
+  ],
+  "active_models_screened": 978,
+  "related_theme_models": [
+    {
+      "id": "candidate-hires-photomorphogenesis",
+      "name": "HIRES Eight-State Photomorphogenesis Benchmark"
+    },
+    {
+      "id": "droop-batch-quota-biology",
+      "name": "Droop internal nutrient quota in a closed batch culture"
+    },
+    {
+      "id": "gierer-meinhardt-well-mixed-biology",
+      "name": "Gierer-Meinhardt well-mixed activator-inhibitor core"
+    },
+    {
+      "id": "goldbeter-mitotic-cascade-biology",
+      "name": "Goldbeter cyclin-kinase-protease mitotic cascade"
+    },
+    {
+      "id": "goodwin-feedback-oscillator-biology",
+      "name": "Goodwin three-stage gene feedback oscillator"
+    },
+    {
+      "id": "repressilator-six-state-biology",
+      "name": "Repressilator with explicit mRNA and protein stages"
+    },
+    {
+      "id": "schlogl-bistable-chemistry-second-biology",
+      "name": "Schloegl chemostatted autocatalytic chemical bistability"
+    },
+    {
+      "id": "sterman-expectation-formation-cla",
+      "name": "Sterman Expectation Formation Model"
+    },
+    {
+      "id": "dice-integrated-assessment-model-simplified-cli",
+      "name": "DICE Integrated Assessment Model (Simplified)"
+    },
+    {
+      "id": "electric-grid-resilience-cli",
+      "name": "Electric Grid Resilience Model"
+    },
+    {
+      "id": "energy-storage-grid-cli",
+      "name": "Energy Storage Grid Integration Model"
+    },
+    {
+      "id": "energy-system-transition-model-cli",
+      "name": "Energy System Transition Model"
+    },
+    {
+      "id": "grid-battery-storage-cli",
+      "name": "Grid-Scale Battery Storage Integration"
+    },
+    {
+      "id": "pfas-forever-chemicals-cli",
+      "name": "PFAS Forever Chemicals Environmental Persistence Model"
+    },
+    {
+      "id": "renewable-energy-grid-integration-cli",
+      "name": "Renewable Energy Grid Integration Advanced"
+    },
+    {
+      "id": "renewable-grid-transition-cli",
+      "name": "Renewable Electricity Grid Transition Model"
+    },
+    {
+      "id": "adaptive-expectations-inflation-eco",
+      "name": "Adaptive Expectations Inflation"
+    },
+    {
+      "id": "diamond-overlapping-generations-eco",
+      "name": "Diamond Overlapping Generations Model"
+    },
+    {
+      "id": "dmp-search-matching-eco",
+      "name": "DMP Search and Matching Model"
+    },
+    {
+      "id": "electric-vehicle-battery-supply-chain-eco",
+      "name": "Electric Vehicle Battery Supply Chain Model"
+    },
+    {
+      "id": "holling-resilience-adaptive-eco",
+      "name": "Holling Adaptive Cycle Resilience Model"
+    },
+    {
+      "id": "inflation-expectations-dynamics-eco",
+      "name": "Inflation Expectations Dynamics Model"
+    },
+    {
+      "id": "labor-market-dynamics-model-eco",
+      "name": "Labor Market Dynamics Model"
+    },
+    {
+      "id": "market-share-competition-model-eco",
+      "name": "Market Share Competition Model"
+    },
+    {
+      "id": "modigliani-life-cycle-consumption-eco",
+      "name": "Modigliani Life Cycle Consumption Model"
+    },
+    {
+      "id": "npz-ocean-ecosystem-eco",
+      "name": "NPZ Ocean Ecosystem Model"
+    },
+    {
+      "id": "phillips-curve-with-expectations-eco",
+      "name": "Phillips Curve with Expectations"
+    },
+    {
+      "id": "retirement-savings-lifecycle-eco",
+      "name": "Retirement Savings Life Cycle Model"
+    },
+    {
+      "id": "duck-curve-solar-grid-ene",
+      "name": "Duck Curve Solar Grid Model"
+    },
+    {
+      "id": "electricity-grid-storage-balance-ene",
+      "name": "Electricity Grid Storage Balance Model"
+    },
+    {
+      "id": "energy-transition-policy-toolbox-ene",
+      "name": "Energy Transition Policy Toolbox Model"
+    },
+    {
+      "id": "ev-market-transition-ene",
+      "name": "Charging_Adequacy"
+    },
+    {
+      "id": "grid-frequency-stability-ene",
+      "name": "Grid Frequency Stability Dynamics"
+    },
+    {
+      "id": "grid-storage-renewable-ene",
+      "name": "Grid Storage and Renewable Integration Model"
+    },
+    {
+      "id": "lithium-battery-recycling-ene",
+      "name": "Lithium-Ion Battery Recycling Dynamics"
+    },
+    {
+      "id": "power-grid-frequency-control-ene",
+      "name": "Power Grid Frequency Control Model"
+    },
+    {
+      "id": "wind-grid-storage-integration-ene",
+      "name": "Discharge_Rate"
+    },
+    {
+      "id": "wind-power-grid-integration-ene",
+      "name": "Wind Power Grid Integration with Storage"
+    },
+    {
+      "id": "candidate-applied-active-opamp-bandpass",
+      "name": "Active Op-Amp RC Band-Pass Step Response"
+    },
+    {
+      "id": "candidate-applied-adaptive-noise-cancel",
+      "name": "Adaptive Dynamic Noise-Cancellation Identifier"
+    },
+    {
+      "id": "candidate-applied-afm-piezo-modes",
+      "name": "AFM Piezo Four-State Resonance Transient"
+    },
+    {
+      "id": "candidate-applied-airfuel-cross-limit",
+      "name": "Air\u2013Fuel Cross-Limiting Selector Control"
+    },
+    {
+      "id": "candidate-applied-nonlinear-pendulum-feedback",
+      "name": "Nonlinear Inverted Pendulum State Feedback"
+    },
+    {
+      "id": "candidate-second-applied-countercurrent-exchanger-wall-storage",
+      "name": "Countercurrent Exchanger with Distributed Wall Storage"
+    },
+    {
+      "id": "candidate-second-applied-dc-motor-armature-speed",
+      "name": "DC Motor Armature and Rotor Energy Exchange"
+    },
+    {
+      "id": "candidate-second-applied-quarter-car-road-suspension",
+      "name": "Quarter-Car Suspension with Smooth Road Rise"
+    },
+    {
+      "id": "streeter-phelps-river-sag-environment",
+      "name": "Streeter-Phelps oxygen-deficit sag in a river parcel"
+    },
+    {
+      "id": "uranium-series-lineage-disequilibrium-environment",
+      "name": "Uranium-series lineage disequilibrium in a closed mineral"
+    },
+    {
+      "id": "age-structured-epidemic-who-epi",
+      "name": "Age-Structured Epidemic Model"
+    },
+    {
+      "id": "anderson-may-herd-immunity-epi",
+      "name": "Anderson-May Herd Immunity Model"
+    },
+    {
+      "id": "covid19-sars-cov2-viral-dynamics-epi",
+      "name": "SARS-CoV-2 Viral Load Dynamics"
+    },
+    {
+      "id": "kermack-mckendrick-epidemic-epi",
+      "name": "Kermack-McKendrick Epidemic Model"
+    },
+    {
+      "id": "seir-epidemic-model-epi",
+      "name": "SEIR Epidemic Model"
+    },
+    {
+      "id": "adaptive-evolution-resistance-evo",
+      "name": "Adaptive Evolution of Resistance"
+    },
+    {
+      "id": "healthcare-workforce-planning-hea",
+      "name": "Healthcare Workforce Planning Model"
+    },
+    {
+      "id": "workforce-overtime-morale-man",
+      "name": "Workforce, Overtime and Morale \u2014 Vensim INTRO"
+    },
+    {
+      "id": "coral-calcification-ocean-acidification-mar",
+      "name": "Coral Calcification Under Ocean Acidification Model"
+    },
+    {
+      "id": "morris-lecar-neuron-neu",
+      "name": "Morris-Lecar Neuron Model"
+    },
+    {
+      "id": "oregonator-bz-reaction-chem",
+      "name": "Oregonator BZ Reaction"
+    },
+    {
+      "id": "arrhenius-reaction-rate-phy",
+      "name": "Arrhenius Reaction Kinetics"
+    },
+    {
+      "id": "belousov-zhabotinsky-oscillator-phy",
+      "name": "Belousov-Zhabotinsky Chemical Oscillator"
+    },
+    {
+      "id": "brusselator-chemical-oscillator-phy",
+      "name": "Brusselator Chemical Oscillator Model"
+    },
+    {
+      "id": "candidate-euler-rigid-body",
+      "name": "Torque-Free Euler Rigid-Body Benchmark"
+    },
+    {
+      "id": "candidate-nonlinear-sequential-chemistry",
+      "name": "Nonlinear Sequential Chemistry with Exact Mass Balance"
+    },
+    {
+      "id": "candidate-pleiades-seven-body",
+      "name": "Pleiades Seven-Body Gravitational Benchmark"
+    },
+    {
+      "id": "candidate-robertson-autocatalytic",
+      "name": "Robertson Stiff Autocatalytic Chemistry"
+    },
+    {
+      "id": "chemical-reaction-ab-phy",
+      "name": "Chemical Reaction A to B"
+    },
+    {
+      "id": "double-pendulum-phy",
+      "name": "Double Pendulum"
+    },
+    {
+      "id": "heat-exchanger-dynamics-phy",
+      "name": "Heat Exchanger Dynamics"
+    },
+    {
+      "id": "nuclear-power-plant-operations-phy",
+      "name": "Reactor Point Kinetics and Thermal Feedback \u2014 KTH Example 3-2"
+    },
+    {
+      "id": "rayleigh-benard-convection-phy",
+      "name": "Rayleigh-Benard Convection \u2014 Lorenz Three-Mode Model"
+    },
+    {
+      "id": "milgram-small-world-soc",
+      "name": "Illustrative Logistic Network Reach (Milgram Context)"
+    },
+    {
+      "id": "candidate-applied-sensor-consensus-five-node",
+      "name": "Five-Node Discrete Sensor Consensus"
+    },
+    {
+      "id": "candidate-applied-tcp-red-router",
+      "name": "TCP/RED Windows and Shared Router Queue"
+    },
+    {
+      "id": "candidate-applied-nonlinear-cruise-pi",
+      "name": "Nonlinear Vehicle Cruise with Leaky PI and Hill"
+    },
+    {
+      "id": "candidate-applied-ship-turning-path",
+      "name": "Nonlinear Tanker Turning and Path Instability"
+    },
+    {
+      "id": "candidate-applied-whipple-bicycle-stability",
+      "name": "Whipple Bicycle Self-Stability at 7 m/s"
+    },
+    {
+      "id": "electric-scooter-sharing-tra",
+      "name": "Electric Scooter Sharing System Dynamics"
+    },
+    {
+      "id": "greenshields-traffic-flow-model-tra",
+      "name": "Greenshields Traffic Flow Model"
+    }
+  ],
+  "limitations": "Numerical conformance is not empirical validation; scalar equation fingerprints are not proof of semantic novelty."
+}

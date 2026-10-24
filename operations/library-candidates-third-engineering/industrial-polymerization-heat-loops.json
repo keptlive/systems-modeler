@@ -1,0 +1,562 @@
+{
+  "id": "candidate-third-engineering-industrial-polymerization-heat-loops",
+  "name": "Semibatch Polymerization with Jacket and External Heat Loops",
+  "category": "engineering",
+  "description": "Source physical9-state mass/thermal subsystem and initial states. Redundant adiabatic-temperature state omitted and its algebraic diagnostic can be reconstructed; no dynamics flattened. Authored fixed feed1000mass/hour, jacket333.15K and external coolant298.15K, not source MPC. Conversion-dependent rate and heat transfer retained. No industrial recipe or safety claim. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://github.com/do-mpc/do-mpc/blob/9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc/examples/industrial_poly/template_model.py",
+  "reference": "do-mpc industrial polymerization benchmark, pinned9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "WaterMass",
+      "initial_value": 10000.0,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "kg"
+    },
+    {
+      "id": "s1",
+      "name": "MonomerMass",
+      "initial_value": 853.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "kg"
+    },
+    {
+      "id": "s2",
+      "name": "PolymerMass",
+      "initial_value": 26.5,
+      "position": {
+        "x": 580,
+        "y": 150
+      },
+      "units": "kg"
+    },
+    {
+      "id": "s3",
+      "name": "ReactorTemperature",
+      "initial_value": 363.15,
+      "position": {
+        "x": 760,
+        "y": 150
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "s4",
+      "name": "SteelTemperature",
+      "initial_value": 363.15,
+      "position": {
+        "x": 940,
+        "y": 150
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "s5",
+      "name": "JacketTemperature",
+      "initial_value": 363.15,
+      "position": {
+        "x": 220,
+        "y": 300
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "s6",
+      "name": "ExternalTemperature",
+      "initial_value": 308.15,
+      "position": {
+        "x": 400,
+        "y": 300
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "s7",
+      "name": "ExternalCoolantTemperature",
+      "initial_value": 308.15,
+      "position": {
+        "x": 580,
+        "y": 300
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "s8",
+      "name": "AccumulatedFeed",
+      "initial_value": 300.0,
+      "position": {
+        "x": 760,
+        "y": 300
+      },
+      "units": "kg"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_WaterMass",
+      "equation": "FeedFlow*FeedWater",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "(kg)/hour"
+    },
+    {
+      "id": "f1",
+      "name": "Change_MonomerMass",
+      "equation": "FeedFlow*FeedMonomer-ReactionReactor-ReactionExternal",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "(kg)/hour"
+    },
+    {
+      "id": "f2",
+      "name": "Change_PolymerMass",
+      "equation": "ReactionReactor+ReactionExternal",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      },
+      "units": "(kg)/hour"
+    },
+    {
+      "id": "f3",
+      "name": "Change_ReactorTemperature",
+      "equation": "(FeedFlow*FeedHeat*(FeedTemperature-ReactorTemperature)-Transfer*Surface*(ReactorTemperature-SteelTemperature)-ExternalProductFlow*ProductHeat*(ReactorTemperature-ExternalTemperature)+HeatRelease*ReactionReactor)/(ProductHeat*TotalMass)",
+      "to_stock": "s3",
+      "position": {
+        "x": 670,
+        "y": 150
+      },
+      "units": "(kelvin)/hour"
+    },
+    {
+      "id": "f4",
+      "name": "Change_SteelTemperature",
+      "equation": "Transfer*Surface*(ReactorTemperature-2*SteelTemperature+JacketTemperature)/(SteelHeat*SteelMass)",
+      "to_stock": "s4",
+      "position": {
+        "x": 850,
+        "y": 150
+      },
+      "units": "(kelvin)/hour"
+    },
+    {
+      "id": "f5",
+      "name": "Change_JacketTemperature",
+      "equation": "(JacketFlow*WaterHeat*(JacketInlet-JacketTemperature)+Transfer*Surface*(SteelTemperature-JacketTemperature))/(WaterHeat*JacketMass)",
+      "to_stock": "s5",
+      "position": {
+        "x": 130,
+        "y": 300
+      },
+      "units": "(kelvin)/hour"
+    },
+    {
+      "id": "f6",
+      "name": "Change_ExternalTemperature",
+      "equation": "(ExternalProductFlow*ProductHeat*(ReactorTemperature-ExternalTemperature)-ExternalConductance*(ExternalTemperature-ExternalCoolantTemperature)+HeatRelease*ReactionExternal)/(ProductHeat*ExternalProductMass)",
+      "to_stock": "s6",
+      "position": {
+        "x": 310,
+        "y": 300
+      },
+      "units": "(kelvin)/hour"
+    },
+    {
+      "id": "f7",
+      "name": "Change_ExternalCoolantTemperature",
+      "equation": "(ExternalCoolantFlow*WaterHeat*(ExternalInlet-ExternalCoolantTemperature)+ExternalConductance*(ExternalTemperature-ExternalCoolantTemperature))/(WaterHeat*ExternalCoolantMass)",
+      "to_stock": "s7",
+      "position": {
+        "x": 490,
+        "y": 300
+      },
+      "units": "(kelvin)/hour"
+    },
+    {
+      "id": "f8",
+      "name": "Change_AccumulatedFeed",
+      "equation": "FeedFlow",
+      "to_stock": "s8",
+      "position": {
+        "x": 670,
+        "y": 300
+      },
+      "units": "(kg)/hour"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Gas",
+      "equation": "8.314",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "joule/(mole*kelvin)"
+    },
+    {
+      "id": "p1",
+      "name": "FeedTemperature",
+      "equation": "298.15",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "p2",
+      "name": "Activation",
+      "equation": "8500",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "joule/mole"
+    },
+    {
+      "id": "p3",
+      "name": "HeatRelease",
+      "equation": "950",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "kj/kg"
+    },
+    {
+      "id": "p4",
+      "name": "Surface",
+      "equation": "65",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "meter^2"
+    },
+    {
+      "id": "p5",
+      "name": "RateScale",
+      "equation": "7",
+      "position": {
+        "x": 950,
+        "y": 750
+      },
+      "units": "1/hour"
+    },
+    {
+      "id": "p6",
+      "name": "UnconvertedRate",
+      "equation": "4",
+      "position": {
+        "x": 100,
+        "y": 850
+      },
+      "units": "1"
+    },
+    {
+      "id": "p7",
+      "name": "ConvertedRate",
+      "equation": "32",
+      "position": {
+        "x": 270,
+        "y": 850
+      },
+      "units": "1"
+    },
+    {
+      "id": "p8",
+      "name": "FeedWater",
+      "equation": "0.333",
+      "position": {
+        "x": 440,
+        "y": 850
+      },
+      "units": "1"
+    },
+    {
+      "id": "p9",
+      "name": "FeedMonomer",
+      "equation": "0.667",
+      "position": {
+        "x": 610,
+        "y": 850
+      },
+      "units": "1"
+    },
+    {
+      "id": "p10",
+      "name": "JacketMass",
+      "equation": "5000",
+      "position": {
+        "x": 780,
+        "y": 850
+      },
+      "units": "kg"
+    },
+    {
+      "id": "p11",
+      "name": "JacketFlow",
+      "equation": "300000",
+      "position": {
+        "x": 950,
+        "y": 850
+      },
+      "units": "kg/hour"
+    },
+    {
+      "id": "p12",
+      "name": "ExternalCoolantMass",
+      "equation": "1000",
+      "position": {
+        "x": 100,
+        "y": 950
+      },
+      "units": "kg"
+    },
+    {
+      "id": "p13",
+      "name": "ExternalCoolantFlow",
+      "equation": "100000",
+      "position": {
+        "x": 270,
+        "y": 950
+      },
+      "units": "kg/hour"
+    },
+    {
+      "id": "p14",
+      "name": "ExternalProductMass",
+      "equation": "200",
+      "position": {
+        "x": 440,
+        "y": 950
+      },
+      "units": "kg"
+    },
+    {
+      "id": "p15",
+      "name": "ExternalProductFlow",
+      "equation": "20000",
+      "position": {
+        "x": 610,
+        "y": 950
+      },
+      "units": "kg/hour"
+    },
+    {
+      "id": "p16",
+      "name": "SteelMass",
+      "equation": "39000",
+      "position": {
+        "x": 780,
+        "y": 950
+      },
+      "units": "kg"
+    },
+    {
+      "id": "p17",
+      "name": "WaterHeat",
+      "equation": "4.2",
+      "position": {
+        "x": 950,
+        "y": 950
+      },
+      "units": "kj/(kg*kelvin)"
+    },
+    {
+      "id": "p18",
+      "name": "SteelHeat",
+      "equation": "0.47",
+      "position": {
+        "x": 100,
+        "y": 1050
+      },
+      "units": "kj/(kg*kelvin)"
+    },
+    {
+      "id": "p19",
+      "name": "FeedHeat",
+      "equation": "3",
+      "position": {
+        "x": 270,
+        "y": 1050
+      },
+      "units": "kj/(kg*kelvin)"
+    },
+    {
+      "id": "p20",
+      "name": "ProductHeat",
+      "equation": "5",
+      "position": {
+        "x": 440,
+        "y": 1050
+      },
+      "units": "kj/(kg*kelvin)"
+    },
+    {
+      "id": "p21",
+      "name": "WaterTransfer",
+      "equation": "17280",
+      "position": {
+        "x": 610,
+        "y": 1050
+      },
+      "units": "kj/(hour*meter^2*kelvin)"
+    },
+    {
+      "id": "p22",
+      "name": "MonomerTransfer",
+      "equation": "3600",
+      "position": {
+        "x": 780,
+        "y": 1050
+      },
+      "units": "kj/(hour*meter^2*kelvin)"
+    },
+    {
+      "id": "p23",
+      "name": "PolymerTransfer",
+      "equation": "360",
+      "position": {
+        "x": 950,
+        "y": 1050
+      },
+      "units": "kj/(hour*meter^2*kelvin)"
+    },
+    {
+      "id": "p24",
+      "name": "ExternalConductance",
+      "equation": "3600000",
+      "position": {
+        "x": 100,
+        "y": 1150
+      },
+      "units": "kj/(hour*kelvin)"
+    },
+    {
+      "id": "p25",
+      "name": "FeedFlow",
+      "equation": "1000",
+      "position": {
+        "x": 270,
+        "y": 1150
+      },
+      "units": "kg/hour"
+    },
+    {
+      "id": "p26",
+      "name": "JacketInlet",
+      "equation": "333.15",
+      "position": {
+        "x": 440,
+        "y": 1150
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "p27",
+      "name": "ExternalInlet",
+      "equation": "298.15",
+      "position": {
+        "x": 610,
+        "y": 1150
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "p28",
+      "name": "TotalMass",
+      "equation": "WaterMass+MonomerMass+PolymerMass",
+      "position": {
+        "x": 780,
+        "y": 1150
+      },
+      "units": "kg"
+    },
+    {
+      "id": "p29",
+      "name": "Conversion",
+      "equation": "PolymerMass/(MonomerMass+PolymerMass)",
+      "position": {
+        "x": 950,
+        "y": 1150
+      },
+      "units": "1"
+    },
+    {
+      "id": "p30",
+      "name": "RateReactor",
+      "equation": "RateScale*exp(-Activation/(Gas*ReactorTemperature))*(UnconvertedRate*(1-Conversion)+ConvertedRate*Conversion)",
+      "position": {
+        "x": 100,
+        "y": 1250
+      },
+      "units": "1/hour"
+    },
+    {
+      "id": "p31",
+      "name": "RateExternal",
+      "equation": "RateScale*exp(-Activation/(Gas*ExternalTemperature))*(UnconvertedRate*(1-Conversion)+ConvertedRate*Conversion)",
+      "position": {
+        "x": 270,
+        "y": 1250
+      },
+      "units": "1/hour"
+    },
+    {
+      "id": "p32",
+      "name": "Transfer",
+      "equation": "(WaterMass*WaterTransfer+MonomerMass*MonomerTransfer+PolymerMass*PolymerTransfer)/TotalMass",
+      "position": {
+        "x": 440,
+        "y": 1250
+      },
+      "units": "kj/(hour*meter^2*kelvin)"
+    },
+    {
+      "id": "p33",
+      "name": "ReactionReactor",
+      "equation": "RateReactor*MonomerMass*(1-ExternalProductMass/TotalMass)",
+      "position": {
+        "x": 610,
+        "y": 1250
+      },
+      "units": "kg/hour"
+    },
+    {
+      "id": "p34",
+      "name": "ReactionExternal",
+      "equation": "RateExternal*MonomerMass/TotalMass*ExternalProductMass",
+      "position": {
+        "x": 780,
+        "y": 1250
+      },
+      "units": "kg/hour"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 1,
+    "dt": 0.002,
+    "integration_method": "radau",
+    "units": "hour"
+  }
+}
