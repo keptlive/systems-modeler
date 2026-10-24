@@ -133,19 +133,9 @@ def run_all_model_tests() -> dict:
 
 
 def corpus_cases():
-    """Known invalid definitions stay visible as strict, hash-bound xfails."""
-    root = Path(__file__).resolve().parents[1]
-    audit = json.loads((root / 'operations/library-full-v110.json').read_text())
-    known = {row['file']: row for row in audit['models'] if row['status'] == 'failed'}
-    cases = []
-    for name, model in load_all_models():
-        path = root / 'models' / name
-        record = known.get('models/' + name)
-        marks = []
-        if record and hashlib.sha256(path.read_bytes()).hexdigest() == record['sha256']:
-            marks.append(pytest.mark.xfail(strict=True, reason='Known invalid definition; docs/FAILURE-REGISTER-1.9.md'))
-        cases.append(pytest.param(name, model, marks=marks, id=name))
-    return cases
+    """Every active library example must finish; retired failures are separate fixtures."""
+    return [pytest.param(name, model, id=name) for name, model in load_all_models()]
+
 
 
 @pytest.mark.parametrize('name,model', corpus_cases())

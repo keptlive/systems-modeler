@@ -1,0 +1,124 @@
+{
+  "id": "chemostat-continuous-culture-bio",
+  "name": "Chemostat Continuous Culture",
+  "description": "Models continuous flow bioreactor dynamics with steady-state bacterial growth and washout",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Biomass",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Substrate",
+      "initial_value": 5.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Dilution_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Substrate_In",
+      "equation": "10.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "mu_max",
+      "equation": "0.6",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Ks",
+      "equation": "1.0",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Yield",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Specific_Growth_Rate",
+      "equation": "mu_max*Substrate/(Ks+Substrate)",
+      "position": {
+        "x": 230,
+        "y": 130
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Net_Growth",
+      "equation": "(Specific_Growth_Rate-Dilution_Rate)*Biomass",
+      "position": {
+        "x": 360,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Substrate",
+      "to_element": "Specific_Growth_Rate"
+    },
+    {
+      "id": "c2",
+      "from_element": "Biomass",
+      "to_element": "Net_Growth"
+    },
+    {
+      "id": "c3",
+      "from_element": "Specific_Growth_Rate",
+      "to_element": "Net_Growth"
+    },
+    {
+      "id": "c4",
+      "from_element": "Dilution_Rate",
+      "to_element": "Net_Growth"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 100.0,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T20:40:14.098254+00:00",
+  "updated_at": "2026-01-15T20:40:14.098261+00:00",
+  "source": "https://doi.org/10.1016/B978-0-12-373944-5.00206-0",
+  "reference": "Novick, A. & Szilard, L. (1950) Description of the Chemostat. Science 112:715-716"
+}

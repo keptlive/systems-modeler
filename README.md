@@ -19,18 +19,9 @@ Optional provider configuration is described in `.env.example` and `app/llm/`. K
 
 ## Validate models
 
-Run `pip install -r requirements-dev.txt` and `python -m pytest -q` for the
-credential-free regression suite. Discovery is limited to `tests/`; the old
-root-level AI tuning scripts are manual experiments, not offline tests.
-Every bundled model is exercised. The 28 documented invalid definitions are
-strict expected failures only while their file hashes match the audit; an
-unexpected failure or an unexpected repair fails the suite and requires review.
-`python tests/test_models.py` remains the uncompromised library audit: it exits
-nonzero for any failed definition, load error, or empty library.
-
 Use **Settings → Check inputs** or `POST /api/validate` with `{"model_id":"..."}` or `{"model":{...}}`. Inspection covers names, references, syntax, initial values, flow endpoints, tables, settings and a short numerical run. Units and provenance are retained. Scientific validity is not established by these checks or by finite simulation output.
 
-The current 1.9 audit runs all 1,078 checked-in definitions at their full default horizons: **1,050 complete and 28 fail explicitly**, with no newly failing defaults. All 47 previous failures were investigated; 19 definitions are repaired. Tests compare reconstructed source dynamics, conservation, analytic results and appropriate refinements. Completion is not empirical validation. See the [failure register](docs/FAILURE-REGISTER-1.9.md), [release evidence](docs/RELEASE-1.9.md), and source partitions [A](docs/CORPUS-REPAIRS-1.9-A.md), [B](docs/CORPUS-REPAIRS-1.9-B.md), [C](docs/CORPUS-REPAIRS-1.9-C.md). Public status badges apply only to exact audited model bytes. Preserve additional user models during release.
+The curated public library contains **923 examples: 920 dynamic models and three explicitly labeled static calculators**. Curation retired 155 failing, incomplete, degenerate or redundant definitions from the served library while preserving their exact bytes as test evidence. Five flowless examples were reconstructed from attributable equations and checked independently. Every active example must complete its full default run; numerical completion is not empirical validation. See [curation decisions](docs/LIBRARY-CURATION.md), [reconstructions](docs/MODEL-RECONSTRUCTIONS-2026-10.md), and the historical [failure register](docs/FAILURE-REGISTER-1.9.md). Additional user models are preserved during release.
 
 ## API and MCP
 
@@ -64,7 +55,7 @@ Version 1.9 adds explicit report-only categorical outputs and fixed-period recur
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest -q tests --ignore=tests/test_models.py
+python -m pytest -q
 node scripts/check_frontend.cjs
 node scripts/check_simulation_state.cjs
 node scripts/check_workbench_v15.cjs
@@ -73,4 +64,4 @@ PYTHONPATH=. python scripts/check_mcp.py --stdio
 PYTHONPATH=. python scripts/audit_library.py --full --tracked-only --output operations/library-full.json
 ```
 
-Run the application before the MCP client check. Node.js is needed for actual JavaScript parser checks. API tests use disposable storage. The separate `tests/test_models.py` aggregate intentionally fails while unresolved library defaults remain; the full audit records each failure instead of treating it as a passing regression. Browser acceptance and alternate-engine/device limitations are recorded separately; responsive emulation is not proof of physical iOS/Android compatibility. Never synchronize `models/`, `models.db`, `.env` or Git credentials over production. Reviewed per-file model repairs require exact old/new hashes and backups; preserve all other model data.
+Run the application before the MCP client check. Node.js is needed for JavaScript checks. API tests use disposable storage. Every active library model must pass; retired invalid inputs have separate causal-failure regression tests. Three existing XMILE identifier limitations remain expected failures. Offline pytest collection is restricted to tests/; root-level provider scripts are manual probes. Browser acceptance and alternate-engine/device limitations are recorded separately. Never synchronize model directories, databases, credentials or configuration over production. Reviewed per-file repairs and retirements require exact hashes and backups; preserve all other model data.

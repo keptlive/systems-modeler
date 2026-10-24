@@ -1,3 +1,4 @@
+from tests.model_history import model_path, find_model_path
 """Portable v1.9 partition B source, independent mathematics and domain checks."""
 import hashlib
 import json
@@ -22,7 +23,7 @@ FIX=ROOT/'tests/fixtures/corpus-v19-b'
 
 
 def load(slug,category='economics'):
-    return Model.model_validate_json((ROOT/f'models/{category}/{slug}.json').read_text())
+    return Model.model_validate_json(model_path(ROOT,f'models/{category}/{slug}.json').read_text())
 
 
 @lru_cache(None)

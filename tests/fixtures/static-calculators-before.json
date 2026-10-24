@@ -1,0 +1,359 @@
+[
+  {
+    "file": "models/other/kingman-formula-variability-ops.json",
+    "sha256": "c89af4fa4ccfc0c12d88ec186657d5eb8de09ecbc6a5d59d5483ad011b9c328a",
+    "definition": {
+      "id": "kingman-formula-variability-ops",
+      "name": "Kingman Waiting Time - Static Calculator",
+      "description": "Static calculator for the Kingman approximate mean queue waiting time: Wait_Time is the calculated output. Process_Time is a fixed input. Queue_Time is an inert placeholder. Assumes stationary single-server queue conditions and utilization below 1; no queue dynamics are simulated.",
+      "stocks": [
+        {
+          "id": "s1",
+          "name": "Queue_Time",
+          "initial_value": 0.0,
+          "equation": "",
+          "position": {
+            "x": 150,
+            "y": 200
+          }
+        },
+        {
+          "id": "s2",
+          "name": "Process_Time",
+          "initial_value": 1.0,
+          "equation": "",
+          "position": {
+            "x": 350,
+            "y": 200
+          }
+        }
+      ],
+      "flows": [],
+      "variables": [
+        {
+          "id": "v1",
+          "name": "Utilization",
+          "equation": "0.8",
+          "position": {
+            "x": 100,
+            "y": 50
+          }
+        },
+        {
+          "id": "v2",
+          "name": "CV_Arrival",
+          "equation": "1.0",
+          "position": {
+            "x": 230,
+            "y": 50
+          }
+        },
+        {
+          "id": "v3",
+          "name": "CV_Process",
+          "equation": "1.0",
+          "position": {
+            "x": 360,
+            "y": 50
+          }
+        },
+        {
+          "id": "v4",
+          "name": "Variability_Factor",
+          "equation": "(CV_Arrival*CV_Arrival+CV_Process*CV_Process)/2",
+          "position": {
+            "x": 490,
+            "y": 50
+          }
+        },
+        {
+          "id": "v5",
+          "name": "Utilization_Factor",
+          "equation": "Utilization/(1-Utilization)",
+          "position": {
+            "x": 620,
+            "y": 50
+          }
+        },
+        {
+          "id": "v6",
+          "name": "Wait_Time",
+          "equation": "Variability_Factor*Utilization_Factor*Process_Time",
+          "position": {
+            "x": 100,
+            "y": 130
+          }
+        }
+      ],
+      "connectors": [
+        {
+          "id": "c1",
+          "from_element": "CV_Arrival",
+          "to_element": "Variability_Factor"
+        },
+        {
+          "id": "c2",
+          "from_element": "CV_Process",
+          "to_element": "Variability_Factor"
+        },
+        {
+          "id": "c3",
+          "from_element": "Utilization",
+          "to_element": "Utilization_Factor"
+        },
+        {
+          "id": "c4",
+          "from_element": "Process_Time",
+          "to_element": "Wait_Time"
+        }
+      ],
+      "time_settings": {
+        "start": 0.0,
+        "end": 1.0,
+        "dt": 0.01
+      },
+      "created_at": "2026-01-15T20:53:08.360225+00:00",
+      "updated_at": "2026-01-15T20:53:08.360225+00:00",
+      "source": "https://doi.org/10.1287/opre.14.3.377",
+      "reference": "Kingman, J.F.C. (1961) The single server queue in heavy traffic. Math. Proc. Cambridge Phil. Soc. 57:902-904"
+    }
+  },
+  {
+    "file": "models/energy/solar-panel-power-output-ene.json",
+    "sha256": "3c06c539eb2a04f23a54ae4ea37233825bb2243bc9550274d2a0823a0b1beb32",
+    "definition": {
+      "id": "solar-panel-power-output-ene",
+      "name": "PV Temperature Correction - Static Calculator",
+      "description": "Static calculator for photovoltaic power at fixed irradiance and panel temperature. Power is the calculated output; Power_Output is an inert placeholder. No temperature dynamics, diurnal irradiance or energy accumulation are simulated.",
+      "stocks": [
+        {
+          "id": "s1",
+          "name": "Power_Output",
+          "initial_value": 0.0,
+          "equation": "",
+          "position": {
+            "x": 150,
+            "y": 200
+          }
+        },
+        {
+          "id": "s2",
+          "name": "Panel_Temperature",
+          "initial_value": 25.0,
+          "equation": "",
+          "position": {
+            "x": 350,
+            "y": 200
+          }
+        }
+      ],
+      "flows": [],
+      "variables": [
+        {
+          "id": "v1",
+          "name": "Irradiance",
+          "equation": "1000.0",
+          "position": {
+            "x": 100,
+            "y": 50
+          }
+        },
+        {
+          "id": "v2",
+          "name": "Panel_Area",
+          "equation": "1.6",
+          "position": {
+            "x": 230,
+            "y": 50
+          }
+        },
+        {
+          "id": "v3",
+          "name": "Efficiency_STC",
+          "equation": "0.20",
+          "position": {
+            "x": 360,
+            "y": 50
+          }
+        },
+        {
+          "id": "v4",
+          "name": "Temp_Coefficient",
+          "equation": "-0.004",
+          "position": {
+            "x": 490,
+            "y": 50
+          }
+        },
+        {
+          "id": "v5",
+          "name": "Reference_Temp",
+          "equation": "25.0",
+          "position": {
+            "x": 620,
+            "y": 50
+          }
+        },
+        {
+          "id": "v6",
+          "name": "Temperature_Loss",
+          "equation": "Temp_Coefficient*(Panel_Temperature-Reference_Temp)",
+          "position": {
+            "x": 100,
+            "y": 130
+          }
+        },
+        {
+          "id": "v7",
+          "name": "Actual_Efficiency",
+          "equation": "Efficiency_STC*(1+Temperature_Loss)",
+          "position": {
+            "x": 300,
+            "y": 130
+          }
+        },
+        {
+          "id": "v8",
+          "name": "Power",
+          "equation": "Irradiance*Panel_Area*Actual_Efficiency",
+          "position": {
+            "x": 500,
+            "y": 130
+          }
+        }
+      ],
+      "connectors": [
+        {
+          "id": "c1",
+          "from_element": "Panel_Temperature",
+          "to_element": "Temperature_Loss"
+        },
+        {
+          "id": "c2",
+          "from_element": "Temperature_Loss",
+          "to_element": "Actual_Efficiency"
+        },
+        {
+          "id": "c3",
+          "from_element": "Irradiance",
+          "to_element": "Power"
+        },
+        {
+          "id": "c4",
+          "from_element": "Actual_Efficiency",
+          "to_element": "Power"
+        }
+      ],
+      "time_settings": {
+        "start": 0.0,
+        "end": 24.0,
+        "dt": 0.25
+      },
+      "created_at": "2026-01-15T20:50:11.591354+00:00",
+      "updated_at": "2026-01-15T20:50:11.591354+00:00",
+      "source": "https://doi.org/10.1016/j.solener.2009.04.010",
+      "reference": "Skoplaki, E. & Palyvos, J.A. (2009) On the temperature dependence of photovoltaic module electrical performance. Solar Energy 83:614-624"
+    }
+  },
+  {
+    "file": "models/transportation/lighthill-whitham-richards-traffic-tra.json",
+    "sha256": "24975d40098ed435ac9c5e5e17fd7639f23b92aefb184185bdea636fcb035568",
+    "definition": {
+      "id": "lighthill-whitham-richards-traffic-tra",
+      "name": "Traffic Fundamental Diagram - Static Calculator",
+      "description": "Static calculator for a linear speed-density relationship: Speed and Flow are calculated outputs at fixed Traffic_Density. Traffic_Flow is an inert placeholder. This is a fundamental-diagram illustration, not a simulation of the Lighthill-Whitham-Richards conservation PDE.",
+      "stocks": [
+        {
+          "id": "s1",
+          "name": "Traffic_Density",
+          "initial_value": 20.0,
+          "equation": "",
+          "position": {
+            "x": 150,
+            "y": 200
+          }
+        },
+        {
+          "id": "s2",
+          "name": "Traffic_Flow",
+          "initial_value": 0.0,
+          "equation": "",
+          "position": {
+            "x": 350,
+            "y": 200
+          }
+        }
+      ],
+      "flows": [],
+      "variables": [
+        {
+          "id": "v1",
+          "name": "Free_Flow_Speed",
+          "equation": "100.0",
+          "position": {
+            "x": 100,
+            "y": 50
+          }
+        },
+        {
+          "id": "v2",
+          "name": "Jam_Density",
+          "equation": "150.0",
+          "position": {
+            "x": 230,
+            "y": 50
+          }
+        },
+        {
+          "id": "v3",
+          "name": "Speed",
+          "equation": "Free_Flow_Speed*(1-Traffic_Density/Jam_Density)",
+          "position": {
+            "x": 360,
+            "y": 50
+          }
+        },
+        {
+          "id": "v4",
+          "name": "Flow",
+          "equation": "Traffic_Density*Speed",
+          "position": {
+            "x": 490,
+            "y": 50
+          }
+        }
+      ],
+      "connectors": [
+        {
+          "id": "c1",
+          "from_element": "Traffic_Density",
+          "to_element": "Speed"
+        },
+        {
+          "id": "c2",
+          "from_element": "Jam_Density",
+          "to_element": "Speed"
+        },
+        {
+          "id": "c3",
+          "from_element": "Traffic_Density",
+          "to_element": "Flow"
+        },
+        {
+          "id": "c4",
+          "from_element": "Speed",
+          "to_element": "Flow"
+        }
+      ],
+      "time_settings": {
+        "start": 0.0,
+        "end": 1.0,
+        "dt": 0.01
+      },
+      "created_at": "2026-01-15T20:53:08.350407+00:00",
+      "updated_at": "2026-01-15T20:53:08.350407+00:00",
+      "source": "https://doi.org/10.1098/rspa.1955.0088",
+      "reference": "Lighthill, M.J. & Whitham, G.B. (1955) On kinematic waves II: A theory of traffic flow. Proc. R. Soc. A 229:317-345"
+    }
+  }
+]

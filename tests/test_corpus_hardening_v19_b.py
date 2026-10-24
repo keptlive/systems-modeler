@@ -1,3 +1,4 @@
+from tests.model_history import model_path, find_model_path
 """Independent full-horizon mathematics for explicit integration defaults."""
 import hashlib
 import json
@@ -23,7 +24,7 @@ PLAN={'grid-frequency-stability-ene':('energy',.04),
 
 
 def load(slug):
-    return Model.model_validate_json((ROOT/'models'/PLAN[slug][0]/(slug+'.json')).read_text())
+    return Model.model_validate_json(model_path(ROOT,'models/'+PLAN[slug][0]+'/'+slug+'.json').read_text())
 
 
 def world2_rhs(t,y):
@@ -121,7 +122,7 @@ def test_exact_before_receipts_and_only_explicit_numerical_fields_change():
     assert {row['id'] for row in ledger['models']}==set(PLAN)
     for row in ledger['models']:
         assert hashlib.sha256(row['before_text'].encode()).hexdigest()==row['before_sha256']==row['baseline_sha256']
-        after=(ROOT/row['file']).read_bytes()
+        after=model_path(ROOT,row['file']).read_bytes()
         assert hashlib.sha256(after).hexdigest()==row['after_sha256']
         before=json.loads(row['before_text']);current=json.loads(after)
         for field in ('description','name','time_settings','source','reference'):

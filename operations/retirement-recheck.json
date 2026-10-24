@@ -1,0 +1,2005 @@
+{
+  "models": [
+    {
+      "file": "models/climate/arctic-sea-ice-decline-model-cli.json",
+      "sha256": "5449ad8241eeb077e6a0c7003982289e2c3f1ebf5da6bf9ec4d014be5938aec2",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 1979: Root causes: ice_melt: Error evaluating equation 'melt_sensitivity * warming_rate * (Ice_Extent + feedback_amplification)': Unknown variable: feedback_amplification",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 1979: Root causes: ice_melt: Error evaluating equation 'melt_sensitivity * warming_rate * (Ice_Extent + feedback_amplification)': Unknown variable: feedback_amplification",
+        "category": "invalid_equations",
+        "time": 1979.0,
+        "root_errors": [
+          {
+            "element": "ice_melt",
+            "element_id": "flow-ice-melt",
+            "equation": "melt_sensitivity * warming_rate * (Ice_Extent + feedback_amplification)",
+            "code": "unknown_variable",
+            "message": "Error evaluating equation 'melt_sensitivity * warming_rate * (Ice_Extent + feedback_amplification)': Unknown variable: feedback_amplification",
+            "symbol": "feedback_amplification"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Ice_Extent": 7.0,
+          "Ice_Volume": 16.0,
+          "Multi_Year_Ice": 3.5
+        },
+        "reproduction": {
+          "normalized_model_sha256": "acb58a3cec6115e6f38b3319a0a6d1c19fbe3b7a03a560e10d25da94ac62ee3e",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 1979.0,
+            "end": 2100.0,
+            "dt": 1.0,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/climate/forest-fire-spread-cli.json",
+      "sha256": "d91383973239441b64a44c660e37d464834253b17706626805a0acaee692e488",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 12: Root causes: Perimeter_Length: Error evaluating equation '2 * 3.14159 * SQRT(Active_Fire_Ha / 3.14159)': Function error in SQRT: math domain error; Blocked dependents: Fire_Spread (waiting for Perimeter_Length)",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 12: Root causes: Perimeter_Length: Error evaluating equation '2 * 3.14159 * SQRT(Active_Fire_Ha / 3.14159)': Function error in SQRT: math domain error; Blocked dependents: Fire_Spread (waiting for Perimeter_Length)",
+        "category": "invalid_equations",
+        "time": 12.0,
+        "root_errors": [
+          {
+            "element": "Perimeter_Length",
+            "element_id": "v8",
+            "equation": "2 * 3.14159 * SQRT(Active_Fire_Ha / 3.14159)",
+            "code": "domain_error",
+            "message": "Error evaluating equation '2 * 3.14159 * SQRT(Active_Fire_Ha / 3.14159)': Function error in SQRT: math domain error",
+            "function": "SQRT"
+          }
+        ],
+        "blocked_errors": [
+          {
+            "element": "Fire_Spread",
+            "element_id": "f1",
+            "equation": "Spread_Rate * Perimeter_Length",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'Spread_Rate * Perimeter_Length': Unknown variable: Perimeter_Length",
+            "symbol": "Perimeter_Length",
+            "waiting_for": "Perimeter_Length",
+            "dependency_path": [
+              "Fire_Spread",
+              "Perimeter_Length"
+            ],
+            "root_cause": {
+              "code": "domain_error",
+              "element": "Perimeter_Length"
+            }
+          }
+        ],
+        "stock_values": {
+          "Unburned_Forest_Ha": 10001.626977823933,
+          "Active_Fire_Ha": -0.05914958596391581,
+          "Burned_Forest_Ha": -0.5678282379711626,
+          "Fuel_Load": -21.392483989874787
+        },
+        "reproduction": {
+          "normalized_model_sha256": "b5310f09c1ef952da71c2663b9104444671c8b73f7b3bbf364ce26b0fe876dc4",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 72.0,
+            "dt": 0.25,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/climate/global-food-security-cli.json",
+      "sha256": "d1e6eb21ea5d0ca45a1cc6cf784b7d24e84ea16d91b1ec9be19f224faf0b352c",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 0: Root causes: Cropland_Expansion: Error evaluating equation 'MAX(0, (Food_Demand - Annual_Food_Production) / Average_Yield * Land_Response_Rate)': Division by zero",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 0: Root causes: Cropland_Expansion: Error evaluating equation 'MAX(0, (Food_Demand - Annual_Food_Production) / Average_Yield * Land_Response_Rate)': Division by zero",
+        "category": "invalid_equations",
+        "time": 0.0,
+        "root_errors": [
+          {
+            "element": "Cropland_Expansion",
+            "element_id": "flow-land-expansion",
+            "equation": "MAX(0, (Food_Demand - Annual_Food_Production) / Average_Yield * Land_Response_Rate)",
+            "code": "division_by_zero",
+            "message": "Error evaluating equation 'MAX(0, (Food_Demand - Annual_Food_Production) / Average_Yield * Land_Response_Rate)': Division by zero"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Cropland_Area": 0.0,
+          "Average_Yield": 0.0,
+          "Annual_Food_Production": 0.0,
+          "Food_Demand": 0.0,
+          "Food_Insecure_Population": 0.0
+        },
+        "reproduction": {
+          "normalized_model_sha256": "14c4878d699c0aca281a7155f9212446ff7bf0af3638fd2b74a477ad9574cd2c",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 80.0,
+            "dt": 0.5,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/climate/global-nitrogen-cycle-model-cli.json",
+      "sha256": "537d133a1e448bae0a4f36bbbae55d65790da3fa7f5f5fa4416eb90c4536f086",
+      "status": "failed",
+      "error": "Element names must be unique, including case/space/punctuation aliases",
+      "failure": {
+        "code": "name_collision",
+        "message": "Element names must be unique, including case/space/punctuation aliases",
+        "category": "invalid_structure",
+        "conflicting_names": [
+          "industrial_fixation",
+          "industrial_fixation"
+        ],
+        "reproduction": {
+          "normalized_model_sha256": "003655f26ed12f47f5a10a60ded709d43a38f0a898c2ed03444124edf9906d4f",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 1900.0,
+            "end": 2100.0,
+            "dt": 1.0,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/climate/global-tipping-points-2023-assessment-cli.json",
+      "sha256": "004f3d9ea0608c9289b83a3500f16398bb0317dcf2a8a47b00fe3a184dd023a6",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 194: Root causes: Sea Ice Loss: Error evaluating equation 'Arctic_Summer_Sea_Ice * Ice_Albedo_Feedback * Temp_Sensitivity': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 194: Root causes: Sea Ice Loss: Error evaluating equation 'Arctic_Summer_Sea_Ice * Ice_Albedo_Feedback * Temp_Sensitivity': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 194.0,
+        "root_errors": [
+          {
+            "element": "Sea Ice Loss",
+            "element_id": "f1",
+            "equation": "Arctic_Summer_Sea_Ice * Ice_Albedo_Feedback * Temp_Sensitivity",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Arctic_Summer_Sea_Ice * Ice_Albedo_Feedback * Temp_Sensitivity': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Arctic Summer Sea Ice": 2.169456027290757e+294,
+          "Greenland Ice Sheet": 7.434402931414679e+134,
+          "West Antarctic Ice Sheet": 0.0865146707736308,
+          "Boreal Permafrost": 7.773750827925547e+133,
+          "Amazon Rainforest": 0.6716683061233745,
+          "Warm Water Coral Reefs": 1.2653170096338665e+142,
+          "Atlantic Subpolar Gyre": 5.939842075214669e+98,
+          "Labrador Sea Convection": 4.2500092713242017e+45,
+          "Global Mean Temperature": -2.7610312884841804e+146
+        },
+        "reproduction": {
+          "normalized_model_sha256": "1c60f0e07601972f8aedcc6ad27148f8baae9fe0fc59b99c74ab8197b04c1a47",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 200.0,
+            "dt": 1.0,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/climate/sea-level-rise-and-ice-sheet-dynamics-model-cli.json",
+      "sha256": "308c5bfce25817f26046a7e1c2015331f52b32cdd194d06ccf809533e4db1b9b",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 2000: Root causes: CO2 Concentration: Error evaluating equation 'CO2_Scenario(Time)': Unknown function: CO2_Scenario; Ice-Albedo Feedback (Greenland): Error evaluating equation '1 + 0.1 * (1 - Greenland_Ice_Mass / 2900000)': Unknown variable: Greenland_Ice_Mass; Greenland Sea Level Contribution: Error evaluating equation '(Greenland_Melt + Greenland_Calving - Greenland_Accumulation) / 361': Unknown variable: Greenland_Melt; Marine Ice Sheet Instability Factor: Error evaluating equation '1 + MISI_Sensitivity * MAX(0, Global_Temperature - MISI_Threshold)^2': Unknown variable: Global_Temperature; Antarctic Sea Level Contribution: Error evaluating equation '(Antarctica_Melt + Antarctica_Calving - Antarctica_Accumulation) / 361': Unknown variable: Antarctica_Melt; Glacier Melt Rate: Error evaluating equation '0.01 * (1 + 0.5 * (Global_Temperature - 0.8))': Unknown variable: Global_Temperature; Total Ice Mass Loss Rate: Error evaluating equation '(Greenland_Melt + Greenland_Calving - Greenland_Accumulation) + (Antarctica_Melt + Antarctica_Calving - Antarctica_Accumulation) + (Glacier_Melt - Glacier_Accumulation)': Unknown variable: Greenland_Melt; Committed Sea Level Rise: Error evaluating equation '0.4 * Global_Temperature': Unknown variable: Global_Temperature; Greenland Snow Accumulation: Error evaluating equation 'Greenland_Base_Accumulation * (1 + 0.05 * Global_Temperature)': Unknown variable: Global_Temperature; Greenland Surface Melt: Error evaluating equation 'Greenland_Base_Melt * Greenland_Melt_Sensitivity^(Global_Temperature - 0.8) * Ice_Albedo_Feedback_Greenland': Unknown variable: Global_Temperature; Greenland Calving: Error evaluating equation 'Greenland_Base_Calving * (1 + Greenland_Dynamic_Sensitivity * (Global_Temperature - 0.8))': Unknown variable: Global_Temperature; Antarctic Snow Accumulation: Error evaluating equation 'Antarctica_Base_Accumulation * (1 + 0.06 * Global_Temperature)': Unknown variable: Global_Temperature; Antarctic Melt: Error evaluating equation 'Antarctica_Base_Melt * (1 + Antarctica_Melt_Sensitivity * MAX(0, Global_Temperature - 1.5))': Unknown variable: Global_Temperature; Blocked dependents: Radiative Forcing (waiting for CO2 Concentration); Equilibrium Temperature (waiting for CO2 Concentration); Radiative Imbalance (waiting for Radiative Forcing); Thermal Expansion Rate (waiting for Ocean Heat Uptake); Glacier Sea Level Contribution (waiting for Glacier Melt); Sea Level Rise Rate (waiting for Thermal Expansion Rate); Antarctic Calving and Discharge (waiting for Marine Ice Sheet Instability Factor); Glacier Melt (waiting for Glacier Melt Rate); Ocean Heat Uptake (waiting for Radiative Imbalance); Global Warming Rate (waiting for Equilibrium Temperature)",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 2000: Root causes: CO2 Concentration: Error evaluating equation 'CO2_Scenario(Time)': Unknown function: CO2_Scenario; Ice-Albedo Feedback (Greenland): Error evaluating equation '1 + 0.1 * (1 - Greenland_Ice_Mass / 2900000)': Unknown variable: Greenland_Ice_Mass; Greenland Sea Level Contribution: Error evaluating equation '(Greenland_Melt + Greenland_Calving - Greenland_Accumulation) / 361': Unknown variable: Greenland_Melt; Marine Ice Sheet Instability Factor: Error evaluating equation '1 + MISI_Sensitivity * MAX(0, Global_Temperature - MISI_Threshold)^2': Unknown variable: Global_Temperature; Antarctic Sea Level Contribution: Error evaluating equation '(Antarctica_Melt + Antarctica_Calving - Antarctica_Accumulation) / 361': Unknown variable: Antarctica_Melt; Glacier Melt Rate: Error evaluating equation '0.01 * (1 + 0.5 * (Global_Temperature - 0.8))': Unknown variable: Global_Temperature; Total Ice Mass Loss Rate: Error evaluating equation '(Greenland_Melt + Greenland_Calving - Greenland_Accumulation) + (Antarctica_Melt + Antarctica_Calving - Antarctica_Accumulation) + (Glacier_Melt - Glacier_Accumulation)': Unknown variable: Greenland_Melt; Committed Sea Level Rise: Error evaluating equation '0.4 * Global_Temperature': Unknown variable: Global_Temperature; Greenland Snow Accumulation: Error evaluating equation 'Greenland_Base_Accumulation * (1 + 0.05 * Global_Temperature)': Unknown variable: Global_Temperature; Greenland Surface Melt: Error evaluating equation 'Greenland_Base_Melt * Greenland_Melt_Sensitivity^(Global_Temperature - 0.8) * Ice_Albedo_Feedback_Greenland': Unknown variable: Global_Temperature; Greenland Calving: Error evaluating equation 'Greenland_Base_Calving * (1 + Greenland_Dynamic_Sensitivity * (Global_Temperature - 0.8))': Unknown variable: Global_Temperature; Antarctic Snow Accumulation: Error evaluating equation 'Antarctica_Base_Accumulation * (1 + 0.06 * Global_Temperature)': Unknown variable: Global_Temperature; Antarctic Melt: Error evaluating equation 'Antarctica_Base_Melt * (1 + Antarctica_Melt_Sensitivity * MAX(0, Global_Temperature - 1.5))': Unknown variable: Global_Temperature; Blocked dependents: Radiative Forcing (waiting for CO2 Concentration); Equilibrium Temperature (waiting for CO2 Concentration); Radiative Imbalance (waiting for Radiative Forcing); Thermal Expansion Rate (waiting for Ocean Heat Uptake); Glacier Sea Level Contribution (waiting for Glacier Melt); Sea Level Rise Rate (waiting for Thermal Expansion Rate); Antarctic Calving and Discharge (waiting for Marine Ice Sheet Instability Factor); Glacier Melt (waiting for Glacier Melt Rate); Ocean Heat Uptake (waiting for Radiative Imbalance); Global Warming Rate (waiting for Equilibrium Temperature)",
+        "category": "invalid_equations",
+        "time": 2000.0,
+        "root_errors": [
+          {
+            "element": "CO2 Concentration",
+            "element_id": "var-co2-concentration",
+            "equation": "CO2_Scenario(Time)",
+            "code": "unknown_function",
+            "message": "Error evaluating equation 'CO2_Scenario(Time)': Unknown function: CO2_Scenario",
+            "function": "CO2_Scenario"
+          },
+          {
+            "element": "Ice-Albedo Feedback (Greenland)",
+            "element_id": "var-ice-albedo-feedback-greenland",
+            "equation": "1 + 0.1 * (1 - Greenland_Ice_Mass / 2900000)",
+            "code": "unknown_variable",
+            "message": "Error evaluating equation '1 + 0.1 * (1 - Greenland_Ice_Mass / 2900000)': Unknown variable: Greenland_Ice_Mass",
+            "symbol": "Greenland_Ice_Mass"
+          },
+          {
+            "element": "Greenland Sea Level Contribution",
+            "element_id": "var-greenland-sea-level-contribution",
+            "equation": "(Greenland_Melt + Greenland_Calving - Greenland_Accumulation) / 361",
+            "code": "unknown_variable",
+            "message": "Error evaluating equation '(Greenland_Melt + Greenland_Calving - Greenland_Accumulation) / 361': Unknown variable: Greenland_Melt",
+            "symbol": "Greenland_Melt"
+          },
+          {
+            "element": "Marine Ice Sheet Instability Factor",
+            "element_id": "var-marine-ice-sheet-instability-factor",
+            "equation": "1 + MISI_Sensitivity * MAX(0, Global_Temperature - MISI_Threshold)^2",
+            "code": "unknown_variable",
+            "message": "Error evaluating equation '1 + MISI_Sensitivity * MAX(0, Global_Temperature - MISI_Threshold)^2': Unknown variable: Global_Temperature",
+            "symbol": "Global_Temperature"
+          },
+          {
+            "element": "Antarctic Sea Level Contribution",
+            "element_id": "var-antarctic-sea-level-contribution",
+            "equation": "(Antarctica_Melt + Antarctica_Calving - Antarctica_Accumulation) / 361",
+            "code": "unknown_variable",
+            "message": "Error evaluating equation '(Antarctica_Melt + Antarctica_Calving - Antarctica_Accumulation) / 361': Unknown variable: Antarctica_Melt",
+            "symbol": "Antarctica_Melt"
+          },
+          {
+            "element": "Glacier Melt Rate",
+            "element_id": "var-glacier-melt-rate",
+            "equation": "0.01 * (1 + 0.5 * (Global_Temperature - 0.8))",
+            "code": "unknown_variable",
+            "message": "Error evaluating equation '0.01 * (1 + 0.5 * (Global_Temperature - 0.8))': Unknown variable: Global_Temperature",
+            "symbol": "Global_Temperature"
+          },
+          {
+            "element": "Total Ice Mass Loss Rate",
+            "element_id": "var-total-ice-mass-loss-rate",
+            "equation": "(Greenland_Melt + Greenland_Calving - Greenland_Accumulation) + (Antarctica_Melt + Antarctica_Calving - Antarctica_Accumulation) + (Glacier_Melt - Glacier_Accumulation)",
+            "code": "unknown_variable",
+            "message": "Error evaluating equation '(Greenland_Melt + Greenland_Calving - Greenland_Accumulation) + (Antarctica_Melt + Antarctica_Calving - Antarctica_Accumulation) + (Glacier_Melt - Glacier_Accumulation)': Unknown variable: Greenland_Melt",
+            "symbol": "Greenland_Melt"
+          },
+          {
+            "element": "Committed Sea Level Rise",
+            "element_id": "var-committed-sea-level-rise",
+            "equation": "0.4 * Global_Temperature",
+            "code": "unknown_variable",
+            "message": "Error evaluating equation '0.4 * Global_Temperature': Unknown variable: Global_Temperature",
+            "symbol": "Global_Temperature"
+          },
+          {
+            "element": "Greenland Snow Accumulation",
+            "element_id": "flow-greenland-snow-accumulation",
+            "equation": "Greenland_Base_Accumulation * (1 + 0.05 * Global_Temperature)",
+            "code": "unknown_variable",
+            "message": "Error evaluating equation 'Greenland_Base_Accumulation * (1 + 0.05 * Global_Temperature)': Unknown variable: Global_Temperature",
+            "symbol": "Global_Temperature"
+          },
+          {
+            "element": "Greenland Surface Melt",
+            "element_id": "flow-greenland-surface-melt",
+            "equation": "Greenland_Base_Melt * Greenland_Melt_Sensitivity^(Global_Temperature - 0.8) * Ice_Albedo_Feedback_Greenland",
+            "code": "unknown_variable",
+            "message": "Error evaluating equation 'Greenland_Base_Melt * Greenland_Melt_Sensitivity^(Global_Temperature - 0.8) * Ice_Albedo_Feedback_Greenland': Unknown variable: Global_Temperature",
+            "symbol": "Global_Temperature"
+          },
+          {
+            "element": "Greenland Calving",
+            "element_id": "flow-greenland-calving",
+            "equation": "Greenland_Base_Calving * (1 + Greenland_Dynamic_Sensitivity * (Global_Temperature - 0.8))",
+            "code": "unknown_variable",
+            "message": "Error evaluating equation 'Greenland_Base_Calving * (1 + Greenland_Dynamic_Sensitivity * (Global_Temperature - 0.8))': Unknown variable: Global_Temperature",
+            "symbol": "Global_Temperature"
+          },
+          {
+            "element": "Antarctic Snow Accumulation",
+            "element_id": "flow-antarctic-snow-accumulation",
+            "equation": "Antarctica_Base_Accumulation * (1 + 0.06 * Global_Temperature)",
+            "code": "unknown_variable",
+            "message": "Error evaluating equation 'Antarctica_Base_Accumulation * (1 + 0.06 * Global_Temperature)': Unknown variable: Global_Temperature",
+            "symbol": "Global_Temperature"
+          },
+          {
+            "element": "Antarctic Melt",
+            "element_id": "flow-antarctic-melt",
+            "equation": "Antarctica_Base_Melt * (1 + Antarctica_Melt_Sensitivity * MAX(0, Global_Temperature - 1.5))",
+            "code": "unknown_variable",
+            "message": "Error evaluating equation 'Antarctica_Base_Melt * (1 + Antarctica_Melt_Sensitivity * MAX(0, Global_Temperature - 1.5))': Unknown variable: Global_Temperature",
+            "symbol": "Global_Temperature"
+          }
+        ],
+        "blocked_errors": [
+          {
+            "element": "Radiative Forcing",
+            "element_id": "var-radiative-forcing",
+            "equation": "5.35 * LOG(CO2_Concentration / 280)",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation '5.35 * LOG(CO2_Concentration / 280)': Unknown variable: CO2_Concentration",
+            "symbol": "CO2_Concentration",
+            "waiting_for": "CO2 Concentration",
+            "dependency_path": [
+              "Radiative Forcing",
+              "CO2 Concentration"
+            ],
+            "root_cause": {
+              "code": "unknown_function",
+              "element": "CO2 Concentration"
+            }
+          },
+          {
+            "element": "Equilibrium Temperature",
+            "element_id": "var-equilibrium-temperature",
+            "equation": "Climate_Sensitivity * LOG(CO2_Concentration / 280) / LOG(2)",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'Climate_Sensitivity * LOG(CO2_Concentration / 280) / LOG(2)': Unknown variable: CO2_Concentration",
+            "symbol": "CO2_Concentration",
+            "waiting_for": "CO2 Concentration",
+            "dependency_path": [
+              "Equilibrium Temperature",
+              "CO2 Concentration"
+            ],
+            "root_cause": {
+              "code": "unknown_function",
+              "element": "CO2 Concentration"
+            }
+          },
+          {
+            "element": "Radiative Imbalance",
+            "element_id": "var-radiative-imbalance",
+            "equation": "Radiative_Forcing - Global_Temperature / Climate_Sensitivity * 3.7",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'Radiative_Forcing - Global_Temperature / Climate_Sensitivity * 3.7': Unknown variable: Radiative_Forcing",
+            "symbol": "Radiative_Forcing",
+            "waiting_for": "Radiative Forcing",
+            "dependency_path": [
+              "Radiative Imbalance",
+              "Radiative Forcing",
+              "CO2 Concentration"
+            ],
+            "root_cause": {
+              "code": "unknown_function",
+              "element": "CO2 Concentration"
+            }
+          },
+          {
+            "element": "Thermal Expansion Rate",
+            "element_id": "var-thermal-expansion-rate",
+            "equation": "Ocean_Heat_Uptake * Thermal_Expansion_Coefficient",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'Ocean_Heat_Uptake * Thermal_Expansion_Coefficient': Unknown variable: Ocean_Heat_Uptake",
+            "symbol": "Ocean_Heat_Uptake",
+            "waiting_for": "Ocean Heat Uptake",
+            "dependency_path": [
+              "Thermal Expansion Rate",
+              "Ocean Heat Uptake",
+              "Radiative Imbalance",
+              "Radiative Forcing",
+              "CO2 Concentration"
+            ],
+            "root_cause": {
+              "code": "unknown_function",
+              "element": "CO2 Concentration"
+            }
+          },
+          {
+            "element": "Glacier Sea Level Contribution",
+            "element_id": "var-glacier-sea-level-contribution",
+            "equation": "(Glacier_Melt - Glacier_Accumulation) / 361",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation '(Glacier_Melt - Glacier_Accumulation) / 361': Unknown variable: Glacier_Melt",
+            "symbol": "Glacier_Melt",
+            "waiting_for": "Glacier Melt",
+            "dependency_path": [
+              "Glacier Sea Level Contribution",
+              "Glacier Melt",
+              "Glacier Melt Rate"
+            ],
+            "root_cause": {
+              "code": "unknown_variable",
+              "element": "Glacier Melt Rate"
+            }
+          },
+          {
+            "element": "Sea Level Rise Rate",
+            "element_id": "flow-sea-level-rise-rate",
+            "equation": "Thermal_Expansion_Rate + Greenland_Contribution + Antarctica_Contribution + Glacier_Contribution + Land_Water_Storage",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'Thermal_Expansion_Rate + Greenland_Contribution + Antarctica_Contribution + Glacier_Contribution + Land_Water_Storage': Unknown variable: Thermal_Expansion_Rate",
+            "symbol": "Thermal_Expansion_Rate",
+            "waiting_for": "Thermal Expansion Rate",
+            "dependency_path": [
+              "Sea Level Rise Rate",
+              "Thermal Expansion Rate",
+              "Ocean Heat Uptake",
+              "Radiative Imbalance",
+              "Radiative Forcing",
+              "CO2 Concentration"
+            ],
+            "root_cause": {
+              "code": "unknown_function",
+              "element": "CO2 Concentration"
+            }
+          },
+          {
+            "element": "Antarctic Calving and Discharge",
+            "element_id": "flow-antarctic-calving-and-discharge",
+            "equation": "Antarctica_Base_Calving * Marine_Ice_Sheet_Instability_Factor",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'Antarctica_Base_Calving * Marine_Ice_Sheet_Instability_Factor': Unknown variable: Marine_Ice_Sheet_Instability_Factor",
+            "symbol": "Marine_Ice_Sheet_Instability_Factor",
+            "waiting_for": "Marine Ice Sheet Instability Factor",
+            "dependency_path": [
+              "Antarctic Calving and Discharge",
+              "Marine Ice Sheet Instability Factor"
+            ],
+            "root_cause": {
+              "code": "unknown_variable",
+              "element": "Marine Ice Sheet Instability Factor"
+            }
+          },
+          {
+            "element": "Glacier Melt",
+            "element_id": "flow-glacier-melt",
+            "equation": "Mountain_Glacier_Mass * Glacier_Melt_Rate",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'Mountain_Glacier_Mass * Glacier_Melt_Rate': Unknown variable: Glacier_Melt_Rate",
+            "symbol": "Glacier_Melt_Rate",
+            "waiting_for": "Glacier Melt Rate",
+            "dependency_path": [
+              "Glacier Melt",
+              "Glacier Melt Rate"
+            ],
+            "root_cause": {
+              "code": "unknown_variable",
+              "element": "Glacier Melt Rate"
+            }
+          },
+          {
+            "element": "Ocean Heat Uptake",
+            "element_id": "flow-ocean-heat-uptake",
+            "equation": "Radiative_Imbalance * Ocean_Heat_Fraction * 3.15e7",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'Radiative_Imbalance * Ocean_Heat_Fraction * 3.15e7': Unknown variable: Radiative_Imbalance",
+            "symbol": "Radiative_Imbalance",
+            "waiting_for": "Radiative Imbalance",
+            "dependency_path": [
+              "Ocean Heat Uptake",
+              "Radiative Imbalance",
+              "Radiative Forcing",
+              "CO2 Concentration"
+            ],
+            "root_cause": {
+              "code": "unknown_function",
+              "element": "CO2 Concentration"
+            }
+          },
+          {
+            "element": "Global Warming Rate",
+            "element_id": "flow-global-warming-rate",
+            "equation": "(Equilibrium_Temperature - Global_Temperature) / Climate_Response_Time",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation '(Equilibrium_Temperature - Global_Temperature) / Climate_Response_Time': Unknown variable: Equilibrium_Temperature",
+            "symbol": "Equilibrium_Temperature",
+            "waiting_for": "Equilibrium Temperature",
+            "dependency_path": [
+              "Global Warming Rate",
+              "Equilibrium Temperature",
+              "CO2 Concentration"
+            ],
+            "root_cause": {
+              "code": "unknown_function",
+              "element": "CO2 Concentration"
+            }
+          }
+        ],
+        "stock_values": {
+          "Global Mean Sea Level Rise": 0.0,
+          "Greenland Ice Sheet Mass": 2900000.0,
+          "Antarctic Ice Sheet Mass": 26500000.0,
+          "Mountain Glacier Mass": 170000.0,
+          "Ocean Heat Content Anomaly": 0.0,
+          "Global Temperature Anomaly": 0.8
+        },
+        "reproduction": {
+          "normalized_model_sha256": "7969f2131c1d0a13c5f5c9e416209b7a9a2de89f078849c36e05a55df875cd0c",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 2000.0,
+            "end": 2200.0,
+            "dt": 1.0,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/climate/sustainable-agriculture-transition-cli.json",
+      "sha256": "bd476a310fba12aedc7663a036e6f8d66c9cfb1d81e561ad6a2cf7b9d3b5ba68",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 0: Root causes: Transition_Start: Error evaluating equation 'Conventional_Farms * Adoption_Rate * (1 + Peer_Effect * Sustainable_Farms / Total_Farms)': Division by zero",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 0: Root causes: Transition_Start: Error evaluating equation 'Conventional_Farms * Adoption_Rate * (1 + Peer_Effect * Sustainable_Farms / Total_Farms)': Division by zero",
+        "category": "invalid_equations",
+        "time": 0.0,
+        "root_errors": [
+          {
+            "element": "Transition_Start",
+            "element_id": "flow-adoption-start",
+            "equation": "Conventional_Farms * Adoption_Rate * (1 + Peer_Effect * Sustainable_Farms / Total_Farms)",
+            "code": "division_by_zero",
+            "message": "Error evaluating equation 'Conventional_Farms * Adoption_Rate * (1 + Peer_Effect * Sustainable_Farms / Total_Farms)': Division by zero"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Conventional_Farms": 0.0,
+          "Transitioning_Farms": 0.0,
+          "Sustainable_Farms": 0.0,
+          "Soil_Health_Index": 0.0
+        },
+        "reproduction": {
+          "normalized_model_sha256": "5ea9bd633bb726f817f08e7c1d3f4b67b49495ac225bea5a16dba795c5848bf6",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 50.0,
+            "dt": 0.25,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/economics/aluminum-supply-chain-sustainability-eco.json",
+      "sha256": "b2b2bc0031e9b6c7c64acafeb6f6f2ad0d6ca1304d2580872ce04c489b4380e9",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 35: Root causes: Emission_Reduction: Error evaluating equation 'Carbon_Emissions * Abatement_Rate * Green_Technology_Investment / 10000': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 35: Root causes: Emission_Reduction: Error evaluating equation 'Carbon_Emissions * Abatement_Rate * Green_Technology_Investment / 10000': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 35.0,
+        "root_errors": [
+          {
+            "element": "Emission_Reduction",
+            "element_id": "f4",
+            "equation": "Carbon_Emissions * Abatement_Rate * Green_Technology_Investment / 10000",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Carbon_Emissions * Abatement_Rate * Green_Technology_Investment / 10000': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Primary_Aluminum_Production": 2.48568493077113e+20,
+          "Recycled_Aluminum": 101000.0,
+          "Carbon_Emissions": 5.27501463111673e+299,
+          "Green_Technology_Investment": 1.8821576469066006e+22,
+          "Market_Share_Sustainable": 0.23662239091174395
+        },
+        "reproduction": {
+          "normalized_model_sha256": "a531b358794ce2db0e1946fe3289dd91603ae9be223986284096202c2f913872",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 3650.0,
+            "dt": 1.0,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/economics/brand-loyalty-dynamics-eco.json",
+      "sha256": "df42a0475700992f0dfc786cb34bdc04dee3abdddf69bcca2c548727c241b4a2",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 32: Root causes: Churn: Error evaluating equation 'Loyal_Customers * Churn_Rate * (1 - Brand_Equity / 100)': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 32: Root causes: Churn: Error evaluating equation 'Loyal_Customers * Churn_Rate * (1 - Brand_Equity / 100)': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 32.0,
+        "root_errors": [
+          {
+            "element": "Churn",
+            "element_id": "flow-churn",
+            "equation": "Loyal_Customers * Churn_Rate * (1 - Brand_Equity / 100)",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Loyal_Customers * Churn_Rate * (1 - Brand_Equity / 100)': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Brand_Awareness": 86.15179625037203,
+          "Trial_Users": -8.91196352631797e+233,
+          "Loyal_Customers": 8.91196352631797e+233
+        },
+        "reproduction": {
+          "normalized_model_sha256": "5532b4ca02e8e91829fb62e860b533d81e5830987bb8a24f265ee6cc077a25b2",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 50.0,
+            "dt": 0.5,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/economics/coral-reef-bleaching-and-recovery-dynamics-eco.json",
+      "sha256": "a9e2ec827d5ddbfd0220e2d69777bb4a9d22146331f002443d41a4e8e559e74f",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 2010.75: Root causes: Recovery Potential: Error evaluating equation 'Coral_Cover * \"Coral Species Diversity\" / 100 * (1 - Bleaching_Severity) * \"Herbivore Fish Biomass\" / Reference_Herbivore_Biomass': result is not finite; check the reached scalar expression; Coral Recruitment: Error evaluating equation 'Recruitment_Rate * Available_Substrate * Coral_Cover / 100 * Recruitment_Success': result is not finite; check the reached scalar expression; Algae Grazing: Error evaluating equation '\"Macroalgae Cover\" * Grazing_Rate * \"Herbivore Fish Biomass\" / Reference_Herbivore_Biomass': result is not finite; check the reached scalar expression; Herbivore Population Growth: Error evaluating equation '\"Herbivore Fish Biomass\" * Herbivore_Growth_Rate * (\"Macroalgae Cover\" / 30) * (Coral_Cover / 50)': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 2010.75: Root causes: Recovery Potential: Error evaluating equation 'Coral_Cover * \"Coral Species Diversity\" / 100 * (1 - Bleaching_Severity) * \"Herbivore Fish Biomass\" / Reference_Herbivore_Biomass': result is not finite; check the reached scalar expression; Coral Recruitment: Error evaluating equation 'Recruitment_Rate * Available_Substrate * Coral_Cover / 100 * Recruitment_Success': result is not finite; check the reached scalar expression; Algae Grazing: Error evaluating equation '\"Macroalgae Cover\" * Grazing_Rate * \"Herbivore Fish Biomass\" / Reference_Herbivore_Biomass': result is not finite; check the reached scalar expression; Herbivore Population Growth: Error evaluating equation '\"Herbivore Fish Biomass\" * Herbivore_Growth_Rate * (\"Macroalgae Cover\" / 30) * (Coral_Cover / 50)': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 2010.75,
+        "root_errors": [
+          {
+            "element": "Recovery Potential",
+            "element_id": "var-recovery-potential",
+            "equation": "Coral_Cover * \"Coral Species Diversity\" / 100 * (1 - Bleaching_Severity) * \"Herbivore Fish Biomass\" / Reference_Herbivore_Biomass",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Coral_Cover * \"Coral Species Diversity\" / 100 * (1 - Bleaching_Severity) * \"Herbivore Fish Biomass\" / Reference_Herbivore_Biomass': result is not finite; check the reached scalar expression"
+          },
+          {
+            "element": "Coral Recruitment",
+            "element_id": "flow-coral-recruitment",
+            "equation": "Recruitment_Rate * Available_Substrate * Coral_Cover / 100 * Recruitment_Success",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Recruitment_Rate * Available_Substrate * Coral_Cover / 100 * Recruitment_Success': result is not finite; check the reached scalar expression"
+          },
+          {
+            "element": "Algae Grazing",
+            "element_id": "flow-algae-grazing",
+            "equation": "\"Macroalgae Cover\" * Grazing_Rate * \"Herbivore Fish Biomass\" / Reference_Herbivore_Biomass",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation '\"Macroalgae Cover\" * Grazing_Rate * \"Herbivore Fish Biomass\" / Reference_Herbivore_Biomass': result is not finite; check the reached scalar expression"
+          },
+          {
+            "element": "Herbivore Population Growth",
+            "element_id": "flow-herbivore-population-growth",
+            "equation": "\"Herbivore Fish Biomass\" * Herbivore_Growth_Rate * (\"Macroalgae Cover\" / 30) * (Coral_Cover / 50)",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation '\"Herbivore Fish Biomass\" * Herbivore_Growth_Rate * (\"Macroalgae Cover\" / 30) * (Coral_Cover / 50)': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Coral Cover": -8.546987915078167e+121,
+          "Macroalgae Cover": -5.5343974187304e+139,
+          "Herbivore Fish Biomass": -3.423033826415343e+200,
+          "Accumulated Thermal Stress": -141273.62251431885,
+          "Ocean pH": 8.078499999999973,
+          "Coral Species Diversity": -2.7297206534470078e+106
+        },
+        "reproduction": {
+          "normalized_model_sha256": "0a6ee7e50063abc37a2cf46edb5f81b7468900fd9bc1667ad8612cf0860a4845",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 2000.0,
+            "end": 2100.0,
+            "dt": 0.25,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/economics/platform-network-effects-advanced-eco.json",
+      "sha256": "e19e193ba5e625ca4a9281cc62f71f4784ca59e68092d17c21a96ed7122094de",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 72.5: Root causes: Transaction Flow: Error evaluating equation 'Platform_Users * Service_Providers * Match_Efficiency / 1000': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 72.5: Root causes: Transaction Flow: Error evaluating equation 'Platform_Users * Service_Providers * Match_Efficiency / 1000': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 72.5,
+        "root_errors": [
+          {
+            "element": "Transaction Flow",
+            "element_id": "flow-transactions",
+            "equation": "Platform_Users * Service_Providers * Match_Efficiency / 1000",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Platform_Users * Service_Providers * Match_Efficiency / 1000': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Platform Users": 6.4979901367074955e+174,
+          "Service Providers": 3.531350497733824e+173,
+          "Cumulative Transactions": 7.699416477818892e+215,
+          "User Perceived Value": 1.1375779028715812e+107,
+          "Provider Perceived Value": 9.343574994554787e+106,
+          "Competitor Users": -1.00713846699692e+164
+        },
+        "reproduction": {
+          "normalized_model_sha256": "190da3d4757cd084adaa56666b8ee9c48e6569a9e10a2e26448b72f1b8c51f4e",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 120.0,
+            "dt": 0.25,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/economics/rd-investment-innovation-eco.json",
+      "sha256": "2f64b58780f19e88eee94cbb0e0e11c81b62cc365ff6bf194b4369d6ab1dae1a",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 14: Root causes: Knowledge Creation: Error evaluating equation 'R_D_Productivity * R_D_Personnel * SQRT(R_D_Capital / 1000000) * (1 + Spillover_Effect * Knowledge_Stock / 100)': result is not finite; check the reached scalar expression; Blocked dependents: Patenting (waiting for Knowledge Creation)",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 14: Root causes: Knowledge Creation: Error evaluating equation 'R_D_Productivity * R_D_Personnel * SQRT(R_D_Capital / 1000000) * (1 + Spillover_Effect * Knowledge_Stock / 100)': result is not finite; check the reached scalar expression; Blocked dependents: Patenting (waiting for Knowledge Creation)",
+        "category": "invalid_equations",
+        "time": 14.0,
+        "root_errors": [
+          {
+            "element": "Knowledge Creation",
+            "element_id": "flow-knowledge-creation",
+            "equation": "R_D_Productivity * R_D_Personnel * SQRT(R_D_Capital / 1000000) * (1 + Spillover_Effect * Knowledge_Stock / 100)",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'R_D_Productivity * R_D_Personnel * SQRT(R_D_Capital / 1000000) * (1 + Spillover_Effect * Knowledge_Stock / 100)': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [
+          {
+            "element": "Patenting",
+            "element_id": "flow-patenting",
+            "equation": "Knowledge_Creation * Patent_Propensity",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'Knowledge_Creation * Patent_Propensity': Unknown variable: Knowledge_Creation",
+            "symbol": "Knowledge_Creation",
+            "waiting_for": "Knowledge Creation",
+            "dependency_path": [
+              "Patenting",
+              "Knowledge Creation"
+            ],
+            "root_cause": {
+              "code": "non_finite_result",
+              "element": "Knowledge Creation"
+            }
+          }
+        ],
+        "stock_values": {
+          "Knowledge Stock": 2.0228555645093506e+282,
+          "R&D Personnel": 11693.507658882869,
+          "R&D Capital": 7.188774363784657e+147,
+          "Active Patents": 6.068566693528052e+281,
+          "Commercial Products": 3.897064713754409e+224,
+          "Innovation Revenue": 4.454960050277307e+184
+        },
+        "reproduction": {
+          "normalized_model_sha256": "fe558d82d888e23401dcd158c3fa267ba3dca1c7658e14c5e6539edf0c329565",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 50.0,
+            "dt": 0.25,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/economics/semiconductor-chip-shortage-supply-chain-eco.json",
+      "sha256": "9f1581174ce2b0cf2c7dbfc51319f51c042cef0ff6ed8df04f97d49f658b1dfb",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 41.75: Root causes: Desired_Capacity: Error evaluating equation 'Fab_Capacity * (1 + Order_Backlog / 1000)': result is not finite; check the reached scalar expression; Blocked dependents: Capacity Investment (waiting for Desired_Capacity)",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 41.75: Root causes: Desired_Capacity: Error evaluating equation 'Fab_Capacity * (1 + Order_Backlog / 1000)': result is not finite; check the reached scalar expression; Blocked dependents: Capacity Investment (waiting for Desired_Capacity)",
+        "category": "invalid_equations",
+        "time": 41.75,
+        "root_errors": [
+          {
+            "element": "Desired_Capacity",
+            "element_id": "var-desired-capacity",
+            "equation": "Fab_Capacity * (1 + Order_Backlog / 1000)",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Fab_Capacity * (1 + Order_Backlog / 1000)': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [
+          {
+            "element": "Capacity Investment",
+            "element_id": "flow-capacity-investment",
+            "equation": "Investment_Rate * (Desired_Capacity - Fab_Capacity) / Capacity_Adjustment_Time",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'Investment_Rate * (Desired_Capacity - Fab_Capacity) / Capacity_Adjustment_Time': Unknown variable: Desired_Capacity",
+            "symbol": "Desired_Capacity",
+            "waiting_for": "Desired_Capacity",
+            "dependency_path": [
+              "Capacity Investment",
+              "Desired_Capacity"
+            ],
+            "root_cause": {
+              "code": "non_finite_result",
+              "element": "Desired_Capacity"
+            }
+          }
+        ],
+        "stock_values": {
+          "Fab Capacity": 1.3803356484091246e+295,
+          "Capacity Under Construction": 7.636954818675563e+301,
+          "Chip Inventory": 5.8971761177974935e+289,
+          "Order Backlog": 1.6748540491563245e+17,
+          "Auto Production": 100.0
+        },
+        "reproduction": {
+          "normalized_model_sha256": "899349cbde521ceb551fccfbdec1560df2d10abb64364c525532c7104ffba1c1",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 104.0,
+            "dt": 0.25,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/economics/startup-ecosystem-dynamics-eco.json",
+      "sha256": "4ca2f8fb881cc62b0ddc3127662ca614698bf2f40860e8b34328d3bf92452a91",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 5.25: Root causes: Ecosystem Support: Error evaluating equation '0.3 + 0.1 * LOG(1 + Active_Startups, 10)': Function error in LOG: math domain error; Blocked dependents: Startup Failures (waiting for Ecosystem Support); Talent Recycling (waiting for Startup Failures)",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 5.25: Root causes: Ecosystem Support: Error evaluating equation '0.3 + 0.1 * LOG(1 + Active_Startups, 10)': Function error in LOG: math domain error; Blocked dependents: Startup Failures (waiting for Ecosystem Support); Talent Recycling (waiting for Startup Failures)",
+        "category": "invalid_equations",
+        "time": 5.25,
+        "root_errors": [
+          {
+            "element": "Ecosystem Support",
+            "element_id": "var-ecosystem-support",
+            "equation": "0.3 + 0.1 * LOG(1 + Active_Startups, 10)",
+            "code": "domain_error",
+            "message": "Error evaluating equation '0.3 + 0.1 * LOG(1 + Active_Startups, 10)': Function error in LOG: math domain error",
+            "function": "LOG"
+          }
+        ],
+        "blocked_errors": [
+          {
+            "element": "Startup Failures",
+            "element_id": "flow-failure",
+            "equation": "Active_Startups * Base_Failure_Rate * (1 - Ecosystem_Support)",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'Active_Startups * Base_Failure_Rate * (1 - Ecosystem_Support)': Unknown variable: Ecosystem_Support",
+            "symbol": "Ecosystem_Support",
+            "waiting_for": "Ecosystem Support",
+            "dependency_path": [
+              "Startup Failures",
+              "Ecosystem Support"
+            ],
+            "root_cause": {
+              "code": "domain_error",
+              "element": "Ecosystem Support"
+            }
+          },
+          {
+            "element": "Talent Recycling",
+            "element_id": "flow-recycling",
+            "equation": "Startup_Failures * Employees_per_Startup * Retention_Rate",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'Startup_Failures * Employees_per_Startup * Retention_Rate': Unknown variable: Startup_Failures",
+            "symbol": "Startup_Failures",
+            "waiting_for": "Startup Failures",
+            "dependency_path": [
+              "Talent Recycling",
+              "Startup Failures",
+              "Ecosystem Support"
+            ],
+            "root_cause": {
+              "code": "domain_error",
+              "element": "Ecosystem Support"
+            }
+          }
+        ],
+        "stock_values": {
+          "Active Startups": -7.865544007382095,
+          "Available Funding": -5485.682938806821,
+          "Startup Talent Pool": 3725.095311716221,
+          "Successful Exits": 31.011062607573063
+        },
+        "reproduction": {
+          "normalized_model_sha256": "605ac244f009007503b5134267d3dc4f3affc1e195834cb5218f38edab33fffb",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 20.0,
+            "dt": 0.25,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/economics/trophic-cascade-ecosystem-eco.json",
+      "sha256": "34fb90fe709d78855fcd77bea066dfd5eefbbad6f91347c890072ea772f99b55",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 10.75: Root causes: Herb_Growth: Error evaluating equation 'Herbivores * Herb_Growth_Rate * (Vegetation / Veg_Capacity) - Mesopredators * Predation_Meso_Herb - Apex_Predators * Predation_Apex_Herb': result is not finite; check the reached scalar expression; Veg_Growth: Error evaluating equation 'Vegetation * Veg_Growth_Rate * (1 - Vegetation / Veg_Capacity) - Herbivores * Grazing_Rate': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 10.75: Root causes: Herb_Growth: Error evaluating equation 'Herbivores * Herb_Growth_Rate * (Vegetation / Veg_Capacity) - Mesopredators * Predation_Meso_Herb - Apex_Predators * Predation_Apex_Herb': result is not finite; check the reached scalar expression; Veg_Growth: Error evaluating equation 'Vegetation * Veg_Growth_Rate * (1 - Vegetation / Veg_Capacity) - Herbivores * Grazing_Rate': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 10.75,
+        "root_errors": [
+          {
+            "element": "Herb_Growth",
+            "element_id": "flow-herbgrow",
+            "equation": "Herbivores * Herb_Growth_Rate * (Vegetation / Veg_Capacity) - Mesopredators * Predation_Meso_Herb - Apex_Predators * Predation_Apex_Herb",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Herbivores * Herb_Growth_Rate * (Vegetation / Veg_Capacity) - Mesopredators * Predation_Meso_Herb - Apex_Predators * Predation_Apex_Herb': result is not finite; check the reached scalar expression"
+          },
+          {
+            "element": "Veg_Growth",
+            "element_id": "flow-veggrow",
+            "equation": "Vegetation * Veg_Growth_Rate * (1 - Vegetation / Veg_Capacity) - Herbivores * Grazing_Rate",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Vegetation * Veg_Growth_Rate * (1 - Vegetation / Veg_Capacity) - Herbivores * Grazing_Rate': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Apex_Predators": 5.606252562921487e+83,
+          "Mesopredators": 4.875347762607102e+138,
+          "Herbivores": 4.780628900320914e+164,
+          "Vegetation": -4.23285165450082e+170
+        },
+        "reproduction": {
+          "normalized_model_sha256": "312f1ab1876aa7bfa08040d02aa5daf68bd3f65ce6e13614b5bdf9418dbd3308",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 100.0,
+            "dt": 0.25,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/education/online-learning-platform-edu.json",
+      "sha256": "f6ebe64df9544a23ca0d308e440d869ff72a8d58321f6662c4c7b84a938b9122",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 36.75: Root causes: Learner_Activation: Error evaluating equation 'Enrolled_Learners * Activation_Rate * Content_Quality / Reference_Quality': result is not finite; check the reached scalar expression; Late_Dropout: Error evaluating equation 'Active_Learners * Late_Dropout_Rate * (1 - Content_Quality / Reference_Quality)': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 36.75: Root causes: Learner_Activation: Error evaluating equation 'Enrolled_Learners * Activation_Rate * Content_Quality / Reference_Quality': result is not finite; check the reached scalar expression; Late_Dropout: Error evaluating equation 'Active_Learners * Late_Dropout_Rate * (1 - Content_Quality / Reference_Quality)': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 36.75,
+        "root_errors": [
+          {
+            "element": "Learner_Activation",
+            "element_id": "flow-activation",
+            "equation": "Enrolled_Learners * Activation_Rate * Content_Quality / Reference_Quality",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Enrolled_Learners * Activation_Rate * Content_Quality / Reference_Quality': result is not finite; check the reached scalar expression"
+          },
+          {
+            "element": "Late_Dropout",
+            "element_id": "flow-late-dropout",
+            "equation": "Active_Learners * Late_Dropout_Rate * (1 - Content_Quality / Reference_Quality)",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Active_Learners * Late_Dropout_Rate * (1 - Content_Quality / Reference_Quality)': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Enrolled_Learners": 2.1759994308751016e+210,
+          "Active_Learners": 2.0548260351664032e+217,
+          "Completed_Learners": 1.3027784206364288e+149,
+          "Dropped_Out": -2.0548262527663463e+217,
+          "Content_Quality": 1.0434838889197544e+101
+        },
+        "reproduction": {
+          "normalized_model_sha256": "a7256540fb3be523de2ae0a5047d2bc88e6cf0f0bc4ef2941d99862f73ebab2f",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 52.0,
+            "dt": 0.25,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/epidemiology/peer-vaccination-network-nudge-epi.json",
+      "sha256": "0ea76475995d187b8f89d4472f27d04fa9ae13af003c9bf4c2131d75f5a5b348",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 59: Root causes: Resistance Nudge: Error evaluating equation 'Vaccine_Willing_Population * (Side_Effect_Nudge + Breakthrough_Nudge) * Nudge_Effectiveness': result is not finite; check the reached scalar expression; Willingness Nudge: Error evaluating equation 'Vaccine_Resistant_Population * Hospitalization_Fear_Nudge * Community_Pressure': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 59: Root causes: Resistance Nudge: Error evaluating equation 'Vaccine_Willing_Population * (Side_Effect_Nudge + Breakthrough_Nudge) * Nudge_Effectiveness': result is not finite; check the reached scalar expression; Willingness Nudge: Error evaluating equation 'Vaccine_Resistant_Population * Hospitalization_Fear_Nudge * Community_Pressure': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 59.0,
+        "root_errors": [
+          {
+            "element": "Resistance Nudge",
+            "element_id": "f1",
+            "equation": "Vaccine_Willing_Population * (Side_Effect_Nudge + Breakthrough_Nudge) * Nudge_Effectiveness",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Vaccine_Willing_Population * (Side_Effect_Nudge + Breakthrough_Nudge) * Nudge_Effectiveness': result is not finite; check the reached scalar expression"
+          },
+          {
+            "element": "Willingness Nudge",
+            "element_id": "f2",
+            "equation": "Vaccine_Resistant_Population * Hospitalization_Fear_Nudge * Community_Pressure",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Vaccine_Resistant_Population * Hospitalization_Fear_Nudge * Community_Pressure': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Vaccine Willing Population": 3.6691530377552406e+182,
+          "Vaccine Resistant Population": -3.6691530377552406e+182,
+          "Vaccinated": 3.4045156335366618e+100,
+          "Infected": 2.1533086207101475e+34,
+          "Hospitalized": 2.326289091625921e+33,
+          "Side Effect Reports": 6.809031267073323e+98
+        },
+        "reproduction": {
+          "normalized_model_sha256": "70fd579bc7e3edf023557877ebcf6ad2b0a1b40a437a2ace30deebe8f538fa7f",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 365.0,
+            "dt": 1.0,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/finance/leverage-cycle-dynamics-fin.json",
+      "sha256": "590c661069576eb36a6ce3b2246a5c983d7a31f573e7ab29f93555be2e451873",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 50.25: Root causes: Price_Appreciation: Error evaluating equation 'Asset_Price * Price_Growth * (1 + Leverage_Effect * (Leverage_Ratio - Base_Leverage))': result is not finite; check the reached scalar expression; Leverage_Increase: Error evaluating equation 'IF(Asset_Price > 100, Leverage_Ratio * Lever_Adjust_Rate * (Asset_Price/100 - 1), 0)': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 50.25: Root causes: Price_Appreciation: Error evaluating equation 'Asset_Price * Price_Growth * (1 + Leverage_Effect * (Leverage_Ratio - Base_Leverage))': result is not finite; check the reached scalar expression; Leverage_Increase: Error evaluating equation 'IF(Asset_Price > 100, Leverage_Ratio * Lever_Adjust_Rate * (Asset_Price/100 - 1), 0)': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 50.25,
+        "root_errors": [
+          {
+            "element": "Price_Appreciation",
+            "element_id": "flow-price-up",
+            "equation": "Asset_Price * Price_Growth * (1 + Leverage_Effect * (Leverage_Ratio - Base_Leverage))",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Asset_Price * Price_Growth * (1 + Leverage_Effect * (Leverage_Ratio - Base_Leverage))': result is not finite; check the reached scalar expression"
+          },
+          {
+            "element": "Leverage_Increase",
+            "element_id": "flow-lever-up",
+            "equation": "IF(Asset_Price > 100, Leverage_Ratio * Lever_Adjust_Rate * (Asset_Price/100 - 1), 0)",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'IF(Asset_Price > 100, Leverage_Ratio * Lever_Adjust_Rate * (Asset_Price/100 - 1), 0)': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Asset_Price": 1.8957704067329992e+221,
+          "Leverage_Ratio": 1.8957704067329992e+221,
+          "Margin_Requirement": 0.1500000000015938
+        },
+        "reproduction": {
+          "normalized_model_sha256": "64c5cb19d4cd4ed03336048a622a9af47cb5dc8f869c746508d157203e85858f",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 100.0,
+            "dt": 0.25,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/finance/momentum-trading-dynamics-fin.json",
+      "sha256": "17c2509072734fea3d6fc80bdc3bf572a12c9b2ba6369b7a8fa0a7735c0afb92",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 32: Root causes: Price_Change: Error evaluating equation 'Stock_Price * (Fundamental_Return + Momentum_Effect * Momentum_Demand)': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 32: Root causes: Price_Change: Error evaluating equation 'Stock_Price * (Fundamental_Return + Momentum_Effect * Momentum_Demand)': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 32.0,
+        "root_errors": [
+          {
+            "element": "Price_Change",
+            "element_id": "flow-price-change",
+            "equation": "Stock_Price * (Fundamental_Return + Momentum_Effect * Momentum_Demand)",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Stock_Price * (Fundamental_Return + Momentum_Effect * Momentum_Demand)': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Stock_Price": 3.365994603991151e+244,
+          "Price_Momentum": 7.57754825366488e+166,
+          "Momentum_Demand": 5.934751151157996e+114
+        },
+        "reproduction": {
+          "normalized_model_sha256": "66320a1c673c3f5e04e325f7188b31d7b82d9d55779c1f62c790da04891ee101",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 200.0,
+            "dt": 1.0,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/healthcare/antibiotic-resistance-evolution-extended-hea.json",
+      "sha256": "d914c0d9d36a06f935fa723c5bdcc88d8febfe1290a0cd6bc655bccb2ae259fe",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 0: Root causes: Effectiveness_Decay: Error evaluating equation 'Antibiotic_Effectiveness * (Resistant_Bacteria + Multi_Resistant_Bacteria) / Total_Bacteria * Decay_Rate': Division by zero",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 0: Root causes: Effectiveness_Decay: Error evaluating equation 'Antibiotic_Effectiveness * (Resistant_Bacteria + Multi_Resistant_Bacteria) / Total_Bacteria * Decay_Rate': Division by zero",
+        "category": "invalid_equations",
+        "time": 0.0,
+        "root_errors": [
+          {
+            "element": "Effectiveness_Decay",
+            "element_id": "flow-effectiveness-decay",
+            "equation": "Antibiotic_Effectiveness * (Resistant_Bacteria + Multi_Resistant_Bacteria) / Total_Bacteria * Decay_Rate",
+            "code": "division_by_zero",
+            "message": "Error evaluating equation 'Antibiotic_Effectiveness * (Resistant_Bacteria + Multi_Resistant_Bacteria) / Total_Bacteria * Decay_Rate': Division by zero"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Susceptible_Bacteria": 0.0,
+          "Resistant_Bacteria": 0.0,
+          "Multi_Resistant_Bacteria": 0.0,
+          "Antibiotic_Effectiveness": 0.0,
+          "New_Drug_Pipeline": 0.0
+        },
+        "reproduction": {
+          "normalized_model_sha256": "452bc73bf636683516c3867c18426fafdb0105b545dc805d36058c99ae46c1eb",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 100.0,
+            "dt": 0.25,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/healthcare/burnout-recovery-cycle-hea.json",
+      "sha256": "194439e889202ca51c4bee52c57a8e9801a21213124893811d38c6a9abbc8ade",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 19: Root causes: Energy_Restoration: Error evaluating equation '(Max_Energy - Personal_Energy) * Recovery_Rate * (1 - Burnout_Level / 100)': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 19: Root causes: Energy_Restoration: Error evaluating equation '(Max_Energy - Personal_Energy) * Recovery_Rate * (1 - Burnout_Level / 100)': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 19.0,
+        "root_errors": [
+          {
+            "element": "Energy_Restoration",
+            "element_id": "flow-restore",
+            "equation": "(Max_Energy - Personal_Energy) * Recovery_Rate * (1 - Burnout_Level / 100)",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation '(Max_Energy - Personal_Energy) * Recovery_Rate * (1 - Burnout_Level / 100)': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Personal_Energy": -8.257519534792077e+185,
+          "Accumulated_Stress": 2.2221736908317825e+102,
+          "Burnout_Level": 1.9934366549129658e+156
+        },
+        "reproduction": {
+          "normalized_model_sha256": "947ef3e9b5bf6f5c0c837d6db86dfa3037d1b04fa94a7634001636153d0ddaca",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 52.0,
+            "dt": 1.0,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/healthcare/mental-health-treatment-system-dynamics-hea.json",
+      "sha256": "8a20e1539cea656bc83a771357d903522e0c7a9ab2b89dc7394fd2e2378b2c6e",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 0: Root causes: Any Disorder Prevalence: Error evaluating equation '(Total_Population - \"Mentally Healthy Population\") / Total_Population': Division by zero; Treatment Gap: Error evaluating equation '(\"Mild Disorder Untreated\" + \"Moderate Disorder Untreated\" + \"Severe Disorder Untreated\") / (Total_Population - \"Mentally Healthy Population\")': Division by zero; Blocked dependents: Workforce Gap (waiting for Needed Workforce); Needed Workforce (waiting for Any Disorder Prevalence); Burnout Effect (waiting for Treatment Gap); Workforce Hiring (waiting for Workforce Gap); Workforce Leaving (waiting for Burnout Effect)",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 0: Root causes: Any Disorder Prevalence: Error evaluating equation '(Total_Population - \"Mentally Healthy Population\") / Total_Population': Division by zero; Treatment Gap: Error evaluating equation '(\"Mild Disorder Untreated\" + \"Moderate Disorder Untreated\" + \"Severe Disorder Untreated\") / (Total_Population - \"Mentally Healthy Population\")': Division by zero; Blocked dependents: Workforce Gap (waiting for Needed Workforce); Needed Workforce (waiting for Any Disorder Prevalence); Burnout Effect (waiting for Treatment Gap); Workforce Hiring (waiting for Workforce Gap); Workforce Leaving (waiting for Burnout Effect)",
+        "category": "invalid_equations",
+        "time": 0.0,
+        "root_errors": [
+          {
+            "element": "Any Disorder Prevalence",
+            "element_id": "var-any-disorder-prevalence",
+            "equation": "(Total_Population - \"Mentally Healthy Population\") / Total_Population",
+            "code": "division_by_zero",
+            "message": "Error evaluating equation '(Total_Population - \"Mentally Healthy Population\") / Total_Population': Division by zero"
+          },
+          {
+            "element": "Treatment Gap",
+            "element_id": "var-treatment-gap",
+            "equation": "(\"Mild Disorder Untreated\" + \"Moderate Disorder Untreated\" + \"Severe Disorder Untreated\") / (Total_Population - \"Mentally Healthy Population\")",
+            "code": "division_by_zero",
+            "message": "Error evaluating equation '(\"Mild Disorder Untreated\" + \"Moderate Disorder Untreated\" + \"Severe Disorder Untreated\") / (Total_Population - \"Mentally Healthy Population\")': Division by zero"
+          }
+        ],
+        "blocked_errors": [
+          {
+            "element": "Workforce Gap",
+            "element_id": "var-workforce-gap",
+            "equation": "MAX(0, Needed_Workforce - \"Mental Health Workforce\")",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'MAX(0, Needed_Workforce - \"Mental Health Workforce\")': Unknown variable: Needed_Workforce",
+            "symbol": "Needed_Workforce",
+            "waiting_for": "Needed Workforce",
+            "dependency_path": [
+              "Workforce Gap",
+              "Needed Workforce",
+              "Any Disorder Prevalence"
+            ],
+            "root_cause": {
+              "code": "division_by_zero",
+              "element": "Any Disorder Prevalence"
+            }
+          },
+          {
+            "element": "Needed Workforce",
+            "element_id": "var-needed-workforce",
+            "equation": "100 * (1 + (\"Any Disorder Prevalence\" - 0.15) * 2)",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation '100 * (1 + (\"Any Disorder Prevalence\" - 0.15) * 2)': Unknown variable: Any Disorder Prevalence",
+            "symbol": "Any Disorder Prevalence",
+            "waiting_for": "Any Disorder Prevalence",
+            "dependency_path": [
+              "Needed Workforce",
+              "Any Disorder Prevalence"
+            ],
+            "root_cause": {
+              "code": "division_by_zero",
+              "element": "Any Disorder Prevalence"
+            }
+          },
+          {
+            "element": "Burnout Effect",
+            "element_id": "var-burnout-effect",
+            "equation": "1 + 0.5 * MAX(0, (Treatment_Gap - 0.5))",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation '1 + 0.5 * MAX(0, (Treatment_Gap - 0.5))': Unknown variable: Treatment_Gap",
+            "symbol": "Treatment_Gap",
+            "waiting_for": "Treatment Gap",
+            "dependency_path": [
+              "Burnout Effect",
+              "Treatment Gap"
+            ],
+            "root_cause": {
+              "code": "division_by_zero",
+              "element": "Treatment Gap"
+            }
+          },
+          {
+            "element": "Workforce Hiring",
+            "element_id": "flow-workforce-hiring",
+            "equation": "Workforce_Gap * Hiring_Rate * \"Mental Health Budget Allocation\"",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'Workforce_Gap * Hiring_Rate * \"Mental Health Budget Allocation\"': Unknown variable: Workforce_Gap",
+            "symbol": "Workforce_Gap",
+            "waiting_for": "Workforce Gap",
+            "dependency_path": [
+              "Workforce Hiring",
+              "Workforce Gap",
+              "Needed Workforce",
+              "Any Disorder Prevalence"
+            ],
+            "root_cause": {
+              "code": "division_by_zero",
+              "element": "Any Disorder Prevalence"
+            }
+          },
+          {
+            "element": "Workforce Leaving",
+            "element_id": "flow-workforce-leaving",
+            "equation": "\"Mental Health Workforce\" * Turnover_Rate * Burnout_Effect",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation '\"Mental Health Workforce\" * Turnover_Rate * Burnout_Effect': Unknown variable: Burnout_Effect",
+            "symbol": "Burnout_Effect",
+            "waiting_for": "Burnout Effect",
+            "dependency_path": [
+              "Workforce Leaving",
+              "Burnout Effect",
+              "Treatment Gap"
+            ],
+            "root_cause": {
+              "code": "division_by_zero",
+              "element": "Treatment Gap"
+            }
+          }
+        ],
+        "stock_values": {
+          "Mentally Healthy Population": 0.0,
+          "Mild Disorder Untreated": 0.0,
+          "Mild Disorder in Treatment": 0.0,
+          "Moderate Disorder Untreated": 0.0,
+          "Moderate Disorder in Treatment": 0.0,
+          "Severe Disorder Untreated": 0.0,
+          "Severe Disorder in Treatment": 0.0,
+          "In Mental Health Crisis": 0.0,
+          "Treatment System Capacity": 100.0,
+          "Mental Health Workforce": 100.0,
+          "Social Stigma Level": 60.0
+        },
+        "reproduction": {
+          "normalized_model_sha256": "f4fa028dd2db54d6fa704f0127d6ce27ff2ef0d5b85bc9f3274986ed20953425",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 30.0,
+            "dt": 0.125,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/management/organizational-knowledge-loss-man.json",
+      "sha256": "2f316bf9c25d72137bdfe3b5a26421bee04229124f1e7a8bf7658f46f211c6a4",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 31.5: Root causes: Knowledge_Transfer: Error evaluating equation 'Organizational_Knowledge * Transfer_Rate * Expert_Knowledge / 100': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 31.5: Root causes: Knowledge_Transfer: Error evaluating equation 'Organizational_Knowledge * Transfer_Rate * Expert_Knowledge / 100': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 31.5,
+        "root_errors": [
+          {
+            "element": "Knowledge_Transfer",
+            "element_id": "flow-transfer",
+            "equation": "Organizational_Knowledge * Transfer_Rate * Expert_Knowledge / 100",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Organizational_Knowledge * Transfer_Rate * Expert_Knowledge / 100': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Expert_Knowledge": 3.796312953531023e+290,
+          "Organizational_Knowledge": 1.4444640105382254e+180
+        },
+        "reproduction": {
+          "normalized_model_sha256": "cadf555a1beee5895a5433fc6146bfd6677436a390550927fce5e13f07e26594",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 50.0,
+            "dt": 0.5,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/social/baby-names-popularity-dynamics-soc.json",
+      "sha256": "5072a6872429f589b1a1a69aa35ed4efa71448c956486d32cd80b737875780ad",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 1886.56: Root causes: Christenings: Error evaluating equation 'People_Aware_of_Name * Base_Christening_Rate * Perception_of_Name_Freshness': result is not finite; check the reached scalar expression; Becoming Aware: Error evaluating equation 'People_Unaware_of_Name * Name_Prevalence * Awareness_Rate': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 1886.56: Root causes: Christenings: Error evaluating equation 'People_Aware_of_Name * Base_Christening_Rate * Perception_of_Name_Freshness': result is not finite; check the reached scalar expression; Becoming Aware: Error evaluating equation 'People_Unaware_of_Name * Name_Prevalence * Awareness_Rate': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 1886.5625,
+        "root_errors": [
+          {
+            "element": "Christenings",
+            "element_id": "flow-christenings",
+            "equation": "People_Aware_of_Name * Base_Christening_Rate * Perception_of_Name_Freshness",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'People_Aware_of_Name * Base_Christening_Rate * Perception_of_Name_Freshness': result is not finite; check the reached scalar expression"
+          },
+          {
+            "element": "Becoming Aware",
+            "element_id": "flow-becoming-aware",
+            "equation": "People_Unaware_of_Name * Name_Prevalence * Awareness_Rate",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'People_Unaware_of_Name * Name_Prevalence * Awareness_Rate': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Perception of Name Freshness": 2.784773857562864e+106,
+          "Name Prevalence": -6.443191736342993e+190,
+          "People Aware of Name": -3.9950375027591395e+236,
+          "People Unaware of Name": 3.9950375027591395e+236
+        },
+        "reproduction": {
+          "normalized_model_sha256": "3fa9a95fc6e66b981e2bd4cc7e1088bef68f5d4a802a06464871ddf0c6731adc",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 1880.0,
+            "end": 2013.0,
+            "dt": 0.0625,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/social/hardin-tragedy-commons-extended-soc.json",
+      "sha256": "caa5313bc1a52c67b386d99eb8ab15cc6dfb1fbcac753f66d49c0289b9369815",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 20.5: Root causes: Regeneration: Error evaluating equation 'Regeneration_Rate * Common_Resource * (1 - Common_Resource / Carrying_Capacity)': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 20.5: Root causes: Regeneration: Error evaluating equation 'Regeneration_Rate * Common_Resource * (1 - Common_Resource / Carrying_Capacity)': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 20.5,
+        "root_errors": [
+          {
+            "element": "Regeneration",
+            "element_id": "flow-regeneration",
+            "equation": "Regeneration_Rate * Common_Resource * (1 - Common_Resource / Carrying_Capacity)",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Regeneration_Rate * Common_Resource * (1 - Common_Resource / Carrying_Capacity)': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Common_Resource": -9.752966667679732e+232,
+          "Number_of_Users": 30.5,
+          "Extraction_Technology": 1.2272110751044996
+        },
+        "reproduction": {
+          "normalized_model_sha256": "7d86210c546a488519992207076b4ae4a5221b0fa24221c42968a3e8c038f650",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 100.0,
+            "dt": 0.25,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/social/ostrom-common-pool-institutions-soc.json",
+      "sha256": "3f22975d7476ee9bea75e0d52aa9807623e60dcc17d1ed52c14f28e405c5bc87",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 92.5: Root causes: Regeneration: Error evaluating equation 'Intrinsic_Growth * Common_Pool_Resource * (1 - Common_Pool_Resource / Max_Capacity)': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 92.5: Root causes: Regeneration: Error evaluating equation 'Intrinsic_Growth * Common_Pool_Resource * (1 - Common_Pool_Resource / Max_Capacity)': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 92.5,
+        "root_errors": [
+          {
+            "element": "Regeneration",
+            "element_id": "flow-regen",
+            "equation": "Intrinsic_Growth * Common_Pool_Resource * (1 - Common_Pool_Resource / Max_Capacity)",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Intrinsic_Growth * Common_Pool_Resource * (1 - Common_Pool_Resource / Max_Capacity)': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Common_Pool_Resource": -5.712403035423051e+276,
+          "Community_Trust": 0.624503853921213,
+          "Rule_Compliance": 0.8012647925916186
+        },
+        "reproduction": {
+          "normalized_model_sha256": "4ff61b599d1a7d0cf204f617aaeddb36cdab572e6e56a42cbef249daa74f4771",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 100.0,
+            "dt": 0.5,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/technology/quantum-computing-progress-tec.json",
+      "sha256": "ccb19e074e303b2b398a3304a154b542de8506fd8f8b7a9e4d0d39ac3a173012",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 5.75: Root causes: Quantum Utility: Error evaluating equation 'Physical_Qubits * (1 - Error_Rate)^(Physical_Qubits / 10)': (34, 'Numerical result out of range'); Blocked dependents: Algorithm Development (waiting for Quantum Utility); Commercialization (waiting for Quantum Utility)",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 5.75: Root causes: Quantum Utility: Error evaluating equation 'Physical_Qubits * (1 - Error_Rate)^(Physical_Qubits / 10)': (34, 'Numerical result out of range'); Blocked dependents: Algorithm Development (waiting for Quantum Utility); Commercialization (waiting for Quantum Utility)",
+        "category": "invalid_equations",
+        "time": 5.75,
+        "root_errors": [
+          {
+            "element": "Quantum Utility",
+            "element_id": "var-quantum-utility",
+            "equation": "Physical_Qubits * (1 - Error_Rate)^(Physical_Qubits / 10)",
+            "code": "numeric_overflow",
+            "message": "Error evaluating equation 'Physical_Qubits * (1 - Error_Rate)^(Physical_Qubits / 10)': (34, 'Numerical result out of range')"
+          }
+        ],
+        "blocked_errors": [
+          {
+            "element": "Algorithm Development",
+            "element_id": "flow-algorithm-development",
+            "equation": "Algorithm_Discovery_Rate * Quantum_Utility * Research_Community_Size",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'Algorithm_Discovery_Rate * Quantum_Utility * Research_Community_Size': Unknown variable: Quantum_Utility",
+            "symbol": "Quantum_Utility",
+            "waiting_for": "Quantum Utility",
+            "dependency_path": [
+              "Algorithm Development",
+              "Quantum Utility"
+            ],
+            "root_cause": {
+              "code": "numeric_overflow",
+              "element": "Quantum Utility"
+            }
+          },
+          {
+            "element": "Commercialization",
+            "element_id": "flow-commercialization",
+            "equation": "IF(Quantum_Utility > Utility_Threshold, Commercial_Adoption_Rate * Useful_Algorithms * Market_Pull, 0)",
+            "code": "blocked_dependency",
+            "message": "Error evaluating equation 'IF(Quantum_Utility > Utility_Threshold, Commercial_Adoption_Rate * Useful_Algorithms * Market_Pull, 0)': Unknown variable: Quantum_Utility",
+            "symbol": "Quantum_Utility",
+            "waiting_for": "Quantum Utility",
+            "dependency_path": [
+              "Commercialization",
+              "Quantum Utility"
+            ],
+            "root_cause": {
+              "code": "numeric_overflow",
+              "element": "Quantum Utility"
+            }
+          }
+        ],
+        "stock_values": {
+          "Physical Qubits": 744446656.071827,
+          "Error Rate": -0.028422767394124013,
+          "Useful Algorithms": 15417137.188090146,
+          "Commercial Applications": 1498.9917725553519,
+          "R&D Investment": 3723478.4637298933
+        },
+        "reproduction": {
+          "normalized_model_sha256": "fb55ad22f0cc65e5fab8e8cdb7cd4f2df7bab2dc7c6b8b6b35bba8458157e205",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 20.0,
+            "dt": 0.25,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    },
+    {
+      "file": "models/transportation/urban-rail-transit-ridership-tra.json",
+      "sha256": "0f1471a9dfc1556fe885484545768065fb24dedbed3d33be1c1d1def30e9d97b",
+      "status": "failed",
+      "error": "Unresolved or invalid equations at time 3.75: Root causes: Rider_Adoption: Error evaluating equation 'Potential_Riders * adoption_rate * Service_Quality / 100': result is not finite; check the reached scalar expression; Rider_Attrition: Error evaluating equation 'Regular_Riders * attrition_rate * (100 - Service_Quality) / 100': result is not finite; check the reached scalar expression",
+      "failure": {
+        "code": "unresolved_equations",
+        "message": "Unresolved or invalid equations at time 3.75: Root causes: Rider_Adoption: Error evaluating equation 'Potential_Riders * adoption_rate * Service_Quality / 100': result is not finite; check the reached scalar expression; Rider_Attrition: Error evaluating equation 'Regular_Riders * attrition_rate * (100 - Service_Quality) / 100': result is not finite; check the reached scalar expression",
+        "category": "invalid_equations",
+        "time": 3.75,
+        "root_errors": [
+          {
+            "element": "Rider_Adoption",
+            "element_id": "flow-adoption",
+            "equation": "Potential_Riders * adoption_rate * Service_Quality / 100",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Potential_Riders * adoption_rate * Service_Quality / 100': result is not finite; check the reached scalar expression"
+          },
+          {
+            "element": "Rider_Attrition",
+            "element_id": "flow-attrition",
+            "equation": "Regular_Riders * attrition_rate * (100 - Service_Quality) / 100",
+            "code": "non_finite_result",
+            "message": "Error evaluating equation 'Regular_Riders * attrition_rate * (100 - Service_Quality) / 100': result is not finite; check the reached scalar expression"
+          }
+        ],
+        "blocked_errors": [],
+        "stock_values": {
+          "Regular_Riders": 2.159832068196208e+292,
+          "Potential_Riders": -2.159832068196208e+292,
+          "Service_Quality": 3.1915991363206592e+181
+        },
+        "reproduction": {
+          "normalized_model_sha256": "2f6740d78698b97d01615832bfaa8295f16379f3b4d599340c6d1b78bfdd1bee",
+          "engine_sha256": {
+            "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+            "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+            "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+            "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+            "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+            "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+            "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+            "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e"
+          },
+          "settings": {
+            "start": 0.0,
+            "end": 100.0,
+            "dt": 0.25,
+            "integration_method": "euler",
+            "discrete_period": null,
+            "rtol": 1e-06,
+            "atol": 1e-09,
+            "random_seed": 42
+          }
+        }
+      }
+    }
+  ]
+}

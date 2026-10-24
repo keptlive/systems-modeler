@@ -1,0 +1,110 @@
+{
+  "id": "monod-bacterial-growth-bio",
+  "name": "Monod Bacterial Growth",
+  "description": "Models bacterial growth as a function of limiting substrate concentration, foundation of microbial ecology",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Biomass",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Substrate",
+      "initial_value": 100.0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "mu_max",
+      "equation": "0.5",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Ks",
+      "equation": "10.0",
+      "position": {
+        "x": 230,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Growth_Rate",
+      "equation": "mu_max*Substrate/(Ks+Substrate)",
+      "position": {
+        "x": 360,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Yield_Coefficient",
+      "equation": "0.4",
+      "position": {
+        "x": 490,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Biomass_Growth",
+      "equation": "Growth_Rate*Biomass",
+      "position": {
+        "x": 100,
+        "y": 130
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Substrate_Consumption",
+      "equation": "Biomass_Growth/Yield_Coefficient",
+      "position": {
+        "x": 230,
+        "y": 130
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Biomass",
+      "to_element": "Biomass_Growth"
+    },
+    {
+      "id": "c2",
+      "from_element": "Growth_Rate",
+      "to_element": "Biomass_Growth"
+    },
+    {
+      "id": "c3",
+      "from_element": "Substrate",
+      "to_element": "Growth_Rate"
+    }
+  ],
+  "time_settings": {
+    "start": 0.0,
+    "end": 48.0,
+    "dt": 0.1
+  },
+  "created_at": "2026-01-15T20:40:14.096252+00:00",
+  "updated_at": "2026-01-15T20:40:14.096259+00:00",
+  "source": "https://doi.org/10.1146/annurev.mi.03.100149.002103",
+  "reference": "Monod, J. (1949) The growth of bacterial cultures. Ann. Rev. Microbiol. 3:371-394"
+}

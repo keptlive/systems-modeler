@@ -67,6 +67,16 @@ def inspect_inputs(model: Model, numerical_check=True) -> dict:
     if model.stocks and len(disconnected) == len(model.stocks):
         issue("warning", "no_dynamic_stocks",
               "No stock has an attached stock-changing flow; numerical completion cannot demonstrate the claimed dynamics.")
+    changing_flows = [f for f in model.flows
+                      if stock_owners.get(f.from_stock) != stock_owners.get(f.to_stock)]
+    def literal_zero(equation):
+        try:
+            return float(equation.strip()) == 0
+        except (ValueError, TypeError):
+            return False
+    if changing_flows and all(literal_zero(f.equation) for f in changing_flows):
+        issue("warning", "zero_flow_definitions",
+              "Every stock-changing flow is defined as literal zero. Stocks stay fixed; confirm whether this is an intentional baseline or an unfinished model.")
     for table in model.tables:
         xs = [x for x, _ in table.points]
         if not xs or len(set(xs)) != len(xs) or any(not math.isfinite(v) for point in table.points for v in point):

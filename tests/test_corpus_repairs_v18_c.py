@@ -1,3 +1,4 @@
+from tests.model_history import model_path, find_model_path
 from tests.model_history import v18_bytes
 """v1.8 C: portable preservation, primary-source balances and independent ODEs."""
 import hashlib,json,math
@@ -16,7 +17,7 @@ def run(i,end=None,dt=None,**updates):
  if i in [72,77,84]:
   # Preserve v1.8 source/geometry receipts above; execute the reviewed solver
   # revision only after confirming these source equations/parameters are equal.
-  current=Model.model_validate_json((ROOT/ROWS[i]['file']).read_text())
+  current=Model.model_validate_json(model_path(ROOT,ROWS[i]['file']).read_text())
   for field in ['stocks','flows','variables','tables','connectors']:
    assert getattr(current,field)==getattr(m,field)
   assert (current.time_settings.start,current.time_settings.end)==(m.time_settings.start,m.time_settings.end)
@@ -143,7 +144,7 @@ def test_corrected_dynamics_against_independently_written_rhs_and_distinct_solve
  # These old accuracy bounds are tighter than the new explicit defaults.
  # Check their independently reviewed quarter grids, without claiming the
  # defaults meet adaptive-era thresholds (default errors live in v19 B tests).
- dt=Model.model_validate_json((ROOT/ROWS[i]['file']).read_text()).time_settings.dt/4 if i in [77,84] else None
+ dt=Model.model_validate_json(model_path(ROOT,ROWS[i]['file']).read_text()).time_settings.dt/4 if i in [77,84] else None
  out=run(i,dt=dt);ref=reference(i,out.time);actual=np.array([out.values[s.name] for s in load(i).stocks])
  scale=1+np.max(np.abs(ref),axis=1,keepdims=True)
  error=np.max(np.abs(actual-ref)/scale)
@@ -216,7 +217,7 @@ def test_kimura_linear_mutation_pool_exact_analytic_solution_on_original_million
 def test_milgram_logistic_exact_solution_cannot_overshoot_population():
  # Retain the stringent v1.8 analytic bound on the reviewed quarter grid;
  # default/half/quarter errors and the counter phase error are tested in v19 B.
- dt=Model.model_validate_json((ROOT/ROWS[72]['file']).read_text()).time_settings.dt/4
+ dt=Model.model_validate_json(model_path(ROOT,ROWS[72]['file']).read_text()).time_settings.dt/4
  o=run(72,dt=dt);t=np.array(o.time);expected=3e8/(1+(3e8-1)*np.exp(-50*t))
  assert o.values['People_Reached']==pytest.approx(expected,rel=2e-7,abs=1e-5)
  assert max(o.values['People_Reached'])<=3e8*(1+1e-8)
