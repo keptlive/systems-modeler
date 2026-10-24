@@ -6,6 +6,104 @@ from .model import Model, Stock, Flow, Variable, Connector, Position, TimeSettin
 from .equations import canonical_name
 
 
+
+_XMILE_NAMESPACES = {"", "http://docs.oasis-open.org/xmile/ns/XMILE/v1.0",
+                     "http://www.systemdynamics.org/XMILE"}
+_PROVENANCE_NS = "https://stockandflow.live/ns/model"
+_MAX_XML_BYTES = 2 * 1024 * 1024
+_MAX_XML_ELEMENTS = 20000
+_MAX_XML_DEPTH = 128
+
+
+class XmileNamespaceError(ValueError):
+    """Unsupported vocabulary; the caller retains its unchanged source document."""
+
+
+def _expanded(tag):
+    if tag.startswith("{"):
+        namespace, local = tag[1:].split("}", 1)
+        return namespace, local
+    return "", tag
+
+
+def _namespace_error(tag, path):
+    # Names and URIs are untrusted. Keep errors bounded even for direct callers.
+    clean = lambda value: "".join(c if ord(c) >= 32 and ord(c) != 127 else " "
+                                  for c in value)[:160]
+    raise XmileNamespaceError(
+        f"Unsupported XMILE namespace element or attribute {repr(clean(tag))[:160]} at "
+        f"{clean(path)}; use the document core vocabulary or remove unsupported "
+        "extensions before import. Keep the original file to preserve its source.")
+
+
+def _prepare_namespaces(root):
+    """Normalize only one verified vocabulary, never foreign lookalike tags."""
+    namespace, local = _expanded(root.tag)
+    if local != "xmile":
+        raise ValueError("Expected an XMILE document")
+    if namespace not in _XMILE_NAMESPACES:
+        _namespace_error(root.tag, "/xmile")
+    metadata = None
+    stack = [(root, "/xmile", 0)]
+    count = 0
+    while stack:
+        element, path, depth = stack.pop()
+        count += 1
+        if count > _MAX_XML_ELEMENTS or depth > _MAX_XML_DEPTH:
+            raise ValueError("XMILE document exceeds element or nesting limits")
+        uri, tag = _expanded(element.tag)
+        if uri != namespace:
+            # Existing SDX fixtures contain only these empty editor preferences.
+            profiles = {
+                ("http://iseesystems.com/XMILE", "prefs"): {"show_module_prefix", "layer"},
+                ("isee", "equation_prefs"): {"order_by"},
+            }
+            allowed = profiles.get((uri, tag))
+            if (depth == 1 and allowed is not None and not len(element)
+                    and not (element.text or "").strip()
+                    and set(element.attrib) <= allowed):
+                continue
+            if uri == _PROVENANCE_NS and tag == "provenance" and depth == 1:
+                if metadata is not None or element.attrib:
+                    _namespace_error(element.tag, path)
+                metadata = element
+                fields = {"description", "source", "reference", "category", "source_document"}
+                seen = set()
+                for child in element:
+                    child_uri, child_tag = _expanded(child.tag)
+                    if (child_uri != _PROVENANCE_NS or child_tag not in fields
+                            or child_tag in seen or child.attrib or len(child)):
+                        _namespace_error(child.tag, path + "/" + child_tag[:80])
+                    seen.add(child_tag)
+                    child.tag = child_tag
+                continue
+            _namespace_error(element.tag, path)
+        for attr in element.attrib:
+            attr_uri, attr_tag = _expanded(attr)
+            if not attr_uri:
+                continue
+            # Standard annotation labels/hints never trigger resource fetching.
+            known_annotation = (
+                (attr_uri == "http://www.w3.org/XML/1998/namespace"
+                 and attr_tag in {"lang", "space"}) or
+                (attr_uri == "http://www.w3.org/2001/XMLSchema-instance"
+                 and attr_tag in {"schemaLocation", "noNamespaceSchemaLocation"}))
+            known = known_annotation or (attr_uri == _PROVENANCE_NS and
+                     ((tag == "sim_specs" and attr_tag == "random_seed") or
+                      (tag == "gf" and attr_tag in {"input_units", "output_units"})))
+            known |= (attr_uri == "http://iseesystems.com/XMILE"
+                      and tag == "sim_specs" and attr_tag == "sim_duration")
+            if not known:
+                _namespace_error(attr, path + "/@" + attr_tag[:80])
+        element.tag = tag
+        for index, child in reversed(list(enumerate(element))):
+            child_local = _expanded(child.tag)[1]
+            # Truncate each step; error paths never grow with untrusted depth.
+            child_path = (path + "/" + child_local[:60] + f"[{index + 1}]")[-160:]
+            stack.append((child, child_path, depth + 1))
+    return metadata
+
+
 def parse_graphical_function(gf_elem) -> list[tuple[float, float]]:
     """Parse a graphical function (lookup table) from XMILE XML."""
     points = []
@@ -59,13 +157,10 @@ def parse_graphical_function(gf_elem) -> list[tuple[float, float]]:
 
 def parse_xmile(xml_content: str) -> Model:
     """Parse XMILE XML and return Model."""
+    if len(xml_content) > _MAX_XML_BYTES or len(xml_content.encode("utf-8")) > _MAX_XML_BYTES:
+        raise ValueError("XMILE inputs are limited to 2 MiB")
     root = ET.fromstring(xml_content)
-    metadata = root.find('{https://stockandflow.live/ns/model}provenance')
-    # ElementTree resolves default and prefixed namespaces for either quote style.
-    for elem in root.iter():
-        elem.tag = elem.tag.rsplit("}", 1)[-1]
-    if root.tag != "xmile":
-        raise ValueError("Expected an XMILE document")
+    metadata = _prepare_namespaces(root)
     # Scalar XMILE exporters may emit an empty dimensions container. Only
     # declarations carry array semantics; do not reject harmless metadata.
     if len(root.findall(".//model")) > 1 or any(len(dimensions) for dimensions in root.findall(".//dimensions")):
