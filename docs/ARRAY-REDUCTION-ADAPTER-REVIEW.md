@@ -1,0 +1,24 @@
+# Independent typed array adapter review
+
+2026-10-24. Reviewer legacy_repair_resume; independent of adapter author. Approve the exact four-file implementation/test/reference package below for scoped local commit and subsequent public review. This is not release authorization or a scientific-validity certificate. No runtime files were edited by this reviewer.
+
+Independently ran adapter, structured-model, structured-integration and offline research suites: **143 passed, one pre-existing Pydantic incomplete-forward-reference warning, 1.53 s**. An additional 18 independent checks covered nonalphabetic declared two-axis order, cancellation-sensitive left-associated SUM/MEAN, ordered literal subdomains, whole-reference quoting, scalar outer MIN/MAX, unchanged unary scalar/literal-cell forms, repeated reductions without marker text, input dictionary preservation, arithmetic/list/nested unsupported reductions, quoted comment injection and nesting caps. All passed. These scratch checks were executed independently; they are not claimed as an additional committed regression suite.
+
+The adapter reuses the validated compiler resolver and global dimensions/module checks. A shared Budget covers every expanded equation/override; generated scalar text is charged and bounded, while existing 4096-cell, 128-instance, module-depth and identifier budgets remain. Typed replacement spans are substituted between separately rewritten scalar source segments, with no user-collidable placeholder. Declared rightmost-axis-fastest order is retained; no sorted enumeration or zero-prefix SUM reassociation is introduced. Scalar multiargument MIN/MAX and unary scalar/literal-cell calls retain existing validation paths. Unary reductions require a declared selected axis, including singleton axes. Module input/output validation still requires explicit scalar targets and forbids parent capture; the reducer does not infer array shape from dotted spelling.
+
+Original project dictionaries, stock initializers, override selection, source-map entries and flow endpoint resolution are untouched by the adapter. Existing API integration regressions exercise original structured JSON save/reload and compile/run; typed reductions are not an XMILE interoperability implementation. Pinned executed reference receipt contains all 33 samples for the four reductions; adapter tests compare these numerical arrays. This is narrow compatibility evidence, not equivalence to the separate inspected Simlin source revision, complete language coverage, performance evidence or empirical model verification.
+
+No arbitrary array expression operands, slices, wildcards, mappings, array ports, composite nested reductions or scalar MEAN lists are admitted. No parser limits are relaxed, generated authored code executed, model definitions changed or fake equation provenance introduced. Required release work remains the full suite result, reviewed documentation/public allowlist, API/MCP/browser checks appropriate to the final release and exact CI/staged deployment gates; no push/deploy performed by this reviewer.
+
+## Exact reviewed bytes
+
+- app/core/structured.py: 44e119463fc6470e867fcfd519099f0ebb2a527a547c88d623ae2b1f7591a5ee
+- app/core/array_reductions.py: 9881875542167f033142376167e3e13487000aaed84029d157a09e200f2c275b
+- tests/test_array_reductions.py: 0bb1d51f6ba256bcf828e4e383bc15c9229fa58ef1a8c9b99c9b4bc8503f61f2
+- docs/array-reduction-simlin-reference.json: 1372e7c9e11317fad3f80b46632923980a3c67f245f6006345e4d9405a09520d
+
+Changing those bytes requires renewed exact-byte review. Research contract and primary-source/rights limitations remain in docs/ARRAY-REDUCTION-RESEARCH.md; frozen research artifact hashes are recorded in docs/ARRAY-REDUCTION-ADAPTER.md; this review does not claim fresh upstream source retrieval.
+
+## Independent next-release default-audit receipt review
+
+Approved receipt-only refresh for a future release. Independently verified full audit SHA256 204e0b30913ea1c881545a7539c84e5258d909f2c9e1af226ed2e194e473153e and public index SHA256 338942c218df43b74f47d8a3b90c14cfef2b07d77d4171c39f0106bce881028a. All 993 full-audit rows report passed, match the exact Git-tracked model path set and current on-disk SHA256, and extract exactly to the public ordered id/hash/status rows. Every engine hash matches its current file and the full core module set. Compared with committed HEAD public index, all fields and ordered model rows are identical except the updated structured.py engine hash and added array_reductions.py hash. The evidence records 90.73 seconds and fallback seed42; reviewer checked extraction and hash bindings rather than rerunning that 90-second audit. Finite defaults remain numerical regression evidence, not source/scientific validation. This is a next-release receipt; no current public worktree, PR8 or deployment was changed by this reviewer.

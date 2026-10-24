@@ -4,6 +4,7 @@ from itertools import product
 import json
 import re
 from app.core.equations import canonical_name
+from app.core.array_reductions import Budget, Selection, ReductionError, lower_expression
 
 MAX_CELLS = 4096
 MAX_MODULE_DEPTH = 8
@@ -215,36 +216,36 @@ def compile_structured_model(raw):
                 fail("invalid_index", f"Unknown {dimension} member {selector}")
         return [symbol["cells"][idx] for idx in product(*choices)]
 
-    expression_work = 0
+    reduction_budget = Budget()
     def equation(scope, expr, context):
-        nonlocal expression_work
         if not isinstance(expr, str):
             fail("invalid_equation", "Equations must be strings")
-        expression_work += len(expr)
-        if expression_work > 2_000_000 or len(expr) > 100_000:
-            fail("resource_limit", "Structured equation expansion budget exceeded")
-        # SUM deliberately accepts one reference only; arbitrary reduction expressions are rejected.
-        sums = {}
-        def sum_ref(m):
-            nonlocal expression_work
-            values = resolve(scope, m.group(1), context, True)
-            expression_work += sum(len(v["name"]) + 5 for v in values)
-            if expression_work > 2_000_000:
-                fail("resource_limit", "Structured equation expansion budget exceeded")
-            marker = f"__structured_sum_{len(sums)}"
-            while marker in expr or marker in scope["symbols"] or marker in scope["bindings"]:
-                marker += "_"
-            sums[marker] = "(" + " + ".join(json.dumps(v["name"]) for v in values) + ")"
-            return marker
-        reduction_pattern = r'"(?:[^"\\]|\\.)*"|\bSUM\s*\(\s*([A-Za-z_][A-Za-z0-9_.]*(?:\[[^\[\]]*\])?)\s*\)'
-        expr = re.sub(reduction_pattern, lambda m: m.group() if m.group().startswith('"') else sum_ref(m), expr, flags=re.I)
-        unquoted = re.sub(r'"(?:[^"\\]|\\.)*"', "", expr)
-        if re.search(r"\bSUM\s*\(", unquoted, re.I):
-            fail("unsupported_semantics", "SUM supports one array reference only")
+        class ValidatedSelection:
+            def select(self, ref, budget):
+                # Ports have already been validated as explicit scalar references.
+                # Only local declared shapes can introduce reduction axes.
+                symbol = scope["symbols"].get(ref.name)
+                axes = symbol["shape"] if symbol else ()
+                selectors = axes if ref.selectors is None else ref.selectors
+                reduced = tuple(d for d, selector in zip(axes, selectors) if d == selector)
+                reference = ref.name
+                if ref.selectors is not None:
+                    reference += "[" + ",".join(ref.selectors) + "]"
+                try:
+                    values = resolve(scope, reference, context, True)
+                except StructuredModelError as exc:
+                    if exc.code == "unknown_reference":
+                        raise ReductionError(exc.code, str(exc)) from exc
+                    raise
+                names = tuple(v["name"] for v in values)
+                budget.charge(sum(len(n.encode("utf-8")) + 5 for n in names))
+                return Selection(names, reduced)
+        try:
+            lowered = lower_expression(expr, ValidatedSelection(), reduction_budget)
+        except ReductionError as exc:
+            fail(exc.code, str(exc), scope["prefix"])
         def replace(m):
             token = m.group()
-            if token in sums:
-                return sums[token]
             if token.startswith('"'):
                 values = resolve(scope, json.loads(token), context)
                 return json.dumps(values[0]["name"])
@@ -259,7 +260,22 @@ def compile_structured_model(raw):
             if re.fullmatch(r"[eE][0-9]+", token) and m.start() and expr[m.start()-1].isdigit():
                 return token
             fail("unknown_reference", f"Unknown reference {token}", scope["prefix"])
-        return TOKEN.sub(replace, expr)
+        source = expr
+        pieces, pos = [], 0
+        for start, end, text in lowered.replacements:
+            expr = source[pos:start]
+            pieces.extend((TOKEN.sub(replace, expr), text))
+            pos = end
+        expr = source[pos:]
+        pieces.append(TOKEN.sub(replace, expr))
+        equation = "".join(pieces)
+        if len(equation) > 100_000:
+            fail("resource_limit", "Expanded expression length limit")
+        try:
+            reduction_budget.charge(len(equation))
+        except ReductionError as exc:
+            fail(exc.code, str(exc), scope["prefix"])
+        return equation
 
     for scope in scopes.values():
         for name, symbol in scope["symbols"].items():
