@@ -1,7 +1,7 @@
 """Opt-in local feedback response analysis, using the canonical scalar evaluator."""
 import math
 import numpy as np
-from app.core.equations import equation_features, EquationError, canonical_name
+from app.core.equations import equation_features, EquationError, symbol_identity
 from app.core.integration import evaluate
 
 
@@ -28,7 +28,7 @@ def analyze_feedback(model, result, sample_count=8, relative_step=1e-4):
                       requirement='Caller must supply a trajectory from this exact model and effective time settings; an absent hash cannot establish that association.')
     numeric_model = model.model_copy(update={'variables':[v for v in model.variables if getattr(v,'role',None) != 'report']})
     names = [s.name for s in model.stocks]
-    if len({canonical_name(e.name) for e in elements}) != len(elements):
+    if len({symbol_identity(e.name) for e in elements}) != len(elements):
         raise ValueError('Ambiguous element names cannot be analyzed')
     if model.time_settings.discrete_period is not None:
         raise ValueError('Continuous-time feedback analysis does not support discrete recurrences')

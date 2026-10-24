@@ -3,7 +3,7 @@ from copy import deepcopy
 from itertools import product
 import json
 import re
-from app.core.equations import canonical_name
+from app.core.equations import symbol_identity
 from app.core.array_reductions import Budget, Selection, ReductionError, lower_expression
 
 MAX_CELLS = 4096
@@ -127,7 +127,7 @@ def compile_structured_model(raw):
                     key = ",".join(indices)
                     valid_keys.add(key)
                     full = (prefix + "." if prefix else "") + name + ("[" + key + "]" if shape else "")
-                    alias = canonical_name(full)
+                    alias = symbol_identity(full)
                     if alias in expanded_aliases:
                         fail("ambiguous_name", "Expanded names collide under scalar identifier matching", path)
                     expanded_aliases.add(alias)

@@ -8,7 +8,7 @@ import math
 import ast
 from fractions import Fraction
 from scipy.integrate import solve_ivp
-from app.core.equations import (EquationError, SafeEvaluator, canonical_name,
+from app.core.equations import (EquationError, SafeEvaluator, canonical_name, symbol_identity, resolve_name,
                                 decode_identifier, preprocess_equation)
 from app.core.failure_diagnostics import capacity_error
 from app.core.model import SimulationResult
@@ -19,7 +19,7 @@ class _UncertifiedBoundary(Exception):
     pass
 
 
-def _matching_branch_limits(condition, yes, no, aliases):
+def _matching_branch_limits(condition, yes, no, aliases, resolve_key=canonical_name):
     """A bounded algebraic proof, never a numerical sampling heuristic.
 
     Expand algebraic aliases, impose each comparison's equality boundary, and
@@ -35,7 +35,7 @@ def _matching_branch_limits(condition, yes, no, aliases):
         if budget[0] < 0 or len(active) > 80:
             raise _UncertifiedBoundary
         if isinstance(node, ast.Name):
-            name = canonical_name(decode_identifier(node.id))
+            name = resolve_key(decode_identifier(node.id))
             if name in aliases:
                 if name in active:
                     raise _UncertifiedBoundary
@@ -229,15 +229,19 @@ def state_discontinuities(model):
     continuous; IF needs matching branch limits. This is a conservative supported
     syntax contract, not a general proof of existence, uniqueness or accuracy.
     """
-    elements = {canonical_name(e.name): e for e in [*model.variables, *model.flows]}
+    declared = tuple(e.name for e in (*model.stocks, *model.flows, *model.variables))
+    table_declarations = tuple(t.name for t in model.tables)
+    key = lambda name: symbol_identity(resolve_name(name, declared) or name)
+    table_key = lambda name: symbol_identity(resolve_name(name, table_declarations) or name)
+    elements = {symbol_identity(e.name): e for e in [*model.variables, *model.flows]}
     trees = {name: ast.parse(preprocess_equation(e.equation), mode="eval").body
              for name,e in elements.items() if e.equation.strip()}
-    stocks = {canonical_name(s.name) for s in model.stocks}
-    tables = {canonical_name(t.name): t.interpolation for t in model.tables}
+    stocks = {symbol_identity(s.name) for s in model.stocks}
+    tables = {symbol_identity(t.name): t.interpolation for t in model.tables}
 
     def references(node):
         functions = {id(n.func) for n in ast.walk(node) if isinstance(n, ast.Call)}
-        return {canonical_name(decode_identifier(n.id)) for n in ast.walk(node)
+        return {key(decode_identifier(n.id)) for n in ast.walk(node)
                 if isinstance(n, ast.Name) and id(n) not in functions}
 
     state_names = set(stocks)
@@ -245,7 +249,7 @@ def state_discontinuities(model):
         added = {name for name,tree in trees.items() if references(tree) & state_names} - state_names
         if not added: break
         state_names.update(added)
-    needed = {canonical_name(f.name) for f in model.flows if f.from_stock is not None or f.to_stock is not None}
+    needed = {symbol_identity(f.name) for f in model.flows if f.from_stock is not None or f.to_stock is not None}
     for _ in range(len(trees)+1):
         added = {ref for name in needed if name in trees for ref in references(trees[name]) if ref in trees} - needed
         if not added: break
@@ -259,7 +263,7 @@ def state_discontinuities(model):
             condition, yes, no = (node.test, node.body, node.orelse) if isinstance(node, ast.IfExp) else (None,None,None)
             if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
                 function = decode_identifier(node.func.id).upper()
-                if (canonical_name(function) in tables or function in {"LOOKUP", "WITH_LOOKUP"}) and references(node) & state_names:
+                if (table_key(function) in tables or function in {"LOOKUP", "WITH_LOOKUP"}) and references(node) & state_names:
                     # Even continuous interpolation can hide an entire narrow
                     # forcing pulse between internal steps. Table knots need
                     # event localization before this RHS contract can expand.
@@ -270,7 +274,7 @@ def state_discontinuities(model):
                     findings.append({"element":elements[name].name,"operation":function})
             if condition is not None:
                 condition_nodes.update(id(n) for n in ast.walk(condition))
-                if references(condition) & state_names and not _matching_branch_limits(condition,yes,no,trees):
+                if references(condition) & state_names and not _matching_branch_limits(condition,yes,no,trees,key):
                     findings.append({"element":elements[name].name,"operation":"uncertified state-dependent conditional"})
         for node in ast.walk(tree):
             if isinstance(node, (ast.Compare, ast.BoolOp)) and id(node) not in condition_nodes and references(node) & state_names:
@@ -287,22 +291,26 @@ def time_discontinuities(model):
     feedback conditions retain their ordinary ODE meaning. This is a conservative
     input contract, not a proof that all accepted RHS functions are smooth.
     """
+    declared = tuple(e.name for e in (*model.stocks, *model.flows, *model.variables))
+    table_declarations = tuple(t.name for t in model.tables)
+    key = lambda name: symbol_identity(resolve_name(name, declared) or name)
+    table_key = lambda name: symbol_identity(resolve_name(name, table_declarations) or name)
     trees = {}
-    table_names = {canonical_name(t.name) for t in model.tables}
+    table_names = {symbol_identity(t.name) for t in model.tables}
     for element in [*model.variables, *model.flows]:
         if element.equation.strip():
             trees[element.name] = ast.parse(preprocess_equation(element.equation), mode="eval")
     def references(node):
         function_nodes = {id(n.func) for n in ast.walk(node) if isinstance(n, ast.Call)}
-        return {canonical_name(decode_identifier(n.id)) for n in ast.walk(node)
+        return {key(decode_identifier(n.id)) for n in ast.walk(node)
                 if isinstance(n, ast.Name) and id(n) not in function_nodes}
     time_names = {"time"}
     changed = True
     while changed:
         changed = False
         for name, tree in trees.items():
-            if canonical_name(name) not in time_names and references(tree) & time_names:
-                time_names.add(canonical_name(name))
+            if key(name) not in time_names and references(tree) & time_names:
+                time_names.add(key(name))
                 changed = True
     findings = []
     for name, tree in trees.items():
@@ -315,7 +323,7 @@ def time_discontinuities(model):
                 # do not constrain internal steps. Until table-knot events are
                 # supported, reject explicit TIME-driven lookups rather than
                 # returning a successful but silently missed forcing pulse.
-                if canonical_name(function) in table_names:
+                if table_key(function) in table_names:
                     lookup_arguments = node.args
                 elif function == "LOOKUP":
                     lookup_arguments = node.args[1:]  # table name is not an input
@@ -325,7 +333,7 @@ def time_discontinuities(model):
                     lookup_arguments = []
                 if any(references(argument) & time_names for argument in lookup_arguments):
                     findings.append({"element": name, "operation": "time-dependent lookup", "function": function})
-                if canonical_name(function) not in table_names:
+                if table_key(function) not in table_names:
                     if function in {"IF", "IF_THEN_ELSE"} and node.args:
                         condition = node.args[0]
                     elif function in {"FLOOR", "CEIL", "ROUND", "SIGN", "MOD"} and references(node) & time_names:

@@ -87,7 +87,7 @@ def test_constants_do_not_shadow_user_parameters():
     assert safe_eval("PI", {}) == math.pi
 
 
-@pytest.mark.parametrize("names", [("A", "a"), ("a-b", "a_b"), ("A B", "A_B")])
+@pytest.mark.parametrize("names", [("A", "a"), ("A B", "A_B")])
 def test_colliding_aliases_are_rejected(names):
     model = Model(variables=[{"name": name, "equation": "1"} for name in names])
     with pytest.raises(EquationError, match="unique"):
@@ -491,3 +491,10 @@ def test_rk4_budget_counts_hidden_stages_and_all_derivative_evaluations():
                   time_settings={"end":10000,"dt":1,"integration_method":"rk4"})
     with pytest.raises(EquationError,match="RK4 evaluations"):
         simulate(model)
+
+def test_punctuation_distinct_names_have_distinct_owners():
+    model = Model(variables=[{"name":"a-b","equation":"1"},
+                             {"name":"a_b","equation":"2"},
+                             {"name":"Output","equation":'"a-b"+"a_b"'}],
+                  time_settings={"end":1,"dt":.25})
+    assert simulate(model).values["Output"] == [3]*5

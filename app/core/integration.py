@@ -13,7 +13,7 @@ from app.core.limits import MAX_INTERVALS, MAX_ELEMENTS, MAX_RETAINED_VALUES, MA
 from app.core.execution_order import derive_execution_order
 from app.core.failure_diagnostics import stalled_evaluation, capacity_error
 from app.core.equations import (EquationError, safe_eval, SimulationContext,
-                                discover_stateful, advance_stateful, canonical_name,
+                                discover_stateful, advance_stateful, canonical_name, symbol_identity, random_symbol_keys,
                                 RandomRuntime, stateful_derivatives, equation_features)
 
 
@@ -38,6 +38,8 @@ class _EvaluationPlan:
     equations: tuple
     initial_equations: tuple
     declared_names: frozenset
+    declared_symbols: tuple
+    random_keys: object
     tables: object
     table_types: object
 
@@ -54,6 +56,8 @@ def _make_evaluation_plan(model):
         id(model), scheduled if scheduled is not None else equations,
         scheduled_initial if scheduled_initial is not None else initial_equations,
         frozenset(canonical_name(e.name) for e in (*model.stocks, *model.flows, *model.variables)),
+        tuple(e.name for e in (*model.stocks, *model.flows, *model.variables)),
+        MappingProxyType(random_symbol_keys(e.name for e in (*model.stocks, *model.flows, *model.variables))),
         MappingProxyType({table.name: tuple(tuple(point) for point in table.to_list()) for table in model.tables}),
         MappingProxyType({table.name: table.interpolation for table in model.tables}),
     )
@@ -69,6 +73,9 @@ def simulation_context(model, t, dt, delay, smooth, random_runtime=None, input_t
     # Declared e/pi must wait for authored initializers, never constant fallback.
     context.declared_names = plan.declared_names if plan else frozenset(canonical_name(element.name)
                               for element in (*model.stocks, *model.flows, *model.variables))
+    context.declared_symbols = plan.declared_symbols if plan else tuple(
+        e.name for e in (*model.stocks, *model.flows, *model.variables))
+    context.random_symbol_keys = plan.random_keys if plan else random_symbol_keys(context.declared_symbols)
     context.table_types = plan.table_types if plan else {table.name: table.interpolation for table in model.tables}
     context.input_time = t if input_time is None else input_time
     context.input_snapshot = input_snapshot
@@ -161,7 +168,7 @@ def integrate(model: Model, settings: TimeSettings):
     result = _integrate_numeric(numeric_model, settings, report_work)
     for variable, tree in reports:
         del result.values[variable.name]
-    tables = {canonical_name(t.name) for t in model.tables}
+    tables = tuple(t.name for t in model.tables)
     result.report_values = {variable.name: [] for variable, _ in reports}
     for index, at in enumerate(result.time) if reports else []:
         values = {name: series[index] for name, series in result.values.items()}
@@ -187,9 +194,9 @@ def _integrate_numeric(model: Model, settings: TimeSettings, report_work=0):
 
 def _integrate_numeric_planned(model: Model, settings: TimeSettings, report_work=0):
     elements = [*model.stocks, *model.flows, *model.variables]
-    names = [canonical_name(e.name) for e in elements]
+    names = [symbol_identity(e.name) for e in elements]
     if len(set(names)) != len(names):
-        raise EquationError("Element names must be unique, including case/space/punctuation aliases", code="name_collision", details={"category": "invalid_structure", "conflicting_names": [e.name for e in elements if names.count(canonical_name(e.name)) > 1]})
+        raise EquationError("Element names must be unique, including case and XMILE whitespace aliases", code="name_collision", details={"category": "invalid_structure", "conflicting_names": [e.name for e in elements if names.count(symbol_identity(e.name)) > 1]})
     if any(name in {"time", "dt", "time_step"} for name in names):
         raise EquationError("TIME, DT and TIME_STEP are reserved simulation names", code="reserved_name", details={"category": "invalid_structure", "names": [e.name for e in elements if canonical_name(e.name) in {"time", "dt", "time_step"}]})
     reference_owners = {}
@@ -198,7 +205,7 @@ def _integrate_numeric_planned(model: Model, settings: TimeSettings, report_work
             if reference in reference_owners and reference_owners[reference] is not stock:
                 raise EquationError(f"Ambiguous stock reference: '{reference}'")
             reference_owners[reference] = stock
-    if len({canonical_name(table.name) for table in model.tables}) != len(model.tables):
+    if len({symbol_identity(table.name) for table in model.tables}) != len(model.tables):
         raise EquationError("Lookup table names must be unique")
     if len(elements) > MAX_ELEMENTS:
         raise capacity_error("Models are limited to 500 elements per simulation", resource="elements", requested=len(elements), limit=MAX_ELEMENTS)

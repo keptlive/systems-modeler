@@ -339,6 +339,8 @@ class SimulationContext:
         self.delay_state = delay_state if delay_state is not None else {}
         self.smooth_state = smooth_state if smooth_state is not None else {}
         self.table_types = {}
+        self.declared_symbols = None
+        self.random_symbol_keys = {}
         self.equation_key = ""
         self.random_runtime = random_runtime if random_runtime is not None else RandomRuntime()
 
@@ -399,6 +401,41 @@ def _canonical_name(value):
     return re.sub(r"_+", "_", normalized)
 
 
+@lru_cache(maxsize=8192)
+def _symbol_identity(value):
+    import unicodedata
+    return re.sub(r"[ _\n\u00a0]+", "_", unicodedata.normalize("NFC", value).casefold())
+
+
+def symbol_identity(value):
+    """Semantic identity preserves punctuation and non-XMILE whitespace."""
+    return _symbol_identity(value) if len(value) <= 1024 else _symbol_identity.__wrapped__(value)
+
+
+def resolve_name(requested, declared):
+    """Bind against the complete declaration inventory, not available values."""
+    if requested in declared:
+        return requested
+    identity = symbol_identity(requested)
+    matches = [name for name in declared if symbol_identity(name) == identity]
+    if not matches:
+        legacy = canonical_name(requested)
+        matches = [name for name in declared if canonical_name(name) == legacy]
+    if len(matches) > 1:
+        raise EquationError(f"Ambiguous variable alias: {requested}", code="name_collision")
+    return matches[0] if matches else None
+
+
+def random_symbol_keys(names):
+    """Preserve historical streams; newly permitted alias buckets stay distinct."""
+    buckets = {}
+    for name in names:
+        buckets.setdefault(canonical_name(name), []).append(name)
+    return {name: (key if len(group) == 1 else ":strict:" + symbol_identity(name).encode("utf-8").hex())
+            for key, group in buckets.items() for name in group}
+
+
+
 class SafeEvaluator(ast.NodeVisitor):
     """
     Safely evaluate mathematical expressions using AST.
@@ -427,19 +464,13 @@ class SafeEvaluator(ast.NodeVisitor):
             return _finite_real(self.context.time)
         if name_upper in ("DT", "TIME_STEP"):
             return _finite_real(self.context.dt)
-        # Then check user variables - try multiple name variations
-        # to handle underscore vs space naming inconsistencies
-        for var_name in name_variations:
-            if var_name in self.variables:
-                return _finite_real(self.variables[var_name])
-        matched = [value for key, value in self.variables.items() if canonical_name(key) == canonical]
-        if len(matched) == 1:
-            return _finite_real(matched[0])
-        if len(matched) > 1:
-            raise EquationError(f"Ambiguous variable alias: {name}")
-        # A declared but unresolved e/pi must wait for its initializer/equation.
-        # Otherwise dependency retries cache a mathematical constant as if it were
-        # the authored model quantity. Lazy branches remain evaluated on demand.
+        inventory = getattr(self.context, "declared_symbols", None)
+        owner = resolve_name(name, inventory if inventory is not None else self.variables)
+        if owner is not None:
+            if owner in self.variables:
+                return _finite_real(self.variables[owner])
+            raise EquationError(f"Unknown variable: {name}", code="unknown_variable",
+                                details={"symbol": name})
         if canonical in getattr(self.context, "declared_names", ()):
             raise EquationError(f"Unknown variable: {name}", code="unknown_variable",
                                 details={"symbol": name})
@@ -540,7 +571,7 @@ class SafeEvaluator(ast.NodeVisitor):
                 raise EquationError("RANDOM_BINOMIAL requires integer trials between 0 and 1,000,000")
             if not 0 <= probability <= 1:
                 raise EquationError("RANDOM_BINOMIAL probability must be between 0 and 1")
-            key = f"{canonical_name(self.context.equation_key)}:{node.lineno}:{node.col_offset}:binomial"
+            key = f"{self.context.random_symbol_keys.get(self.context.equation_key, canonical_name(self.context.equation_key))}:{node.lineno}:{node.col_offset}:binomial"
             return self.context.random_runtime.binomial_sample(key, int(trials), probability, seed, self.context.time)
         kind = "normal" if function in ("RANDOM_NORMAL", "NORMAL") else "uniform"
         first, second = parameters
@@ -548,7 +579,7 @@ class SafeEvaluator(ast.NodeVisitor):
             raise EquationError("Uniform minimum must not exceed maximum")
         if kind == "normal" and second < 0:
             raise EquationError("Normal standard deviation must be nonnegative")
-        key = f"{canonical_name(self.context.equation_key)}:{node.lineno}:{node.col_offset}:{kind}"
+        key = f"{self.context.random_symbol_keys.get(self.context.equation_key, canonical_name(self.context.equation_key))}:{node.lineno}:{node.col_offset}:{kind}"
         unit = self.context.random_runtime.unit_sample(key, kind, seed, self.context.time)
         # The convex form avoids max-min overflowing for finite opposite endpoints.
         if kind == "uniform":
@@ -560,12 +591,10 @@ class SafeEvaluator(ast.NodeVisitor):
         return value
 
     def _table_name(self, requested):
-        if requested in self.context.tables:
-            return requested
-        matches = [name for name in self.context.tables if canonical_name(name) == canonical_name(requested)]
-        if len(matches) > 1:
-            raise EquationError(f"Ambiguous lookup table alias: {requested}")
-        return matches[0] if matches else None
+        try:
+            return resolve_name(requested, self.context.tables)
+        except EquationError as exc:
+            raise EquationError(f"Ambiguous lookup table alias: {requested}") from exc
 
     def _handle_context_function(self, func_name: str, args: list) -> float:
         """Handle functions that require simulation context."""
@@ -815,7 +844,36 @@ def preprocess_equation(equation: str) -> str:
     import io
     import tokenize
     try:
-        tokens = [token.string for token in tokenize.generate_tokens(io.StringIO(_strip_comments(equation)).readline)
+        source = _strip_comments(equation)
+        lexical = list(tokenize.generate_tokens(io.StringIO(source).readline))
+        offsets = [0]
+        for line in source.split(chr(10)):
+            offsets.append(offsets[-1] + len(line) + 1)
+        replacements = []
+        consumed = -1
+        for token in lexical:
+            if token.type != tokenize.NAME:
+                continue
+            start = offsets[token.start[0] - 1] + token.start[1]
+            if start < consumed:
+                continue
+            end = start
+            while end < len(source):
+                character = source[end]
+                if character == "$" or ("A" + character).isidentifier():
+                    end += 1
+                else:
+                    break
+            value = source[start:end]
+            if "$" in value:
+                # Quote only the physically contiguous identifier span. This
+                # also splits Python NUMBER tokens such as 1e+3 at the operator.
+                import json
+                replacements.append((start, end, json.dumps(value, ensure_ascii=False)))
+                consumed = end
+        for start, end, replacement in reversed(replacements):
+            source = source[:start] + replacement + source[end:]
+        tokens = [token.string for token in tokenize.generate_tokens(io.StringIO(source).readline)
                   if token.type not in (tokenize.ENDMARKER, tokenize.NEWLINE,
                                         tokenize.NL, tokenize.INDENT, tokenize.DEDENT)]
     except (tokenize.TokenError, IndentationError) as exc:
@@ -1100,7 +1158,7 @@ def equation_features(equation, table_names=()):
     tables = {canonical_name(name) for name in table_names}
     calls = [decode_identifier(node.func.id).upper() for node in ast.walk(tree)
              if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
-             and canonical_name(decode_identifier(node.func.id)) not in tables]
+             and resolve_name(decode_identifier(node.func.id), table_names) is None]
     return {"random_calls": sum(name in STOCHASTIC_FUNCTIONS for name in calls),
             "fixed_delay": any(name in ("DELAY", "DELAY_FIXED") for name in calls),
             "stateful_calls": sorted(set(calls) & STATEFUL_FUNCTIONS),
@@ -1143,15 +1201,17 @@ def validate_equation(equation: str, available_variables: list[str],
                 if node.keywords:
                     return False, "Keyword arguments are unsupported"
                 function = decode_identifier(node.func.id)
-                if function.upper() not in functions and canonical_name(function) not in tables:
+                if function.upper() not in functions and resolve_name(function, table_names or ()) is None:
                     return False, f"Unknown function: {function}"
-                if function.upper() == "LOOKUP" and node.args:
+                if function.upper() == "LOOKUP" and resolve_name(function, table_names or ()) is None and node.args:
                     argument = node.args[0]
                     table = decode_identifier(argument.id) if isinstance(argument, ast.Name) else (
                         argument.value if isinstance(argument, ast.Constant) and isinstance(argument.value, str) else None)
-                    if table is None or canonical_name(table) not in tables:
+                    if table is None or resolve_name(table, table_names or ()) is None:
                         return False, f"Unknown lookup table: {table}"
-        unknown = {name for name in _reference_names(tree) if canonical_name(name) not in known}
+        unknown = {name for name in _reference_names(tree)
+                   if resolve_name(name, available_variables) is None
+                   and symbol_identity(name) not in {*SAFE_CONSTANTS, "time", "dt", "time_step"}}
         if unknown:
             return False, f"Unknown variables: {', '.join(sorted(unknown))}"
         return True, ""

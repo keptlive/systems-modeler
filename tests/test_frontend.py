@@ -274,6 +274,22 @@ def test_index_html():
     assert success, message
 
 
+def test_property_rename_preserves_identifier_bindings():
+    """Run real editor transactions, including strict/legacy alias collisions."""
+    executable = shutil.which("node") or shutil.which("nodejs") or shutil.which("node.exe")
+    assert executable, "Node.js is required for JavaScript behavior checks"
+    root = Path(__file__).resolve().parents[1]
+    script = str(root / "scripts/check_property_inputs_v16.cjs")
+    if os.name != "nt" and executable.lower().endswith(".exe"):
+        # WSL may discover Windows Node; it needs a Windows/UNC script path.
+        converter = shutil.which("wslpath")
+        assert converter, "wslpath is required to run a WSL script with Windows Node"
+        script = subprocess.check_output([converter, "-w", script], text=True).strip()
+    result = subprocess.run([executable, script], cwd=root,
+                            capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
 def test_js_parser_rejects_balanced_invalid_syntax(tmp_path):
     script = tmp_path / "invalid.js"
     script.write_text("const broken = ;", encoding="utf-8")

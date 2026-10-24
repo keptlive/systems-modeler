@@ -362,29 +362,9 @@ def generate_connectors_from_equations(model: Model) -> list[Connector]:
     """
     if model.has_structure():
         return list(model.connectors)
-    from app.core.equations import get_equation_variables, canonical_name
+    from app.core.equations import get_equation_variables, resolve_name
 
-    # Build a lookup map for all element names (normalized to handle variations)
-    element_names = {}  # normalized_name -> actual_name
-
-    for stock in model.stocks:
-        element_names[canonical_name(stock.name)] = stock.name
-        # Store original name and underscore variant
-        element_names[stock.name.lower()] = stock.name
-        element_names[stock.name.lower().replace(" ", "_")] = stock.name
-        element_names[stock.name.lower().replace("_", " ")] = stock.name
-
-    for flow in model.flows:
-        element_names[canonical_name(flow.name)] = flow.name
-        element_names[flow.name.lower()] = flow.name
-        element_names[flow.name.lower().replace(" ", "_")] = flow.name
-        element_names[flow.name.lower().replace("_", " ")] = flow.name
-
-    for var in model.variables:
-        element_names[canonical_name(var.name)] = var.name
-        element_names[var.name.lower()] = var.name
-        element_names[var.name.lower().replace(" ", "_")] = var.name
-        element_names[var.name.lower().replace("_", " ")] = var.name
+    element_names = tuple(e.name for e in (*model.stocks, *model.flows, *model.variables))
 
     # Collect existing connectors to avoid duplicates
     existing = set()
@@ -396,17 +376,7 @@ def generate_connectors_from_equations(model: Model) -> list[Connector]:
 
     def find_element_name(ref: str) -> Optional[str]:
         """Find the actual element name for a reference."""
-        ref_lower = canonical_name(ref)
-        if ref_lower in element_names:
-            return element_names[ref_lower]
-        # Try with underscore substitution
-        ref_underscore = ref_lower.replace(" ", "_")
-        if ref_underscore in element_names:
-            return element_names[ref_underscore]
-        ref_space = ref_lower.replace("_", " ")
-        if ref_space in element_names:
-            return element_names[ref_space]
-        return None
+        return resolve_name(ref, element_names)
 
     # Process flows
     for flow in model.flows:

@@ -2,7 +2,7 @@
 import ast
 from fractions import Fraction
 from app.core.equations import (_parse_expression, preprocess_equation,
-                                canonical_name, decode_identifier, EquationError, STATEFUL_FUNCTIONS, STATEFUL_ALIASES)
+                                canonical_name, symbol_identity, resolve_name, decode_identifier, EquationError, STATEFUL_FUNCTIONS, STATEFUL_ALIASES)
 
 # None is unknown; literals have contextual units, distinct from dimensionless {}.
 _LITERAL = object()
@@ -107,7 +107,7 @@ def analyze_units(model, time_units=None):
     for element in elements:
         current = element.name
         exact[element.name] = element
-        aliases.setdefault(canonical_name(element.name), []).append(element)
+        aliases.setdefault(symbol_identity(element.name), []).append(element)
         units[element.id] = declared(element.units)
     for key, entries in aliases.items():
         if len(entries) > 1:
@@ -120,7 +120,7 @@ def analyze_units(model, time_units=None):
     table_units = {}
     for table in model.tables:
         current = table.name
-        key = canonical_name(table.name)
+        key = symbol_identity(table.name)
         if key in tables:
             note('unknown', 'ambiguous_table', f'Multiple tables share alias {key}')
         tables[key] = table
@@ -155,10 +155,11 @@ def analyze_units(model, time_units=None):
             name = decode_identifier(node.id)
             if name.upper() in {'TIME', 'DT', 'TIME_STEP'}:
                 return clock
-            element = exact.get(name)
-            matches = aliases.get(canonical_name(name), [])
-            if element is None and len(matches) == 1:
-                element = matches[0]
+            try:
+                owner = resolve_name(name, exact)
+            except EquationError:
+                owner = None
+            element = exact.get(owner)
             if element is not None:
                 return units[element.id]
             if name.upper() in {'TIME', 'DT', 'TIME_STEP'}:
@@ -205,17 +206,19 @@ def analyze_units(model, time_units=None):
         if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
             name = decode_identifier(node.func.id)
             upper = name.upper()
-            if canonical_name(name) in tables or upper in {'LOOKUP', 'WITH_LOOKUP'}:
-                key = canonical_name(name)
+            table_owner = resolve_name(name, [t.name for t in model.tables])
+            if table_owner is not None or upper in {'LOOKUP', 'WITH_LOOKUP'}:
+                key = symbol_identity(table_owner) if table_owner is not None else None
                 input_node = node.args[0] if node.args else None
                 if upper == 'LOOKUP' and key not in tables:
                     table_arg = node.args[0] if node.args else None
                     requested = (decode_identifier(table_arg.id) if isinstance(table_arg, ast.Name) else
                                  table_arg.value if isinstance(table_arg, ast.Constant) and isinstance(table_arg.value,str) else '')
-                    key = canonical_name(requested)
+                    owner = resolve_name(requested, [t.name for t in model.tables])
+                    key = symbol_identity(owner) if owner is not None else None
                     input_node = node.args[1] if len(node.args)>1 else None
                 if key in tables:
-                    if len(node.args) != (2 if upper == 'LOOKUP' and canonical_name(name) not in tables else 1):
+                    if len(node.args) != (2 if upper == 'LOOKUP' and table_owner is None else 1):
                         note('unknown', 'function_signature', 'Lookup has an invalid argument count')
                         return None
                     inp, output = table_units[key]
