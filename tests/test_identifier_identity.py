@@ -53,12 +53,12 @@ def test_distinct_state_flow_init_table_units_and_feedback(solver):
     assert r.values["Store_A"]==pytest.approx([5+2*t for t in r.time],abs=1e-9)
     assert inspect_inputs(m)["valid"] and analyze_units(m)["status"]=="consistent"
     assert analyze_feedback(m,r)["samples"]
-    if solver=="radau":
-        with pytest.raises(ValueError,match="Radau settings"):generate_xmile(m)
-        out=Model.model_validate_json(m.model_dump_json())
-    else:
-        out=parse_xmile(generate_xmile(m))
-    assert simulate(out).values==r.values
+    out=parse_xmile(generate_xmile(m)); result=simulate(out)
+    assert result.time==r.time and result.values==r.values and result.report_values==r.report_values
+    assert out.time_settings.model_dump()==m.time_settings.model_dump()
+    for kind in ('stocks','flows','variables'):
+        assert [(v.name,v.equation,v.units) for v in getattr(out,kind)]==[(v.name,v.equation,v.units) for v in getattr(m,kind)]
+    assert [(t.name,t.points,t.input_units,t.output_units) for t in out.tables]==[(t.name,t.points,t.input_units,t.output_units) for t in m.tables]
     assert m.model_dump(mode="json")==before
 
 def test_forward_exact_dependencies_and_lazy_branch_cycles():

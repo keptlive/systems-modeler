@@ -8,6 +8,7 @@ from app.core.simulator import simulate
 from app.core.equations import EquationError
 from app.core.validation import inspect_inputs
 from app.core.xmile_generator import generate_xmile
+from app.core.xmile_parser import parse_xmile
 
 
 def example(method="euler"):
@@ -72,7 +73,13 @@ def test_report_limits_and_names():
 def test_numeric_auxiliaries_still_reject_text_and_xmile_is_explicit():
     model=example();model.variables[0].role='auxiliary'
     with pytest.raises(EquationError):simulate(model)
-    with pytest.raises(ValueError,match='JSON'):generate_xmile(example())
+    source=example(); before=source.model_dump(mode='json'); original=simulate(source)
+    restored=parse_xmile(generate_xmile(source)); result=simulate(restored)
+    assert result.time==original.time and result.values==original.values
+    assert result.report_values==original.report_values=={'Status':['Empty','Empty','Filling','Filling','Full']}
+    assert restored.time_settings.model_dump()==source.time_settings.model_dump()
+    assert [(v.name,v.role,v.equation) for v in restored.variables]==[(v.name,v.role,v.equation) for v in source.variables]
+    assert source.model_dump(mode='json')==before
 
 
 def test_limits_growth_preserves_original_status_and_independent_rhs():
