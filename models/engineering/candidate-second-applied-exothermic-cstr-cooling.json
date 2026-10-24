@@ -1,0 +1,185 @@
+{
+  "id": "candidate-second-applied-exothermic-cstr-cooling",
+  "name": "Exothermic CSTR Cooling and Conversion",
+  "category": "engineering",
+  "description": "Source equations/constants and initial coolant300K equilibrium; authored time origin is coolant295K cooling step. Consistent interpretation: litre, gram, mole, joule, kelvin, minute; source comments mix unit conventions. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://apmonitor.com/pdc/index.php/Main/StirredReactor",
+  "reference": "Hedengren, APMonitor Process Dynamics and Control, Stirred Reactor",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Concentration",
+      "initial_value": 0.87725294608097,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "mole/litre"
+    },
+    {
+      "id": "s1",
+      "name": "Temperature",
+      "initial_value": 324.475443431599,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "kelvin"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Concentration",
+      "equation": "FeedRate/Volume*(FeedConcentration-Concentration)-Reaction",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "(mole/litre)/minute"
+    },
+    {
+      "id": "f1",
+      "name": "Change_Temperature",
+      "equation": "FeedRate/Volume*(FeedTemperature-Temperature)+HeatRelease/(Density*HeatCapacity)*Reaction+Conductance/(Volume*Density*HeatCapacity)*(Coolant-Temperature)",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "(kelvin)/minute"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "FeedRate",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "litre/minute"
+    },
+    {
+      "id": "p1",
+      "name": "Volume",
+      "equation": "100",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "litre"
+    },
+    {
+      "id": "p2",
+      "name": "FeedConcentration",
+      "equation": "1",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "mole/litre"
+    },
+    {
+      "id": "p3",
+      "name": "FeedTemperature",
+      "equation": "350",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "p4",
+      "name": "HeatRelease",
+      "equation": "50000",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "joule/mole"
+    },
+    {
+      "id": "p5",
+      "name": "Density",
+      "equation": "1000",
+      "position": {
+        "x": 950,
+        "y": 750
+      },
+      "units": "gram/litre"
+    },
+    {
+      "id": "p6",
+      "name": "HeatCapacity",
+      "equation": "0.239",
+      "position": {
+        "x": 100,
+        "y": 850
+      },
+      "units": "joule/(gram*kelvin)"
+    },
+    {
+      "id": "p7",
+      "name": "Conductance",
+      "equation": "50000",
+      "position": {
+        "x": 270,
+        "y": 850
+      },
+      "units": "joule/(minute*kelvin)"
+    },
+    {
+      "id": "p8",
+      "name": "Coolant",
+      "equation": "295",
+      "position": {
+        "x": 440,
+        "y": 850
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "p9",
+      "name": "Preexponential",
+      "equation": "72000000000.0",
+      "position": {
+        "x": 610,
+        "y": 850
+      },
+      "units": "1/minute"
+    },
+    {
+      "id": "p10",
+      "name": "Activation",
+      "equation": "8750",
+      "position": {
+        "x": 780,
+        "y": 850
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "p11",
+      "name": "Reaction",
+      "equation": "Preexponential*exp(-Activation/Temperature)*Concentration",
+      "position": {
+        "x": 950,
+        "y": 850
+      },
+      "units": "mole/(litre*minute)"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 10,
+    "dt": 0.005,
+    "integration_method": "rk4",
+    "units": "minute"
+  }
+}

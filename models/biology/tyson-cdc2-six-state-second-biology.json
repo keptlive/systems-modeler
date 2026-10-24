@@ -1,0 +1,266 @@
+{
+  "id": "tyson-cdc2-six-state-second-biology",
+  "name": "Tyson conserved cdc2 and cyclin binding cycle",
+  "description": "Explicit cdc2 phosphorylation, cyclin binding and autocatalytic preMPF activation conserve the cdc2 pool. Different mechanism from the Goldbeter three-activity cascade. Concentration scale follows the CellML source; time is minutes. Coefficients and six initial concentrations0.001 follow the corrected Physiome source; total cdc2 is0.004. Its zero k2 and k5 terms are removed algebraically. Horizon100 and Radau output step0.1 are our verification choices. https://models.physiomeproject.org/workspace/tyson_1991/rawfile/882447deebe540870a53c5971525d12208fca27b/tyson_1991.cellml Signed net-rate flows encode the stated differential equations. No clamps or resets. These educational equations are not fitted biological forecasts.",
+  "source": "https://doi.org/10.1073/pnas.88.16.7328",
+  "reference": "Tyson (1991), Modeling the cell division cycle: cdc2 and cyclin interactions, PNAS88:7328-7332. Numerical verification: Physiome tyson_1991 revision882447deebe540870a53c5971525d12208fca27b.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "tyson-cdc2-six-state-second-biology:Cdc2",
+      "name": "Cdc2",
+      "initial_value": 0.001,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 120,
+        "y": 200
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:Phosphorylated_Cdc2",
+      "name": "Phosphorylated_Cdc2",
+      "initial_value": 0.001,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 280,
+        "y": 200
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:PreMPF",
+      "name": "PreMPF",
+      "initial_value": 0.001,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 440,
+        "y": 200
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:Active_MPF",
+      "name": "Active_MPF",
+      "initial_value": 0.001,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:Cyclin",
+      "name": "Cyclin",
+      "initial_value": 0.001,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 760,
+        "y": 200
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:Degraded_Cyclin",
+      "name": "Degraded_Cyclin",
+      "initial_value": 0.001,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 920,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "tyson-cdc2-six-state-second-biology:rate:Cdc2",
+      "name": "Cdc2_net_rate",
+      "equation": "mpf_loss*Active_MPF+dephosphorylation*Phosphorylated_Cdc2-phosphorylation*Cdc2",
+      "to_stock": "tyson-cdc2-six-state-second-biology:Cdc2",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 120,
+        "y": 300
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:rate:Phosphorylated_Cdc2",
+      "name": "Phosphorylated_Cdc2_net_rate",
+      "equation": "phosphorylation*Cdc2-dephosphorylation*Phosphorylated_Cdc2-Binding",
+      "to_stock": "tyson-cdc2-six-state-second-biology:Phosphorylated_Cdc2",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 280,
+        "y": 300
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:rate:PreMPF",
+      "name": "PreMPF_net_rate",
+      "equation": "Binding-Activation",
+      "to_stock": "tyson-cdc2-six-state-second-biology:PreMPF",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 440,
+        "y": 300
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:rate:Active_MPF",
+      "name": "Active_MPF_net_rate",
+      "equation": "Activation-mpf_loss*Active_MPF",
+      "to_stock": "tyson-cdc2-six-state-second-biology:Active_MPF",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:rate:Cyclin",
+      "name": "Cyclin_net_rate",
+      "equation": "synthesis_fraction*Total_Cdc2-Binding",
+      "to_stock": "tyson-cdc2-six-state-second-biology:Cyclin",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 760,
+        "y": 300
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:rate:Degraded_Cyclin",
+      "name": "Degraded_Cyclin_net_rate",
+      "equation": "mpf_loss*Active_MPF-fragment_loss*Degraded_Cyclin",
+      "to_stock": "tyson-cdc2-six-state-second-biology:Degraded_Cyclin",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 920,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "tyson-cdc2-six-state-second-biology:synthesis_fraction",
+      "name": "synthesis_fraction",
+      "equation": "0.015",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:binding_scaled",
+      "name": "binding_scaled",
+      "equation": "200",
+      "units": "1/time",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:activation_basal",
+      "name": "activation_basal",
+      "equation": "0.018",
+      "units": "1/time",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:activation_feedback",
+      "name": "activation_feedback",
+      "equation": "180",
+      "units": "1/time",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:mpf_loss",
+      "name": "mpf_loss",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 740,
+        "y": 50
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:fragment_loss",
+      "name": "fragment_loss",
+      "equation": "0.6",
+      "units": "1/time",
+      "position": {
+        "x": 900,
+        "y": 50
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:phosphorylation",
+      "name": "phosphorylation",
+      "equation": "100",
+      "units": "1/time",
+      "position": {
+        "x": 1060,
+        "y": 50
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:dephosphorylation",
+      "name": "dephosphorylation",
+      "equation": "100",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 120
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:Total_Cdc2",
+      "name": "Total_Cdc2",
+      "equation": "Cdc2+Phosphorylated_Cdc2+PreMPF+Active_MPF",
+      "units": "concentration",
+      "position": {
+        "x": 260,
+        "y": 120
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:Binding",
+      "name": "Binding",
+      "equation": "binding_scaled/Total_Cdc2*Phosphorylated_Cdc2*Cyclin",
+      "units": "concentration/time",
+      "position": {
+        "x": 420,
+        "y": 120
+      }
+    },
+    {
+      "id": "tyson-cdc2-six-state-second-biology:Activation",
+      "name": "Activation",
+      "equation": "(activation_basal+activation_feedback*(Active_MPF/Total_Cdc2)^2)*PreMPF",
+      "units": "concentration/time",
+      "position": {
+        "x": 580,
+        "y": 120
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.1,
+    "integration_method": "radau",
+    "units": "time",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

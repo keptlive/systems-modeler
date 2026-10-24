@@ -1,0 +1,200 @@
+{
+  "id": "kirschner-panetta-immune-second-biology",
+  "name": "Kirschner-Panetta effector-tumor-IL2 coupling",
+  "description": "Tumor antigen recruits effectors, IL2 promotes effector growth, and effectors cause saturating tumor killing. Different from the active Gompertz/treatment/resistance model. No clinical efficacy inference. All numeric values and initial E1,T100,IL2zero are explicitly illustrative teaching choices with time in days. They do not reproduce the original Table1 calibration or any clinical treatment. Horizon300 and Radau outputstep0.1 are verification choices. https://main.kirschnerlab.med.umich.edu/lab/pubs/80370235.pdf Signed net-rate flows encode the stated differential equations. No clamps or resets. These educational equations are not fitted biological forecasts.",
+  "source": "https://doi.org/10.1007/s002850050127",
+  "reference": "Kirschner and Panetta (1998), Modeling immunotherapy of the tumor-immune interaction, J Math Biol37:235-252, three unscaled ODEs; no external cell/IL2 treatment sources in this example.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "kirschner-panetta-immune-second-biology:Effectors",
+      "name": "Effectors",
+      "initial_value": 1,
+      "equation": "",
+      "units": "cell",
+      "position": {
+        "x": 120,
+        "y": 200
+      }
+    },
+    {
+      "id": "kirschner-panetta-immune-second-biology:Tumor",
+      "name": "Tumor",
+      "initial_value": 100,
+      "equation": "",
+      "units": "cell",
+      "position": {
+        "x": 280,
+        "y": 200
+      }
+    },
+    {
+      "id": "kirschner-panetta-immune-second-biology:IL2",
+      "name": "IL2",
+      "initial_value": 0,
+      "equation": "",
+      "units": "cytokine",
+      "position": {
+        "x": 440,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "kirschner-panetta-immune-second-biology:rate:Effectors",
+      "name": "Effectors_net_rate",
+      "equation": "antigenicity*Tumor-effector_loss*Effectors+stimulation*Effectors*IL2/(IL2_half+IL2)",
+      "to_stock": "kirschner-panetta-immune-second-biology:Effectors",
+      "units": "(cell)/time",
+      "position": {
+        "x": 120,
+        "y": 300
+      }
+    },
+    {
+      "id": "kirschner-panetta-immune-second-biology:rate:Tumor",
+      "name": "Tumor_net_rate",
+      "equation": "tumor_growth*(1-inverse_capacity*Tumor)*Tumor-killing*Effectors*Tumor/(killing_half+Tumor)",
+      "to_stock": "kirschner-panetta-immune-second-biology:Tumor",
+      "units": "(cell)/time",
+      "position": {
+        "x": 280,
+        "y": 300
+      }
+    },
+    {
+      "id": "kirschner-panetta-immune-second-biology:rate:IL2",
+      "name": "IL2_net_rate",
+      "equation": "IL2_production*Effectors*Tumor/(production_half+Tumor)-IL2_loss*IL2",
+      "to_stock": "kirschner-panetta-immune-second-biology:IL2",
+      "units": "(cytokine)/time",
+      "position": {
+        "x": 440,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "kirschner-panetta-immune-second-biology:antigenicity",
+      "name": "antigenicity",
+      "equation": "0.02",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "kirschner-panetta-immune-second-biology:effector_loss",
+      "name": "effector_loss",
+      "equation": "0.03",
+      "units": "1/time",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "kirschner-panetta-immune-second-biology:stimulation",
+      "name": "stimulation",
+      "equation": "0.1245",
+      "units": "1/time",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "kirschner-panetta-immune-second-biology:IL2_half",
+      "name": "IL2_half",
+      "equation": "20",
+      "units": "cytokine",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    },
+    {
+      "id": "kirschner-panetta-immune-second-biology:tumor_growth",
+      "name": "tumor_growth",
+      "equation": "0.18",
+      "units": "1/time",
+      "position": {
+        "x": 740,
+        "y": 50
+      }
+    },
+    {
+      "id": "kirschner-panetta-immune-second-biology:inverse_capacity",
+      "name": "inverse_capacity",
+      "equation": "0.001",
+      "units": "1/cell",
+      "position": {
+        "x": 900,
+        "y": 50
+      }
+    },
+    {
+      "id": "kirschner-panetta-immune-second-biology:killing",
+      "name": "killing",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 1060,
+        "y": 50
+      }
+    },
+    {
+      "id": "kirschner-panetta-immune-second-biology:killing_half",
+      "name": "killing_half",
+      "equation": "10",
+      "units": "cell",
+      "position": {
+        "x": 100,
+        "y": 120
+      }
+    },
+    {
+      "id": "kirschner-panetta-immune-second-biology:IL2_production",
+      "name": "IL2_production",
+      "equation": "0.5",
+      "units": "cytokine/(cell*time)",
+      "position": {
+        "x": 260,
+        "y": 120
+      }
+    },
+    {
+      "id": "kirschner-panetta-immune-second-biology:production_half",
+      "name": "production_half",
+      "equation": "10",
+      "units": "cell",
+      "position": {
+        "x": 420,
+        "y": 120
+      }
+    },
+    {
+      "id": "kirschner-panetta-immune-second-biology:IL2_loss",
+      "name": "IL2_loss",
+      "equation": "10",
+      "units": "1/time",
+      "position": {
+        "x": 580,
+        "y": 120
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 300,
+    "dt": 0.1,
+    "integration_method": "radau",
+    "units": "time",
+    "rtol": 1e-09,
+    "atol": 1e-25
+  }
+}

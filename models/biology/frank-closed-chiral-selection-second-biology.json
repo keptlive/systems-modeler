@@ -1,0 +1,132 @@
+{
+  "id": "frank-closed-chiral-selection-second-biology",
+  "name": "Closed chiral autocatalysis with mutual antagonism",
+  "description": "A small specified handedness bias can be amplified by autocatalysis and mutual deactivation while total monomer equivalents are conserved. Does not generate chirality from an exactly symmetric deterministic state or establish an origin-of-life mechanism. Illustrative rates1/10,precursor1,right0.01001,left0.01,inactivepairs0, horizon100,RK4step0.01. Inactive pair formation consumes one molecule of each handedness. https://astrobiology.nasa.gov/nai/annual-reports/2015/uiuc/project-1-the-origin-of-homochirality/index.html Signed net-rate flows encode the stated differential equations. No clamps or resets. These educational equations are not fitted biological forecasts.",
+  "source": "https://doi.org/10.1016/0006-3002(53)90082-1",
+  "reference": "Frank (1953), On spontaneous asymmetric synthesis. Our closed finite-precursor mass-action adaptation of autocatalysis plus mutual antagonism, not a verbatim original equation set.",
+  "category": "biology",
+  "stocks": [
+    {
+      "id": "frank-closed-chiral-selection-second-biology:Precursor",
+      "name": "Precursor",
+      "initial_value": 1,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 120,
+        "y": 200
+      }
+    },
+    {
+      "id": "frank-closed-chiral-selection-second-biology:Right_Enantiomer",
+      "name": "Right_Enantiomer",
+      "initial_value": 0.01001,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 280,
+        "y": 200
+      }
+    },
+    {
+      "id": "frank-closed-chiral-selection-second-biology:Left_Enantiomer",
+      "name": "Left_Enantiomer",
+      "initial_value": 0.01,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 440,
+        "y": 200
+      }
+    },
+    {
+      "id": "frank-closed-chiral-selection-second-biology:Inactive_Pairs",
+      "name": "Inactive_Pairs",
+      "initial_value": 0,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "frank-closed-chiral-selection-second-biology:rate:Precursor",
+      "name": "Precursor_net_rate",
+      "equation": "-autocatalysis*Precursor*(Right_Enantiomer+Left_Enantiomer)",
+      "to_stock": "frank-closed-chiral-selection-second-biology:Precursor",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 120,
+        "y": 300
+      }
+    },
+    {
+      "id": "frank-closed-chiral-selection-second-biology:rate:Right_Enantiomer",
+      "name": "Right_Enantiomer_net_rate",
+      "equation": "autocatalysis*Precursor*Right_Enantiomer-antagonism*Right_Enantiomer*Left_Enantiomer",
+      "to_stock": "frank-closed-chiral-selection-second-biology:Right_Enantiomer",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 280,
+        "y": 300
+      }
+    },
+    {
+      "id": "frank-closed-chiral-selection-second-biology:rate:Left_Enantiomer",
+      "name": "Left_Enantiomer_net_rate",
+      "equation": "autocatalysis*Precursor*Left_Enantiomer-antagonism*Right_Enantiomer*Left_Enantiomer",
+      "to_stock": "frank-closed-chiral-selection-second-biology:Left_Enantiomer",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 440,
+        "y": 300
+      }
+    },
+    {
+      "id": "frank-closed-chiral-selection-second-biology:rate:Inactive_Pairs",
+      "name": "Inactive_Pairs_net_rate",
+      "equation": "antagonism*Right_Enantiomer*Left_Enantiomer",
+      "to_stock": "frank-closed-chiral-selection-second-biology:Inactive_Pairs",
+      "units": "(concentration)/time",
+      "position": {
+        "x": 600,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "frank-closed-chiral-selection-second-biology:autocatalysis",
+      "name": "autocatalysis",
+      "equation": "1",
+      "units": "1/(concentration*time)",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "frank-closed-chiral-selection-second-biology:antagonism",
+      "name": "antagonism",
+      "equation": "10",
+      "units": "1/(concentration*time)",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.01,
+    "integration_method": "rk4",
+    "units": "time",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

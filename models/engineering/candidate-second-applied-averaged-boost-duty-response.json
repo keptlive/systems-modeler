@@ -1,0 +1,115 @@
+{
+  "id": "candidate-second-applied-averaged-boost-duty-response",
+  "name": "Averaged Boost Converter Inverse Voltage Response",
+  "category": "engineering",
+  "description": "Authored continuous-conduction ideal-switch period-averaged closure of source ON/OFF Kirchhoff balances including capacitor. Authored L10mH,C1mF,R10ohm,10V; start at duty0.5 equilibrium then change to0.6. Not a switching-ripple or discontinuous-conduction model. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://ctms.engin.umich.edu/CTMS/index.php?aux=Activities_BoostcircuitA",
+  "reference": "Control Tutorials for MATLAB and Simulink, Boost Circuit Activity5(a)",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "InductorCurrent",
+      "initial_value": 4.0,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "ampere"
+    },
+    {
+      "id": "s1",
+      "name": "OutputVoltage",
+      "initial_value": 20.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "volt"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_InductorCurrent",
+      "equation": "(InputVoltage-(1-Duty)*OutputVoltage)/Inductance",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "(ampere)/second"
+    },
+    {
+      "id": "f1",
+      "name": "Change_OutputVoltage",
+      "equation": "((1-Duty)*InductorCurrent-OutputVoltage/Load)/Capacitance",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "(volt)/second"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "InputVoltage",
+      "equation": "10",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "volt"
+    },
+    {
+      "id": "p1",
+      "name": "Inductance",
+      "equation": "0.01",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "volt*second/ampere"
+    },
+    {
+      "id": "p2",
+      "name": "Capacitance",
+      "equation": "0.001",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "ampere*second/volt"
+    },
+    {
+      "id": "p3",
+      "name": "Load",
+      "equation": "10",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "volt/ampere"
+    },
+    {
+      "id": "p4",
+      "name": "Duty",
+      "equation": "0.6",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "1"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 0.5,
+    "dt": 0.0001,
+    "integration_method": "rk4",
+    "units": "second"
+  }
+}

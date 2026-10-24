@@ -1,0 +1,115 @@
+{
+  "id": "candidate-second-applied-dc-motor-armature-speed",
+  "name": "DC Motor Armature and Rotor Energy Exchange",
+  "category": "engineering",
+  "description": "Source physical constants, zero state and1-volt step; authored finer grid. Torque and back-EMF exchange electrical and mechanical energy. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://www.ece.ualberta.ca/~tchen/ctm/examples/motor/motor.html",
+  "reference": "Control Tutorials for MATLAB, DC Motor Speed Modeling, university mirror",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Speed",
+      "initial_value": 0.0,
+      "position": {
+        "x": 220,
+        "y": 150
+      }
+    },
+    {
+      "id": "s1",
+      "name": "Current",
+      "initial_value": 0.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Speed",
+      "equation": "(TorqueConstant*Current-Friction*Speed)/Inertia",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      }
+    },
+    {
+      "id": "f1",
+      "name": "Change_Current",
+      "equation": "(Voltage-Resistance*Current-TorqueConstant*Speed)/Inductance",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "TorqueConstant",
+      "equation": "0.01",
+      "position": {
+        "x": 100,
+        "y": 750
+      }
+    },
+    {
+      "id": "p1",
+      "name": "Friction",
+      "equation": "0.1",
+      "position": {
+        "x": 270,
+        "y": 750
+      }
+    },
+    {
+      "id": "p2",
+      "name": "Inertia",
+      "equation": "0.01",
+      "position": {
+        "x": 440,
+        "y": 750
+      }
+    },
+    {
+      "id": "p3",
+      "name": "Voltage",
+      "equation": "1",
+      "position": {
+        "x": 610,
+        "y": 750
+      }
+    },
+    {
+      "id": "p4",
+      "name": "Resistance",
+      "equation": "1",
+      "position": {
+        "x": 780,
+        "y": 750
+      }
+    },
+    {
+      "id": "p5",
+      "name": "Inductance",
+      "equation": "0.5",
+      "position": {
+        "x": 950,
+        "y": 750
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 3,
+    "dt": 0.005,
+    "integration_method": "rk4",
+    "units": "second"
+  }
+}

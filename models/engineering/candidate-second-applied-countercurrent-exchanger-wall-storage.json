@@ -1,0 +1,352 @@
+{
+  "id": "candidate-second-applied-countercurrent-exchanger-wall-storage",
+  "name": "Countercurrent Exchanger with Distributed Wall Storage",
+  "category": "engineering",
+  "description": "Source N4 upwind fluid balances, midpoint film temperatures,3 dynamic wall sections; authored constant flows/inlets and thermal capacities. WallCapacity is effective J/K per section, resolving source cpW dimension label. Existing two-temperature exchanger lacks spatial counterflow and wall storage. No claim of spatial grid convergence. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://github.com/casella/ScalableTestSuite/blob/2e288e71eb0a7834310827144462726180d10500/ScalableTestSuite/Thermal/HeatExchanger.mo",
+  "reference": "Politecnico di Milano, ScalableTestSuite countercurrent heat-exchanger equations, BSD3, pinned2e288e71eb0a7834310827144462726180d10500",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "A0",
+      "initial_value": 300.0,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "s1",
+      "name": "A1",
+      "initial_value": 300.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "s2",
+      "name": "A2",
+      "initial_value": 300.0,
+      "position": {
+        "x": 580,
+        "y": 150
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "s3",
+      "name": "B0",
+      "initial_value": 300.0,
+      "position": {
+        "x": 760,
+        "y": 150
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "s4",
+      "name": "B1",
+      "initial_value": 300.0,
+      "position": {
+        "x": 940,
+        "y": 150
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "s5",
+      "name": "B2",
+      "initial_value": 300.0,
+      "position": {
+        "x": 220,
+        "y": 300
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "s6",
+      "name": "Wall0",
+      "initial_value": 300.0,
+      "position": {
+        "x": 400,
+        "y": 300
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "s7",
+      "name": "Wall1",
+      "initial_value": 300.0,
+      "position": {
+        "x": 580,
+        "y": 300
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "s8",
+      "name": "Wall2",
+      "initial_value": 300.0,
+      "position": {
+        "x": 760,
+        "y": 300
+      },
+      "units": "kelvin"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_A0",
+      "equation": "(ColdCapacityFlow*(ColdInlet-A0)+HeatA0)/FluidCapacity",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "(kelvin)/second"
+    },
+    {
+      "id": "f1",
+      "name": "Change_A1",
+      "equation": "(ColdCapacityFlow*(A0-A1)+HeatA1)/FluidCapacity",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "(kelvin)/second"
+    },
+    {
+      "id": "f2",
+      "name": "Change_A2",
+      "equation": "(ColdCapacityFlow*(A1-A2)+HeatA2)/FluidCapacity",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      },
+      "units": "(kelvin)/second"
+    },
+    {
+      "id": "f3",
+      "name": "Change_B0",
+      "equation": "(HotCapacityFlow*(B1-B0)-HeatB0)/FluidCapacity",
+      "to_stock": "s3",
+      "position": {
+        "x": 670,
+        "y": 150
+      },
+      "units": "(kelvin)/second"
+    },
+    {
+      "id": "f4",
+      "name": "Change_B1",
+      "equation": "(HotCapacityFlow*(B2-B1)-HeatB1)/FluidCapacity",
+      "to_stock": "s4",
+      "position": {
+        "x": 850,
+        "y": 150
+      },
+      "units": "(kelvin)/second"
+    },
+    {
+      "id": "f5",
+      "name": "Change_B2",
+      "equation": "(HotCapacityFlow*(HotInlet-B2)-HeatB2)/FluidCapacity",
+      "to_stock": "s5",
+      "position": {
+        "x": 130,
+        "y": 300
+      },
+      "units": "(kelvin)/second"
+    },
+    {
+      "id": "f6",
+      "name": "Change_Wall0",
+      "equation": "(HeatB0-HeatA0)/WallCapacity",
+      "to_stock": "s6",
+      "position": {
+        "x": 310,
+        "y": 300
+      },
+      "units": "(kelvin)/second"
+    },
+    {
+      "id": "f7",
+      "name": "Change_Wall1",
+      "equation": "(HeatB1-HeatA1)/WallCapacity",
+      "to_stock": "s7",
+      "position": {
+        "x": 490,
+        "y": 300
+      },
+      "units": "(kelvin)/second"
+    },
+    {
+      "id": "f8",
+      "name": "Change_Wall2",
+      "equation": "(HeatB2-HeatA2)/WallCapacity",
+      "to_stock": "s8",
+      "position": {
+        "x": 670,
+        "y": 300
+      },
+      "units": "(kelvin)/second"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "ColdInlet",
+      "equation": "300",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "p1",
+      "name": "HotInlet",
+      "equation": "310",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "kelvin"
+    },
+    {
+      "id": "p2",
+      "name": "ColdCapacityFlow",
+      "equation": "4000",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "joule/(second*kelvin)"
+    },
+    {
+      "id": "p3",
+      "name": "HotCapacityFlow",
+      "equation": "4000",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "joule/(second*kelvin)"
+    },
+    {
+      "id": "p4",
+      "name": "ConductanceA",
+      "equation": "2000",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "joule/(second*kelvin)"
+    },
+    {
+      "id": "p5",
+      "name": "ConductanceB",
+      "equation": "2000",
+      "position": {
+        "x": 950,
+        "y": 750
+      },
+      "units": "joule/(second*kelvin)"
+    },
+    {
+      "id": "p6",
+      "name": "FluidCapacity",
+      "equation": "4000",
+      "position": {
+        "x": 100,
+        "y": 850
+      },
+      "units": "joule/kelvin"
+    },
+    {
+      "id": "p7",
+      "name": "WallCapacity",
+      "equation": "1000",
+      "position": {
+        "x": 270,
+        "y": 850
+      },
+      "units": "joule/kelvin"
+    },
+    {
+      "id": "p8",
+      "name": "HeatA0",
+      "equation": "ConductanceA*(Wall0-(ColdInlet+A0)/2)",
+      "position": {
+        "x": 440,
+        "y": 850
+      },
+      "units": "joule/second"
+    },
+    {
+      "id": "p9",
+      "name": "HeatB0",
+      "equation": "ConductanceB*((B1+B0)/2-Wall0)",
+      "position": {
+        "x": 610,
+        "y": 850
+      },
+      "units": "joule/second"
+    },
+    {
+      "id": "p10",
+      "name": "HeatA1",
+      "equation": "ConductanceA*(Wall1-(A0+A1)/2)",
+      "position": {
+        "x": 780,
+        "y": 850
+      },
+      "units": "joule/second"
+    },
+    {
+      "id": "p11",
+      "name": "HeatB1",
+      "equation": "ConductanceB*((B2+B1)/2-Wall1)",
+      "position": {
+        "x": 950,
+        "y": 850
+      },
+      "units": "joule/second"
+    },
+    {
+      "id": "p12",
+      "name": "HeatA2",
+      "equation": "ConductanceA*(Wall2-(A1+A2)/2)",
+      "position": {
+        "x": 100,
+        "y": 950
+      },
+      "units": "joule/second"
+    },
+    {
+      "id": "p13",
+      "name": "HeatB2",
+      "equation": "ConductanceB*((HotInlet+B2)/2-Wall2)",
+      "position": {
+        "x": 270,
+        "y": 950
+      },
+      "units": "joule/second"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.01,
+    "integration_method": "rk4",
+    "units": "second"
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "id": "candidate-second-applied-planar-vtol-coupled-flight",
+  "name": "Planar VTOL Coupled Translation and Attitude",
+  "category": "engineering",
+  "description": "Exact source physical parameters and force limits; authored small-angle recovery feedback, constant hover lift and8-second experiment. Not the source optimal controller. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://github.com/python-control/python-control/blob/b4cf7360138985f84afe299337ef9ee6c25e9c38/examples/pvtol.py",
+  "reference": "Murray, python-control planar VTOL model, BSD3, pinned b4cf7360138985f84afe299337ef9ee6c25e9c38",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "X",
+      "initial_value": 0.0,
+      "position": {
+        "x": 220,
+        "y": 150
+      }
+    },
+    {
+      "id": "s1",
+      "name": "Y",
+      "initial_value": 0.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Angle",
+      "initial_value": 0.05,
+      "position": {
+        "x": 580,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "VX",
+      "initial_value": 0.0,
+      "position": {
+        "x": 760,
+        "y": 150
+      }
+    },
+    {
+      "id": "s4",
+      "name": "VY",
+      "initial_value": 0.0,
+      "position": {
+        "x": 940,
+        "y": 150
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Spin",
+      "initial_value": 0.0,
+      "position": {
+        "x": 220,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_X",
+      "equation": "VX",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      }
+    },
+    {
+      "id": "f1",
+      "name": "Change_Y",
+      "equation": "VY",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Change_Angle",
+      "equation": "Spin",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Change_VX",
+      "equation": "(Fside*cos(Angle)-Lift*sin(Angle)-Drag*VX)/Mass",
+      "to_stock": "s3",
+      "position": {
+        "x": 670,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Change_VY",
+      "equation": "(Fside*sin(Angle)+Lift*cos(Angle)-Mass*Gravity-Drag*VY)/Mass",
+      "to_stock": "s4",
+      "position": {
+        "x": 850,
+        "y": 150
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Change_Spin",
+      "equation": "Arm*Fside/Inertia",
+      "to_stock": "s5",
+      "position": {
+        "x": 130,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Mass",
+      "equation": "4",
+      "position": {
+        "x": 100,
+        "y": 750
+      }
+    },
+    {
+      "id": "p1",
+      "name": "Inertia",
+      "equation": "0.0475",
+      "position": {
+        "x": 270,
+        "y": 750
+      }
+    },
+    {
+      "id": "p2",
+      "name": "Arm",
+      "equation": "0.25",
+      "position": {
+        "x": 440,
+        "y": 750
+      }
+    },
+    {
+      "id": "p3",
+      "name": "Gravity",
+      "equation": "9.8",
+      "position": {
+        "x": 610,
+        "y": 750
+      }
+    },
+    {
+      "id": "p4",
+      "name": "Drag",
+      "equation": "0.05",
+      "position": {
+        "x": 780,
+        "y": 750
+      }
+    },
+    {
+      "id": "p5",
+      "name": "Lift",
+      "equation": "Mass*Gravity",
+      "position": {
+        "x": 950,
+        "y": 750
+      }
+    },
+    {
+      "id": "p6",
+      "name": "Fside",
+      "equation": "min(max(-0.12*Angle-0.08*Spin,-0.1*Lift),0.1*Lift)",
+      "position": {
+        "x": 100,
+        "y": 850
+      }
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 8,
+    "dt": 0.005,
+    "integration_method": "rk4",
+    "units": "second"
+  }
+}

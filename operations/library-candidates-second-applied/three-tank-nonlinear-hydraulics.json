@@ -1,0 +1,197 @@
+{
+  "id": "candidate-second-applied-three-tank-nonlinear-hydraulics",
+  "name": "Three-Tank Communicating Nonlinear Hydraulics",
+  "category": "engineering",
+  "description": "Exact source synchronous1-second Euler plant map, hydraulic parameters, initial true state and inflows. Source drain modifiers fixed1; estimator and noise omitted. Signed square-root communication permits reversal; no positivity clamps. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://github.com/do-mpc/do-mpc/blob/9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc/examples/triple_tank_ekf/template_model.py",
+  "reference": "do-mpc triple-tank EKF source, pinned9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Height1",
+      "initial_value": 2.0,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "meter"
+    },
+    {
+      "id": "s1",
+      "name": "Height2",
+      "initial_value": 2.8,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "meter"
+    },
+    {
+      "id": "s2",
+      "name": "Height3",
+      "initial_value": 2.7,
+      "position": {
+        "x": 580,
+        "y": 150
+      },
+      "units": "meter"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Height1",
+      "equation": "(Inflow1-Flow13)/Area",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "(meter)/second"
+    },
+    {
+      "id": "f1",
+      "name": "Change_Height2",
+      "equation": "(Inflow2+Flow32-Outflow)/Area",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "(meter)/second"
+    },
+    {
+      "id": "f2",
+      "name": "Change_Height3",
+      "equation": "(Flow13-Flow32)/Area",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      },
+      "units": "(meter)/second"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Area",
+      "equation": "0.00154",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "meter^2"
+    },
+    {
+      "id": "p1",
+      "name": "Gravity",
+      "equation": "9.81",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "meter/second^2"
+    },
+    {
+      "id": "p2",
+      "name": "Orifice",
+      "equation": "5e-05",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "meter^2"
+    },
+    {
+      "id": "p3",
+      "name": "Discharge1",
+      "equation": "1",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p4",
+      "name": "Discharge2",
+      "equation": "0.8",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p5",
+      "name": "Discharge3",
+      "equation": "1",
+      "position": {
+        "x": 950,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p6",
+      "name": "Inflow1",
+      "equation": "0.0001",
+      "position": {
+        "x": 100,
+        "y": 850
+      },
+      "units": "meter^3/second"
+    },
+    {
+      "id": "p7",
+      "name": "Inflow2",
+      "equation": "0.0001",
+      "position": {
+        "x": 270,
+        "y": 850
+      },
+      "units": "meter^3/second"
+    },
+    {
+      "id": "p8",
+      "name": "Flow13",
+      "equation": "Discharge1*Orifice*IF(Height1>=Height3,1,-1)*sqrt(2*Gravity*abs(Height1-Height3))",
+      "position": {
+        "x": 440,
+        "y": 850
+      },
+      "units": "meter^3/second"
+    },
+    {
+      "id": "p9",
+      "name": "Flow32",
+      "equation": "Discharge3*Orifice*IF(Height3>=Height2,1,-1)*sqrt(2*Gravity*abs(Height3-Height2))",
+      "position": {
+        "x": 610,
+        "y": 850
+      },
+      "units": "meter^3/second"
+    },
+    {
+      "id": "p10",
+      "name": "Outflow",
+      "equation": "Discharge2*Orifice*sqrt(2*Gravity*Height2)",
+      "position": {
+        "x": 780,
+        "y": 850
+      },
+      "units": "meter^3/second"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1,
+    "integration_method": "euler",
+    "units": "second",
+    "discrete_period": 1
+  }
+}
