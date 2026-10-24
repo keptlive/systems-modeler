@@ -19,6 +19,7 @@ from contextlib import asynccontextmanager
 from fastapi.middleware.gzip import GZipMiddleware
 
 from app.api import models, simulate, llm, analyze, observability, workspaces
+from app.sensitivity_transport import router as sensitivity_router
 from app.storage import models as model_storage
 from app.mcp_server import create_sse_app, mcp
 
@@ -78,6 +79,8 @@ app.include_router(llm.router, prefix="/api/llm", tags=["llm"])
 app.include_router(analyze.router, prefix="/api", tags=["analysis"])
 app.include_router(observability.router, prefix="/llm", tags=["observability"])
 app.include_router(workspaces.router,prefix='/api/workspaces',tags=['agent workspaces'])
+
+app.include_router(sensitivity_router, prefix="/api", tags=["local sensitivity"])
 
 # Mount MCP server (SSE transport) - must be before static files
 mcp_app = create_sse_app()
