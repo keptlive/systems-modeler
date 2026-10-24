@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 from app.core.model import Model, TimeSettings, Stock
 from app.core.simulator import simulate
+from tests.model_history import model_path
 
 ROOT = Path(__file__).resolve().parents[1]
 PK = ROOT / "models/healthcare/two-compartment-pharmacokinetics-model-hea.json"
@@ -76,7 +77,7 @@ def test_pk_units_and_declared_oral_loss():
 def test_healthcare_manifest_and_preserved_layout():
     receipt=json.loads((ROOT/"operations/healthcare-source-reconciliation-v14.json").read_text())
     for row in receipt["models"]:
-        d=json.loads((ROOT/row["file"]).read_text())
+        d=json.loads(model_path(ROOT,row["file"]).read_text())
         if not row["equation_repair"]:
             assert set(row["changed_fields"]) <= {"description","source","reference"}
         else:
