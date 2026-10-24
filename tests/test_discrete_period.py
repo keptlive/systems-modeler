@@ -6,6 +6,7 @@ from app.core.simulator import simulate
 from app.core.equations import EquationError
 from app.core.diagnostics import investigate_model
 from app.core.xmile_generator import generate_xmile
+from app.core.xmile_parser import parse_xmile
 
 
 def recurrence():
@@ -36,5 +37,12 @@ def test_discrete_contract_cannot_be_removed_by_override(changes):
 def test_discrete_settings_and_export_are_explicit():
     with pytest.raises(ValueError):TimeSettings(end=3,dt=.5,discrete_period=1)
     with pytest.raises(ValueError):TimeSettings(end=3.5,dt=1,discrete_period=1)
-    with pytest.raises(ValueError,match='JSON'):generate_xmile(recurrence())
+    model=recurrence(); before=model.model_dump(mode='json')
+    original=simulate(model); restored=parse_xmile(generate_xmile(model)); result=simulate(restored)
+    assert restored.time_settings.model_dump()==model.time_settings.model_dump()
+    assert result.time==original.time and result.values==original.values
+    assert result.report_values==original.report_values
+    assert result.values['Balance']==[8,4,2,1]
+    assert restored.flows[0].equation==model.flows[0].equation
+    assert model.model_dump(mode='json')==before
     assert Model.model_validate_json(recurrence().model_dump_json()).time_settings.discrete_period==1

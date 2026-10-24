@@ -34,9 +34,20 @@ SAFE_OPERATORS: dict[type, Callable] = {
 
 
 # Time-based input functions
-def step_function(height: float, step_time: float, time: float) -> float:
-    """Step function: returns height after step_time, 0 before."""
-    return height if time >= step_time else 0.0
+def step_function(height: float, step_time: float, time: float,
+                  dt: Optional[float] = None, start_time: float = 0.0) -> float:
+    """Step at the accepted input time, snapping only local grid roundoff."""
+    if time >= step_time:
+        return height
+    if dt is not None and math.isfinite(dt) and dt > 0:
+        # A decimal grid can land a few ULPs below its nominal event. Bound
+        # the snap by both local floating precision and a fraction of DT;
+        # never use a relative epsilon or the half-step Vensim convention.
+        tolerance = min(dt / 4, 4 * max(math.ulp(time), math.ulp(step_time),
+                                       math.ulp(start_time), math.ulp(time - start_time)))
+        if step_time - time <= tolerance:
+            return height
+    return 0.0
 
 
 def pulse_function(magnitude: float, start_time: float, repeat_interval: float, time: float, dt: float) -> float:
@@ -62,16 +73,16 @@ def pulse_function(magnitude: float, start_time: float, repeat_interval: float, 
     return magnitude / dt if phase < dt and dt - phase > tolerance else 0.0
 
 
-def ramp_function(slope: float, start_time: float, end_time: float, time: float) -> float:
+def ramp_function(slope: float, start_time: float, end_time: Optional[float], time: float) -> float:
     """
     Ramp function: increases linearly from start_time at rate 'slope'.
-    If end_time > start_time, ramp stops at end_time.
-    If end_time <= start_time, ramp continues indefinitely.
+    An omitted end (None) continues indefinitely. Preserve the native
+    explicit-end contract: only an end later than start stops the ramp.
     """
     if time < start_time:
         return 0.0
 
-    if end_time > start_time and time > end_time:
+    if end_time is not None and end_time > start_time and time > end_time:
         # Ramp has ended - return final value
         return slope * (end_time - start_time)
 
@@ -201,7 +212,9 @@ SAFE_FUNCTIONS: dict[str, Callable] = {
     "ceil": math.ceil,
     "round": round,
     "mod": operator.mod,
-    "modulo": math.fmod,  # Vensim/C remainder keeps the dividend's sign.
+    # Explicit compatibility extensions: truncated, dividend-signed remainder.
+    "modulo": math.fmod,
+    "rem": math.fmod,
     # Conditional function
     "IF_THEN_ELSE": if_then_else,
     "IF": if_then_else,  # Alias for IF_THEN_ELSE
@@ -218,7 +231,7 @@ STATEFUL_ALIASES = {"SMTH1": "SMOOTH", "SMTH3": "SMOOTH3", "SMTHN": "SMOOTH_N",
                     "DELAYN": "DELAY_N", "DELAY": "DELAY_FIXED"}
 STATEFUL_FUNCTIONS = {"DELAY1", "DELAY3", "DELAY_N", "DELAY_FIXED",
                       "SMOOTH", "SMOOTH3", "SMOOTH_N"} | set(STATEFUL_ALIASES)
-CONTEXT_FUNCTIONS = {"STEP", "PULSE", "RAMP", "LOOKUP", "WITH_LOOKUP", "STARTTIME", "STOPTIME"} | STATEFUL_FUNCTIONS | STOCHASTIC_FUNCTIONS
+CONTEXT_FUNCTIONS = {"STEP", "PULSE", "RAMP", "RAMP_VENSIM", "LOOKUP", "WITH_LOOKUP", "STARTTIME", "STOPTIME"} | STATEFUL_FUNCTIONS | STOCHASTIC_FUNCTIONS
 
 SAFE_CONSTANTS: dict[str, float] = {
     "pi": math.pi,
@@ -667,14 +680,14 @@ class SafeEvaluator(ast.NodeVisitor):
         # at the accepted left state during RK4. Only declared test primitives
         # use this snapshot; ordinary TIME/algebra and hidden states keep stage
         # values. The accepted context has no snapshot, avoiding recursion.
-        if func_name in {"STEP", "PULSE", "RAMP"} and self.context.input_snapshot is not None:
+        if func_name in {"STEP", "PULSE", "RAMP", "RAMP_VENSIM"} and self.context.input_snapshot is not None:
             accepted_values, accepted_context = self.context.input_snapshot
             accepted_context.equation_key = self.context.equation_key
             return SafeEvaluator(accepted_values, accepted_context)._handle_context_function(func_name, args)
 
         # For other functions, evaluate all args
         evaluated_args = [self.visit(arg) for arg in args]
-        if func_name in {"STEP", "PULSE", "RAMP"} and not all(
+        if func_name in {"STEP", "PULSE", "RAMP", "RAMP_VENSIM"} and not all(
             math.isfinite(value) for value in evaluated_args
         ):
             raise EquationError(f"{func_name} parameters must be finite")
@@ -684,7 +697,7 @@ class SafeEvaluator(ast.NodeVisitor):
             if len(evaluated_args) != 2:
                 raise EquationError("STEP requires 2 arguments: height, step_time", code="function_signature", details={"function": "STEP", "argument_count": len(evaluated_args)})
             height, step_time = evaluated_args[0], evaluated_args[1]
-            return step_function(height, step_time, self.context.input_time)
+            return step_function(height, step_time, self.context.input_time, self.context.dt, self.context.start_time)
 
         elif func_name == "PULSE":
             # PULSE(magnitude, start_time, repeat_interval=0)
@@ -695,13 +708,26 @@ class SafeEvaluator(ast.NodeVisitor):
             repeat_interval = evaluated_args[2] if len(evaluated_args) > 2 else 0.0
             return pulse_function(magnitude, start_time, repeat_interval, self.context.input_time, self.context.dt)
 
+        elif func_name == "RAMP_VENSIM":
+            # Vensim's three-argument dialect, including reversed end times.
+            # https://www.vensim.com/documentation/fn_ramp.html
+            if len(evaluated_args) != 3:
+                raise EquationError("RAMP_VENSIM requires 3 arguments: slope, start_time, end_time",
+                                    code="function_signature",
+                                    details={"function": func_name, "argument_count": len(evaluated_args)})
+            slope, start_time, end_time = evaluated_args
+            time = self.context.input_time
+            if time <= start_time:
+                return 0.0
+            return slope * ((time if time < end_time else end_time) - start_time)
+
         elif func_name == "RAMP":
-            # RAMP(slope, start_time, end_time=0)
+            # RAMP(slope, start_time, optional end_time)
             if not 2 <= len(evaluated_args) <= 3:
                 raise EquationError("RAMP requires 2 or 3 arguments: slope, start_time, optional end_time")
             slope = evaluated_args[0]
             start_time = evaluated_args[1]
-            end_time = evaluated_args[2] if len(evaluated_args) > 2 else 0.0
+            end_time = evaluated_args[2] if len(evaluated_args) > 2 else None
             return ramp_function(slope, start_time, end_time, self.context.input_time)
 
         raise EquationError(f"Unhandled context function: {func_name}")
@@ -1110,7 +1136,8 @@ def discover_stateful(equation, variables, context):
     evaluator = SafeEvaluator(variables, context)
     for node in ast.walk(tree):
         if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
-            if decode_identifier(node.func.id).upper() in STATEFUL_FUNCTIONS:
+            requested = decode_identifier(node.func.id)
+            if requested.upper() in STATEFUL_FUNCTIONS and evaluator._table_name(requested) is None:
                 evaluator.visit(node)
 
 
@@ -1187,7 +1214,7 @@ def equation_features(equation, table_names=()):
     return {"random_calls": sum(name in STOCHASTIC_FUNCTIONS for name in calls),
             "fixed_delay": any(name in ("DELAY", "DELAY_FIXED") for name in calls),
             "stateful_calls": sorted(set(calls) & STATEFUL_FUNCTIONS),
-            "test_input_calls": sorted(set(calls) & {"STEP", "PULSE", "RAMP"})}
+            "test_input_calls": sorted(set(calls) & {"STEP", "PULSE", "RAMP", "RAMP_VENSIM"})}
 
 
 def _reference_names(tree):

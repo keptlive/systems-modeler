@@ -17,6 +17,8 @@ MAX_PLAN_AST_NODES = 100_000
 MAX_PLAN_EDGES = 100_000
 # Deliberately explicit: additions to the evaluator are not automatically eligible.
 PURE_FUNCTIONS = frozenset({
+    'ARCSIN', 'ARCCOS', 'ARCTAN', 'INT', 'TRUNC',
+    'QUANTUM', 'SAFEDIV', 'ZIDZ', 'XIDZ', 'MODULO', 'REM',
     "SIN", "COS", "TAN", "ASIN", "ACOS", "ATAN", "ATAN2", "SIGN",
     "EXP", "LOG", "LN", "LOG10", "SQRT", "ABS", "MIN", "MAX", "POW",
     "FLOOR", "CEIL", "ROUND", "MOD",

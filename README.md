@@ -10,6 +10,8 @@ Native engine improvements add bounded [arrays and reusable modules](docs/STRUCT
 
 The three previously recorded identifier/import failures are now repaired, with exact names preserved through import, simulation, rename and export. See the [identifier repair and compatibility evidence](docs/IDENTIFIER-IMPORT-FIX.md).
 
+Scalar expression repairs preserve arithmetic in MDL imports, nested graphical functions and seeded random identities through XMILE round trips. Vensim-specific operations retain their own semantics. See [expression support and round-trip validation](docs/EXPRESSION-ROUNDTRIP.md).
+
 ## Run locally
 
 ```bash
