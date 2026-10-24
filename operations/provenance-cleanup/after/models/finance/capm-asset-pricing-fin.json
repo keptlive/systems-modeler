@@ -1,0 +1,169 @@
+{
+  "id": "capm-asset-pricing-fin",
+  "name": "Capital Asset Pricing Model",
+  "description": "Expected return of asset equals risk-free rate plus beta times market risk premium. Foundation of modern finance. Shows only systematic risk is priced. Nobel Prize 1990 (Sharpe).",
+  "stocks": [
+    {
+      "id": "stock-portfolio-value",
+      "name": "Portfolio Value",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-market-value",
+      "name": "Market Value",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-portfolio-return",
+      "name": "Portfolio Return",
+      "equation": "Portfolio_Value * Expected_Return_Portfolio",
+      "from_stock": null,
+      "to_stock": "stock-portfolio-value",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-market-return",
+      "name": "Market Return",
+      "equation": "Market_Value * Expected_Market_Return",
+      "from_stock": null,
+      "to_stock": "stock-market-value",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-risk-free",
+      "name": "Risk Free Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-market-return",
+      "name": "Expected Market Return",
+      "equation": "0.08",
+      "position": {
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-market-premium",
+      "name": "Market Risk Premium",
+      "equation": "Expected_Market_Return - Risk_Free_Rate",
+      "position": {
+        "x": 450,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-beta",
+      "name": "Portfolio Beta",
+      "equation": "1.2",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-expected-return",
+      "name": "Expected Return Portfolio",
+      "equation": "Risk_Free_Rate + Portfolio_Beta * Market_Risk_Premium",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-alpha",
+      "name": "Jensen Alpha",
+      "equation": "Actual_Return - Expected_Return_Portfolio",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-actual",
+      "name": "Actual Return",
+      "equation": "0.1",
+      "position": {
+        "x": 600,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-sharpe",
+      "name": "Sharpe Ratio",
+      "equation": "(Expected_Return_Portfolio - Risk_Free_Rate) / Portfolio_Volatility",
+      "position": {
+        "x": 200,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-volatility",
+      "name": "Portfolio Volatility",
+      "equation": "0.2",
+      "position": {
+        "x": 450,
+        "y": 420
+      }
+    },
+    {
+      "id": "var-treynor",
+      "name": "Treynor Ratio",
+      "equation": "(Expected_Return_Portfolio - Risk_Free_Rate) / Portfolio_Beta",
+      "position": {
+        "x": 350,
+        "y": 490
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "Portfolio Beta",
+      "to_element": "Expected Return Portfolio"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "Market Risk Premium",
+      "to_element": "Expected Return Portfolio"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "Risk Free Rate",
+      "to_element": "Expected Return Portfolio"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.25
+  },
+  "created_at": "2026-01-12T07:45:54.017047+00:00",
+  "updated_at": "2026-01-12T07:45:54.017052+00:00",
+  "source": "https://doi.org/10.1111/j.1540-6261.1964.tb02865.x",
+  "reference": "Sharpe WF. Capital Asset Prices: A Theory of Market Equilibrium under Conditions of Risk. Journal of Finance. 1964;19(3):425-442. Nobel Prize 1990."
+}

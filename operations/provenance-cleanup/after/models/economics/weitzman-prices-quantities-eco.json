@@ -1,0 +1,158 @@
+{
+  "id": "weitzman-prices-quantities-eco",
+  "name": "Weitzman Prices vs Quantities",
+  "description": "Martin Weitzman's 1974 analysis of choosing between price instruments (taxes) and quantity instruments (permits) under uncertainty. Foundational for environmental policy.",
+  "stocks": [
+    {
+      "id": "stock-emissions",
+      "name": "Cumulative_Emissions",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-welfare-loss",
+      "name": "Welfare_Loss",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-emissions",
+      "name": "Emissions_Flow",
+      "equation": "emission_response",
+      "from_stock": null,
+      "to_stock": "stock-emissions",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-loss",
+      "name": "Loss_Accumulation",
+      "equation": "expected_loss",
+      "from_stock": null,
+      "to_stock": "stock-welfare-loss",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-mb-slope",
+      "name": "benefit_slope",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-mc-slope",
+      "name": "cost_slope",
+      "equation": "1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-uncertainty",
+      "name": "cost_uncertainty",
+      "equation": "0.5",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-tax",
+      "name": "carbon_tax",
+      "equation": "50",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-cap",
+      "name": "emission_cap",
+      "equation": "100",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-response",
+      "name": "emission_response",
+      "equation": "IF(use_price_instrument > 0.5, (intercept - carbon_tax) / (cost_slope + RANDOM(-cost_uncertainty, cost_uncertainty)), emission_cap)",
+      "position": {
+        "x": 300,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-intercept",
+      "name": "intercept",
+      "equation": "100",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-use-price",
+      "name": "use_price_instrument",
+      "equation": "IF(benefit_slope > cost_slope, 1, 0)",
+      "position": {
+        "x": 450,
+        "y": 250
+      }
+    },
+    {
+      "id": "var-loss",
+      "name": "expected_loss",
+      "equation": "0.5 * cost_uncertainty^2 * IF(use_price_instrument > 0.5, 1/cost_slope, cost_slope/benefit_slope^2)",
+      "position": {
+        "x": 300,
+        "y": 400
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn-1",
+      "from_element": "benefit_slope",
+      "to_element": "use_price_instrument"
+    },
+    {
+      "id": "conn-2",
+      "from_element": "cost_slope",
+      "to_element": "use_price_instrument"
+    },
+    {
+      "id": "conn-3",
+      "from_element": "use_price_instrument",
+      "to_element": "emission_response"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.2307/2296698",
+  "reference": "Weitzman ML. Prices vs. Quantities. Review of Economic Studies. 1974;41(4):477-491."
+}

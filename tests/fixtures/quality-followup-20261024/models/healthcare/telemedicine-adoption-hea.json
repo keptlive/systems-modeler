@@ -1,0 +1,128 @@
+{
+  "id": "telemedicine-adoption-hea",
+  "name": "Telemedicine Adoption Dynamics Model",
+  "description": "Model of telemedicine service adoption showing patient acceptance, provider readiness, and policy effects. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Traditional_Visits",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Telehealth_Visits",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Provider_Readiness",
+      "initial_value": 0.3,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Shift_to_Telehealth",
+      "equation": "Traditional_Visits * Adoption_Rate * Provider_Readiness * Patient_Acceptance",
+      "from_stock": "s1",
+      "to_stock": "s2",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Readiness_Building",
+      "equation": "Investment_Effect * (1 - Provider_Readiness)",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 150,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Adoption_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Patient_Acceptance",
+      "equation": "0.6 + 0.3 * Experience_Effect",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Experience_Effect",
+      "equation": "Telehealth_Visits / (Traditional_Visits + Telehealth_Visits + 1)",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Investment_Effect",
+      "equation": "0.05",
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Cost_Savings",
+      "equation": "Telehealth_Visits * 30",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Telehealth_Share",
+      "equation": "Telehealth_Visits / (Traditional_Visits + Telehealth_Visits)",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 20,
+    "dt": 0.25,
+    "integration_method": "euler"
+  },
+  "created_at": "2026-01-12T11:34:23.558311+00:00",
+  "updated_at": "2026-01-12T11:34:23.558311+00:00",
+  "source": "https://doi.org/10.1001/jama.2020.22716",
+  "reference": "Mehrotra A, et al. The impact of the COVID-19 pandemic on outpatient visits: A rebound emerges. The Commonwealth Fund. 2020."
+}

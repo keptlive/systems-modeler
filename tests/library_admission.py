@@ -2,12 +2,19 @@
 import hashlib,json
 
 def baseline_models(root, excluded_ids=None):
-    quality_path=root/'operations/library-quality-20261024.json'
-    if quality_path.exists():
+    quality_paths=[root/'operations/library-quality-20261024.json', root/'operations/library-quality-followup-20261024.json']
+    for quality_path in quality_paths:
+        if not quality_path.exists(): continue
         quality=json.loads(quality_path.read_text())
         for row in quality['retired']+quality['replaced']:
             assert hashlib.sha256((root/row['archive']).read_bytes()).hexdigest()==row['before_sha256']
-            assert row['before_sha256'] in (root/row['review']).read_text()
+            if 'review_manifest' in row:
+                evidence=(root/row['review_manifest']).read_bytes()
+                assert hashlib.sha256(evidence).hexdigest()==row['review_manifest_sha256']
+                assert row['review_manifest_sha256'] in (root/row['review']).read_text()
+                bound=next(e for e in json.loads(evidence)['entries'] if e['path']==row['file'])
+                assert bound['before_sha256']==row['before_sha256'] and bound['after_sha256']==row['after_sha256']
+            else: assert row['before_sha256'] in (root/row['review']).read_text()
         for row in quality['retired']:assert not (root/row['file']).exists()
         for row in quality['replaced']:
             assert (root/row['file']).read_bytes()==(root/row['source']).read_bytes()

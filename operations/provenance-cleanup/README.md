@@ -1,0 +1,1 @@
+Isolated metadata-only proposals; no active writes. See ../../docs/PROVENANCE-CLEANUP.md. MANIFEST.json binds26description-only candidates and2preserved/deferred contexts. Existing source/reference fields and all executable content remain unchanged; no model validation is implied. Independent review is required before admission.

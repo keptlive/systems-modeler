@@ -1,0 +1,228 @@
+{
+  "id": "business-customer-lifetime-value-eco",
+  "name": "Customer Lifetime Value Dynamics",
+  "description": "Models customer acquisition, retention, and lifetime value for subscription businesses. Based on Gupta et al. (2004) and SaaS metrics best practices.",
+  "category": "economics",
+  "stocks": [
+    {
+      "id": "stock-prospects",
+      "name": "Marketing_Prospects",
+      "initial_value": 10000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-trials",
+      "name": "Free_Trials",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-customers",
+      "name": "Paying_Customers",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-churned",
+      "name": "Churned_Customers",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-revenue",
+      "name": "Cumulative_Revenue",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-lead-gen",
+      "name": "Lead_Generation",
+      "equation": "Marketing_Spend / Cost_Per_Lead",
+      "from_stock": null,
+      "to_stock": "stock-prospects",
+      "position": {
+        "x": 25,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-trial-start",
+      "name": "Trial_Starts",
+      "equation": "Marketing_Prospects * Trial_Conversion_Rate",
+      "from_stock": "stock-prospects",
+      "to_stock": "stock-trials",
+      "position": {
+        "x": 175,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-conversion",
+      "name": "Trial_Conversion",
+      "equation": "Free_Trials * Paid_Conversion_Rate / Trial_Length",
+      "from_stock": "stock-trials",
+      "to_stock": "stock-customers",
+      "position": {
+        "x": 325,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-churn",
+      "name": "Customer_Churn",
+      "equation": "Paying_Customers * Monthly_Churn_Rate",
+      "from_stock": "stock-customers",
+      "to_stock": "stock-churned",
+      "position": {
+        "x": 475,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-mrr",
+      "name": "Monthly_Revenue",
+      "equation": "Paying_Customers * ARPU",
+      "from_stock": null,
+      "to_stock": "stock-revenue",
+      "position": {
+        "x": 325,
+        "y": 275
+      }
+    },
+    {
+      "id": "flow-expansion",
+      "name": "Expansion_Revenue",
+      "equation": "Paying_Customers * Expansion_Rate * ARPU",
+      "from_stock": null,
+      "to_stock": "stock-revenue",
+      "position": {
+        "x": 450,
+        "y": 275
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-marketing",
+      "name": "Marketing_Spend",
+      "equation": "50000",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-cpl",
+      "name": "Cost_Per_Lead",
+      "equation": "50",
+      "position": {
+        "x": 200,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-trial-conv",
+      "name": "Trial_Conversion_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-paid-conv",
+      "name": "Paid_Conversion_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 400,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-trial-len",
+      "name": "Trial_Length",
+      "equation": "0.5",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-churn",
+      "name": "Monthly_Churn_Rate",
+      "equation": "0.03",
+      "position": {
+        "x": 600,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-arpu",
+      "name": "ARPU",
+      "equation": "100",
+      "position": {
+        "x": 250,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-expansion",
+      "name": "Expansion_Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 400,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-ltv",
+      "name": "Customer_LTV",
+      "equation": "ARPU / Monthly_Churn_Rate",
+      "position": {
+        "x": 550,
+        "y": 450
+      }
+    },
+    {
+      "id": "var-cac",
+      "name": "CAC",
+      "equation": "Marketing_Spend / (Trial_Starts * Paid_Conversion_Rate)",
+      "position": {
+        "x": 150,
+        "y": 450
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 36,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1509/jmkr.41.1.7.25084",
+  "reference": "Gupta S et al. (2004) Valuing Customers. Journal of Marketing Research.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:12:55.726823+00:00",
+  "updated_at": "2026-01-12T06:12:55.726823+00:00"
+}

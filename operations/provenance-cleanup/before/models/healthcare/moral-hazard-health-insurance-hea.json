@@ -1,0 +1,191 @@
+{
+  "id": "moral-hazard-health-insurance-hea",
+  "name": "Moral Hazard in Health Insurance Model",
+  "description": "Pauly (1968) / RAND Health Insurance Experiment model. Shows how insurance coverage changes healthcare utilization through reduced price sensitivity. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Healthcare_Utilization",
+      "initial_value": 100,
+      "position": {
+        "x": 200,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s2",
+      "name": "Health_Stock",
+      "initial_value": 80,
+      "position": {
+        "x": 400,
+        "y": 200
+      },
+      "equation": ""
+    },
+    {
+      "id": "s3",
+      "name": "Insurance_Costs",
+      "initial_value": 1000,
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "equation": ""
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "utilization_change",
+      "to_stock": "s1",
+      "equation": "(desired_utilization - Healthcare_Utilization) / adjustment_time",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f2",
+      "name": "health_improvement",
+      "to_stock": "s2",
+      "equation": "health_production - health_depreciation",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "f3",
+      "name": "cost_accumulation",
+      "to_stock": "s3",
+      "equation": "Healthcare_Utilization * unit_cost",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "full_price",
+      "equation": "10",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v2",
+      "name": "insurance_coverage",
+      "equation": "0.8",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v3",
+      "name": "out_of_pocket_price",
+      "equation": "full_price * (1 - insurance_coverage)",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v4",
+      "name": "price_elasticity",
+      "equation": "-0.2",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v5",
+      "name": "baseline_utilization",
+      "equation": "80",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v6",
+      "name": "desired_utilization",
+      "equation": "baseline_utilization * (out_of_pocket_price / full_price) ^ price_elasticity",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v7",
+      "name": "adjustment_time",
+      "equation": "2",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v8",
+      "name": "health_production",
+      "equation": "Healthcare_Utilization * 0.1",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v9",
+      "name": "health_depreciation",
+      "equation": "Health_Stock * 0.05",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v10",
+      "name": "unit_cost",
+      "equation": "full_price",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "v11",
+      "name": "moral_hazard_effect",
+      "equation": "Healthcare_Utilization / baseline_utilization - 1",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "desired_utilization",
+      "to_element": "utilization_change"
+    },
+    {
+      "id": "c2",
+      "from_element": "Healthcare_Utilization",
+      "to_element": "health_improvement"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "dt": 0.5,
+    "end": 30
+  },
+  "created_at": "2026-01-12T02:25:30.586862+00:00",
+  "updated_at": "2026-01-12T02:25:30.586865+00:00",
+  "source": "https://doi.org/10.2307/1830346",
+  "reference": "Pauly, M. V. (1968). The economics of moral hazard: comment. The American Economic Review, 58(3), 531-537."
+}

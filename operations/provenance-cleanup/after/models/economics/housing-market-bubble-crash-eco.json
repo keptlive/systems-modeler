@@ -1,0 +1,368 @@
+{
+  "id": "housing-market-bubble-crash-eco",
+  "name": "Housing Market Bubble and Crash Dynamics",
+  "description": "Model of housing price bubbles with credit expansion, speculation, and crash dynamics. Based on Case & Shiller 2003 research.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Housing Prices Index",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Mortgage Credit",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Housing Supply",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 250
+      }
+    },
+    {
+      "id": "s4",
+      "name": "Speculative Demand",
+      "initial_value": 50,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 350
+      }
+    },
+    {
+      "id": "s5",
+      "name": "Foreclosure Inventory",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Price Appreciation",
+      "equation": "Housing_Prices_Index * (Excess_Demand / Housing_Supply) * Price_Adjustment_Rate",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Price Depreciation",
+      "equation": "Housing_Prices_Index * (Foreclosure_Pressure + Supply_Pressure) * 0.01",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Credit Expansion",
+      "equation": "Credit_Growth_Rate * Mortgage_Credit * Price_Expectation_Effect",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 50,
+        "y": 250
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Credit Contraction",
+      "equation": "Mortgage_Credit * Default_Rate * Crash_Sensitivity",
+      "from_stock": "s2",
+      "to_stock": null,
+      "position": {
+        "x": 100,
+        "y": 350
+      }
+    },
+    {
+      "id": "f5",
+      "name": "New Construction",
+      "equation": "Construction_Rate * (Housing_Prices_Index / 100) * Profitability_Signal",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 500,
+        "y": 250
+      }
+    },
+    {
+      "id": "f6",
+      "name": "Demolition",
+      "equation": "Housing_Supply * Depreciation_Rate",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 400,
+        "y": 350
+      }
+    },
+    {
+      "id": "f7",
+      "name": "Speculation Increase",
+      "equation": "Price_Momentum * Speculation_Sensitivity * 10",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 200,
+        "y": 350
+      }
+    },
+    {
+      "id": "f8",
+      "name": "Speculation Decrease",
+      "equation": "Speculative_Demand * (Fear_Effect + Profit_Taking_Rate)",
+      "from_stock": "s4",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    },
+    {
+      "id": "f9",
+      "name": "New Foreclosures",
+      "equation": "Mortgage_Credit * Default_Rate * 0.1",
+      "from_stock": null,
+      "to_stock": "s5",
+      "position": {
+        "x": 450,
+        "y": 150
+      }
+    },
+    {
+      "id": "f10",
+      "name": "Foreclosure Sales",
+      "equation": "Foreclosure_Inventory / Foreclosure_Clearance_Time",
+      "from_stock": "s5",
+      "to_stock": null,
+      "position": {
+        "x": 550,
+        "y": 150
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Fundamental Demand",
+      "equation": "500 * (1 + 0.02 * TIME)",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Total Demand",
+      "equation": "Fundamental_Demand + Speculative_Demand + Mortgage_Credit / 10",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Excess Demand",
+      "equation": "Total_Demand - Housing_Supply",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Price Adjustment Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Credit Growth Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Price Expectation Effect",
+      "equation": "1 + Price_Momentum * 0.5",
+      "position": {
+        "x": 50,
+        "y": 300
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Price Momentum",
+      "equation": "MAX(-0.1, MIN(0.2, (Housing_Prices_Index - 100) / 500))",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Default Rate",
+      "equation": "0.02 + MAX(0, (150 - Housing_Prices_Index) / 500)",
+      "position": {
+        "x": 50,
+        "y": 350
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Crash Sensitivity",
+      "equation": "IF(Housing_Prices_Index < 90, 3, 1)",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Construction Rate",
+      "equation": "20",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Profitability Signal",
+      "equation": "MAX(0.5, Housing_Prices_Index / 100)",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Depreciation Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Speculation Sensitivity",
+      "equation": "2",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Fear Effect",
+      "equation": "MAX(0, (100 - Housing_Prices_Index) / 200)",
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    },
+    {
+      "id": "v15",
+      "name": "Profit Taking Rate",
+      "equation": "MAX(0, (Housing_Prices_Index - 120) / 500)",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "v16",
+      "name": "Foreclosure Pressure",
+      "equation": "Foreclosure_Inventory / Housing_Supply",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "v17",
+      "name": "Supply Pressure",
+      "equation": "MAX(0, (Housing_Supply - Total_Demand) / Housing_Supply)",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "v18",
+      "name": "Foreclosure Clearance Time",
+      "equation": "12",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    },
+    {
+      "id": "v19",
+      "name": "Price to Income Ratio",
+      "equation": "Housing_Prices_Index / 25",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Housing Prices Index",
+      "to_element": "Price Momentum"
+    },
+    {
+      "id": "c2",
+      "from_element": "Mortgage Credit",
+      "to_element": "Total Demand"
+    },
+    {
+      "id": "c3",
+      "from_element": "Foreclosure Inventory",
+      "to_element": "Foreclosure Pressure"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:14:19.563190",
+  "updated_at": "2026-01-15T14:14:19.563200",
+  "source": "https://www.brookings.edu/articles/is-there-a-bubble-in-the-housing-market/",
+  "reference": "Case KE, Shiller RJ. Is There a Bubble in the Housing Market? Brookings Papers on Economic Activity. 2003;2003(2):299-362."
+}

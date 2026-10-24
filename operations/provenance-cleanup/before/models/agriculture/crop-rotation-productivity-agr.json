@@ -1,0 +1,179 @@
+{
+  "id": "crop-rotation-productivity-agr",
+  "name": "Crop Rotation and Soil Productivity",
+  "description": "Models how crop rotation practices affect soil health and long-term yields. Based on Bullock (1992) Crop rotation, Critical Reviews in Plant Sciences. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "category": "agriculture",
+  "stocks": [
+    {
+      "id": "stock-nitrogen",
+      "name": "Soil_Nitrogen",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-pest",
+      "name": "Pest_Population",
+      "initial_value": 10,
+      "equation": "",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-yield",
+      "name": "Crop_Yield",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-n-fix",
+      "name": "Nitrogen_Fixation",
+      "equation": "Legume_Fraction * Fixation_Rate",
+      "from_stock": null,
+      "to_stock": "stock-nitrogen",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-n-uptake",
+      "name": "Nitrogen_Uptake",
+      "equation": "Soil_Nitrogen * Crop_Demand",
+      "from_stock": "stock-nitrogen",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-pest-grow",
+      "name": "Pest_Growth",
+      "equation": "Pest_Population * (1 - Rotation_Diversity) * Pest_Growth_Rate",
+      "from_stock": null,
+      "to_stock": "stock-pest",
+      "position": {
+        "x": 350,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-pest-die",
+      "name": "Pest_Mortality",
+      "equation": "Pest_Population * Rotation_Diversity * Mortality_Rate",
+      "from_stock": "stock-pest",
+      "to_stock": null,
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-yield-change",
+      "name": "Yield_Adjustment",
+      "equation": "(Potential_Yield - Crop_Yield) / Adjustment_Time",
+      "from_stock": null,
+      "to_stock": "stock-yield",
+      "position": {
+        "x": 300,
+        "y": 280
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-legume",
+      "name": "Legume_Fraction",
+      "equation": "0.25",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-fix-rate",
+      "name": "Fixation_Rate",
+      "equation": "20",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-demand",
+      "name": "Crop_Demand",
+      "equation": "0.05",
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-diversity",
+      "name": "Rotation_Diversity",
+      "equation": "0.5",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-pest-gr",
+      "name": "Pest_Growth_Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 500,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-mort",
+      "name": "Mortality_Rate",
+      "equation": "0.2",
+      "position": {
+        "x": 600,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-potential",
+      "name": "Potential_Yield",
+      "equation": "Soil_Nitrogen * (1 - Pest_Population/100) * 1.5",
+      "position": {
+        "x": 200,
+        "y": 400
+      }
+    },
+    {
+      "id": "var-adj",
+      "name": "Adjustment_Time",
+      "equation": "1",
+      "position": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 1
+  },
+  "source": "https://doi.org/10.1080/07352689209382349",
+  "reference": "Bullock DG (1992) Crop rotation. Critical Reviews in Plant Sciences 11(4):309-326.",
+  "connectors": [],
+  "created_at": "2026-01-12T06:26:04.512256+00:00",
+  "updated_at": "2026-01-12T06:26:04.512256+00:00"
+}

@@ -1,7 +1,7 @@
 {
   "id": "may-chaos-population-eco",
-  "name": "May Logistic Map Chaos Model",
-  "description": "Robert May's 1976 demonstration that simple population models can exhibit chaotic dynamics. Shows how the discrete logistic equation transitions from stable equilibrium to periodic cycles to chaos as growth rate increases. Foundational for chaos theory in ecology. Reference: May, R. M. (1976). Simple mathematical models with very complicated dynamics. Nature, 261(5560), 459-467. DOI: https://doi.org/10.1038/261459a0",
+  "name": "May logistic generation map",
+  "description": "Normalized discrete-generation logistic map X[n+1]=r*X[n]*(1-X[n]), with synchronous old-state updates and exactly one generation per Euler step. Illustrative default r=3.9,X[0]=0.1; companion scenario presets r=3.7, 3.8, 3.9 preserve the three legacy default populations without three catalog mechanisms. This is a mathematical teaching example, not a calibrated ecological forecast. Use only Euler,dt=discrete_period=1 and whole generations. Diagnostic Instantaneous Log Slope is one iterate's log(abs(r*(1-2*X))), not a long-run Lyapunov estimate; Coarse Parameter Range Code is an interval label and 99 does not establish chaos. Periodic windows occur above 3.57. Presets: use r=3.7, 3.8 or 3.9 with Population=0.1 over 0..100 whole generations; keep Euler and dt=discrete_period=1. To try a case, open Inspect, select r under Equations & initial values, change its Equation in the existing editor, then Run. This intentionally changes the current draft; Save is separate. To compare, run and Save Run for 3.7, then 3.8, then 3.9 and use Compare; generated run labels follow that order, so retain parameter notes/exports. Former May's Logistic Map Model (may-logistic-chaos,r=3.7) and May Ecological Chaos Model (may-ecological-chaos-eco,r=3.8) are these parameter cases, not separate mechanisms. Agents can use compare_scenarios with model_id may-chaos-population-eco and named parameters r/Population; use the published preset payload when available. Instantaneous log slope is not an averaged Lyapunov exponent, and coarse interval code 99 does not prove chaos. JSON preserves the generation contract; unsupported XMILE export explains choosing JSON. Migration notes: former model IDs may-logistic-chaos (r=3.7) and may-ecological-chaos-eco (r=3.8) map to this retained canonical ID plus those parameter presets. Their originals are archived; old direct links are not automatically redirected. Existing saved/private copies are not changed. For exact old report columns use the documented preset-specific compatibility mapping, since Growth_Rate had different meanings in the two variants.",
   "stocks": [
     {
       "id": "stock-population",
@@ -57,7 +57,7 @@
     },
     {
       "id": "var-lyapunov",
-      "name": "Lyapunov Exponent Estimate",
+      "name": "Instantaneous Log Slope",
       "equation": "LN(ABS(r - 2 * r * Population))",
       "position": {
         "x": 500,
@@ -66,7 +66,7 @@
     },
     {
       "id": "var-regime",
-      "name": "Dynamic Regime",
+      "name": "Coarse Parameter Range Code",
       "equation": "IF r < 1 THEN 0 ELSE IF r < 3 THEN 1 ELSE IF r < 3.449 THEN 2 ELSE IF r < 3.57 THEN 4 ELSE 99",
       "position": {
         "x": 350,
@@ -94,7 +94,10 @@
   "time_settings": {
     "start": 0,
     "end": 100,
-    "dt": 1
+    "dt": 1,
+    "integration_method": "euler",
+    "discrete_period": 1,
+    "units": "generation"
   },
   "created_at": "2026-01-12T01:30:00.000Z",
   "updated_at": "2026-01-12T01:30:00.000Z",

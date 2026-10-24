@@ -1,0 +1,135 @@
+{
+  "id": "glacial-interglacial-cycle-cli",
+  "name": "Glacial-Interglacial Cycle Model",
+  "description": "Simplified model of glacial cycles based on Milankovitch forcing and ice-albedo feedback. Shows how small orbital variations can trigger major ice ages. Based on Imbrie & Imbrie (1980) and Paillard (1998). Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "stock-ice-volume",
+      "name": "Ice Volume",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-temperature",
+      "name": "Global Temperature Anomaly",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-ice-accumulation",
+      "name": "Ice Accumulation",
+      "equation": "Ice_Accumulation_Rate * (Ice_Equilibrium - Ice_Volume) / Ice_Response_Time",
+      "from_stock": null,
+      "to_stock": "stock-ice-volume",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-temperature-change",
+      "name": "Temperature Change",
+      "equation": "(Equilibrium_Temperature - Global_Temperature_Anomaly) / Temperature_Response_Time",
+      "from_stock": null,
+      "to_stock": "stock-temperature",
+      "position": {
+        "x": 400,
+        "y": 200
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "var-milankovitch-forcing",
+      "name": "Milankovitch Forcing",
+      "equation": "0.5 * SIN(2 * 3.14159 * Time / 41) + 0.3 * SIN(2 * 3.14159 * Time / 23) + 0.2 * SIN(2 * 3.14159 * Time / 100)",
+      "position": {
+        "x": 100,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-ice-equilibrium",
+      "name": "Ice Equilibrium",
+      "equation": "0.5 - 0.4 * Milankovitch_Forcing + 0.2 * Ice_Volume",
+      "position": {
+        "x": 300,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-albedo-effect",
+      "name": "Albedo Effect",
+      "equation": "0.3 * Ice_Volume",
+      "position": {
+        "x": 500,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-equilibrium-temperature",
+      "name": "Equilibrium Temperature",
+      "equation": "Milankovitch_Forcing - Albedo_Effect - CO2_Effect",
+      "position": {
+        "x": 700,
+        "y": 80
+      }
+    },
+    {
+      "id": "var-co2-effect",
+      "name": "CO2 Effect",
+      "equation": "0.1 * Ice_Volume",
+      "position": {
+        "x": 100,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-ice-accumulation-rate",
+      "name": "Ice Accumulation Rate",
+      "equation": "1",
+      "position": {
+        "x": 250,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-ice-response-time",
+      "name": "Ice Response Time",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 160
+      }
+    },
+    {
+      "id": "var-temperature-response-time",
+      "name": "Temperature Response Time",
+      "equation": "1",
+      "position": {
+        "x": 550,
+        "y": 160
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 500,
+    "dt": 0.5
+  },
+  "created_at": "2026-01-11T21:11:32.978722+00:00",
+  "updated_at": "2026-01-11T21:11:32.978722+00:00",
+  "source": "https://github.com/SDXorg/PySD-Cookbook",
+  "reference": "SDXorg System Dynamics Model Repository"
+}

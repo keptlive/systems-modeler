@@ -1,0 +1,198 @@
+{
+  "id": "learning-curve-skill-acquisition-edu",
+  "name": "Learning Curve and Skill Acquisition Model",
+  "description": "Model of skill acquisition following power law of practice with forgetting. Based on Newell & Rosenbloom 1981. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Skill Level",
+      "initial_value": 0.1,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 150
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Practice Accumulated",
+      "initial_value": 1,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Memory Strength",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Skill Gain",
+      "equation": "(Max_Skill - Skill_Level) * Learning_Rate * Practice_Intensity * Memory_Strength",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Skill Decay",
+      "equation": "Skill_Level * Forgetting_Rate * (1 - Practice_Intensity)",
+      "from_stock": "s1",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 100
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Practice Addition",
+      "equation": "Practice_Intensity * Practice_Rate",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 50,
+        "y": 150
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Memory Consolidation",
+      "equation": "(1 - Memory_Strength) * Consolidation_Rate * Skill_Level",
+      "from_stock": null,
+      "to_stock": "s3",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "f5",
+      "name": "Memory Decay",
+      "equation": "Memory_Strength * Memory_Decay_Rate * (1 - Practice_Intensity)",
+      "from_stock": "s3",
+      "to_stock": null,
+      "position": {
+        "x": 300,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Max Skill",
+      "equation": "1",
+      "position": {
+        "x": 150,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Learning Rate",
+      "equation": "0.1",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Forgetting Rate",
+      "equation": "0.02",
+      "position": {
+        "x": 350,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Practice Intensity",
+      "equation": "0.8",
+      "position": {
+        "x": 50,
+        "y": 100
+      }
+    },
+    {
+      "id": "v5",
+      "name": "Practice Rate",
+      "equation": "1",
+      "position": {
+        "x": 50,
+        "y": 200
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Consolidation Rate",
+      "equation": "0.05",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Memory Decay Rate",
+      "equation": "0.01",
+      "position": {
+        "x": 350,
+        "y": 350
+      }
+    },
+    {
+      "id": "v8",
+      "name": "Performance",
+      "equation": "Skill_Level * Memory_Strength",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "v9",
+      "name": "Learning Efficiency",
+      "equation": "Skill_Gain / (Practice_Addition + 0.01)",
+      "position": {
+        "x": 150,
+        "y": 250
+      }
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from_element": "Skill Level",
+      "to_element": "Skill Gain"
+    },
+    {
+      "id": "c2",
+      "from_element": "Memory Strength",
+      "to_element": "Skill Gain"
+    }
+  ],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 1
+  },
+  "created_at": "2026-01-15T14:20:13.053964",
+  "updated_at": "2026-01-15T14:20:13.053970",
+  "source": "https://doi.org/10.1016/B978-1-4832-1446-7.50025-0",
+  "reference": "Newell A, Rosenbloom PS. Mechanisms of skill acquisition and the law of practice. Cognitive Skills and Their Acquisition. 1981:1-55."
+}
