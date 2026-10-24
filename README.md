@@ -19,6 +19,15 @@ Optional provider configuration is described in `.env.example` and `app/llm/`. K
 
 ## Validate models
 
+Run `pip install -r requirements-dev.txt` and `python -m pytest -q` for the
+credential-free regression suite. Discovery is limited to `tests/`; the old
+root-level AI tuning scripts are manual experiments, not offline tests.
+Every bundled model is exercised. The 28 documented invalid definitions are
+strict expected failures only while their file hashes match the audit; an
+unexpected failure or an unexpected repair fails the suite and requires review.
+`python tests/test_models.py` remains the uncompromised library audit: it exits
+nonzero for any failed definition, load error, or empty library.
+
 Use **Settings → Check inputs** or `POST /api/validate` with `{"model_id":"..."}` or `{"model":{...}}`. Inspection covers names, references, syntax, initial values, flow endpoints, tables, settings and a short numerical run. Units and provenance are retained. Scientific validity is not established by these checks or by finite simulation output.
 
 The current 1.9 audit runs all 1,078 checked-in definitions at their full default horizons: **1,050 complete and 28 fail explicitly**, with no newly failing defaults. All 47 previous failures were investigated; 19 definitions are repaired. Tests compare reconstructed source dynamics, conservation, analytic results and appropriate refinements. Completion is not empirical validation. See the [failure register](docs/FAILURE-REGISTER-1.9.md), [release evidence](docs/RELEASE-1.9.md), and source partitions [A](docs/CORPUS-REPAIRS-1.9-A.md), [B](docs/CORPUS-REPAIRS-1.9-B.md), [C](docs/CORPUS-REPAIRS-1.9-C.md). Public status badges apply only to exact audited model bytes. Preserve additional user models during release.
