@@ -1,0 +1,170 @@
+{
+  "id": "rayleigh-plesset-bubble-third-science",
+  "name": "Rayleigh-Plesset gas-bubble oscillation and viscous energy loss",
+  "description": "Spherical gas compression, radial fluid inertia, surface tension and viscous damping. Incompressible unbounded liquid and uniform polytropic gas; this small oscillation does not model violent collapse, heat/mass transfer or sonoluminescence. Illustrative millimetre bubble with water-like rho1000,mu0.001,surface tension0.072 SI; ambient100kPa,gas reference100144Pa,exponent1.4,initial radius1.05mm,speed0. Horizon3ms,RK4step0.5microsecond. No vapor pressure or gas diffusion. Original mathematical transcription/adaptation; not a calibrated forecast. Signed net-rate flows implement the stated equations. No numerical clamps or hidden resets.",
+  "category": "physics",
+  "source": "https://media.library.caltech.edu/CaltechBOOK:1995.001/chap2.htm",
+  "reference": "Brennen (1995), Cavitation and Bubble Dynamics, Chapter2, Rayleigh-Plesset equation and bubble-gas closure; polytropic gas specialization.",
+  "stocks": [
+    {
+      "id": "rayleigh-plesset-bubble-third-science:Radius",
+      "name": "Radius",
+      "initial_value": 0.00105,
+      "equation": "",
+      "units": "meter",
+      "position": {
+        "x": 140,
+        "y": 230
+      }
+    },
+    {
+      "id": "rayleigh-plesset-bubble-third-science:Radial_Speed",
+      "name": "Radial_Speed",
+      "initial_value": 0,
+      "equation": "",
+      "units": "meter/second",
+      "position": {
+        "x": 300,
+        "y": 230
+      }
+    },
+    {
+      "id": "rayleigh-plesset-bubble-third-science:Viscous_Loss",
+      "name": "Viscous_Loss",
+      "initial_value": 0,
+      "equation": "",
+      "units": "kg*meter^2/second^2",
+      "position": {
+        "x": 460,
+        "y": 230
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "rayleigh-plesset-bubble-third-science:rate:Radius",
+      "name": "Radius_net_rate",
+      "equation": "Radial_Speed",
+      "to_stock": "rayleigh-plesset-bubble-third-science:Radius",
+      "units": "(meter)/(second)",
+      "position": {
+        "x": 140,
+        "y": 330
+      }
+    },
+    {
+      "id": "rayleigh-plesset-bubble-third-science:rate:Radial_Speed",
+      "name": "Radial_Speed_net_rate",
+      "equation": "(Gas_Pressure-Ambient_Pressure-2*Surface_Tension/Radius-4*Viscosity*Radial_Speed/Radius)/(Liquid_Density*Radius)-1.5*Radial_Speed^2/Radius",
+      "to_stock": "rayleigh-plesset-bubble-third-science:Radial_Speed",
+      "units": "(meter/second)/(second)",
+      "position": {
+        "x": 300,
+        "y": 330
+      }
+    },
+    {
+      "id": "rayleigh-plesset-bubble-third-science:rate:Viscous_Loss",
+      "name": "Viscous_Loss_net_rate",
+      "equation": "16*PI*Viscosity*Radius*Radial_Speed^2",
+      "to_stock": "rayleigh-plesset-bubble-third-science:Viscous_Loss",
+      "units": "(kg*meter^2/second^2)/(second)",
+      "position": {
+        "x": 460,
+        "y": 330
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "rayleigh-plesset-bubble-third-science:Reference_Radius",
+      "name": "Reference_Radius",
+      "equation": "0.001",
+      "units": "meter",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "rayleigh-plesset-bubble-third-science:Gas_Reference_Pressure",
+      "name": "Gas_Reference_Pressure",
+      "equation": "100144",
+      "units": "kg/(meter*second^2)",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "rayleigh-plesset-bubble-third-science:Ambient_Pressure",
+      "name": "Ambient_Pressure",
+      "equation": "100000",
+      "units": "kg/(meter*second^2)",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "rayleigh-plesset-bubble-third-science:Liquid_Density",
+      "name": "Liquid_Density",
+      "equation": "1000",
+      "units": "kg/meter^3",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    },
+    {
+      "id": "rayleigh-plesset-bubble-third-science:Surface_Tension",
+      "name": "Surface_Tension",
+      "equation": "0.072",
+      "units": "kg/second^2",
+      "position": {
+        "x": 740,
+        "y": 50
+      }
+    },
+    {
+      "id": "rayleigh-plesset-bubble-third-science:Viscosity",
+      "name": "Viscosity",
+      "equation": "0.001",
+      "units": "kg/(meter*second)",
+      "position": {
+        "x": 900,
+        "y": 50
+      }
+    },
+    {
+      "id": "rayleigh-plesset-bubble-third-science:Polytropic_Index",
+      "name": "Polytropic_Index",
+      "equation": "1.4",
+      "units": "1",
+      "position": {
+        "x": 1060,
+        "y": 50
+      }
+    },
+    {
+      "id": "rayleigh-plesset-bubble-third-science:Gas_Pressure",
+      "name": "Gas_Pressure",
+      "equation": "Gas_Reference_Pressure*(Reference_Radius/Radius)^(3*Polytropic_Index)",
+      "units": "kg/(meter*second^2)",
+      "position": {
+        "x": 100,
+        "y": 120
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 0.003,
+    "dt": 5e-07,
+    "integration_method": "rk4",
+    "units": "second",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

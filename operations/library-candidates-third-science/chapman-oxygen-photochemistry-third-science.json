@@ -1,0 +1,170 @@
+{
+  "id": "chapman-oxygen-photochemistry-third-science",
+  "name": "Closed oxygen Chapman photochemistry with conserved oxygen atoms",
+  "description": "Photolysis, three-body stabilization with a fixed inert bath, and O+O3 destruction retain atom stoichiometry. The oxygen-only mechanism omits catalytic HOx/NOx/halogen cycles, transport and radiation transfer and cannot predict actual ozone abundance. Illustrative normalized concentrations O0,O2one,O3zero and effective rates0.001,0.1,1,0.05. Constant third-body concentration is absorbed into recombination; constant illumination. Horizon800,RK4step0.1. These are not atmospheric rate constants or a chosen stratospheric altitude. Original mathematical transcription/adaptation; not a calibrated forecast. Signed net-rate flows implement the stated equations. No numerical clamps or hidden resets.",
+  "category": "physics",
+  "source": "https://ntrs.nasa.gov/api/citations/19810008106/downloads/19810008106.pdf",
+  "reference": "Malkin (1978), Environmental Impact Statement for the Space Shuttle Program, NASA-TM-82278, AppendixD Chapman four-reaction oxygen photochemistry; NTRS19810008106.",
+  "stocks": [
+    {
+      "id": "chapman-oxygen-photochemistry-third-science:Atomic_Oxygen",
+      "name": "Atomic_Oxygen",
+      "initial_value": 0,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 140,
+        "y": 230
+      }
+    },
+    {
+      "id": "chapman-oxygen-photochemistry-third-science:Molecular_Oxygen",
+      "name": "Molecular_Oxygen",
+      "initial_value": 1,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 300,
+        "y": 230
+      }
+    },
+    {
+      "id": "chapman-oxygen-photochemistry-third-science:Ozone",
+      "name": "Ozone",
+      "initial_value": 0,
+      "equation": "",
+      "units": "concentration",
+      "position": {
+        "x": 460,
+        "y": 230
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "chapman-oxygen-photochemistry-third-science:rate:Atomic_Oxygen",
+      "name": "Atomic_Oxygen_net_rate",
+      "equation": "2*Split_Oxygen-Form_Ozone+Split_Ozone-Destroy_Ozone",
+      "to_stock": "chapman-oxygen-photochemistry-third-science:Atomic_Oxygen",
+      "units": "(concentration)/(time)",
+      "position": {
+        "x": 140,
+        "y": 330
+      }
+    },
+    {
+      "id": "chapman-oxygen-photochemistry-third-science:rate:Molecular_Oxygen",
+      "name": "Molecular_Oxygen_net_rate",
+      "equation": "-Split_Oxygen-Form_Ozone+Split_Ozone+2*Destroy_Ozone",
+      "to_stock": "chapman-oxygen-photochemistry-third-science:Molecular_Oxygen",
+      "units": "(concentration)/(time)",
+      "position": {
+        "x": 300,
+        "y": 330
+      }
+    },
+    {
+      "id": "chapman-oxygen-photochemistry-third-science:rate:Ozone",
+      "name": "Ozone_net_rate",
+      "equation": "Form_Ozone-Split_Ozone-Destroy_Ozone",
+      "to_stock": "chapman-oxygen-photochemistry-third-science:Ozone",
+      "units": "(concentration)/(time)",
+      "position": {
+        "x": 460,
+        "y": 330
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "chapman-oxygen-photochemistry-third-science:Oxygen_Photolysis",
+      "name": "Oxygen_Photolysis",
+      "equation": "0.001",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "chapman-oxygen-photochemistry-third-science:Ozone_Photolysis",
+      "name": "Ozone_Photolysis",
+      "equation": "0.1",
+      "units": "1/time",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "chapman-oxygen-photochemistry-third-science:Recombination",
+      "name": "Recombination",
+      "equation": "1",
+      "units": "1/(concentration*time)",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "chapman-oxygen-photochemistry-third-science:Ozone_Destruction",
+      "name": "Ozone_Destruction",
+      "equation": "0.05",
+      "units": "1/(concentration*time)",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    },
+    {
+      "id": "chapman-oxygen-photochemistry-third-science:Split_Oxygen",
+      "name": "Split_Oxygen",
+      "equation": "Oxygen_Photolysis*Molecular_Oxygen",
+      "units": "concentration/time",
+      "position": {
+        "x": 740,
+        "y": 50
+      }
+    },
+    {
+      "id": "chapman-oxygen-photochemistry-third-science:Form_Ozone",
+      "name": "Form_Ozone",
+      "equation": "Recombination*Atomic_Oxygen*Molecular_Oxygen",
+      "units": "concentration/time",
+      "position": {
+        "x": 900,
+        "y": 50
+      }
+    },
+    {
+      "id": "chapman-oxygen-photochemistry-third-science:Split_Ozone",
+      "name": "Split_Ozone",
+      "equation": "Ozone_Photolysis*Ozone",
+      "units": "concentration/time",
+      "position": {
+        "x": 1060,
+        "y": 50
+      }
+    },
+    {
+      "id": "chapman-oxygen-photochemistry-third-science:Destroy_Ozone",
+      "name": "Destroy_Ozone",
+      "equation": "Ozone_Destruction*Atomic_Oxygen*Ozone",
+      "units": "concentration/time",
+      "position": {
+        "x": 100,
+        "y": 120
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 800,
+    "dt": 0.1,
+    "integration_method": "rk4",
+    "units": "time",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

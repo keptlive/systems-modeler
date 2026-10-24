@@ -1,0 +1,1 @@
+Review package only. See ../../docs/LEGACY-QUALITY-REPAIRS.md and ../remaining-library-quality-review.md. PROPOSAL.json binds exact active/candidate hashes; it is not an executable transaction. No active definitions were changed.

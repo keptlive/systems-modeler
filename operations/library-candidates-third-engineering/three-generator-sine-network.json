@@ -1,0 +1,199 @@
+{
+  "id": "candidate-third-engineering-three-generator-sine-network",
+  "name": "Three-Generator Nonlinear Power-Angle Synchronization",
+  "category": "engineering",
+  "description": "Source lossless network sine-power swing laws before DC linearization. Authored balanced three-node topology, inertia/damping and initial phase disturbance; no turbine controller. Unlike existing lumped grid frequency-governor model, transmission topology, relative rotor phase and synchronization modes are explicit. Normalized units; no real grid calibration. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://www.control.utoronto.ca/~jwsimpson/papers/2017c/",
+  "reference": "Pirani, Simpson-Porco and Fidan, CDC2017, System-Theoretic Performance Metrics for Low-Inertia Stability of Power Networks, equations1\u20132",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Angle0",
+      "initial_value": 0.4,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s1",
+      "name": "Angle1",
+      "initial_value": -0.2,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s2",
+      "name": "Angle2",
+      "initial_value": -0.2,
+      "position": {
+        "x": 580,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s3",
+      "name": "Speed0",
+      "initial_value": 0.0,
+      "position": {
+        "x": 760,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s4",
+      "name": "Speed1",
+      "initial_value": 0.0,
+      "position": {
+        "x": 940,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s5",
+      "name": "Speed2",
+      "initial_value": 0.0,
+      "position": {
+        "x": 220,
+        "y": 300
+      },
+      "units": "1"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Angle0",
+      "equation": "Speed0",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "f1",
+      "name": "Change_Angle1",
+      "equation": "Speed1",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "f2",
+      "name": "Change_Angle2",
+      "equation": "Speed2",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "f3",
+      "name": "Change_Speed0",
+      "equation": "(-Damping*Speed0-Line01*sin(Angle0-Angle1)-Line02*sin(Angle0-Angle2))/Inertia",
+      "to_stock": "s3",
+      "position": {
+        "x": 670,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "f4",
+      "name": "Change_Speed1",
+      "equation": "(-Damping*Speed1-Line01*sin(Angle1-Angle0)-Line12*sin(Angle1-Angle2))/Inertia",
+      "to_stock": "s4",
+      "position": {
+        "x": 850,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "f5",
+      "name": "Change_Speed2",
+      "equation": "(-Damping*Speed2-Line02*sin(Angle2-Angle0)-Line12*sin(Angle2-Angle1))/Inertia",
+      "to_stock": "s5",
+      "position": {
+        "x": 130,
+        "y": 300
+      },
+      "units": "1"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Inertia",
+      "equation": "2",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p1",
+      "name": "Damping",
+      "equation": "0.4",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p2",
+      "name": "Line01",
+      "equation": "1",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p3",
+      "name": "Line02",
+      "equation": "0.5",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p4",
+      "name": "Line12",
+      "equation": "0.8",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "1"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 40,
+    "dt": 0.01,
+    "integration_method": "rk4",
+    "units": "1"
+  }
+}

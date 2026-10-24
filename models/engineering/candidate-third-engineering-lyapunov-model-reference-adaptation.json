@@ -1,0 +1,187 @@
+{
+  "id": "candidate-third-engineering-lyapunov-model-reference-adaptation",
+  "name": "Lyapunov Model-Reference Adaptive Tracking",
+  "category": "engineering",
+  "description": "Exact source scalar plant/reference and Lyapunov adaptation equations with gamma1. Authored smooth persistently exciting two-sine command replaces source square wave; zero initial states retained. No claim of identifying arbitrary plants. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://github.com/python-control/python-control/blob/b4cf7360138985f84afe299337ef9ee6c25e9c38/examples/mrac_siso_lyapunov.py",
+  "reference": "Kaisinger, python-control Lyapunov MRAC example; Astrom/Wittenmark Adaptive Control example5.7",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Plant",
+      "initial_value": 0.0,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s1",
+      "name": "Reference",
+      "initial_value": 0.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s2",
+      "name": "FeedGain",
+      "initial_value": 0.0,
+      "position": {
+        "x": 580,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s3",
+      "name": "StateGain",
+      "initial_value": 0.0,
+      "position": {
+        "x": 760,
+        "y": 150
+      },
+      "units": "1"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Plant",
+      "equation": "PlantA*Plant+PlantB*(StateGain*Plant+FeedGain*Command)",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "(1)/second"
+    },
+    {
+      "id": "f1",
+      "name": "Change_Reference",
+      "equation": "ReferenceA*Reference+ReferenceB*Command",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "(1)/second"
+    },
+    {
+      "id": "f2",
+      "name": "Change_FeedGain",
+      "equation": "Adaptation*Command*(Reference-Plant)",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      },
+      "units": "(1)/second"
+    },
+    {
+      "id": "f3",
+      "name": "Change_StateGain",
+      "equation": "Adaptation*Plant*(Reference-Plant)",
+      "to_stock": "s3",
+      "position": {
+        "x": 670,
+        "y": 150
+      },
+      "units": "(1)/second"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "PlantA",
+      "equation": "-1",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "1/second"
+    },
+    {
+      "id": "p1",
+      "name": "PlantB",
+      "equation": "0.5",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "1/second"
+    },
+    {
+      "id": "p2",
+      "name": "ReferenceA",
+      "equation": "-2",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "1/second"
+    },
+    {
+      "id": "p3",
+      "name": "ReferenceB",
+      "equation": "2",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "1/second"
+    },
+    {
+      "id": "p4",
+      "name": "Adaptation",
+      "equation": "1",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "1/second"
+    },
+    {
+      "id": "p5",
+      "name": "Frequency1",
+      "equation": "0.3141592653589793",
+      "position": {
+        "x": 950,
+        "y": 750
+      },
+      "units": "1/second"
+    },
+    {
+      "id": "p6",
+      "name": "Frequency2",
+      "equation": "0.7",
+      "position": {
+        "x": 100,
+        "y": 850
+      },
+      "units": "1/second"
+    },
+    {
+      "id": "p7",
+      "name": "Command",
+      "equation": "sin(Frequency1*TIME)+0.5*sin(Frequency2*TIME)",
+      "position": {
+        "x": 270,
+        "y": 850
+      },
+      "units": "1"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.02,
+    "integration_method": "rk4",
+    "units": "second"
+  }
+}

@@ -1,0 +1,454 @@
+{
+  "candidates": [
+    {
+      "file": "lyapunov-model-reference-adaptation.json",
+      "id": "candidate-third-engineering-lyapunov-model-reference-adaptation",
+      "candidate_sha256": "2af257ee69ea0cba5a21137e796d13942afee3de001a438822b2c269ad405299",
+      "source": "https://github.com/python-control/python-control/blob/b4cf7360138985f84afe299337ef9ee6c25e9c38/examples/mrac_siso_lyapunov.py",
+      "citation": "Kaisinger, python-control Lyapunov MRAC example; Astrom/Wittenmark Adaptive Control example5.7",
+      "scenario": "Exact source scalar plant/reference and Lyapunov adaptation equations with gamma1. Authored smooth persistently exciting two-sine command replaces source square wave; zero initial states retained. No claim of identifying arbitrary plants.",
+      "parameters": {
+        "PlantA": -1,
+        "PlantB": 0.5,
+        "ReferenceA": -2,
+        "ReferenceB": 2,
+        "Adaptation": 1,
+        "Frequency1": 0.3141592653589793,
+        "Frequency2": 0.7
+      },
+      "initials": {
+        "Plant": 0.0,
+        "Reference": 0.0,
+        "FeedGain": 0.0,
+        "StateGain": 0.0
+      },
+      "equations": {
+        "Plant": "PlantA*Plant+PlantB*(StateGain*Plant+FeedGain*Command)",
+        "Reference": "ReferenceA*Reference+ReferenceB*Command",
+        "FeedGain": "Adaptation*Command*(Reference-Plant)",
+        "StateGain": "Adaptation*Plant*(Reference-Plant)"
+      },
+      "settings": {
+        "start": 0,
+        "end": 100,
+        "dt": 0.02,
+        "integration_method": "rk4",
+        "units": "second"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "magnetic-levitation-inverse-square.json",
+      "id": "candidate-third-engineering-magnetic-levitation-inverse-square",
+      "candidate_sha256": "c8bbec99127524f2f87431581f34061d8767aae656144bff9000fc2f0b989074",
+      "source": "https://github.com/python-control/python-control/blob/b4cf7360138985f84afe299337ef9ee6c25e9c38/examples/cds110-L8a_maglev-limits.ipynb",
+      "citation": "Murray, CDS110 magnetic levitation notebook, python-control BSD3",
+      "scenario": "Exact source inverse-square plant/parameters. Authored local voltage feedback around2cm equilibrium and2mm initial gap error; no actuator clipping, impact/contact dynamics or global stabilization claim. Source sensor voltage conversion omitted.",
+      "parameters": {
+        "Gravity": 9.81,
+        "ForceConstant": 0.000313,
+        "Mass": 0.2,
+        "Conductance": 1,
+        "Damping": 1,
+        "Target": 0.02,
+        "PositionGain": 100,
+        "VelocityGain": 3
+      },
+      "initials": {
+        "Gap": 0.022,
+        "Velocity": 0.0
+      },
+      "equations": {
+        "Gap": "Velocity",
+        "Velocity": "Gravity-ForceConstant/Mass*(Conductance*Voltage)^2/Gap^2-Damping*Velocity"
+      },
+      "settings": {
+        "start": 0,
+        "end": 2,
+        "dt": 0.001,
+        "integration_method": "rk4",
+        "units": "second"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "aircraft-longitudinal-pitch.json",
+      "id": "candidate-third-engineering-aircraft-longitudinal-pitch",
+      "candidate_sha256": "95179d37f8c503f488bc86ccbfa1edfe2d4d9122359a3991f259576b9733df1a",
+      "source": "https://www.ece.ualberta.ca/~tchen/ctm/examples/pitch/Mpitch.html",
+      "citation": "Control Tutorials for MATLAB, Modeling Pitch Controller, university-hosted primary tutorial",
+      "scenario": "Exact source3-state longitudinal matrices, fixed-speed decoupling assumption. Authored0.01rad elevator step preserves small perturbations over10s instead of source0.2rad controller-design exercise. This is neither a full flight envelope nor nonlinear VTOL physics.",
+      "parameters": {
+        "Elevator": 0.01
+      },
+      "initials": {
+        "AttackAngle": 0.0,
+        "ReducedPitchRate": 0.0,
+        "PitchAngle": 0.0
+      },
+      "equations": {
+        "AttackAngle": "-0.313*AttackAngle+56.7*ReducedPitchRate+0.232*Elevator",
+        "ReducedPitchRate": "-0.0139*AttackAngle-0.426*ReducedPitchRate+0.0203*Elevator",
+        "PitchAngle": "56.7*ReducedPitchRate"
+      },
+      "settings": {
+        "start": 0,
+        "end": 10,
+        "dt": 0.01,
+        "integration_method": "rk4",
+        "units": "second"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "tethered-kite-crosswind.json",
+      "id": "candidate-third-engineering-tethered-kite-crosswind",
+      "candidate_sha256": "cf4f7f4c83a356a3b1198b730183928c5077f6e759c6b24758dc3bcca2bc55e0",
+      "source": "https://github.com/do-mpc/do-mpc/blob/9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc/examples/kite/template_model.py",
+      "citation": "do-mpc tethered kite kinematic model, pinned9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc",
+      "scenario": "Source three-angle kite plant,400m tether and steering efficiency penalty. Authored fixed wind10m/s, base efficiency6, initial angles and sinusoidal steering; source randomized wind/parameters and optimizing controller omitted. No gravity/tether elasticity or calibrated power-output prediction.",
+      "parameters": {
+        "Tether": 400,
+        "BaseEfficiency": 6,
+        "DragPenalty": 0.028,
+        "Wind": 10,
+        "SteeringAmplitude": 0.5,
+        "SteeringFrequency": 0.1
+      },
+      "initials": {
+        "Zenith": 0.7,
+        "Azimuth": 0.0,
+        "Heading": 0.0
+      },
+      "equations": {
+        "Zenith": "Airspeed/Tether*(cos(Heading)-tan(Zenith)/Efficiency)",
+        "Azimuth": "-Airspeed/(Tether*sin(Zenith))*sin(Heading)",
+        "Heading": "Airspeed/Tether*Steering+AzimuthRate*cos(Zenith)"
+      },
+      "settings": {
+        "start": 0,
+        "end": 120,
+        "dt": 0.05,
+        "integration_method": "rk4",
+        "units": "second"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "tire-slip-dynamic-vehicle.json",
+      "id": "candidate-third-engineering-tire-slip-dynamic-vehicle",
+      "candidate_sha256": "464bdce409dc162d6a66532509940f980003cb82fca3fae2d0be5094ab4abbf5",
+      "source": "https://github.com/do-mpc/do-mpc/blob/9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc/examples/dynamic_bicycle_model/template_model.py",
+      "citation": "Cataffo et al., IEEE SMC2022; do-mpc dynamic bicycle adaptation",
+      "scenario": "Exact source six-state tire-slip plant and parameter values, including its drive-force yaw moment. Authored constant0.1rad steer,0.6PWM and3m/s initial speed; source racecourse/MPC omitted. Distinct from Whipple bicycle roll stability and kinematic steering; no tire calibration claim beyond source values.",
+      "parameters": {
+        "Mass": 5.692,
+        "YawInertia": 0.204,
+        "FrontArm": 0.178,
+        "RearArm": 0.147,
+        "FrontPeak": 134.585,
+        "RearPeak": 159.919,
+        "FrontShape": 0.085,
+        "RearShape": 0.133,
+        "FrontStiffness": 9.242,
+        "RearStiffness": 17.716,
+        "MotorGain": 20,
+        "MotorSpeedLoss": 6.92e-07,
+        "Rolling": 3.99,
+        "QuadraticDrag": 0.67,
+        "Steering": 0.1,
+        "Throttle": 0.6
+      },
+      "initials": {
+        "X": 0.0,
+        "Y": 0.0,
+        "Yaw": 0.0,
+        "ForwardSpeed": 3.0,
+        "SideSpeed": 0.0,
+        "YawRate": 0.0
+      },
+      "equations": {
+        "X": "ForwardSpeed*cos(Yaw)-SideSpeed*sin(Yaw)",
+        "Y": "ForwardSpeed*sin(Yaw)+SideSpeed*cos(Yaw)",
+        "Yaw": "YawRate",
+        "ForwardSpeed": "(DriveForce-FrontForce*sin(Steering)+Mass*SideSpeed*YawRate)/Mass",
+        "SideSpeed": "(RearForce+FrontForce*cos(Steering)-Mass*ForwardSpeed*YawRate)/Mass",
+        "YawRate": "(FrontForce*FrontArm*cos(Steering)-FrontArm*DriveForce*sin(Steering)-RearArm*RearForce)/YawInertia"
+      },
+      "settings": {
+        "start": 0,
+        "end": 12,
+        "dt": 0.005,
+        "integration_method": "rk4",
+        "units": "second"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "battery-polarization-thermal.json",
+      "id": "candidate-third-engineering-battery-polarization-thermal",
+      "candidate_sha256": "6fe243caf7f903c13c125c582063d2bbbc4c021e23f60c1b69231ec453e90092",
+      "source": "https://github.com/pybamm-team/PyBaMM/blob/5651a97ecc5dfd1a2de8c2a1af13368263ee12ed/packages/pybamm/src/pybamm/input/parameters/ecm/example_set.py",
+      "citation": "PyBaMM Thevenin equivalent-circuit thermal/RC submodels, BSD3 pinned5651a97ecc5dfd1a2de8c2a1af13368263ee12ed",
+      "scenario": "Source illustrative100Ah,100A,30s RC design and cell/jig thermal masses/conductances. Authored fixed nominal R0/R1/C1 rather than source3D dependencies; entropic heat set0 and source undisclosed OCV table not copied. Temperature in Celsius differences; source aggregate overpotential heating retained. No particular commercial cell or full electrochemical energy balance claimed.",
+      "parameters": {
+        "Current": 100,
+        "CapacityCharge": 360000,
+        "Resistance0": 0.0004,
+        "Resistance1": 0.0006,
+        "Capacitance1": 50000,
+        "CellJig": 10,
+        "JigAir": 10,
+        "CellThermalMass": 1000,
+        "JigThermalMass": 500,
+        "Ambient": 25
+      },
+      "initials": {
+        "ChargeFraction": 0.5,
+        "Overpotential": 0.0,
+        "CellTemperature": 25.0,
+        "JigTemperature": 25.0
+      },
+      "equations": {
+        "ChargeFraction": "-Current/CapacityCharge",
+        "Overpotential": "-Overpotential/(Resistance1*Capacitance1)-Current/Capacitance1",
+        "CellTemperature": "(Heating-CellJig*(CellTemperature-JigTemperature))/CellThermalMass",
+        "JigTemperature": "(CellJig*(CellTemperature-JigTemperature)-JigAir*(JigTemperature-Ambient))/JigThermalMass"
+      },
+      "settings": {
+        "start": 0,
+        "end": 600,
+        "dt": 0.5,
+        "integration_method": "rk4",
+        "units": "second"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "compressor-plenum-surge.json",
+      "id": "candidate-third-engineering-compressor-plenum-surge",
+      "candidate_sha256": "ed6850f827350a313ea05507f065d184436c09a8e7b42a8b34c3d470d9616eb2",
+      "source": "https://www.mic-journal.no/PDF/2020/MIC-2020-2-1.pdf",
+      "citation": "Neverlien, Moe and Gravdahl2020, Compressor Surge Control Using Lyapunov Neural Networks, doi10.4173/mic.2020.2.1",
+      "scenario": "Source shifted unactuated surge subsystem, unstable operating-point coefficients and table values. Authored small perturbation and60 normalized-time horizon. No neural controller or full rotating-stall PDE; pressure must remain in the square-root domain.",
+      "parameters": {
+        "Greitzer": 0.8319,
+        "Throttle": 0.411,
+        "BasePressure": 0.533,
+        "BaseFlow": 0.3,
+        "Height": 0.18,
+        "Width": 0.25
+      },
+      "initials": {
+        "PressureShift": 0.03,
+        "FlowShift": 0.02
+      },
+      "equations": {
+        "PressureShift": "(FlowShift-Throttle*(sqrt(PressureShift+BasePressure)-sqrt(BasePressure)))/Greitzer",
+        "FlowShift": "Greitzer*(-Cubic*FlowShift^3-Quadratic*FlowShift^2-Linear*FlowShift-PressureShift)"
+      },
+      "settings": {
+        "start": 0,
+        "end": 60,
+        "dt": 0.01,
+        "integration_method": "rk4",
+        "units": "1"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "bouc-wen-hysteretic-isolator.json",
+      "id": "candidate-third-engineering-bouc-wen-hysteretic-isolator",
+      "candidate_sha256": "417dd921eeffd40b2e9806e37af83bf996fe5be8bfcc424040c19cea42f2d0ec",
+      "source": "https://skoge.folk.ntnu.no/prost/proceedings/acc04/Papers/0636_ThP09.1.pdf",
+      "citation": "Ikhouane, Manosa and Rodellar, ACC2004, Bounded and dissipative solutions of the Bouc-Wen model",
+      "scenario": "Source constitutive law specialized to n1 limit with an explicitly authored normalized mass/spring/damper and sinusoidal force. Internal hysteresis memory creates dissipative loops beyond a Duffing/purely elastic oscillator. No degradation, pinching, seismic calibration or hardware certification.",
+      "parameters": {
+        "Mass": 1,
+        "Damping": 0.1,
+        "ElasticFraction": 0.1,
+        "Stiffness": 1,
+        "YieldLength": 1,
+        "Scale": 1,
+        "Beta": 0.5,
+        "Gamma": 0.5,
+        "ForceAmplitude": 1,
+        "Frequency": 1.2
+      },
+      "initials": {
+        "Displacement": 0.0,
+        "Velocity": 0.0,
+        "Hysteresis": 0.0
+      },
+      "equations": {
+        "Displacement": "Velocity",
+        "Velocity": "(Force-Damping*Velocity-ElasticFraction*Stiffness*Displacement-(1-ElasticFraction)*YieldLength*Stiffness*Hysteresis)/Mass",
+        "Hysteresis": "(Scale*Velocity-Beta*abs(Velocity)*Hysteresis-Gamma*Velocity*abs(Hysteresis))/YieldLength"
+      },
+      "settings": {
+        "start": 0,
+        "end": 40,
+        "dt": 0.02,
+        "integration_method": "radau",
+        "units": "second",
+        "rtol": 1e-08,
+        "atol": 1e-10
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "batch-crystallization-moments.json",
+      "id": "candidate-third-engineering-batch-crystallization-moments",
+      "candidate_sha256": "09b2f0c6448cfc56f5fc75d3e7d17293d3313da96604a64a8745075c2d739b36",
+      "source": "https://www.netl.doe.gov/projects/files/OptimizingBatchCrystallizationwithModelbasedDesignofExperiments_071024.pdf",
+      "citation": "Lynch et al., FOCAPD2024, Optimizing Batch Crystallization with Model-based Design of Experiments, doi10.69997/sct.152239",
+      "scenario": "Source size-independent moment and solute-mass laws. Authored normalized isothermal seeded scenario: monodisperse0.5size seeds, first-order growth and second-order primary nucleation. Secondary nucleation omitted; coefficients/scales are illustrative, not claimed paper values or material calibration. No arbitrary supersaturation clamp; domain is verified through full horizon.",
+      "parameters": {
+        "Saturation": 1,
+        "GrowthCoefficient": 0.5,
+        "BirthCoefficient": 0.2,
+        "SolidScale": 1
+      },
+      "initials": {
+        "Moment0": 0.1,
+        "Moment1": 0.05,
+        "Moment2": 0.025,
+        "Moment3": 0.0125,
+        "Concentration": 1.2
+      },
+      "equations": {
+        "Moment0": "Birth",
+        "Moment1": "Growth*Moment0",
+        "Moment2": "2*Growth*Moment1",
+        "Moment3": "3*Growth*Moment2",
+        "Concentration": "-3*SolidScale*Growth*Moment2"
+      },
+      "settings": {
+        "start": 0,
+        "end": 80,
+        "dt": 0.02,
+        "integration_method": "rk4",
+        "units": "1"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "three-generator-sine-network.json",
+      "id": "candidate-third-engineering-three-generator-sine-network",
+      "candidate_sha256": "af0d83e79352f6368a39882b604a86c3d3f113b72a697192a127722b5b355149",
+      "source": "https://www.control.utoronto.ca/~jwsimpson/papers/2017c/",
+      "citation": "Pirani, Simpson-Porco and Fidan, CDC2017, System-Theoretic Performance Metrics for Low-Inertia Stability of Power Networks, equations1\u20132",
+      "scenario": "Source lossless network sine-power swing laws before DC linearization. Authored balanced three-node topology, inertia/damping and initial phase disturbance; no turbine controller. Unlike existing lumped grid frequency-governor model, transmission topology, relative rotor phase and synchronization modes are explicit. Normalized units; no real grid calibration.",
+      "parameters": {
+        "Inertia": 2,
+        "Damping": 0.4,
+        "Line01": 1,
+        "Line02": 0.5,
+        "Line12": 0.8
+      },
+      "initials": {
+        "Angle0": 0.4,
+        "Angle1": -0.2,
+        "Angle2": -0.2,
+        "Speed0": 0.0,
+        "Speed1": 0.0,
+        "Speed2": 0.0
+      },
+      "equations": {
+        "Angle0": "Speed0",
+        "Angle1": "Speed1",
+        "Angle2": "Speed2",
+        "Speed0": "(-Damping*Speed0-Line01*sin(Angle0-Angle1)-Line02*sin(Angle0-Angle2))/Inertia",
+        "Speed1": "(-Damping*Speed1-Line01*sin(Angle1-Angle0)-Line12*sin(Angle1-Angle2))/Inertia",
+        "Speed2": "(-Damping*Speed2-Line02*sin(Angle2-Angle0)-Line12*sin(Angle2-Angle1))/Inertia"
+      },
+      "settings": {
+        "start": 0,
+        "end": 40,
+        "dt": 0.01,
+        "integration_method": "rk4",
+        "units": "1"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    },
+    {
+      "file": "industrial-polymerization-heat-loops.json",
+      "id": "candidate-third-engineering-industrial-polymerization-heat-loops",
+      "candidate_sha256": "f0a3f32241ccfe7acdeeb92517a3994b9e221818facc25ef57100ef795fa97b7",
+      "source": "https://github.com/do-mpc/do-mpc/blob/9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc/examples/industrial_poly/template_model.py",
+      "citation": "do-mpc industrial polymerization benchmark, pinned9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc",
+      "scenario": "Source physical9-state mass/thermal subsystem and initial states. Redundant adiabatic-temperature state omitted and its algebraic diagnostic can be reconstructed; no dynamics flattened. Authored fixed feed1000mass/hour, jacket333.15K and external coolant298.15K, not source MPC. Conversion-dependent rate and heat transfer retained. No industrial recipe or safety claim.",
+      "parameters": {
+        "Gas": 8.314,
+        "FeedTemperature": 298.15,
+        "Activation": 8500,
+        "HeatRelease": 950,
+        "Surface": 65,
+        "RateScale": 7,
+        "UnconvertedRate": 4,
+        "ConvertedRate": 32,
+        "FeedWater": 0.333,
+        "FeedMonomer": 0.667,
+        "JacketMass": 5000,
+        "JacketFlow": 300000,
+        "ExternalCoolantMass": 1000,
+        "ExternalCoolantFlow": 100000,
+        "ExternalProductMass": 200,
+        "ExternalProductFlow": 20000,
+        "SteelMass": 39000,
+        "WaterHeat": 4.2,
+        "SteelHeat": 0.47,
+        "FeedHeat": 3,
+        "ProductHeat": 5,
+        "WaterTransfer": 17280,
+        "MonomerTransfer": 3600,
+        "PolymerTransfer": 360,
+        "ExternalConductance": 3600000,
+        "FeedFlow": 1000,
+        "JacketInlet": 333.15,
+        "ExternalInlet": 298.15
+      },
+      "initials": {
+        "WaterMass": 10000.0,
+        "MonomerMass": 853.0,
+        "PolymerMass": 26.5,
+        "ReactorTemperature": 363.15,
+        "SteelTemperature": 363.15,
+        "JacketTemperature": 363.15,
+        "ExternalTemperature": 308.15,
+        "ExternalCoolantTemperature": 308.15,
+        "AccumulatedFeed": 300.0
+      },
+      "equations": {
+        "WaterMass": "FeedFlow*FeedWater",
+        "MonomerMass": "FeedFlow*FeedMonomer-ReactionReactor-ReactionExternal",
+        "PolymerMass": "ReactionReactor+ReactionExternal",
+        "ReactorTemperature": "(FeedFlow*FeedHeat*(FeedTemperature-ReactorTemperature)-Transfer*Surface*(ReactorTemperature-SteelTemperature)-ExternalProductFlow*ProductHeat*(ReactorTemperature-ExternalTemperature)+HeatRelease*ReactionReactor)/(ProductHeat*TotalMass)",
+        "SteelTemperature": "Transfer*Surface*(ReactorTemperature-2*SteelTemperature+JacketTemperature)/(SteelHeat*SteelMass)",
+        "JacketTemperature": "(JacketFlow*WaterHeat*(JacketInlet-JacketTemperature)+Transfer*Surface*(SteelTemperature-JacketTemperature))/(WaterHeat*JacketMass)",
+        "ExternalTemperature": "(ExternalProductFlow*ProductHeat*(ReactorTemperature-ExternalTemperature)-ExternalConductance*(ExternalTemperature-ExternalCoolantTemperature)+HeatRelease*ReactionExternal)/(ProductHeat*ExternalProductMass)",
+        "ExternalCoolantTemperature": "(ExternalCoolantFlow*WaterHeat*(ExternalInlet-ExternalCoolantTemperature)+ExternalConductance*(ExternalTemperature-ExternalCoolantTemperature))/(WaterHeat*ExternalCoolantMass)",
+        "AccumulatedFeed": "FeedFlow"
+      },
+      "settings": {
+        "start": 0,
+        "end": 1,
+        "dt": 0.002,
+        "integration_method": "radau",
+        "units": "hour"
+      },
+      "reference_data": {},
+      "status": "candidate only; independent admission required"
+    }
+  ]
+}

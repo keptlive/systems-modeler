@@ -1,0 +1,165 @@
+{
+  "id": "candidate-third-engineering-magnetic-levitation-inverse-square",
+  "name": "Magnetic Levitation with Inverse-Square Attraction",
+  "category": "engineering",
+  "description": "Exact source inverse-square plant/parameters. Authored local voltage feedback around2cm equilibrium and2mm initial gap error; no actuator clipping, impact/contact dynamics or global stabilization claim. Source sensor voltage conversion omitted. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://github.com/python-control/python-control/blob/b4cf7360138985f84afe299337ef9ee6c25e9c38/examples/cds110-L8a_maglev-limits.ipynb",
+  "reference": "Murray, CDS110 magnetic levitation notebook, python-control BSD3",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "Gap",
+      "initial_value": 0.022,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "meter"
+    },
+    {
+      "id": "s1",
+      "name": "Velocity",
+      "initial_value": 0.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "meter/second"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_Gap",
+      "equation": "Velocity",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "(meter)/second"
+    },
+    {
+      "id": "f1",
+      "name": "Change_Velocity",
+      "equation": "Gravity-ForceConstant/Mass*(Conductance*Voltage)^2/Gap^2-Damping*Velocity",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "(meter/second)/second"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Gravity",
+      "equation": "9.81",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "meter/second^2"
+    },
+    {
+      "id": "p1",
+      "name": "ForceConstant",
+      "equation": "0.000313",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "kg*meter^3/(second^2*ampere^2)"
+    },
+    {
+      "id": "p2",
+      "name": "Mass",
+      "equation": "0.2",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "kg"
+    },
+    {
+      "id": "p3",
+      "name": "Conductance",
+      "equation": "1",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "ampere/volt"
+    },
+    {
+      "id": "p4",
+      "name": "Damping",
+      "equation": "1",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "1/second"
+    },
+    {
+      "id": "p5",
+      "name": "Target",
+      "equation": "0.02",
+      "position": {
+        "x": 950,
+        "y": 750
+      },
+      "units": "meter"
+    },
+    {
+      "id": "p6",
+      "name": "PositionGain",
+      "equation": "100",
+      "position": {
+        "x": 100,
+        "y": 850
+      },
+      "units": "volt/meter"
+    },
+    {
+      "id": "p7",
+      "name": "VelocityGain",
+      "equation": "3",
+      "position": {
+        "x": 270,
+        "y": 850
+      },
+      "units": "volt*second/meter"
+    },
+    {
+      "id": "p8",
+      "name": "EquilibriumVoltage",
+      "equation": "Target*sqrt(Mass*Gravity/ForceConstant)/Conductance",
+      "position": {
+        "x": 440,
+        "y": 850
+      },
+      "units": "volt"
+    },
+    {
+      "id": "p9",
+      "name": "Voltage",
+      "equation": "EquilibriumVoltage+PositionGain*(Gap-Target)+VelocityGain*Velocity",
+      "position": {
+        "x": 610,
+        "y": 850
+      },
+      "units": "volt"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 2,
+    "dt": 0.001,
+    "integration_method": "rk4",
+    "units": "second"
+  }
+}

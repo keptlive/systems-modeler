@@ -1,0 +1,359 @@
+{
+  "id": "candidate-third-engineering-tire-slip-dynamic-vehicle",
+  "name": "Tire-Slip Vehicle Cornering Dynamics",
+  "category": "engineering",
+  "description": "Exact source six-state tire-slip plant and parameter values, including its drive-force yaw moment. Authored constant0.1rad steer,0.6PWM and3m/s initial speed; source racecourse/MPC omitted. Distinct from Whipple bicycle roll stability and kinematic steering; no tire calibration claim beyond source values. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://github.com/do-mpc/do-mpc/blob/9d5a8df0e4d6acac899bf0a65ffd4c30a6e2e4cc/examples/dynamic_bicycle_model/template_model.py",
+  "reference": "Cataffo et al., IEEE SMC2022; do-mpc dynamic bicycle adaptation",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "X",
+      "initial_value": 0.0,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "meter"
+    },
+    {
+      "id": "s1",
+      "name": "Y",
+      "initial_value": 0.0,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "meter"
+    },
+    {
+      "id": "s2",
+      "name": "Yaw",
+      "initial_value": 0.0,
+      "position": {
+        "x": 580,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s3",
+      "name": "ForwardSpeed",
+      "initial_value": 3.0,
+      "position": {
+        "x": 760,
+        "y": 150
+      },
+      "units": "meter/second"
+    },
+    {
+      "id": "s4",
+      "name": "SideSpeed",
+      "initial_value": 0.0,
+      "position": {
+        "x": 940,
+        "y": 150
+      },
+      "units": "meter/second"
+    },
+    {
+      "id": "s5",
+      "name": "YawRate",
+      "initial_value": 0.0,
+      "position": {
+        "x": 220,
+        "y": 300
+      },
+      "units": "1/second"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_X",
+      "equation": "ForwardSpeed*cos(Yaw)-SideSpeed*sin(Yaw)",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "(meter)/second"
+    },
+    {
+      "id": "f1",
+      "name": "Change_Y",
+      "equation": "ForwardSpeed*sin(Yaw)+SideSpeed*cos(Yaw)",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "(meter)/second"
+    },
+    {
+      "id": "f2",
+      "name": "Change_Yaw",
+      "equation": "YawRate",
+      "to_stock": "s2",
+      "position": {
+        "x": 490,
+        "y": 150
+      },
+      "units": "(1)/second"
+    },
+    {
+      "id": "f3",
+      "name": "Change_ForwardSpeed",
+      "equation": "(DriveForce-FrontForce*sin(Steering)+Mass*SideSpeed*YawRate)/Mass",
+      "to_stock": "s3",
+      "position": {
+        "x": 670,
+        "y": 150
+      },
+      "units": "(meter/second)/second"
+    },
+    {
+      "id": "f4",
+      "name": "Change_SideSpeed",
+      "equation": "(RearForce+FrontForce*cos(Steering)-Mass*ForwardSpeed*YawRate)/Mass",
+      "to_stock": "s4",
+      "position": {
+        "x": 850,
+        "y": 150
+      },
+      "units": "(meter/second)/second"
+    },
+    {
+      "id": "f5",
+      "name": "Change_YawRate",
+      "equation": "(FrontForce*FrontArm*cos(Steering)-FrontArm*DriveForce*sin(Steering)-RearArm*RearForce)/YawInertia",
+      "to_stock": "s5",
+      "position": {
+        "x": 130,
+        "y": 300
+      },
+      "units": "(1/second)/second"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Mass",
+      "equation": "5.692",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "kg"
+    },
+    {
+      "id": "p1",
+      "name": "YawInertia",
+      "equation": "0.204",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "kg*meter^2"
+    },
+    {
+      "id": "p2",
+      "name": "FrontArm",
+      "equation": "0.178",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "meter"
+    },
+    {
+      "id": "p3",
+      "name": "RearArm",
+      "equation": "0.147",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "meter"
+    },
+    {
+      "id": "p4",
+      "name": "FrontPeak",
+      "equation": "134.585",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "kg*meter/second^2"
+    },
+    {
+      "id": "p5",
+      "name": "RearPeak",
+      "equation": "159.919",
+      "position": {
+        "x": 950,
+        "y": 750
+      },
+      "units": "kg*meter/second^2"
+    },
+    {
+      "id": "p6",
+      "name": "FrontShape",
+      "equation": "0.085",
+      "position": {
+        "x": 100,
+        "y": 850
+      },
+      "units": "1"
+    },
+    {
+      "id": "p7",
+      "name": "RearShape",
+      "equation": "0.133",
+      "position": {
+        "x": 270,
+        "y": 850
+      },
+      "units": "1"
+    },
+    {
+      "id": "p8",
+      "name": "FrontStiffness",
+      "equation": "9.242",
+      "position": {
+        "x": 440,
+        "y": 850
+      },
+      "units": "1"
+    },
+    {
+      "id": "p9",
+      "name": "RearStiffness",
+      "equation": "17.716",
+      "position": {
+        "x": 610,
+        "y": 850
+      },
+      "units": "1"
+    },
+    {
+      "id": "p10",
+      "name": "MotorGain",
+      "equation": "20",
+      "position": {
+        "x": 780,
+        "y": 850
+      },
+      "units": "kg*meter/second^2"
+    },
+    {
+      "id": "p11",
+      "name": "MotorSpeedLoss",
+      "equation": "6.92e-07",
+      "position": {
+        "x": 950,
+        "y": 850
+      },
+      "units": "kg/second"
+    },
+    {
+      "id": "p12",
+      "name": "Rolling",
+      "equation": "3.99",
+      "position": {
+        "x": 100,
+        "y": 950
+      },
+      "units": "kg*meter/second^2"
+    },
+    {
+      "id": "p13",
+      "name": "QuadraticDrag",
+      "equation": "0.67",
+      "position": {
+        "x": 270,
+        "y": 950
+      },
+      "units": "kg/meter"
+    },
+    {
+      "id": "p14",
+      "name": "Steering",
+      "equation": "0.1",
+      "position": {
+        "x": 440,
+        "y": 950
+      },
+      "units": "1"
+    },
+    {
+      "id": "p15",
+      "name": "Throttle",
+      "equation": "0.6",
+      "position": {
+        "x": 610,
+        "y": 950
+      },
+      "units": "1"
+    },
+    {
+      "id": "p16",
+      "name": "FrontSlip",
+      "equation": "-atan2(YawRate*FrontArm+SideSpeed,ForwardSpeed)+Steering",
+      "position": {
+        "x": 780,
+        "y": 950
+      },
+      "units": "1"
+    },
+    {
+      "id": "p17",
+      "name": "RearSlip",
+      "equation": "atan2(YawRate*RearArm-SideSpeed,ForwardSpeed)",
+      "position": {
+        "x": 950,
+        "y": 950
+      },
+      "units": "1"
+    },
+    {
+      "id": "p18",
+      "name": "FrontForce",
+      "equation": "FrontPeak*sin(FrontShape*atan(FrontStiffness*FrontSlip))",
+      "position": {
+        "x": 100,
+        "y": 1050
+      },
+      "units": "kg*meter/second^2"
+    },
+    {
+      "id": "p19",
+      "name": "RearForce",
+      "equation": "RearPeak*sin(RearShape*atan(RearStiffness*RearSlip))",
+      "position": {
+        "x": 270,
+        "y": 1050
+      },
+      "units": "kg*meter/second^2"
+    },
+    {
+      "id": "p20",
+      "name": "DriveForce",
+      "equation": "(MotorGain-MotorSpeedLoss*ForwardSpeed)*Throttle-QuadraticDrag*ForwardSpeed^2-Rolling",
+      "position": {
+        "x": 440,
+        "y": 1050
+      },
+      "units": "kg*meter/second^2"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 12,
+    "dt": 0.005,
+    "integration_method": "rk4",
+    "units": "second"
+  }
+}

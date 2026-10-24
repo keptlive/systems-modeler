@@ -1,0 +1,192 @@
+{
+  "id": "adiabatic-gas-piston-third-science",
+  "name": "Adiabatic gas pressure coupled to piston mechanics and damping",
+  "description": "Uniform gas obeys a reversible adiabatic lumped closure and drives an inertial spring piston. Dissipated mechanical work is tracked outside the gas; no heat is returned to it. No leakage, shocks, wall heat exchange or engine-combustion claim. Illustrative SI volume0.01m3,area0.01m2,mass1kg,spring1000N/m,external damper10kg/s,external100kPa,gamma1.4. Initial displacement0.02m,zero speed,pressure from pV^gamma=100000*0.01^gamma,damper heat0. Horizon2s,RK4step0.0005s. Original mathematical transcription/adaptation; not a calibrated forecast. Signed net-rate flows implement the stated equations. No numerical clamps or hidden resets.",
+  "category": "physics",
+  "source": "https://openstax.org/books/university-physics-volume-2/pages/3-6-adiabatic-processes-for-an-ideal-gas",
+  "reference": "OpenStax University Physics Volume2 Section3.6, ideal-gas adiabatic pressure-volume law, Rice University, CC BY4.0; our Newtonian piston/spring/external-damper closure.",
+  "stocks": [
+    {
+      "id": "adiabatic-gas-piston-third-science:Displacement",
+      "name": "Displacement",
+      "initial_value": 0.02,
+      "equation": "",
+      "units": "meter",
+      "position": {
+        "x": 140,
+        "y": 230
+      }
+    },
+    {
+      "id": "adiabatic-gas-piston-third-science:Piston_Speed",
+      "name": "Piston_Speed",
+      "initial_value": 0,
+      "equation": "",
+      "units": "meter/second",
+      "position": {
+        "x": 300,
+        "y": 230
+      }
+    },
+    {
+      "id": "adiabatic-gas-piston-third-science:Gas_Pressure",
+      "name": "Gas_Pressure",
+      "initial_value": 97265.70960169718,
+      "equation": "",
+      "units": "kg/(meter*second^2)",
+      "position": {
+        "x": 460,
+        "y": 230
+      }
+    },
+    {
+      "id": "adiabatic-gas-piston-third-science:Damper_Heat",
+      "name": "Damper_Heat",
+      "initial_value": 0,
+      "equation": "",
+      "units": "kg*meter^2/second^2",
+      "position": {
+        "x": 620,
+        "y": 230
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "adiabatic-gas-piston-third-science:rate:Displacement",
+      "name": "Displacement_net_rate",
+      "equation": "Piston_Speed",
+      "to_stock": "adiabatic-gas-piston-third-science:Displacement",
+      "units": "(meter)/(second)",
+      "position": {
+        "x": 140,
+        "y": 330
+      }
+    },
+    {
+      "id": "adiabatic-gas-piston-third-science:rate:Piston_Speed",
+      "name": "Piston_Speed_net_rate",
+      "equation": "(Piston_Area*(Gas_Pressure-External_Pressure)-Spring_Stiffness*Displacement-Damping*Piston_Speed)/Piston_Mass",
+      "to_stock": "adiabatic-gas-piston-third-science:Piston_Speed",
+      "units": "(meter/second)/(second)",
+      "position": {
+        "x": 300,
+        "y": 330
+      }
+    },
+    {
+      "id": "adiabatic-gas-piston-third-science:rate:Gas_Pressure",
+      "name": "Gas_Pressure_net_rate",
+      "equation": "-Heat_Capacity_Ratio*Gas_Pressure*Piston_Area*Piston_Speed/Gas_Volume",
+      "to_stock": "adiabatic-gas-piston-third-science:Gas_Pressure",
+      "units": "(kg/(meter*second^2))/(second)",
+      "position": {
+        "x": 460,
+        "y": 330
+      }
+    },
+    {
+      "id": "adiabatic-gas-piston-third-science:rate:Damper_Heat",
+      "name": "Damper_Heat_net_rate",
+      "equation": "Damping*Piston_Speed^2",
+      "to_stock": "adiabatic-gas-piston-third-science:Damper_Heat",
+      "units": "(kg*meter^2/second^2)/(second)",
+      "position": {
+        "x": 620,
+        "y": 330
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "adiabatic-gas-piston-third-science:Dead_Volume",
+      "name": "Dead_Volume",
+      "equation": "0.01",
+      "units": "meter^3",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "adiabatic-gas-piston-third-science:Piston_Area",
+      "name": "Piston_Area",
+      "equation": "0.01",
+      "units": "meter^2",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "adiabatic-gas-piston-third-science:Piston_Mass",
+      "name": "Piston_Mass",
+      "equation": "1",
+      "units": "kg",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "adiabatic-gas-piston-third-science:External_Pressure",
+      "name": "External_Pressure",
+      "equation": "100000",
+      "units": "kg/(meter*second^2)",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    },
+    {
+      "id": "adiabatic-gas-piston-third-science:Spring_Stiffness",
+      "name": "Spring_Stiffness",
+      "equation": "1000",
+      "units": "kg/second^2",
+      "position": {
+        "x": 740,
+        "y": 50
+      }
+    },
+    {
+      "id": "adiabatic-gas-piston-third-science:Damping",
+      "name": "Damping",
+      "equation": "10",
+      "units": "kg/second",
+      "position": {
+        "x": 900,
+        "y": 50
+      }
+    },
+    {
+      "id": "adiabatic-gas-piston-third-science:Heat_Capacity_Ratio",
+      "name": "Heat_Capacity_Ratio",
+      "equation": "1.4",
+      "units": "1",
+      "position": {
+        "x": 1060,
+        "y": 50
+      }
+    },
+    {
+      "id": "adiabatic-gas-piston-third-science:Gas_Volume",
+      "name": "Gas_Volume",
+      "equation": "Dead_Volume+Piston_Area*Displacement",
+      "units": "meter^3",
+      "position": {
+        "x": 100,
+        "y": 120
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 2,
+    "dt": 0.0005,
+    "integration_method": "rk4",
+    "units": "second",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

@@ -2,6 +2,17 @@
 import hashlib,json
 
 def baseline_models(root, excluded_ids=None):
+    quality_path=root/'operations/library-quality-20261024.json'
+    if quality_path.exists():
+        quality=json.loads(quality_path.read_text())
+        for row in quality['retired']+quality['replaced']:
+            assert hashlib.sha256((root/row['archive']).read_bytes()).hexdigest()==row['before_sha256']
+            assert row['before_sha256'] in (root/row['review']).read_text()
+        for row in quality['retired']:assert not (root/row['file']).exists()
+        for row in quality['replaced']:
+            assert (root/row['file']).read_bytes()==(root/row['source']).read_bytes()
+            assert hashlib.sha256((root/row['file']).read_bytes()).hexdigest()==row['after_sha256']
+            assert row['after_sha256'] in (root/row['review']).read_text()
     manifest=root/'operations/library-admissions-20261024.json'
     admitted=json.loads(manifest.read_text())['models'] if manifest.exists() else []
     allowed={row['file']:row for row in admitted}

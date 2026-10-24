@@ -1,0 +1,158 @@
+{
+  "id": "rate-state-stable-sliding-third-science",
+  "name": "Dieterich-Ruina aging friction under quasistatic spring loading",
+  "description": "Contact healing and velocity/state friction feed back through quasistatic elastic loading. Stable stiffness exceeds critical(b-a)/Dc. This massless positive-sliding model excludes inertia, velocity reversal, pore-pressure change and earthquake rupture propagation. Illustrative a0.01,b0.015,stiffness/normalstress0.02 per metre,Dc1m,load/reference speed1m/s,initial V0.8m/s and age1.1s. Log-speed formulation is our algebraic variable choice; horizon30s,RK4step0.01s. Not a fault-specific or laboratory fit. Original mathematical transcription/adaptation; not a calibrated forecast. Signed net-rate flows implement the stated equations. No numerical clamps or hidden resets.",
+  "category": "physics",
+  "source": "https://doi.org/10.1029/JB088iB12p10359",
+  "reference": "Ruina (1983), Slip instability and state variable friction laws, JGR88:10359-10370; aging/slowness law and massless spring-slider stability. Dieterich (1979), doi:10.1029/JB084iB05p02161. Explicit aging-law form also verified against Pipping (2019), Eq3.1, doi:10.1002/zamm.201800263.",
+  "stocks": [
+    {
+      "id": "rate-state-stable-sliding-third-science:Log_Slip_Speed",
+      "name": "Log_Slip_Speed",
+      "initial_value": -0.2231435513142097,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 140,
+        "y": 230
+      }
+    },
+    {
+      "id": "rate-state-stable-sliding-third-science:Contact_Age",
+      "name": "Contact_Age",
+      "initial_value": 1.1,
+      "equation": "",
+      "units": "second",
+      "position": {
+        "x": 300,
+        "y": 230
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "rate-state-stable-sliding-third-science:rate:Log_Slip_Speed",
+      "name": "Log_Slip_Speed_net_rate",
+      "equation": "(Normalized_Stiffness*(Load_Speed-Slip_Speed)-State_Effect/Contact_Age*Age_Rate)/Direct_Effect",
+      "to_stock": "rate-state-stable-sliding-third-science:Log_Slip_Speed",
+      "units": "(1)/(second)",
+      "position": {
+        "x": 140,
+        "y": 330
+      }
+    },
+    {
+      "id": "rate-state-stable-sliding-third-science:rate:Contact_Age",
+      "name": "Contact_Age_net_rate",
+      "equation": "Age_Rate",
+      "to_stock": "rate-state-stable-sliding-third-science:Contact_Age",
+      "units": "(second)/(second)",
+      "position": {
+        "x": 300,
+        "y": 330
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "rate-state-stable-sliding-third-science:Direct_Effect",
+      "name": "Direct_Effect",
+      "equation": "0.01",
+      "units": "1",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "rate-state-stable-sliding-third-science:State_Effect",
+      "name": "State_Effect",
+      "equation": "0.015",
+      "units": "1",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "rate-state-stable-sliding-third-science:Normalized_Stiffness",
+      "name": "Normalized_Stiffness",
+      "equation": "0.02",
+      "units": "1/meter",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    },
+    {
+      "id": "rate-state-stable-sliding-third-science:Load_Speed",
+      "name": "Load_Speed",
+      "equation": "1",
+      "units": "meter/second",
+      "position": {
+        "x": 580,
+        "y": 50
+      }
+    },
+    {
+      "id": "rate-state-stable-sliding-third-science:Reference_Speed",
+      "name": "Reference_Speed",
+      "equation": "1",
+      "units": "meter/second",
+      "position": {
+        "x": 740,
+        "y": 50
+      }
+    },
+    {
+      "id": "rate-state-stable-sliding-third-science:Slip_Distance",
+      "name": "Slip_Distance",
+      "equation": "1",
+      "units": "meter",
+      "position": {
+        "x": 900,
+        "y": 50
+      }
+    },
+    {
+      "id": "rate-state-stable-sliding-third-science:Slip_Speed",
+      "name": "Slip_Speed",
+      "equation": "Reference_Speed*EXP(Log_Slip_Speed)",
+      "units": "meter/second",
+      "position": {
+        "x": 1060,
+        "y": 50
+      }
+    },
+    {
+      "id": "rate-state-stable-sliding-third-science:Age_Rate",
+      "name": "Age_Rate",
+      "equation": "1-Slip_Speed*Contact_Age/Slip_Distance",
+      "units": "1",
+      "position": {
+        "x": 100,
+        "y": 120
+      }
+    },
+    {
+      "id": "rate-state-stable-sliding-third-science:Friction_Increment",
+      "name": "Friction_Increment",
+      "equation": "Direct_Effect*Log_Slip_Speed+State_Effect*LN(Contact_Age*Reference_Speed/Slip_Distance)",
+      "units": "1",
+      "position": {
+        "x": 260,
+        "y": 120
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 30,
+    "dt": 0.01,
+    "integration_method": "rk4",
+    "units": "second",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

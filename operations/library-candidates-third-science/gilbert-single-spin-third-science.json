@@ -1,0 +1,120 @@
+{
+  "id": "gilbert-single-spin-third-science",
+  "name": "Landau-Lifshitz-Gilbert single-spin precession and relaxation",
+  "description": "One uniform magnetic moment precesses and aligns while preserving its length. No exchange/demagnetizing/anisotropy fields, thermal noise, spatial domains or domain-wall predictions. Illustrative unit magnetization(0.6,0,0.8),constant z-directed field absorbed into frequency1,damping0.1; horizon50,RK4step0.02. Normalized magnetization/time, no material-specific calibration. Original mathematical transcription/adaptation; not a calibrated forecast. Signed net-rate flows implement the stated equations. No numerical clamps or hidden resets.",
+  "category": "physics",
+  "source": "https://math.nist.gov/oommf/doc/userguide12b4/userguide.pdf",
+  "reference": "NIST OOMMF User Guide, Landau-Lifshitz/Gilbert equations2-3 and gamma=(1+alpha^2)*gamma_LL; Gilbert (2004), doi:10.1109/TMAG.2004.836740.",
+  "stocks": [
+    {
+      "id": "gilbert-single-spin-third-science:Magnetization_X",
+      "name": "Magnetization_X",
+      "initial_value": 0.6,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 140,
+        "y": 230
+      }
+    },
+    {
+      "id": "gilbert-single-spin-third-science:Magnetization_Y",
+      "name": "Magnetization_Y",
+      "initial_value": 0,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 300,
+        "y": 230
+      }
+    },
+    {
+      "id": "gilbert-single-spin-third-science:Magnetization_Z",
+      "name": "Magnetization_Z",
+      "initial_value": 0.8,
+      "equation": "",
+      "units": "1",
+      "position": {
+        "x": 460,
+        "y": 230
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "gilbert-single-spin-third-science:rate:Magnetization_X",
+      "name": "Magnetization_X_net_rate",
+      "equation": "-Precession*(Magnetization_Y+Damping*Magnetization_X*Magnetization_Z)",
+      "to_stock": "gilbert-single-spin-third-science:Magnetization_X",
+      "units": "(1)/(time)",
+      "position": {
+        "x": 140,
+        "y": 330
+      }
+    },
+    {
+      "id": "gilbert-single-spin-third-science:rate:Magnetization_Y",
+      "name": "Magnetization_Y_net_rate",
+      "equation": "Precession*(Magnetization_X-Damping*Magnetization_Y*Magnetization_Z)",
+      "to_stock": "gilbert-single-spin-third-science:Magnetization_Y",
+      "units": "(1)/(time)",
+      "position": {
+        "x": 300,
+        "y": 330
+      }
+    },
+    {
+      "id": "gilbert-single-spin-third-science:rate:Magnetization_Z",
+      "name": "Magnetization_Z_net_rate",
+      "equation": "Precession*Damping*(Magnetization_X^2+Magnetization_Y^2)",
+      "to_stock": "gilbert-single-spin-third-science:Magnetization_Z",
+      "units": "(1)/(time)",
+      "position": {
+        "x": 460,
+        "y": 330
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "gilbert-single-spin-third-science:Gilbert_Frequency",
+      "name": "Gilbert_Frequency",
+      "equation": "1",
+      "units": "1/time",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "gilbert-single-spin-third-science:Damping",
+      "name": "Damping",
+      "equation": "0.1",
+      "units": "1",
+      "position": {
+        "x": 260,
+        "y": 50
+      }
+    },
+    {
+      "id": "gilbert-single-spin-third-science:Precession",
+      "name": "Precession",
+      "equation": "Gilbert_Frequency/(1+Damping^2)",
+      "units": "1/time",
+      "position": {
+        "x": 420,
+        "y": 50
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 50,
+    "dt": 0.02,
+    "integration_method": "rk4",
+    "units": "time",
+    "rtol": 1e-09,
+    "atol": 1e-12
+  }
+}

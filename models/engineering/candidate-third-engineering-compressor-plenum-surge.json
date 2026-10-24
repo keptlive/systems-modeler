@@ -1,0 +1,155 @@
+{
+  "id": "candidate-third-engineering-compressor-plenum-surge",
+  "name": "Moore-Greitzer Compressor and Plenum Surge",
+  "category": "engineering",
+  "description": "Source shifted unactuated surge subsystem, unstable operating-point coefficients and table values. Authored small perturbation and60 normalized-time horizon. No neural controller or full rotating-stall PDE; pressure must remain in the square-root domain. Teaching reconstruction; not calibrated equipment or a certified controller. Missing dimensional annotations remain unknown.",
+  "source": "https://www.mic-journal.no/PDF/2020/MIC-2020-2-1.pdf",
+  "reference": "Neverlien, Moe and Gravdahl2020, Compressor Surge Control Using Lyapunov Neural Networks, doi10.4173/mic.2020.2.1",
+  "stocks": [
+    {
+      "id": "s0",
+      "name": "PressureShift",
+      "initial_value": 0.03,
+      "position": {
+        "x": 220,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "s1",
+      "name": "FlowShift",
+      "initial_value": 0.02,
+      "position": {
+        "x": 400,
+        "y": 150
+      },
+      "units": "1"
+    }
+  ],
+  "flows": [
+    {
+      "id": "f0",
+      "name": "Change_PressureShift",
+      "equation": "(FlowShift-Throttle*(sqrt(PressureShift+BasePressure)-sqrt(BasePressure)))/Greitzer",
+      "to_stock": "s0",
+      "position": {
+        "x": 130,
+        "y": 150
+      },
+      "units": "1"
+    },
+    {
+      "id": "f1",
+      "name": "Change_FlowShift",
+      "equation": "Greitzer*(-Cubic*FlowShift^3-Quadratic*FlowShift^2-Linear*FlowShift-PressureShift)",
+      "to_stock": "s1",
+      "position": {
+        "x": 310,
+        "y": 150
+      },
+      "units": "1"
+    }
+  ],
+  "variables": [
+    {
+      "id": "p0",
+      "name": "Greitzer",
+      "equation": "0.8319",
+      "position": {
+        "x": 100,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p1",
+      "name": "Throttle",
+      "equation": "0.411",
+      "position": {
+        "x": 270,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p2",
+      "name": "BasePressure",
+      "equation": "0.533",
+      "position": {
+        "x": 440,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p3",
+      "name": "BaseFlow",
+      "equation": "0.3",
+      "position": {
+        "x": 610,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p4",
+      "name": "Height",
+      "equation": "0.18",
+      "position": {
+        "x": 780,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p5",
+      "name": "Width",
+      "equation": "0.25",
+      "position": {
+        "x": 950,
+        "y": 750
+      },
+      "units": "1"
+    },
+    {
+      "id": "p6",
+      "name": "Cubic",
+      "equation": "Height/(2*Width^3)",
+      "position": {
+        "x": 100,
+        "y": 850
+      },
+      "units": "1"
+    },
+    {
+      "id": "p7",
+      "name": "Quadratic",
+      "equation": "3*Height/(2*Width^2)*(BaseFlow/Width-1)",
+      "position": {
+        "x": 270,
+        "y": 850
+      },
+      "units": "1"
+    },
+    {
+      "id": "p8",
+      "name": "Linear",
+      "equation": "3*Height*BaseFlow/(2*Width^2)*(BaseFlow/Width-2)",
+      "position": {
+        "x": 440,
+        "y": 850
+      },
+      "units": "1"
+    }
+  ],
+  "tables": [],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 60,
+    "dt": 0.01,
+    "integration_method": "rk4",
+    "units": "1"
+  }
+}
