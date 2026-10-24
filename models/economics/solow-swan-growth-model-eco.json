@@ -1,13 +1,13 @@
 {
   "id": "solow-swan-growth-model-eco",
   "name": "Solow-Swan Growth Model",
-  "description": "Foundational neoclassical model of long-term economic growth. Capital accumulation drives growth in output per worker, but diminishing returns to capital mean the economy converges to a steady state. Long-run growth requires technological progress. Reference: Solow, R. M. (1956). A contribution to the theory of economic growth. Quarterly Journal of Economics, 70(1), 65-94. DOI: https://doi.org/10.2307/1884513",
+  "description": "Foundational neoclassical model of long-term economic growth. Capital accumulation drives growth in output per worker, but diminishing returns to capital mean the economy converges to a steady state. Long-run growth requires technological progress. Reference: Solow, R. M. (1956). A contribution to the theory of economic growth. Quarterly Journal of Economics, 70(1), 65-94. DOI: https://doi.org/10.2307/1884513\n\nReview 2026-10-20: repaired references to the existing capital/labor/productivity/share variables and restored initialization from the existing Initial Capital and Initial Labor parameters. This is an illustrative Cobb-Douglas Solow model with explicit depreciation, not an empirical calibration or an exact parameterization from Solow (1956). A closed-form capital-per-worker solution checks the complete numerical trajectory.",
   "stocks": [
     {
       "id": "stock-capital-stock",
       "name": "Capital Stock",
       "initial_value": 0,
-      "equation": "",
+      "equation": "Initial_Capital",
       "position": {
         "x": 150,
         "y": 200
@@ -17,7 +17,7 @@
       "id": "stock-labor-force",
       "name": "Labor Force",
       "initial_value": 0,
-      "equation": "",
+      "equation": "Initial_Labor",
       "position": {
         "x": 350,
         "y": 200
@@ -39,7 +39,7 @@
     {
       "id": "flow-depreciation",
       "name": "Depreciation",
-      "equation": "Depreciation_Rate * Capital",
+      "equation": "Depreciation_Rate * \"Capital Stock\"",
       "from_stock": "stock-capital-stock",
       "to_stock": null,
       "position": {
@@ -50,7 +50,7 @@
     {
       "id": "flow-labor-force-growth",
       "name": "Labor Force Growth",
-      "equation": "Labor_Growth_Rate * Labor",
+      "equation": "Labor_Growth_Rate * \"Labor Force\"",
       "from_stock": null,
       "to_stock": "stock-labor-force",
       "position": {
@@ -126,7 +126,7 @@
     {
       "id": "var-output",
       "name": "Output",
-      "equation": "TFP * Capital^Capital_Share * Labor^(1-Capital_Share)",
+      "equation": "\"Total Factor Productivity\" * \"Capital Stock\"^\"Capital Share (alpha)\" * \"Labor Force\"^(1-\"Capital Share (alpha)\")",
       "position": {
         "x": 400,
         "y": 160
@@ -135,7 +135,7 @@
     {
       "id": "var-output-per-worker",
       "name": "Output per Worker",
-      "equation": "Output / Labor",
+      "equation": "Output / \"Labor Force\"",
       "position": {
         "x": 550,
         "y": 160
@@ -144,7 +144,7 @@
     {
       "id": "var-capital-per-worker",
       "name": "Capital per Worker",
-      "equation": "Capital / Labor",
+      "equation": "\"Capital Stock\" / \"Labor Force\"",
       "position": {
         "x": 700,
         "y": 160
@@ -153,7 +153,7 @@
     {
       "id": "var-steady-state-capital-per-worker",
       "name": "Steady State Capital per Worker",
-      "equation": "(Savings_Rate * TFP / (Depreciation_Rate + Labor_Growth_Rate))^(1/(1-Capital_Share))",
+      "equation": "(Savings_Rate * \"Total Factor Productivity\" / (Depreciation_Rate + Labor_Growth_Rate))^(1/(1-\"Capital Share (alpha)\"))",
       "position": {
         "x": 100,
         "y": 240
@@ -162,7 +162,7 @@
     {
       "id": "var-marginal-product-of-capital",
       "name": "Marginal Product of Capital",
-      "equation": "Capital_Share * Output / Capital",
+      "equation": "\"Capital Share (alpha)\" * Output / \"Capital Stock\"",
       "position": {
         "x": 250,
         "y": 240

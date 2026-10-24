@@ -26,14 +26,14 @@ const Canvas = {
     height: 600,
 
     // Element sizes
-    stockWidth: 100,
-    stockHeight: 60,
+    stockWidth: 112,
+    stockHeight: 64,
     flowSize: 30,
     variableRadius: 25,
 
     // Zoom and pan state
     scale: 1,
-    minScale: 0.5,
+    minScale: 0.1,
     maxScale: 3,
     translateX: 0,
     translateY: 0,
@@ -80,7 +80,7 @@ const Canvas = {
             .attr('orient', 'auto')
             .append('path')
             .attr('d', 'M0,-5L10,0L0,5')
-            .attr('fill', '#9b59b6');
+            .attr('fill', '#b6a1e4');
 
         // Arrowhead for connectors
         this.defs.append('marker')
@@ -93,7 +93,7 @@ const Canvas = {
             .attr('orient', 'auto')
             .append('path')
             .attr('d', 'M0,-5L10,0L0,5')
-            .attr('fill', '#7f8c8d');
+            .attr('fill', '#8399b6');
 
         // Create main group for zoom/pan
         this.mainGroup = this.svg.append('g').attr('class', 'main-group'); 
@@ -396,32 +396,21 @@ const Canvas = {
      * Check if point is in stock
      */
     isPointInStock(x, y, stock) {
-        const halfWidth = this.stockWidth / 2;
-        const halfHeight = this.stockHeight / 2;
-        return x >= stock.position.x - halfWidth &&
-               x <= stock.position.x + halfWidth &&
-               y >= stock.position.y - halfHeight &&
-               y <= stock.position.y + halfHeight;
+        return this.containsPoint('stock',stock,x,y);
     },
 
     /**
      * Check if point is in flow
      */
     isPointInFlow(x, y, flow) {
-        const halfSize = this.flowSize / 2 + 10; // Extra padding for easier touch
-        return x >= flow.position.x - halfSize &&
-               x <= flow.position.x + halfSize &&
-               y >= flow.position.y - halfSize &&
-               y <= flow.position.y + halfSize;
+        return this.containsPoint('flow',flow,x,y);
     },
 
     /**
      * Check if point is in variable
      */
     isPointInVariable(x, y, variable) {
-        const dx = x - variable.position.x;
-        const dy = y - variable.position.y;
-        return Math.sqrt(dx * dx + dy * dy) <= this.variableRadius + 10; // Extra padding
+        return this.containsPoint('variable',variable,x,y);
     },
 
     /**
@@ -584,6 +573,20 @@ const Canvas = {
         this.updateTransform();
     },
 
+    fitToModel() {
+        const elements = [...App.model.stocks, ...App.model.flows, ...App.model.variables];
+        if (!elements.length) return this.resetView();
+        this.updateDimensions();
+        const bounds=this.modelBounds();
+        const minX=bounds.minX-18,maxX=bounds.maxX+18,minY=bounds.minY-18,maxY=bounds.maxY+18;
+        const availableWidth = Math.max(100, this.width - 40);
+        const availableHeight = Math.max(100, this.height - 120);
+        this.scale = Math.max(this.minScale, Math.min(1, availableWidth / (maxX-minX), availableHeight / (maxY-minY)));
+        this.translateX = (this.width - (maxX-minX)*this.scale) / 2 - minX*this.scale;
+        this.translateY = 70 + (availableHeight - (maxY-minY)*this.scale) / 2 - minY*this.scale;
+        this.updateTransform();
+    },
+
     /**
      * Render the entire canvas
      */
@@ -592,6 +595,8 @@ const Canvas = {
             console.warn("Canvas not initialized");
             return;
         }
+        const focused=document.activeElement;
+        const focusedId=this.svg.node().contains(focused)?focused?.__data__?.id:null;
         // Clear previous content (except defs)
         this.mainGroup.selectAll('g').remove();
 
@@ -610,198 +615,164 @@ const Canvas = {
         this.renderStocks(elementsLayer);
         this.renderFlows(elementsLayer);
         this.renderVariables(elementsLayer);
+        if(focusedId)this.mainGroup.selectAll('[data-element-id]').filter(d=>d.id===focusedId).node()?.focus();
         
-        // Debug: count rendered elements
-        const stockCount = elementsLayer.selectAll(".stock").size();
-        const flowCount = elementsLayer.selectAll(".flow").size();
-        const varCount = elementsLayer.selectAll(".variable").size();
-        console.log("Canvas rendered:", stockCount, "stocks,", flowCount, "flows,", varCount, "variables");
     },
 
     /**
      * Render stocks
      */
-    renderStocks(layer) {
-        const self = this;
-        const stocks = layer.selectAll('.stock')
-            .data(App.model.stocks, d => d.id)
-            .enter()
-            .append('g')
-            .attr('class', 'stock')
-            .attr('transform', d => `translate(${d.position.x}, ${d.position.y})`);
-
-        // Rectangle
-        stocks.append('rect')
-            .attr('class', d => `stock-rect ${App.selected?.id === d.id ? 'selected' : ''}`)
-            .attr('x', -this.stockWidth / 2)
-            .attr('y', -this.stockHeight / 2)
-            .attr('width', this.stockWidth)
-            .attr('height', this.stockHeight)
-            .attr('rx', 5)
-            .on('click', function(event, d) { self.handleElementClick('stock', d, event); })
-            .on('mousedown', function(event, d) { self.startDrag('stock', d, event); });
-
-        // Label
-        stocks.append('text')
-            .attr('class', 'element-label')
-            .attr('y', 5)
-            .text(d => this.truncateLabel(d.name, 12));
-    },
-
-    /**
-     * Render flows
-     */
-    renderFlows(layer) {
-        const self = this;
-        const flows = layer.selectAll('.flow')
-            .data(App.model.flows, d => d.id)
-            .enter()
-            .append('g')
-            .attr('class', 'flow')
-            .attr('transform', d => `translate(${d.position.x}, ${d.position.y})`);
-
-        // Valve shape (hourglass/bowtie)
-        flows.append('path')
-            .attr('class', d => `flow-valve ${App.selected?.id === d.id ? 'selected' : ''}`)
-            .attr('d', `M${-this.flowSize/2},${-this.flowSize/2}
-                       L${this.flowSize/2},${-this.flowSize/2}
-                       L0,0
-                       L${this.flowSize/2},${this.flowSize/2}
-                       L${-this.flowSize/2},${this.flowSize/2}
-                       L0,0Z`)
-            .on('click', function(event, d) { self.handleElementClick('flow', d, event); })
-            .on('mousedown', function(event, d) { self.startDrag('flow', d, event); });
-
-        // Label
-        flows.append('text')
-            .attr('class', 'element-label')
-            .attr('y', this.flowSize / 2 + 15)
-            .text(d => this.truncateLabel(d.name, 10));
-    },
-
-    /**
-     * Render variables
-     */
-    renderVariables(layer) {
-        const self = this;
-        const variables = layer.selectAll('.variable')
-            .data(App.model.variables, d => d.id)
-            .enter()
-            .append('g')
-            .attr('class', 'variable')
-            .attr('transform', d => `translate(${d.position.x}, ${d.position.y})`);
-
-        // Circle
-        variables.append('circle')
-            .attr('class', d => `variable-circle ${App.selected?.id === d.id ? 'selected' : ''}`)
-            .attr('r', this.variableRadius)
-            .on('click', function(event, d) { self.handleElementClick('variable', d, event); })
-            .on('mousedown', function(event, d) { self.startDrag('variable', d, event); });
-
-        // Label
-        variables.append('text')
-            .attr('class', 'element-label')
-            .attr('y', 5)
-            .text(d => this.truncateLabel(d.name, 8));
-    },
-
-    /**
-     * Render flow lines connecting flows to stocks
-     */
-    renderFlowLines(layer) {
-        App.model.flows.forEach(flow => {
-            const flowPos = flow.position;
-
-            // From stock to flow
-            if (flow.from_stock) {
-                const fromStock = App.model.stocks.find(
-                    s => s.id === flow.from_stock || s.name === flow.from_stock
-                );
-                if (fromStock) {
-                    this.drawFlowLine(layer, fromStock.position, flowPos);
-                }
+    /** Greedy text wrapping. Exceptional long names retain a native full-name title. */
+    wrapLabel(name, columns=16, maximum=3) {
+        const words=String(name||'Unnamed').trim().split(/\s+/),lines=[];
+        let line='';
+        for(const word of words){
+            const chunks=Array.from(word);const parts=[];
+            while(chunks.length>columns)parts.push(chunks.splice(0,columns).join(''));
+            if(chunks.length)parts.push(chunks.join(''));
+            for(const part of parts){
+                if(line&&line.length+part.length+1>columns){lines.push(line);line='';}
+                line+=(line?' ':'')+part;
             }
-
-            // From flow to stock
-            if (flow.to_stock) {
-                const toStock = App.model.stocks.find(
-                    s => s.id === flow.to_stock || s.name === flow.to_stock
-                );
-                if (toStock) {
-                    this.drawFlowLine(layer, flowPos, toStock.position);
-                }
-            }
-        });
-    },
-
-    /**
-     * Draw a flow line with arrow
-     */
-    drawFlowLine(layer, from, to) {
-        layer.append('line')
-            .attr('class', 'flow-line')
-            .attr('x1', from.x)
-            .attr('y1', from.y)
-            .attr('x2', to.x)
-            .attr('y2', to.y)
-            .attr('marker-end', 'url(#arrowhead)');
-    },
-
-    /**
-     * Render connectors between elements
-     */
-    renderConnectors(layer) {
-        const self = this;
-        App.model.connectors.forEach(connector => {
-            const fromEl = App.findElement(connector.from_element);
-            const toEl = App.findElement(connector.to_element);
-
-            if (fromEl && toEl) {
-                const fromPos = fromEl.element.position;
-                const toPos = toEl.element.position;
-
-                // Draw curved connector line
-                const midX = (fromPos.x + toPos.x) / 2;
-                const midY = (fromPos.y + toPos.y) / 2;
-                const offset = 30;
-
-                // Calculate perpendicular offset for curve
-                const dx = toPos.x - fromPos.x;
-                const dy = toPos.y - fromPos.y;
-                const len = Math.sqrt(dx * dx + dy * dy);
-                const nx = -dy / len * offset;
-                const ny = dx / len * offset;
-
-                const path = `M${fromPos.x},${fromPos.y} Q${midX + nx},${midY + ny} ${toPos.x},${toPos.y}`;
-
-                layer.append('path')
-                    .attr('class', 'connector-line')
-                    .attr('d', path)
-                    .attr('marker-end', 'url(#connector-arrow)')
-                    .on('click', function(event) {
-                        event.stopPropagation();
-                        App.selectElement('connector', connector.id);
-                    });
-            }
-        });
-    },
-
-    /**
-     * Truncate label to fit
-     */
-    truncateLabel(text, maxLen) {
-        if (text.length <= maxLen) return text;
-        return text.substring(0, maxLen - 2) + '..';
-    },
-
-    /**
-     * Get element position for connector endpoints
-     */
-    getElementPosition(nameOrId) {
-        const result = App.findElement(nameOrId);
-        if (result) {
-            return result.element.position;
         }
-        return null;
-    }
+        if(line)lines.push(line);
+        if(lines.length>maximum){lines.length=maximum;lines[maximum-1]=lines[maximum-1].replace(/[ .…]+$/,'')+'…';}
+        return lines.length?lines:['Unnamed'];
+    },
+    flowLabelWidth(element) {return Math.min(104,Math.max(40,...this.wrapLabel(element.name,17,3).map(line=>line.length*6+14)));},
+    nodeMetrics(type,element) {
+        if(type==='stock')return {width:this.stockWidth,height:this.stockHeight,radius:7};
+        if(type==='flow')return {width:24,height:24,radius:0};
+        return {width:110,height:42,radius:21};
+    },
+    nodeBounds(type,element,hit=false) {
+        const {width,height}=this.nodeMetrics(type,element),p=element.position;
+        let left=-width/2,right=width/2,top=-height/2,bottom=height/2;
+        if(type==='flow'){
+            left=-Math.max(22,this.flowLabelWidth(element)/2);right=-left;top=-22;
+            bottom=26+this.wrapLabel(element.name,17,3).length*12;
+        }
+        const pad=hit?4:0;
+        return {minX:p.x+left-pad,maxX:p.x+right+pad,minY:p.y+top-pad,maxY:p.y+bottom+pad};
+    },
+    containsPoint(type,element,x,y) {
+        const b=this.nodeBounds(type,element,true);
+        return x>=b.minX&&x<=b.maxX&&y>=b.minY&&y<=b.maxY;
+    },
+    /** Intersect a ray with the actual rounded node body, then leave a small gap. */
+    boundaryPoint(type,element,toward,gap=3) {
+        const p=element.position,m=this.nodeMetrics(type,element);
+        let dx=toward.x-p.x,dy=toward.y-p.y;
+        const length=Math.hypot(dx,dy);
+        if(length<1e-9){dx=1;dy=0;}else{dx/=length;dy/=length;}
+        const inside=distance=>{
+            const x=Math.abs(dx*distance),y=Math.abs(dy*distance),r=m.radius;
+            if(x>m.width/2||y>m.height/2)return false;
+            if(!r)return true;
+            const cx=Math.max(0,x-(m.width/2-r)),cy=Math.max(0,y-(m.height/2-r));
+            return cx*cx+cy*cy<=r*r;
+        };
+        let low=0,high=Math.hypot(m.width,m.height);
+        for(let i=0;i<32;i++){const mid=(low+high)/2;if(inside(mid))low=mid;else high=mid;}
+        return {x:p.x+dx*(low+gap),y:p.y+dy*(low+gap)};
+    },
+    connectorGeometry(from,to) {
+        const a=from.element.position,b=to.element.position,dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy);
+        if(len<1e-6){
+            const reach=Math.max(this.nodeMetrics(from.type,from.element).width,this.nodeMetrics(to.type,to.element).width)/2+48;
+            const p=this.boundaryPoint(from.type,from.element,{x:a.x+reach,y:a.y-reach});
+            const q=this.boundaryPoint(to.type,to.element,{x:b.x+reach,y:b.y+reach});
+            return {path:`M${p.x},${p.y} C${a.x+reach},${a.y-reach} ${b.x+reach},${b.y+reach} ${q.x},${q.y}`,points:[p,q,{x:a.x+reach,y:a.y-reach},{x:b.x+reach,y:b.y+reach}]};
+        }
+        const bend=Math.min(28,len*.16),control={x:(a.x+b.x)/2-dy/len*bend,y:(a.y+b.y)/2+dx/len*bend};
+        const p=this.boundaryPoint(from.type,from.element,control),q=this.boundaryPoint(to.type,to.element,control);
+        return {path:`M${p.x},${p.y} Q${control.x},${control.y} ${q.x},${q.y}`,points:[p,control,q]};
+    },
+    modelBounds() {
+        const bounds=[];
+        for(const [type,key] of [['stock','stocks'],['flow','flows'],['variable','variables']]){
+            for(const element of App.model[key])bounds.push(this.nodeBounds(type,element));
+        }
+        for(const connector of App.model.connectors){
+            const from=App.findElement(connector.from_element),to=App.findElement(connector.to_element);
+            if(from&&to)for(const point of this.connectorGeometry(from,to).points)bounds.push({minX:point.x,maxX:point.x,minY:point.y,maxY:point.y});
+        }
+        if(!bounds.length)return null;
+        return {minX:Math.min(...bounds.map(b=>b.minX)),maxX:Math.max(...bounds.map(b=>b.maxX)),minY:Math.min(...bounds.map(b=>b.minY)),maxY:Math.max(...bounds.map(b=>b.maxY))};
+    },
+    nodeGroup(layer,type,elements) {
+        const self=this;
+        const groups=layer.selectAll(`g.${type}`).data(elements,d=>d.id).enter().append('g')
+            .attr('class',d=>`${type} diagram-node${App.selected?.id===d.id?' is-selected':''}`)
+            .attr('transform',d=>`translate(${d.position.x},${d.position.y})`)
+            .attr('tabindex',0).attr('role','button').attr('data-keyboard-ready','true').attr('data-element-id',d=>d.id)
+            .attr('aria-label',d=>`${type}: ${d.name}`).attr('aria-pressed',d=>App.selected?.id===d.id?'true':'false')
+            .on('click',function(event,d){self.handleElementClick(type,d,event);})
+            .on('mousedown',function(event,d){self.startDrag(type,d,event);})
+            .on('keydown',function(event,d){if(event.key==='Enter'||event.key===' '){event.preventDefault();self.handleElementClick(type,d,event);}});
+        groups.append('title').text(d=>`${d.name}${d.units?' · '+d.units:''}`);
+        return groups;
+    },
+    appendLabel(group,name,columns,y,lineHeight=12,maximum=3) {
+        const lines=this.wrapLabel(name,columns,maximum);
+        const label=group.append('text').attr('class','element-label').attr('x',0);
+        lines.forEach((line,index)=>label.append('tspan').attr('x',0).attr('y',y+index*lineHeight).text(line));
+    },
+    renderStocks(layer) {
+        const self=this,groups=this.nodeGroup(layer,'stock',App.model.stocks);
+        groups.append('rect').attr('class','stock-rect').attr('x',-this.stockWidth/2).attr('y',-this.stockHeight/2)
+            .attr('width',this.stockWidth).attr('height',this.stockHeight).attr('rx',7);
+        groups.append('path').attr('class','stock-accent').attr('d',`M${-this.stockWidth/2+10},${-this.stockHeight/2+1} H${this.stockWidth/2-10}`);
+        groups.append('text').attr('class','node-eyebrow').attr('x',0).attr('y',-18).text('STOCK');
+        groups.each(function(d){const lines=self.wrapLabel(d.name,17,3);self.appendLabel(d3.select(this),d.name,17,6-(lines.length-1)*6,12);});
+    },
+    renderFlows(layer) {
+        const self=this,groups=this.nodeGroup(layer,'flow',App.model.flows);
+        groups.append('rect').attr('class','node-hit').attr('x',-22).attr('y',-22).attr('width',44).attr('height',44).attr('rx',8);
+        groups.append('path').attr('class','flow-valve').attr('d','M-10,-9 L10,9 L10,-9 L-10,9 Z');
+        groups.append('circle').attr('class','valve-center').attr('r',2.5);
+        groups.each(function(d){
+            const group=d3.select(this),lines=self.wrapLabel(d.name,17,3);
+            group.append('rect').attr('class','flow-label-plate').attr('x',-self.flowLabelWidth(d)/2).attr('y',19).attr('width',self.flowLabelWidth(d)).attr('height',lines.length*12+7).attr('rx',4);
+            self.appendLabel(group,d.name,17,30,12);
+        });
+    },
+    renderVariables(layer) {
+        const self=this,groups=this.nodeGroup(layer,'variable',App.model.variables);
+        groups.append('rect').attr('class','variable-capsule').attr('x',-55).attr('y',-21).attr('width',110).attr('height',42).attr('rx',21);
+        groups.append('circle').attr('class','variable-circle').attr('cx',-43).attr('r',3.5);
+        groups.each(function(d){
+            const group=d3.select(this),lines=self.wrapLabel(d.name,15,3);
+            const label=group.append('text').attr('class','element-label');
+            lines.forEach((line,index)=>label.append('tspan').attr('x',5).attr('y',4-(lines.length-1)*5.7+index*11.4).text(line));
+        });
+    },
+    renderFlowLines(layer) {
+        for(const flow of App.model.flows){
+            const valve={type:'flow',element:flow};
+            if(flow.from_stock){const stock=App.model.stocks.find(s=>s.id===flow.from_stock||s.name===flow.from_stock);if(stock)this.drawFlowLine(layer,{type:'stock',element:stock},valve);}
+            if(flow.to_stock){const stock=App.model.stocks.find(s=>s.id===flow.to_stock||s.name===flow.to_stock);if(stock)this.drawFlowLine(layer,valve,{type:'stock',element:stock});}
+        }
+    },
+    drawFlowLine(layer,from,to) {
+        const p=this.boundaryPoint(from.type,from.element,to.element.position,1),q=this.boundaryPoint(to.type,to.element,from.element.position,5);
+        // Coincident primitives have no defined direction; keep endpoints finite.
+        const dx=to.element.position.x-from.element.position.x,dy=to.element.position.y-from.element.position.y;
+        if(Math.hypot(dx,dy)<1e-6||(q.x-p.x)*dx+(q.y-p.y)*dy<=0)return;
+        layer.append('line').attr('class','flow-line').attr('x1',p.x).attr('y1',p.y).attr('x2',q.x).attr('y2',q.y).attr('marker-end','url(#arrowhead)');
+    },
+    renderConnectors(layer) {
+        for(const connector of App.model.connectors){
+            const from=App.findElement(connector.from_element),to=App.findElement(connector.to_element);
+            if(!from||!to)continue;
+            const geometry=this.connectorGeometry(from,to),selected=App.selected?.id===connector.id;
+            layer.append('path').attr('class',`connector-line${selected?' selected':''}`).attr('d',geometry.path).attr('marker-end','url(#connector-arrow)');
+            layer.append('path').datum(connector).attr('data-element-id',connector.id).attr('class','connector-hit').attr('d',geometry.path).attr('tabindex',0).attr('role','button')
+                .attr('aria-label',`Dependency: ${from.element.name} to ${to.element.name}`)
+                .on('click',event=>{event.stopPropagation();App.selectElement('connector',connector.id);})
+                .on('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();App.selectElement('connector',connector.id);}});
+        }
+    },
+    truncateLabel(text,maxLen) {return this.wrapLabel(text,maxLen,1)[0];},
+    getElementPosition(nameOrId) {return App.findElement(nameOrId)?.element.position||null;}
 };

@@ -1,128 +1,120 @@
 {
   "id": "rayleigh-benard-convection-phy",
-  "name": "Rayleigh-Bénard Convection Model",
-  "description": "Classic model of thermal convection in a fluid layer heated from below. Above a critical Rayleigh number, convection cells form. This is a fundamental paradigm for pattern formation in physics. Source: Bénard (1900), Rayleigh (1916). DOI: 10.1098/rspa.1916.0076",
+  "name": "Rayleigh-Benard Convection \u2014 Lorenz Three-Mode Model",
+  "description": "Source reconstruction of Lorenz (1963), equations (25)-(27), pp.134-136: the signed convection X, horizontal temperature Y and vertical thermal-profile Z amplitudes form a nonlinear three-mode free-boundary Rayleigh-Benard truncation. The original generated ramp-heated two-temperature exponential model was not executable Rayleigh physics and is replaced by these published equations, parameters sigma10, r28, a-squared0.5 and initial (0,1,0) from Table1. Time is dimensionless tau, not seconds. The saved horizon0..200 is retained; the integration grid is refined from0.1 to the paper's0.01 dimensionless time step, with RK4. The paper used a double-approximation method, not RK4. The removed physical parameters and heating/cooling laws are archived in the repair receipt; they cannot consistently describe these dimensionless modes. This low-order educational model is not a calibrated fluid simulation; Lorenz explicitly warns that strongly convecting PDE solutions need not resemble its extreme truncation. Negative X/Y mean reversed circulation, not negative absolute temperature.",
   "stocks": [
     {
+      "id": "stock-convection",
+      "position": {
+        "x": 350,
+        "y": 200
+      },
+      "name": "Convection_Amplitude",
+      "units": "dimensionless",
+      "initial_value": 0,
+      "equation": ""
+    },
+    {
       "id": "stock-bottom-temp",
-      "name": "Bottom_Temperature",
-      "initial_value": 100,
-      "equation": "",
-      "position": {"x": 150, "y": 300}
+      "position": {
+        "x": 150,
+        "y": 300
+      },
+      "name": "Horizontal_Temperature_Amplitude",
+      "units": "dimensionless",
+      "initial_value": 1,
+      "equation": ""
     },
     {
       "id": "stock-top-temp",
-      "name": "Top_Temperature",
-      "initial_value": 20,
-      "equation": "",
-      "position": {"x": 150, "y": 100}
-    },
-    {
-      "id": "stock-convection",
-      "name": "Convection_Amplitude",
-      "initial_value": 0.1,
-      "equation": "",
-      "position": {"x": 350, "y": 200}
+      "position": {
+        "x": 150,
+        "y": 100
+      },
+      "name": "Vertical_Profile_Amplitude",
+      "units": "dimensionless",
+      "initial_value": 0,
+      "equation": ""
     }
   ],
   "flows": [
     {
-      "id": "flow-heating",
-      "name": "Bottom_Heating",
-      "equation": "Heat_Input",
+      "id": "flow-convection-growth",
+      "position": {
+        "x": 250,
+        "y": 200
+      },
+      "name": "Convection_Growth",
+      "units": "dimensionless",
+      "equation": "Prandtl_Number * (Horizontal_Temperature_Amplitude - Convection_Amplitude)",
       "from_stock": null,
-      "to_stock": "stock-bottom-temp",
-      "position": {"x": 50, "y": 300}
+      "to_stock": "stock-convection"
+    },
+    {
+      "id": "flow-heating",
+      "position": {
+        "x": 50,
+        "y": 300
+      },
+      "name": "Horizontal_Thermal_Change",
+      "units": "dimensionless",
+      "equation": "Reduced_Rayleigh * Convection_Amplitude - Horizontal_Temperature_Amplitude - Convection_Amplitude * Vertical_Profile_Amplitude",
+      "from_stock": null,
+      "to_stock": "stock-bottom-temp"
     },
     {
       "id": "flow-cooling",
-      "name": "Top_Cooling",
-      "equation": "Heat_Loss",
-      "from_stock": "stock-top-temp",
-      "to_stock": null,
-      "position": {"x": 50, "y": 100}
-    },
-    {
-      "id": "flow-convection-growth",
-      "name": "Convection_Growth",
-      "equation": "IF(Rayleigh_Number > Critical_Ra, Growth_Rate * (Rayleigh_Number / Critical_Ra - 1) * Convection_Amplitude, -0.1 * Convection_Amplitude)",
+      "position": {
+        "x": 50,
+        "y": 100
+      },
+      "name": "Vertical_Profile_Change",
+      "units": "dimensionless",
+      "equation": "Convection_Amplitude * Horizontal_Temperature_Amplitude - Geometry_Factor * Vertical_Profile_Amplitude",
       "from_stock": null,
-      "to_stock": "stock-convection",
-      "position": {"x": 250, "y": 200}
+      "to_stock": "stock-top-temp"
     }
   ],
   "variables": [
     {
-      "id": "var-temp-diff",
-      "name": "Temperature_Difference",
-      "equation": "Bottom_Temperature - Top_Temperature",
-      "position": {"x": 200, "y": 200}
-    },
-    {
-      "id": "var-height",
-      "name": "Layer_Height",
-      "equation": "0.1",
-      "position": {"x": 350, "y": 100}
-    },
-    {
-      "id": "var-alpha",
-      "name": "Thermal_Expansion",
-      "equation": "0.0002",
-      "position": {"x": 450, "y": 100}
-    },
-    {
-      "id": "var-gravity",
-      "name": "Gravity",
-      "equation": "9.81",
-      "position": {"x": 350, "y": 300}
-    },
-    {
-      "id": "var-thermal-diff",
-      "name": "Thermal_Diffusivity",
-      "equation": "0.00014",
-      "position": {"x": 450, "y": 200}
-    },
-    {
-      "id": "var-viscosity",
-      "name": "Kinematic_Viscosity",
-      "equation": "0.00001",
-      "position": {"x": 450, "y": 300}
-    },
-    {
-      "id": "var-rayleigh",
-      "name": "Rayleigh_Number",
-      "equation": "Thermal_Expansion * Gravity * Temperature_Difference * Layer_Height^3 / (Thermal_Diffusivity * Kinematic_Viscosity)",
-      "position": {"x": 300, "y": 50}
-    },
-    {
-      "id": "var-critical-ra",
-      "name": "Critical_Ra",
-      "equation": "1708",
-      "position": {"x": 450, "y": 50}
-    },
-    {
-      "id": "var-growth",
-      "name": "Growth_Rate",
-      "equation": "0.1",
-      "position": {"x": 250, "y": 300}
-    },
-    {
-      "id": "var-heat-input",
-      "name": "Heat_Input",
+      "id": "var-prandtl-source",
+      "name": "Prandtl_Number",
       "equation": "10",
-      "position": {"x": 50, "y": 350}
+      "position": {
+        "x": 450,
+        "y": 100
+      }
     },
     {
-      "id": "var-heat-loss",
-      "name": "Heat_Loss",
-      "equation": "Top_Temperature * 0.1",
-      "position": {"x": 50, "y": 50}
+      "id": "var-reduced-rayleigh-source",
+      "name": "Reduced_Rayleigh",
+      "equation": "28",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-b-source",
+      "name": "Geometry_Factor",
+      "equation": "8 / 3",
+      "position": {
+        "x": 450,
+        "y": 300
+      }
     }
   ],
   "connectors": [],
-  "time_settings": {"start": 0, "end": 200, "dt": 0.1},
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 0.01,
+    "integration_method": "rk4",
+    "rtol": 1e-06,
+    "atol": 1e-09
+  },
   "created_at": "2026-01-15T00:00:00Z",
   "updated_at": "2026-01-15T00:00:00Z",
-  "source": "https://doi.org/10.1098/rspa.1916.0076",
-  "reference": "Rayleigh, Lord (1916). On convection currents in a horizontal layer of fluid when the higher temperature is on the under side. Phil. Mag., 32, 529-546."
+  "source": "https://doi.org/10.1175/1520-0469(1963)020<0130:DNF>2.0.CO;2",
+  "reference": "Lorenz EN (1963). Deterministic Nonperiodic Flow. J Atmos Sci20:130-141. Equations21-27 and Table1, pp.134-136. Primary paper scan inspected 2026-10-20: https://samizdat.co/works/do-while/lorenz-1963.pdf"
 }

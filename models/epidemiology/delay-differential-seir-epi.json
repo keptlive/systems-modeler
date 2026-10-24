@@ -1,7 +1,7 @@
 {
   "id": "delay-differential-seir-epi",
-  "name": "Delay-Differential SEIR Model",
-  "description": "SEIR model with explicit time delays representing incubation and infectious periods. Improves modeling of infection dynamics with more realistic delay structures. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "name": "Delayed SEIR with Explicit Initial Cohort Histories",
+  "description": "Illustrative fixed-duration delayed SEIR scenario with explicit uniform ages for the existing initial exposed and infectious cohorts. For t<0, the incubation outflow history is Initial Exposed/Tau E=20 people/day, and recovery-inflow history is Initial Infectious/Tau I=10/7 people/day. These histories correspond to exposure incidence 20/day on [-5,0) and 10/7 per day on [-12,-5); each integral equals its existing initial cohort. At t=0 the exposure law becomes beta*S*I/N. N is the actual conserved population sum 1000110, preserving all original initial stock values rather than claiming their sum is 1000000. Nested fixed-delay calls use distinct constant prehistories and left-continuous sampled history at nonnegative times. Full-horizon, refinement, population conservation, nonnegative age-window integrals, and boundary checks are retained. This is not the published Kiselev/BioUML model: that source uses weighted delayed stock terms, additional clinical compartments, instantaneous splitting and fitted country data. No epidemic forecast or empirical calibration is claimed.",
   "stocks": [
     {
       "id": "stock-susceptible",
@@ -17,7 +17,7 @@
       "id": "stock-exposed",
       "name": "Exposed",
       "initial_value": 100,
-      "equation": "",
+      "equation": "Initial_Exposed",
       "position": {
         "x": 250,
         "y": 200
@@ -27,7 +27,7 @@
       "id": "stock-infectious",
       "name": "Infectious",
       "initial_value": 10,
-      "equation": "",
+      "equation": "Initial_Infectious",
       "position": {
         "x": 400,
         "y": 200
@@ -59,7 +59,7 @@
     {
       "id": "flow-incubation",
       "name": "End Incubation",
-      "equation": "DELAY(Exposure_Rate, Tau_E)",
+      "equation": "DELAY(Exposure_Rate, Tau_E, Initial_Exposed / Tau_E)",
       "from_stock": "stock-exposed",
       "to_stock": "stock-infectious",
       "position": {
@@ -70,7 +70,7 @@
     {
       "id": "flow-recovery",
       "name": "Recovery",
-      "equation": "DELAY(End_Incubation, Tau_I)",
+      "equation": "DELAY(End_Incubation, Tau_I, Initial_Infectious / Tau_I)",
       "from_stock": "stock-infectious",
       "to_stock": "stock-recovered",
       "position": {
@@ -110,7 +110,7 @@
     {
       "id": "var-n",
       "name": "N",
-      "equation": "1000000",
+      "equation": "Susceptible + Exposed + Infectious + Recovered",
       "position": {
         "x": 550,
         "y": 100
@@ -133,6 +133,24 @@
         "x": 400,
         "y": 350
       }
+    },
+    {
+      "id": "var-initial-exposed-history",
+      "name": "Initial Exposed",
+      "equation": "100",
+      "position": {
+        "x": 700,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-initial-infectious-history",
+      "name": "Initial Infectious",
+      "equation": "10",
+      "position": {
+        "x": 850,
+        "y": 300
+      }
     }
   ],
   "connectors": [],
@@ -142,7 +160,7 @@
     "dt": 0.25
   },
   "source": "https://doi.org/10.1038/s41598-023-40008-9",
-  "reference": "Delay-differential SEIR modeling for improved modelling of infection dynamics. Scientific Reports (2023).",
+  "reference": "Kiselev et al. (2023), Scientific Reports 13:13439, doi:10.1038/s41598-023-40008-9 provides delay-model context; its weighted-stock-delay BioUML equations differ from this fixed-duration local scenario. Uniform initial cohort histories are explicit local model inputs, mathematically derived from existing E0=100,I0=10 and fixed durations 5,7.",
   "created_at": "2026-01-12T08:11:11.789037+00:00",
   "updated_at": "2026-01-12T08:11:11.789037+00:00"
 }

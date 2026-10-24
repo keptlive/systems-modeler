@@ -1,7 +1,7 @@
 {
   "id": "full-beer-model",
   "name": "Full Beer Model",
-  "description": "Model from Full Beer Model.mdl",
+  "description": "Original SDMR Full Beer Model reconstructed from native Vensim equations. Restores all18 INTEG balances, missing R_ALPHA and six expectation-adjustment flows, corrects generic-block stock links, and retains declaration aliases without double-counting physical flows. All original IDs/nodes/layout retained; no new demand coupling invented where the source only declares a potential dependency.",
   "stocks": [
     {
       "id": "s1",
@@ -200,8 +200,8 @@
       "id": "f2",
       "name": "D_Acquisition_Rate",
       "equation": "D_Supply_Line/D_Delivery_Delay",
-      "from_stock": "D_Supply_Line",
-      "to_stock": "D_Stock",
+      "from_stock": "s3",
+      "to_stock": "s2",
       "position": {
         "x": 450,
         "y": 200
@@ -223,7 +223,7 @@
       "name": "D_Order_Rate",
       "equation": "max(0,D_Indicated_Orders)",
       "from_stock": null,
-      "to_stock": "D_Supply_Line",
+      "to_stock": "s3",
       "position": {
         "x": 300,
         "y": 320
@@ -233,7 +233,7 @@
       "id": "f5",
       "name": "D_Shipment_Rate",
       "equation": "MIN(D_Customer_Orders,D_Maximum_Shipped_Orders)",
-      "from_stock": "D_Stock",
+      "from_stock": "s2",
       "to_stock": null,
       "position": {
         "x": 450,
@@ -244,8 +244,8 @@
       "id": "f6",
       "name": "F_Acquisition_Rate",
       "equation": "F_Supply_Line/F_Delivery_Delay",
-      "from_stock": "F_Supply_Line",
-      "to_stock": "F_Stock",
+      "from_stock": "s6",
+      "to_stock": "s5",
       "position": {
         "x": 600,
         "y": 320
@@ -267,7 +267,7 @@
       "name": "F_Order_Rate",
       "equation": "max(0,F_Indicated_Orders)",
       "from_stock": null,
-      "to_stock": "F_Supply_Line",
+      "to_stock": "s6",
       "position": {
         "x": 450,
         "y": 440
@@ -277,7 +277,7 @@
       "id": "f9",
       "name": "F_Shipment_Rate",
       "equation": "MIN(F_Customer_Orders,F_Maximum_Shipped_Orders)",
-      "from_stock": "F_Stock",
+      "from_stock": "s5",
       "to_stock": null,
       "position": {
         "x": 600,
@@ -289,7 +289,7 @@
       "name": "W_Order_Rate_0",
       "equation": "max(0,W_Indicated_Orders_0)",
       "from_stock": null,
-      "to_stock": "W_Supply_Line_0",
+      "to_stock": "s13",
       "position": {
         "x": 300,
         "y": 560
@@ -299,7 +299,7 @@
       "id": "f11",
       "name": "W_Shipment_Rate",
       "equation": "MIN(W_Customer_Orders,W_Maximum_Shipped_Orders)",
-      "from_stock": "W_Stock",
+      "from_stock": "s7",
       "to_stock": null,
       "position": {
         "x": 450,
@@ -310,7 +310,7 @@
       "id": "f12",
       "name": "W_Shipment_Rate_0",
       "equation": "MIN(W_Customer_Orders_0,W_Maximum_Shipped_Orders_0)",
-      "from_stock": "W_Stock_0",
+      "from_stock": "s8",
       "to_stock": null,
       "position": {
         "x": 600,
@@ -321,8 +321,8 @@
       "id": "f13",
       "name": "R_Acquisition_Rate",
       "equation": "R_Supply_Line/R_Delivery_Delay",
-      "from_stock": "R_Supply_Line",
-      "to_stock": "R_Stock",
+      "from_stock": "s11",
+      "to_stock": "s10",
       "position": {
         "x": 300,
         "y": 680
@@ -340,22 +340,11 @@
       }
     },
     {
-      "id": "f15",
-      "name": "R_Order_Rate",
-      "equation": "A FUNCTION OF( )",
-      "from_stock": null,
-      "to_stock": "R_Supply_Line",
-      "position": {
-        "x": 600,
-        "y": 680
-      }
-    },
-    {
       "id": "f16",
       "name": "R_Order_Rate",
       "equation": "max(0,R_Indicated_Orders)",
       "from_stock": null,
-      "to_stock": "R_Supply_Line",
+      "to_stock": "s11",
       "position": {
         "x": 300,
         "y": 800
@@ -365,7 +354,7 @@
       "id": "f17",
       "name": "R_Shipment_Rate",
       "equation": "MIN(R_Customer_Orders,R_Maximum_Shipped_Orders)",
-      "from_stock": "R_Stock",
+      "from_stock": "s10",
       "to_stock": null,
       "position": {
         "x": 450,
@@ -376,8 +365,8 @@
       "id": "f18",
       "name": "W_Acquisition_Rate",
       "equation": "W_Supply_Line/W_Delivery_Delay",
-      "from_stock": "W_Supply_Line",
-      "to_stock": "W_Stock",
+      "from_stock": "s12",
+      "to_stock": "s7",
       "position": {
         "x": 600,
         "y": 800
@@ -387,21 +376,10 @@
       "id": "f19",
       "name": "W_Acquisition_Rate_0",
       "equation": "W_Supply_Line_0/W_Delivery_Delay_0",
-      "from_stock": "W_Supply_Line_0",
-      "to_stock": "W_Stock_0",
+      "from_stock": "s13",
+      "to_stock": "s8",
       "position": {
         "x": 300,
-        "y": 920
-      }
-    },
-    {
-      "id": "f20",
-      "name": "W_Order_Rate",
-      "equation": "A FUNCTION OF( )",
-      "from_stock": null,
-      "to_stock": "W_Supply_Line",
-      "position": {
-        "x": 450,
         "y": 920
       }
     },
@@ -410,7 +388,7 @@
       "name": "W_Order_Rate",
       "equation": "max(0,W_Indicated_Orders)",
       "from_stock": null,
-      "to_stock": "W_Supply_Line",
+      "to_stock": "s12",
       "position": {
         "x": 600,
         "y": 920
@@ -431,8 +409,8 @@
       "id": "f23",
       "name": "Acquisition_Rate",
       "equation": "Supply_Line/Delivery_Delay",
-      "from_stock": "Supply_Line",
-      "to_stock": "D_Stock",
+      "from_stock": "s18",
+      "to_stock": "s17",
       "position": {
         "x": 450,
         "y": 1040
@@ -454,7 +432,7 @@
       "name": "Order_Rate",
       "equation": "max(0,Indicated_Orders)",
       "from_stock": null,
-      "to_stock": "D_Supply_Line",
+      "to_stock": "s18",
       "position": {
         "x": 300,
         "y": 1160
@@ -464,11 +442,77 @@
       "id": "f26",
       "name": "Shipment_Rate",
       "equation": "MIN(Customer_Orders,Maximum_Shipped_Orders)",
-      "from_stock": "Stock",
-      "to_stock": "D_Stock",
+      "from_stock": "s17",
+      "to_stock": null,
       "position": {
         "x": 450,
         "y": 1160
+      }
+    },
+    {
+      "id": "v18-s1-expectation-rate",
+      "name": "D_Expected_Order_Update",
+      "equation": "D_CECO",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 150,
+        "y": 270
+      }
+    },
+    {
+      "id": "v18-s4-expectation-rate",
+      "name": "F_Expected_Order_Update",
+      "equation": "F_CECO",
+      "from_stock": null,
+      "to_stock": "s4",
+      "position": {
+        "x": 150,
+        "y": 420
+      }
+    },
+    {
+      "id": "v18-s9-expectation-rate",
+      "name": "R_Expected_Order_Update",
+      "equation": "R_CECO",
+      "from_stock": null,
+      "to_stock": "s9",
+      "position": {
+        "x": 550,
+        "y": 570
+      }
+    },
+    {
+      "id": "v18-s14-expectation-rate",
+      "name": "W_Expected_Order_Update",
+      "equation": "W_CECO",
+      "from_stock": null,
+      "to_stock": "s14",
+      "position": {
+        "x": 350,
+        "y": 870
+      }
+    },
+    {
+      "id": "v18-s15-expectation-rate",
+      "name": "W_Expected_Order_Update_0",
+      "equation": "W_CECO_0",
+      "from_stock": null,
+      "to_stock": "s15",
+      "position": {
+        "x": 550,
+        "y": 870
+      }
+    },
+    {
+      "id": "v18-s16-expectation-rate",
+      "name": "Expected_Order_Update",
+      "equation": "CECO",
+      "from_stock": null,
+      "to_stock": "s16",
+      "position": {
+        "x": 150,
+        "y": 1020
       }
     }
   ],
@@ -925,8 +969,8 @@
     },
     {
       "id": "v51",
-      "name": "W_Customer_Orders",
-      "equation": "A FUNCTION OF( R_Indicated_Orders)",
+      "name": "W_Customer_Orders Declaration",
+      "equation": "W_Customer_Orders",
       "position": {
         "x": 100,
         "y": 850
@@ -989,7 +1033,7 @@
     {
       "id": "v58",
       "name": "R_Inventory_Adjustment_Time",
-      "equation": "1/R ALPHA",
+      "equation": "1 / R_ALPHA",
       "position": {
         "x": 360,
         "y": 930
@@ -1335,6 +1379,33 @@
       "position": {
         "x": 100,
         "y": 1570
+      }
+    },
+    {
+      "id": "f15",
+      "name": "R_Order_Rate Declaration",
+      "equation": "R_Order_Rate",
+      "position": {
+        "x": 600,
+        "y": 680
+      }
+    },
+    {
+      "id": "f20",
+      "name": "W_Order_Rate Declaration",
+      "equation": "W_Order_Rate",
+      "position": {
+        "x": 450,
+        "y": 920
+      }
+    },
+    {
+      "id": "v18-r-alpha",
+      "name": "R_ALPHA",
+      "equation": "1",
+      "position": {
+        "x": 800,
+        "y": 600
       }
     }
   ],
@@ -3002,6 +3073,6 @@
   },
   "created_at": "2026-01-15T19:13:16.731437+00:00",
   "updated_at": "2026-01-15T19:13:16.731437+00:00",
-  "source": "https://github.com/JimDuggan/SDMR",
-  "reference": "System Dynamics Modeling with R (Duggan, 2016)"
+  "source": "https://raw.githubusercontent.com/JimDuggan/SDMR/89bbfe65c25db5bcca511c10ef6527c8ebe35696/models/08%20Additional/05%20Retailer%20Beer%20Game/Full%20Beer%20Model.mdl",
+  "reference": "Duggan J. System Dynamics Modeling with R. Full Beer Model.mdl, SDMR revision89bbfe65c25db5bcca511c10ef6527c8ebe35696. Original18 stock derivatives and six standalone inventory/expectation blocks restored; A FUNCTION OF declaration nodes retained only as informational aliases."
 }

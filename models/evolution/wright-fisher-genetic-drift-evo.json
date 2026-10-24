@@ -3,23 +3,113 @@
   "name": "Wright-Fisher Genetic Drift Model",
   "description": "Classic population genetics model of random genetic drift in finite populations. Allele frequencies change stochastically each generation. Foundation of neutral theory. Source: Wright (1931), Fisher (1930). DOI: 10.1093/genetics/16.2.97",
   "stocks": [
-    {"id": "stock-freq", "name": "Allele_Frequency", "initial_value": 0.5, "equation": "", "position": {"x": 300, "y": 200}},
-    {"id": "stock-generations", "name": "Generations", "initial_value": 0, "equation": "", "position": {"x": 300, "y": 350}}
+    {
+      "id": "stock-freq",
+      "name": "Allele_Frequency",
+      "initial_value": 0.5,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 200
+      }
+    },
+    {
+      "id": "stock-generations",
+      "name": "Generations",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 350
+      }
+    }
   ],
   "flows": [
-    {"id": "flow-drift", "name": "Frequency_Change", "equation": "Drift_Increment", "from_stock": null, "to_stock": "stock-freq", "position": {"x": 150, "y": 200}},
-    {"id": "flow-gen", "name": "Generation_Increment", "equation": "1", "from_stock": null, "to_stock": "stock-generations", "position": {"x": 150, "y": 350}}
+    {
+      "id": "flow-drift",
+      "name": "Frequency_Change",
+      "equation": "Drift_Increment",
+      "from_stock": null,
+      "to_stock": "stock-freq",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-gen",
+      "name": "Generation_Increment",
+      "equation": "1",
+      "from_stock": null,
+      "to_stock": "stock-generations",
+      "position": {
+        "x": 150,
+        "y": 350
+      }
+    }
   ],
   "variables": [
-    {"id": "var-pop-size", "name": "Population_Size", "equation": "100", "position": {"x": 150, "y": 100}},
-    {"id": "var-drift-sd", "name": "Drift_SD", "equation": "SQRT(Allele_Frequency * (1 - Allele_Frequency) / (2 * Population_Size))", "position": {"x": 350, "y": 100}},
-    {"id": "var-drift-inc", "name": "Drift_Increment", "equation": "Drift_SD * (2 * RANDOM() - 1) * 1.7", "position": {"x": 200, "y": 300}},
-    {"id": "var-het", "name": "Heterozygosity", "equation": "2 * Allele_Frequency * (1 - Allele_Frequency)", "position": {"x": 450, "y": 200}},
-    {"id": "var-fixation", "name": "Near_Fixation", "equation": "IF(Allele_Frequency > 0.95 OR Allele_Frequency < 0.05, 1, 0)", "position": {"x": 450, "y": 350}},
-    {"id": "var-ne", "name": "Effective_Population_Size", "equation": "Population_Size", "position": {"x": 100, "y": 300}}
+    {
+      "id": "var-pop-size",
+      "name": "Population_Size",
+      "equation": "100",
+      "position": {
+        "x": 150,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-drift-sd",
+      "name": "Drift_SD",
+      "equation": "SQRT(Allele_Frequency * (1 - Allele_Frequency) / (2 * Population_Size))",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-drift-inc",
+      "name": "Drift_Increment",
+      "equation": "RANDOM_BINOMIAL(2 * Population_Size, Allele_Frequency) / (2 * Population_Size) - Allele_Frequency",
+      "position": {
+        "x": 200,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-het",
+      "name": "Heterozygosity",
+      "equation": "2 * Allele_Frequency * (1 - Allele_Frequency)",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-fixation",
+      "name": "Near_Fixation",
+      "equation": "IF(Allele_Frequency > 0.95 OR Allele_Frequency < 0.05, 1, 0)",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "var-ne",
+      "name": "Effective_Population_Size",
+      "equation": "Population_Size",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    }
   ],
   "connectors": [],
-  "time_settings": {"start": 0, "end": 200, "dt": 1},
+  "time_settings": {
+    "start": 0,
+    "end": 200,
+    "dt": 1
+  },
   "created_at": "2026-01-15T00:00:00Z",
   "updated_at": "2026-01-15T00:00:00Z",
   "source": "https://doi.org/10.1093/genetics/16.2.97",

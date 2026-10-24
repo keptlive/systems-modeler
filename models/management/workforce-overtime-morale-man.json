@@ -1,7 +1,7 @@
 {
   "id": "workforce-overtime-morale-man",
-  "name": "Target_Backlog",
-  "description": "Classic workforce inventory model with feedback loop through overtime, morale and productivity that causes oscillation. From Vensim sample models. Demonstrates how workforce pressure creates boom-bust cycles. Reference: Based on Beer Game model (Sterman, 2000). Source: https://systemdynamics.org/",
+  "name": "Workforce, Overtime and Morale \u2014 Vensim INTRO",
+  "description": "Source reconstruction of Vensim INTRO.mdl (downloaded 2026-10-20). Workforce and average worker hours follow the original integrators, sales step and two graphical functions. Morale is a graphical auxiliary, not an invented stock; The unsupported backlog accumulator, quit-rate and target-backlog hybrid are archived in the repair receipt rather than presented as source equations. All source parameters are the native INTRO defaults. The saved 0\u2013200 month horizon and 0.5 month Euler grid are retained; INTRO uses end100, integration0.125, SAVEPER1. This is an educational model, not workforce forecasting.",
   "stocks": [
     {
       "id": "s1",
@@ -14,24 +14,15 @@
       }
     },
     {
-      "id": "s2",
-      "name": "Morale",
-      "initial_value": 1.0,
-      "equation": "",
+      "id": "stock-average-worker-hours",
+      "name": "Average_Worker_Hours",
+      "initial_value": 40,
+      "equation": "Normal_Hours",
       "position": {
         "x": 400,
         "y": 200
-      }
-    },
-    {
-      "id": "s3",
-      "name": "Work_Backlog",
-      "initial_value": 200,
-      "equation": "",
-      "position": {
-        "x": 600,
-        "y": 200
-      }
+      },
+      "units": "hours/month"
     }
   ],
   "flows": [
@@ -47,46 +38,13 @@
       }
     },
     {
-      "id": "f2",
-      "name": "Quitting",
-      "equation": "Workforce * Quit_Rate_Normal / Morale",
-      "from_stock": "s1",
-      "to_stock": null,
-      "position": {
-        "x": 300,
-        "y": 200
-      }
-    },
-    {
       "id": "f3",
-      "name": "Morale_Change",
-      "equation": "(Target_Morale - Morale) / Morale_Adjustment_Time",
+      "name": "Change_in_Hours_Worked",
+      "equation": "(Hours_Worked - Average_Worker_Hours) / Overtime_Adjustment_Time",
       "from_stock": null,
-      "to_stock": "s2",
+      "to_stock": "stock-average-worker-hours",
       "position": {
         "x": 350,
-        "y": 200
-      }
-    },
-    {
-      "id": "f4",
-      "name": "Work_Arrival",
-      "equation": "Work_Arrival_Rate",
-      "from_stock": null,
-      "to_stock": "s3",
-      "position": {
-        "x": 500,
-        "y": 200
-      }
-    },
-    {
-      "id": "f5",
-      "name": "Work_Completion",
-      "equation": "Workforce * Productivity * Hours_Worked",
-      "from_stock": "s3",
-      "to_stock": null,
-      "position": {
-        "x": 700,
         "y": 200
       }
     }
@@ -95,7 +53,7 @@
     {
       "id": "v1",
       "name": "Desired_Workforce",
-      "equation": "Work_Backlog / Target_Backlog * 100",
+      "equation": "Work_Arrival_Rate / Productivity",
       "position": {
         "x": 150,
         "y": 100
@@ -104,25 +62,16 @@
     {
       "id": "v2",
       "name": "Hiring_Time",
-      "equation": "10",
+      "equation": "6",
       "position": {
         "x": 100,
         "y": 300
       }
     },
     {
-      "id": "v3",
-      "name": "Quit_Rate_Normal",
-      "equation": "0.05",
-      "position": {
-        "x": 250,
-        "y": 300
-      }
-    },
-    {
       "id": "v4",
       "name": "Target_Morale",
-      "equation": "1 - (Overtime_Fraction - 0.2)",
+      "equation": "Morale",
       "position": {
         "x": 400,
         "y": 100
@@ -130,8 +79,8 @@
     },
     {
       "id": "v5",
-      "name": "Morale_Adjustment_Time",
-      "equation": "20",
+      "name": "Overtime_Adjustment_Time",
+      "equation": "3",
       "position": {
         "x": 450,
         "y": 300
@@ -140,7 +89,7 @@
     {
       "id": "v6",
       "name": "Work_Arrival_Rate",
-      "equation": "200",
+      "equation": "IF(TIME > 20, 120, 100)",
       "position": {
         "x": 550,
         "y": 100
@@ -149,7 +98,7 @@
     {
       "id": "v7",
       "name": "Productivity",
-      "equation": "2 * Morale",
+      "equation": "Normal_Productivity * LOOKUP(Productivity_Response, Morale)",
       "position": {
         "x": 600,
         "y": 300
@@ -158,7 +107,7 @@
     {
       "id": "v8",
       "name": "Hours_Worked",
-      "equation": "Normal_Hours * (1 + Overtime_Fraction)",
+      "equation": "Work_Arrival_Rate / (Workforce * Productivity) * Normal_Hours",
       "position": {
         "x": 700,
         "y": 100
@@ -167,7 +116,7 @@
     {
       "id": "v9",
       "name": "Normal_Hours",
-      "equation": "8",
+      "equation": "40",
       "position": {
         "x": 750,
         "y": 300
@@ -176,20 +125,48 @@
     {
       "id": "v10",
       "name": "Overtime_Fraction",
-      "equation": "MAX(0, (Work_Backlog - Target_Backlog) / Target_Backlog * 0.5)",
+      "equation": "Average_Worker_Hours / Normal_Hours - 1",
       "position": {
         "x": 500,
         "y": 350
       }
     },
     {
-      "id": "v11",
-      "name": "Target_Backlog",
-      "equation": "100",
+      "id": "s2",
+      "name": "Morale",
       "position": {
-        "x": 600,
+        "x": 400,
+        "y": 200
+      },
+      "equation": "LOOKUP(Morale_Response, Average_Worker_Hours / Normal_Hours)"
+    },
+    {
+      "id": "f4",
+      "name": "Work_Arrival",
+      "position": {
+        "x": 500,
+        "y": 200
+      },
+      "equation": "Work_Arrival_Rate"
+    },
+    {
+      "id": "f5",
+      "name": "Work_Completion",
+      "position": {
+        "x": 700,
+        "y": 200
+      },
+      "equation": "Workforce * Hours_Worked * Productivity / Normal_Hours"
+    },
+    {
+      "id": "var-normal-productivity-source",
+      "name": "Normal_Productivity",
+      "equation": "1",
+      "position": {
+        "x": 650,
         "y": 400
-      }
+      },
+      "units": "widgets/(month*person)"
     }
   ],
   "connectors": [
@@ -209,34 +186,19 @@
       "to_element": "Hiring"
     },
     {
-      "id": "conn-4",
-      "from_element": "Quit_Rate_Normal",
-      "to_element": "Quitting"
-    },
-    {
-      "id": "conn-5",
-      "from_element": "Morale",
-      "to_element": "Quitting"
-    },
-    {
-      "id": "conn-6",
-      "from_element": "Workforce",
-      "to_element": "Quitting"
-    },
-    {
       "id": "conn-7",
       "from_element": "Morale",
-      "to_element": "Morale_Change"
+      "to_element": "Change_in_Hours_Worked"
     },
     {
       "id": "conn-8",
-      "from_element": "Morale_Adjustment_Time",
-      "to_element": "Morale_Change"
+      "from_element": "Overtime_Adjustment_Time",
+      "to_element": "Change_in_Hours_Worked"
     },
     {
       "id": "conn-9",
       "from_element": "Target_Morale",
-      "to_element": "Morale_Change"
+      "to_element": "Change_in_Hours_Worked"
     },
     {
       "id": "conn-10",
@@ -259,16 +221,6 @@
       "to_element": "Work_Completion"
     },
     {
-      "id": "conn-14",
-      "from_element": "Work_Backlog",
-      "to_element": "Desired_Workforce"
-    },
-    {
-      "id": "conn-15",
-      "from_element": "Target_Backlog",
-      "to_element": "Desired_Workforce"
-    },
-    {
       "id": "conn-16",
       "from_element": "Overtime_Fraction",
       "to_element": "Target_Morale"
@@ -289,14 +241,19 @@
       "to_element": "Hours_Worked"
     },
     {
-      "id": "conn-20",
-      "from_element": "Work_Backlog",
-      "to_element": "Overtime_Fraction"
+      "id": "source-avg-hours-morale",
+      "from_element": "Average_Worker_Hours",
+      "to_element": "Morale"
     },
     {
-      "id": "conn-21",
-      "from_element": "Target_Backlog",
-      "to_element": "Overtime_Fraction"
+      "id": "source-sales-workforce",
+      "from_element": "Work_Arrival_Rate",
+      "to_element": "Desired_Workforce"
+    },
+    {
+      "id": "source-hours-averaging",
+      "from_element": "Hours_Worked",
+      "to_element": "Change_in_Hours_Worked"
     }
   ],
   "time_settings": {
@@ -306,6 +263,84 @@
   },
   "created_at": "2026-01-12T07:19:37.013647+00:00",
   "updated_at": "2026-01-12T07:19:37.013647+00:00",
-  "source": "https://vensim.com/documentation/sample_models.html",
-  "reference": "Vensim Sample Models. Workforce inventory model with overtime-morale feedback."
+  "source": "https://vensim.com/documentation/Models/Sample/INTRO.mdl",
+  "reference": "Ventana Systems. Vensim native INTRO.mdl, server modification 2025-05-29; downloaded 2026-10-20. Equations before sketch section.",
+  "tables": [
+    {
+      "name": "Morale_Response",
+      "interpolation": "continuous",
+      "points": [
+        [
+          0,
+          1.5
+        ],
+        [
+          0.326284,
+          1.4386
+        ],
+        [
+          0.495468,
+          1.40351
+        ],
+        [
+          0.682779,
+          1.32018
+        ],
+        [
+          0.839879,
+          1.18421
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1.14804,
+          0.833333
+        ],
+        [
+          1.3716,
+          0.640351
+        ],
+        [
+          1.66767,
+          0.526316
+        ],
+        [
+          2,
+          0.5
+        ]
+      ]
+    },
+    {
+      "name": "Productivity_Response",
+      "interpolation": "continuous",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2.63444,
+          2.36842
+        ],
+        [
+          3.29909,
+          2.52632
+        ],
+        [
+          3.97583,
+          2.57895
+        ]
+      ]
+    }
+  ]
 }

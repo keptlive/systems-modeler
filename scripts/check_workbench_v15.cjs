@@ -1,0 +1,53 @@
+// Focused regressions for the additive navigation/state logic, not browser QA.
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const source=fs.readFileSync(require('node:path').join(__dirname,'../static/js/workbench-tools.js'),'utf8');
+const sandbox={document:{addEventListener(){}}};vm.createContext(sandbox);
+vm.runInContext(source+';this.tools=WorkbenchTools;',sandbox);
+const tools=sandbox.tools;
+const rows=[{label:'Drug in Central Compartment',detail:'Stock'},{label:'Inspect model inputs',detail:'Check equations and units'},{label:'Save model',detail:'Saved workflow'}];
+assert.equal(tools.filter(rows,'central stock').length,1);
+assert.equal(tools.filter(rows,'  INPUTS   equations ').length,1);
+assert.equal(tools.filter(rows,'not-found').length,0);
+assert.equal(tools.filter(rows,'').length,3);
+const empty={stocks:[],flows:[],variables:[]};
+assert.equal(tools.state(empty,{},false).label,'Add a model to begin');
+assert.equal(tools.state({...empty,stocks:[{}]}, {},false).label,'Ready to run');
+assert.equal(tools.state(empty,{results:{time:[0,1,2]}},false).label,'Run complete · 3 samples');
+assert.equal(tools.state(empty,{lastError:'division by zero'},false).kind,'error');
+assert.equal(tools.state(empty,{lastError:'old error'},true).kind,'running');
+console.log('Workbench search and truthful state precedence: 9 checks passed.');
+const clicked=[];
+sandbox.document.getElementById=id=>({click(){clicked.push(id);},focus(){}});
+sandbox.document.querySelector=()=>({click(){clicked.push('agent');}});
+sandbox.App={model:{stocks:[{id:'s',name:'A < B',initial_value:10}],flows:[],variables:[]},isMobile:false,selectElement(type,id){clicked.push(`${type}:${id}`);},setMode(mode){clicked.push(mode);}};
+sandbox.Canvas={fitToModel(){clicked.push('fit');}};
+const commands=tools.commands();
+commands.find(x=>x.label==='Inspect model inputs').run();
+commands.find(x=>x.label==='Run simulation').run();
+commands.find(x=>x.label==='A < B').run();
+commands.find(x=>x.label==='Add stock').run();
+commands.find(x=>x.label==='Fit diagram').run();
+assert.deepEqual(clicked,['btn-inspect-model','btn-simulate','stock:s','add-stock','fit']);
+assert.equal(commands.some(x=>/delete|reset|discard/i.test(x.label)),false);
+assert.equal(sandbox.App.model.stocks[0].initial_value,10);
+console.log('Existing action delegation, no new destructive command, and input preservation passed.');
+const ranked=tools.filter([{label:'Infection',detail:'Flow · Beta*S*I'}, {label:'Beta adjustment',detail:'Variable'}, {label:'Beta',detail:'Variable'},{label:'Other Beta',detail:'Variable'}],'beta');
+assert.deepEqual(Array.from(ranked,x=>x.label),['Beta','Beta adjustment','Other Beta','Infection']);
+assert.deepEqual(Array.from(tools.filter([{label:'B',detail:'x'}, {label:'A',detail:'x'}],''),x=>x.label),['B','A']);
+let focused;
+sandbox.document.getElementById=id=>({click(){clicked.push(id);},focus(){focused=id;}});
+sandbox.App.isMobile=true;
+tools.commands().find(x=>x.label==='A < B').run();
+assert.equal(focused,'prop-name-mobile');
+console.log('Exact-label ranking, stable empty-query order and mobile property focus passed.');
+// Opening a command must not silently stack over a draft settings/library modal.
+let opened=0,searchFocused=0,rendered=0;
+tools.dialog={open:false,showModal(){this.open=true;opened++;}};
+tools.input={value:'old query',focus(){searchFocused++;}};tools.render=()=>rendered++;
+for(const state of ['dialog[open]','.modal-overlay.active','.library-modal.open']){
+ sandbox.document.querySelector=selector=>selector.includes(state)?{}:null;
+ tools.open();assert.equal(opened,0,state);
+}
+sandbox.document.querySelector=()=>null;
+tools.open();assert.equal(opened,1);assert.equal(tools.input.value,'');assert.equal(rendered,1);assert.equal(searchFocused,1);
+console.log('Command finder preserves active modal boundaries and opens normally otherwise.');

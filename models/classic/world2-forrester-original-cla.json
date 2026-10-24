@@ -1,9 +1,9 @@
 {
   "id": "world2-forrester-original-cla",
   "name": "World2 Forrester Original Model",
-  "description": "Jay Forrester's original WORLD2 model from 1971. A five-sector global model examining interactions between population, capital investment, natural resources, pollution, and quality of life. Reference: Forrester, J. W. (1961). Industrial Dynamics. MIT Press. Source: https://systemdynamics.org/",
-  "source": "https://mitpress.mit.edu/9780262560047/world-dynamics/",
-  "reference": "Forrester, J.W. (1971). World Dynamics. Wright-Allen Press/MIT Press. Cambridge, MA.",
+  "description": "Jay Forrester’s five-sector WORLD2 global dynamics equations. Version 1.8 restored the 1970 primary D-1354 documentor (MIT archive PDF pp. 82–91), including its 22 piecewise-linear feedback tables, birth/death normals 0.045/0.025 and initial agricultural fraction 0.3. Existing element IDs and positions are preserved. Capital Generation Multiplier is the source CIPC table divided by the retained 0.05 normal, an algebraically identical rescaling. The documented baseline pre/post-1970 policy coefficients are equal. Version 1.9 uses explicit RK4 at half-year DT over the unchanged 1900–2100 horizon, with half/quarter refinements inside the work budget. This is continuous-equation numerical integration, not an exact replay of the source DYNAMO Euler listing. Maximum stock error against an independent literal-source-table reference is below 5e-6 of each stock maximum. This historical scenario is not a contemporary population or climate calibration.",
+  "source": "https://dome.mit.edu/bitstream/handle/1721.3/189645/39080024064039.pdf?isAllowed=y&sequence=1",
+  "reference": "Forrester, J.W. (1970), WORLD2 D-1354 equation documentor, equations 1–43, MIT archive PDF pp. 82–91; explicitly the 1970 formulation, not the later 1973 book variant.",
   "stocks": [
     {
       "id": "stock-pop",
@@ -48,7 +48,7 @@
     {
       "id": "stock-agric-frac",
       "name": "Capital in Agriculture Fraction",
-      "initial_value": 0.2,
+      "initial_value": 0.3,
       "equation": "",
       "position": {
         "x": 100,
@@ -150,7 +150,7 @@
     {
       "id": "var-brn",
       "name": "Birth Rate Normal",
-      "equation": "0.04",
+      "equation": "0.045",
       "position": {
         "x": 50,
         "y": 150
@@ -168,7 +168,7 @@
     {
       "id": "var-brm-mat",
       "name": "BRM Material",
-      "equation": "1.2 - 0.8 * Material_Standard_of_Living / 5",
+      "equation": "World2_BRMM(Material_Standard_of_Living)",
       "position": {
         "x": 50,
         "y": 50
@@ -177,7 +177,7 @@
     {
       "id": "var-brm-crowd",
       "name": "BRM Crowding",
-      "equation": "1 - 0.5 * Crowding_Ratio",
+      "equation": "World2_BRCM(Crowding_Ratio)",
       "position": {
         "x": 150,
         "y": 50
@@ -186,7 +186,7 @@
     {
       "id": "var-brm-food",
       "name": "BRM Food",
-      "equation": "1 + 0.2 * (Food_Ratio - 1)",
+      "equation": "World2_BRFM(Food_Ratio)",
       "position": {
         "x": 250,
         "y": 50
@@ -195,7 +195,7 @@
     {
       "id": "var-brm-poll",
       "name": "BRM Pollution",
-      "equation": "1 - 0.3 * Pollution_Ratio",
+      "equation": "World2_BRPM(Pollution_Ratio)",
       "position": {
         "x": 350,
         "y": 50
@@ -204,7 +204,7 @@
     {
       "id": "var-drn",
       "name": "Death Rate Normal",
-      "equation": "0.028",
+      "equation": "0.025",
       "position": {
         "x": 150,
         "y": 150
@@ -222,7 +222,7 @@
     {
       "id": "var-drm-mat",
       "name": "DRM Material",
-      "equation": "0.6 + 0.4 / (Material_Standard_of_Living + 0.1)",
+      "equation": "World2_DRMM(Material_Standard_of_Living)",
       "position": {
         "x": 50,
         "y": 250
@@ -231,7 +231,7 @@
     {
       "id": "var-drm-crowd",
       "name": "DRM Crowding",
-      "equation": "1 + 0.5 * Crowding_Ratio",
+      "equation": "World2_DRCM(Crowding_Ratio)",
       "position": {
         "x": 150,
         "y": 250
@@ -240,7 +240,7 @@
     {
       "id": "var-drm-food",
       "name": "DRM Food",
-      "equation": "1 / (Food_Ratio + 0.1)",
+      "equation": "World2_DRFM(Food_Ratio)",
       "position": {
         "x": 250,
         "y": 250
@@ -249,7 +249,7 @@
     {
       "id": "var-drm-poll",
       "name": "DRM Pollution",
-      "equation": "1 + 0.5 * Pollution_Ratio",
+      "equation": "World2_DRPM(Pollution_Ratio)",
       "position": {
         "x": 350,
         "y": 250
@@ -267,7 +267,7 @@
     {
       "id": "var-cgm",
       "name": "Capital Generation Multiplier",
-      "equation": "1",
+      "equation": "World2_CIM(Material_Standard_of_Living)",
       "position": {
         "x": 300,
         "y": 100
@@ -294,7 +294,7 @@
     {
       "id": "var-rum",
       "name": "Resource Usage Multiplier",
-      "equation": "Material_Standard_of_Living",
+      "equation": "World2_NRMM(Material_Standard_of_Living)",
       "position": {
         "x": 500,
         "y": 100
@@ -312,7 +312,7 @@
     {
       "id": "var-pgm",
       "name": "Pollution Generation Multiplier",
-      "equation": "Material_Standard_of_Living",
+      "equation": "World2_POLCM(Capital_Investment / Population)",
       "position": {
         "x": 300,
         "y": 250
@@ -321,7 +321,7 @@
     {
       "id": "var-pat",
       "name": "Pollution Absorption Time",
-      "equation": "100",
+      "equation": "World2_POLAT(Pollution_Ratio)",
       "position": {
         "x": 350,
         "y": 300
@@ -330,7 +330,7 @@
     {
       "id": "var-msol",
       "name": "Material Standard of Living",
-      "equation": "Capital_Investment / Population / 0.2",
+      "equation": "(Capital_Investment / Population) * (1 - Capital_in_Agriculture_Fraction) * World2_NREM(Resource_Ratio) / (1 - 0.3)",
       "position": {
         "x": 400,
         "y": 100
@@ -339,7 +339,7 @@
     {
       "id": "var-food-ratio",
       "name": "Food Ratio",
-      "equation": "Capital_Investment * Capital_in_Agriculture_Fraction / Population / 0.1",
+      "equation": "World2_FPCI((Capital_Investment / Population) * Capital_in_Agriculture_Fraction / 0.3) * World2_FCM(Crowding_Ratio) * World2_FPM(Pollution_Ratio)",
       "position": {
         "x": 200,
         "y": 400
@@ -348,7 +348,7 @@
     {
       "id": "var-crowd",
       "name": "Crowding Ratio",
-      "equation": "Population / 3700000000",
+      "equation": "Population / (135000000 * 26.5)",
       "position": {
         "x": 100,
         "y": 150
@@ -357,7 +357,7 @@
     {
       "id": "var-poll-ratio",
       "name": "Pollution Ratio",
-      "equation": "Pollution / 350000000",
+      "equation": "Pollution / 3600000000",
       "position": {
         "x": 400,
         "y": 350
@@ -375,7 +375,7 @@
     {
       "id": "var-qol",
       "name": "Quality of Life",
-      "equation": "(Material_Standard_of_Living * Food_Ratio) / ((Crowding_Ratio + 0.1) * (Pollution_Ratio + 0.1))",
+      "equation": "World2_QLM(Material_Standard_of_Living) * World2_QLC(Crowding_Ratio) * World2_QLF(Food_Ratio) * World2_QLP(Pollution_Ratio)",
       "position": {
         "x": 450,
         "y": 350
@@ -384,7 +384,7 @@
     {
       "id": "var-desired-agric",
       "name": "Desired Agric Fraction",
-      "equation": "0.3 - 0.1 * Food_Ratio",
+      "equation": "World2_CFIFR(Food_Ratio) * World2_CIQR(World2_QLM(Material_Standard_of_Living) / World2_QLF(Food_Ratio))",
       "position": {
         "x": 50,
         "y": 400
@@ -404,8 +404,749 @@
   "time_settings": {
     "start": 1900,
     "end": 2100,
-    "dt": 1
+    "dt": 0.5,
+    "integration_method": "rk4",
+    "rtol": 1e-08,
+    "atol": 1e-10
   },
   "created_at": "2026-01-12T03:11:09.889436+00:00",
-  "updated_at": "2026-01-12T03:11:09.889436+00:00"
+  "updated_at": "2026-01-12T03:11:09.889436+00:00",
+  "tables": [
+    {
+      "name": "World2_BRMM",
+      "points": [
+        [
+          0,
+          1.2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0.85
+        ],
+        [
+          3,
+          0.75
+        ],
+        [
+          4,
+          0.7
+        ],
+        [
+          5,
+          0.7
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_BRCM",
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0.95
+        ],
+        [
+          2,
+          0.8
+        ],
+        [
+          3,
+          0.7
+        ],
+        [
+          4,
+          0.65
+        ],
+        [
+          5,
+          0.65
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_BRFM",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1.6
+        ],
+        [
+          3,
+          1.9
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_BRPM",
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          5,
+          0.97
+        ],
+        [
+          10,
+          0.92
+        ],
+        [
+          15,
+          0.82
+        ],
+        [
+          20,
+          0.72
+        ],
+        [
+          25,
+          0.6
+        ],
+        [
+          30,
+          0.4
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_DRMM",
+      "points": [
+        [
+          0.0,
+          2
+        ],
+        [
+          0.5,
+          1.4
+        ],
+        [
+          1.0,
+          1
+        ],
+        [
+          1.5,
+          0.8
+        ],
+        [
+          2.0,
+          0.7
+        ],
+        [
+          2.5,
+          0.6
+        ],
+        [
+          3.0,
+          0.53
+        ],
+        [
+          3.5,
+          0.5
+        ],
+        [
+          4.0,
+          0.5
+        ],
+        [
+          4.5,
+          0.5
+        ],
+        [
+          5.0,
+          0.5
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_DRCM",
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1.1
+        ],
+        [
+          2,
+          1.3
+        ],
+        [
+          3,
+          1.6
+        ],
+        [
+          4,
+          2.1
+        ],
+        [
+          5,
+          3
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_DRFM",
+      "points": [
+        [
+          0.0,
+          30
+        ],
+        [
+          0.25,
+          3
+        ],
+        [
+          0.5,
+          2
+        ],
+        [
+          0.75,
+          1.4
+        ],
+        [
+          1.0,
+          1
+        ],
+        [
+          1.25,
+          0.7
+        ],
+        [
+          1.5,
+          0.6
+        ],
+        [
+          1.75,
+          0.5
+        ],
+        [
+          2.0,
+          0.5
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_DRPM",
+      "points": [
+        [
+          0,
+          0.98
+        ],
+        [
+          5,
+          1.1
+        ],
+        [
+          10,
+          1.3
+        ],
+        [
+          15,
+          1.6
+        ],
+        [
+          20,
+          2.1
+        ],
+        [
+          25,
+          2.8
+        ],
+        [
+          30,
+          4
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_NREM",
+      "points": [
+        [
+          0.0,
+          0
+        ],
+        [
+          0.25,
+          0.15
+        ],
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.75,
+          0.85
+        ],
+        [
+          1.0,
+          1
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_NRMM",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1.8
+        ],
+        [
+          3,
+          2.4
+        ],
+        [
+          4,
+          2.9
+        ],
+        [
+          5,
+          3.3
+        ],
+        [
+          6,
+          3.6
+        ],
+        [
+          7,
+          3.8
+        ],
+        [
+          8,
+          3.9
+        ],
+        [
+          9,
+          3.95
+        ],
+        [
+          10,
+          4
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_FPCI",
+      "points": [
+        [
+          0,
+          0.5
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1.4
+        ],
+        [
+          3,
+          1.7
+        ],
+        [
+          4,
+          1.9
+        ],
+        [
+          5,
+          2.05
+        ],
+        [
+          6,
+          2.2
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_FCM",
+      "points": [
+        [
+          0,
+          2.4
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0.6
+        ],
+        [
+          3,
+          0.4
+        ],
+        [
+          4,
+          0.3
+        ],
+        [
+          5,
+          0.2
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_FPM",
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          5,
+          0.95
+        ],
+        [
+          10,
+          0.87
+        ],
+        [
+          15,
+          0.77
+        ],
+        [
+          20,
+          0.65
+        ],
+        [
+          25,
+          0.5
+        ],
+        [
+          30,
+          0.32
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_CIM",
+      "points": [
+        [
+          0,
+          0.1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1.8
+        ],
+        [
+          3,
+          2.4
+        ],
+        [
+          4,
+          2.8
+        ],
+        [
+          5,
+          3
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_POLCM",
+      "points": [
+        [
+          0,
+          0.05
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          5.4
+        ],
+        [
+          4,
+          7.4
+        ],
+        [
+          5,
+          8
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_POLAT",
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          5,
+          1.4
+        ],
+        [
+          10,
+          2.4
+        ],
+        [
+          15,
+          3.6
+        ],
+        [
+          20,
+          5.2
+        ],
+        [
+          25,
+          7.2
+        ],
+        [
+          30,
+          10
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_CFIFR",
+      "points": [
+        [
+          0.0,
+          1
+        ],
+        [
+          0.5,
+          0.6
+        ],
+        [
+          1.0,
+          0.3
+        ],
+        [
+          1.5,
+          0.15
+        ],
+        [
+          2.0,
+          0.1
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_CIQR",
+      "points": [
+        [
+          0.0,
+          0.7
+        ],
+        [
+          0.5,
+          0.8
+        ],
+        [
+          1.0,
+          1
+        ],
+        [
+          1.5,
+          1.5
+        ],
+        [
+          2.0,
+          2
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_QLM",
+      "points": [
+        [
+          0,
+          0.2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1.7
+        ],
+        [
+          3,
+          2.3
+        ],
+        [
+          4,
+          2.7
+        ],
+        [
+          5,
+          2.9
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_QLC",
+      "points": [
+        [
+          0.0,
+          2
+        ],
+        [
+          0.5,
+          1.3
+        ],
+        [
+          1.0,
+          1
+        ],
+        [
+          1.5,
+          0.75
+        ],
+        [
+          2.0,
+          0.55
+        ],
+        [
+          2.5,
+          0.45
+        ],
+        [
+          3.0,
+          0.38
+        ],
+        [
+          3.5,
+          0.3
+        ],
+        [
+          4.0,
+          0.25
+        ],
+        [
+          4.5,
+          0.22
+        ],
+        [
+          5.0,
+          0.2
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_QLF",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1.8
+        ],
+        [
+          3,
+          2.4
+        ],
+        [
+          4,
+          2.7
+        ]
+      ],
+      "interpolation": "continuous"
+    },
+    {
+      "name": "World2_QLP",
+      "points": [
+        [
+          0,
+          1.1
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          10,
+          0.88
+        ],
+        [
+          15,
+          0.71
+        ],
+        [
+          20,
+          0.55
+        ],
+        [
+          25,
+          0.35
+        ],
+        [
+          30,
+          0.12
+        ]
+      ],
+      "interpolation": "continuous"
+    }
+  ]
 }

@@ -6,6 +6,8 @@ import os
 import sys
 import json
 import math
+import hashlib
+import pytest
 from pathlib import Path
 
 # Add parent directory to path for imports
@@ -21,17 +23,19 @@ def load_all_models(models_dir: str = "models") -> list:
     models = []
 
     if not models_path.exists():
-        print(f"Warning: Models directory not found: {models_path}")
-        return []
+        raise ValueError(f"Models directory not found: {models_path}")
 
-    for file_path in models_path.glob("*.json"):
+    for file_path in sorted(models_path.rglob("*.json")):
         try:
             with open(file_path, 'r') as f:
                 data = json.load(f)
             model = Model(**data)
-            models.append((file_path.name, model))
+            models.append((file_path.relative_to(models_path).as_posix(), model))
         except Exception as e:
-            print(f"FAIL: Could not load {file_path.name}: {e}")
+            models.append((file_path.relative_to(models_path).as_posix(), e))
+
+    if not models:
+        raise ValueError(f"No model JSON files found in {models_path}")
 
     return models
 
@@ -60,6 +64,8 @@ def _test_model_simulation(name: str, model: Model) -> tuple:
     Returns (success, message).
     """
     try:
+        if isinstance(model, Exception):
+            return False, f"Model load error: {model}"
         # Skip empty models (no stocks, flows, or variables)
         is_empty = not model.stocks and not model.flows and not model.variables
         if is_empty:
@@ -126,18 +132,40 @@ def run_all_model_tests() -> dict:
     }
 
 
-def test_all_models_simulate():
-    """Pytest-discoverable test that runs all model simulations."""
-    results = run_all_model_tests()
+def corpus_cases():
+    """Known invalid definitions stay visible as strict, hash-bound xfails."""
+    root = Path(__file__).resolve().parents[1]
+    audit = json.loads((root / 'operations/library-full-v110.json').read_text())
+    known = {row['file']: row for row in audit['models'] if row['status'] == 'failed'}
+    cases = []
+    for name, model in load_all_models():
+        path = root / 'models' / name
+        record = known.get('models/' + name)
+        marks = []
+        if record and hashlib.sha256(path.read_bytes()).hexdigest() == record['sha256']:
+            marks.append(pytest.mark.xfail(strict=True, reason='Known invalid definition; docs/FAILURE-REGISTER-1.9.md'))
+        cases.append(pytest.param(name, model, marks=marks, id=name))
+    return cases
 
-    # Collect failures for better error messages
-    failures = [r for r in results['results'] if not r['success']]
 
-    if failures:
-        failure_msg = "\n".join([f"  - {r['name']}: {r['message']}" for r in failures])
-        assert False, f"Model simulation failures:\n{failure_msg}"
+@pytest.mark.parametrize('name,model', corpus_cases())
+def test_all_models_simulate(name, model):
+    success, message = _test_model_simulation(name, model)
+    assert success, message
 
-    assert results['passed'] == results['total'], f"Not all models passed: {results['passed']}/{results['total']}"
+
+def test_loader_rejects_empty_directory(tmp_path):
+    with pytest.raises(ValueError, match='No model JSON'):
+        load_all_models(tmp_path)
+
+
+def test_loader_counts_nested_invalid_json(tmp_path):
+    nested = tmp_path / 'nested'
+    nested.mkdir()
+    (nested / 'broken.json').write_text('{')
+    rows = load_all_models(tmp_path)
+    assert len(rows) == 1 and rows[0][0] == 'nested/broken.json'
+    assert not _test_model_simulation(*rows[0])[0]
 
 
 if __name__ == "__main__":

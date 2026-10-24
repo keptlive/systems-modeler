@@ -1,24 +1,25 @@
 {
   "id": "subscripted-population-model-massachusetts-towns-eco",
   "name": "Subscripted Population Model (Massachusetts Towns)",
-  "description": "A multi-region population model demonstrating array/subscript capabilities using Massachusetts town data. Models birth and death dynamics across 351 towns with individual initial populations. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "description": "Restores all 351 Massachusetts towns and their original populations from the native Vensim source. Population is the statewide total. Every Population[Town] series is retained as a named output. Identical birthrate 0.1, lifespan 70, and order-8 exponential delay make each regional system linear and proportional to its initial population, so exact factorization of the 351 independent systems uses one aggregate population and one eight-stage delay chain. Each town output is its original initial fraction times the statewide population. This is not a single-town approximation or truncated data list. Source initial list, town ordering, and nine-state independent reference are retained in tests/fixtures/corpus-v19-b. Native DELAY N(input,time,initial,order) is mapped to DELAY_N(input,time,order,initial). Start 0, end 20 and Euler step 1 match the source. Source controls say Month despite lifespan 70; no empirical demographic calibration is claimed.",
   "stocks": [
     {
       "id": "stock-population",
       "name": "Population",
-      "initial_value": 0,
-      "equation": "",
+      "initial_value": 6547695,
+      "equation": "Initial_Population",
       "position": {
         "x": 150,
         "y": 200
-      }
+      },
+      "units": "people"
     }
   ],
   "flows": [
     {
       "id": "flow-births",
       "name": "Births",
-      "equation": "Birthrate[Towns] * Population[Towns]",
+      "equation": "Birthrate * Population",
       "from_stock": null,
       "to_stock": "stock-population",
       "position": {
@@ -29,7 +30,7 @@
     {
       "id": "flow-deaths",
       "name": "Deaths",
-      "equation": "DELAY(Births[Towns], Lifespan, Population[Towns]/Lifespan, 8)",
+      "equation": "DELAY_N(Births, Lifespan, 8, Population / Lifespan)",
       "from_stock": "stock-population",
       "to_stock": null,
       "position": {
@@ -60,10 +61,3520 @@
     {
       "id": "var-initial-population",
       "name": "Initial Population",
-      "equation": "[15985, 21924, 10303, ...]",
+      "equation": "6547695",
       "position": {
         "x": 400,
         "y": 80
+      }
+    },
+    {
+      "id": "town-population-abington",
+      "name": "Population[Abington]",
+      "units": "people",
+      "equation": "Population * 15985 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 100
+      }
+    },
+    {
+      "id": "town-population-acton",
+      "name": "Population[Acton]",
+      "units": "people",
+      "equation": "Population * 21924 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 132
+      }
+    },
+    {
+      "id": "town-population-acushnet",
+      "name": "Population[Acushnet]",
+      "units": "people",
+      "equation": "Population * 10303 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 164
+      }
+    },
+    {
+      "id": "town-population-adams",
+      "name": "Population[Adams]",
+      "units": "people",
+      "equation": "Population * 8485 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 196
+      }
+    },
+    {
+      "id": "town-population-agawam",
+      "name": "Population[Agawam]",
+      "units": "people",
+      "equation": "Population * 28438 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 228
+      }
+    },
+    {
+      "id": "town-population-alford",
+      "name": "Population[Alford]",
+      "units": "people",
+      "equation": "Population * 494 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 260
+      }
+    },
+    {
+      "id": "town-population-amesbury",
+      "name": "Population[Amesbury]",
+      "units": "people",
+      "equation": "Population * 16283 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 292
+      }
+    },
+    {
+      "id": "town-population-amherst",
+      "name": "Population[Amherst]",
+      "units": "people",
+      "equation": "Population * 37819 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 324
+      }
+    },
+    {
+      "id": "town-population-andover",
+      "name": "Population[Andover]",
+      "units": "people",
+      "equation": "Population * 33201 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 356
+      }
+    },
+    {
+      "id": "town-population-aquinnah",
+      "name": "Population[Aquinnah]",
+      "units": "people",
+      "equation": "Population * 311 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 388
+      }
+    },
+    {
+      "id": "town-population-arlington",
+      "name": "Population[Arlington]",
+      "units": "people",
+      "equation": "Population * 42844 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 420
+      }
+    },
+    {
+      "id": "town-population-ashburnham",
+      "name": "Population[Ashburnham]",
+      "units": "people",
+      "equation": "Population * 6081 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 452
+      }
+    },
+    {
+      "id": "town-population-ashby",
+      "name": "Population[Ashby]",
+      "units": "people",
+      "equation": "Population * 3074 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 484
+      }
+    },
+    {
+      "id": "town-population-ashfield",
+      "name": "Population[Ashfield]",
+      "units": "people",
+      "equation": "Population * 1737 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 516
+      }
+    },
+    {
+      "id": "town-population-ashland",
+      "name": "Population[Ashland]",
+      "units": "people",
+      "equation": "Population * 16593 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 548
+      }
+    },
+    {
+      "id": "town-population-athol",
+      "name": "Population[Athol]",
+      "units": "people",
+      "equation": "Population * 11584 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 580
+      }
+    },
+    {
+      "id": "town-population-attleboro",
+      "name": "Population[Attleboro]",
+      "units": "people",
+      "equation": "Population * 43593 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 612
+      }
+    },
+    {
+      "id": "town-population-auburn",
+      "name": "Population[Auburn]",
+      "units": "people",
+      "equation": "Population * 16188 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 644
+      }
+    },
+    {
+      "id": "town-population-avon",
+      "name": "Population[Avon]",
+      "units": "people",
+      "equation": "Population * 4356 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 676
+      }
+    },
+    {
+      "id": "town-population-ayer",
+      "name": "Population[Ayer]",
+      "units": "people",
+      "equation": "Population * 7427 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 708
+      }
+    },
+    {
+      "id": "town-population-barnstable",
+      "name": "Population[Barnstable]",
+      "units": "people",
+      "equation": "Population * 45193 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 740
+      }
+    },
+    {
+      "id": "town-population-barre",
+      "name": "Population[Barre]",
+      "units": "people",
+      "equation": "Population * 5398 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 772
+      }
+    },
+    {
+      "id": "town-population-becket",
+      "name": "Population[Becket]",
+      "units": "people",
+      "equation": "Population * 1779 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 804
+      }
+    },
+    {
+      "id": "town-population-bedford",
+      "name": "Population[Bedford]",
+      "units": "people",
+      "equation": "Population * 13320 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 836
+      }
+    },
+    {
+      "id": "town-population-belchertown",
+      "name": "Population[Belchertown]",
+      "units": "people",
+      "equation": "Population * 14649 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 868
+      }
+    },
+    {
+      "id": "town-population-bellingham",
+      "name": "Population[Bellingham]",
+      "units": "people",
+      "equation": "Population * 16332 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 900
+      }
+    },
+    {
+      "id": "town-population-belmont",
+      "name": "Population[Belmont]",
+      "units": "people",
+      "equation": "Population * 24729 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 932
+      }
+    },
+    {
+      "id": "town-population-berkley",
+      "name": "Population[Berkley]",
+      "units": "people",
+      "equation": "Population * 6411 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 964
+      }
+    },
+    {
+      "id": "town-population-berlin",
+      "name": "Population[Berlin]",
+      "units": "people",
+      "equation": "Population * 2866 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 996
+      }
+    },
+    {
+      "id": "town-population-bernardston",
+      "name": "Population[Bernardston]",
+      "units": "people",
+      "equation": "Population * 2129 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 1028
+      }
+    },
+    {
+      "id": "town-population-beverly",
+      "name": "Population[Beverly]",
+      "units": "people",
+      "equation": "Population * 39502 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 1060
+      }
+    },
+    {
+      "id": "town-population-billerica",
+      "name": "Population[Billerica]",
+      "units": "people",
+      "equation": "Population * 40243 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 1092
+      }
+    },
+    {
+      "id": "town-population-blackstone",
+      "name": "Population[Blackstone]",
+      "units": "people",
+      "equation": "Population * 9026 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 1124
+      }
+    },
+    {
+      "id": "town-population-blandford",
+      "name": "Population[Blandford]",
+      "units": "people",
+      "equation": "Population * 1233 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 1156
+      }
+    },
+    {
+      "id": "town-population-bolton",
+      "name": "Population[Bolton]",
+      "units": "people",
+      "equation": "Population * 4897 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 1188
+      }
+    },
+    {
+      "id": "town-population-boston",
+      "name": "Population[Boston]",
+      "units": "people",
+      "equation": "Population * 617660 / 6547695",
+      "position": {
+        "x": 1050,
+        "y": 1220
+      }
+    },
+    {
+      "id": "town-population-bourne",
+      "name": "Population[Bourne]",
+      "units": "people",
+      "equation": "Population * 19754 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 100
+      }
+    },
+    {
+      "id": "town-population-boxborough",
+      "name": "Population[Boxborough]",
+      "units": "people",
+      "equation": "Population * 4996 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 132
+      }
+    },
+    {
+      "id": "town-population-boxford",
+      "name": "Population[Boxford]",
+      "units": "people",
+      "equation": "Population * 7965 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 164
+      }
+    },
+    {
+      "id": "town-population-boylston",
+      "name": "Population[Boylston]",
+      "units": "people",
+      "equation": "Population * 4355 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 196
+      }
+    },
+    {
+      "id": "town-population-braintree",
+      "name": "Population[Braintree]",
+      "units": "people",
+      "equation": "Population * 35744 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 228
+      }
+    },
+    {
+      "id": "town-population-brewster",
+      "name": "Population[Brewster]",
+      "units": "people",
+      "equation": "Population * 9820 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 260
+      }
+    },
+    {
+      "id": "town-population-bridgewater",
+      "name": "Population[Bridgewater]",
+      "units": "people",
+      "equation": "Population * 26563 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 292
+      }
+    },
+    {
+      "id": "town-population-brimfield",
+      "name": "Population[Brimfield]",
+      "units": "people",
+      "equation": "Population * 3609 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 324
+      }
+    },
+    {
+      "id": "town-population-brockton",
+      "name": "Population[Brockton]",
+      "units": "people",
+      "equation": "Population * 93810 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 356
+      }
+    },
+    {
+      "id": "town-population-brookfield",
+      "name": "Population[Brookfield]",
+      "units": "people",
+      "equation": "Population * 3390 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 388
+      }
+    },
+    {
+      "id": "town-population-brookline",
+      "name": "Population[Brookline]",
+      "units": "people",
+      "equation": "Population * 58732 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 420
+      }
+    },
+    {
+      "id": "town-population-buckland",
+      "name": "Population[Buckland]",
+      "units": "people",
+      "equation": "Population * 1902 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 452
+      }
+    },
+    {
+      "id": "town-population-burlington",
+      "name": "Population[Burlington]",
+      "units": "people",
+      "equation": "Population * 24498 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 484
+      }
+    },
+    {
+      "id": "town-population-cambridge",
+      "name": "Population[Cambridge]",
+      "units": "people",
+      "equation": "Population * 105162 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 516
+      }
+    },
+    {
+      "id": "town-population-canton",
+      "name": "Population[Canton]",
+      "units": "people",
+      "equation": "Population * 21561 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 548
+      }
+    },
+    {
+      "id": "town-population-carlisle",
+      "name": "Population[Carlisle]",
+      "units": "people",
+      "equation": "Population * 4852 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 580
+      }
+    },
+    {
+      "id": "town-population-carver",
+      "name": "Population[Carver]",
+      "units": "people",
+      "equation": "Population * 11509 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 612
+      }
+    },
+    {
+      "id": "town-population-charlemont",
+      "name": "Population[Charlemont]",
+      "units": "people",
+      "equation": "Population * 1266 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 644
+      }
+    },
+    {
+      "id": "town-population-charlton",
+      "name": "Population[Charlton]",
+      "units": "people",
+      "equation": "Population * 12981 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 676
+      }
+    },
+    {
+      "id": "town-population-chatham",
+      "name": "Population[Chatham]",
+      "units": "people",
+      "equation": "Population * 6125 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 708
+      }
+    },
+    {
+      "id": "town-population-chelmsford",
+      "name": "Population[Chelmsford]",
+      "units": "people",
+      "equation": "Population * 33802 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 740
+      }
+    },
+    {
+      "id": "town-population-chelsea",
+      "name": "Population[Chelsea]",
+      "units": "people",
+      "equation": "Population * 35177 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 772
+      }
+    },
+    {
+      "id": "town-population-cheshire",
+      "name": "Population[Cheshire]",
+      "units": "people",
+      "equation": "Population * 3235 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 804
+      }
+    },
+    {
+      "id": "town-population-chester",
+      "name": "Population[Chester]",
+      "units": "people",
+      "equation": "Population * 1337 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 836
+      }
+    },
+    {
+      "id": "town-population-chesterfield",
+      "name": "Population[Chesterfield]",
+      "units": "people",
+      "equation": "Population * 1222 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 868
+      }
+    },
+    {
+      "id": "town-population-chicopee",
+      "name": "Population[Chicopee]",
+      "units": "people",
+      "equation": "Population * 55298 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 900
+      }
+    },
+    {
+      "id": "town-population-chilmark",
+      "name": "Population[Chilmark]",
+      "units": "people",
+      "equation": "Population * 866 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 932
+      }
+    },
+    {
+      "id": "town-population-clarksburg",
+      "name": "Population[Clarksburg]",
+      "units": "people",
+      "equation": "Population * 1702 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 964
+      }
+    },
+    {
+      "id": "town-population-clinton",
+      "name": "Population[Clinton]",
+      "units": "people",
+      "equation": "Population * 13606 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 996
+      }
+    },
+    {
+      "id": "town-population-cohasset",
+      "name": "Population[Cohasset]",
+      "units": "people",
+      "equation": "Population * 7542 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 1028
+      }
+    },
+    {
+      "id": "town-population-colrain",
+      "name": "Population[Colrain]",
+      "units": "people",
+      "equation": "Population * 1671 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 1060
+      }
+    },
+    {
+      "id": "town-population-concord",
+      "name": "Population[Concord]",
+      "units": "people",
+      "equation": "Population * 17668 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 1092
+      }
+    },
+    {
+      "id": "town-population-conway",
+      "name": "Population[Conway]",
+      "units": "people",
+      "equation": "Population * 1897 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 1124
+      }
+    },
+    {
+      "id": "town-population-cummington",
+      "name": "Population[Cummington]",
+      "units": "people",
+      "equation": "Population * 872 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 1156
+      }
+    },
+    {
+      "id": "town-population-dalton",
+      "name": "Population[Dalton]",
+      "units": "people",
+      "equation": "Population * 6756 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 1188
+      }
+    },
+    {
+      "id": "town-population-danvers",
+      "name": "Population[Danvers]",
+      "units": "people",
+      "equation": "Population * 26493 / 6547695",
+      "position": {
+        "x": 1270,
+        "y": 1220
+      }
+    },
+    {
+      "id": "town-population-dartmouth",
+      "name": "Population[Dartmouth]",
+      "units": "people",
+      "equation": "Population * 34032 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 100
+      }
+    },
+    {
+      "id": "town-population-dedham",
+      "name": "Population[Dedham]",
+      "units": "people",
+      "equation": "Population * 24729 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 132
+      }
+    },
+    {
+      "id": "town-population-deerfield",
+      "name": "Population[Deerfield]",
+      "units": "people",
+      "equation": "Population * 5125 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 164
+      }
+    },
+    {
+      "id": "town-population-dennis",
+      "name": "Population[Dennis]",
+      "units": "people",
+      "equation": "Population * 14207 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 196
+      }
+    },
+    {
+      "id": "town-population-dighton",
+      "name": "Population[Dighton]",
+      "units": "people",
+      "equation": "Population * 7086 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 228
+      }
+    },
+    {
+      "id": "town-population-douglas",
+      "name": "Population[Douglas]",
+      "units": "people",
+      "equation": "Population * 8471 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 260
+      }
+    },
+    {
+      "id": "town-population-dover",
+      "name": "Population[Dover]",
+      "units": "people",
+      "equation": "Population * 5589 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 292
+      }
+    },
+    {
+      "id": "town-population-dracut",
+      "name": "Population[Dracut]",
+      "units": "people",
+      "equation": "Population * 29457 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 324
+      }
+    },
+    {
+      "id": "town-population-dudley",
+      "name": "Population[Dudley]",
+      "units": "people",
+      "equation": "Population * 11390 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 356
+      }
+    },
+    {
+      "id": "town-population-dunstable",
+      "name": "Population[Dunstable]",
+      "units": "people",
+      "equation": "Population * 3179 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 388
+      }
+    },
+    {
+      "id": "town-population-duxbury",
+      "name": "Population[Duxbury]",
+      "units": "people",
+      "equation": "Population * 15059 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 420
+      }
+    },
+    {
+      "id": "town-population-east-bridgewater",
+      "name": "Population[East Bridgewater]",
+      "units": "people",
+      "equation": "Population * 13794 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 452
+      }
+    },
+    {
+      "id": "town-population-east-brookfield",
+      "name": "Population[East Brookfield]",
+      "units": "people",
+      "equation": "Population * 2183 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 484
+      }
+    },
+    {
+      "id": "town-population-east-longmeadow",
+      "name": "Population[East Longmeadow]",
+      "units": "people",
+      "equation": "Population * 15720 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 516
+      }
+    },
+    {
+      "id": "town-population-eastham",
+      "name": "Population[Eastham]",
+      "units": "people",
+      "equation": "Population * 4956 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 548
+      }
+    },
+    {
+      "id": "town-population-easthampton",
+      "name": "Population[Easthampton]",
+      "units": "people",
+      "equation": "Population * 16053 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 580
+      }
+    },
+    {
+      "id": "town-population-easton",
+      "name": "Population[Easton]",
+      "units": "people",
+      "equation": "Population * 23112 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 612
+      }
+    },
+    {
+      "id": "town-population-edgartown",
+      "name": "Population[Edgartown]",
+      "units": "people",
+      "equation": "Population * 4067 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 644
+      }
+    },
+    {
+      "id": "town-population-egremont",
+      "name": "Population[Egremont]",
+      "units": "people",
+      "equation": "Population * 1225 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 676
+      }
+    },
+    {
+      "id": "town-population-erving",
+      "name": "Population[Erving]",
+      "units": "people",
+      "equation": "Population * 1800 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 708
+      }
+    },
+    {
+      "id": "town-population-essex",
+      "name": "Population[Essex]",
+      "units": "people",
+      "equation": "Population * 3504 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 740
+      }
+    },
+    {
+      "id": "town-population-everett",
+      "name": "Population[Everett]",
+      "units": "people",
+      "equation": "Population * 41667 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 772
+      }
+    },
+    {
+      "id": "town-population-fairhaven",
+      "name": "Population[Fairhaven]",
+      "units": "people",
+      "equation": "Population * 15873 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 804
+      }
+    },
+    {
+      "id": "town-population-fall-river",
+      "name": "Population[Fall River]",
+      "units": "people",
+      "equation": "Population * 88857 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 836
+      }
+    },
+    {
+      "id": "town-population-falmouth",
+      "name": "Population[Falmouth]",
+      "units": "people",
+      "equation": "Population * 31531 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 868
+      }
+    },
+    {
+      "id": "town-population-fitchburg",
+      "name": "Population[Fitchburg]",
+      "units": "people",
+      "equation": "Population * 40318 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 900
+      }
+    },
+    {
+      "id": "town-population-florida",
+      "name": "Population[Florida]",
+      "units": "people",
+      "equation": "Population * 752 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 932
+      }
+    },
+    {
+      "id": "town-population-foxborough",
+      "name": "Population[Foxborough]",
+      "units": "people",
+      "equation": "Population * 16865 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 964
+      }
+    },
+    {
+      "id": "town-population-framingham",
+      "name": "Population[Framingham]",
+      "units": "people",
+      "equation": "Population * 68318 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 996
+      }
+    },
+    {
+      "id": "town-population-franklin",
+      "name": "Population[Franklin]",
+      "units": "people",
+      "equation": "Population * 31635 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 1028
+      }
+    },
+    {
+      "id": "town-population-freetown",
+      "name": "Population[Freetown]",
+      "units": "people",
+      "equation": "Population * 8870 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 1060
+      }
+    },
+    {
+      "id": "town-population-gardner",
+      "name": "Population[Gardner]",
+      "units": "people",
+      "equation": "Population * 20228 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 1092
+      }
+    },
+    {
+      "id": "town-population-georgetown",
+      "name": "Population[Georgetown]",
+      "units": "people",
+      "equation": "Population * 8183 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 1124
+      }
+    },
+    {
+      "id": "town-population-gill",
+      "name": "Population[Gill]",
+      "units": "people",
+      "equation": "Population * 1500 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 1156
+      }
+    },
+    {
+      "id": "town-population-gloucester",
+      "name": "Population[Gloucester]",
+      "units": "people",
+      "equation": "Population * 28789 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 1188
+      }
+    },
+    {
+      "id": "town-population-goshen",
+      "name": "Population[Goshen]",
+      "units": "people",
+      "equation": "Population * 1054 / 6547695",
+      "position": {
+        "x": 1490,
+        "y": 1220
+      }
+    },
+    {
+      "id": "town-population-gosnold",
+      "name": "Population[Gosnold]",
+      "units": "people",
+      "equation": "Population * 75 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 100
+      }
+    },
+    {
+      "id": "town-population-grafton",
+      "name": "Population[Grafton]",
+      "units": "people",
+      "equation": "Population * 17765 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 132
+      }
+    },
+    {
+      "id": "town-population-granby",
+      "name": "Population[Granby]",
+      "units": "people",
+      "equation": "Population * 6240 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 164
+      }
+    },
+    {
+      "id": "town-population-granville",
+      "name": "Population[Granville]",
+      "units": "people",
+      "equation": "Population * 1566 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 196
+      }
+    },
+    {
+      "id": "town-population-great-barrington",
+      "name": "Population[Great Barrington]",
+      "units": "people",
+      "equation": "Population * 7104 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 228
+      }
+    },
+    {
+      "id": "town-population-greenfield",
+      "name": "Population[Greenfield]",
+      "units": "people",
+      "equation": "Population * 17456 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 260
+      }
+    },
+    {
+      "id": "town-population-groton",
+      "name": "Population[Groton]",
+      "units": "people",
+      "equation": "Population * 10646 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 292
+      }
+    },
+    {
+      "id": "town-population-groveland",
+      "name": "Population[Groveland]",
+      "units": "people",
+      "equation": "Population * 6459 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 324
+      }
+    },
+    {
+      "id": "town-population-hadley",
+      "name": "Population[Hadley]",
+      "units": "people",
+      "equation": "Population * 5250 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 356
+      }
+    },
+    {
+      "id": "town-population-halifax",
+      "name": "Population[Halifax]",
+      "units": "people",
+      "equation": "Population * 7518 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 388
+      }
+    },
+    {
+      "id": "town-population-hamilton",
+      "name": "Population[Hamilton]",
+      "units": "people",
+      "equation": "Population * 7764 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 420
+      }
+    },
+    {
+      "id": "town-population-hampden",
+      "name": "Population[Hampden]",
+      "units": "people",
+      "equation": "Population * 5139 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 452
+      }
+    },
+    {
+      "id": "town-population-hancock",
+      "name": "Population[Hancock]",
+      "units": "people",
+      "equation": "Population * 717 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 484
+      }
+    },
+    {
+      "id": "town-population-hanover",
+      "name": "Population[Hanover]",
+      "units": "people",
+      "equation": "Population * 13879 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 516
+      }
+    },
+    {
+      "id": "town-population-hanson",
+      "name": "Population[Hanson]",
+      "units": "people",
+      "equation": "Population * 10209 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 548
+      }
+    },
+    {
+      "id": "town-population-hardwick",
+      "name": "Population[Hardwick]",
+      "units": "people",
+      "equation": "Population * 2990 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 580
+      }
+    },
+    {
+      "id": "town-population-harvard",
+      "name": "Population[Harvard]",
+      "units": "people",
+      "equation": "Population * 6520 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 612
+      }
+    },
+    {
+      "id": "town-population-harwich",
+      "name": "Population[Harwich]",
+      "units": "people",
+      "equation": "Population * 12243 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 644
+      }
+    },
+    {
+      "id": "town-population-hatfield",
+      "name": "Population[Hatfield]",
+      "units": "people",
+      "equation": "Population * 3279 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 676
+      }
+    },
+    {
+      "id": "town-population-haverhill",
+      "name": "Population[Haverhill]",
+      "units": "people",
+      "equation": "Population * 60879 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 708
+      }
+    },
+    {
+      "id": "town-population-hawley",
+      "name": "Population[Hawley]",
+      "units": "people",
+      "equation": "Population * 337 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 740
+      }
+    },
+    {
+      "id": "town-population-heath",
+      "name": "Population[Heath]",
+      "units": "people",
+      "equation": "Population * 706 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 772
+      }
+    },
+    {
+      "id": "town-population-hingham",
+      "name": "Population[Hingham]",
+      "units": "people",
+      "equation": "Population * 22157 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 804
+      }
+    },
+    {
+      "id": "town-population-hinsdale",
+      "name": "Population[Hinsdale]",
+      "units": "people",
+      "equation": "Population * 2032 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 836
+      }
+    },
+    {
+      "id": "town-population-holbrook",
+      "name": "Population[Holbrook]",
+      "units": "people",
+      "equation": "Population * 10791 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 868
+      }
+    },
+    {
+      "id": "town-population-holden",
+      "name": "Population[Holden]",
+      "units": "people",
+      "equation": "Population * 17346 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 900
+      }
+    },
+    {
+      "id": "town-population-holland",
+      "name": "Population[Holland]",
+      "units": "people",
+      "equation": "Population * 2481 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 932
+      }
+    },
+    {
+      "id": "town-population-holliston",
+      "name": "Population[Holliston]",
+      "units": "people",
+      "equation": "Population * 13547 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 964
+      }
+    },
+    {
+      "id": "town-population-holyoke",
+      "name": "Population[Holyoke]",
+      "units": "people",
+      "equation": "Population * 39880 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 996
+      }
+    },
+    {
+      "id": "town-population-hopedale",
+      "name": "Population[Hopedale]",
+      "units": "people",
+      "equation": "Population * 5911 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 1028
+      }
+    },
+    {
+      "id": "town-population-hopkinton",
+      "name": "Population[Hopkinton]",
+      "units": "people",
+      "equation": "Population * 14925 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 1060
+      }
+    },
+    {
+      "id": "town-population-hubbardston",
+      "name": "Population[Hubbardston]",
+      "units": "people",
+      "equation": "Population * 4382 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 1092
+      }
+    },
+    {
+      "id": "town-population-hudson",
+      "name": "Population[Hudson]",
+      "units": "people",
+      "equation": "Population * 19063 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 1124
+      }
+    },
+    {
+      "id": "town-population-hull",
+      "name": "Population[Hull]",
+      "units": "people",
+      "equation": "Population * 10293 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 1156
+      }
+    },
+    {
+      "id": "town-population-huntington",
+      "name": "Population[Huntington]",
+      "units": "people",
+      "equation": "Population * 2180 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 1188
+      }
+    },
+    {
+      "id": "town-population-ipswich",
+      "name": "Population[Ipswich]",
+      "units": "people",
+      "equation": "Population * 13175 / 6547695",
+      "position": {
+        "x": 1710,
+        "y": 1220
+      }
+    },
+    {
+      "id": "town-population-kingston",
+      "name": "Population[Kingston]",
+      "units": "people",
+      "equation": "Population * 12629 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 100
+      }
+    },
+    {
+      "id": "town-population-lakeville",
+      "name": "Population[Lakeville]",
+      "units": "people",
+      "equation": "Population * 10602 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 132
+      }
+    },
+    {
+      "id": "town-population-lancaster",
+      "name": "Population[Lancaster]",
+      "units": "people",
+      "equation": "Population * 8055 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 164
+      }
+    },
+    {
+      "id": "town-population-lanesborough",
+      "name": "Population[Lanesborough]",
+      "units": "people",
+      "equation": "Population * 3091 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 196
+      }
+    },
+    {
+      "id": "town-population-lawrence",
+      "name": "Population[Lawrence]",
+      "units": "people",
+      "equation": "Population * 76377 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 228
+      }
+    },
+    {
+      "id": "town-population-lee",
+      "name": "Population[Lee]",
+      "units": "people",
+      "equation": "Population * 5943 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 260
+      }
+    },
+    {
+      "id": "town-population-leicester",
+      "name": "Population[Leicester]",
+      "units": "people",
+      "equation": "Population * 10970 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 292
+      }
+    },
+    {
+      "id": "town-population-lenox",
+      "name": "Population[Lenox]",
+      "units": "people",
+      "equation": "Population * 5025 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 324
+      }
+    },
+    {
+      "id": "town-population-leominster",
+      "name": "Population[Leominster]",
+      "units": "people",
+      "equation": "Population * 40759 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 356
+      }
+    },
+    {
+      "id": "town-population-leverett",
+      "name": "Population[Leverett]",
+      "units": "people",
+      "equation": "Population * 1851 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 388
+      }
+    },
+    {
+      "id": "town-population-lexington",
+      "name": "Population[Lexington]",
+      "units": "people",
+      "equation": "Population * 31394 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 420
+      }
+    },
+    {
+      "id": "town-population-leyden",
+      "name": "Population[Leyden]",
+      "units": "people",
+      "equation": "Population * 711 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 452
+      }
+    },
+    {
+      "id": "town-population-lincoln",
+      "name": "Population[Lincoln]",
+      "units": "people",
+      "equation": "Population * 6362 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 484
+      }
+    },
+    {
+      "id": "town-population-littleton",
+      "name": "Population[Littleton]",
+      "units": "people",
+      "equation": "Population * 8924 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 516
+      }
+    },
+    {
+      "id": "town-population-longmeadow",
+      "name": "Population[Longmeadow]",
+      "units": "people",
+      "equation": "Population * 15784 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 548
+      }
+    },
+    {
+      "id": "town-population-lowell",
+      "name": "Population[Lowell]",
+      "units": "people",
+      "equation": "Population * 106519 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 580
+      }
+    },
+    {
+      "id": "town-population-ludlow",
+      "name": "Population[Ludlow]",
+      "units": "people",
+      "equation": "Population * 21103 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 612
+      }
+    },
+    {
+      "id": "town-population-lunenburg",
+      "name": "Population[Lunenburg]",
+      "units": "people",
+      "equation": "Population * 10086 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 644
+      }
+    },
+    {
+      "id": "town-population-lynn",
+      "name": "Population[Lynn]",
+      "units": "people",
+      "equation": "Population * 90329 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 676
+      }
+    },
+    {
+      "id": "town-population-lynnfield",
+      "name": "Population[Lynnfield]",
+      "units": "people",
+      "equation": "Population * 11596 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 708
+      }
+    },
+    {
+      "id": "town-population-malden",
+      "name": "Population[Malden]",
+      "units": "people",
+      "equation": "Population * 59450 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 740
+      }
+    },
+    {
+      "id": "town-population-manchester-by-the-sea",
+      "name": "Population[Manchester by the Sea]",
+      "units": "people",
+      "equation": "Population * 5136 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 772
+      }
+    },
+    {
+      "id": "town-population-mansfield",
+      "name": "Population[Mansfield]",
+      "units": "people",
+      "equation": "Population * 23184 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 804
+      }
+    },
+    {
+      "id": "town-population-marblehead",
+      "name": "Population[Marblehead]",
+      "units": "people",
+      "equation": "Population * 19808 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 836
+      }
+    },
+    {
+      "id": "town-population-marion",
+      "name": "Population[Marion]",
+      "units": "people",
+      "equation": "Population * 4907 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 868
+      }
+    },
+    {
+      "id": "town-population-marlborough",
+      "name": "Population[Marlborough]",
+      "units": "people",
+      "equation": "Population * 38499 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 900
+      }
+    },
+    {
+      "id": "town-population-marshfield",
+      "name": "Population[Marshfield]",
+      "units": "people",
+      "equation": "Population * 25132 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 932
+      }
+    },
+    {
+      "id": "town-population-mashpee",
+      "name": "Population[Mashpee]",
+      "units": "people",
+      "equation": "Population * 14006 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 964
+      }
+    },
+    {
+      "id": "town-population-mattapoisett",
+      "name": "Population[Mattapoisett]",
+      "units": "people",
+      "equation": "Population * 6045 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 996
+      }
+    },
+    {
+      "id": "town-population-maynard",
+      "name": "Population[Maynard]",
+      "units": "people",
+      "equation": "Population * 10106 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 1028
+      }
+    },
+    {
+      "id": "town-population-medfield",
+      "name": "Population[Medfield]",
+      "units": "people",
+      "equation": "Population * 12024 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 1060
+      }
+    },
+    {
+      "id": "town-population-medford",
+      "name": "Population[Medford]",
+      "units": "people",
+      "equation": "Population * 56173 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 1092
+      }
+    },
+    {
+      "id": "town-population-medway",
+      "name": "Population[Medway]",
+      "units": "people",
+      "equation": "Population * 12752 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 1124
+      }
+    },
+    {
+      "id": "town-population-melrose",
+      "name": "Population[Melrose]",
+      "units": "people",
+      "equation": "Population * 26983 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 1156
+      }
+    },
+    {
+      "id": "town-population-mendon",
+      "name": "Population[Mendon]",
+      "units": "people",
+      "equation": "Population * 5839 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 1188
+      }
+    },
+    {
+      "id": "town-population-merrimac",
+      "name": "Population[Merrimac]",
+      "units": "people",
+      "equation": "Population * 6338 / 6547695",
+      "position": {
+        "x": 1930,
+        "y": 1220
+      }
+    },
+    {
+      "id": "town-population-methuen",
+      "name": "Population[Methuen]",
+      "units": "people",
+      "equation": "Population * 47255 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 100
+      }
+    },
+    {
+      "id": "town-population-middleborough",
+      "name": "Population[Middleborough]",
+      "units": "people",
+      "equation": "Population * 23116 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 132
+      }
+    },
+    {
+      "id": "town-population-middlefield",
+      "name": "Population[Middlefield]",
+      "units": "people",
+      "equation": "Population * 521 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 164
+      }
+    },
+    {
+      "id": "town-population-middleton",
+      "name": "Population[Middleton]",
+      "units": "people",
+      "equation": "Population * 8987 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 196
+      }
+    },
+    {
+      "id": "town-population-milford",
+      "name": "Population[Milford]",
+      "units": "people",
+      "equation": "Population * 27999 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 228
+      }
+    },
+    {
+      "id": "town-population-millbury",
+      "name": "Population[Millbury]",
+      "units": "people",
+      "equation": "Population * 13261 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 260
+      }
+    },
+    {
+      "id": "town-population-millis",
+      "name": "Population[Millis]",
+      "units": "people",
+      "equation": "Population * 7891 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 292
+      }
+    },
+    {
+      "id": "town-population-millville",
+      "name": "Population[Millville]",
+      "units": "people",
+      "equation": "Population * 3190 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 324
+      }
+    },
+    {
+      "id": "town-population-milton",
+      "name": "Population[Milton]",
+      "units": "people",
+      "equation": "Population * 27003 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 356
+      }
+    },
+    {
+      "id": "town-population-monroe",
+      "name": "Population[Monroe]",
+      "units": "people",
+      "equation": "Population * 121 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 388
+      }
+    },
+    {
+      "id": "town-population-monson",
+      "name": "Population[Monson]",
+      "units": "people",
+      "equation": "Population * 8560 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 420
+      }
+    },
+    {
+      "id": "town-population-montague",
+      "name": "Population[Montague]",
+      "units": "people",
+      "equation": "Population * 8437 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 452
+      }
+    },
+    {
+      "id": "town-population-monterey",
+      "name": "Population[Monterey]",
+      "units": "people",
+      "equation": "Population * 961 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 484
+      }
+    },
+    {
+      "id": "town-population-montgomery",
+      "name": "Population[Montgomery]",
+      "units": "people",
+      "equation": "Population * 838 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 516
+      }
+    },
+    {
+      "id": "town-population-mount-washington",
+      "name": "Population[Mount Washington]",
+      "units": "people",
+      "equation": "Population * 167 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 548
+      }
+    },
+    {
+      "id": "town-population-nahant",
+      "name": "Population[Nahant]",
+      "units": "people",
+      "equation": "Population * 3410 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 580
+      }
+    },
+    {
+      "id": "town-population-nantucket",
+      "name": "Population[Nantucket]",
+      "units": "people",
+      "equation": "Population * 10172 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 612
+      }
+    },
+    {
+      "id": "town-population-natick",
+      "name": "Population[Natick]",
+      "units": "people",
+      "equation": "Population * 33006 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 644
+      }
+    },
+    {
+      "id": "town-population-needham",
+      "name": "Population[Needham]",
+      "units": "people",
+      "equation": "Population * 28886 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 676
+      }
+    },
+    {
+      "id": "town-population-new-ashford",
+      "name": "Population[New Ashford]",
+      "units": "people",
+      "equation": "Population * 228 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 708
+      }
+    },
+    {
+      "id": "town-population-new-bedford",
+      "name": "Population[New Bedford]",
+      "units": "people",
+      "equation": "Population * 95072 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 740
+      }
+    },
+    {
+      "id": "town-population-new-braintree",
+      "name": "Population[New Braintree]",
+      "units": "people",
+      "equation": "Population * 999 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 772
+      }
+    },
+    {
+      "id": "town-population-new-marlborough",
+      "name": "Population[New Marlborough]",
+      "units": "people",
+      "equation": "Population * 1509 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 804
+      }
+    },
+    {
+      "id": "town-population-new-salem",
+      "name": "Population[New Salem]",
+      "units": "people",
+      "equation": "Population * 990 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 836
+      }
+    },
+    {
+      "id": "town-population-newbury",
+      "name": "Population[Newbury]",
+      "units": "people",
+      "equation": "Population * 6666 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 868
+      }
+    },
+    {
+      "id": "town-population-newburyport",
+      "name": "Population[Newburyport]",
+      "units": "people",
+      "equation": "Population * 17416 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 900
+      }
+    },
+    {
+      "id": "town-population-newton",
+      "name": "Population[Newton]",
+      "units": "people",
+      "equation": "Population * 85146 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 932
+      }
+    },
+    {
+      "id": "town-population-norfolk",
+      "name": "Population[Norfolk]",
+      "units": "people",
+      "equation": "Population * 11227 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 964
+      }
+    },
+    {
+      "id": "town-population-north-adams",
+      "name": "Population[North Adams]",
+      "units": "people",
+      "equation": "Population * 13708 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 996
+      }
+    },
+    {
+      "id": "town-population-north-andover",
+      "name": "Population[North Andover]",
+      "units": "people",
+      "equation": "Population * 28352 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 1028
+      }
+    },
+    {
+      "id": "town-population-north-attleborough",
+      "name": "Population[North Attleborough]",
+      "units": "people",
+      "equation": "Population * 28712 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 1060
+      }
+    },
+    {
+      "id": "town-population-north-brookfield",
+      "name": "Population[North Brookfield]",
+      "units": "people",
+      "equation": "Population * 4680 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 1092
+      }
+    },
+    {
+      "id": "town-population-north-reading",
+      "name": "Population[North Reading]",
+      "units": "people",
+      "equation": "Population * 14892 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 1124
+      }
+    },
+    {
+      "id": "town-population-northampton",
+      "name": "Population[Northampton]",
+      "units": "people",
+      "equation": "Population * 28549 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 1156
+      }
+    },
+    {
+      "id": "town-population-northborough",
+      "name": "Population[Northborough]",
+      "units": "people",
+      "equation": "Population * 14155 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 1188
+      }
+    },
+    {
+      "id": "town-population-northbridge",
+      "name": "Population[Northbridge]",
+      "units": "people",
+      "equation": "Population * 15707 / 6547695",
+      "position": {
+        "x": 2150,
+        "y": 1220
+      }
+    },
+    {
+      "id": "town-population-northfield",
+      "name": "Population[Northfield]",
+      "units": "people",
+      "equation": "Population * 3032 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 100
+      }
+    },
+    {
+      "id": "town-population-norton",
+      "name": "Population[Norton]",
+      "units": "people",
+      "equation": "Population * 19031 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 132
+      }
+    },
+    {
+      "id": "town-population-norwell",
+      "name": "Population[Norwell]",
+      "units": "people",
+      "equation": "Population * 10506 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 164
+      }
+    },
+    {
+      "id": "town-population-norwood",
+      "name": "Population[Norwood]",
+      "units": "people",
+      "equation": "Population * 28602 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 196
+      }
+    },
+    {
+      "id": "town-population-oak-bluffs",
+      "name": "Population[Oak Bluffs]",
+      "units": "people",
+      "equation": "Population * 4527 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 228
+      }
+    },
+    {
+      "id": "town-population-oakham",
+      "name": "Population[Oakham]",
+      "units": "people",
+      "equation": "Population * 1902 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 260
+      }
+    },
+    {
+      "id": "town-population-orange",
+      "name": "Population[Orange]",
+      "units": "people",
+      "equation": "Population * 7839 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 292
+      }
+    },
+    {
+      "id": "town-population-orleans",
+      "name": "Population[Orleans]",
+      "units": "people",
+      "equation": "Population * 5890 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 324
+      }
+    },
+    {
+      "id": "town-population-otis",
+      "name": "Population[Otis]",
+      "units": "people",
+      "equation": "Population * 1612 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 356
+      }
+    },
+    {
+      "id": "town-population-oxford",
+      "name": "Population[Oxford]",
+      "units": "people",
+      "equation": "Population * 13709 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 388
+      }
+    },
+    {
+      "id": "town-population-palmer",
+      "name": "Population[Palmer]",
+      "units": "people",
+      "equation": "Population * 12140 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 420
+      }
+    },
+    {
+      "id": "town-population-paxton",
+      "name": "Population[Paxton]",
+      "units": "people",
+      "equation": "Population * 4806 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 452
+      }
+    },
+    {
+      "id": "town-population-peabody",
+      "name": "Population[Peabody]",
+      "units": "people",
+      "equation": "Population * 51251 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 484
+      }
+    },
+    {
+      "id": "town-population-pelham",
+      "name": "Population[Pelham]",
+      "units": "people",
+      "equation": "Population * 1321 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 516
+      }
+    },
+    {
+      "id": "town-population-pembroke",
+      "name": "Population[Pembroke]",
+      "units": "people",
+      "equation": "Population * 17837 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 548
+      }
+    },
+    {
+      "id": "town-population-pepperell",
+      "name": "Population[Pepperell]",
+      "units": "people",
+      "equation": "Population * 11497 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 580
+      }
+    },
+    {
+      "id": "town-population-peru",
+      "name": "Population[Peru]",
+      "units": "people",
+      "equation": "Population * 847 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 612
+      }
+    },
+    {
+      "id": "town-population-petersham",
+      "name": "Population[Petersham]",
+      "units": "people",
+      "equation": "Population * 1234 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 644
+      }
+    },
+    {
+      "id": "town-population-phillipston",
+      "name": "Population[Phillipston]",
+      "units": "people",
+      "equation": "Population * 1682 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 676
+      }
+    },
+    {
+      "id": "town-population-pittsfield",
+      "name": "Population[Pittsfield]",
+      "units": "people",
+      "equation": "Population * 44737 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 708
+      }
+    },
+    {
+      "id": "town-population-plainfield",
+      "name": "Population[Plainfield]",
+      "units": "people",
+      "equation": "Population * 648 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 740
+      }
+    },
+    {
+      "id": "town-population-plainville",
+      "name": "Population[Plainville]",
+      "units": "people",
+      "equation": "Population * 8264 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 772
+      }
+    },
+    {
+      "id": "town-population-plymouth",
+      "name": "Population[Plymouth]",
+      "units": "people",
+      "equation": "Population * 56468 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 804
+      }
+    },
+    {
+      "id": "town-population-plympton",
+      "name": "Population[Plympton]",
+      "units": "people",
+      "equation": "Population * 2820 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 836
+      }
+    },
+    {
+      "id": "town-population-princeton",
+      "name": "Population[Princeton]",
+      "units": "people",
+      "equation": "Population * 3413 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 868
+      }
+    },
+    {
+      "id": "town-population-provincetown",
+      "name": "Population[Provincetown]",
+      "units": "people",
+      "equation": "Population * 2942 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 900
+      }
+    },
+    {
+      "id": "town-population-quincy",
+      "name": "Population[Quincy]",
+      "units": "people",
+      "equation": "Population * 92271 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 932
+      }
+    },
+    {
+      "id": "town-population-randolph",
+      "name": "Population[Randolph]",
+      "units": "people",
+      "equation": "Population * 32112 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 964
+      }
+    },
+    {
+      "id": "town-population-raynham",
+      "name": "Population[Raynham]",
+      "units": "people",
+      "equation": "Population * 13383 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 996
+      }
+    },
+    {
+      "id": "town-population-reading",
+      "name": "Population[Reading]",
+      "units": "people",
+      "equation": "Population * 24747 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 1028
+      }
+    },
+    {
+      "id": "town-population-rehoboth",
+      "name": "Population[Rehoboth]",
+      "units": "people",
+      "equation": "Population * 11608 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 1060
+      }
+    },
+    {
+      "id": "town-population-revere",
+      "name": "Population[Revere]",
+      "units": "people",
+      "equation": "Population * 51755 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 1092
+      }
+    },
+    {
+      "id": "town-population-richmond",
+      "name": "Population[Richmond]",
+      "units": "people",
+      "equation": "Population * 1475 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 1124
+      }
+    },
+    {
+      "id": "town-population-rochester",
+      "name": "Population[Rochester]",
+      "units": "people",
+      "equation": "Population * 5232 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 1156
+      }
+    },
+    {
+      "id": "town-population-rockland",
+      "name": "Population[Rockland]",
+      "units": "people",
+      "equation": "Population * 17489 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 1188
+      }
+    },
+    {
+      "id": "town-population-rockport",
+      "name": "Population[Rockport]",
+      "units": "people",
+      "equation": "Population * 6952 / 6547695",
+      "position": {
+        "x": 2370,
+        "y": 1220
+      }
+    },
+    {
+      "id": "town-population-rowe",
+      "name": "Population[Rowe]",
+      "units": "people",
+      "equation": "Population * 393 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 100
+      }
+    },
+    {
+      "id": "town-population-rowley",
+      "name": "Population[Rowley]",
+      "units": "people",
+      "equation": "Population * 5856 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 132
+      }
+    },
+    {
+      "id": "town-population-royalston",
+      "name": "Population[Royalston]",
+      "units": "people",
+      "equation": "Population * 1258 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 164
+      }
+    },
+    {
+      "id": "town-population-russell",
+      "name": "Population[Russell]",
+      "units": "people",
+      "equation": "Population * 1775 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 196
+      }
+    },
+    {
+      "id": "town-population-rutland",
+      "name": "Population[Rutland]",
+      "units": "people",
+      "equation": "Population * 7973 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 228
+      }
+    },
+    {
+      "id": "town-population-salem",
+      "name": "Population[Salem]",
+      "units": "people",
+      "equation": "Population * 41340 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 260
+      }
+    },
+    {
+      "id": "town-population-salisbury",
+      "name": "Population[Salisbury]",
+      "units": "people",
+      "equation": "Population * 8283 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 292
+      }
+    },
+    {
+      "id": "town-population-sandisfield",
+      "name": "Population[Sandisfield]",
+      "units": "people",
+      "equation": "Population * 915 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 324
+      }
+    },
+    {
+      "id": "town-population-sandwich",
+      "name": "Population[Sandwich]",
+      "units": "people",
+      "equation": "Population * 20675 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 356
+      }
+    },
+    {
+      "id": "town-population-saugus",
+      "name": "Population[Saugus]",
+      "units": "people",
+      "equation": "Population * 26628 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 388
+      }
+    },
+    {
+      "id": "town-population-savoy",
+      "name": "Population[Savoy]",
+      "units": "people",
+      "equation": "Population * 692 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 420
+      }
+    },
+    {
+      "id": "town-population-scituate",
+      "name": "Population[Scituate]",
+      "units": "people",
+      "equation": "Population * 18133 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 452
+      }
+    },
+    {
+      "id": "town-population-seekonk",
+      "name": "Population[Seekonk]",
+      "units": "people",
+      "equation": "Population * 13722 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 484
+      }
+    },
+    {
+      "id": "town-population-sharon",
+      "name": "Population[Sharon]",
+      "units": "people",
+      "equation": "Population * 17612 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 516
+      }
+    },
+    {
+      "id": "town-population-sheffield",
+      "name": "Population[Sheffield]",
+      "units": "people",
+      "equation": "Population * 3257 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 548
+      }
+    },
+    {
+      "id": "town-population-shelburne",
+      "name": "Population[Shelburne]",
+      "units": "people",
+      "equation": "Population * 1893 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 580
+      }
+    },
+    {
+      "id": "town-population-sherborn",
+      "name": "Population[Sherborn]",
+      "units": "people",
+      "equation": "Population * 4119 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 612
+      }
+    },
+    {
+      "id": "town-population-shirley",
+      "name": "Population[Shirley]",
+      "units": "people",
+      "equation": "Population * 7211 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 644
+      }
+    },
+    {
+      "id": "town-population-shrewsbury",
+      "name": "Population[Shrewsbury]",
+      "units": "people",
+      "equation": "Population * 35608 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 676
+      }
+    },
+    {
+      "id": "town-population-shutesbury",
+      "name": "Population[Shutesbury]",
+      "units": "people",
+      "equation": "Population * 1771 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 708
+      }
+    },
+    {
+      "id": "town-population-somerset",
+      "name": "Population[Somerset]",
+      "units": "people",
+      "equation": "Population * 18165 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 740
+      }
+    },
+    {
+      "id": "town-population-somerville",
+      "name": "Population[Somerville]",
+      "units": "people",
+      "equation": "Population * 75754 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 772
+      }
+    },
+    {
+      "id": "town-population-south-hadley",
+      "name": "Population[South Hadley]",
+      "units": "people",
+      "equation": "Population * 17514 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 804
+      }
+    },
+    {
+      "id": "town-population-southampton",
+      "name": "Population[Southampton]",
+      "units": "people",
+      "equation": "Population * 5792 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 836
+      }
+    },
+    {
+      "id": "town-population-southborough",
+      "name": "Population[Southborough]",
+      "units": "people",
+      "equation": "Population * 9767 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 868
+      }
+    },
+    {
+      "id": "town-population-southbridge",
+      "name": "Population[Southbridge]",
+      "units": "people",
+      "equation": "Population * 16719 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 900
+      }
+    },
+    {
+      "id": "town-population-southwick",
+      "name": "Population[Southwick]",
+      "units": "people",
+      "equation": "Population * 9502 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 932
+      }
+    },
+    {
+      "id": "town-population-spencer",
+      "name": "Population[Spencer]",
+      "units": "people",
+      "equation": "Population * 11688 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 964
+      }
+    },
+    {
+      "id": "town-population-springfield",
+      "name": "Population[Springfield]",
+      "units": "people",
+      "equation": "Population * 153060 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 996
+      }
+    },
+    {
+      "id": "town-population-sterling",
+      "name": "Population[Sterling]",
+      "units": "people",
+      "equation": "Population * 7808 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 1028
+      }
+    },
+    {
+      "id": "town-population-stockbridge",
+      "name": "Population[Stockbridge]",
+      "units": "people",
+      "equation": "Population * 1947 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 1060
+      }
+    },
+    {
+      "id": "town-population-stoneham",
+      "name": "Population[Stoneham]",
+      "units": "people",
+      "equation": "Population * 21437 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 1092
+      }
+    },
+    {
+      "id": "town-population-stoughton",
+      "name": "Population[Stoughton]",
+      "units": "people",
+      "equation": "Population * 26962 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 1124
+      }
+    },
+    {
+      "id": "town-population-stow",
+      "name": "Population[Stow]",
+      "units": "people",
+      "equation": "Population * 6590 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 1156
+      }
+    },
+    {
+      "id": "town-population-sturbridge",
+      "name": "Population[Sturbridge]",
+      "units": "people",
+      "equation": "Population * 9268 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 1188
+      }
+    },
+    {
+      "id": "town-population-sudbury",
+      "name": "Population[Sudbury]",
+      "units": "people",
+      "equation": "Population * 17659 / 6547695",
+      "position": {
+        "x": 2590,
+        "y": 1220
+      }
+    },
+    {
+      "id": "town-population-sunderland",
+      "name": "Population[Sunderland]",
+      "units": "people",
+      "equation": "Population * 3684 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 100
+      }
+    },
+    {
+      "id": "town-population-sutton",
+      "name": "Population[Sutton]",
+      "units": "people",
+      "equation": "Population * 8963 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 132
+      }
+    },
+    {
+      "id": "town-population-swampscott",
+      "name": "Population[Swampscott]",
+      "units": "people",
+      "equation": "Population * 13787 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 164
+      }
+    },
+    {
+      "id": "town-population-swansea",
+      "name": "Population[Swansea]",
+      "units": "people",
+      "equation": "Population * 15865 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 196
+      }
+    },
+    {
+      "id": "town-population-taunton",
+      "name": "Population[Taunton]",
+      "units": "people",
+      "equation": "Population * 55874 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 228
+      }
+    },
+    {
+      "id": "town-population-templeton",
+      "name": "Population[Templeton]",
+      "units": "people",
+      "equation": "Population * 8013 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 260
+      }
+    },
+    {
+      "id": "town-population-tewksbury",
+      "name": "Population[Tewksbury]",
+      "units": "people",
+      "equation": "Population * 28961 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 292
+      }
+    },
+    {
+      "id": "town-population-tisbury",
+      "name": "Population[Tisbury]",
+      "units": "people",
+      "equation": "Population * 3949 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 324
+      }
+    },
+    {
+      "id": "town-population-tolland",
+      "name": "Population[Tolland]",
+      "units": "people",
+      "equation": "Population * 485 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 356
+      }
+    },
+    {
+      "id": "town-population-topsfield",
+      "name": "Population[Topsfield]",
+      "units": "people",
+      "equation": "Population * 6085 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 388
+      }
+    },
+    {
+      "id": "town-population-townsend",
+      "name": "Population[Townsend]",
+      "units": "people",
+      "equation": "Population * 8926 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 420
+      }
+    },
+    {
+      "id": "town-population-truro",
+      "name": "Population[Truro]",
+      "units": "people",
+      "equation": "Population * 2003 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 452
+      }
+    },
+    {
+      "id": "town-population-tyngsborough",
+      "name": "Population[Tyngsborough]",
+      "units": "people",
+      "equation": "Population * 11292 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 484
+      }
+    },
+    {
+      "id": "town-population-tyringham",
+      "name": "Population[Tyringham]",
+      "units": "people",
+      "equation": "Population * 327 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 516
+      }
+    },
+    {
+      "id": "town-population-upton",
+      "name": "Population[Upton]",
+      "units": "people",
+      "equation": "Population * 7542 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 548
+      }
+    },
+    {
+      "id": "town-population-uxbridge",
+      "name": "Population[Uxbridge]",
+      "units": "people",
+      "equation": "Population * 13457 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 580
+      }
+    },
+    {
+      "id": "town-population-wakefield",
+      "name": "Population[Wakefield]",
+      "units": "people",
+      "equation": "Population * 24932 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 612
+      }
+    },
+    {
+      "id": "town-population-wales",
+      "name": "Population[Wales]",
+      "units": "people",
+      "equation": "Population * 1838 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 644
+      }
+    },
+    {
+      "id": "town-population-walpole",
+      "name": "Population[Walpole]",
+      "units": "people",
+      "equation": "Population * 24070 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 676
+      }
+    },
+    {
+      "id": "town-population-waltham",
+      "name": "Population[Waltham]",
+      "units": "people",
+      "equation": "Population * 60632 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 708
+      }
+    },
+    {
+      "id": "town-population-ware",
+      "name": "Population[Ware]",
+      "units": "people",
+      "equation": "Population * 9872 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 740
+      }
+    },
+    {
+      "id": "town-population-wareham",
+      "name": "Population[Wareham]",
+      "units": "people",
+      "equation": "Population * 21822 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 772
+      }
+    },
+    {
+      "id": "town-population-warren",
+      "name": "Population[Warren]",
+      "units": "people",
+      "equation": "Population * 5135 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 804
+      }
+    },
+    {
+      "id": "town-population-warwick",
+      "name": "Population[Warwick]",
+      "units": "people",
+      "equation": "Population * 780 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 836
+      }
+    },
+    {
+      "id": "town-population-washington",
+      "name": "Population[Washington]",
+      "units": "people",
+      "equation": "Population * 538 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 868
+      }
+    },
+    {
+      "id": "town-population-watertown",
+      "name": "Population[Watertown]",
+      "units": "people",
+      "equation": "Population * 31915 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 900
+      }
+    },
+    {
+      "id": "town-population-wayland",
+      "name": "Population[Wayland]",
+      "units": "people",
+      "equation": "Population * 12994 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 932
+      }
+    },
+    {
+      "id": "town-population-webster",
+      "name": "Population[Webster]",
+      "units": "people",
+      "equation": "Population * 16767 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 964
+      }
+    },
+    {
+      "id": "town-population-wellesley",
+      "name": "Population[Wellesley]",
+      "units": "people",
+      "equation": "Population * 27982 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 996
+      }
+    },
+    {
+      "id": "town-population-wellfleet",
+      "name": "Population[Wellfleet]",
+      "units": "people",
+      "equation": "Population * 2750 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 1028
+      }
+    },
+    {
+      "id": "town-population-wendell",
+      "name": "Population[Wendell]",
+      "units": "people",
+      "equation": "Population * 848 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 1060
+      }
+    },
+    {
+      "id": "town-population-wenham",
+      "name": "Population[Wenham]",
+      "units": "people",
+      "equation": "Population * 4875 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 1092
+      }
+    },
+    {
+      "id": "town-population-west-boylston",
+      "name": "Population[West Boylston]",
+      "units": "people",
+      "equation": "Population * 7669 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 1124
+      }
+    },
+    {
+      "id": "town-population-west-bridgewater",
+      "name": "Population[West Bridgewater]",
+      "units": "people",
+      "equation": "Population * 6916 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 1156
+      }
+    },
+    {
+      "id": "town-population-west-brookfield",
+      "name": "Population[West Brookfield]",
+      "units": "people",
+      "equation": "Population * 3701 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 1188
+      }
+    },
+    {
+      "id": "town-population-west-newbury",
+      "name": "Population[West Newbury]",
+      "units": "people",
+      "equation": "Population * 4235 / 6547695",
+      "position": {
+        "x": 2810,
+        "y": 1220
+      }
+    },
+    {
+      "id": "town-population-west-springfield",
+      "name": "Population[West Springfield]",
+      "units": "people",
+      "equation": "Population * 28391 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 100
+      }
+    },
+    {
+      "id": "town-population-west-stockbridge",
+      "name": "Population[West Stockbridge]",
+      "units": "people",
+      "equation": "Population * 1306 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 132
+      }
+    },
+    {
+      "id": "town-population-west-tisbury",
+      "name": "Population[West Tisbury]",
+      "units": "people",
+      "equation": "Population * 2740 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 164
+      }
+    },
+    {
+      "id": "town-population-westborough",
+      "name": "Population[Westborough]",
+      "units": "people",
+      "equation": "Population * 18272 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 196
+      }
+    },
+    {
+      "id": "town-population-westfield",
+      "name": "Population[Westfield]",
+      "units": "people",
+      "equation": "Population * 41094 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 228
+      }
+    },
+    {
+      "id": "town-population-westford",
+      "name": "Population[Westford]",
+      "units": "people",
+      "equation": "Population * 21951 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 260
+      }
+    },
+    {
+      "id": "town-population-westhampton",
+      "name": "Population[Westhampton]",
+      "units": "people",
+      "equation": "Population * 1607 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 292
+      }
+    },
+    {
+      "id": "town-population-westminster",
+      "name": "Population[Westminster]",
+      "units": "people",
+      "equation": "Population * 7277 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 324
+      }
+    },
+    {
+      "id": "town-population-weston",
+      "name": "Population[Weston]",
+      "units": "people",
+      "equation": "Population * 11261 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 356
+      }
+    },
+    {
+      "id": "town-population-westport",
+      "name": "Population[Westport]",
+      "units": "people",
+      "equation": "Population * 15532 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 388
+      }
+    },
+    {
+      "id": "town-population-westwood",
+      "name": "Population[Westwood]",
+      "units": "people",
+      "equation": "Population * 14618 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 420
+      }
+    },
+    {
+      "id": "town-population-weymouth",
+      "name": "Population[Weymouth]",
+      "units": "people",
+      "equation": "Population * 53743 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 452
+      }
+    },
+    {
+      "id": "town-population-whately",
+      "name": "Population[Whately]",
+      "units": "people",
+      "equation": "Population * 1496 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 484
+      }
+    },
+    {
+      "id": "town-population-whitman",
+      "name": "Population[Whitman]",
+      "units": "people",
+      "equation": "Population * 14489 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 516
+      }
+    },
+    {
+      "id": "town-population-wilbraham",
+      "name": "Population[Wilbraham]",
+      "units": "people",
+      "equation": "Population * 14219 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 548
+      }
+    },
+    {
+      "id": "town-population-williamsburg",
+      "name": "Population[Williamsburg]",
+      "units": "people",
+      "equation": "Population * 2482 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 580
+      }
+    },
+    {
+      "id": "town-population-williamstown",
+      "name": "Population[Williamstown]",
+      "units": "people",
+      "equation": "Population * 7754 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 612
+      }
+    },
+    {
+      "id": "town-population-wilmington",
+      "name": "Population[Wilmington]",
+      "units": "people",
+      "equation": "Population * 22325 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 644
+      }
+    },
+    {
+      "id": "town-population-winchendon",
+      "name": "Population[Winchendon]",
+      "units": "people",
+      "equation": "Population * 10300 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 676
+      }
+    },
+    {
+      "id": "town-population-winchester",
+      "name": "Population[Winchester]",
+      "units": "people",
+      "equation": "Population * 21374 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 708
+      }
+    },
+    {
+      "id": "town-population-windsor",
+      "name": "Population[Windsor]",
+      "units": "people",
+      "equation": "Population * 899 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 740
+      }
+    },
+    {
+      "id": "town-population-winthrop",
+      "name": "Population[Winthrop]",
+      "units": "people",
+      "equation": "Population * 17497 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 772
+      }
+    },
+    {
+      "id": "town-population-woburn",
+      "name": "Population[Woburn]",
+      "units": "people",
+      "equation": "Population * 38120 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 804
+      }
+    },
+    {
+      "id": "town-population-worcester",
+      "name": "Population[Worcester]",
+      "units": "people",
+      "equation": "Population * 181045 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 836
+      }
+    },
+    {
+      "id": "town-population-worthington",
+      "name": "Population[Worthington]",
+      "units": "people",
+      "equation": "Population * 1156 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 868
+      }
+    },
+    {
+      "id": "town-population-wrentham",
+      "name": "Population[Wrentham]",
+      "units": "people",
+      "equation": "Population * 10955 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 900
+      }
+    },
+    {
+      "id": "town-population-yarmouth",
+      "name": "Population[Yarmouth]",
+      "units": "people",
+      "equation": "Population * 23793 / 6547695",
+      "position": {
+        "x": 3030,
+        "y": 932
       }
     }
   ],
@@ -75,6 +3586,6 @@
   },
   "created_at": "2026-01-11T20:04:50.745066Z",
   "updated_at": "2026-01-11T20:04:50.745066Z",
-  "source": "https://github.com/SDXorg/test-models",
-  "reference": "SDXorg Test Models Repository"
+  "source": "https://github.com/SDXorg/test-models/blob/21aab02739dc5187bc9564e4d3de14e575905d2f/samples/Population/Subscripted%20Population%20Model.mdl",
+  "reference": "Native Vensim model, SDXorg test-models commit 21aab02739dc5187bc9564e4d3de14e575905d2f; Vensim DELAY N documentation https://www.vensim.com/documentation/fn_delay_n.html"
 }

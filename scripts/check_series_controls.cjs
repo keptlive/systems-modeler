@@ -1,0 +1,33 @@
+// Selection is a view operation: preserve trajectory values and series colors.
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
+const sandbox={};vm.createContext(sandbox);
+vm.runInContext(fs.readFileSync(path.join(__dirname,'../static/js/charts.js'),'utf8')+';this.charts=Charts;',sandbox);
+const c=sandbox.charts;
+const result={time:[0,1],values:{'Drug in GI Tract':[100,20],'Drug in Central Compartment':[0,50],'Absorption Rate':[150,30]}};
+c.setResults(result);
+let renders=0,changes=0;c.render=()=>renders++;c.onSelectionChanged=()=>changes++;
+const original=JSON.stringify(result),colors=Object.values(c.options.variables).map(x=>x.color);
+c.selectVariables(['Drug in GI Tract','Drug in Central Compartment']);
+assert.deepEqual(Array.from(c.getVisibleVariables()),['Drug in GI Tract','Drug in Central Compartment']);
+c.toggleVariable('Absorption Rate');assert.equal(c.getVisibleVariables().length,3);
+c.selectVariables([]);assert.equal(c.getVisibleVariables().length,0);
+c.selectVariables(Object.keys(result.values));assert.equal(c.getVisibleVariables().length,3);
+assert.equal(JSON.stringify(result),original);
+assert.deepEqual(Object.values(c.options.variables).map(x=>x.color),colors);
+assert.equal(renders,4);assert.equal(changes,4);
+assert.deepEqual(Array.from(c.filterSeries(Object.keys(result.values),' DRUG   central ')),['Drug in Central Compartment']);
+assert.equal(c.filterSeries(Object.keys(result.values),'not present').length,0);
+assert.equal(c.filterSeries(Object.keys(result.values),'').length,3);
+console.log('Series selection, legend synchronization callback, filtering and result/color preservation passed.');
+const appScope={document:{addEventListener(){}},window:{}};vm.createContext(appScope);
+vm.runInContext(fs.readFileSync(path.join(__dirname,'../static/js/app.js'),'utf8')+';this.app=App;',appScope);
+for(const [input,expected] of [[0,'0'],[.01,'0.01'],[-.01,'-0.01'],[.1234,'0.123'],[.0001,'1.0e-4']])assert.equal(appScope.app.formatNumShort(input),expected);
+console.log('Mobile numerical labels preserve small nonzero values.');
+
+const large={time:[0,1],values:Object.fromEntries(Array.from({length:352},(_,i)=>[i===0?'Population':'Town '+i,[10,11]]))};
+c.setResults(large,{stocks:[{name:'Population'}]});
+assert.deepEqual(Array.from(c.getVisibleVariables()),['Population']);
+assert.equal(Object.keys(c.options.variables).length,352);
+c.selectVariables(['Town 351']);assert.deepEqual(Array.from(c.getVisibleVariables()),['Town 351']);
+assert.equal(c.results,large);
+console.log('Large corpus models begin with stocks; every individual member series remains selectable.');

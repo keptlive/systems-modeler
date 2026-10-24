@@ -1,7 +1,7 @@
 {
   "id": "fitzhugh-nagumo-neuron-neu",
   "name": "FitzHugh-Nagumo Neuron Model",
-  "description": "Simplified two-variable model of neuronal excitability capturing action potential generation",
+  "description": "Two-variable FitzHugh-Nagumo teaching variant. Restores missing integration of the pre-existing dV_dt and dW_dt auxiliaries using two additive signed derivative flows; all original parameters, stocks, links and geometry retained. Original1961 paper supplies model-family context; local reparameterization is not claimed to reproduce its numerical experiment or biological calibration.",
   "stocks": [
     {
       "id": "s1",
@@ -24,7 +24,30 @@
       }
     }
   ],
-  "flows": [],
+  "flows": [
+    {
+      "id": "f-v17-membrane-derivative",
+      "name": "Membrane Derivative Flow",
+      "equation": "dV_dt",
+      "from_stock": null,
+      "to_stock": "s1",
+      "position": {
+        "x": 150,
+        "y": 290
+      }
+    },
+    {
+      "id": "f-v17-recovery-derivative",
+      "name": "Recovery Derivative Flow",
+      "equation": "dW_dt",
+      "from_stock": null,
+      "to_stock": "s2",
+      "position": {
+        "x": 350,
+        "y": 290
+      }
+    }
+  ],
   "variables": [
     {
       "id": "v1",

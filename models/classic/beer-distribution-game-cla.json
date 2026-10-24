@@ -1,7 +1,7 @@
 {
   "id": "beer-distribution-game-cla",
   "name": "Beer Distribution Game",
-  "description": "The classic 'Beer Game' supply chain simulation developed at MIT Sloan. Demonstrates the bullwhip effect where small changes in retail demand cause increasingly larger fluctuations at each upstream stage (retailer, wholesaler, distributor, factory). Reference: Based on System Dynamics supply chain models (Sterman, 2000). Source: https://systemdynamics.org/",
+  "description": "Beer Distribution Game rebuilt from Tom Fiddaman's native RB4-S13-NoSS-6.mdl (2018 author download). Restores all four inventories/backlogs, two shipping stages, order-slip queues, supply-line accounting and rounded anchor-and-adjust order policy. Native desired stocks17/12, stock correction0.26, supply-line weight0.34 and forecast adjustment0.25 are explicit; initial supply lines16/12 replace the incomplete8-case extraction. Original model ID, existing element IDs/positions, demand step at week5 and 52-week horizon are retained; native model ends at36. This is the deterministic default policy, not all human decision presets or stochastic-noise experiments. A discrete_period of1week fixes the source recurrence; fractional timesteps and non-Euler methods are rejected.",
   "stocks": [
     {
       "id": "stock-retailer-inventory",
@@ -11,7 +11,8 @@
       "position": {
         "x": 150,
         "y": 200
-      }
+      },
+      "units": "cases"
     },
     {
       "id": "stock-wholesaler-inventory",
@@ -21,7 +22,8 @@
       "position": {
         "x": 350,
         "y": 200
-      }
+      },
+      "units": "cases"
     },
     {
       "id": "stock-distributor-inventory",
@@ -31,7 +33,8 @@
       "position": {
         "x": 550,
         "y": 200
-      }
+      },
+      "units": "cases"
     },
     {
       "id": "stock-factory-inventory",
@@ -41,7 +44,8 @@
       "position": {
         "x": 750,
         "y": 200
-      }
+      },
+      "units": "cases"
     },
     {
       "id": "stock-retailer-backlog",
@@ -51,37 +55,294 @@
       "position": {
         "x": 150,
         "y": 350
-      }
+      },
+      "units": "cases"
     },
     {
       "id": "stock-supply-line-retailer",
       "name": "Supply Line Retailer",
-      "initial_value": 8,
+      "initial_value": 16,
       "equation": "",
       "position": {
         "x": 350,
         "y": 350
-      }
+      },
+      "units": "cases"
     },
     {
       "id": "stock-supply-line-wholesaler",
       "name": "Supply Line Wholesaler",
-      "initial_value": 8,
+      "initial_value": 16,
       "equation": "",
       "position": {
         "x": 550,
         "y": 350
-      }
+      },
+      "units": "cases"
     },
     {
       "id": "stock-supply-line-distributor",
       "name": "Supply Line Distributor",
-      "initial_value": 8,
+      "initial_value": 16,
       "equation": "",
       "position": {
         "x": 750,
         "y": 350
-      }
+      },
+      "units": "cases"
+    },
+    {
+      "id": "v19-R-T1",
+      "name": "In Transit One R",
+      "position": {
+        "x": 260,
+        "y": 700
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-R-T2",
+      "name": "In Transit Two R",
+      "position": {
+        "x": 420,
+        "y": 700
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-R-OP",
+      "name": "Orders Placed R",
+      "position": {
+        "x": 580,
+        "y": 700
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-R-E",
+      "name": "Expected Order Rate R",
+      "position": {
+        "x": 740,
+        "y": 700
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-R-IO",
+      "name": "Incoming Orders R",
+      "position": {
+        "x": 900,
+        "y": 700
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-W-B",
+      "name": "Wholesaler Backlog",
+      "position": {
+        "x": 1060,
+        "y": 700
+      },
+      "initial_value": 0,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-W-T1",
+      "name": "In Transit One W",
+      "position": {
+        "x": 100,
+        "y": 800
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-W-T2",
+      "name": "In Transit Two W",
+      "position": {
+        "x": 260,
+        "y": 800
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-W-OP",
+      "name": "Orders Placed W",
+      "position": {
+        "x": 420,
+        "y": 800
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-W-E",
+      "name": "Expected Order Rate W",
+      "position": {
+        "x": 580,
+        "y": 800
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-W-IO",
+      "name": "Incoming Orders W",
+      "position": {
+        "x": 740,
+        "y": 800
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-D-B",
+      "name": "Distributor Backlog",
+      "position": {
+        "x": 900,
+        "y": 800
+      },
+      "initial_value": 0,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-D-T1",
+      "name": "In Transit One D",
+      "position": {
+        "x": 1060,
+        "y": 800
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-D-T2",
+      "name": "In Transit Two D",
+      "position": {
+        "x": 100,
+        "y": 900
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-D-OP",
+      "name": "Orders Placed D",
+      "position": {
+        "x": 260,
+        "y": 900
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-D-E",
+      "name": "Expected Order Rate D",
+      "position": {
+        "x": 420,
+        "y": 900
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-D-IO",
+      "name": "Incoming Orders D",
+      "position": {
+        "x": 580,
+        "y": 900
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-F-B",
+      "name": "Factory Backlog",
+      "position": {
+        "x": 740,
+        "y": 900
+      },
+      "initial_value": 0,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-F-SL",
+      "name": "Supply Line Factory",
+      "position": {
+        "x": 900,
+        "y": 900
+      },
+      "initial_value": 12,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-F-T1",
+      "name": "In Transit One F",
+      "position": {
+        "x": 1060,
+        "y": 900
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-F-T2",
+      "name": "In Transit Two F",
+      "position": {
+        "x": 100,
+        "y": 1000
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-F-OP",
+      "name": "Orders Placed F",
+      "position": {
+        "x": 260,
+        "y": 1000
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases"
+    },
+    {
+      "id": "v19-F-E",
+      "name": "Expected Order Rate F",
+      "position": {
+        "x": 420,
+        "y": 1000
+      },
+      "initial_value": 4,
+      "equation": "",
+      "units": "cases/week"
     }
   ],
   "flows": [
@@ -99,7 +360,7 @@
     {
       "id": "flow-retailer-orders",
       "name": "Retailer Orders",
-      "equation": "MAX(0, Expected_Demand + Inventory_Adjustment_Retailer + Supply_Line_Adjustment_Retailer)",
+      "equation": "IF Time < 5 THEN 4 ELSE MAX(0, FLOOR(Desired_Order_Rate_R + 0.5))",
       "from_stock": null,
       "to_stock": "stock-supply-line-retailer",
       "position": {
@@ -110,7 +371,7 @@
     {
       "id": "flow-wholesaler-orders",
       "name": "Wholesaler Orders",
-      "equation": "MAX(0, Retailer_Orders + Inventory_Adjustment_Wholesaler + Supply_Line_Adjustment_Wholesaler)",
+      "equation": "IF Time < 5 THEN 4 ELSE MAX(0, FLOOR(Desired_Order_Rate_W + 0.5))",
       "from_stock": null,
       "to_stock": "stock-supply-line-wholesaler",
       "position": {
@@ -121,7 +382,7 @@
     {
       "id": "flow-distributor-orders",
       "name": "Distributor Orders",
-      "equation": "MAX(0, Wholesaler_Orders + Inventory_Adjustment_Distributor + Supply_Line_Adjustment_Distributor)",
+      "equation": "IF Time < 5 THEN 4 ELSE MAX(0, FLOOR(Desired_Order_Rate_D + 0.5))",
       "from_stock": null,
       "to_stock": "stock-supply-line-distributor",
       "position": {
@@ -132,13 +393,482 @@
     {
       "id": "flow-production",
       "name": "Production",
-      "equation": "DELAY3(Production_Order, Production_Delay)",
-      "from_stock": null,
+      "equation": "In_Transit_Two_F",
+      "from_stock": "v19-F-T2",
       "to_stock": "stock-factory-inventory",
       "position": {
         "x": 450,
         "y": 350
-      }
+      },
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-queue-orders-r",
+      "name": "Queue Orders R",
+      "position": {
+        "x": 900,
+        "y": 600
+      },
+      "equation": "Placing_R",
+      "from_stock": null,
+      "to_stock": "v19-R-OP",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-advancing-r",
+      "name": "Advancing R",
+      "position": {
+        "x": 1060,
+        "y": 600
+      },
+      "equation": "Orders_Placed_R",
+      "from_stock": "v19-R-OP",
+      "to_stock": "v19-R-IO",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-processing-r",
+      "name": "Processing R",
+      "position": {
+        "x": 100,
+        "y": 700
+      },
+      "equation": "Incoming_Orders_R",
+      "from_stock": "v19-R-IO",
+      "to_stock": null,
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-moving-r",
+      "name": "Moving R",
+      "position": {
+        "x": 260,
+        "y": 700
+      },
+      "equation": "In_Transit_One_R",
+      "from_stock": "v19-R-T1",
+      "to_stock": "v19-R-T2",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-receiving-r",
+      "name": "Receiving R",
+      "position": {
+        "x": 420,
+        "y": 700
+      },
+      "equation": "In_Transit_Two_R",
+      "from_stock": "v19-R-T2",
+      "to_stock": "stock-retailer-inventory",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-shipping-r",
+      "name": "Shipping R",
+      "position": {
+        "x": 580,
+        "y": 700
+      },
+      "equation": "MIN(Desired_Shipping_R, Maximum_Shipping_R)",
+      "from_stock": "stock-retailer-inventory",
+      "to_stock": null,
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-booking-r",
+      "name": "Booking R",
+      "position": {
+        "x": 740,
+        "y": 700
+      },
+      "equation": "Incoming_Order_Rate_R",
+      "from_stock": null,
+      "to_stock": "stock-retailer-backlog",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-fulfilling-r",
+      "name": "Fulfilling R",
+      "position": {
+        "x": 900,
+        "y": 700
+      },
+      "equation": "Shipping_R",
+      "from_stock": "stock-retailer-backlog",
+      "to_stock": null,
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-supply-line-receiving-r",
+      "name": "Supply Line Receiving R",
+      "position": {
+        "x": 1060,
+        "y": 700
+      },
+      "equation": "Receiving_R",
+      "from_stock": "stock-supply-line-retailer",
+      "to_stock": null,
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-adjusting-expectations-r",
+      "name": "Adjusting Expectations R",
+      "position": {
+        "x": 100,
+        "y": 800
+      },
+      "equation": "(Incoming_Order_Rate_R - Expected_Order_Rate_R) / Demand_Forecast_Time",
+      "from_stock": null,
+      "to_stock": "v19-R-E",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-queue-orders-w",
+      "name": "Queue Orders W",
+      "position": {
+        "x": 260,
+        "y": 800
+      },
+      "equation": "Placing_W",
+      "from_stock": null,
+      "to_stock": "v19-W-OP",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-advancing-w",
+      "name": "Advancing W",
+      "position": {
+        "x": 420,
+        "y": 800
+      },
+      "equation": "Orders_Placed_W",
+      "from_stock": "v19-W-OP",
+      "to_stock": "v19-W-IO",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-processing-w",
+      "name": "Processing W",
+      "position": {
+        "x": 580,
+        "y": 800
+      },
+      "equation": "Incoming_Orders_W",
+      "from_stock": "v19-W-IO",
+      "to_stock": null,
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-moving-w",
+      "name": "Moving W",
+      "position": {
+        "x": 740,
+        "y": 800
+      },
+      "equation": "In_Transit_One_W",
+      "from_stock": "v19-W-T1",
+      "to_stock": "v19-W-T2",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-receiving-w",
+      "name": "Receiving W",
+      "position": {
+        "x": 900,
+        "y": 800
+      },
+      "equation": "In_Transit_Two_W",
+      "from_stock": "v19-W-T2",
+      "to_stock": "stock-wholesaler-inventory",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-shipping-w",
+      "name": "Shipping W",
+      "position": {
+        "x": 1060,
+        "y": 800
+      },
+      "equation": "MIN(Desired_Shipping_W, Maximum_Shipping_W)",
+      "from_stock": "stock-wholesaler-inventory",
+      "to_stock": "v19-R-T1",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-booking-w",
+      "name": "Booking W",
+      "position": {
+        "x": 100,
+        "y": 900
+      },
+      "equation": "Incoming_Order_Rate_W",
+      "from_stock": null,
+      "to_stock": "v19-W-B",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-fulfilling-w",
+      "name": "Fulfilling W",
+      "position": {
+        "x": 260,
+        "y": 900
+      },
+      "equation": "Shipping_W",
+      "from_stock": "v19-W-B",
+      "to_stock": null,
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-supply-line-receiving-w",
+      "name": "Supply Line Receiving W",
+      "position": {
+        "x": 420,
+        "y": 900
+      },
+      "equation": "Receiving_W",
+      "from_stock": "stock-supply-line-wholesaler",
+      "to_stock": null,
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-adjusting-expectations-w",
+      "name": "Adjusting Expectations W",
+      "position": {
+        "x": 580,
+        "y": 900
+      },
+      "equation": "(Incoming_Order_Rate_W - Expected_Order_Rate_W) / Demand_Forecast_Time",
+      "from_stock": null,
+      "to_stock": "v19-W-E",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-queue-orders-d",
+      "name": "Queue Orders D",
+      "position": {
+        "x": 740,
+        "y": 900
+      },
+      "equation": "Placing_D",
+      "from_stock": null,
+      "to_stock": "v19-D-OP",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-advancing-d",
+      "name": "Advancing D",
+      "position": {
+        "x": 900,
+        "y": 900
+      },
+      "equation": "Orders_Placed_D",
+      "from_stock": "v19-D-OP",
+      "to_stock": "v19-D-IO",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-processing-d",
+      "name": "Processing D",
+      "position": {
+        "x": 1060,
+        "y": 900
+      },
+      "equation": "Incoming_Orders_D",
+      "from_stock": "v19-D-IO",
+      "to_stock": null,
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-moving-d",
+      "name": "Moving D",
+      "position": {
+        "x": 100,
+        "y": 1000
+      },
+      "equation": "In_Transit_One_D",
+      "from_stock": "v19-D-T1",
+      "to_stock": "v19-D-T2",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-receiving-d",
+      "name": "Receiving D",
+      "position": {
+        "x": 260,
+        "y": 1000
+      },
+      "equation": "In_Transit_Two_D",
+      "from_stock": "v19-D-T2",
+      "to_stock": "stock-distributor-inventory",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-shipping-d",
+      "name": "Shipping D",
+      "position": {
+        "x": 420,
+        "y": 1000
+      },
+      "equation": "MIN(Desired_Shipping_D, Maximum_Shipping_D)",
+      "from_stock": "stock-distributor-inventory",
+      "to_stock": "v19-W-T1",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-booking-d",
+      "name": "Booking D",
+      "position": {
+        "x": 580,
+        "y": 1000
+      },
+      "equation": "Incoming_Order_Rate_D",
+      "from_stock": null,
+      "to_stock": "v19-D-B",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-fulfilling-d",
+      "name": "Fulfilling D",
+      "position": {
+        "x": 740,
+        "y": 1000
+      },
+      "equation": "Shipping_D",
+      "from_stock": "v19-D-B",
+      "to_stock": null,
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-supply-line-receiving-d",
+      "name": "Supply Line Receiving D",
+      "position": {
+        "x": 900,
+        "y": 1000
+      },
+      "equation": "Receiving_D",
+      "from_stock": "stock-supply-line-distributor",
+      "to_stock": null,
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-adjusting-expectations-d",
+      "name": "Adjusting Expectations D",
+      "position": {
+        "x": 1060,
+        "y": 1000
+      },
+      "equation": "(Incoming_Order_Rate_D - Expected_Order_Rate_D) / Demand_Forecast_Time",
+      "from_stock": null,
+      "to_stock": "v19-D-E",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-production-order",
+      "name": "Production Order",
+      "position": {
+        "x": 100,
+        "y": 1100
+      },
+      "equation": "IF Time < 5 THEN 4 ELSE MAX(0, FLOOR(Desired_Order_Rate_F + 0.5))",
+      "from_stock": null,
+      "to_stock": "v19-F-SL",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-queue-orders-f",
+      "name": "Queue Orders F",
+      "position": {
+        "x": 260,
+        "y": 1100
+      },
+      "equation": "Placing_F",
+      "from_stock": null,
+      "to_stock": "v19-F-OP",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-advancing-f",
+      "name": "Advancing F",
+      "position": {
+        "x": 420,
+        "y": 1100
+      },
+      "equation": "Orders_Placed_F",
+      "from_stock": "v19-F-OP",
+      "to_stock": "v19-F-T1",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-moving-f",
+      "name": "Moving F",
+      "position": {
+        "x": 580,
+        "y": 1100
+      },
+      "equation": "In_Transit_One_F",
+      "from_stock": "v19-F-T1",
+      "to_stock": "v19-F-T2",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-shipping-f",
+      "name": "Shipping F",
+      "position": {
+        "x": 740,
+        "y": 1100
+      },
+      "equation": "MIN(Desired_Shipping_F, Maximum_Shipping_F)",
+      "from_stock": "stock-factory-inventory",
+      "to_stock": "v19-D-T1",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-booking-f",
+      "name": "Booking F",
+      "position": {
+        "x": 900,
+        "y": 1100
+      },
+      "equation": "Incoming_Order_Rate_F",
+      "from_stock": null,
+      "to_stock": "v19-F-B",
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-fulfilling-f",
+      "name": "Fulfilling F",
+      "position": {
+        "x": 1060,
+        "y": 1100
+      },
+      "equation": "Shipping_F",
+      "from_stock": "v19-F-B",
+      "to_stock": null,
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-supply-line-receiving-f",
+      "name": "Supply Line Receiving F",
+      "position": {
+        "x": 100,
+        "y": 1200
+      },
+      "equation": "Receiving_F",
+      "from_stock": "v19-F-SL",
+      "to_stock": null,
+      "units": "cases/week"
+    },
+    {
+      "id": "v19-flow-adjusting-expectations-f",
+      "name": "Adjusting Expectations F",
+      "position": {
+        "x": 260,
+        "y": 1200
+      },
+      "equation": "(Incoming_Order_Rate_F - Expected_Order_Rate_F) / Demand_Forecast_Time",
+      "from_stock": null,
+      "to_stock": "v19-F-E",
+      "units": "cases/week"
     }
   ],
   "variables": [
@@ -154,7 +884,7 @@
     {
       "id": "var-production-delay",
       "name": "Production Delay",
-      "equation": "3",
+      "equation": "2",
       "position": {
         "x": 250,
         "y": 80
@@ -163,7 +893,7 @@
     {
       "id": "var-desired-inventory",
       "name": "Desired Inventory",
-      "equation": "12",
+      "equation": "17",
       "position": {
         "x": 400,
         "y": 80
@@ -172,7 +902,7 @@
     {
       "id": "var-inventory-adjustment-time",
       "name": "Inventory Adjustment Time",
-      "equation": "4",
+      "equation": "1 / 0.26",
       "position": {
         "x": 550,
         "y": 80
@@ -181,7 +911,7 @@
     {
       "id": "var-expected-demand",
       "name": "Expected Demand",
-      "equation": "SMOOTH(Customer_Demand, Demand_Forecast_Time)",
+      "equation": "Expected_Order_Rate_R",
       "position": {
         "x": 700,
         "y": 80
@@ -195,13 +925,382 @@
         "x": 100,
         "y": 160
       }
+    },
+    {
+      "id": "v19-var-incoming-order-rate-r",
+      "name": "Incoming Order Rate R",
+      "position": {
+        "x": 1060,
+        "y": 600
+      },
+      "equation": "Customer_Demand"
+    },
+    {
+      "id": "v19-var-desired-shipping-r",
+      "name": "Desired Shipping R",
+      "position": {
+        "x": 100,
+        "y": 700
+      },
+      "equation": "Incoming_Order_Rate_R + \"Retailer Backlog\""
+    },
+    {
+      "id": "v19-var-maximum-shipping-r",
+      "name": "Maximum Shipping R",
+      "position": {
+        "x": 260,
+        "y": 700
+      },
+      "equation": "\"Retailer Inventory\" + Receiving_R"
+    },
+    {
+      "id": "v19-var-recorded-inventory-r",
+      "name": "Recorded Inventory R",
+      "position": {
+        "x": 420,
+        "y": 700
+      },
+      "equation": "\"Retailer Inventory\" + Receiving_R - Shipping_R"
+    },
+    {
+      "id": "v19-var-recorded-backlog-r",
+      "name": "Recorded Backlog R",
+      "position": {
+        "x": 580,
+        "y": 700
+      },
+      "equation": "\"Retailer Backlog\" + Incoming_Order_Rate_R - Shipping_R"
+    },
+    {
+      "id": "v19-var-effective-inventory-r",
+      "name": "Effective Inventory R",
+      "position": {
+        "x": 740,
+        "y": 700
+      },
+      "equation": "Recorded_Inventory_R - Recorded_Backlog_R"
+    },
+    {
+      "id": "v19-var-effective-supply-line-r",
+      "name": "Effective Supply Line R",
+      "position": {
+        "x": 900,
+        "y": 700
+      },
+      "equation": "\"Supply Line Retailer\" - Receiving_R"
+    },
+    {
+      "id": "v19-var-desired-stock-r",
+      "name": "Desired Stock R",
+      "position": {
+        "x": 1060,
+        "y": 700
+      },
+      "equation": "Desired_Inventory"
+    },
+    {
+      "id": "v19-var-desired-order-rate-r",
+      "name": "Desired Order Rate R",
+      "position": {
+        "x": 100,
+        "y": 800
+      },
+      "equation": "Expected_Order_Rate_R + (Desired_Stock_R - Effective_Inventory_R - 0.34 * Effective_Supply_Line_R) / Inventory_Adjustment_Time"
+    },
+    {
+      "id": "v19-var-placing-r",
+      "name": "Placing R",
+      "position": {
+        "x": 260,
+        "y": 800
+      },
+      "equation": "\"Retailer Orders\""
+    },
+    {
+      "id": "v19-var-incoming-order-rate-w",
+      "name": "Incoming Order Rate W",
+      "position": {
+        "x": 420,
+        "y": 800
+      },
+      "equation": "Processing_R"
+    },
+    {
+      "id": "v19-var-desired-shipping-w",
+      "name": "Desired Shipping W",
+      "position": {
+        "x": 580,
+        "y": 800
+      },
+      "equation": "Incoming_Order_Rate_W + \"Wholesaler Backlog\""
+    },
+    {
+      "id": "v19-var-maximum-shipping-w",
+      "name": "Maximum Shipping W",
+      "position": {
+        "x": 740,
+        "y": 800
+      },
+      "equation": "\"Wholesaler Inventory\" + Receiving_W"
+    },
+    {
+      "id": "v19-var-recorded-inventory-w",
+      "name": "Recorded Inventory W",
+      "position": {
+        "x": 900,
+        "y": 800
+      },
+      "equation": "\"Wholesaler Inventory\" + Receiving_W - Shipping_W"
+    },
+    {
+      "id": "v19-var-recorded-backlog-w",
+      "name": "Recorded Backlog W",
+      "position": {
+        "x": 1060,
+        "y": 800
+      },
+      "equation": "\"Wholesaler Backlog\" + Incoming_Order_Rate_W - Shipping_W"
+    },
+    {
+      "id": "v19-var-effective-inventory-w",
+      "name": "Effective Inventory W",
+      "position": {
+        "x": 100,
+        "y": 900
+      },
+      "equation": "Recorded_Inventory_W - Recorded_Backlog_W"
+    },
+    {
+      "id": "v19-var-effective-supply-line-w",
+      "name": "Effective Supply Line W",
+      "position": {
+        "x": 260,
+        "y": 900
+      },
+      "equation": "\"Supply Line Wholesaler\" - Receiving_W"
+    },
+    {
+      "id": "v19-var-desired-stock-w",
+      "name": "Desired Stock W",
+      "position": {
+        "x": 420,
+        "y": 900
+      },
+      "equation": "Desired_Inventory"
+    },
+    {
+      "id": "v19-var-desired-order-rate-w",
+      "name": "Desired Order Rate W",
+      "position": {
+        "x": 580,
+        "y": 900
+      },
+      "equation": "Expected_Order_Rate_W + (Desired_Stock_W - Effective_Inventory_W - 0.34 * Effective_Supply_Line_W) / Inventory_Adjustment_Time"
+    },
+    {
+      "id": "v19-var-placing-w",
+      "name": "Placing W",
+      "position": {
+        "x": 740,
+        "y": 900
+      },
+      "equation": "\"Wholesaler Orders\""
+    },
+    {
+      "id": "v19-var-incoming-order-rate-d",
+      "name": "Incoming Order Rate D",
+      "position": {
+        "x": 900,
+        "y": 900
+      },
+      "equation": "Processing_W"
+    },
+    {
+      "id": "v19-var-desired-shipping-d",
+      "name": "Desired Shipping D",
+      "position": {
+        "x": 1060,
+        "y": 900
+      },
+      "equation": "Incoming_Order_Rate_D + \"Distributor Backlog\""
+    },
+    {
+      "id": "v19-var-maximum-shipping-d",
+      "name": "Maximum Shipping D",
+      "position": {
+        "x": 100,
+        "y": 1000
+      },
+      "equation": "\"Distributor Inventory\" + Receiving_D"
+    },
+    {
+      "id": "v19-var-recorded-inventory-d",
+      "name": "Recorded Inventory D",
+      "position": {
+        "x": 260,
+        "y": 1000
+      },
+      "equation": "\"Distributor Inventory\" + Receiving_D - Shipping_D"
+    },
+    {
+      "id": "v19-var-recorded-backlog-d",
+      "name": "Recorded Backlog D",
+      "position": {
+        "x": 420,
+        "y": 1000
+      },
+      "equation": "\"Distributor Backlog\" + Incoming_Order_Rate_D - Shipping_D"
+    },
+    {
+      "id": "v19-var-effective-inventory-d",
+      "name": "Effective Inventory D",
+      "position": {
+        "x": 580,
+        "y": 1000
+      },
+      "equation": "Recorded_Inventory_D - Recorded_Backlog_D"
+    },
+    {
+      "id": "v19-var-effective-supply-line-d",
+      "name": "Effective Supply Line D",
+      "position": {
+        "x": 740,
+        "y": 1000
+      },
+      "equation": "\"Supply Line Distributor\" - Receiving_D"
+    },
+    {
+      "id": "v19-var-desired-stock-d",
+      "name": "Desired Stock D",
+      "position": {
+        "x": 900,
+        "y": 1000
+      },
+      "equation": "Desired_Inventory"
+    },
+    {
+      "id": "v19-var-desired-order-rate-d",
+      "name": "Desired Order Rate D",
+      "position": {
+        "x": 1060,
+        "y": 1000
+      },
+      "equation": "Expected_Order_Rate_D + (Desired_Stock_D - Effective_Inventory_D - 0.34 * Effective_Supply_Line_D) / Inventory_Adjustment_Time"
+    },
+    {
+      "id": "v19-var-placing-d",
+      "name": "Placing D",
+      "position": {
+        "x": 100,
+        "y": 1100
+      },
+      "equation": "\"Distributor Orders\""
+    },
+    {
+      "id": "v19-var-incoming-order-rate-f",
+      "name": "Incoming Order Rate F",
+      "position": {
+        "x": 260,
+        "y": 1100
+      },
+      "equation": "Processing_D"
+    },
+    {
+      "id": "v19-var-desired-shipping-f",
+      "name": "Desired Shipping F",
+      "position": {
+        "x": 420,
+        "y": 1100
+      },
+      "equation": "Incoming_Order_Rate_F + \"Factory Backlog\""
+    },
+    {
+      "id": "v19-var-maximum-shipping-f",
+      "name": "Maximum Shipping F",
+      "position": {
+        "x": 580,
+        "y": 1100
+      },
+      "equation": "\"Factory Inventory\" + Receiving_F"
+    },
+    {
+      "id": "v19-var-recorded-inventory-f",
+      "name": "Recorded Inventory F",
+      "position": {
+        "x": 740,
+        "y": 1100
+      },
+      "equation": "\"Factory Inventory\" + Receiving_F - Shipping_F"
+    },
+    {
+      "id": "v19-var-recorded-backlog-f",
+      "name": "Recorded Backlog F",
+      "position": {
+        "x": 900,
+        "y": 1100
+      },
+      "equation": "\"Factory Backlog\" + Incoming_Order_Rate_F - Shipping_F"
+    },
+    {
+      "id": "v19-var-effective-inventory-f",
+      "name": "Effective Inventory F",
+      "position": {
+        "x": 1060,
+        "y": 1100
+      },
+      "equation": "Recorded_Inventory_F - Recorded_Backlog_F"
+    },
+    {
+      "id": "v19-var-effective-supply-line-f",
+      "name": "Effective Supply Line F",
+      "position": {
+        "x": 100,
+        "y": 1200
+      },
+      "equation": "\"Supply Line Factory\" - Receiving_F"
+    },
+    {
+      "id": "v19-var-desired-stock-f",
+      "name": "Desired Stock F",
+      "position": {
+        "x": 260,
+        "y": 1200
+      },
+      "equation": "12"
+    },
+    {
+      "id": "v19-var-desired-order-rate-f",
+      "name": "Desired Order Rate F",
+      "position": {
+        "x": 420,
+        "y": 1200
+      },
+      "equation": "Expected_Order_Rate_F + (Desired_Stock_F - Effective_Inventory_F - 0.34 * Effective_Supply_Line_F) / Inventory_Adjustment_Time"
+    },
+    {
+      "id": "v19-var-placing-f",
+      "name": "Placing F",
+      "position": {
+        "x": 580,
+        "y": 1200
+      },
+      "equation": "\"Production Order\""
+    },
+    {
+      "id": "v19-var-receiving-f",
+      "name": "Receiving F",
+      "position": {
+        "x": 740,
+        "y": 1200
+      },
+      "equation": "Production"
     }
   ],
   "connectors": [
     {
       "id": "conn-1",
       "from_element": "Customer Demand",
-      "to_element": "retailer_shipments"
+      "to_element": "Shipping R"
     },
     {
       "id": "conn-2",
@@ -222,10 +1321,11 @@
   "time_settings": {
     "start": 0,
     "end": 52,
-    "dt": 1
+    "dt": 1,
+    "discrete_period": 1
   },
   "created_at": "2026-01-11T20:04:50.689151Z",
   "updated_at": "2026-01-11T20:04:50.689151Z",
-  "source": "https://doi.org/10.1287/mnsc.35.3.321",
-  "reference": "Sterman JD. Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill, 2000."
+  "source": "https://metasd.com/wp-content/uploads/2018/03/Beer-Game-Fiddaman-NoSubscripts.zip",
+  "reference": "Fiddaman, Tom (2018), Beer Game, native NoSubscripts/RB4-S13-NoSS-6.mdl; Sterman (1989), Management Science 35(3),321-339."
 }

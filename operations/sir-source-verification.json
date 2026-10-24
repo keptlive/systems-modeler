@@ -1,0 +1,95 @@
+{
+  "model_id": "sir",
+  "file_sha256": "3fdfe61a2d85c1b376d99453b556c18ce9ecca1146f55945a5fcbf98f045a1eb",
+  "proposal": {
+    "path": "stocks[name=Susceptible].equation",
+    "before": "",
+    "after": "Total_Population",
+    "status": "candidate tested on a copy; no library mutation"
+  },
+  "primary_source_commit": "21aab02739dc5187bc9564e4d3de14e575905d2f",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/SDXorg/test-models/21aab02739dc5187bc9564e4d3de14e575905d2f/samples/SIR/SIR.mdl",
+      "sha256": "86b26882aff1fe99e4020ca7df46e03cea2be4e3c85dea41cf0cc6c247ce8402"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/SDXorg/test-models/21aab02739dc5187bc9564e4d3de14e575905d2f/samples/SIR/output.csv",
+      "sha256": "5d2b6277cb112b1b6a264b428e3734a1749036e157861f77008c7aa285ec0ccf"
+    }
+  ],
+  "important_source_detail": "The original benchmark starts S=1000,I=5,R=0, so compartment sum=1005 while the infection denominator remains1000. Do not substitute995 to make the parameter equal the compartment sum.",
+  "checks": [
+    {
+      "case": "unchanged_library_definition",
+      "normalized_model_sha256": "e1b3e26a3b4f2bcd09c37c1394547f454e1bec272c67f9faf24ea5888e6ba5e0",
+      "settings": {
+        "start": 0.0,
+        "end": 100.0,
+        "dt": 0.03125,
+        "integration_method": "euler",
+        "random_seed": null
+      },
+      "compared_samples": 3201,
+      "per_stock": [
+        {
+          "stock": "Susceptible",
+          "maximum_absolute_difference": 1000.0,
+          "maximum_scaled_difference": 1.0,
+          "model_final": 0.0,
+          "canonical_final": 412.158
+        },
+        {
+          "stock": "Infectious",
+          "maximum_absolute_difference": 68.08202273081447,
+          "maximum_scaled_difference": 0.9999753645999627,
+          "model_final": 9.678840449855609e-09,
+          "canonical_final": 2.07135
+        },
+        {
+          "stock": "Recovered",
+          "maximum_absolute_difference": 585.7710000096788,
+          "maximum_scaled_difference": 0.9915364836961849,
+          "model_final": 4.99999999032118,
+          "canonical_final": 590.771
+        }
+      ]
+    },
+    {
+      "case": "candidate_initial_equation_restored",
+      "normalized_model_sha256": "86bd0ce89cc60200669236c2a1210e3d9a3dedbcc1f38c547b9e073fb37bd530",
+      "settings": {
+        "start": 0.0,
+        "end": 100.0,
+        "dt": 0.03125,
+        "integration_method": "euler",
+        "random_seed": null
+      },
+      "compared_samples": 3201,
+      "per_stock": [
+        {
+          "stock": "Susceptible",
+          "maximum_absolute_difference": 0.0009469751714732411,
+          "maximum_scaled_difference": 9.46975171473241e-07,
+          "model_final": 412.1577059835983,
+          "canonical_final": 412.158
+        },
+        {
+          "stock": "Infectious",
+          "maximum_absolute_difference": 0.00016471787229477286,
+          "maximum_scaled_difference": 2.419340894276092e-06,
+          "model_final": 2.071343317152297,
+          "canonical_final": 2.07135
+        },
+        {
+          "stock": "Recovered",
+          "maximum_absolute_difference": 0.0010122072400235993,
+          "maximum_scaled_difference": 1.713366499072567e-06,
+          "model_final": 590.7709506992525,
+          "canonical_final": 590.771
+        }
+      ]
+    }
+  ],
+  "scientific_validation": "benchmark fidelity only, not real-world epidemiological validation"
+}

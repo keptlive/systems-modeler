@@ -1,7 +1,7 @@
 {
   "id": "ice-albedo-feedback-model-cli",
   "name": "Ice-Albedo Feedback Model",
-  "description": "Models the positive feedback between ice coverage and planetary temperature. Ice reflects sunlight (high albedo), keeping the planet cool. As temperatures rise, ice melts, exposing darker ocean/land which absorbs more heat, causing more warming and more melting. This is one of the strongest amplifying feedbacks in the climate system. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/",
+  "description": "Models the positive feedback between ice coverage and planetary temperature. Ice reflects sunlight (high albedo), keeping the planet cool. As temperatures rise, ice melts, exposing darker ocean/land which absorbs more heat, causing more warming and more melting. This is one of the strongest amplifying feedbacks in the climate system. Reference: IPCC Climate Assessment Reports. Source: https://www.ipcc.ch/\n\nVersion 1.8 repairs the Stefan-Boltzmann radiation units: the existing 5.67e-8 coefficient returns W/m^2, matching absorbed solar radiation, so the erroneous division by one million is removed. Celsius is converted to kelvin with the exact 273.15 offset. Other coefficients remain illustrative and uncalibrated.",
   "stocks": [
     {
       "id": "stock-global-temperature",
@@ -137,7 +137,7 @@
     {
       "id": "var-outgoing-radiation",
       "name": "Outgoing Radiation",
-      "equation": "Emissivity * Stefan_Boltzmann * (Global_Temperature + 273)^4 / 1e6",
+      "equation": "Emissivity * Stefan_Boltzmann * (Global_Temperature + 273.15)^4",
       "position": {
         "x": 400,
         "y": 160

@@ -1,4 +1,66 @@
+## 1.10.0 — Mobile workspace and personal OpenRouter
+
+- Compact phone navigation with preserved document actions, separate Run controls, responsive result sheets and tablet/landscape reflow.
+- Fixed mobile draft loss, delayed chat visibility, library focus races, touch chart coordinates and resize handling; added phone chart export, run comparison, animation and phase axes.
+- Optional personal OpenRouter key with explicit browser persistence choice, free router only, actual connection test and safe request-scoped credential handling. Existing agent/MCP and server provider paths remain.
+- Full regressions and corpus rerun; 28 pre-existing public model failures remain explicit. See docs/MOBILE-1.10.md and docs/OPENROUTER.md.
+
+# Version 1.9
+
+- Fix silent flow cancellation, RK4 intermediate overflow, delayed-history phase shifts, hidden non-finite intermediates, initializer constant shadowing and uncharged dependency retries.
+- Preserve partial REST settings and structured MCP failures; export exact failed-run inputs and engine fingerprints.
+- Reject uncertified Radau state events and state lookup forcing; repair five defaults with independently tested explicit grids, preserving equations.
+- Translate supported XMILE functions and syntax; reject invalid namespaces, unsupported functions and seeded-stream-changing conversions.
+
+- Investigate all 47 previous failures; repair 19 definitions with original-source evidence and independent mathematical checks. Full corpus: 1,050 completed / 28 failed, no new failures.
+- Restore native Beer Game, urban dynamics, workforce and 351-town population models; reconstruct physical, climate and financial examples with explicit source mappings and limitations.
+- Add report-only numeric/text results without allowing labels into integration or charts. Preserve authored categorical diagnostics.
+- Enforce fixed-period Euler recurrence contracts across API, MCP edits and UI; reject fractional periods and misleading refinement comparisons.
+- Independently review source tables, all native urban balances and engine boundaries. Fix recurrence rounding and targeted-edit contract preservation found by review.
+- Start large chart selections with stocks; retain all series, report outputs, existing navigation and numerical controls.
+
+# Version 1.8
+
+- Diagnose all86 previous public failures;39 now complete,47 remain explicitly explained, no new failures.
+- Review43 model revisions, including source-backed World2/FullBeer restorations and actual Morris–Lecar/Oregonator dynamics.
+- Add explicit bounded Radau, exact binomial sampling, root-versus-blocked error reports, tolerance controls and method-aware investigation interpretation.
+- Reject adaptive time-driven lookup pulses after independent review reproduced silent misses.
+- Preserve prior revision assertions through exact SHA-bound historical snapshots; new tests check current repairs separately.
+- Retain all existing editor, analytics, saved-model, MCP and library paths; promotional footer links remain removed.
+
 # Changelog
+
+## 1.7.0 — 2026-10-20
+
+- Diagnose all 134 previously failing public definitions in three disjoint source-review ledgers; repair or annotate 64 definitions while preserving model identities and authored inputs. Public audit: 992 completed / 86 failed, with no numerical regressions. Two new completions remain structurally incomplete and are explicitly flagged.
+- Admit source-authored fine time grids up to 100,000 intervals; enforce one million retained scalar values alongside the existing method-aware work ceiling. No solver equations changed.
+- Refine Analytics around one selected series, readable metrics and expandable comparisons; retain every analysis section. Repair fullscreen bindings, focus restoration, mobile scrolling, chart axis collisions and long legends.
+- Export a styled SVG or PNG with the complete selected-series legend through an accessible preview dialog. Remove unrelated free-tool promotions from both site footers.
+- Add independent source recurrences, conservation, convergence, capacity and DOM export checks. See docs/RELEASE-1.7.md for test scope and remaining scientific limitations.
+
+## 1.6.0 — 2026-10-20
+
+- Refine stocks, variables, flow valves, dependency curves, wrapped labels, selection, hit zones and fit geometry; preserve saved diagram positions and equations.
+- Polish the workbench controls, assistant, properties, results, library and mobile sheets. Put the phone chart first; add a reversible assistant toggle and expandable final values.
+- Commit element renames atomically across supported scalar references and named endpoints; reject ambiguity. Preserve valid initial values through blank/nonfinite drafts.
+- Restore six original lookup tables across three teaching models. Compare complete source trajectories and the original Stella CSV while retaining source warnings and unsupported-constraint limits.
+- Public default runs: 944 completed / 134 failed. Full regression: 595 tests, 18 preservation subtests, three explicit identifier-compatibility expected failures. Core engine unchanged; all 44 advertised names retain advanced regression coverage.
+
+## 1.5.0 — 2026-10-20
+
+- Verify all 44 advertised functions and aliases with 218 advanced tests, including independent delay, pulse, stochastic and nonlinear reference trajectories. Separate static corpus coverage, actual function invocation and scientific validity.
+- Repair decimal pulse boundaries, RK4 test-input holding and extreme lookup arithmetic, including two independently discovered review cases. Document the accepted-time and XMILE pulse-signature contract in MCP and the guide.
+- Add a keyboard command/element finder, persistent solver/run context, tighter workbench styling and desktop/mobile series search with Stocks / All / Clear. Preserve existing product paths.
+- Fix small mobile numbers displaying as zero, hidden-series styling and mobile status overlap. Verify desktop, tablet and phone viewport workflows.
+- Full public corpus remains 941 completed / 137 failed with no definition changes. Regression suite: 563 tests plus 18 preservation subtests; use Pytest 9 for its subtests fixture.
+
+## 1.4.0 — 2026-10-20
+
+- Reconcile63 model definitions against original implementations, mathematics and publisher records. Six previously failing public defaults now complete;137 remain explicitly unresolved. Two additional finite-but-incomplete source examples have their missing dynamics restored.
+- Check illustrative epidemic trajectories against independent DOP853 references, growth against closed forms and pharmacokinetics against independent convolution, dose accounting and AUC. Explicit RK4 defaults resolve material Euler error in three epidemic examples without changing their time grids or coefficients.
+- Correct Vensim conditional spelling, XMILE comments and comparison semantics; reject malformed function signatures and lookup points.
+- Show known citation mismatches and model limitations in input inspection and MCP reports. Bibliographic corrections never establish source fidelity or calibration.
+- Make legacy API/frontend tests assert outcomes, isolate test storage and use real JavaScript parsing. Add reproducible reference generation and per-model source/hash receipts.
 
 ## 2026-01-18
 

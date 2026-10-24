@@ -1,13 +1,13 @@
 {
   "id": "labor-market-dynamics-model-eco",
   "name": "Labor Market Dynamics Model",
-  "description": "A system dynamics model of labor market dynamics including unemployment, job search, wage dynamics, and labor force participation. Based on search and matching theory and captures the natural dynamics of employment adjustment. Reference: BLS Employment Situation. Source: https://www.bls.gov/",
+  "description": "Illustrative labor search and matching model. Version 1.9 connects the supplied Initial Labor Force, Initial Working Age Population, Initial Vacancies and Initial Wage inputs to the stock initial equations. Initial unemployment uses the existing Natural Unemployment Rate parameter; employed workers are the labor-force remainder and people outside the labor force are the working-age remainder. Long-term unemployment keeps its existing zero starting cohort. This is an explicit natural-rate starting scenario, not a recovered historical BLS calibration. Cohort sums and long-term subset bounds are independently checked over the full horizon. The local job, wage, retirement and matching responses remain illustrative assumptions.",
   "stocks": [
     {
       "id": "stock-employed-workers",
       "name": "Employed Workers",
       "initial_value": 0,
-      "equation": "",
+      "equation": "Initial_Labor_Force*(1-Natural_Unemployment_Rate)",
       "position": {
         "x": 150,
         "y": 200
@@ -17,7 +17,7 @@
       "id": "stock-unemployed-workers",
       "name": "Unemployed Workers",
       "initial_value": 0,
-      "equation": "",
+      "equation": "Initial_Labor_Force*Natural_Unemployment_Rate",
       "position": {
         "x": 350,
         "y": 200
@@ -27,7 +27,7 @@
       "id": "stock-out-of-labor-force",
       "name": "Out of Labor Force",
       "initial_value": 0,
-      "equation": "",
+      "equation": "Initial_Working_Age_Population-Initial_Labor_Force",
       "position": {
         "x": 550,
         "y": 200
@@ -37,7 +37,7 @@
       "id": "stock-job-vacancies",
       "name": "Job Vacancies",
       "initial_value": 0,
-      "equation": "",
+      "equation": "Initial_Vacancies",
       "position": {
         "x": 750,
         "y": 200
@@ -47,7 +47,7 @@
       "id": "stock-average-wage",
       "name": "Average Wage",
       "initial_value": 0,
-      "equation": "",
+      "equation": "Initial_Wage",
       "position": {
         "x": 150,
         "y": 350
@@ -68,7 +68,7 @@
     {
       "id": "flow-hiring",
       "name": "Hiring",
-      "equation": "Matching_Function * (1 - Long_Term_Fraction)",
+      "equation": "Matching_Function * (1 - \"Long-term Unemployed Fraction\")",
       "from_stock": "stock-unemployed-workers",
       "to_stock": "stock-employed-workers",
       "position": {
@@ -79,7 +79,7 @@
     {
       "id": "flow-job-separations",
       "name": "Job Separations",
-      "equation": "Employed * Separation_Rate",
+      "equation": "\"Employed Workers\" * Separation_Rate",
       "from_stock": "stock-employed-workers",
       "to_stock": "stock-unemployed-workers",
       "position": {
@@ -90,7 +90,7 @@
     {
       "id": "flow-vacancy-creation",
       "name": "Vacancy Creation",
-      "equation": "Target_Vacancies - Job_Vacancies + Hiring + Vacancy_Closing) / Vacancy_Adjustment_Time",
+      "equation": "(Target_Vacancies - Job_Vacancies + Hiring + Vacancy_Closing) / Vacancy_Adjustment_Time",
       "from_stock": null,
       "to_stock": "stock-job-vacancies",
       "position": {
@@ -123,7 +123,7 @@
     {
       "id": "flow-labor-force-entry",
       "name": "Labor Force Entry",
-      "equation": "Out_of_Labor_Force * Entry_Rate * Participation_Effect",
+      "equation": "Out_of_Labor_Force * \"Base Entry Rate\" * Participation_Effect",
       "from_stock": "stock-out-of-labor-force",
       "to_stock": "stock-unemployed-workers",
       "position": {
@@ -134,7 +134,7 @@
     {
       "id": "flow-labor-force-exit",
       "name": "Labor Force Exit",
-      "equation": "Unemployed * Discouragement_Rate",
+      "equation": "\"Unemployed Workers\" * Discouragement_Rate",
       "from_stock": "stock-unemployed-workers",
       "to_stock": "stock-out-of-labor-force",
       "position": {
@@ -145,7 +145,7 @@
     {
       "id": "flow-retirements-from-employment",
       "name": "Retirements from Employment",
-      "equation": "Employed * Retirement_Rate",
+      "equation": "\"Employed Workers\" * Retirement_Rate",
       "from_stock": "stock-employed-workers",
       "to_stock": "stock-out-of-labor-force",
       "position": {
@@ -200,7 +200,7 @@
     {
       "id": "flow-becoming-long-term-unemployed",
       "name": "Becoming Long-term Unemployed",
-      "equation": "(Unemployed - Long_Term_Unemployed) * Transition_to_Long_Term_Rate",
+      "equation": "(\"Unemployed Workers\" - Long_Term_Unemployed) * Transition_to_Long_Term_Rate",
       "from_stock": null,
       "to_stock": "stock-long-term-unemployed",
       "position": {
@@ -211,7 +211,7 @@
     {
       "id": "flow-long-term-unemployed-hiring",
       "name": "Long-term Unemployed Hiring",
-      "equation": "Matching_Function * Long_Term_Fraction * Long_Term_Matching_Penalty",
+      "equation": "Matching_Function * \"Long-term Unemployed Fraction\" * Long_Term_Matching_Penalty",
       "from_stock": "stock-long-term-unemployed",
       "to_stock": null,
       "position": {
@@ -280,7 +280,7 @@
     {
       "id": "var-labor-force",
       "name": "Labor Force",
-      "equation": "Employed + Unemployed",
+      "equation": "\"Employed Workers\" + \"Unemployed Workers\"",
       "position": {
         "x": 100,
         "y": 160
@@ -298,7 +298,7 @@
     {
       "id": "var-unemployment-rate",
       "name": "Unemployment Rate",
-      "equation": "Unemployed / Labor_Force",
+      "equation": "\"Unemployed Workers\" / Labor_Force",
       "position": {
         "x": 400,
         "y": 160
@@ -316,7 +316,7 @@
     {
       "id": "var-vacancy-rate",
       "name": "Vacancy Rate",
-      "equation": "Job_Vacancies / (Employed + Job_Vacancies)",
+      "equation": "Job_Vacancies / (\"Employed Workers\" + Job_Vacancies)",
       "position": {
         "x": 700,
         "y": 160
@@ -325,7 +325,7 @@
     {
       "id": "var-labor-market-tightness",
       "name": "Labor Market Tightness",
-      "equation": "Job_Vacancies / Unemployed",
+      "equation": "Job_Vacancies / \"Unemployed Workers\"",
       "position": {
         "x": 100,
         "y": 240
@@ -352,7 +352,7 @@
     {
       "id": "var-matching-function",
       "name": "Matching Function",
-      "equation": "Matching_Efficiency * Unemployed^Matching_Elasticity * Job_Vacancies^(1-Matching_Elasticity)",
+      "equation": "Matching_Efficiency * \"Unemployed Workers\"^Matching_Elasticity * Job_Vacancies^(1-Matching_Elasticity)",
       "position": {
         "x": 550,
         "y": 240
@@ -361,7 +361,7 @@
     {
       "id": "var-job-finding-rate",
       "name": "Job Finding Rate",
-      "equation": "Matching_Function / Unemployed",
+      "equation": "Matching_Function / \"Unemployed Workers\"",
       "position": {
         "x": 700,
         "y": 240
@@ -406,7 +406,7 @@
     {
       "id": "var-target-vacancies",
       "name": "Target Vacancies",
-      "equation": "Employed * Target_Vacancy_Rate",
+      "equation": "\"Employed Workers\" * Target_Vacancy_Rate",
       "position": {
         "x": 700,
         "y": 320
@@ -550,7 +550,7 @@
     {
       "id": "var-long-term-unemployed-fraction",
       "name": "Long-term Unemployed Fraction",
-      "equation": "Long_Term_Unemployed / Unemployed",
+      "equation": "Long_Term_Unemployed / \"Unemployed Workers\"",
       "position": {
         "x": 100,
         "y": 640
@@ -586,7 +586,7 @@
     {
       "id": "var-beveridge-curve-shift",
       "name": "Beveridge Curve Shift",
-      "equation": "1 + 0.5 * Long_Term_Fraction",
+      "equation": "1 + 0.5 * \"Long-term Unemployed Fraction\"",
       "position": {
         "x": 700,
         "y": 640
@@ -641,6 +641,6 @@
   },
   "created_at": "2026-01-11T20:04:50.758421Z",
   "updated_at": "2026-01-11T20:04:50.758421Z",
-  "source": "https://github.com/SDXorg/test-models",
-  "reference": "SDXorg Test Models Repository"
+  "source": "https://www.bls.gov/cps/definitions.htm",
+  "reference": "BLS Current Population Survey concepts: labor force = employed + unemployed; not in labor force is the remainder. Numerical initial inputs and natural-rate scenario are supplied local assumptions, not BLS estimates."
 }

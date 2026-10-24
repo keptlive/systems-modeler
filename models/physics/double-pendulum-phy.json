@@ -1,7 +1,7 @@
 {
   "id": "double-pendulum-phy",
   "name": "Double Pendulum",
-  "description": "A chaotic double pendulum system demonstrating sensitive dependence on initial conditions. Two pendulums are connected end-to-end, with the first attached to a fixed pivot point. The system exhibits complex, unpredictable motion characteristic of deterministic chaos. Reference: http://www.myphysicslab.com/dbl_pendulum.html",
+  "description": "A chaotic double pendulum system demonstrating sensitive dependence on initial conditions. Two pendulums are connected end-to-end, with the first attached to a fixed pivot point. The system exhibits complex, unpredictable motion characteristic of deterministic chaos. Reference: http://www.myphysicslab.com/dbl_pendulum.html Source reconciliation: explicit shorthand is translated to the existing declared quantities using the pinned native equations; source initial values and 0.0078125-second integration grid are retained. Euler energy drift and chaotic sensitivity limit long-horizon physical accuracy.",
   "stocks": [
     {
       "id": "stock-angular-position",
@@ -59,7 +59,7 @@
     {
       "id": "flow-change-in-angular-velocity",
       "name": "Change in Angular Velocity",
-      "equation": "(g*(2*m1+m2)*SIN(theta1) - m2*g*SIN(theta1-2*theta2) - 2*SIN(theta1-theta2)*m2*(omega2^2*L2 + omega1^2*L1*COS(theta1-theta2))) / (L1*(2*m1+m2-m2*COS(2*theta1-2*theta2)))",
+      "equation": "(Acceleration_due_to_Gravity*(2*Mass_of_Pendulum+Mass_of_Pendulum_2)*SIN(Angular_Position) - Mass_of_Pendulum_2*Acceleration_due_to_Gravity*SIN(Angular_Position-2*Angular_Position_2) - 2*SIN(Angular_Position-Angular_Position_2)*Mass_of_Pendulum_2*(Angular_Velocity_2^2*Length_of_Pendulum_2 + Angular_Velocity^2*Length_of_Pendulum*COS(Angular_Position-Angular_Position_2))) / (Length_of_Pendulum*(2*Mass_of_Pendulum+Mass_of_Pendulum_2-Mass_of_Pendulum_2*COS(2*Angular_Position-2*Angular_Position_2)))",
       "from_stock": null,
       "to_stock": "stock-angular-velocity",
       "position": {
@@ -70,7 +70,7 @@
     {
       "id": "flow-change-in-angular-position-2",
       "name": "Change in Angular Position 2",
-      "equation": "Angular_Velocity2",
+      "equation": "Angular_Velocity_2",
       "from_stock": null,
       "to_stock": "stock-angular-position-2",
       "position": {
@@ -81,7 +81,7 @@
     {
       "id": "flow-change-in-angular-velocity-2",
       "name": "Change in Angular Velocity 2",
-      "equation": "(2*SIN(theta1-theta2)*(omega1^2*L1*(m1+m2) + g*(m1+m2)*COS(theta1) + omega2^2*L2*m2*COS(theta1-theta2))) / (L2*(2*m1+m2-m2*COS(2*theta1-2*theta2)))",
+      "equation": "(2*SIN(Angular_Position-Angular_Position_2)*(Angular_Velocity^2*Length_of_Pendulum*(Mass_of_Pendulum+Mass_of_Pendulum_2) + Acceleration_due_to_Gravity*(Mass_of_Pendulum+Mass_of_Pendulum_2)*COS(Angular_Position) + Angular_Velocity_2^2*Length_of_Pendulum_2*Mass_of_Pendulum_2*COS(Angular_Position-Angular_Position_2))) / (Length_of_Pendulum_2*(2*Mass_of_Pendulum+Mass_of_Pendulum_2-Mass_of_Pendulum_2*COS(2*Angular_Position-2*Angular_Position_2)))",
       "from_stock": null,
       "to_stock": "stock-angular-velocity-2",
       "position": {
@@ -246,6 +246,6 @@
   },
   "created_at": "2026-01-11T20:04:50.828622Z",
   "updated_at": "2026-01-11T20:04:50.828622Z",
-  "source": "https://github.com/SDXorg/PySD-Cookbook",
-  "reference": "Classical mechanics demonstration - PySD Cookbook"
+  "source": "https://raw.githubusercontent.com/SDXorg/PySD-Cookbook/d7ebddadad9cd87cf796b9b6031ea2b5c45da4c4/source/models/Pendulum/Double_Pendulum.mdl",
+  "reference": "PySD-Cookbook Double_Pendulum.mdl, revision d7ebddadad9cd87cf796b9b6031ea2b5c45da4c4; linked source equations from myPhysicsLab."
 }

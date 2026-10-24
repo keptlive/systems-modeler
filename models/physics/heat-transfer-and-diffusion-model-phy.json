@@ -48,7 +48,7 @@
     {
       "id": "flow-interior-heating-rate",
       "name": "Interior Heating Rate",
-      "equation": "(Q_Convection_Wall_Interior + Q_Convection_Floor_Interior + Q_Solar_Gain + Q_Internal_Gains + Q_HVAC_Heating) / Interior_Heat_Capacity",
+      "equation": "(\"Convection Wall to Interior\" + \"Convection Floor to Interior\" + \"Solar Gain through Windows\" + \"Internal Heat Gains\" + \"HVAC Heating\") / Interior_Heat_Capacity",
       "from_stock": null,
       "to_stock": "stock-interior-air-temperature",
       "position": {
@@ -59,7 +59,7 @@
     {
       "id": "flow-interior-cooling-rate",
       "name": "Interior Cooling Rate",
-      "equation": "(Q_Infiltration + Q_HVAC_Cooling) / Interior_Heat_Capacity",
+      "equation": "(\"Infiltration Heat Loss\" + \"HVAC Cooling\") / Interior_Heat_Capacity",
       "from_stock": "stock-interior-air-temperature",
       "to_stock": null,
       "position": {
@@ -70,7 +70,7 @@
     {
       "id": "flow-wall-heating-rate",
       "name": "Wall Heating Rate",
-      "equation": "(Q_Solar_Wall + Q_Convection_Exterior_Wall) / Wall_Heat_Capacity",
+      "equation": "(\"Solar Gain on Wall\" + \"Convection Exterior to Wall\") / Wall_Heat_Capacity",
       "from_stock": null,
       "to_stock": "stock-wall-temperature",
       "position": {
@@ -81,7 +81,7 @@
     {
       "id": "flow-wall-cooling-rate",
       "name": "Wall Cooling Rate",
-      "equation": "(Q_Convection_Wall_Interior + Q_Radiation_Wall_Sky) / Wall_Heat_Capacity",
+      "equation": "(\"Convection Wall to Interior\" + \"Radiation Wall to Sky\") / Wall_Heat_Capacity",
       "from_stock": "stock-wall-temperature",
       "to_stock": null,
       "position": {
@@ -92,7 +92,7 @@
     {
       "id": "flow-floor-heating-rate",
       "name": "Floor Heating Rate",
-      "equation": "Q_Solar_Floor / Floor_Heat_Capacity",
+      "equation": "\"Solar Gain to Floor\" / Floor_Heat_Capacity",
       "from_stock": null,
       "to_stock": "stock-floorthermal-mass-temperature",
       "position": {
@@ -103,7 +103,7 @@
     {
       "id": "flow-floor-cooling-rate",
       "name": "Floor Cooling Rate",
-      "equation": "Q_Convection_Floor_Interior / Floor_Heat_Capacity",
+      "equation": "\"Convection Floor to Interior\" / Floor_Heat_Capacity",
       "from_stock": "stock-floorthermal-mass-temperature",
       "to_stock": null,
       "position": {
@@ -114,7 +114,7 @@
     {
       "id": "flow-hvac-power-consumption",
       "name": "HVAC Power Consumption",
-      "equation": "ABS(Q_HVAC_Heating + Q_HVAC_Cooling) / HVAC_COP",
+      "equation": "ABS(\"HVAC Heating\" + \"HVAC Cooling\") / \"HVAC Coefficient of Performance\"",
       "from_stock": null,
       "to_stock": "stock-total-energy-consumption",
       "position": {
@@ -343,7 +343,7 @@
     {
       "id": "var-convection-wall-to-interior",
       "name": "Convection Wall to Interior",
-      "equation": "Interior_Convection_Coefficient * Wall_Area * (Wall_Temperature - Interior_Temperature)",
+      "equation": "Interior_Convection_Coefficient * Wall_Area * (Wall_Temperature - \"Interior Air Temperature\")",
       "position": {
         "x": 700,
         "y": 400
@@ -361,7 +361,7 @@
     {
       "id": "var-convection-floor-to-interior",
       "name": "Convection Floor to Interior",
-      "equation": "Interior_Convection_Coefficient * Floor_Area * (Floor_Temperature - Interior_Temperature)",
+      "equation": "Interior_Convection_Coefficient * Floor_Area * (\"Floor/Thermal Mass Temperature\" - \"Interior Air Temperature\")",
       "position": {
         "x": 250,
         "y": 480
@@ -370,7 +370,7 @@
     {
       "id": "var-infiltration-heat-loss",
       "name": "Infiltration Heat Loss",
-      "equation": "Air_Changes_Per_Hour * Interior_Volume * Air_Density * Air_Specific_Heat * (Interior_Temperature - Exterior_Temperature) / 3600",
+      "equation": "Air_Changes_Per_Hour * Interior_Volume * Air_Density * Air_Specific_Heat * (\"Interior Air Temperature\" - Exterior_Temperature) / 3600",
       "position": {
         "x": 400,
         "y": 480
@@ -415,7 +415,7 @@
     {
       "id": "var-solar-gain-through-windows",
       "name": "Solar Gain through Windows",
-      "equation": "Solar_Irradiance * Window_Area * Window_SHGC",
+      "equation": "Solar_Irradiance * Window_Area * \"Window Solar Heat Gain Coefficient\"",
       "position": {
         "x": 400,
         "y": 560
@@ -442,7 +442,7 @@
     {
       "id": "var-solar-gain-to-floor",
       "name": "Solar Gain to Floor",
-      "equation": "Q_Solar_Gain * 0.4",
+      "equation": "\"Solar Gain through Windows\" * 0.4",
       "position": {
         "x": 100,
         "y": 640
@@ -451,7 +451,7 @@
     {
       "id": "var-internal-heat-gains",
       "name": "Internal Heat Gains",
-      "equation": "Internal_Gains_Schedule * Max_Internal_Gains",
+      "equation": "Internal_Gains_Schedule * \"Maximum Internal Gains\"",
       "position": {
         "x": 250,
         "y": 640
@@ -478,7 +478,7 @@
     {
       "id": "var-radiation-wall-to-sky",
       "name": "Radiation Wall to Sky",
-      "equation": "Wall_Emissivity * Stefan_Boltzmann * Wall_Area * Wall_Solar_Fraction * (Wall_Temperature^4 - Sky_Temperature^4)",
+      "equation": "Wall_Emissivity * \"Stefan-Boltzmann Constant\" * Wall_Area * Wall_Solar_Fraction * (Wall_Temperature^4 - Sky_Temperature^4)",
       "position": {
         "x": 700,
         "y": 640
@@ -505,7 +505,7 @@
     {
       "id": "var-hvac-heating",
       "name": "HVAC Heating",
-      "equation": "IF Interior_Temperature < Setpoint_Temperature - Thermostat_Deadband THEN HVAC_Capacity ELSE 0",
+      "equation": "IF \"Interior Air Temperature\" < \"Temperature Setpoint\" - Thermostat_Deadband THEN HVAC_Capacity ELSE 0",
       "position": {
         "x": 400,
         "y": 720
@@ -514,7 +514,7 @@
     {
       "id": "var-hvac-cooling",
       "name": "HVAC Cooling",
-      "equation": "IF Interior_Temperature > Setpoint_Temperature + Thermostat_Deadband THEN HVAC_Capacity ELSE 0",
+      "equation": "IF \"Interior Air Temperature\" > \"Temperature Setpoint\" + Thermostat_Deadband THEN HVAC_Capacity ELSE 0",
       "position": {
         "x": 550,
         "y": 720
@@ -541,7 +541,7 @@
     {
       "id": "var-total-heat-loss",
       "name": "Total Heat Loss",
-      "equation": "Q_Convection_Wall_Interior + Q_Infiltration",
+      "equation": "\"Convection Wall to Interior\" + \"Infiltration Heat Loss\"",
       "position": {
         "x": 250,
         "y": 800
@@ -550,7 +550,7 @@
     {
       "id": "var-total-heat-gain",
       "name": "Total Heat Gain",
-      "equation": "Q_Solar_Gain + Q_Internal_Gains",
+      "equation": "\"Solar Gain through Windows\" + \"Internal Heat Gains\"",
       "position": {
         "x": 400,
         "y": 800
@@ -559,7 +559,7 @@
     {
       "id": "var-net-heat-flow",
       "name": "Net Heat Flow",
-      "equation": "Total_Heat_Gain - Total_Heat_Loss + Q_HVAC_Heating - Q_HVAC_Cooling",
+      "equation": "Total_Heat_Gain - Total_Heat_Loss + \"HVAC Heating\" - \"HVAC Cooling\"",
       "position": {
         "x": 550,
         "y": 800
@@ -568,7 +568,7 @@
     {
       "id": "var-interior-temperature-celsius",
       "name": "Interior Temperature (Celsius)",
-      "equation": "Interior_Temperature - 273.15",
+      "equation": "\"Interior Air Temperature\" - 273.15",
       "position": {
         "x": 700,
         "y": 800

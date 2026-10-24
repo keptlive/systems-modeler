@@ -1,7 +1,7 @@
 {
   "id": "hospital-capacity-and-patient-flow-model-hea",
   "name": "Hospital Capacity and Patient Flow Model",
-  "description": "Models hospital operations including patient arrivals, bed capacity, staffing, length of stay, and quality of care. Demonstrates healthcare system dynamics and capacity constraints. Reference: Juran, J. M. (1999). Juran's Quality Handbook. McGraw-Hill. Source: https://www.mheducation.com/",
+  "description": "Illustrative Hospital Capacity and Patient Flow Model. Source reconciliation 2026-10-20: The previous DOI is Muntaner's political-health commentary, not a hospital patient-flow source. Several stock/parameter aliases do not match declared labels; ICU allocation and general admissions require topology and capacity reconciliation. No hospital data, length-of-stay distribution, mortality calibration or fatigue/quality causal law is traced to a source. No arbitrary alias-only repair is presented as scientific validation. Scientific calibration and applicability remain unverified.\n\nIdentifier reconciliation 2026-10-20: undeclared shorthand is explicitly mapped to existing declared quantities. This preserves the authored scalar mathematics, IDs, inputs, topology and layout. It does not recover an original executable source or establish parameter calibration/scientific fidelity; existing conceptual references remain unverified for these equations.",
   "stocks": [
     {
       "id": "stock-patients-waiting-for-admission",
@@ -79,7 +79,7 @@
     {
       "id": "flow-admissions",
       "name": "Admissions",
-      "equation": "MIN(Patients_Waiting / Wait_Time_Target, Available_Beds / Admission_Processing_Time)",
+      "equation": "MIN(\"Patients Waiting for Admission\" / Wait_Time_Target, Available_Beds / Admission_Processing_Time)",
       "from_stock": "stock-patients-waiting-for-admission",
       "to_stock": "stock-inpatients",
       "position": {
@@ -178,7 +178,7 @@
     {
       "id": "flow-fatigue-recovery",
       "name": "Fatigue Recovery",
-      "equation": "Staff_Fatigue * Recovery_Rate * Staffing_Adequacy",
+      "equation": "\"Staff Fatigue Level\" * Recovery_Rate * Staffing_Adequacy",
       "from_stock": "stock-staff-fatigue-level",
       "to_stock": null,
       "position": {
@@ -303,7 +303,7 @@
     {
       "id": "var-capacity-pressure-effect",
       "name": "Capacity Pressure Effect",
-      "equation": "IF Bed_Occupancy > 0.85 THEN -0.1 * (Bed_Occupancy - 0.85) / 0.15 ELSE 0",
+      "equation": "IF \"Bed Occupancy Rate\" > 0.85 THEN -0.1 * (\"Bed Occupancy Rate\" - 0.85) / 0.15 ELSE 0",
       "position": {
         "x": 100,
         "y": 240
@@ -384,7 +384,7 @@
     {
       "id": "var-staffing-adequacy",
       "name": "Staffing Adequacy",
-      "equation": "MIN(1, Nurse_to_Patient_Ratio / Target_Nurse_Ratio)",
+      "equation": "MIN(1, Nurse_to_Patient_Ratio / \"Target Nurse to Patient Ratio\")",
       "position": {
         "x": 700,
         "y": 320
@@ -393,7 +393,7 @@
     {
       "id": "var-desired-nursing-staff",
       "name": "Desired Nursing Staff",
-      "equation": "(Inpatients + ICU_Patients * 2) * Target_Nurse_Ratio",
+      "equation": "(Inpatients + ICU_Patients * 2) * \"Target Nurse to Patient Ratio\"",
       "position": {
         "x": 100,
         "y": 400
@@ -420,7 +420,7 @@
     {
       "id": "var-fatigue-induced-turnover",
       "name": "Fatigue Induced Turnover",
-      "equation": "Staff_Fatigue / 100 * 0.001",
+      "equation": "\"Staff Fatigue Level\" / 100 * 0.001",
       "position": {
         "x": 550,
         "y": 400
@@ -465,7 +465,7 @@
     {
       "id": "var-quality-of-care",
       "name": "Quality of Care",
-      "equation": "100 * Staffing_Adequacy * (1 - Staff_Fatigue / 200) * (1 - MAX(0, Bed_Occupancy - 0.85) / 0.15)",
+      "equation": "100 * Staffing_Adequacy * (1 - \"Staff Fatigue Level\" / 200) * (1 - MAX(0, \"Bed Occupancy Rate\" - 0.85) / 0.15)",
       "position": {
         "x": 550,
         "y": 480
@@ -492,7 +492,7 @@
     {
       "id": "var-average-wait-time",
       "name": "Average Wait Time",
-      "equation": "Patients_Waiting / MAX(1, Admissions)",
+      "equation": "\"Patients Waiting for Admission\" / MAX(1, Admissions)",
       "position": {
         "x": 250,
         "y": 560
@@ -516,6 +516,6 @@
   },
   "created_at": "2026-01-11T20:04:50.814139Z",
   "updated_at": "2026-01-11T20:04:50.814139Z",
-  "source": "https://doi.org/10.1016/j.socscimed.2013.03.004",
-  "reference": "Healthcare System Dynamics Models"
+  "source": "",
+  "reference": "Unverified illustrative healthcare stock-flow construction; no identified source for these equations, units or numerical parameters."
 }

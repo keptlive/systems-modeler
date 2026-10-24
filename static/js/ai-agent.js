@@ -23,7 +23,7 @@ const AIAgent = {
      */
     async checkAvailability() {
         try {
-            const response = await fetch('/api/analyze/status');
+            const response = await OpenRouterUI.request('/api/analyze/status');
             if (response.ok) {
                 const data = await response.json();
                 this.isAvailable = data.available;
@@ -55,11 +55,11 @@ const AIAgent = {
         this.setLoading(true);
 
         try {
-            const response = await fetch('/api/analyze', {
+            const response = await OpenRouterUI.request('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    model: this.model,
+                    model: {...this.model,id:this.model.id||'draft'},
                     simulation_results: this.results
                 })
             });
@@ -98,11 +98,11 @@ const AIAgent = {
         this.renderConversation();
 
         try {
-            const response = await fetch('/api/analyze/ask', {
+            const response = await OpenRouterUI.request('/api/analyze/ask', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    model: this.model,
+                    model: {...this.model,id:this.model.id||'draft'},
                     simulation_results: this.results,
                     question: question
                 })
@@ -156,7 +156,7 @@ const AIAgent = {
                     <div class="ai-icon">&#129302;</div>
                     <p>Click "Analyze" to get AI insights</p>
                     <button class="btn btn-primary btn-analyze" onclick="AIAgent.analyze()">
-                        &#10024; Analyze with AI
+                        &#10024; Analyze results
                     </button>
                 </div>
             `;
@@ -164,12 +164,13 @@ const AIAgent = {
         }
 
         let html = '<div class="ai-agent-content">';
+        html += `<p class="ai-analysis-status">${this.analysis.ai_used ? 'AI interpretation completed. Check its claims against the inputs and results.' : 'Statistical interpretation. An AI response was not used.'}</p>`;
 
         // Summary section
         html += `
             <div class="ai-section ai-summary">
                 <h3><span class="ai-icon">&#128161;</span> Summary</h3>
-                <p>${this.analysis.summary}</p>
+                <p>${App.escapeHtml(this.analysis.summary)}</p>
             </div>
         `;
 
@@ -182,7 +183,7 @@ const AIAgent = {
                         ${this.analysis.insights.map(insight => `
                             <li class="insight-item">
                                 <span class="insight-bullet">&#9679;</span>
-                                <span class="insight-text">${insight}</span>
+                                <span class="insight-text">${App.escapeHtml(insight)}</span>
                             </li>
                         `).join('')}
                     </ul>
@@ -199,7 +200,7 @@ const AIAgent = {
                         ${this.analysis.recommendations.map(rec => `
                             <li class="recommendation-item">
                                 <span class="rec-bullet">&#10148;</span>
-                                <span class="rec-text">${rec}</span>
+                                <span class="rec-text">${App.escapeHtml(rec)}</span>
                             </li>
                         `).join('')}
                     </ul>
@@ -229,7 +230,7 @@ const AIAgent = {
                 </div>
                 ${!this.isAvailable ? `
                     <p class="ai-unavailable-notice">
-                        &#9888; AI Q&A requires GEMINI_API_KEY to be configured
+                        &#9888; Server AI Q&amp;A is unavailable. Your connected agent can interpret these results through MCP.
                     </p>
                 ` : ''}
             </div>
@@ -408,11 +409,11 @@ const AIAgent = {
         this.showFeedbackLoading('Finding equilibrium parameters...');
 
         try {
-            const response = await fetch('/api/llm/find-equilibrium', {
+            const response = await OpenRouterUI.request('/api/llm/find-equilibrium', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    model: this.model,
+                    model: {...this.model,id:this.model.id||'draft'},
                     target_stocks: targetStocks,
                     max_iterations: 100
                 })
@@ -445,11 +446,11 @@ const AIAgent = {
         this.showFeedbackLoading('Fitting model to data...');
 
         try {
-            const response = await fetch('/api/llm/fit-to-data', {
+            const response = await OpenRouterUI.request('/api/llm/fit-to-data', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    model: this.model,
+                    model: {...this.model,id:this.model.id||'draft'},
                     historical_data: historicalData,
                     time_points: timePoints,
                     max_iterations: 200
@@ -483,13 +484,19 @@ const AIAgent = {
         this.showFeedbackLoading('Getting AI suggestions...');
 
         try {
-            const response = await fetch('/api/llm/refine-model', {
+            // Keep the server refinement flow; personal free keys use modification.
+            const personalKey = OpenRouterUI.hasKey();
+            const response = await OpenRouterUI.request(personalKey ? '/api/llm/modify' : '/api/llm/refine-model', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    model: this.model,
-                    simulation_results: this.results,
-                    feedback: feedback
+                    model: {...this.model,id:this.model.id||'draft'},
+                    ...(personalKey ? {
+                        modification: `Refine this model using this feedback: ${feedback}\nSimulation results for context: ${JSON.stringify(this.results)}`
+                    } : {
+                        simulation_results: this.results,
+                        feedback: feedback
+                    })
                 })
             });
 
@@ -498,7 +505,13 @@ const AIAgent = {
                 throw new Error(error.detail || 'Refinement failed');
             }
 
-            const result = await response.json();
+            const payload = await response.json();
+            const result = personalKey ? {
+                success: true,
+                suggestions: [],
+                modified_model: payload,
+                explanation: 'A free model proposed a revised model using your feedback and simulation results. Review it before applying; AI output may contain errors.'
+            } : payload;
             this.renderRefinementResult(result);
             return result;
 

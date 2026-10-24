@@ -23,7 +23,7 @@ const Charts = {
         animationSpeed: 1,     // 1x, 2x, 4x speed multiplier
         showTooltip: true,
         showComparison: false,
-        normalize: true,      // Scale each variable to 0-100% // Overlay previous runs
+        normalize: false,     // Optional scaling of each variable to 0-100%
         variables: {}          // { 'Population': { visible: true, color: '#4CAF50' } }
     },
 
@@ -37,6 +37,10 @@ const Charts = {
         '#4CAF50', '#2196F3', '#FF9800', '#E91E63', '#9C27B0',
         '#00BCD4', '#FFEB3B', '#795548', '#607D8B', '#8BC34A'
     ],
+
+    variableKey(name) {
+        return 'v-' + Array.from(name, character => character.codePointAt(0).toString(16)).join('-');
+    },
 
     /**
      * Initialize charts module
@@ -52,7 +56,7 @@ const Charts = {
     /**
      * Set simulation results
      */
-    setResults(results) {
+    setResults(results, model = null) {
         this.results = results;
 
         // Clear old variable options when loading new results
@@ -61,10 +65,12 @@ const Charts = {
         // Initialize variable options if not set
         if (results && results.values) {
             const varNames = Object.keys(results.values);
+            const stockNames = new Set((model?.stocks || []).map(stock => stock.name));
+            const startWithStocks = varNames.length > 24 && varNames.some(name => stockNames.has(name));
             varNames.forEach((name, i) => {
                 if (!this.options.variables[name]) {
                     this.options.variables[name] = {
-                        visible: true,
+                        visible: !startWithStocks || stockNames.has(name),
                         color: this.colors[i % this.colors.length]
                     };
                 }
@@ -109,7 +115,22 @@ const Charts = {
         if (this.options.variables[name]) {
             this.options.variables[name].visible = !this.options.variables[name].visible;
             this.render();
+            this.onSelectionChanged?.();
         }
+    },
+
+    selectVariables(names) {
+        const selected = new Set(names);
+        for (const [name, option] of Object.entries(this.options.variables)) {
+            option.visible = selected.has(name);
+        }
+        this.render();
+        this.onSelectionChanged?.();
+    },
+
+    filterSeries(names, query) {
+        const terms = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+        return names.filter(name => terms.every(term => name.toLocaleLowerCase().includes(term)));
     },
 
     /**
@@ -125,7 +146,27 @@ const Charts = {
     /**
      * Main render function
      */
+    syncControls() {
+        if (typeof document === 'undefined') return;
+        const mark = (button, active) => {
+            if (!button) return;
+            button.classList.toggle('active', !!active);
+            button.setAttribute('aria-pressed', String(!!active));
+        };
+        for (const button of document.querySelectorAll('[data-chart-type]')) mark(button, button.dataset.chartType === this.options.type);
+        for (const button of document.querySelectorAll('[data-scale]')) mark(button, button.dataset.scale === this.options.scale);
+        for (const id of ['btn-normalize','btn-normalize-mobile']) mark(document.getElementById(id), this.options.normalize);
+        mark(document.getElementById('btn-log-mobile'), this.options.scale === 'log');
+        for (const id of ['btn-compare','mobile-compare']) mark(document.getElementById(id), this.options.showComparison);
+        for (const id of ['btn-animate','mobile-animate']) {
+            const button = document.getElementById(id);
+            mark(button, this.isAnimating);
+            if (button) button.textContent = id === 'mobile-animate' ? `${this.isAnimating ? 'Pause' : 'Play'} animation` : this.isAnimating ? 'Pause' : 'Play';
+        }
+    },
+
     render() {
+        this.syncControls();
         if (!this.container || !this.results) return;
 
         // Clear previous chart
@@ -153,8 +194,11 @@ const Charts = {
      */
     getDimensions() {
         const rect = this.container.getBoundingClientRect();
-        const width = rect.width || 600;
-        const height = rect.height || 350;
+        // :empty hides the plot while render clears its old SVG. Measure the
+        // parent as a fallback rather than creating a scaled-down 600px chart.
+        const width = rect.width || this.container.parentElement.clientWidth || 600;
+        const height = rect.height || parseFloat(getComputedStyle(this.container).height) || 350;
+        this.margin = {top:24, right:width < 500 ? 16 : width < 800 ? 148 : 200, bottom:44, left:68};
 
         return {
             width,
@@ -249,6 +293,7 @@ const Charts = {
      * Create SVG with zoom behavior
      */
     createSvg(dim) {
+        this._plotId = 'plot-' + (this._plotSequence = (this._plotSequence || 0) + 1);
         const svg = d3.select(this.container)
             .append('svg')
             .attr('width', dim.width)
@@ -260,7 +305,7 @@ const Charts = {
 
         // Clip path for chart area
         defs.append('clipPath')
-            .attr('id', 'chart-clip')
+            .attr('id', this._plotId + '-clip')
             .append('rect')
             .attr('width', dim.innerWidth)
             .attr('height', dim.innerHeight);
@@ -269,7 +314,7 @@ const Charts = {
         this.getVisibleVariables().forEach(name => {
             const color = this.options.variables[name]?.color || '#4CAF50';
             const gradient = defs.append('linearGradient')
-                .attr('id', `gradient-${name.replace(/\s+/g, '-')}`)
+                .attr('id', `gradient-${this._plotId}-${this.variableKey(name)}`)
                 .attr('x1', '0%').attr('y1', '0%')
                 .attr('x2', '0%').attr('y2', '100%');
 
@@ -291,8 +336,8 @@ const Charts = {
      * Add axes to chart
      */
     addAxes(g, xScale, yScale, dim) {
-        const xAxis = d3.axisBottom(xScale).ticks(8);
-        const yAxis = d3.axisLeft(yScale).ticks(6);
+        const xAxis = d3.axisBottom(xScale).ticks(Math.max(3, Math.floor(dim.innerWidth / 55)));
+        const yAxis = d3.axisLeft(yScale).ticks(5).tickFormat(d3.format('~s'));
 
         // X axis
         g.append('g')
@@ -331,72 +376,52 @@ const Charts = {
             .attr('fill', 'var(--text-secondary)')
             .attr('text-anchor', 'middle')
             .attr('font-size', '12px')
-            .text('Time: ' + this.results.time[0] + ' → ' + this.results.time[this.results.time.length-1].toFixed(1));
+            .text('Time: ' + this.results.time[0] + ' → ' + this.results.time[this.results.time.length-1]);
 
         g.append('text')
             .attr('class', 'axis-label')
             .attr('transform', 'rotate(-90)')
             .attr('x', -dim.innerHeight / 2)
-            .attr('y', -50)
+            .attr('y', -(this.margin.left - 14))
             .attr('fill', 'var(--text-secondary)')
             .attr('text-anchor', 'middle')
             .attr('font-size', '12px')
-            .text('Value');
+            .text(this.options.normalize && this.options.type === 'line' ? 'Normalized (%)' : 'Value');
     },
 
     /**
      * Add interactive legend
      */
     addLegend(svg, dim) {
+        if (dim.width < 500) return;
         if (!this.options.showLegend) return;
 
-        const legend = svg.append('g')
-            .attr('class', 'chart-legend')
-            .attr('transform', `translate(${dim.width - this.margin.right + 15}, ${this.margin.top})`);
-
-        const varNames = Object.keys(this.options.variables);
-
-        varNames.forEach((name, i) => {
-            const opt = this.options.variables[name];
-            const y = i * 24;
-
-            const item = legend.append('g')
-                .attr('class', 'legend-item')
-                .attr('transform', `translate(0, ${y})`)
-                .style('cursor', 'pointer')
-                .on('click', () => this.toggleVariable(name));
-
-            // Color box
-            item.append('rect')
-                .attr('width', 14)
-                .attr('height', 14)
-                .attr('rx', 2)
-                .attr('fill', opt.visible ? opt.color : 'transparent')
-                .attr('stroke', opt.color)
-                .attr('stroke-width', 2);
-
-            // Label
-            item.append('text')
-                .attr('x', 20)
-                .attr('y', 11)
-                .attr('fill', opt.visible ? 'var(--text-primary)' : 'var(--text-muted)')
-                .attr('font-size', '11px')
-                .text(this.truncateLabel(name, 12));
-
-            // Hover effect
-            item.on('mouseenter', function() {
-                d3.select(this).select('rect').attr('stroke-width', 3);
-            }).on('mouseleave', function() {
-                d3.select(this).select('rect').attr('stroke-width', 2);
-            });
-        });
+        const width = this.margin.right - 20;
+        const legend = svg.append('foreignObject')
+            .attr('x', dim.width - this.margin.right + 12).attr('y', this.margin.top)
+            .attr('width', width).attr('height', Math.max(50,dim.innerHeight));
+        const list = legend.append('xhtml:div').attr('class','chart-legend-list')
+            .attr('role','group').attr('aria-label','Chart series');
+        for (const [name,opt] of Object.entries(this.options.variables)) {
+            const item = list.append('xhtml:button').attr('type','button')
+                .attr('aria-pressed',String(opt.visible)).attr('title',name)
+                .on('click',()=>{
+                    this.toggleVariable(name);
+                    [...this.container.querySelectorAll('.chart-legend-list button')].find(button=>button.title===name)?.focus();
+                });
+            item.append('xhtml:span').attr('class','legend-swatch')
+                .style('border-color',opt.color).style('background',opt.visible ? opt.color : 'transparent');
+            item.append('xhtml:span').text(name);
+        }
     },
 
     /**
      * Add tooltip
      */
     addTooltip(svg, g, xScale, yScale, dim, time, values) {
-        if (!this.options.showTooltip) return;
+        if (!this.options.showTooltip || !time.length) return;
+        const chartContainer = this.container;
+        let hideTimer;
 
         const visibleVars = this.getVisibleVariables();
 
@@ -411,9 +436,9 @@ const Charts = {
             .style('opacity', 0);
 
         // Tooltip div
-        let tooltip = d3.select(this.container).select('.chart-tooltip');
+        let tooltip = d3.select(chartContainer).select('.chart-tooltip');
         if (tooltip.empty()) {
-            tooltip = d3.select(this.container)
+            tooltip = d3.select(chartContainer)
                 .append('div')
                 .attr('class', 'chart-tooltip')
                 .style('opacity', 0);
@@ -423,7 +448,7 @@ const Charts = {
         const hoverDots = g.append('g').attr('class', 'hover-dots');
         visibleVars.forEach(name => {
             hoverDots.append('circle')
-                .attr('class', `hover-dot-${name.replace(/\s+/g, '-')}`)
+                .attr('class', `hover-dot-${this.variableKey(name)}`)
                 .attr('r', 5)
                 .attr('fill', this.options.variables[name]?.color || '#4CAF50')
                 .attr('stroke', 'white')
@@ -442,10 +467,11 @@ const Charts = {
 
         // Unified handler for both mouse and touch
         const showTooltip = (event) => {
-            const [mx] = d3.pointer(event);
+            clearTimeout(hideTimer);
+            const [mx] = d3.pointer(event, overlay.node());
             const x0 = xScale.invert(mx);
-            const i = bisect(time, x0, 1);
-            const i0 = Math.max(0, Math.min(i, time.length - 1));
+            const i = Math.min(bisect(time, x0), time.length - 1);
+            const i0 = i > 0 && x0 - time[i - 1] <= time[i] - x0 ? i - 1 : i;
 
             const t = time[i0];
 
@@ -462,34 +488,33 @@ const Charts = {
                     const color = this.options.variables[name]?.color || '#4CAF50';
                     tooltipHtml += `<div class="tooltip-row">
                         <span class="tooltip-color" style="background:${color}"></span>
-                        <span class="tooltip-name">${name}:</span>
+                        <span class="tooltip-name">${App.escapeHtml(name)}:</span>
                         <span class="tooltip-value">${this.formatNumber(val)}</span>
                     </div>`;
 
-                    hoverDots.select(`.hover-dot-${name.replace(/\s+/g, '-')}`)
+                    hoverDots.select(`.hover-dot-${this.variableKey(name)}`)
                         .attr('cx', xScale(t))
                         .attr('cy', yScale(val))
                         .style('opacity', 1);
                 }
             });
 
-            // Calculate tooltip position, keeping it within bounds
-            let tooltipX = event.offsetX + 15;
-            let tooltipY = event.offsetY - 10;
-
-            // Adjust for mobile - keep tooltip visible
-            const containerRect = this.container.getBoundingClientRect();
-            if (tooltipX + 200 > containerRect.width) {
-                tooltipX = event.offsetX - 180;
-            }
-            if (tooltipY < 10) {
-                tooltipY = 10;
-            }
-
+            // Touch objects have client coordinates but no offsetX/offsetY.
+            // Keep the rendered chart's owner: mobile rendering restores the
+            // shared Charts.container before these handlers execute.
+            tooltip.html(tooltipHtml);
+            const containerRect = chartContainer.getBoundingClientRect();
+            const tooltipNode = tooltip.node();
+            const tooltipWidth = tooltipNode.offsetWidth || 200;
+            const tooltipHeight = tooltipNode.offsetHeight || 40;
+            const pointerX = event.clientX - containerRect.left;
+            const pointerY = event.clientY - containerRect.top;
+            const desiredX = pointerX + tooltipWidth + 15 > containerRect.width ? pointerX - tooltipWidth - 15 : pointerX + 15;
+            const tooltipX = Math.max(0, Math.min(desiredX, Math.max(0, containerRect.width - tooltipWidth)));
+            const tooltipY = Math.max(0, Math.min(pointerY - 10, Math.max(0, containerRect.height - tooltipHeight)));
             tooltip
-                .html(tooltipHtml)
-                .style('left', `${tooltipX}px`)
-                .style('top', `${tooltipY}px`)
+                .style('left', `${tooltipX + (chartContainer.scrollLeft || 0)}px`)
+                .style('top', `${tooltipY + (chartContainer.scrollTop || 0)}px`)
                 .style('opacity', 1);
         };
 
@@ -505,23 +530,22 @@ const Charts = {
 
         // Touch events for mobile
         overlay.on('touchstart', (event) => {
-            event.preventDefault();
             if (event.touches.length === 1) {
                 showTooltip(event.touches[0]);
             }
-        });
+        }, { passive: true });
 
         overlay.on('touchmove', (event) => {
-            event.preventDefault();
             if (event.touches.length === 1) {
                 showTooltip(event.touches[0]);
             }
-        });
+        }, { passive: true });
 
         overlay.on('touchend', () => {
             // Keep tooltip visible for a moment on touch end
-            setTimeout(hideTooltip, 1500);
+            hideTimer = setTimeout(hideTooltip, 1500);
         });
+        overlay.on('touchcancel', hideTooltip);
     },
 
     /**
@@ -561,7 +585,7 @@ const Charts = {
 
         // Chart area with clipping
         const chartArea = g.append('g')
-            .attr('clip-path', 'url(#chart-clip)');
+            .attr('clip-path', `url(#${this._plotId}-clip)`);
 
         // Line generator
         const line = d3.line()
@@ -579,7 +603,7 @@ const Charts = {
 
             const path = chartArea.append('path')
                 .datum(vals)
-                .attr('class', `chart-line line-${name.replace(/\s+/g, '-')}`)
+                .attr('class', `chart-line line-${this.variableKey(name)}`)
                 .attr('d', line)
                 .attr('fill', 'none')
                 .attr('stroke', color)
@@ -646,7 +670,7 @@ const Charts = {
         this.addAxes(g, xScale, yScale, dim);
 
         const chartArea = g.append('g')
-            .attr('clip-path', 'url(#chart-clip)');
+            .attr('clip-path', `url(#${this._plotId}-clip)`);
 
         // Area generator
         const area = d3.area()
@@ -668,19 +692,19 @@ const Charts = {
             if (!vals) return;
 
             const color = this.options.variables[name]?.color || '#4CAF50';
-            const gradientId = `gradient-${name.replace(/\s+/g, '-')}`;
+            const gradientId = `gradient-${this._plotId}-${this.variableKey(name)}`;
 
             // Area
             chartArea.append('path')
                 .datum(vals)
-                .attr('class', `chart-area area-${name.replace(/\s+/g, '-')}`)
+                .attr('class', `chart-area area-${this.variableKey(name)}`)
                 .attr('d', area)
                 .attr('fill', `url(#${gradientId})`);
 
             // Line
             chartArea.append('path')
                 .datum(vals)
-                .attr('class', `chart-line line-${name.replace(/\s+/g, '-')}`)
+                .attr('class', `chart-line line-${this.variableKey(name)}`)
                 .attr('d', line)
                 .attr('fill', 'none')
                 .attr('stroke', color)
@@ -711,7 +735,7 @@ const Charts = {
         const stackData = time.map((t, i) => {
             const row = { time: t };
             visibleVars.forEach(name => {
-                row[name] = Math.max(0, values[name]?.[i] || 0);
+                row[name] = values[name]?.[i] ?? 0;
             });
             return row;
         });
@@ -719,19 +743,20 @@ const Charts = {
         const stack = d3.stack()
             .keys(visibleVars)
             .order(d3.stackOrderNone)
-            .offset(d3.stackOffsetNone);
+            .offset(d3.stackOffsetDiverging);
 
         const series = stack(stackData);
 
         // Y scale for stacked data
         const yMax = d3.max(series, s => d3.max(s, d => d[1]));
+        const yMin = d3.min(series, s => d3.min(s, d => d[0]));
 
         const xScale = d3.scaleLinear()
             .domain([time[0], time[time.length - 1]])
             .range([0, dim.innerWidth]);
 
         const yScale = d3.scaleLinear()
-            .domain([0, yMax * 1.1])
+            .domain(yMin === yMax ? [yMin-1,yMax+1] : [Math.min(0,yMin*1.1),Math.max(0,yMax*1.1)])
             .range([dim.innerHeight, 0]);
 
         const g = svg.append('g')
@@ -740,7 +765,7 @@ const Charts = {
         this.addAxes(g, xScale, yScale, dim);
 
         const chartArea = g.append('g')
-            .attr('clip-path', 'url(#chart-clip)');
+            .attr('clip-path', `url(#${this._plotId}-clip)`);
 
         const area = d3.area()
             .x((d, i) => xScale(time[i]))
@@ -755,7 +780,7 @@ const Charts = {
 
             chartArea.append('path')
                 .datum(s)
-                .attr('class', `stacked-area area-${name.replace(/\s+/g, '-')}`)
+                .attr('class', `stacked-area area-${this.variableKey(name)}`)
                 .attr('d', area)
                 .attr('fill', color)
                 .attr('fill-opacity', 0.7)
@@ -769,18 +794,24 @@ const Charts = {
     /**
      * Render phase diagram (variable vs variable)
      */
+    getPhaseVariables() {
+        const names = Object.keys(this.results?.values || {});
+        const visible = this.getVisibleVariables();
+        const x = names.includes(this.options.phaseX) ? this.options.phaseX : visible[0];
+        const y = names.includes(this.options.phaseY) && this.options.phaseY !== x ? this.options.phaseY : visible.find(name => name !== x);
+        return [x, y];
+    },
+
     renderPhaseChart() {
         const dim = this.getDimensions();
         const values = this.results.values;
-        const visibleVars = this.getVisibleVariables();
+        const [xVar, yVar] = this.getPhaseVariables();
 
-        if (visibleVars.length < 2) {
+        if (!xVar || !yVar) {
             this.container.innerHTML = '<div class="no-data">Select at least 2 variables for phase diagram</div>';
             return;
         }
 
-        const xVar = visibleVars[0];
-        const yVar = visibleVars[1];
         const xVals = values[xVar];
         const yVals = values[yVar];
 
@@ -812,7 +843,7 @@ const Charts = {
 
         g.append('g')
             .attr('class', 'axis y-axis')
-            .call(d3.axisLeft(yScale).ticks(6));
+            .call(d3.axisLeft(yScale).ticks(5).tickFormat(d3.format('~s')));
 
         // Axis labels
         g.append('text')
@@ -826,7 +857,7 @@ const Charts = {
         g.append('text')
             .attr('transform', 'rotate(-90)')
             .attr('x', -dim.innerHeight / 2)
-            .attr('y', -50)
+            .attr('y', -(this.margin.left - 14))
             .attr('fill', 'var(--text-secondary)')
             .attr('text-anchor', 'middle')
             .attr('font-size', '12px')
@@ -839,7 +870,7 @@ const Charts = {
         const line = d3.line()
             .x(d => xScale(d[0]))
             .y(d => yScale(d[1]))
-            .curve(d3.curveMonotoneX);
+            .curve(d3.curveLinear);
 
         const color = this.options.variables[xVar]?.color || '#4CAF50';
 
@@ -912,7 +943,7 @@ const Charts = {
 
                 // Update axes
                 g.select('.x-axis').call(d3.axisBottom(newXScale).ticks(8));
-                g.select('.y-axis').call(d3.axisLeft(newYScale).ticks(6));
+                g.select('.y-axis').call(d3.axisLeft(newYScale).ticks(5).tickFormat(d3.format('~s')));
 
                 // Update grid
                 g.select('.x-grid').call(
@@ -930,7 +961,7 @@ const Charts = {
                     .curve(d3.curveMonotoneX);
 
                 visibleVars.forEach(name => {
-                    g.select(`.line-${name.replace(/\s+/g, '-')}`)
+                    g.select(`.line-${this.variableKey(name)}`)
                         .attr('d', line(values[name]));
                 });
             });
@@ -1032,10 +1063,72 @@ const Charts = {
     /**
      * Export chart as image
      */
-    exportAs(format = 'png') {
-        const svg = this.container.querySelector('svg');
-        if (!svg) return;
+    buildExportSvg() {
+        const live = this.container.querySelector('svg');
+        if (!live) return null;
+        const svg = live.cloneNode(true), dim = this.getDimensions();
+        // Freeze computed SVG styles: downloaded files do not have the app stylesheet.
+        const originals = [live,...live.querySelectorAll('*')], copies = [svg,...svg.querySelectorAll('*')];
+        originals.forEach((node,index) => {
+            const style = getComputedStyle(node);
+            for (const key of ['fill','stroke','stroke-width','font-family','font-size','font-weight','opacity'])
+                copies[index].style.setProperty(key,style.getPropertyValue(key));
+        });
+        svg.querySelectorAll('foreignObject').forEach(node=>node.remove());
+        const ns = 'http://www.w3.org/2000/svg';
+        const add = (tag,attributes,parent=svg) => {
+            const node=document.createElementNS(ns,tag);
+            for(const [key,value] of Object.entries(attributes)) node.setAttribute(key,String(value));
+            parent.appendChild(node); return node;
+        };
+        const columns = dim.width >= 600 ? 2 : 1, colWidth = (dim.width-32)/columns;
+        const measure = document.createElement('canvas').getContext('2d');
+        measure.font = '11px sans-serif';
+        const wrapLabel = name => {
+            const lines=[]; let line='';
+            for (const char of Array.from(name)) {
+                if (line && measure.measureText(line+char).width > colWidth-30) { lines.push(line); line=''; }
+                line+=char;
+            }
+            lines.push(line); return lines;
+        };
+        const entries=Object.entries(this.options.variables).filter(([,option])=>option.visible);
+        let y=dim.height+20;
+        for(let i=0;i<entries.length;i+=columns) {
+            let rowHeight=24;
+            for(let c=0;c<columns && i+c<entries.length;c++) {
+                const [name,option]=entries[i+c],x=16+c*colWidth;
+                const lines=wrapLabel(name);
+                add('rect',{x,y:y-9,width:9,height:9,rx:2,fill:option.color});
+                const label=add('text',{x:x+18,y,fill:'#dce9f6','font-family':'sans-serif','font-size':11});
+                lines.forEach((line,j)=>{add('tspan',{x:x+18,dy:j?16:0},label).textContent=line;});
+                rowHeight=Math.max(rowHeight,lines.length*16+10);
+            }
+            y+=rowHeight;
+        }
+        const height=entries.length ? y+12 : dim.height;
+        svg.setAttribute('width',dim.width);svg.setAttribute('height',height);
+        svg.setAttribute('viewBox',`0 0 ${dim.width} ${height}`);
+        const background=add('rect',{x:0,y:0,width:dim.width,height,fill:'#14263a'});
+        svg.insertBefore(background,svg.firstChild);
+        return {svg,width:dim.width,height};
+    },
 
+    exportAs(format = 'png') {
+        if (format === 'csv') {
+            if (!this.results) return;
+            const names = this.getVisibleVariables();
+            const cell = value => '"' + String(value ?? '').replace(/"/g, '""') + '"';
+            const rows = [['Time', ...names], ...this.results.time.map((time, i) => [time, ...names.map(name => this.results.values[name]?.[i])])];
+            const blob = new Blob([rows.map(row => row.map(cell).join(',')).join('\r\n')], {type:'text/csv;charset=utf-8'});
+            const url = URL.createObjectURL(blob), link = document.createElement('a');
+            link.href = url; link.download = 'chart.csv'; link.click();
+            setTimeout(() => URL.revokeObjectURL(url), 0);
+            return;
+        }
+        const exported = this.buildExportSvg();
+        if (!exported) return;
+        const {svg} = exported;
         const svgData = new XMLSerializer().serializeToString(svg);
         const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
 
@@ -1054,24 +1147,38 @@ const Charts = {
         const ctx = canvas.getContext('2d');
         const img = new Image();
 
-        const dim = this.getDimensions();
+        const dim = exported;
         canvas.width = dim.width * 2;  // 2x for retina
         canvas.height = dim.height * 2;
         ctx.scale(2, 2);
 
+        const imageUrl = URL.createObjectURL(svgBlob);
+        img.onerror = () => { URL.revokeObjectURL(imageUrl); App.showToast('Chart export failed. Try the SVG format.', 'error'); };
         img.onload = () => {
-            ctx.fillStyle = '#1a1a2e';  // Background color
+            URL.revokeObjectURL(imageUrl);
+            ctx.fillStyle = '#14263a';  // Background color
             ctx.fillRect(0, 0, dim.width, dim.height);
             ctx.drawImage(img, 0, 0, dim.width, dim.height);
 
             const pngUrl = canvas.toDataURL('image/png');
-            const a = document.createElement('a');
-            a.href = pngUrl;
-            a.download = 'chart.png';
-            a.click();
+            const dialog = document.createElement('dialog');
+            dialog.className = 'chart-export-dialog';
+            dialog.setAttribute('aria-label','Export chart');
+            dialog.innerHTML = '<header><h2>Export chart</h2><button type="button" aria-label="Close chart export">×</button></header><p>Your chart with all selected series. PNG is rendered at twice the display resolution.</p><div class="chart-export-preview"></div><footer></footer>';
+            const picture=document.createElement('img');picture.src=pngUrl;picture.alt='Chart export preview';
+            dialog.querySelector('.chart-export-preview').appendChild(picture);
+            const svgUrl=URL.createObjectURL(svgBlob);
+            for(const [label,href,filename] of [['Save PNG',pngUrl,'chart.png'],['Save SVG',svgUrl,'chart.svg']]) {
+                const link=document.createElement('a');link.textContent=label;link.href=href;link.download=filename;
+                dialog.querySelector('footer').appendChild(link);
+            }
+            const opener=document.activeElement;
+            dialog.querySelector('button').addEventListener('click',()=>dialog.close());
+            dialog.addEventListener('close',()=>{URL.revokeObjectURL(svgUrl);dialog.remove();opener?.focus();},{once:true});
+            document.body.appendChild(dialog);dialog.showModal();
         };
 
-        img.src = URL.createObjectURL(svgBlob);
+        img.src = imageUrl;
     },
 
     /**
@@ -1093,10 +1200,13 @@ const Charts = {
     /**
      * Start animated playback of simulation
      */
-    startAnimation() {
+    startAnimation(container = this.container) {
         if (!this.results || this.isAnimating) return;
 
+        this.animationContainer = container;
         this.isAnimating = true;
+        this.syncControls();
+        this.onAnimationStateChanged?.();
         this.animationProgress = 0;
         this.animateFrame();
     },
@@ -1106,6 +1216,9 @@ const Charts = {
      */
     stopAnimation() {
         this.isAnimating = false;
+        this.animationContainer = null;
+        this.syncControls();
+        this.onAnimationStateChanged?.();
         if (this.animationFrame) {
             cancelAnimationFrame(this.animationFrame);
             this.animationFrame = null;
@@ -1115,11 +1228,11 @@ const Charts = {
     /**
      * Toggle animation play/pause
      */
-    toggleAnimation() {
+    toggleAnimation(container = this.container) {
         if (this.isAnimating) {
             this.stopAnimation();
         } else {
-            this.startAnimation();
+            this.startAnimation(container);
         }
         return this.isAnimating;
     },
@@ -1137,8 +1250,16 @@ const Charts = {
      * Animation frame update
      */
     animateFrame() {
-        if (!this.isAnimating || !this.results) return;
+        if (!this.isAnimating) return;
+        if (!this.results) { this.stopAnimation(); return; }
+        const owner = this.animationContainer;
+        if (!owner || owner.isConnected === false) { this.stopAnimation(); return; }
+        const previous = this.container;
+        this.container = owner;
+        try { this.animateOwnedFrame(); } finally { this.container = previous; }
+    },
 
+    animateOwnedFrame() {
         const totalSteps = this.results.time.length;
         const progressIncrement = (this.options.animationSpeed * 2) / totalSteps;
 
@@ -1149,6 +1270,8 @@ const Charts = {
             this.isAnimating = false;
             this.renderAnimatedFrame(1);
             this.onAnimationComplete();
+            this.syncControls();
+        this.onAnimationStateChanged?.();
             return;
         }
 
@@ -1217,7 +1340,7 @@ const Charts = {
         this.addAxes(g, xScale, yScale, dim);
 
         const chartArea = g.append('g')
-            .attr('clip-path', 'url(#chart-clip)');
+            .attr('clip-path', `url(#${this._plotId}-clip)`);
 
         // Line generator
         const line = d3.line()
@@ -1235,7 +1358,7 @@ const Charts = {
 
             chartArea.append('path')
                 .datum(vals)
-                .attr('class', `chart-line line-${name.replace(/\s+/g, '-')}`)
+                .attr('class', `chart-line line-${this.variableKey(name)}`)
                 .attr('d', line)
                 .attr('fill', 'none')
                 .attr('stroke', color)
@@ -1285,8 +1408,8 @@ const Charts = {
             this.container.appendChild(indicator);
         }
 
-        const currentTime = this.results.time[currentStep]?.toFixed(1) || '0';
-        const endTime = this.results.time[totalSteps - 1]?.toFixed(1) || '?';
+        const currentTime = this.results.time[currentStep] ?? '0';
+        const endTime = this.results.time[totalSteps - 1] ?? '?';
         indicator.innerHTML = `
             <span>t = ${currentTime} / ${endTime}</span>
             <span style="margin-left: 1rem; color: var(--text-muted);">${Math.round(progress * 100)}%</span>

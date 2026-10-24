@@ -41,12 +41,13 @@ const LLMInterface = {
      */
     async checkStatus() {
         try {
-            const response = await fetch('/api/llm/status');
+            const response = await OpenRouterUI.request('/api/llm/status');
             const data = await response.json();
             this.available = data.available;
 
             if (this.available) {
-                this.statusEl.textContent = 'Available';
+                this.statusEl.textContent = 'Configured';
+                this.statusEl.title = 'AI configured; use AI settings to test your personal OpenRouter connection';
                 this.statusEl.className = 'llm-status available';
             } else {
                 this.statusEl.textContent = 'Unavailable';
@@ -56,6 +57,12 @@ const LLMInterface = {
             this.available = false;
             this.statusEl.textContent = 'Error';
             this.statusEl.className = 'llm-status unavailable';
+        } finally {
+            document.querySelectorAll('.chat-header .llm-status').forEach(status => {
+                status.textContent = this.statusEl.textContent;
+                status.className = this.statusEl.className;
+                status.title = this.statusEl.title;
+            });
         }
     },
 
@@ -73,7 +80,7 @@ const LLMInterface = {
         // Check availability
         if (!this.available) {
             this.addMessage(
-                'LLM is not available. Please set ANTHROPIC_API_KEY or OPENAI_API_KEY environment variable.',
+                'Choose AI settings to use your OpenRouter key, or Connect agent through MCP.',
                 'error'
             );
             return;
@@ -118,7 +125,7 @@ const LLMInterface = {
      * Generate a new model from description
      */
     async generateModel(description) {
-        const response = await fetch('/api/llm/generate', {
+        const response = await OpenRouterUI.request('/api/llm/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ description })
@@ -136,11 +143,11 @@ const LLMInterface = {
      * Modify existing model
      */
     async modifyModel(modification) {
-        const response = await fetch('/api/llm/modify', {
+        const response = await OpenRouterUI.request('/api/llm/modify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                model: App.model,
+                model: App.modelSnapshot(),
                 modification
             })
         });
@@ -184,6 +191,8 @@ const LLMInterface = {
         }
 
         this.chatMessages.appendChild(messageEl);
+        const mobileMessages = document.getElementById('chat-messages-mobile');
+        if (mobileMessages) mobileMessages.appendChild(messageEl.cloneNode(true));
         this.scrollToBottom();
     },
 
@@ -243,11 +252,12 @@ const LLMInterface = {
         // Add user message to both desktop and mobile
         this.addMessage(message, 'user');
         input.value = '';
+        App.mobileChatDraft = '';
 
         // Check availability
         if (!this.available) {
             this.addMessage(
-                'LLM is not available. Please set GEMINI_API_KEY, ANTHROPIC_API_KEY, or OPENAI_API_KEY.',
+                'Choose AI settings to use your OpenRouter key, or Connect agent through MCP.',
                 'error'
             );
             return;
@@ -305,25 +315,6 @@ const LLMInterface = {
      * Add message to both desktop and mobile chat containers
      */
     addMessageToBoth(content, type) {
-        // Add to desktop
         this.addMessage(content, type);
-
-        // Also add to mobile if it exists
-        const mobileMessages = document.getElementById('chat-messages-mobile');
-        if (mobileMessages) {
-            const messageEl = document.createElement('div');
-            messageEl.className = `chat-message ${type}`;
-
-            if (type === 'user') {
-                messageEl.textContent = content;
-            } else {
-                const p = document.createElement('p');
-                p.innerHTML = this.formatMessage(content);
-                messageEl.appendChild(p);
-            }
-
-            mobileMessages.appendChild(messageEl);
-            mobileMessages.scrollTop = mobileMessages.scrollHeight;
-        }
     }
 };

@@ -5,22 +5,43 @@ Uses FastAPI's TestClient for synchronous testing.
 import os
 import sys
 import json
+from contextlib import contextmanager
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
+import pytest
 from pathlib import Path
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from fastapi.testclient import TestClient
-from app.main import app
+from fastapi import FastAPI
+from app.api import models, simulate, llm
+from app.storage import models as model_storage
 
 
-client = TestClient(app)
+@contextmanager
+def isolated_client():
+    """Keep every CRUD request in disposable storage, including manual runs."""
+    # These are REST endpoint tests. A fresh API app avoids starting the shared,
+    # one-shot MCP session manager or modifying its lifecycle for unrelated tests.
+    application = FastAPI()
+    application.include_router(models.router, prefix="/api/models")
+    application.include_router(simulate.router, prefix="/api")
+    application.include_router(llm.router, prefix="/api/llm")
+    with TemporaryDirectory(prefix="systems-modeler-api-test-") as directory:
+        with patch.object(model_storage, "MODELS_DIR", directory):
+            with TestClient(application) as temporary_client:
+                yield temporary_client
 
-# Store created model IDs for use across tests
-_created_model_ids = []
+
+@pytest.fixture
+def client():
+    with isolated_client() as temporary_client:
+        yield temporary_client
 
 
-def test_list_models() -> tuple:
+def _check_list_models(client) -> tuple:
     """Test GET /api/models - list all models."""
     try:
         response = client.get("/api/models")
@@ -36,9 +57,8 @@ def test_list_models() -> tuple:
         return False, str(e)
 
 
-def test_create_model() -> tuple:
+def _check_create_model(client) -> tuple:
     """Test POST /api/models - create a new model."""
-    global _created_model_ids
     try:
         test_model = {
             "name": "API Test Model",
@@ -71,7 +91,6 @@ def test_create_model() -> tuple:
             return False, "No model ID returned"
 
         # Store for cleanup and other tests
-        _created_model_ids.append(data.get("id"))
 
         if data.get("name") != "API Test Model":
             return False, f"Model name mismatch: {data.get('name')}"
@@ -81,9 +100,8 @@ def test_create_model() -> tuple:
         return False, str(e)
 
 
-def test_get_model() -> tuple:
+def _check_get_model(client) -> tuple:
     """Test GET /api/models/{id} - get a specific model."""
-    global _created_model_ids
     try:
         # First create a model
         test_model = {
@@ -101,7 +119,6 @@ def test_get_model() -> tuple:
 
         created = create_resp.json()
         model_id = created.get("id")
-        _created_model_ids.append(model_id)
 
         # Then get it
         response = client.get(f"/api/models/{model_id}")
@@ -117,9 +134,8 @@ def test_get_model() -> tuple:
         return False, str(e)
 
 
-def test_update_model() -> tuple:
+def _check_update_model(client) -> tuple:
     """Test PUT /api/models/{id} - update a model."""
-    global _created_model_ids
     try:
         # First create a model
         test_model = {
@@ -137,7 +153,6 @@ def test_update_model() -> tuple:
 
         created = create_resp.json()
         model_id = created.get("id")
-        _created_model_ids.append(model_id)
 
         # Update it
         update_data = {"description": "Updated description"}
@@ -156,7 +171,7 @@ def test_update_model() -> tuple:
         return False, str(e)
 
 
-def test_delete_model() -> tuple:
+def _check_delete_model(client) -> tuple:
     """Test DELETE /api/models/{id} - delete a model."""
     try:
         # First create a model
@@ -191,7 +206,7 @@ def test_delete_model() -> tuple:
         return False, str(e)
 
 
-def test_simulate() -> tuple:
+def _check_simulate(client) -> tuple:
     """Test POST /api/simulate - run simulation."""
     try:
         test_model = {
@@ -254,7 +269,7 @@ def test_simulate() -> tuple:
         return False, str(e)
 
 
-def test_llm_status() -> tuple:
+def _check_llm_status(client) -> tuple:
     """Test GET /api/llm/status - check LLM availability."""
     try:
         response = client.get("/api/llm/status")
@@ -272,27 +287,57 @@ def test_llm_status() -> tuple:
         return False, str(e)
 
 
-def cleanup_test_models():
-    """Remove test models created during testing."""
-    global _created_model_ids
-    for model_id in _created_model_ids:
-        try:
-            client.delete(f"/api/models/{model_id}")
-        except:
-            pass
-    _created_model_ids = []
+def test_list_models(client):
+    success, message = _check_list_models(client)
+    assert success, message
+
+def test_create_model(client):
+    success, message = _check_create_model(client)
+    assert success, message
+
+def test_get_model(client):
+    success, message = _check_get_model(client)
+    assert success, message
+
+def test_update_model(client):
+    success, message = _check_update_model(client)
+    assert success, message
+
+def test_delete_model(client):
+    success, message = _check_delete_model(client)
+    assert success, message
+
+def test_simulate(client):
+    success, message = _check_simulate(client)
+    assert success, message
+
+def test_llm_status(client):
+    success, message = _check_llm_status(client)
+    assert success, message
+
+
+def test_api_storage_is_disposable():
+    original_directory = model_storage.MODELS_DIR
+    with isolated_client() as temporary_client:
+        temporary_directory = Path(model_storage.MODELS_DIR)
+        assert temporary_directory.resolve() != Path(original_directory).resolve()
+        success, message = _check_create_model(temporary_client)
+        assert success, message
+        assert len(list(temporary_directory.glob("*.json"))) == 1
+    assert model_storage.MODELS_DIR == original_directory
+    assert not temporary_directory.exists()
 
 
 def run_all_api_tests() -> dict:
     """Run all API tests and return results."""
     tests = [
-        ("GET /api/models", test_list_models),
-        ("POST /api/models", test_create_model),
-        ("GET /api/models/{id}", test_get_model),
-        ("PUT /api/models/{id}", test_update_model),
-        ("DELETE /api/models/{id}", test_delete_model),
-        ("POST /api/simulate", test_simulate),
-        ("GET /api/llm/status", test_llm_status),
+        ("GET /api/models", _check_list_models),
+        ("POST /api/models", _check_create_model),
+        ("GET /api/models/{id}", _check_get_model),
+        ("PUT /api/models/{id}", _check_update_model),
+        ("DELETE /api/models/{id}", _check_delete_model),
+        ("POST /api/simulate", _check_simulate),
+        ("GET /api/llm/status", _check_llm_status),
     ]
 
     results = []
@@ -300,7 +345,8 @@ def run_all_api_tests() -> dict:
     failed = 0
 
     for name, test_func in tests:
-        success, message = test_func()
+        with isolated_client() as temporary_client:
+            success, message = test_func(temporary_client)
         results.append({
             "name": name,
             "success": success,
@@ -313,9 +359,6 @@ def run_all_api_tests() -> dict:
         else:
             failed += 1
             print(f"FAIL: {name} - {message}")
-
-    # Cleanup
-    cleanup_test_models()
 
     return {
         "passed": passed,

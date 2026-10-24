@@ -1,7 +1,7 @@
 {
   "id": "energy-system-transition-model-cli",
   "name": "Energy System Transition Model",
-  "description": "Models the transition from fossil fuels to renewable energy, including capacity investment, learning curves, grid integration, and stranded assets. Based on energy transition literature. Reference: IEA World Energy Outlook. Source: https://www.iea.org/",
+  "description": "Models the transition from fossil fuels to renewable energy, including capacity investment, learning curves, grid integration, and stranded assets. Based on energy transition literature. Reference: IEA World Energy Outlook. Source: https://www.iea.org/\n\nIdentifier reconciliation 2026-10-20: undeclared shorthand is explicitly mapped to existing declared quantities. This preserves the authored scalar mathematics, IDs, inputs, topology and layout. It does not recover an original executable source or establish parameter calibration/scientific fidelity; existing conceptual references remain unverified for these equations.",
   "stocks": [
     {
       "id": "stock-fossil-fuel-capacity",
@@ -68,7 +68,7 @@
     {
       "id": "flow-fossil-capacity-investment",
       "name": "Fossil Capacity Investment",
-      "equation": "MAX(0, (Desired_Fossil_Capacity - Fossil_Capacity) / Fossil_Construction_Time)",
+      "equation": "MAX(0, (Desired_Fossil_Capacity - \"Fossil Fuel Capacity\") / Fossil_Construction_Time)",
       "from_stock": null,
       "to_stock": "stock-fossil-fuel-capacity",
       "position": {
@@ -79,7 +79,7 @@
     {
       "id": "flow-fossil-capacity-retirement",
       "name": "Fossil Capacity Retirement",
-      "equation": "Fossil_Capacity / Fossil_Lifetime + Early_Retirement",
+      "equation": "\"Fossil Fuel Capacity\" / \"Fossil Plant Lifetime\" + \"Early Retirement Rate\"",
       "from_stock": "stock-fossil-fuel-capacity",
       "to_stock": null,
       "position": {
@@ -90,7 +90,7 @@
     {
       "id": "flow-renewable-capacity-investment",
       "name": "Renewable Capacity Investment",
-      "equation": "(Desired_Renewable_Capacity - Renewable_Capacity) / Renewable_Construction_Time",
+      "equation": "(Desired_Renewable_Capacity - \"Renewable Energy Capacity\") / Renewable_Construction_Time",
       "from_stock": null,
       "to_stock": "stock-cumulative-renewable-deployment",
       "position": {
@@ -101,7 +101,7 @@
     {
       "id": "flow-renewable-capacity-retirement",
       "name": "Renewable Capacity Retirement",
-      "equation": "Renewable_Capacity / Renewable_Lifetime",
+      "equation": "\"Renewable Energy Capacity\" / \"Renewable Plant Lifetime\"",
       "from_stock": "stock-renewable-energy-capacity",
       "to_stock": null,
       "position": {
@@ -112,7 +112,7 @@
     {
       "id": "flow-storage-capacity-investment",
       "name": "Storage Capacity Investment",
-      "equation": "(Desired_Storage_Capacity - Storage_Capacity) / Storage_Construction_Time",
+      "equation": "(Desired_Storage_Capacity - \"Energy Storage Capacity\") / Storage_Construction_Time",
       "from_stock": null,
       "to_stock": "stock-energy-storage-capacity",
       "position": {
@@ -123,7 +123,7 @@
     {
       "id": "flow-storage-retirement",
       "name": "Storage Retirement",
-      "equation": "Storage_Capacity / Storage_Lifetime",
+      "equation": "\"Energy Storage Capacity\" / Storage_Lifetime",
       "from_stock": "stock-energy-storage-capacity",
       "to_stock": null,
       "position": {
@@ -134,7 +134,7 @@
     {
       "id": "flow-asset-stranding-rate",
       "name": "Asset Stranding Rate",
-      "equation": "Early_Retirement * Fossil_Capital_Cost * Remaining_Lifetime_Fraction",
+      "equation": "\"Early Retirement Rate\" * Fossil_Capital_Cost * Remaining_Lifetime_Fraction",
       "from_stock": null,
       "to_stock": "stock-stranded-assets-value",
       "position": {
@@ -145,7 +145,7 @@
     {
       "id": "flow-asset-writeoff",
       "name": "Asset Writeoff",
-      "equation": "Stranded_Assets / Writeoff_Period",
+      "equation": "\"Stranded Assets Value\" / Writeoff_Period",
       "from_stock": "stock-stranded-assets-value",
       "to_stock": null,
       "position": {
@@ -169,7 +169,7 @@
     {
       "id": "var-total-electricity-demand",
       "name": "Total Electricity Demand",
-      "equation": "Base_Demand * (1 + Demand_Growth_Rate)^(Time - 2020) * Electrification_Factor",
+      "equation": "\"Base Demand (2020)\" * (1 + Demand_Growth_Rate)^(Time - 2020) * Electrification_Factor",
       "position": {
         "x": 100,
         "y": 80
@@ -250,7 +250,7 @@
     {
       "id": "var-cost-parity-index",
       "name": "Cost Parity Index",
-      "equation": "Fossil_Cost / Renewable_Cost",
+      "equation": "\"Fossil LCOE\" / \"Renewable LCOE\"",
       "position": {
         "x": 700,
         "y": 160
@@ -259,7 +259,7 @@
     {
       "id": "var-desired-renewable-share",
       "name": "Desired Renewable Share",
-      "equation": "MIN(0.95, 0.3 + 0.65 * (1 - 1 / (1 + EXP(2 * (Cost_Parity - 1)))))",
+      "equation": "MIN(0.95, 0.3 + 0.65 * (1 - 1 / (1 + EXP(2 * (\"Cost Parity Index\" - 1)))))",
       "position": {
         "x": 100,
         "y": 240
@@ -286,7 +286,7 @@
     {
       "id": "var-renewable-generation",
       "name": "Renewable Generation",
-      "equation": "Renewable_Capacity * Capacity_Factor_Renewable * 8760 / 1000",
+      "equation": "\"Renewable Energy Capacity\" * \"Renewable Capacity Factor\" * 8760 / 1000",
       "position": {
         "x": 550,
         "y": 240
@@ -304,7 +304,7 @@
     {
       "id": "var-desired-fossil-capacity",
       "name": "Desired Fossil Capacity",
-      "equation": "MAX(0, (Total_Electricity_Demand * (1 - Desired_Renewable_Share)) / (Capacity_Factor_Fossil * 8.76))",
+      "equation": "MAX(0, (Total_Electricity_Demand * (1 - Desired_Renewable_Share)) / (\"Fossil Capacity Factor\" * 8.76))",
       "position": {
         "x": 100,
         "y": 320
@@ -313,7 +313,7 @@
     {
       "id": "var-desired-renewable-capacity",
       "name": "Desired Renewable Capacity",
-      "equation": "(Total_Electricity_Demand * Desired_Renewable_Share) / (Capacity_Factor_Renewable * 8.76) * 1.2",
+      "equation": "(Total_Electricity_Demand * Desired_Renewable_Share) / (\"Renewable Capacity Factor\" * 8.76) * 1.2",
       "position": {
         "x": 250,
         "y": 320
@@ -322,7 +322,7 @@
     {
       "id": "var-desired-storage-capacity",
       "name": "Desired Storage Capacity",
-      "equation": "Renewable_Capacity * Storage_Hours_Per_GW",
+      "equation": "\"Renewable Energy Capacity\" * Storage_Hours_Per_GW",
       "position": {
         "x": 400,
         "y": 320
@@ -403,7 +403,7 @@
     {
       "id": "var-early-retirement-rate",
       "name": "Early Retirement Rate",
-      "equation": "IF Fossil_Cost > Renewable_Cost * 1.5 THEN Fossil_Capacity * 0.03 ELSE 0",
+      "equation": "IF \"Fossil LCOE\" > \"Renewable LCOE\" * 1.5 THEN \"Fossil Fuel Capacity\" * 0.03 ELSE 0",
       "position": {
         "x": 250,
         "y": 480

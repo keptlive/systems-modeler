@@ -2,19 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="Interactive systems dynamics simulator with AI-powered model generation, 1000+ pre-built models, real-time simulation, and XMILE import/export. Free and open source.">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="canonical" href="https://stockandflow.live/">
+    <link rel="search" type="application/opensearchdescription+xml" title="Stock &amp; Flow" href="/static/opensearch.xml">
     <title>Stock & Flow — Systems Dynamics Simulator</title>
-    <link rel="stylesheet" href="/static/css/style.css?v=1775085923">
-    <link rel="stylesheet" href="/static/css/analytics.css?v=1775085923">
-    <script src="https://d3js.org/d3.v7.min.js?v=1775085923"></script>
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Stock & Flow — Systems Dynamics Simulator">
+    <meta property="og:description" content="Interactive systems dynamics simulator with AI-powered model generation, 1000+ pre-built models, real-time simulation, and XMILE import/export.">
+    <meta property="og:url" content="https://stockandflow.live/">
+    <meta property="og:site_name" content="Stock & Flow">
+    <meta property="og:image" content="https://stockandflow.live/static/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Stock & Flow — Systems Dynamics Simulator">
+    <meta name="twitter:description" content="Interactive systems dynamics simulator with AI-powered model generation, 1000+ pre-built models, and XMILE import/export.">
+    <meta name="twitter:image" content="https://stockandflow.live/static/og-image.png">
+    <link rel="stylesheet" href="/static/css/style.css?v=20261021-110f2">
+    <link rel="stylesheet" href="/static/css/analytics.css?v=20261021-110f2">
+    <script src="/static/vendor/d3.v7.min.js"></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Stock & Flow",
+      "url": "https://stockandflow.live/",
+      "description": "Interactive systems dynamics simulator with AI-powered model generation, 1000+ pre-built models, and XMILE import/export.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://stockandflow.live/?search={search_term}",
+        "query-input": "required name=search_term"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Stock & Flow Simulator",
+      "url": "https://stockandflow.live/",
+      "description": "Build and simulate systems dynamics models with stocks, flows, and feedback loops. AI assistant generates models from natural language. 1000+ pre-built models across 26 categories.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "AI-powered model generation",
+        "1000+ pre-built models",
+        "XMILE import/export",
+        "Real-time simulation",
+        "D3.js interactive canvas",
+        "26 model categories"
+      ],
+      "screenshot": "https://stockandflow.live/static/og-image.png"
+    }
+    </script>
+<link rel="stylesheet" href="/static/css/workspace.css?v=20261021-110f2"><link rel="stylesheet" href="/static/css/polish.css?v=20261021-110f2"><link rel="stylesheet" href="/static/css/studio.css?v=20261021-110f2"><link rel="stylesheet" href="/static/css/diagram.css?v=20261021-110f2"><link rel="stylesheet" href="/static/css/analysis-studio.css?v=20261021-110f2">
+<link rel="stylesheet" href="/static/css/mobile.css?v=20261021-110f2">
+<link rel="stylesheet" href="/static/openrouter.css?v=20261021-110f2">
 </head>
 <body>
     <div class="app">
         <!-- Header -->
                                                 <header class="header glass-header-v5">
-            <div class="header-title">STOCK &amp; FLOW</div>
+            <h1 class="header-title" style="margin:0;padding:0">STOCK &amp; FLOW</h1>
             <div class="header-icons">
                 <button id="btn-new" class="btn-icon" title="New">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
@@ -22,7 +86,7 @@
                 <button id="btn-save" class="btn-icon btn-accent" title="Save">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
                 </button>
-                <input type="file" id="xmile-file-input" accept=".xmile,.xml,.stmx" style="display:none">
+                <input type="file" id="xmile-file-input" accept=".xmile,.xml,.stmx,.json" style="display:none">
                 <button id="btn-import" class="btn-icon hide-mobile" title="Import">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 </button>
@@ -111,7 +175,7 @@
                         <span class="icon-settings">&#9881;</span>
                         <span>Settings</span>
                     </button>
-                    <div class="steps-control"><label for="sim-steps">Steps:</label><input type="number" id="sim-steps" value="100" min="10" max="10000" step="10" title="Number of simulation steps"></div>
+                    <div class="steps-control"><label for="sim-steps">Steps:</label><input type="number" id="sim-steps" value="100" min="10" max="100000" step="10" title="Number of simulation steps"></div>
                     <button id="btn-simulate" class="btn btn-primary" title="Run Simulation">
                         <span class="icon-simulate">Run</span>
                     </button>
@@ -184,7 +248,7 @@
                 <div class="slide-panel" id="slide-panel">
                     <div class="slide-panel-header">
                         <h2 id="slide-panel-title">Panel</h2>
-                        <button class="slide-panel-close" id="slide-panel-close">&times;</button>
+                        <button class="slide-panel-close" id="slide-panel-close" aria-label="Close panel">&times;</button>
                     </div>
                     <div class="slide-panel-content" id="slide-panel-content">
                         <!-- Dynamic content injected here -->
@@ -230,7 +294,7 @@
                             <div class="chart-option-group">
                                 <button class="chart-option-btn active" data-scale="linear">Lin</button>
                                 <button class="chart-option-btn" data-scale="log">Log</button>
-                                <button class="chart-option-btn active" id="btn-normalize" title="Normalize">Norm</button>
+                                <button class="chart-option-btn" id="btn-normalize" title="Normalize">Norm</button>
                             </div>
                             <div class="chart-option-group">
                                 <button class="chart-option-btn" id="btn-animate" title="Animate">&#9658;</button>
@@ -260,10 +324,10 @@
     </div>
 
     <!-- Fullscreen Analytics Overlay -->
-    <div class="analytics-fullscreen-overlay" id="fullscreen-overlay">
+    <div class="analytics-fullscreen-overlay" id="fullscreen-overlay" role="dialog" aria-modal="true" aria-label="Analysis workspace">
         <div class="fullscreen-header">
-            <h2>Analytics Dashboard</h2>
-            <button class="fullscreen-close-btn" id="fullscreen-close">&times;</button>
+            <h2>Analysis workspace</h2>
+            <button class="fullscreen-close-btn" id="fullscreen-close" aria-label="Exit fullscreen analytics">&times;</button>
         </div>
         <div class="fullscreen-tabs" id="fullscreen-tabs">
             <button class="fullscreen-tab active" data-tab="combined">Chart + Stats</button>
@@ -315,10 +379,10 @@
 
     <!-- Simulation Settings Modal -->
     <div class="modal-overlay" id="sim-settings-modal">
-        <div class="modal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="sim-settings-title">
             <div class="modal-header">
-                <h3>Simulation Settings</h3>
-                <button class="modal-close" id="sim-settings-close">&times;</button>
+                <h3 id="sim-settings-title">Simulation Settings</h3>
+                <button class="modal-close" id="sim-settings-close" aria-label="Close simulation settings">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="settings-group">
@@ -332,6 +396,19 @@
                 <div class="settings-group">
                     <label for="sim-dt">Time Step (dt)</label>
                     <input type="number" id="sim-dt" value="0.25" step="any" min="0.001">
+                </div>
+<p id="sim-period-note" class="settings-help" hidden></p>
+<div class="form-group"><label for="sim-method">Integration method</label><select id="sim-method"><option value="euler">Euler</option><option value="rk4">Runge–Kutta 4</option><option value="radau">Radau</option></select></div>
+                <div id="sim-adaptive-settings" hidden>
+                    <p class="field-help">Radau chooses internal steps to meet error tolerances. The time step above controls recorded output. Use it for continuous differential equations with fast and slow dynamics; random, delay, step inputs, time-triggered branches and time-driven lookup tables are unsupported.</p>
+                    <div class="settings-group"><label for="sim-rtol">Relative tolerance</label><input id="sim-rtol" type="number" value="0.000001" min="0.000000000001" max="0.1" step="any"></div>
+                    <div class="settings-group"><label for="sim-atol">Absolute tolerance</label><input id="sim-atol" type="number" value="0.000000001" min="0" step="any"></div>
+                    <small>Smaller tolerances request more accuracy and may reach the work limit. Save Radau models as JSON; standard XMILE cannot represent this solver.</small>
+                </div>
+                <div class="form-group">
+                    <label for="sim-seed">Random seed <span class="field-optional">(optional)</span></label>
+                    <input type="number" id="sim-seed" min="0" max="4294967295" step="1" placeholder="New random sequence each run" aria-describedby="sim-seed-help">
+                    <small id="sim-seed-help">Use the same seed and settings to repeat a stochastic run.</small>
                 </div>
                 <div class="settings-info">
                     <span id="sim-steps-info">Steps: 400</span>
@@ -351,15 +428,16 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/static/js/user-models.js?v=1775085923"></script>
-    <script src="/static/js/library.js?v=1775085923"></script>
-    <script src="/static/js/app.js?v=1775085923"></script>
-    <script src="/static/js/canvas.js?v=1775085923"></script>
-    <script src="/static/js/simulation.js?v=1775085923"></script>
-    <script src="/static/js/llm-interface.js?v=1775085923"></script>
-    <script src="/static/js/charts.js?v=1775085923"></script>
-    <script src="/static/js/analytics.js?v=1775085923"></script>
-    <script src="/static/js/ai-agent.js?v=1775085923"></script>
+    <script src="/static/js/user-models.js?v=20261021-110f2"></script>
+    <script src="/static/js/library.js?v=20261021-110f2"></script>
+    <script src="/static/js/app.js?v=20261021-110f2"></script>
+    <script src="/static/js/canvas.js?v=20261021-110f2"></script>
+    <script src="/static/js/simulation.js?v=20261021-110f2"></script>
+    <script src="/static/openrouter.js?v=20261021-110f2"></script>
+    <script src="/static/js/llm-interface.js?v=20261021-110f2"></script>
+    <script src="/static/js/charts.js?v=20261021-110f2"></script>
+    <script src="/static/js/analytics.js?v=20261021-110f2"></script>
+    <script src="/static/js/ai-agent.js?v=20261021-110f2"></script>
     <script>
         // Initialize the application
         document.addEventListener('DOMContentLoaded', () => {
@@ -461,6 +539,9 @@
             openBtn.addEventListener('click', () => {
                 overlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
+                tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === 'combined'));
+                overlay.querySelectorAll('.fullscreen-tab-content').forEach(c => c.classList.toggle('active', c.id === 'fs-tab-combined'));
+                closeBtn.focus();
                 renderFullscreenContent('combined');
             });
 
@@ -474,16 +555,13 @@
                 }
             });
 
-            // Swipe down to close on mobile
-            let touchStartY = 0;
-            overlay.addEventListener('touchstart', (e) => {
-                touchStartY = e.touches[0].clientY;
-            });
-            overlay.addEventListener('touchend', (e) => {
-                const touchEndY = e.changedTouches[0].clientY;
-                if (touchEndY - touchStartY > 100) {
-                    closeFullscreen();
-                }
+            // Scrolling results must not dismiss the workspace. Escape and Close are explicit exits.
+            overlay.addEventListener('keydown', event => {
+                if (event.key !== 'Tab') return;
+                const controls = [...overlay.querySelectorAll('button,select,input,summary,[tabindex="0"]')].filter(el => el.getClientRects().length);
+                const first = controls[0], last = controls.at(-1);
+                if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+                else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
             });
 
             // Tab switching
@@ -503,19 +581,24 @@
             function closeFullscreen() {
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
+                openBtn.focus();
+                if (Charts.results) Charts.render();
+                Analytics.render();
             }
 
             function renderFullscreenContent(tabId) {
                 setTimeout(() => {
-                    const originalContainer = Charts.container;
+                    if (!overlay.classList.contains('active')) return;
 
                     if (tabId === 'combined' || tabId === 'chart-only') {
                         const chartContainerId = tabId === 'combined' ? 'chart-container-fullscreen' : 'chart-container-fullscreen-2';
                         const chartContainer = document.getElementById(chartContainerId);
                         if (chartContainer && Charts.results) {
-                            Charts.container = chartContainer;
-                            Charts.render();
-                            Charts.container = originalContainer;
+                            const chart = Object.create(Charts);
+                            chart.container = chartContainer;
+                            chart.render();
+                        } else if (chartContainer) {
+                            chartContainer.innerHTML = Simulation.lastError ? Simulation.failureHTML() : '<p class="analytics-placeholder">Run a simulation to see results</p>';
                         }
                     }
 
@@ -524,8 +607,13 @@
                             ? document.getElementById('analytics-section-fullscreen')
                             : document.getElementById('analytics-container-fullscreen');
                         const sourceAnalytics = document.getElementById('analytics-container');
-                        if (analyticsContainer && sourceAnalytics) {
-                            analyticsContainer.innerHTML = sourceAnalytics.innerHTML;
+                        if (analyticsContainer && sourceAnalytics && tabId === 'combined' && Simulation.lastError) {
+                            analyticsContainer.replaceChildren();
+                        } else if (analyticsContainer && sourceAnalytics) {
+                            const analysis = Object.create(Analytics);
+                            analysis.container = analyticsContainer;
+                            analysis.onFocusedSeriesChanged = name => { Analytics.focusedSeries = name; };
+                            analysis.render();
                         }
                     }
 
@@ -577,10 +665,14 @@
         };
     </script>
     <!-- Mobile Panel Expand/Collapse -->
-    <script src="/static/js/mobile-expand.js?v=1775085923"></script>
-    <script src="/static/js/xmile-import.js?v=1775085923"></script>
-    <script src="/static/js/xmile-download.js?v=1775085923"></script>
-    <script src="/static/js/faq.js?v=1775085923"></script>
-    <script src="/static/js/floating-title.js?v=1775085923"></script>
-</body>
+    <script src="/static/js/mobile-expand.js?v=20261021-110f2"></script>
+    <script src="/static/js/xmile-import.js?v=20261021-110f2"></script>
+    <script src="/static/js/xmile-download.js?v=20261021-110f2"></script>
+    <script src="/static/js/faq.js?v=20261021-110f2"></script>
+    <script src="/static/js/floating-title.js?v=20261021-110f2"></script>
+<nav id="cross-site-nav" aria-label="Stock &amp; Flow resources" style="position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;gap:20px;border-top:1px solid #26374c;">
+    <a href="/guide" style="text-decoration:none;">Guide &amp; MCP</a>
+    <a href="https://stockandflow.org" style="text-decoration:none;">Model Library</a>
+</nav>
+<script src="/static/js/validation.js?v=20261021-110f2"></script><script src="/static/js/workspace.js?v=20261021-110f2"></script><script src="/static/js/agent-workspace.js?v=20261021-110f2"></script><script src="/static/js/workbench-tools.js?v=20261021-110f2"></script><script src="/static/js/studio.js?v=20261021-110f2"></script><script src="/static/js/mobile-shell.js?v=20261021-110f2"></script></body>
 </html>

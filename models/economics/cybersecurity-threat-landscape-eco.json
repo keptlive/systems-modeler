@@ -1,7 +1,7 @@
 {
   "id": "cybersecurity-threat-landscape-eco",
   "name": "Cybersecurity Threat Landscape Model",
-  "description": "Models cybersecurity threats and defense dynamics. Based on Verizon Data Breach Investigations Report methodology. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/",
+  "description": "Models cybersecurity threats and defense dynamics. Based on Verizon Data Breach Investigations Report methodology. Reference: Based on system dynamics methodology (Sterman, 2000; Forrester, 1961). Source: https://systemdynamics.org/\n\nVersion 1.8 defines the unique continuous extension of the attack flow at zero threats and zero defense. For nonnegative A,D, A^2/(A+D) lies between 0 and A, so its limit at the origin is 0. This is an algebraic boundary repair, not a new empirical attack model; DBIR does not calibrate these local equations.",
   "stocks": [
     {
       "id": "stock-vulnerabilities",
@@ -102,7 +102,7 @@
     {
       "id": "flow-attacks",
       "name": "Successful_Attacks",
-      "equation": "Active_Threats * Attack_Success_Rate * (1 - Defense_Capability / (Defense_Capability + Active_Threats))",
+      "equation": "IF(Active_Threats + Defense_Capability = 0, 0, Attack_Success_Rate * Active_Threats^2 / (Active_Threats + Defense_Capability))",
       "from_stock": null,
       "to_stock": "stock-incidents",
       "position": {

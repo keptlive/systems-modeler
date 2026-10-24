@@ -1,0 +1,2440 @@
+{
+  "version": "1.9.0",
+  "baseline_commit": "3597bbc0ba32fdb92f9ced42a37cd32e053393a0",
+  "scope": "All 47 failures in the v1.8 public audit; no omitted or newly failing definitions.",
+  "summary": {
+    "investigated": 47,
+    "repaired": 19,
+    "remaining_failures": 28,
+    "corpus_completed": 1050,
+    "corpus_total": 1078,
+    "new_failures": 0
+  },
+  "current_audit": "operations/library-full-v190.json",
+  "engine_sha256": {
+    "app/core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "app/core/adaptive.py": "56ea274ce6f65712ae574777f50351247374baf658dc88495e862d3bcd1157f0",
+    "app/core/diagnostics.py": "ae4eb5db8909abcb505d93eff1a8e3b14d469739fdc4e39e5be206d0a0cf7d79",
+    "app/core/equations.py": "d6b1dc0ac35d338b8d32225e63179881e7ca00685389bb0c2c38d83f4746116d",
+    "app/core/failure_diagnostics.py": "ef2627d9d6fd73560b1e3d249b394709e76473db1952e36c5c1ad11fe7ad7e79",
+    "app/core/integration.py": "fdf14ecd2841602e57cf8983f0ee88c4deb6eae0ffc3f07352ebf937775d254c",
+    "app/core/limits.py": "77a726f0764097752534c6bb9c15828a2289a21009daddce882f3fd5abfbfffa",
+    "app/core/model.py": "ff1e2a1e2a2f9231e5f338096baa2ade6672cadc6080e93b265182c86ef346a3",
+    "app/core/reports.py": "ce0bf0e79b23297267ad07628e56b4a40229526acd124461309190739de87e2e",
+    "app/core/simulator.py": "42d1bae6557a402b1d6f11e1270b33fc5ed1b52c5b7d7371d1e40e143cadf9ca",
+    "app/core/source_review.py": "fbb87641cefc9b2ab5f66becffa197993a107522a8d68750b09ae1f0167840ec",
+    "app/core/validation.py": "aa3032893cfdc932eb5855ed01261f1a18522960a3d3aa6e4acccc8410eebb8c",
+    "app/core/validator.py": "18ae2762241eebe32f96f603879bca1b716e6c6fc32f3729d85749408dca4a86",
+    "app/core/xmile_generator.py": "696ee83372e4217e3322ff97a2dfbab4e98b49a42997460dd260cc12a9d06ab4",
+    "app/core/xmile_parser.py": "cbb2688369bdea14ca2a712863463c78d92b5c536812edb618099566727f0681"
+  },
+  "scientific_boundary": "Completion, source fidelity and empirical validity are separate. Per-model assumptions and unrecovered equations remain explicit.",
+  "models": [
+    {
+      "file": "models/classic/beer-distribution-game-cla.json",
+      "id": "beer-distribution-game-cla",
+      "name": "Beer Distribution Game",
+      "baseline_sha256": "8121ee79481e0025efe47ced1b866761c671a5c33c4d1e033fb6c8c97997a9f2",
+      "current_sha256": "4f7d45a618d08d5a9810076015ad0ae37274e6b56a0767cb8fed15e6796de3ec",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "repaired_source_adaptation",
+      "cause_and_repair": "Beer Distribution Game rebuilt from Tom Fiddaman's native RB4-S13-NoSS-6.mdl (2018 author download). Restores all four inventories/backlogs, two shipping stages, order-slip queues, supply-line accounting and rounded anchor-and-adjust order policy. Native desired stocks17/12, stock correction0.26, supply-line weight0.34 and forecast adjustment0.25 are explicit; initial supply lines16/12 replace the incomplete8-case extraction. Original model ID, existing element IDs/positions, demand step at week5 and 52-week horizon are retained; native model ends at36. This is the deterministic default policy, not all human decision presets or stochastic-noise experiments. A discrete_period of1week fixes the source recurrence; fractional timesteps and non-Euler methods are rejected.",
+      "source_evidence": {
+        "url": "https://metasd.com/wp-content/uploads/2018/03/Beer-Game-Fiddaman-NoSubscripts.zip",
+        "member": "NoSubscripts/RB4-S13-NoSS-6.mdl",
+        "native_sha256": "495d5ea4e8ec64fe526fd184c6fa65cc9bea2dc392c02b4f9253c98455d6450f",
+        "read_sections": [
+          "Customer, Distributor, Factory, Retail, Wholesale, Control; all core INTEG and policy equations"
+        ],
+        "mapping": {
+          "R": {
+            "native Inventory R": "Retailer Inventory",
+            "native Backlog R": "Retailer Backlog",
+            "native Supply Line R": "Supply Line Retailer",
+            "native Placing R": "Retailer Orders"
+          },
+          "W": {
+            "native Inventory W": "Wholesaler Inventory",
+            "native Backlog W": "Wholesaler Backlog",
+            "native Supply Line W": "Supply Line Wholesaler",
+            "native Placing W": "Wholesaler Orders"
+          },
+          "D": {
+            "native Inventory D": "Distributor Inventory",
+            "native Backlog D": "Distributor Backlog",
+            "native Supply Line D": "Supply Line Distributor",
+            "native Placing D": "Distributor Orders"
+          },
+          "F": {
+            "native Inventory F": "Factory Inventory",
+            "native Backlog F": "Factory Backlog",
+            "native Supply Line F": "Supply Line Factory",
+            "native Placing F": "Production Order"
+          }
+        },
+        "parameters": {
+          "desired_stock_retail_wholesale_distributor": 17,
+          "desired_stock_factory": 12,
+          "stock_correction_rate": 0.26,
+          "supply_line_weight": 0.34,
+          "expectation_adjustment_rate": 0.25,
+          "one_week": 1,
+          "initial_inventory": 12,
+          "initial_ordering": 4,
+          "initial_supply_lines": [
+            16,
+            16,
+            16,
+            12
+          ]
+        },
+        "adaptation": "Preserved52-week local horizon; unrolled native weekly accounting into explicit stock/flow graph; omitted native cost indicators/noise/policy preset UI not present in generated model. Fixed discrete_period=1week declares the actual board-game recurrence; half/quarter overrides are rejected."
+      },
+      "independent_evidence": "tests/test_corpus_repairs_v19_a.py: sourceRHS/matrix/weeklyreplay + conservation/domain checks",
+      "remaining_limitations": "Deterministic weekly policy only; native 36-week horizon extended to the preserved 52 weeks. Source queues are two one-week stages. Fractional or non-Euler simulation overrides are rejected. No empirical validation of human behavior."
+    },
+    {
+      "file": "models/classic/world3-non-renewable-resources-sector-cla.json",
+      "id": "world3-non-renewable-resources-sector-cla",
+      "name": "World3 Non-Renewable Resources Sector",
+      "baseline_sha256": "2ff706570cc8f47009f689b75d771c46b82456abec730b8f2f1e802393f60f66",
+      "current_sha256": "234ec9a628fce450fbacad85e89da593582111c26a10ca8b809ca5cdffb3f513",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "repaired_source_adaptation",
+      "cause_and_repair": "World3 nonrenewable resource sector reconstructed from the executable PyWorld3 resource.py standalone-sector example (p.405 of Dynamics of Growth in a Finite World). Includes its industrial-capital feedback, exponential exogenous population and clamped PCRUM/FCAOR tables. This is the isolated-sector demonstration, not the fully coupled World3 standard run. Population and capital constants replace the generated fixed-population closure; horizon and existing element geometry are retained.",
+      "source_evidence": {
+        "version": "cdfd0a8f3675c514f27ddc0e00c8d8bd4d1fefb8",
+        "read_sections": [
+          "resource.py:183-240 standalone inputs and capital feedback",
+          "resource.py:300-342 resource equations",
+          "functions_table_world3.json PCRUM,FCAOR1,FCAOR2"
+        ],
+        "tables": [
+          {
+            "name": "Resource_Usage_From_Industry",
+            "points": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                200.0,
+                0.85
+              ],
+              [
+                400.0,
+                2.6
+              ],
+              [
+                600.0,
+                4.4
+              ],
+              [
+                800.0,
+                5.4
+              ],
+              [
+                1000.0,
+                6.2
+              ],
+              [
+                1200.0,
+                6.8
+              ],
+              [
+                1400.0,
+                7.0
+              ],
+              [
+                1600.0,
+                7.0
+              ]
+            ],
+            "interpolation": "continuous"
+          },
+          {
+            "name": "Resource_Extraction_Fraction",
+            "points": [
+              [
+                0.0,
+                1.0
+              ],
+              [
+                0.1,
+                0.9
+              ],
+              [
+                0.2,
+                0.7
+              ],
+              [
+                0.3,
+                0.5
+              ],
+              [
+                0.4,
+                0.2
+              ],
+              [
+                0.5,
+                0.1
+              ],
+              [
+                0.6,
+                0.05
+              ],
+              [
+                0.7,
+                0.05
+              ],
+              [
+                0.8,
+                0.05
+              ],
+              [
+                0.9,
+                0.05
+              ],
+              [
+                1.0,
+                0.05
+              ]
+            ],
+            "interpolation": "continuous"
+          }
+        ],
+        "parameters": {
+          "population_initial": 1650000000.0,
+          "population_growth": 0.012,
+          "capital_initial": 210000000000.0,
+          "capital_lifetime": 14,
+          "capital_output_ratio": 3,
+          "investment_fraction": 0.33,
+          "resources_initial": 1000000000000.0
+        }
+      },
+      "independent_evidence": "tests/test_corpus_repairs_v19_a.py: sourceRHS/matrix/weeklyreplay + conservation/domain checks",
+      "remaining_limitations": "Standaloneexogenousresource-sector demonstration,notfullcoupledWorld3. Post2500populationswitch outsidepreservedhorizon."
+    },
+    {
+      "file": "models/climate/arctic-sea-ice-decline-model-cli.json",
+      "id": "arctic-sea-ice-decline-model-cli",
+      "name": "Arctic Sea Ice Decline Model",
+      "baseline_sha256": "5449ad8241eeb077e6a0c7003982289e2c3f1ebf5da6bf9ec4d014be5938aec2",
+      "current_sha256": "5449ad8241eeb077e6a0c7003982289e2c3f1ebf5da6bf9ec4d014be5938aec2",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "unresolved_unchanged",
+      "cause_and_repair": "The melt equation uses undeclared feedback_amplification. No unique numeric feedback parameter exists to recover from the local file.",
+      "source_evidence": {
+        "source_read": "Pinned SDXorg/PySD-Cookbook recursive tree:244 paths,not truncated,no Arctic/seaice/sea-level/nitrogen/coral filename match. No native3stock equation set recovered. Actual2023 cryosphere assessment describes linear summerseaice retreat, not the local exponential feedback closure.",
+        "urls": [
+          "https://github.com/SDXorg/PySD-Cookbook/tree/d7ebddadad9cd87cf796b9b6031ea2b5c45da4c4",
+          "https://report-2023.global-tipping-points.org/section1/1-earth-system-tipping-points/1-2-tipping-points-in-the-cryosphere/1-2-2-current-state-of-knowledge-on-cryosphere-tipping-points/1-2-2-2-sea-ice/"
+        ],
+        "math_check": "feedback_amplification is absent from all declarations. Declared ice/ocean albedos do not uniquely determine a melt coefficient or volume/MYI dynamics.",
+        "remaining": "Need native calibratedextent/volume/age equations; no missing coefficient guessed."
+      },
+      "independent_evidence": "feedback_amplification is absent from all declarations. Declared ice/ocean albedos do not uniquely determine a melt coefficient or volume/MYI dynamics.",
+      "remaining_limitations": "Need native calibratedextent/volume/age equations; no missing coefficient guessed.",
+      "current_error": "Unresolved or invalid equations at time 1979: Root causes: ice_melt: Error evaluating equation 'melt_sensitivity * warming_rate * (Ice_Extent + feedback_amplification)': Unknown variable: feedback_amplification"
+    },
+    {
+      "file": "models/climate/forest-fire-spread-cli.json",
+      "id": "forest-fire-spread-cli",
+      "name": "Humidity",
+      "baseline_sha256": "d91383973239441b64a44c660e37d464834253b17706626805a0acaee692e488",
+      "current_sha256": "d91383973239441b64a44c660e37d464834253b17706626805a0acaee692e488",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "unresolved_unchanged",
+      "cause_and_repair": "Fuel consumption continues at positive active-fire demand when Fuel_Load approaches0; Fuel_Load crosses negative near t6. Negative fuel changes spread/residence signs, eventually driving active area below0 and invalidating SQRT. The bounded continuous reference also reaches a domain failure.",
+      "source_evidence": {
+        "source_read": "Rothermel1972 official source record verified; original ForestService PDF403 and GovInfo PDF inaccessible in this session. No claim to have read unavailable pages. Prior source annotation already identifies reaction-intensity/spread mismatch.",
+        "urls": [
+          "https://research.fs.usda.gov/treesearch/32533",
+          "https://www.fs.usda.gov/rm/pubs_int/int_rp115.pdf"
+        ],
+        "math_check": "At Fuel_Load=0 and Active_Fire_Ha>0, fuel derivative=-.5*Active_Fire_Ha+.001*Burned_Forest_Ha can be strictlynegative, violating positivefuel domain independent of integrator.",
+        "remaining": "Original fuel availability and finite-area spread/residence formulation and fuel units missing; no inventedcap."
+      },
+      "independent_evidence": "At Fuel_Load=0 and Active_Fire_Ha>0, fuel derivative=-.5*Active_Fire_Ha+.001*Burned_Forest_Ha can be strictlynegative, violating positivefuel domain independent of integrator.",
+      "remaining_limitations": "Original fuel availability and finite-area spread/residence formulation and fuel units missing; no inventedcap.",
+      "current_error": "Unresolved or invalid equations at time 12: Root causes: Perimeter_Length: Error evaluating equation '2 * 3.14159 * SQRT(Active_Fire_Ha / 3.14159)': Function error in SQRT: math domain error; Blocked dependents: Fire_Spread (waiting for Perimeter_Length)"
+    },
+    {
+      "file": "models/climate/global-carbon-cycle-model-cli.json",
+      "id": "global-carbon-cycle-model-cli",
+      "name": "Global Carbon Cycle Model",
+      "baseline_sha256": "3076c082ff6114cdb6cbda5eda03046a8c3e58683369bd34663b0fc78ec8fa9d",
+      "current_sha256": "a2587ac20973fe15d3b341d29974e61b9174f977a6db8a19d99049229041868a",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "repaired_source_adaptation",
+      "cause_and_repair": "Five-reservoir global carbon cycle rebuilt from David Bice/PennState's original STELLA course model: simple terrestrial plus single-surface-ocean model, including Walker carbonate chemistry, biological pump, runoff and burial. Source preindustrial pool values600,610,1580,891.62591,38000GtC replace the generated unsupported initial states. Runs the source's steady6GtC/year fossil-emissions experiment with1.5GtC/year land-use scenario partitioned75%forest burning/25%soil disruption (GC1), over the preserved1850-2100 experiment clock; this is a step experiment, not historical reconstruction or prediction. All physical transfers conserve carbon, natural volcanic0.6 balances burial0.6. Autotrophic Respiration is a visible reporting alias; Vegetation Respiration is its single physical transfer. Airborne Fraction at initial zero cumulative emissions uses the analytic instantaneous-rate limit. Legacy generated Q10, turnover, climate-sensitivity and area controls remain visible but are not used by the restored source equations.",
+      "source_evidence": {
+        "url": "https://personal.ems.psu.edu/~dmb53/DaveSTELLA/Carbon/c_cycle_models.htm",
+        "read_sections": [
+          "simple terrestrial equations INIT,flows,converters",
+          "simple ocean-atmosphere equations carbonate chemistry and turnover",
+          "global model construction (simple5reservoir version)",
+          "TC4 constant6GtC/year fossil experiment",
+          "GC1 land-use75/25 partition"
+        ],
+        "initial_stocks": [
+          600,
+          610,
+          1580,
+          891.62591,
+          38000,
+          0
+        ],
+        "source_parameters": {
+          "fossil_step": 6,
+          "land_use": 1.5,
+          "land_use_forest_fraction": 0.75,
+          "Pmax": 125,
+          "Khs": 62.5,
+          "minimum_CO2": 30,
+          "photosynthesis_temp_sensitivity": 0.04,
+          "soil_temp_sensitivity": 0.1,
+          "gas_exchange": 0.278,
+          "alkalinity": 2.22,
+          "surface_volume": 0.0363,
+          "surface_temperature": 288,
+          "biological_pump": 10,
+          "burial": 0.6,
+          "volcanic_emissions": 0.6
+        },
+        "adaptation": "Source simple global5box coupling, source constant-emissions experiment on preserved1850-2100 local clock. Preserve all existing IDs/positions; one duplicate respiration flow is reporting-only and only one debits vegetation."
+      },
+      "independent_evidence": "tests/test_corpus_repairs_v19_a.py: sourceRHS/matrix/weeklyreplay + conservation/domain checks",
+      "remaining_limitations": "Sourceeducationalconstantemissionsstep experiment onlocal1850-2100clock,not historical reconstruction or calibratedforecast. Generatedunusedlegacycontrols retainedandidentified. Nativecoursemodel haslimitedcarbonate/temperature validitydomain."
+    },
+    {
+      "file": "models/climate/global-food-security-cli.json",
+      "id": "global-food-security-cli",
+      "name": "Global Food Security Model",
+      "baseline_sha256": "d1e6eb21ea5d0ca45a1cc6cf784b7d24e84ea16d91b1ec9be19f224faf0b352c",
+      "current_sha256": "d1e6eb21ea5d0ca45a1cc6cf784b7d24e84ea16d91b1ec9be19f224faf0b352c",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "unresolved_unchanged",
+      "cause_and_repair": "All stocks initialize0; Cropland_Expansion divides the0 food gap by0 Average_Yield. The cited crop-yield study does not initialize this generated five-stock system.",
+      "source_evidence": {
+        "source_read": "Ray2013 fullprimary article, Introduction and Materials/Methods read. Source estimates linear1989-2008 crop-specific yieldtrends for maize/rice/wheat/soybeans, not a single five-stock globalfood insecurity system.",
+        "urls": [
+          "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0066428"
+        ],
+        "math_check": "All fiveinitialstocks0; expansion has0/0. Paper reports differentcrop slopes1.6%,1%,.9%,1.3%/yr and country-specific data; these are not one initialAverage_Yield.",
+        "remaining": "Need namedcrop/region/units and compatible land/yield/food/demand/insecurity baseline; cannot assign one arbitrarily."
+      },
+      "independent_evidence": "All fiveinitialstocks0; expansion has0/0. Paper reports differentcrop slopes1.6%,1%,.9%,1.3%/yr and country-specific data; these are not one initialAverage_Yield.",
+      "remaining_limitations": "Need namedcrop/region/units and compatible land/yield/food/demand/insecurity baseline; cannot assign one arbitrarily.",
+      "current_error": "Unresolved or invalid equations at time 0: Root causes: Cropland_Expansion: Error evaluating equation 'MAX(0, (Food_Demand - Annual_Food_Production) / Average_Yield * Land_Response_Rate)': Division by zero"
+    },
+    {
+      "file": "models/climate/global-nitrogen-cycle-model-cli.json",
+      "id": "global-nitrogen-cycle-model-cli",
+      "name": "Global Nitrogen Cycle Model",
+      "baseline_sha256": "537d133a1e448bae0a4f36bbbae55d65790da3fa7f5f5fa4416eb90c4536f086",
+      "current_sha256": "537d133a1e448bae0a4f36bbbae55d65790da3fa7f5f5fa4416eb90c4536f086",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "unresolved_unchanged",
+      "cause_and_repair": "Industrial fixation is declared twice: a flow at0 and an auxiliary at120. The case-insensitive scalar language correctly refuses two equations for one symbol.",
+      "source_evidence": {
+        "source_read": "Fowler2013 author manuscript Table2,pdfpp9-10 and surroundingtext read; confirms industrial120TgN/yr,marineBNF140,naturalterrestrial58,agricultural60,marineburial20. Marine denitrification is a100-280 range,rivertransfer40-70 in text; no unique fourreservoirkinetic calibration.",
+        "urls": [
+          "https://www.geos.ed.ac.uk/~dstevens/publications/fowler_ptrsb13_inpress.pdf"
+        ],
+        "math_check": "Duplicateindustrial_fixation collidesflow0/aux120; all6flows0. Renamingonly would create an inertfalsepass.120TgN/yr must be120e9kgN/yr, not120kg/yr; observedflux does not determine all emptyequations/stockunits.",
+        "remaining": "Could build a budgetscenario only after allreservoir/fluxpartitions are identified; no guesseddenitrification or range midpoint."
+      },
+      "independent_evidence": "Duplicateindustrial_fixation collidesflow0/aux120; all6flows0. Renamingonly would create an inertfalsepass.120TgN/yr must be120e9kgN/yr, not120kg/yr; observedflux does not determine all emptyequations/stockunits.",
+      "remaining_limitations": "Could build a budgetscenario only after allreservoir/fluxpartitions are identified; no guesseddenitrification or range midpoint.",
+      "current_error": "Element names must be unique, including case/space/punctuation aliases"
+    },
+    {
+      "file": "models/climate/global-tipping-points-2023-assessment-cli.json",
+      "id": "global-tipping-points-2023-assessment-cli",
+      "name": "Global Tipping Points 2023 Assessment Model",
+      "baseline_sha256": "004f3d9ea0608c9289b83a3500f16398bb0317dcf2a8a47b00fe3a184dd023a6",
+      "current_sha256": "004f3d9ea0608c9289b83a3500f16398bb0317dcf2a8a47b00fe3a184dd023a6",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "unresolved_unchanged",
+      "cause_and_repair": "Ice Albedo Feedback=.03*(1.5-T) becomes negative above1.5, so the outgoing Sea Ice Loss flow instead grows ice. Ice above its fraction range reverses the warming feedback, leading to unbounded signed dynamics. A bounded explicit reference exhausted its evaluation allowance rather than validating this closure.",
+      "source_evidence": {
+        "source_read": "Actual2023report section1.2.2.2 Seaice read beyondsummary: linear,threshold-free Arctic summerretreat and highconfidence notatippingsystem. This directlycontradicts treating localArcticSummerSeaIce with an arbitrary1.5K tipping-style closure.",
+        "urls": [
+          "https://report-2023.global-tipping-points.org/section1/1-earth-system-tipping-points/1-2-tipping-points-in-the-cryosphere/1-2-2-current-state-of-knowledge-on-cryosphere-tipping-points/1-2-2-2-sea-ice/"
+        ],
+        "math_check": "At Global_Mean_Temperature>1.5,Ice_Albedo_Feedback=.03*(1.5-T)<0; outgoingloss becomesicegain. Flippingthesign alone wouldgivegainbelow1.5. Neither is a justified linearretreat law.",
+        "remaining": "Need genuine calibratedcoupledtelementmodel and explicitstate mappings; not source-report assessmentnumbers treatedasODEgains."
+      },
+      "independent_evidence": "At Global_Mean_Temperature>1.5,Ice_Albedo_Feedback=.03*(1.5-T)<0; outgoingloss becomesicegain. Flippingthesign alone wouldgivegainbelow1.5. Neither is a justified linearretreat law.",
+      "remaining_limitations": "Need genuine calibratedcoupledtelementmodel and explicitstate mappings; not source-report assessmentnumbers treatedasODEgains.",
+      "current_error": "Unresolved or invalid equations at time 194: Root causes: Sea Ice Loss: result is not finite"
+    },
+    {
+      "file": "models/climate/ocean-heat-content-dynamics-cli.json",
+      "id": "ocean-heat-content-dynamics-cli",
+      "name": "Ocean Heat Content Dynamics Model",
+      "baseline_sha256": "e2c5fb9e934364189d610e328e8e82c23e11d5424c18baef2e25ed78ab2a498e",
+      "current_sha256": "34dc74fd33ac7f42e2fcb5cf45f7d5ac7003a7aa83742dda4adad802c53ca02d",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "repaired_source_adaptation",
+      "cause_and_repair": "Three-layer ocean heat-content model rebuilt from the deterministic FaIR2.1.0 energy-balance operator and its documented HadGEM2-ES/Cummins2020 calibration: capacities3.62,9.47,98.66 W year/m2/K; feedback/exchange0.54,2.39,0.63 W/m2/K; deep efficacy1.59. Existing linear forcing scenario0.93*(0.5+0.01*t) is retained as an illustrative experiment, not historical observations. Layer heat contents are anomalies; Sea_Surface_Temperature exactly tracks surface heat/capacity. The efficacy feedback is an explicit external energy flux. Legacy Equilibrium_Temp and Thermal_Lag controls remain visible but are not parameters of the restored operator. IDs, geometry and100-year horizon remain.",
+      "source_evidence": {
+        "url": "https://docs.fairmodel.net/en/v2.1.0/examples/n-layer-ebm.html",
+        "native": "https://raw.githubusercontent.com/OMS-NetZero/FAIR/v2.1.0/src/fair/energy_balance_model.py",
+        "read_sections": [
+          "FaIR2.1.0 EnergyBalanceModel._eb_matrix and run.toa_imbalance",
+          "n-layer-ebm deterministic3-layer example"
+        ],
+        "capacities": [
+          3.62,
+          9.47,
+          98.66
+        ],
+        "transfers": [
+          0.54,
+          2.39,
+          0.63
+        ],
+        "deep_efficacy": 1.59,
+        "adaptation": "Keep local forcing ramp and output grid. Encode three-layer matrix in heat coordinates; fourth SST stock redundant diagnostic with exact derivative. Explicit efficacy sink closes external energy budget."
+      },
+      "independent_evidence": "tests/test_corpus_repairs_v19_a.py: sourceRHS/matrix/weeklyreplay + conservation/domain checks",
+      "remaining_limitations": "Sourcecalibratedheatoperator drivenbyexistingillustrativeramp,notobservationalfit. Efficacyflux representedexplicitly. ThermalLag/Equilibrium_Temp legacycontrols notpartofrestoredoperator."
+    },
+    {
+      "file": "models/climate/phosphorus-lake-eutrophication-cli.json",
+      "id": "phosphorus-lake-eutrophication-cli",
+      "name": "Phosphorus Lake Eutrophication Model",
+      "baseline_sha256": "c5f6bcb33dcaf0f27f561eef57bdc9584caffd0deb2fc10d04ab63c3878f76e4",
+      "current_sha256": "27893e86f7bd15594bfdeaf741f5e013f59a2f8fc9ffa32741a1271f71b3d64b",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "repaired_source_adaptation",
+      "cause_and_repair": "Illustrative phosphorus-water, sediment and algae model with restored nutrient accounting from the original MyLake1.2 phosphorus-phytoplankton code: algal growth removes dissolved phosphorus and loss returns it using Y_cp=1mgChl/mgP (published Vansjo parameter workbook,row35). Biomass is chlorophyll-equivalent concentration; sediment content is expressed per water volume. TotalP=water+sediment+algae/Y_cp changes only by external loading minus outflow. Original local rates, initial states, sediment/anoxia law, geometry and3650-day horizon are retained and remain uncalibrated; this is a reduced nutrient-accounting adaptation, not full MyLake or a verified Vollenweider model. Radau is explicitly selected for the increasingly stiff sediment release, without positivity clamps or dt-dependent flux caps.",
+      "source_evidence": {
+        "version": "d882070870bd0bd541376ee8b627282d3ae8d329",
+        "url": "https://raw.githubusercontent.com/biogeochemistry/MyLake_public/d882070870bd0bd541376ee8b627282d3ae8d329/v12/v12/solvemodel_v12.m",
+        "parameter_url": "https://raw.githubusercontent.com/biogeochemistry/MyLake_public/d882070870bd0bd541376ee8b627282d3ae8d329/v12/Vansjo_application/VAN_para_v12.xls",
+        "read_sections": [
+          "solvemodel_v12.m lines125-140 parameter units",
+          "solvemodel_v12.m lines454-461 matching algal growth and phosphorus uptake",
+          "VAN_para_v12.xls lake row35"
+        ],
+        "Y_cp": 1,
+        "cell": "lake!B35",
+        "adaptation": "Retain local3stock geometry and uncalibrated rates; add stoichiometrically matched nutrient sinks/sources for existing algal growth/death. Mortality immediate nutrient recycling follows native net-growth coupling. SedimentP is water-volume equivalent. ExplicitRadau for stiff finite-P release."
+      },
+      "independent_evidence": "tests/test_corpus_repairs_v19_a.py: sourceRHS/matrix/weeklyreplay + conservation/domain checks",
+      "remaining_limitations": "Source-backednutrientaccounting with sourceYcp1,notfullMyLake. Existingrates,anoxiafeedback andinitialstates remainlocaluncalibratedillustration; no empiricalwaterbody claim."
+    },
+    {
+      "file": "models/climate/sea-level-rise-and-ice-sheet-dynamics-model-cli.json",
+      "id": "sea-level-rise-and-ice-sheet-dynamics-model-cli",
+      "name": "Sea Level Rise and Ice Sheet Dynamics Model",
+      "baseline_sha256": "308c5bfce25817f26046a7e1c2015331f52b32cdd194d06ccf809533e4db1b9b",
+      "current_sha256": "308c5bfce25817f26046a7e1c2015331f52b32cdd194d06ccf809533e4db1b9b",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "unresolved_unchanged",
+      "cause_and_repair": "CO2_Scenario is an undeclared function/table, with many incomplete temperature/ice/sea-level aliases. The generic Cookbook citation does not supply its forcing points.",
+      "source_evidence": {
+        "source_read": "PinnedCookbook244-path recursive tree hadno sea-levelmodel namedmatch. Full localequations read; missingCO2scenario and multipleGreenland/Antarctic/globalT aliases remain. No claim a genericrepository identifies a scenario.",
+        "urls": [
+          "https://github.com/SDXorg/PySD-Cookbook/tree/d7ebddadad9cd87cf796b9b6031ea2b5c45da4c4"
+        ],
+        "math_check": "Ocean_Heat_Uptake=imbalance(W/m2)*3.15e7 givesJ/m2/yr, but coefficient.0004 is applied directlyasSLR without a documentedm/Jconversion. Aliasfixplusguessedscenario wouldnot repair dimensionalclosure.",
+        "remaining": "Need actualCO2timeseries, heat/sea-levelconversion and completeicebalance calibration; not guessedSSP."
+      },
+      "independent_evidence": "Ocean_Heat_Uptake=imbalance(W/m2)*3.15e7 givesJ/m2/yr, but coefficient.0004 is applied directlyasSLR without a documentedm/Jconversion. Aliasfixplusguessedscenario wouldnot repair dimensionalclosure.",
+      "remaining_limitations": "Need actualCO2timeseries, heat/sea-levelconversion and completeicebalance calibration; not guessedSSP.",
+      "current_error": "Unresolved or invalid equations at time 2000: Root causes: CO2 Concentration: Error evaluating equation 'CO2_Scenario(Time)': Unknown function: CO2_Scenario; Ice-Albedo Feedback (Greenland): Error evaluating equation '1 + 0.1 * (1 - Greenland_Ice_Mass / 2900000)': Unknown variable: Greenland_Ice_Mass; Greenland Sea Level Contribution: Error evaluating equation '(Greenland_Melt + Greenland_Calving - Greenland_Accumulation) / 361': Unknown variable: Greenland_Melt; Marine Ice Sheet Instability Factor: Error evaluating equation '1 + MISI_Sensitivity * MAX(0, Global_Temperature - MISI_Threshold)^2': Unknown variable: Global_Temperature; Antarctic Sea Level Contribution: Error evaluating equation '(Antarctica_Melt + Antarctica_Calving - Antarctica_Accumulation) / 361': Unknown variable: Antarctica_Melt; Glacier Melt Rate: Error evaluating equation '0.01 * (1 + 0.5 * (Global_Temperature - 0.8))': Unknown variable: Global_Temperature; Total Ice Mass Loss Rate: Error evaluating equation '(Greenland_Melt + Greenland_Calving - Greenland_Accumulation) + (Antarctica_Melt + Antarctica_Calving - Antarctica_Accumulation) + (Glacier_Melt - Glacier_Accumulation)': Unknown variable: Greenland_Melt; Committed Sea Level Rise: Error evaluating equation '0.4 * Global_Temperature': Unknown variable: Global_Temperature; Greenland Snow Accumulation: Error evaluating equation 'Greenland_Base_Accumulation * (1 + 0.05 * Global_Temperature)': Unknown variable: Global_Temperature; Greenland Surface Melt: Error evaluating equation 'Greenland_Base_Melt * Greenland_Melt_Sensitivity^(Global_Temperature - 0.8) * Ice_Albedo_Feedback_Greenland': Unknown variable: Global_Temperature; Greenland Calving: Error evaluating equation 'Greenland_Base_Calving * (1 + Greenland_Dynamic_Sensitivity * (Global_Temperature - 0.8))': Unknown variable: Global_Temperature; Antarctic Snow Accumulation: Error evaluating equation 'Antarctica_Base_Accumulation * (1 + 0.06 * Global_Temperature)': Unknown variable: Global_Temperature; Antarctic Melt: Error evaluating equation 'Antarctica_Base_Melt * (1 + Antarctica_Melt_Sensitivity * MAX(0, Global_Temperature - 1.5))': Unknown variable: Global_Temperature; Blocked dependents: Radiative Forcing (waiting for CO2 Concentration); Equilibrium Temperature (waiting for CO2 Concentration); Radiative Imbalance (waiting for Radiative Forcing); Thermal Expansion Rate (waiting for Ocean Heat Uptake); Glacier Sea Level Contribution (waiting for Glacier Melt); Sea Level Rise Rate (waiting for Thermal Expansion Rate); Antarctic Calving and Discharge (waiting for Marine Ice Sheet Instability Factor); Glacier Melt (waiting for Glacier Melt Rate); Ocean Heat Uptake (waiting for Radiative Imbalance); Global Warming Rate (waiting for Equilibrium Temperature)"
+    },
+    {
+      "file": "models/climate/solar-irradiance-and-climate-model-cli.json",
+      "id": "solar-irradiance-and-climate-model-cli",
+      "name": "Solar Irradiance and Climate Model",
+      "baseline_sha256": "8d97182b526a8cdc1090f0798019e2b5079419bd2f14f0b2a8eed0f762da2d0e",
+      "current_sha256": "7d34a8a4ae2147298239a526e5f434928dd1ecc6cbe2acafb532adb755090da3",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "repaired_source_adaptation",
+      "cause_and_repair": "Solar-only two-layer climate response, rebuilt with actual NRLTSI2 annual TSI (LASP/NOAA CDR,1849-2021 data subset) and the deterministic FaIR2.1.0 HadGEM2-ES two-layer operator (capacities7.73/89.29 W year/m2/K,feedback0.63,exchange0.52 W/m2/K,efficacy1.52). Annual values are aligned to their calendar year and linearly interpolated; no amplitude/period sinusoid is fabricated. Original1361 W/m2 reference and287.5K initial reference temperature retained as explicit experiment conventions. Absorbed solar anomaly is(1-albedo)*deltaTSI/4 and all temperature fluxes divide by mixed-layer heat capacity. Existing CO2 forcing remains0 for this solar-only experiment. Legacy amplitude,period and sensitivity controls remain visible but do not alter the measured series or calibrated feedback.",
+      "source_evidence": {
+        "url": "https://lasp.colorado.edu/lisird/latis/dap/nrl2_tsi_P1Y.csv",
+        "read_sections": [
+          "CSV units and all annual samples,days since1610-01-01 converted to year",
+          "FaIR2.1.0 deterministic two-layer example"
+        ],
+        "points": [
+          [
+            1849,
+            1360.9908447265625
+          ],
+          [
+            1850,
+            1360.7637939453125
+          ],
+          [
+            1851,
+            1360.76611328125
+          ],
+          [
+            1852,
+            1360.7635498046875
+          ],
+          [
+            1853,
+            1360.667724609375
+          ],
+          [
+            1854,
+            1360.5201416015625
+          ],
+          [
+            1855,
+            1360.42236328125
+          ],
+          [
+            1856,
+            1360.39453125
+          ],
+          [
+            1857,
+            1360.4716796875
+          ],
+          [
+            1858,
+            1360.6649169921875
+          ],
+          [
+            1859,
+            1360.8914794921875
+          ],
+          [
+            1860,
+            1360.970458984375
+          ],
+          [
+            1861,
+            1360.866455078125
+          ],
+          [
+            1862,
+            1360.7474365234375
+          ],
+          [
+            1863,
+            1360.665771484375
+          ],
+          [
+            1864,
+            1360.6585693359375
+          ],
+          [
+            1865,
+            1360.5726318359375
+          ],
+          [
+            1866,
+            1360.512939453125
+          ],
+          [
+            1867,
+            1360.4227294921875
+          ],
+          [
+            1868,
+            1360.571533203125
+          ],
+          [
+            1869,
+            1360.8140869140625
+          ],
+          [
+            1870,
+            1361.06884765625
+          ],
+          [
+            1871,
+            1361.003662109375
+          ],
+          [
+            1872,
+            1360.9293212890625
+          ],
+          [
+            1873,
+            1360.7247314453125
+          ],
+          [
+            1874,
+            1360.588134765625
+          ],
+          [
+            1875,
+            1360.4443359375
+          ],
+          [
+            1876,
+            1360.4117431640625
+          ],
+          [
+            1877,
+            1360.4122314453125
+          ],
+          [
+            1878,
+            1360.3529052734375
+          ],
+          [
+            1879,
+            1360.3328857421875
+          ],
+          [
+            1880,
+            1360.4571533203125
+          ],
+          [
+            1881,
+            1360.59521484375
+          ],
+          [
+            1882,
+            1360.513427734375
+          ],
+          [
+            1883,
+            1360.4915771484375
+          ],
+          [
+            1884,
+            1360.651611328125
+          ],
+          [
+            1885,
+            1360.5322265625
+          ],
+          [
+            1886,
+            1360.3662109375
+          ],
+          [
+            1887,
+            1360.3096923828125
+          ],
+          [
+            1888,
+            1360.2630615234375
+          ],
+          [
+            1889,
+            1360.25146484375
+          ],
+          [
+            1890,
+            1360.2816162109375
+          ],
+          [
+            1891,
+            1360.53857421875
+          ],
+          [
+            1892,
+            1360.6478271484375
+          ],
+          [
+            1893,
+            1360.816162109375
+          ],
+          [
+            1894,
+            1360.930419921875
+          ],
+          [
+            1895,
+            1360.7867431640625
+          ],
+          [
+            1896,
+            1360.5797119140625
+          ],
+          [
+            1897,
+            1360.4427490234375
+          ],
+          [
+            1898,
+            1360.4139404296875
+          ],
+          [
+            1899,
+            1360.34326171875
+          ],
+          [
+            1900,
+            1360.3201904296875
+          ],
+          [
+            1901,
+            1360.2567138671875
+          ],
+          [
+            1902,
+            1360.2841796875
+          ],
+          [
+            1903,
+            1360.4727783203125
+          ],
+          [
+            1904,
+            1360.7462158203125
+          ],
+          [
+            1905,
+            1360.5733642578125
+          ],
+          [
+            1906,
+            1360.767822265625
+          ],
+          [
+            1907,
+            1360.65087890625
+          ],
+          [
+            1908,
+            1360.711669921875
+          ],
+          [
+            1909,
+            1360.58447265625
+          ],
+          [
+            1910,
+            1360.4544677734375
+          ],
+          [
+            1911,
+            1360.3548583984375
+          ],
+          [
+            1912,
+            1360.306640625
+          ],
+          [
+            1913,
+            1360.30712890625
+          ],
+          [
+            1914,
+            1360.411865234375
+          ],
+          [
+            1915,
+            1360.72607421875
+          ],
+          [
+            1916,
+            1360.958984375
+          ],
+          [
+            1917,
+            1361.15087890625
+          ],
+          [
+            1918,
+            1361.10107421875
+          ],
+          [
+            1919,
+            1360.8389892578125
+          ],
+          [
+            1920,
+            1360.6461181640625
+          ],
+          [
+            1921,
+            1360.5411376953125
+          ],
+          [
+            1922,
+            1360.4412841796875
+          ],
+          [
+            1923,
+            1360.4375
+          ],
+          [
+            1924,
+            1360.503662109375
+          ],
+          [
+            1925,
+            1360.71923828125
+          ],
+          [
+            1926,
+            1360.8359375
+          ],
+          [
+            1927,
+            1361.02490234375
+          ],
+          [
+            1928,
+            1360.8992919921875
+          ],
+          [
+            1929,
+            1360.8455810546875
+          ],
+          [
+            1930,
+            1360.8109130859375
+          ],
+          [
+            1931,
+            1360.6817626953125
+          ],
+          [
+            1932,
+            1360.566650390625
+          ],
+          [
+            1933,
+            1360.4906005859375
+          ],
+          [
+            1934,
+            1360.559814453125
+          ],
+          [
+            1935,
+            1360.799560546875
+          ],
+          [
+            1936,
+            1361.2286376953125
+          ],
+          [
+            1937,
+            1361.2049560546875
+          ],
+          [
+            1938,
+            1361.12841796875
+          ],
+          [
+            1939,
+            1361.091552734375
+          ],
+          [
+            1940,
+            1360.99853515625
+          ],
+          [
+            1941,
+            1360.911376953125
+          ],
+          [
+            1942,
+            1360.791015625
+          ],
+          [
+            1943,
+            1360.6260986328125
+          ],
+          [
+            1944,
+            1360.6729736328125
+          ],
+          [
+            1945,
+            1360.941162109375
+          ],
+          [
+            1946,
+            1361.08837890625
+          ],
+          [
+            1947,
+            1361.3927001953125
+          ],
+          [
+            1948,
+            1361.50634765625
+          ],
+          [
+            1949,
+            1361.4088134765625
+          ],
+          [
+            1950,
+            1361.117919921875
+          ],
+          [
+            1951,
+            1360.8497314453125
+          ],
+          [
+            1952,
+            1360.8223876953125
+          ],
+          [
+            1953,
+            1360.69384765625
+          ],
+          [
+            1954,
+            1360.700927734375
+          ],
+          [
+            1955,
+            1360.881103515625
+          ],
+          [
+            1956,
+            1361.42138671875
+          ],
+          [
+            1957,
+            1361.9398193359375
+          ],
+          [
+            1958,
+            1361.8609619140625
+          ],
+          [
+            1959,
+            1361.561279296875
+          ],
+          [
+            1960,
+            1361.427490234375
+          ],
+          [
+            1961,
+            1360.9957275390625
+          ],
+          [
+            1962,
+            1360.798095703125
+          ],
+          [
+            1963,
+            1360.7325439453125
+          ],
+          [
+            1964,
+            1360.7276611328125
+          ],
+          [
+            1965,
+            1360.7740478515625
+          ],
+          [
+            1966,
+            1361.0020751953125
+          ],
+          [
+            1967,
+            1361.2230224609375
+          ],
+          [
+            1968,
+            1361.3037109375
+          ],
+          [
+            1969,
+            1361.3770751953125
+          ],
+          [
+            1970,
+            1361.3758544921875
+          ],
+          [
+            1971,
+            1361.0400390625
+          ],
+          [
+            1972,
+            1361.1002197265625
+          ],
+          [
+            1973,
+            1360.86474609375
+          ],
+          [
+            1974,
+            1360.77099609375
+          ],
+          [
+            1975,
+            1360.7154541015625
+          ],
+          [
+            1976,
+            1360.694580078125
+          ],
+          [
+            1977,
+            1360.8905029296875
+          ],
+          [
+            1978,
+            1361.2161865234375
+          ],
+          [
+            1979,
+            1361.6015625
+          ],
+          [
+            1980,
+            1361.6397705078125
+          ],
+          [
+            1981,
+            1361.683349609375
+          ],
+          [
+            1982,
+            1361.2310791015625
+          ],
+          [
+            1983,
+            1361.2137451171875
+          ],
+          [
+            1984,
+            1360.7904052734375
+          ],
+          [
+            1985,
+            1360.633056640625
+          ],
+          [
+            1986,
+            1360.6417236328125
+          ],
+          [
+            1987,
+            1360.7828369140625
+          ],
+          [
+            1988,
+            1361.1195068359375
+          ],
+          [
+            1989,
+            1361.643310546875
+          ],
+          [
+            1990,
+            1361.5521240234375
+          ],
+          [
+            1991,
+            1361.517822265625
+          ],
+          [
+            1992,
+            1361.3082275390625
+          ],
+          [
+            1993,
+            1360.9427490234375
+          ],
+          [
+            1994,
+            1360.741943359375
+          ],
+          [
+            1995,
+            1360.731689453125
+          ],
+          [
+            1996,
+            1360.67626953125
+          ],
+          [
+            1997,
+            1360.8072509765625
+          ],
+          [
+            1998,
+            1361.1759033203125
+          ],
+          [
+            1999,
+            1361.47998046875
+          ],
+          [
+            2000,
+            1361.6602783203125
+          ],
+          [
+            2001,
+            1361.568603515625
+          ],
+          [
+            2002,
+            1361.6331787109375
+          ],
+          [
+            2003,
+            1361.1282958984375
+          ],
+          [
+            2004,
+            1360.91796875
+          ],
+          [
+            2005,
+            1360.700439453125
+          ],
+          [
+            2006,
+            1360.6795654296875
+          ],
+          [
+            2007,
+            1360.6038818359375
+          ],
+          [
+            2008,
+            1360.6097412109375
+          ],
+          [
+            2009,
+            1360.6065673828125
+          ],
+          [
+            2010,
+            1360.785400390625
+          ],
+          [
+            2011,
+            1361.0689697265625
+          ],
+          [
+            2012,
+            1361.192626953125
+          ],
+          [
+            2013,
+            1361.2630615234375
+          ],
+          [
+            2014,
+            1361.38623046875
+          ],
+          [
+            2015,
+            1361.4097900390625
+          ],
+          [
+            2016,
+            1360.951904296875
+          ],
+          [
+            2017,
+            1360.65966796875
+          ],
+          [
+            2018,
+            1360.638671875
+          ],
+          [
+            2019,
+            1360.649169921875
+          ],
+          [
+            2020,
+            1360.7491455078125
+          ],
+          [
+            2021,
+            1360.974853515625
+          ]
+        ],
+        "native_header": "time (days since 1610-01-01),irradiance (W/m^2),uncertainty (W/m^2)",
+        "capacities": [
+          7.73,
+          89.29
+        ],
+        "transfers": [
+          0.63,
+          0.52
+        ],
+        "efficacy": 1.52,
+        "albedo": 0.3,
+        "adaptation": "All-year mean values at integer calendar years; linear interpolation; only solar forcing with preserved1361 baseline. Absolute surfaceT,deepheat anomaly separated by dimensional fluxes."
+      },
+      "independent_evidence": "tests/test_corpus_repairs_v19_a.py: sourceRHS/matrix/weeklyreplay + conservation/domain checks",
+      "remaining_limitations": "ActualNRLTSI2yearlydata,annual interpolation,solar-onlyforcingandcalibratedheatoperator.1361referenceand287.5Kbaseline areexperimentconventions; originalamplitude/period/sensitivitylegacycontrols remainvisiblebutunused."
+    },
+    {
+      "file": "models/climate/sustainable-agriculture-transition-cli.json",
+      "id": "sustainable-agriculture-transition-cli",
+      "name": "Sustainable Agriculture Transition Model",
+      "baseline_sha256": "bd476a310fba12aedc7663a036e6f8d66c9cfb1d81e561ad6a2cf7b9d3b5ba68",
+      "current_sha256": "bd476a310fba12aedc7663a036e6f8d66c9cfb1d81e561ad6a2cf7b9d3b5ba68",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "unresolved_unchanged",
+      "cause_and_repair": "All farm compartments start0, giving0/0 in peer-adoption via Total_Farms. No native adaptation supplies farm composition.",
+      "source_evidence": {
+        "source_read": "Pretty2018 originalauthorPDF15pages, Results and bothtables read:163millionfarms29%,453Mha,47initiatives. This is heterogeneousredesign assessment, not a transitioncompartment/soilhealth dynamical calibration.",
+        "urls": [
+          "https://research-portal.uea.ac.uk/files/138418618/NATSUSTAIN_final_paper.pdf"
+        ],
+        "math_check": "Allfarmstates0 produce0/0. Initializing29/71percent alone still leaves soil derivative .02*29-.01*71=-.13 athealth0, and the paperdoesnot provide thatindexbaseline or scaleconversion.",
+        "remaining": "Need transitioningfarmcount and soilindexdefinition/initialvalue, boundedviability response and compatiblefarms-to-soilunits."
+      },
+      "independent_evidence": "Allfarmstates0 produce0/0. Initializing29/71percent alone still leaves soil derivative .02*29-.01*71=-.13 athealth0, and the paperdoesnot provide thatindexbaseline or scaleconversion.",
+      "remaining_limitations": "Need transitioningfarmcount and soilindexdefinition/initialvalue, boundedviability response and compatiblefarms-to-soilunits.",
+      "current_error": "Unresolved or invalid equations at time 0: Root causes: Transition_Start: Error evaluating equation 'Conventional_Farms * Adoption_Rate * (1 + Peer_Effect * Sustainable_Farms / Total_Farms)': Division by zero"
+    },
+    {
+      "file": "models/economics/aluminum-supply-chain-sustainability-eco.json",
+      "id": "aluminum-supply-chain-sustainability-eco",
+      "name": "Recycling_Inflow",
+      "baseline_sha256": "b2b2bc0031e9b6c7c64acafeb6f6f2ad0d6ca1304d2580872ce04c489b4380e9",
+      "current_sha256": "b2b2bc0031e9b6c7c64acafeb6f6f2ad0d6ca1304d2580872ce04c489b4380e9",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "unresolved_unchanged",
+      "cause_and_repair": "Rapid accumulated revenue/investment makes Decarbonization_Progress exceed1 and turns gross emissions negative; emissions become negative by t2. Abatement gain also grows without bound. Explicit reference budget exhaustion is not evidence for a corrected source model.",
+      "source_evidence": {
+        "source_read": "OriginalMDPIpaper sections3Methods,4Validation and SupplementaryMaterials read. Native model uses1990-2050yearhorizon and industrialactor-specific stocks/technologydata. Supplementary s1 publisherandCDNrequests403; actualparameterworkbook/model not retrieved.",
+        "urls": [
+          "https://www.mdpi.com/2071-1050/16/20/8892",
+          "https://www.mdpi.com/article/10.3390/su16208892/s1"
+        ],
+        "math_check": "LocalRevenue=(cumulativeproduction+cumulativerecycling)*2500 entersinvestment everyday, and progress=investment/50000 isunbounded. Onceprogress>1, nominalemissioninflow becomesnegative; sourceannual61year supplychain isnot local3650day5stockclosure.",
+        "remaining": "Recoveractualsupplement equations/technologycosts before replacingabate/progress responses; do not capprogress at1 or rescaleinvestment byguess."
+      },
+      "independent_evidence": "LocalRevenue=(cumulativeproduction+cumulativerecycling)*2500 entersinvestment everyday, and progress=investment/50000 isunbounded. Onceprogress>1, nominalemissioninflow becomesnegative; sourceannual61year supplychain isnot local3650day5stockclosure.",
+      "remaining_limitations": "Recoveractualsupplement equations/technologycosts before replacingabate/progress responses; do not capprogress at1 or rescaleinvestment byguess.",
+      "current_error": "Unresolved or invalid equations at time 35: Root causes: Emission_Reduction: result is not finite"
+    },
+    {
+      "file": "models/economics/brand-loyalty-dynamics-eco.json",
+      "id": "brand-loyalty-dynamics-eco",
+      "name": "Brand Loyalty Dynamics",
+      "baseline_sha256": "df42a0475700992f0dfc786cb34bdc04dee3abdddf69bcca2c548727c241b4a2",
+      "current_sha256": "df42a0475700992f0dfc786cb34bdc04dee3abdddf69bcca2c548727c241b4a2",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "unresolved_unchanged",
+      "cause_and_repair": "Brand Equity=2*Loyal_Customers causes churn to reverse above50 loyal customers. The flow's endpoint also couples a rate based on loyal users to trial users, which become negative. Continuous integration encounters a singular growth regime near26.15.",
+      "source_evidence": {
+        "source_read": "Keller1993 originalpublishercitation located; fullPDFtimedout. Modelstoredreference isgenericSystemDynamicsSocietyresources and givesno nativeequations. No claim thatunavailablefullpaperwasread.",
+        "urls": [
+          "https://journals.sagepub.com/doi/pdf/10.1177/002224299305700101"
+        ],
+        "math_check": "Brand_Equity=2*Loyal makes ChurnnegativeaboveLoyal50; this pumpsTrial\u2192Loyal through areversechurn. AtTrial0,Loyal>50,Trialderivative maybenegative,so nointegrator canensurepositivecohorts.",
+        "remaining": "Need actualcustomercohort/marketnormalization and boundedchurn response from executablemodel; caporlogisticreplacement wouldbe invented."
+      },
+      "independent_evidence": "Brand_Equity=2*Loyal makes ChurnnegativeaboveLoyal50; this pumpsTrial\u2192Loyal through areversechurn. AtTrial0,Loyal>50,Trialderivative maybenegative,so nointegrator canensurepositivecohorts.",
+      "remaining_limitations": "Need actualcustomercohort/marketnormalization and boundedchurn response from executablemodel; caporlogisticreplacement wouldbe invented.",
+      "current_error": "Unresolved or invalid equations at time 32: Root causes: Churn: result is not finite"
+    },
+    {
+      "file": "models/economics/coral-reef-bleaching-and-recovery-dynamics-eco.json",
+      "id": "coral-reef-bleaching-and-recovery-dynamics-eco",
+      "name": "Coral Reef Bleaching and Recovery Dynamics",
+      "baseline_sha256": "a9e2ec827d5ddbfd0220e2d69777bb4a9d22146331f002443d41a4e8e559e74f",
+      "current_sha256": "a9e2ec827d5ddbfd0220e2d69777bb4a9d22146331f002443d41a4e8e559e74f",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-a.json",
+      "repair_classification": "unresolved_unchanged",
+      "cause_and_repair": "Stress recovery has rate12 with dt.25, giving Euler amplification1-3=-2; thermal stress first crosses negative in2005.75. Subsequent bleaching/recruitment feedback diverges. The bounded explicit reference does not complete the full horizon.",
+      "source_evidence": {
+        "source_read": "PinnedSDXtest-models recursive tree945paths nottruncated,no coralfilenamematch. Localall6stockRHS separatelyhand-transcribed and integratedfull100years with RadauandDOP853.",
+        "urls": [
+          "https://github.com/SDXorg/test-models/tree/21aab02739dc5187bc9564e4d3de14e575905d2f"
+        ],
+        "math_check": "IndependentRadau240916nfev andDOP853113963nfev bothreach2100 at rtol1e-9,maxstep.02:diversity450.9861422,coral97.8456756. Stress remainsnonnegative. Atdiversity100 andcoral90,diversityderivative2.5>0,so numericalrepairaloneviolates0-100percentdomain.",
+        "remaining": "Source-backeddiversityloss/recovery and recruitmentbounds/calibration stillneeded; no arbitrarycap or solver-onlypass."
+      },
+      "independent_evidence": "IndependentRadau240916nfev andDOP853113963nfev bothreach2100 at rtol1e-9,maxstep.02:diversity450.9861422,coral97.8456756. Stress remainsnonnegative. Atdiversity100 andcoral90,diversityderivative2.5>0,so numericalrepairaloneviolates0-100percentdomain.",
+      "remaining_limitations": "Source-backeddiversityloss/recovery and recruitmentbounds/calibration stillneeded; no arbitrarycap or solver-onlypass.",
+      "current_error": "Unresolved or invalid equations at time 2010.75: Root causes: Recovery Potential: result is not finite; Coral Recruitment: result is not finite; Algae Grazing: result is not finite; Herbivore Population Growth: result is not finite"
+    },
+    {
+      "file": "models/economics/labor-market-dynamics-model-eco.json",
+      "id": "labor-market-dynamics-model-eco",
+      "name": "Labor Market Dynamics Model",
+      "baseline_sha256": "7956aca27595e17f423a4635175c3809fd4860069b446b2f1ef1f4a691140806",
+      "current_sha256": "774d4efafa2cdb12484ab5df8cee607d378de6d27211313e00b2fca87d895d12",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "repaired_existing_input_scenario",
+      "cause_and_repair": "Zero stock initializers ignored all four named Initial inputs, causing seven ratios to divide by zero. Existing Natural Unemployment Rate defines the explicitly chosen natural-rate starting split; accounting identities determine its complements.",
+      "source_evidence": [
+        {
+          "title": "BLS CPS Concepts and Definitions, current page, labor force and not-in-labor-force sections",
+          "url": "https://www.bls.gov/cps/definitions.htm",
+          "evidence": "The source defines cohort identities, not the numerical calibration of this local model. Initial employed=160m*(1-.05), unemployed=160m*.05, outside=200m-160m, vacancies=160m*.05*.7,wage=60000; long-term cohort remains authored0. The existing input values are preserved."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "Independent handwritten six-state RHS matches parser at multiple states; internal population transfers cancel, leaving d(E+U+O)/dt=.005*(E+U+O)-.02*O. Euler full50, half and quarter finish positive with LT<=U, and converge toward tight Radau reference.",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py"
+      },
+      "remaining_limitations": "This is a defined natural-rate scenario, not recovered BLS historical data or an identified published quantitative search-and-matching model. Wage, retirement and long-term matching closures remain illustrative."
+    },
+    {
+      "file": "models/economics/market-share-competition-model-eco.json",
+      "id": "market-share-competition-model-eco",
+      "name": "Market Share Competition Model",
+      "baseline_sha256": "478e49996ca2c86e2fe52d7007b775e437e72e3fdadd9de852b619fbc7771a91",
+      "current_sha256": "e70ae370ca2555189ee5be85384d6ea9fcbfcd398e7a7827b1038b57a75f85fd",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "repaired_numerical_method",
+      "cause_and_repair": "Quality1000100 combined with switching attractiveness creates rates thousands/time; Euler dt.25 steps far beyond the invariant share interval and corrupts fractional experience powers. The continuous inward-pointing share field is well defined and stiff.",
+      "source_evidence": [
+        {
+          "title": "Vensim allocation guidance and local authored equations; no matching executable Lilien-Rangaswamy source recovered",
+          "url": "https://vensim.com/allocation-by-priority/",
+          "evidence": "Vensim documents resource-allocation domain constraints and warns that simple attractiveness formulations can fail reality checks. This repair changes only numerical method/tolerances, preserving all local equations and inputs. It does not import Vensim allocation behavior."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "Independent four-state RHS and Radau rtol1e-11 reach full50 and agree with engine Radau. Correct price is100*(unitcost/60)*1.3=130*(experience/1m)^(-.15). Share derivative is positive at0, negative at1. Full/half/quarter output grids agree and positive customers remain below total market.",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py"
+      },
+      "remaining_limitations": "The extreme quality-investment units, attraction and marketing coefficients are local assumptions. Numerical validity does not certify Marketing Engineering replication or empirical realism."
+    },
+    {
+      "file": "models/economics/platform-network-effects-advanced-eco.json",
+      "id": "platform-network-effects-advanced-eco",
+      "name": "Two-Sided Platform Network Effects Model",
+      "baseline_sha256": "e19e193ba5e625ca4a9281cc62f71f4784ca59e68092d17c21a96ed7122094de",
+      "current_sha256": "e19e193ba5e625ca4a9281cc62f71f4784ca59e68092d17c21a96ed7122094de",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "remaining_source_closure",
+      "cause_and_repair": "Perceived value exceeds the local50/25 scales and reverses churn into acquisition. Cross-side reinforcing products then grow beyond the stated user/provider market bounds.",
+      "source_evidence": [
+        {
+          "title": "Rysman (2009), Journal of Economic Perspectives23(3),pp125-143",
+          "url": "https://doi.org/10.1257/jep.23.3.125",
+          "evidence": "The primary article explains two-sided-market externalities; it does not identify these six local ODEs,50/25 churn scales or the local acquisition/competition calibration."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "Independent six-state Radau (no6000-evaluation cap) reaches only68.25269 with floating step-size exhaustion after45483 RHS calls and huge states. A negative churn at value>scale is an algebraic domain defect regardless of solver. Solver exhaustion alone is not a proof of mathematical finite-time blowup.",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py",
+        "reference_run": {
+          "success": false,
+          "status": "Required step size is less than spacing between numbers.",
+          "end": 68.25269285393304,
+          "nfev": 45483,
+          "minimum": [
+            1000.0,
+            50.0,
+            0.0,
+            9.150880053328562,
+            5.0,
+            2.3813059299151104e-21
+          ],
+          "maximum": [
+            6.051208094325808e+27,
+            3.313861053196281e+26,
+            1.5656930302654403e+39,
+            85384394960234.61,
+            71153662581900.4,
+            5000.0
+          ],
+          "last": [
+            6.051208094325808e+27,
+            3.313861053196281e+26,
+            1.5656930302654403e+39,
+            85384394960234.61,
+            71153662581900.4,
+            2.3813059299151104e-21
+          ],
+          "threshold_event": false
+        },
+        "reproduction_script": "tests/fixtures/corpus-v19-b/reference_remaining.py"
+      },
+      "remaining_limitations": "Recover a quantitative bounded churn/acquisition law and its market units from an executable source, or explicitly author a new scenario. No cap/saturation/parameter invented.",
+      "current_error": "Unresolved or invalid equations at time 72.5: Root causes: Transaction Flow: result is not finite"
+    },
+    {
+      "file": "models/economics/rd-investment-innovation-eco.json",
+      "id": "rd-investment-innovation-eco",
+      "name": "R&D Investment and Innovation Dynamics",
+      "baseline_sha256": "2f64b58780f19e88eee94cbb0e0e11c81b62cc365ff6bf194b4369d6ab1dae1a",
+      "current_sha256": "2f64b58780f19e88eee94cbb0e0e11c81b62cc365ff6bf194b4369d6ab1dae1a",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "remaining_source_closure",
+      "cause_and_repair": "Knowledge creation multiplies knowledge,personnel and sqrt(capital); patents/products/revenue feed capital back, producing faster amplification than the cited research-sector law.",
+      "source_evidence": [
+        {
+          "title": "Romer (1990), Endogenous Technological Change,printedS83 eq(3),S84 discussion",
+          "url": "https://web.stanford.edu/~klenow/Romer_1990.pdf",
+          "evidence": "Original research law is dA/dt=delta*H_A*A, linear in A at fixed research human capital. The source explicitly discusses this linearity. It does not provide the local sqrt(R&D capital),finite patent expiration,commercialization and accumulated-revenue chain."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "Independent six-state Radau without the old6000-work cap fails near7.284085 after70825 evaluations, knowledge~3.94e65. No finite-time singularity theorem is claimed from that failure. Existing local positive reinforcement is not Romer eq(3).",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py",
+        "reference_run": {
+          "success": false,
+          "status": "Required step size is less than spacing between numbers.",
+          "end": 7.284085054963647,
+          "nfev": 70825,
+          "minimum": [
+            100.0,
+            10000.0,
+            44110511.98569644,
+            500.0,
+            100.0,
+            10000000.0
+          ],
+          "maximum": [
+            3.942093471095545e+65,
+            11104.065717753638,
+            9.342021408025309e+31,
+            1.1826280413286637e+65,
+            6.886931085071314e+51,
+            5.347392204816899e+44
+          ],
+          "last": [
+            3.942093471095545e+65,
+            11104.065717753638,
+            9.342021408025309e+31,
+            1.1826280413286637e+65,
+            6.886931085071314e+51,
+            5.347392204816899e+44
+          ],
+          "threshold_event": false
+        },
+        "reproduction_script": "tests/fixtures/corpus-v19-b/reference_remaining.py"
+      },
+      "remaining_limitations": "Original local capital/revenue/knowledge mapping and calibration remain missing. Replacing the six-stock product with a different Romer model would remove its existing sectors; no such replacement is hidden here.",
+      "current_error": "Unresolved or invalid equations at time 14: Root causes: Knowledge Creation: result is not finite; Blocked dependents: Patenting (waiting for Knowledge Creation)"
+    },
+    {
+      "file": "models/economics/real-business-cycle-basic-eco.json",
+      "id": "real-business-cycle-basic-eco",
+      "name": "Fixed-saving Discrete Growth with AR(1) Technology",
+      "baseline_sha256": "9770365f0111e8d69be09c2a97dde5821f3d49018dfd9be35089a8c4f3223bea",
+      "current_sha256": "a855c0c4497627a748210ac307aae0ef5ac86ca56e50bfd69563672c5d81e27d",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "repaired_exact_difference_mapping",
+      "cause_and_repair": "The local technology derivative used positive rho*log deviation, treating discrete persistence as continuous amplification; investment,wages and return used accumulated Output rather than the Production rate.",
+      "source_evidence": [
+        {
+          "title": "Official Dynare Collard2001 example,commit416626c98e83917b58282a9533c76cc77bf06db7,model block",
+          "url": "https://git.dynare.org/Dynare/dynare/-/blob/416626c98e83917b58282a9533c76cc77bf06db7/examples/stochastic_simulations/collard_2001_theoretical_moments.mod",
+          "evidence": "Native alpha=.36,rho=.95,delta=.025 and AR persistence/production/capital-period conventions are recovered. Local one-factor specialization uses log(A_next/A_ss)=rho*log(A/A_ss)+epsilon; the flow is exactly A_next-A. Current production replaces accumulated output in rate equations. All cumulative stocks remain and current Output/Consumption are visible."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "Independent200-period recurrence verifies every stock and per-period production/investment/consumption. Zero innovation preserves A=1 exactly. discrete_period=1 locks Euler cadence; dt.5,rk4 and attempted request override erasure fail explicitly. Refinement is inapplicable to an exact one-period difference model.",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py"
+      },
+      "remaining_limitations": "Fixed savings.2,labor100 and sinusoidal innovation remain local scenario assumptions. This is explicitly renamed a fixed-saving discrete growth experiment, not the optimizing Dynare or Kydland-Prescott equilibrium."
+    },
+    {
+      "file": "models/economics/semiconductor-chip-shortage-supply-chain-eco.json",
+      "id": "semiconductor-chip-shortage-supply-chain-eco",
+      "name": "Semiconductor Chip Shortage Supply Chain Model",
+      "baseline_sha256": "9f1581174ce2b0cf2c7dbfc51319f51c042cef0ff6ed8df04f97d49f658b1dfb",
+      "current_sha256": "9f1581174ce2b0cf2c7dbfc51319f51c042cef0ff6ed8df04f97d49f658b1dfb",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "remaining_source_closure",
+      "cause_and_repair": "Panic orders increase with backlog; desired capacity multiplies current capacity by backlog, creating enormous reinforcement over104 time units.",
+      "source_evidence": [
+        {
+          "title": "Attinasi etal.,ECB Economic Bulletin4/2021,semiconductor shortage box",
+          "url": "https://www.ecb.europa.eu/press/economic-bulletin/focus/2021/html/ecb.ebbox202104_06~780de2a8fb.en.html",
+          "evidence": "Read complete primary box and ChartA-F sources. It is an empirical trade/production/price analysis, not a five-stock executable model or a calibration for panic/backlog gains."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "Independent Radau runs86585 evaluations and reaches the explicitly declared1e80 diagnostic state threshold by17.48636, not the full104. This threshold stop is not a proof of blowup. Backlog satisfies B>=0 and Bprime>=.79B+1040 for nonnegative states because shipment<=B/4; capacity then has exponentially rising gain.",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py",
+        "reference_run": {
+          "success": false,
+          "status": "A termination event occurred.",
+          "end": 17.486358442204605,
+          "nfev": 86585,
+          "minimum": [
+            1000.0,
+            99.70822568546531,
+            500.0,
+            200.0,
+            100.0
+          ],
+          "maximum": [
+            5.949952225266914e+76,
+            1.0000000000000129e+80,
+            7.690583245488983e+74,
+            14211840129.915808,
+            100.0
+          ],
+          "last": [
+            5.949952225266914e+76,
+            1.0000000000000129e+80,
+            7.690583245488983e+74,
+            14211840129.915808,
+            100.0
+          ],
+          "threshold_event": true
+        },
+        "reproduction_script": "tests/fixtures/corpus-v19-b/reference_remaining.py"
+      },
+      "remaining_limitations": "Demand process and a source-backed capacity/inventory/availability policy are absent. No arbitrary panic clamp, horizon truncation or saturation is introduced.",
+      "current_error": "Unresolved or invalid equations at time 41.75: Root causes: Desired_Capacity: result is not finite; Blocked dependents: Capacity Investment (waiting for Desired_Capacity)"
+    },
+    {
+      "file": "models/economics/startup-ecosystem-dynamics-eco.json",
+      "id": "startup-ecosystem-dynamics-eco",
+      "name": "Startup Ecosystem Dynamics Model",
+      "baseline_sha256": "4ca2f8fb881cc62b0ddc3127662ca614698bf2f40860e8b34328d3bf92452a91",
+      "current_sha256": "4ca2f8fb881cc62b0ddc3127662ca614698bf2f40860e8b34328d3bf92452a91",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "remaining_source_closure",
+      "cause_and_repair": "Funding deployment remains5000/time at initial startup count even with funding0; funding derivative then points outside its nonnegative domain. Negative funding later creates a denominator singularity and invalid startup log.",
+      "source_evidence": [
+        {
+          "title": "Brad Feld,Startup Communities (2012),publisher edition",
+          "url": "https://doi.org/10.1002/9781119204459",
+          "evidence": "The book is qualitative ecosystem context; an executable equation set matching these startup/funding/talent/exits equations was not recovered. DOI direct access was unavailable in this session. SDXorg native samples do not contain this model."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "At startups100,exits10,funding0, dFunding/dt=500*(1+.5)-100*50=-4250, independent of time-step. Tight handwritten Radau reaches a math-domain failure. A numerical method cannot make this outward-pointing funding boundary resource-consistent.",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py",
+        "reference_run": {
+          "success": false,
+          "error": "math domain error"
+        },
+        "reproduction_script": "tests/fixtures/corpus-v19-b/reference_remaining.py"
+      },
+      "remaining_limitations": "Funding availability and talent-accounting response laws and units require an actual authored source. No floor/cap or changed default funding is guessed.",
+      "current_error": "Unresolved or invalid equations at time 5.25: Root causes: Ecosystem Support: Error evaluating equation '0.3 + 0.1 * LOG(1 + Active_Startups, 10)': Function error in LOG: math domain error; Blocked dependents: Startup Failures (waiting for Ecosystem Support); Talent Recycling (waiting for Startup Failures)"
+    },
+    {
+      "file": "models/economics/subscripted-population-model-massachusetts-towns-eco.json",
+      "id": "subscripted-population-model-massachusetts-towns-eco",
+      "name": "Subscripted Population Model (Massachusetts Towns)",
+      "baseline_sha256": "225e35f6a88b54016eab87e584f22d03566a92606a645abb975c020599203b99",
+      "current_sha256": "a895ad7efc18609aa6ff1c86bf9a79d31a6d6c7f4daca100368c79d38b706047",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "restored_native_351_town_model",
+      "cause_and_repair": "The saved initial list contained an ellipsis,dimension members were missing,and native order8 exponential DELAY N had been miswritten as unsupported four-argument fixed DELAY.",
+      "source_evidence": [
+        {
+          "title": "SDXorg/test-models commit21aab02739dc5187bc9564e4d3de14e575905d2f,samples/Population/Subscripted Population Model.mdl",
+          "url": "https://github.com/SDXorg/test-models/blob/21aab02739dc5187bc9564e4d3de14e575905d2f/samples/Population/Subscripted%20Population%20Model.mdl",
+          "evidence": "Recovered and retained all351ordered names and values,total6547695. Native DELAY N(input,time,initial,order) maps to runtime DELAY_N(input,time,order,initial). Vensim constant-delay documentation establishes the eight-stage exponential chain. Source controls0..20,dt1 are unchanged."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "Every regional nine-state system has identical linear matrix M and initial vector P0_town*[1,1/70,...,1/70]. Therefore the aggregate solution times each source initial fraction is exactly each town solution. All351 member outputs and aggregate are compared with an independent Euler matrix recurrence; half/quarter converge toward scipy matrix exponential. No town is dropped.",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py"
+      },
+      "remaining_limitations": "Native time controls say Month while lifespan70 is not empirically reconciled with those units. This restores the native demonstration; it is not a calibrated Massachusetts population forecast."
+    },
+    {
+      "file": "models/economics/trophic-cascade-ecosystem-eco.json",
+      "id": "trophic-cascade-ecosystem-eco",
+      "name": "Trophic Cascade Ecosystem Model",
+      "baseline_sha256": "34fb90fe709d78855fcd77bea066dfd5eefbbad6f91347c890072ea772f99b55",
+      "current_sha256": "34fb90fe709d78855fcd77bea066dfd5eefbbad6f91347c890072ea772f99b55",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "remaining_source_closure",
+      "cause_and_repair": "Local additive predator removals remain nonzero when prey stock is zero,so the nonnegative food-web domain is not invariant.",
+      "source_evidence": [
+        {
+          "title": "Ripple and Beschta (2012),Biological Conservation145(1),pp205-213",
+          "url": "https://doi.org/10.1016/j.biocon.2011.11.005",
+          "evidence": "The Yellowstone trophic-cascade observational source does not define this four-stock ODE or coefficients5,2,3. DOI access redirected to inaccessible publisher content; no native quantitative mapping was recovered."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "At mesopredators0,derivative=-5*apex; at herbivores0,derivative=-2*meso-3*apex; at vegetation0,derivative=-3*herbivores. All point outside the biological domain. Independent Radau fails near7.765216 after24714 calls with negative vegetation/mesopredators.",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py",
+        "reference_run": {
+          "success": false,
+          "status": "Required step size is less than spacing between numbers.",
+          "end": 7.7652161551004175,
+          "nfev": 24714,
+          "minimum": [
+            35.75397941158998,
+            -1512.362782588772,
+            0.009234062734550613,
+            -8.735295995609179e+16
+          ],
+          "maximum": [
+            50.053660415467355,
+            500.0,
+            4607.0594604732905,
+            10000.0
+          ],
+          "last": [
+            35.75397941158998,
+            -1512.362782588772,
+            0.009234062734550613,
+            -8.735295995609179e+16
+          ],
+          "threshold_event": false
+        },
+        "reproduction_script": "tests/fixtures/corpus-v19-b/reference_remaining.py"
+      },
+      "remaining_limitations": "A prey-dependent response and units/calibration from an identifiable executable source remain necessary. No predation clamp is invented.",
+      "current_error": "Unresolved or invalid equations at time 10.75: Root causes: Herb_Growth: result is not finite; Veg_Growth: result is not finite"
+    },
+    {
+      "file": "models/education/limits-to-growth-system-archetype-edu.json",
+      "id": "limits-to-growth-system-archetype-edu",
+      "name": "Limits to Growth System Archetype Model",
+      "baseline_sha256": "ca498edc04a0d38b441eea6195dd2d3c33e27fbfb39a2aae99e64d3618b99c1a",
+      "current_sha256": "621f61e3fd798ef6868e2a62155cede9e67dbcc3315bcc6d72d831beee660e6f",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "engine_report_output",
+      "cause_and_repair": "The authored System State IF returns a categorical label. Numeric integration correctly rejected strings but lacked a separate report channel. Explicit role=report now evaluates the unchanged conditional after each retained numeric state; reports cannot feed dynamics. No numeric equation, initial value or parameter changed.",
+      "source_evidence": [
+        {
+          "title": "Senge (1990),The Fifth Discipline,limits-to-growth archetype;local three labels retained",
+          "url": "https://www.penguinrandomhouse.com/books/163984/the-fifth-discipline-by-peter-m-senge/",
+          "evidence": "Parent provides separate categorical reporting so Growing,Constrained,At Limit remain visible. The local numeric dynamics and label thresholds are preserved; no0encoding is substituted."
+        }
+      ],
+      "independent_evidence": "tests/test_report_outputs.py: independent two-state dynamics and Euler refinement; report dependency, finite arithmetic, lazy branches, escaping, REST/MCP and capacity contracts. tests/test_independent_review_v19.py adds an independent review.",
+      "remaining_limitations": "Illustrative limits-to-growth archetype, not empirical calibration. Only explicit report outputs may return labels; all numeric dynamics remain strict."
+    },
+    {
+      "file": "models/education/online-learning-platform-edu.json",
+      "id": "online-learning-platform-edu",
+      "name": "Online Learning Platform Model",
+      "baseline_sha256": "f6ebe64df9544a23ca0d308e440d869ff72a8d58321f6662c4c7b84a938b9122",
+      "current_sha256": "f6ebe64df9544a23ca0d308e440d869ff72a8d58321f6662c4c7b84a938b9122",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "remaining_source_closure",
+      "cause_and_repair": "Content quality rises above its reference100; late dropout becomes negative and reverses its cohort transfer,then feedback grows without a valid quality domain.",
+      "source_evidence": [
+        {
+          "title": "Kizilcec,Piech,Schneider (2013),Deconstructing Disengagement,LAK13,pp170-179",
+          "url": "https://stanford.edu/~cpiech/bio/papers/deconstructingDisengagement.pdf",
+          "evidence": "The primary study clusters observed learner engagement patterns in MOOCs. It does not provide this quality-investment stock or the local late-dropout linear reversal law."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "Independent five-state Radau without6000 cap fails near31.960435 after51493 calls and dropped-out cohort about-9.47e39. Algebraically late dropout is negative at Q>100 for active learners>0. Changing solver cannot correct that sign-domain failure.",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py",
+        "reference_run": {
+          "success": false,
+          "status": "Required step size is less than spacing between numbers.",
+          "end": 31.960435162657028,
+          "nfev": 51493,
+          "minimum": [
+            0.0,
+            0.0,
+            0.0,
+            -9.465953111426878e+39,
+            0.0
+          ],
+          "maximum": [
+            637619037463867.0,
+            9.46595311142324e+39,
+            3.64396462736684e+27,
+            6739.841035874529,
+            233793647070665.2
+          ],
+          "last": [
+            637619037463867.0,
+            9.46595311142324e+39,
+            3.64396462736684e+27,
+            -9.465953111426878e+39,
+            233793647070665.2
+          ],
+          "threshold_event": false
+        },
+        "reproduction_script": "tests/fixtures/corpus-v19-b/reference_remaining.py"
+      },
+      "remaining_limitations": "A calibrated quality/dropout response law and units from an actual executable platform model remain missing. No arbitrary quality clamp or saturation is added.",
+      "current_error": "Unresolved or invalid equations at time 36.75: Root causes: Learner_Activation: result is not finite; Late_Dropout: result is not finite"
+    },
+    {
+      "file": "models/energy/grid-frequency-stability-ene.json",
+      "id": "grid-frequency-stability-ene",
+      "name": "Grid Frequency Stability Dynamics",
+      "baseline_sha256": "c471e8a2621ed66f4d721eafaa4ae64cb90c714b8c7cddf24b2e8c4f5b96bf07",
+      "current_sha256": "478e89bcf3f9bdbafdb8c5d2d0a2a6a95268ac661678bdbab6a809a0702694f5",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "repaired_physical_energy_mapping",
+      "cause_and_repair": "Independent kinetic-energy drain and frequency denominator gave energy0singularity. Stored energy100 was inconsistent with supplied inertia5s and base1000MW.",
+      "source_evidence": [
+        {
+          "title": "Yan etal.(2020),NREL/CP-5D00-73872,printedp4/PDFp7,eq12",
+          "url": "https://docs.nlr.gov/docs/fy20osti/73872.pdf",
+          "evidence": "Exact per-unit swing law DeltaP=2H*omega*domega/dt maps to SI E=H*Sbase*(f/f0)^2. Thus E0=5*1000=5000MWs,dE/dt=Pgen-Pload,df/dt=(Pgen-Pload)*f/(2E). Only two flow equations and energy initialization change,plus explicit units and adaptive integration."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "Independent handwritten three-state DOP853 reference agrees with default/half/quarter Radau outputs over60s. E-5000*(f/60)^2 error<7.3e-8MWs,relative<1.5e-11. All stocks stay positive. Radau refinements stay within existing work limits; RK4 half-step exceeded the work budget.",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py"
+      },
+      "remaining_limitations": "Governor,droop and reserve equations remain illustrative local assumptions,not the NREL VSG control/network implementation. Original unused Inertia Constant input is preserved but does not define an independent kinetic-energy drain.",
+      "additional_repair_receipt": "operations/corpus-hardening-repairs-v19-b.json",
+      "solver_revision": "Final hardening uses independently checked RK4 dt=.04 and half/quarter grids; source-repair receipt describes the preceding Radau version."
+    },
+    {
+      "file": "models/epidemiology/delay-differential-seir-epi.json",
+      "id": "delay-differential-seir-epi",
+      "name": "Delayed SEIR with Explicit Initial Cohort Histories",
+      "baseline_sha256": "a5c668343a6cd120cac4538fbfe1298bf7d698fdb1c21f9e776dfac8070a6495",
+      "current_sha256": "0da5d32633ae18810be267b4c779a6c81dbacc6fdc81e42d6c57d2ea580deb12",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "repaired_explicit_initial_history_scenario",
+      "cause_and_repair": "Implicit initial-input-rate delay history was incompatible with initial exposed100/infectious10,so delayed removals could exceed remaining cohorts. Stock sum1000110also differed from statedN1000000.",
+      "source_evidence": [
+        {
+          "title": "Kiselev etal.(2023),Scientific Reports13:13439,Methods eq3-4,and linked native BioUML repository commitcd5530f689aeef2c39d62287a1127fa1eedb52a8",
+          "url": "https://gitlab.sirius-web.org/covid-19/dde-epidemiology-model/-/tree/cd5530f689aeef2c39d62287a1127fa1eedb52a8",
+          "evidence": "Recovered actual native repository and read paper Methods: it uses weighted delayed stock terms,clinical partitions and country data,not the local betaSI fixed-delay four-stock equations. This repair explicitly defines a local uniform-initial-age scenario instead: exposure prehistory20/day on[-5,0),10/7/day on[-12,-5); their windows integrate to the existing100and10. Nbecomes actual conserved population sum."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "Independent nonnegative age queues and continuous365-day method of steps validate allhistory breaks5,7,12. Euler .25/.125/.0625 converge toward continuous DDE,all stocks>=-2e-10roundoff and total conserved<2.5e-9persons. Time-origin shift13 preserves trajectories. New Initial Exposed/Infectious inputs use existing100/10 values and stock equations bind them consistently.",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py"
+      },
+      "remaining_limitations": "Uniform age prehistory is a required explicit local scenario assumption,not inferred historical infection data. No empirical forecast or published Kiselev/BioUML reproduction is claimed."
+    },
+    {
+      "file": "models/epidemiology/peer-vaccination-network-nudge-epi.json",
+      "id": "peer-vaccination-network-nudge-epi",
+      "name": "Peer Network Vaccination Nudge Model",
+      "baseline_sha256": "0ea76475995d187b8f89d4472f27d04fa9ae13af003c9bf4c2131d75f5a5b348",
+      "current_sha256": "0ea76475995d187b8f89d4472f27d04fa9ae13af003c9bf4c2131d75f5a5b348",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "remaining_native_network_model",
+      "cause_and_repair": "Aggregate hospitalized stock has no discharge and exceeds a population fraction1; vaccinated>.7/.85 reverses local new-infection flow. Attitude and disease stocks are not a conserved population partition.",
+      "source_evidence": [
+        {
+          "title": "EpiModel/COVID-Vax-Decisions native R repository,commit4df8339c46532a91d753fc6813ee70dd889d1462",
+          "url": "https://github.com/EpiModel/COVID-Vax-Decisions/tree/4df8339c46532a91d753fc6813ee70dd889d1462",
+          "evidence": "Recovered native repository README and R scripts: Georgia2021/2022 stochastic network model requires EpiModel/EpiModelCOVID Vax-Decisions extension,network estimation and individual responsive vaccination. The six local aggregate equations are not a mapped reduction of that source."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "Independent Radau completes365in4298calls but Hospitalized reaches1.3916417. Willing+Resistant+Vaccinated remains.95; Vaccinated approaches.949964,exceeding the local infection-protection zero threshold.823529. Finite series is not a scientifically valid repair.",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py",
+        "reference_run": {
+          "success": true,
+          "status": "The solver successfully reached the end of the integration interval.",
+          "end": 365.0,
+          "nfev": 4298,
+          "minimum": [
+            3.586843953035798e-05,
+            2.3799445119652945e-13,
+            0.15,
+            1.1669501252209748e-07,
+            0.003,
+            1.0746254683891842e-06
+          ],
+          "maximum": [
+            0.6943888660848739,
+            0.3,
+            0.9499641315602323,
+            0.5191264043062285,
+            1.3916417345145335,
+            0.01
+          ],
+          "last": [
+            3.586843953035798e-05,
+            2.3799445119652945e-13,
+            0.9499641315602323,
+            1.1669501252209748e-07,
+            1.3916417345145335,
+            1.0746254683891842e-06
+          ],
+          "threshold_event": false
+        },
+        "reproduction_script": "tests/fixtures/corpus-v19-b/reference_remaining.py"
+      },
+      "remaining_limitations": "A defensible aggregate reduction would require source population/age/network-state mapping,immunity response and recovery/discharge. Restoring the full native agent/network model needs a separate supported representation; no unverified ODE replacement is made.",
+      "current_error": "Unresolved or invalid equations at time 59: Root causes: Resistance Nudge: result is not finite; Willingness Nudge: result is not finite"
+    },
+    {
+      "file": "models/finance/leverage-cycle-dynamics-fin.json",
+      "id": "leverage-cycle-dynamics-fin",
+      "name": "Leverage Cycle and Asset Prices",
+      "baseline_sha256": "590c661069576eb36a6ce3b2246a5c983d7a31f573e7ab29f93555be2e451873",
+      "current_sha256": "590c661069576eb36a6ce3b2246a5c983d7a31f573e7ab29f93555be2e451873",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "remaining_source_closure",
+      "cause_and_repair": "Asset price and leverage reinforce each other while high prices lower margin and deactivate deleveraging. The saved closure has no collateral-equilibrium constraint.",
+      "source_evidence": [
+        {
+          "title": "Geanakoplos (2010),The Leverage Cycle,NBER Macroeconomics Annual24,SectionsII-III",
+          "url": "https://www.journals.uchicago.edu/doi/full/10.1086/648285",
+          "evidence": "The original source defines collateral/equilibrium economies with investors differing in optimism and state-contingent payoffs. It does not specify these local continuous price/leverage/margin equations."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "Independent three-state Radau without6000cap fails near46.738112 after27742calls with price and leverage~1.44e14. Positive price/leverage products amplify as target margin tends.15; no theorem of finite-time blowup is inferred solely from solver failure.",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py",
+        "reference_run": {
+          "success": false,
+          "status": "Required step size is less than spacing between numbers.",
+          "end": 46.73811194782076,
+          "nfev": 27742,
+          "minimum": [
+            100.0,
+            5.0,
+            0.15000000003826086
+          ],
+          "maximum": [
+            143913601590670.2,
+            143913601587310.72,
+            0.2
+          ],
+          "last": [
+            143913601590670.2,
+            143913601587310.72,
+            0.15000000003826086
+          ],
+          "threshold_event": false
+        },
+        "reproduction_script": "tests/fixtures/corpus-v19-b/reference_remaining.py"
+      },
+      "remaining_limitations": "An executable collateral/price/uncertainty mapping for this stock layout or an explicitly authored closure is still needed. No stabilization coefficient or leverage cap is guessed.",
+      "current_error": "Unresolved or invalid equations at time 50.25: Root causes: Price_Appreciation: result is not finite; Leverage_Increase: result is not finite"
+    },
+    {
+      "file": "models/finance/momentum-trading-dynamics-fin.json",
+      "id": "momentum-trading-dynamics-fin",
+      "name": "Momentum Trading and Price Dynamics",
+      "baseline_sha256": "17c2509072734fea3d6fc80bdc3bf572a12c9b2ba6369b7a8fa0a7735c0afb92",
+      "current_sha256": "17c2509072734fea3d6fc80bdc3bf572a12c9b2ba6369b7a8fa0a7735c0afb92",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-b.json",
+      "repair_classification": "remaining_source_closure",
+      "cause_and_repair": "Price multiplies unbounded momentum demand; delayed price difference feeds momentum and demand,creating strong positive feedback without a mapped fundamental-price response.",
+      "source_evidence": [
+        {
+          "title": "DeLong,Shleifer,Summers,Waldmann (1990),Journal of Finance45(2),pp379-395",
+          "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1540-6261.1990.tb03695.x",
+          "evidence": "The primary publication studies positive-feedback investment and rational speculation in a finite-period equilibrium setup. It does not supply a five-time-unit continuous fixed delay or these local momentum adjustment coefficients."
+        }
+      ],
+      "independent_evidence": {
+        "analysis": "Independent continuous method of steps with constant price prehistory100 and Radau on one-unit blocks fails near14.104981 after49476calls,price~3.8e37. A fixed-delay DDE cannot be validated by applying ODE Radau directly; reference explicitly preserves the lag and history.",
+        "portable_tests": "tests/test_corpus_repairs_v19_b.py",
+        "reference_run": {
+          "success": false,
+          "status": "Required step size is less than spacing between numbers.",
+          "end": 14.10498078530317,
+          "nfev": 49476,
+          "last": [
+            3.801078110234555e+37,
+            1.2013372536884086e+25,
+            94921174680071.05
+          ],
+          "threshold_event": false
+        },
+        "reproduction_script": "tests/fixtures/corpus-v19-b/reference_remaining.py"
+      },
+      "remaining_limitations": "Original executable bounded price/fundamental-demand/momentum mapping is absent. No delay history or fundamental attraction is fabricated to suppress runaway.",
+      "current_error": "Unresolved or invalid equations at time 32: Root causes: Price_Change: result is not finite"
+    },
+    {
+      "file": "models/finance/real-options-investment-timing-fin.json",
+      "id": "real-options-investment-timing-fin",
+      "name": "Real Options Investment Model",
+      "baseline_sha256": "55d72eedeb5c962c9343876609f67c8756554c8cc266699b2b8433aebf553512",
+      "current_sha256": "746dae7e75092fd309c63df52b5f56d1a72cfe8c1b315608bca45de813045621",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "source_reconstructed",
+      "cause_and_repair": "beta=1 at mu=r; source delta=0 implies no exercise. Limit of A*V^beta as beta\u21921+ is V. Finite-beta root satisfies .5*sigma\u00b2*beta*(beta-1)+mu*beta-r=0, and value/slope match at beta*I/(beta-1).",
+      "source_evidence": [
+        {
+          "url": "https://www.mit.edu/~rpindyck/Papers/IrreverUncertInvestmentJEL1991.pdf",
+          "version": "Pindyck1991 JEL29:1110-1148",
+          "pages": "1119-1121, equations5-10",
+          "read": "Primary PDF text read, zero opportunity-cost discussion and valuation/exercise equations inspected. Book chapter5 metadata cross-checked."
+        }
+      ],
+      "independent_evidence": {
+        "independent_checks": [
+          "Independent exact asset antiderivative: Euler default/half/quarter errors strictly decrease; default relative error<0.03.",
+          "Analytic option characteristic/PDE residual<1e-12 in finite-boundary scenario; smooth-pasting derivative1.",
+          "Atmu=r, every Option_Value sample equalsAsset_Value and every exercise indicator0; report never enters numericvalues."
+        ],
+        "test_file": "tests/test_corpus_repairs_v19_c.py",
+        "status": "Verified: combined21test run passed"
+      },
+      "remaining_limitations": [
+        "Asset scenario is sinusoidal deterministic forcing, not a Wiener/GBM sample; no stochastic calibration claimed.",
+        "Invested is a current-policy indicator; general nonmonotone path-dependent exercise history is not implemented."
+      ]
+    },
+    {
+      "file": "models/healthcare/antibiotic-resistance-evolution-extended-hea.json",
+      "id": "antibiotic-resistance-evolution-extended-hea",
+      "name": "Antibiotic Resistance Evolution Extended Model",
+      "baseline_sha256": "d914c0d9d36a06f935fa723c5bdcc88d8febfe1290a0cd6bc655bccb2ae259fe",
+      "current_sha256": "d914c0d9d36a06f935fa723c5bdcc88d8febfe1290a0cd6bc655bccb2ae259fe",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "unresolved_original_source_required",
+      "cause_and_repair": "All bacterial stocks/effectiveness/pipeline initialize0; resistance fraction0/0 lacks a unique directional extension. Drug approval also transfers drugs into dimensionless effectiveness.",
+      "source_evidence": [
+        {
+          "url": "https://pubmed.ncbi.nlm.nih.gov/24252483/",
+          "version": "See read evidence",
+          "pages": null,
+          "read": "2013 commission review, pp1057\u20131098; author abstract read, DOI retrieval unavailable. Review context does not provide this local model or initializer."
+        }
+      ],
+      "independent_evidence": {
+        "prior_v18_evidence": {
+          "kind": "Distinct adaptive implicit solver diagnostic of unchanged local equations; same expression evaluator, not source-equivalence validation",
+          "radau_diagnostic": {
+            "status": "failed",
+            "error": "Unresolved or invalid equations at time 0: Root causes: Effectiveness_Decay: Error evaluating equation 'Antibiotic_Effectiveness * (Resistant_Bacteria + Multi_Resistant_Bacteria) / Total_Bacteria * Decay_Rate': Division by zero",
+            "seconds": 0.001
+          }
+        },
+        "scope": "Historical reference evidence retained transparently; current unchanged definition default/half/quarter rerun in grid_evidence."
+      },
+      "remaining_limitations": [
+        "Original nonzero inoculum/genotype proportions, drug-pipeline/effectiveness units and executable parameter model."
+      ],
+      "current_error": "Unresolved or invalid equations at time 0: Root causes: Effectiveness_Decay: Error evaluating equation 'Antibiotic_Effectiveness * (Resistant_Bacteria + Multi_Resistant_Bacteria) / Total_Bacteria * Decay_Rate': Division by zero"
+    },
+    {
+      "file": "models/healthcare/burnout-recovery-cycle-hea.json",
+      "id": "burnout-recovery-cycle-hea",
+      "name": "Burnout and Recovery Cycle Model",
+      "baseline_sha256": "194439e889202ca51c4bee52c57a8e9801a21213124893811d38c6a9abbc8ade",
+      "current_sha256": "194439e889202ca51c4bee52c57a8e9801a21213124893811d38c6a9abbc8ade",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "unresolved_original_source_required",
+      "cause_and_repair": "Energy drain remainspositive atzeroenergy; burnout>100 reverses restoration, causing negative-energy feedback runaway even at refinedsteps.",
+      "source_evidence": [
+        {
+          "url": "https://www.annualreviews.org/content/journals/10.1146/annurev.psych.52.1.397",
+          "version": "See read evidence",
+          "pages": null,
+          "read": "Maslach etal2001 pp397\u2013422; publisher abstract/dimensions read, fulltext subscription required. No recovered energy/stress stock equations."
+        }
+      ],
+      "independent_evidence": {
+        "prior_v18_evidence": {
+          "kind": "Distinct adaptive implicit solver diagnostic of unchanged local equations; same expression evaluator, not source-equivalence validation",
+          "radau_diagnostic": {
+            "status": "failed",
+            "error": "Radau integration failed: Required step size is less than spacing between numbers.",
+            "seconds": 0.884
+          }
+        },
+        "scope": "Historical reference evidence retained transparently; current unchanged definition default/half/quarter rerun in grid_evidence."
+      },
+      "remaining_limitations": [
+        "Original dynamical response equations, measured scales/timeunits and boundaries, not arbitrary energy/burnout clipping."
+      ],
+      "current_error": "Unresolved or invalid equations at time 19: Root causes: Energy_Restoration: result is not finite"
+    },
+    {
+      "file": "models/healthcare/mental-health-treatment-system-dynamics-hea.json",
+      "id": "mental-health-treatment-system-dynamics-hea",
+      "name": "Mental Health Treatment System Dynamics",
+      "baseline_sha256": "8a20e1539cea656bc83a771357d903522e0c7a9ab2b89dc7394fd2e2378b2c6e",
+      "current_sha256": "8a20e1539cea656bc83a771357d903522e0c7a9ab2b89dc7394fd2e2378b2c6e",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "unresolved_original_source_required",
+      "cause_and_repair": "Eight patient cohorts initialize0 while an unused InitialPopulation says10m; prevalence and treatment gapundefined. Recovery/relapse topology does not conserve patients.",
+      "source_evidence": [
+        {
+          "url": "",
+          "version": "See read evidence",
+          "pages": null,
+          "read": "Sourcefieldempty; prior incorrect commentary citation already removed. No original identified; local unused initialpopulation and cohort topology inspected."
+        }
+      ],
+      "independent_evidence": {
+        "prior_v18_evidence": {
+          "kind": "Distinct adaptive implicit solver diagnostic of unchanged local equations; same expression evaluator, not source-equivalence validation",
+          "radau_diagnostic": {
+            "status": "failed",
+            "error": "Unresolved or invalid equations at time 0: Root causes: Any Disorder Prevalence: Error evaluating equation '(Total_Population - \"Mentally Healthy Population\") / Total_Population': Division by zero; Treatment Gap: Error evaluating equation '(\"Mild Disorder Untreated\" + \"Moderate Disorder Untreated\" + \"Severe Disorder Untreated\") / (Total_Population - \"Mentally Healthy Population\")': Division by zero; Blocked dependents: Workforce Gap (waiting for Needed Workforce); Needed Workforce (waiting for Any Disorder Prevalence); Burnout Effect (waiting for Treatment Gap); Workforce Hiring (waiting for Workforce Gap); Workforce Leaving (waiting for Burnout Effect)",
+            "seconds": 0.005
+          }
+        },
+        "scope": "Historical reference evidence retained transparently; current unchanged definition default/half/quarter rerun in grid_evidence."
+      },
+      "remaining_limitations": [
+        "Original cohort distribution and diagnosis/treatment flow endpoints with units/rates. A total10m alone cannot determine patient mixture."
+      ],
+      "current_error": "Unresolved or invalid equations at time 0: Root causes: Any Disorder Prevalence: Error evaluating equation '(Total_Population - \"Mentally Healthy Population\") / Total_Population': Division by zero; Treatment Gap: Error evaluating equation '(\"Mild Disorder Untreated\" + \"Moderate Disorder Untreated\" + \"Severe Disorder Untreated\") / (Total_Population - \"Mentally Healthy Population\")': Division by zero; Blocked dependents: Workforce Gap (waiting for Needed Workforce); Needed Workforce (waiting for Any Disorder Prevalence); Burnout Effect (waiting for Treatment Gap); Workforce Hiring (waiting for Workforce Gap); Workforce Leaving (waiting for Burnout Effect)"
+    },
+    {
+      "file": "models/management/organizational-knowledge-loss-man.json",
+      "id": "organizational-knowledge-loss-man",
+      "name": "Organizational Knowledge Loss Model",
+      "baseline_sha256": "2f316bf9c25d72137bdfe3b5a26421bee04229124f1e7a8bf7658f46f211c6a4",
+      "current_sha256": "2f316bf9c25d72137bdfe3b5a26421bee04229124f1e7a8bf7658f46f211c6a4",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "unresolved_original_source_required",
+      "cause_and_repair": "Bilinear transfer O*K drives expertknowledge, then experts create organizational knowledge; quadratic positive loop diverges.",
+      "source_evidence": [
+        {
+          "url": "https://leeds-faculty.colorado.edu/dahe7472/hom.pdf",
+          "version": "See read evidence",
+          "pages": null,
+          "read": "Hom etal2017 pp530\u2013545; full primary paper text opened and turnover-review scope read. No verified local two-stock model mapping."
+        }
+      ],
+      "independent_evidence": {
+        "prior_v18_evidence": {
+          "kind": "Distinct adaptive implicit solver diagnostic of unchanged local equations; same expression evaluator, not source-equivalence validation",
+          "radau_diagnostic": {
+            "status": "failed",
+            "error": "Radau integration failed: Required step size is less than spacing between numbers.",
+            "seconds": 0.802
+          }
+        },
+        "scope": "Historical reference evidence retained transparently; current unchanged definition default/half/quarter rerun in grid_evidence."
+      },
+      "remaining_limitations": [
+        "Original learning/transfer law and scale/resource constraints; turnover review does not identify a missing capacity or justify deleting expertfactor."
+      ],
+      "current_error": "Unresolved or invalid equations at time 31.5: Root causes: Knowledge_Transfer: result is not finite"
+    },
+    {
+      "file": "models/management/workforce-overtime-morale-man.json",
+      "id": "workforce-overtime-morale-man",
+      "name": "Workforce, Overtime and Morale \u2014 Vensim INTRO",
+      "baseline_sha256": "07e797508f7c27bf1215d1bc7aa96f861b1aa42479b817fdaa47c9b0b2a60c4c",
+      "current_sha256": "3e5838a9d3434fd3a87c9ddef1b98a90d99fb5067d82330c23c7be67cb819f69",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "source_reconstructed",
+      "cause_and_repair": "Independent literal two-state Euler reference checks every default sample; full200 half/quarter grids converge. Source-normalized worker-hour and workforce balances keep positive states and settle near120staff,40hours.",
+      "source_evidence": [
+        {
+          "url": "https://vensim.com/documentation/Models/Sample/INTRO.mdl",
+          "version": "Server modified2025-05-29; downloaded2026-10-20; SHA7c6453f0c0346d0694f7305decf81978331dbc24630c4d55f697c53cec31efad",
+          "pages": "Native equations before sketch section, source lines1-130",
+          "read": "Full native executable equation section read, both graphical functions transcribed. Official sample summary said fixed workforce, but the actual native model explicitly integrates net hires; executable source takes precedence."
+        }
+      ],
+      "independent_evidence": {
+        "independent_checks": [
+          "Every full200 defaultEuler stock sample matches independent literalRHS rtol3e-13,atol3e-11.",
+          "Full200 half/quarter errors against literalEuler.03125 reference strictly decrease.",
+          "Workforce>=100, source morale>.5, final workforce within.01 of120."
+        ],
+        "test_file": "tests/test_corpus_repairs_v19_c.py",
+        "status": "Verified: combined21test run passed"
+      },
+      "remaining_limitations": [
+        "Educational Vensim source, not calibrated workforce forecasting.",
+        "Saved0.5 integration step is coarser than native0.125; source-reference convergence quantified."
+      ]
+    },
+    {
+      "file": "models/physics/navier-stokes-pipe-flow-phy.json",
+      "id": "navier-stokes-pipe-flow-phy",
+      "name": "Rigid-Column Pipe Flow with Darcy-Weisbach Friction",
+      "baseline_sha256": "f28b06ca93264312c07815b0dda575ccff25d1119cb185f7d4a4a7f5fe32cb44",
+      "current_sha256": "9649ddabf83b2fc8d6f3c3549afab427c3f3a8aaba51d242ca5c6f87bf48249f",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "source_reconstructed",
+      "cause_and_repair": "Independent scalar head-form RHS reproduces all samples; unique Darcy equilibrium found by brentq atQ.36467105575. Laminar force has exact zero limit without denominator floors; signed quadratic resistance opposes flow. Positive head makes derivative inward atQ0; solution cannot cross positive equilibrium.",
+      "source_evidence": [
+        {
+          "url": "https://openaccess.city.ac.uk/id/eprint/8269/1/The_dynamic_behaviour_of_check_valves_in_pipeline_systems.pdf",
+          "version": "Kruisbrink ACH, City University London PhD thesis1996; PDF SHA72e3c46f61e371ef370ebca1bf5d5badabd5e136b7c55c83a2ef2df55079e5d3",
+          "pages": "Printed138, PDF152, equation9.66; EPA SWMM2017 printed140 equations7-32/7-33",
+          "read": "Full primary thesis equation9.66 and adjoining constant-head/rigid-column limitation text extracted. EPA author manual force-main friction subsection read, including laminar expression, smooth Swamee-Jain branch and linear Re2000\u20134000 interpolation."
+        },
+        {
+          "url": "https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P100S9AS.txt",
+          "version": "Rossman2017 EPA/600/R-17/111",
+          "pages": "140, equations7-32/7-33",
+          "read": "Primary author friction subsection read, transition and turbulent formula."
+        }
+      ],
+      "independent_evidence": {
+        "independent_checks": [
+          "Independent head-form DOP853 full10, rtol1e-12/maxstep.01; production default/half/quarter tolerance bound rtol3e-7/10^level,atol3e-10/10^level.",
+          "Positive flow remainsbelow unique brentqDarcy equilibrium plus2e-9.",
+          "Qprime(0)=gAH/L; zero force/headloss exact; no denominatorfloor; restfactor explicitlyreportedundefined."
+        ],
+        "test_file": "tests/test_corpus_repairs_v19_c.py",
+        "status": "Verified: combined21test run passed"
+      },
+      "remaining_limitations": [
+        "Rigid incompressible water-column approximation excludes waterhammer and radial unsteady Navier-Stokes velocity profiles.",
+        "Constant boundary head and hydraulically smooth wall are explicit reconstruction assumptions; reservoir depletion and actual wall roughness are unmodeled."
+      ]
+    },
+    {
+      "file": "models/physics/nuclear-power-plant-operations-phy.json",
+      "id": "nuclear-power-plant-operations-phy",
+      "name": "Reactor Point Kinetics and Thermal Feedback \u2014 KTH Example 3-2",
+      "baseline_sha256": "8092f9ff66b06348e1a08f694e2a89de89bd78ccacd8687a862c434937800047",
+      "current_sha256": "af0acd06a979cc49393caa3748408ac854db821fbe312f1146a4b5fa6238f885",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "source_reconstructed",
+      "cause_and_repair": "Independent physical RHS and separately transcribed normalized Scilab RHS agree under variable transformation; Cf*TFprime+Cc*TCprime=P-2Wcp(TC-Tin). Precursor equilibrium beta*n/Lambda=lambda*C. All1000s samples agree with LSODA; half/quarter output and tighter tolerances agree. Analytic post-step equilibrium n291.4285714,TF1091.875,TC581.875.",
+      "source_evidence": [
+        {
+          "url": "https://kth.diva-portal.org/smash/get/diva2%3A500623/FULLTEXT01.pdf",
+          "version": "Anglart H, Nuclear Reactor Dynamics and Stability, KTH; PDF SHA33b952daeb7fa0caba46ed8eda8e10811b4195594f8aa43bf3de91060d9da53e",
+          "pages": "Printed74\u201379/PDF76\u201381, equations3.29\u20133.43, Table3-2, Scilab PDModel, Example3-2",
+          "read": "Primary PDF equation tables, explicit Scilab RHS, complete numeric example and equilibrium initializer formulas read."
+        }
+      ],
+      "independent_evidence": {
+        "independent_checks": [
+          "Full1000 independent LSODA rtol1e-11/atol1e-10 against default/half/quarter/tighterRadau; asserted rtol8e-7/10^level,atol2e-6/10^level.",
+          "Separately transcribed source normalizedScilab and physicalRHS match rtol1e-12; exactweightedthermalenergy cancellation.",
+          "Precursorinitialequilibrium15000; analytic finaln291.4285714285714,TF1091.875,TC581.875; positivefinite physicalstates."
+        ],
+        "test_file": "tests/test_corpus_repairs_v19_c.py",
+        "status": "Verified: combined21test run passed"
+      },
+      "remaining_limitations": [
+        "One-group lumped source example, not validated plant operation or nuclear safety analysis.",
+        "Time origin intentionally starts immediately after source perturbation; omitted pre-step segment is exact equilibrium."
+      ]
+    },
+    {
+      "file": "models/physics/rayleigh-benard-convection-phy.json",
+      "id": "rayleigh-benard-convection-phy",
+      "name": "Rayleigh-Benard Convection \u2014 Lorenz Three-Mode Model",
+      "baseline_sha256": "fa3a9e4d03675e6eb7f806bc19e2236c89588b4c5107ee5a9358ee35eb58c2c7",
+      "current_sha256": "4e78a770c9809fd690d75b26980d82cbb369e7052adc6ea5b6e82ee9e6f6d9c5",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "source_reconstructed",
+      "cause_and_repair": "Nonlinear XY/XZ energy redistribution is the actual source thermal-amplitude model, not invented saturation. V=X\u00b2/10+Y\u00b2+(Z-29)\u00b2 satisfies Vprime\u2264-2V+(8/3)*29\u00b2, bounding source orbit. Independent literal RK4, DOP853 short-time reference and paper double-approximation table check equations, while full200 default/independent half/quarter runs remain bounded.",
+      "source_evidence": [
+        {
+          "url": "https://doi.org/10.1175/1520-0469(1963)020<0130:DNF>2.0.CO;2",
+          "version": "Lorenz1963 JAtmosSci20:130\u2013141; inspected scan SHA35cbe8a9e3ac36f210031376989b3b838de85ca3ba0290ba44131dcfd204cc2f",
+          "pages": "Printed134\u2013136/PDF5\u20137, equations21\u201327, Table1",
+          "read": "Scanned primary pages visually inspected, including free boundaries, modal expansion, equations25\u201327, nondimensional time, source parameters and Table1 initial state."
+        }
+      ],
+      "independent_evidence": {
+        "independent_checks": [
+          "SourceTable1 double-approximation method reproducedat.05/.45 within printed0.1precision; not falsely compared toRK4as identicaldiscretization.",
+          "IndependentRK4 reproduces allfirst10timeunits rtol2e-12/atol2e-11; independentDOP853 confirms refinedfirst1timeunit error<2e-4.",
+          "Full200 default/independentdt.005/.0025 satisfy V=X\u00b2/10+Y\u00b2+(Z-29)\u00b2\u22641121.5.",
+          "Chaotic full200 pointwiseconvergence notclaimed. Productionhalf/quarter capacityerrors explicitly retained; independentfullhorizon refinements bounded."
+        ],
+        "test_file": "tests/test_corpus_repairs_v19_c.py",
+        "status": "Verified: combined21test run passed"
+      },
+      "remaining_limitations": [
+        "Source extreme three-mode truncation may not resemble strong-convection PDE fields; educational dynamical model, not calibrated fluid prediction.",
+        "Full200 chaotic trajectories do not converge pointwise across finite-precision refinements. Engine half/quarter grids exceed its work budget; independent full-horizon RK4 references are recorded instead."
+      ]
+    },
+    {
+      "file": "models/social/baby-names-popularity-dynamics-soc.json",
+      "id": "baby-names-popularity-dynamics-soc",
+      "name": "Baby Names Popularity Dynamics",
+      "baseline_sha256": "5072a6872429f589b1a1a69aa35ed4efa71448c956486d32cd80b737875780ad",
+      "current_sha256": "5072a6872429f589b1a1a69aa35ed4efa71448c956486d32cd80b737875780ad",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "unresolved_original_source_required",
+      "cause_and_repair": "Constant AllDeaths removespeople from initiallyzeroaware cohort, causing negative christenings and unstable signed awareness/freshness.",
+      "source_evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/SDXorg/PySD-Cookbook/d7ebddadad9cd87cf796b9b6031ea2b5c45da4c4/source/models/Baby_Names/Baby_Names.mdl",
+          "version": "See read evidence",
+          "pages": null,
+          "read": "Pinned native file read in full:14 A FUNCTION OF placeholders, FINAL1013<INITIAL1880. No executable integrators/rates to recover."
+        }
+      ],
+      "independent_evidence": {
+        "prior_v18_evidence": {
+          "kind": "Distinct adaptive implicit solver diagnostic of unchanged local equations; same expression evaluator, not source-equivalence validation",
+          "radau_diagnostic": {
+            "status": "failed",
+            "error": "Radau integration failed: Required step size is less than spacing between numbers.",
+            "seconds": 0.685
+          }
+        },
+        "scope": "Historical reference evidence retained transparently; current unchanged definition default/half/quarter rerun in grid_evidence."
+      },
+      "remaining_limitations": [
+        "Executable rate laws, initialization, birth/death cohort allocation and valid horizon; source is only a sketch."
+      ],
+      "current_error": "Unresolved or invalid equations at time 1886.56: Root causes: Christenings: result is not finite; Becoming Aware: result is not finite"
+    },
+    {
+      "file": "models/social/hardin-tragedy-commons-extended-soc.json",
+      "id": "hardin-tragedy-commons-extended-soc",
+      "name": "Hardin Tragedy of the Commons Extended Model",
+      "baseline_sha256": "caa5313bc1a52c67b386d99eb8ab15cc6dfb1fbcac753f66d49c0289b9369815",
+      "current_sha256": "caa5313bc1a52c67b386d99eb8ab15cc6dfb1fbcac753f66d49c0289b9369815",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "unresolved_original_source_required",
+      "cause_and_repair": "Positive harvest at resource0 forces negative biomass; logistic negative-quadratic continuation then blowsup.",
+      "source_evidence": [
+        {
+          "url": "https://www.garretthardinsociety.org/articles/art_tragedy_of_the_commons.html",
+          "version": "See read evidence",
+          "pages": null,
+          "read": "Hardin1968 Science162:1243\u20131248. Primary article/publisher metadata located; essay pasture argument supplies no local logistic/technology ODE or parameter table."
+        }
+      ],
+      "independent_evidence": {
+        "prior_v18_evidence": {
+          "kind": "Distinct adaptive implicit solver diagnostic of unchanged local equations; same expression evaluator, not source-equivalence validation",
+          "radau_diagnostic": {
+            "status": "failed",
+            "error": "Radau integration failed: Required step size is less than spacing between numbers.",
+            "seconds": 1.053
+          }
+        },
+        "scope": "Historical reference evidence retained transparently; current unchanged definition default/half/quarter rerun in grid_evidence."
+      },
+      "remaining_limitations": [
+        "Source-backed stock-dependent harvest/effort law and coefficient meanings; no unsupported nominal-at-capacity calibration inserted."
+      ],
+      "current_error": "Unresolved or invalid equations at time 20.5: Root causes: Regeneration: result is not finite"
+    },
+    {
+      "file": "models/social/ostrom-common-pool-institutions-soc.json",
+      "id": "ostrom-common-pool-institutions-soc",
+      "name": "Ostrom Common-Pool Resource Institutions Model",
+      "baseline_sha256": "3f22975d7476ee9bea75e0d52aa9807623e60dcc17d1ed52c14f28e405c5bc87",
+      "current_sha256": "3f22975d7476ee9bea75e0d52aa9807623e60dcc17d1ed52c14f28e405c5bc87",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "unresolved_original_source_required",
+      "cause_and_repair": "Initial extraction45 exceedsmax logistic regeneration37.5 and remainspositive atresource0. Institutional trust/compliance loopgain.8*1.3=1.04 is not a globalfraction model.",
+      "source_evidence": [
+        {
+          "url": "https://doi.org/10.1017/CBO9780511807763",
+          "version": "See read evidence",
+          "pages": null,
+          "read": "Ostrom1990 GoverningtheCommons. Primary book citation retained; DOI fetch unavailable. No original executable realization matching this three-stock local model found."
+        }
+      ],
+      "independent_evidence": {
+        "prior_v18_evidence": {
+          "kind": "Distinct adaptive implicit solver diagnostic of unchanged local equations; same expression evaluator, not source-equivalence validation",
+          "radau_diagnostic": {
+            "status": "failed",
+            "error": "Radau integration failed: Required step size is less than spacing between numbers.",
+            "seconds": 1.392
+          }
+        },
+        "scope": "Historical reference evidence retained transparently; current unchanged definition default/half/quarter rerun in grid_evidence."
+      },
+      "remaining_limitations": [
+        "Original executable ecological harvest and institutional response laws; normalization atK orK/2 cannot be inferred from a title/MSY identity alone."
+      ],
+      "current_error": "Unresolved or invalid equations at time 92.5: Root causes: Regeneration: result is not finite"
+    },
+    {
+      "file": "models/social/urban-development-feedback-soc.json",
+      "id": "urban-development-feedback-soc",
+      "name": "Urban Dynamics \u2014 Native Vensim URBAN Source",
+      "baseline_sha256": "b8a77ba3951d080186d537ae8d23db83f729702fd704c5a1dc6246eb872ab986",
+      "current_sha256": "92836993b5638b0c84efa50d9a952a264d9594a3d71f8c8947f63eefaab2063c",
+      "changed": true,
+      "numerical_status": "passed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "source_reconstructed",
+      "cause_and_repair": "Separate source-expression math evaluator uses original source equations plus independently hardcoded20balance functions, not safe_eval or engineRHS. All20 stocks at every250year default sample match; full half/quarter steps and positive domains checked.",
+      "source_evidence": [
+        {
+          "url": "https://vensim.com/documentation/Models/Sample/URBAN/URBAN.mdl",
+          "version": "Forrester appendix model with1974 copyright declaration; servermodified2024-09-04; SHAfe7bbd0a26897d2ad2152d6390e3d544dcd861c2ab52eda3922a27a8b49465a4",
+          "pages": "Full native equation section preceding sketch, source lines1\u20131800",
+          "read": "Complete native equations read/parsed, all20 INTEG declarations independently transcribed as stock balances, all53 tables mapped. Original numeric parameters and symbolic initializers retained. Vensim lookup and gaming semantics cross-checked in official docs."
+        }
+      ],
+      "independent_evidence": {
+        "independent_checks": [
+          "All20stock balances independentlytranscribed fromnativeINTEGs; separate source-expression evaluator uses math/np.interp, not engineequations orsafe_eval.",
+          "Every full250 stock sample default/half/quarter matches independentEuler rtol5e-12/atol1e-7; errorsvs independentdt.125 strictlydecrease.",
+          "All20states remainpositive; landfraction0..1; nativeinitialaverages140 and3500; sourcepopulation uses familysizes5,6,8.",
+          "255sourceequationdeclarations=20INTEGs+231aux+4timecontrols,53exacttables,sixGAME(0)baseinputs. NativeSAVEPER5; library reportsannually atsourceEuler1 withoutchanging integration."
+        ],
+        "test_file": "tests/test_corpus_repairs_v19_c.py",
+        "status": "Verified: combined21test run passed"
+      },
+      "remaining_limitations": [
+        "Historical Forrester urban-classification/parameter assumptions, not a contemporary calibrated city forecast.",
+        "Interactive GAME/CIN interventions are not selected; baseline only."
+      ]
+    },
+    {
+      "file": "models/technology/quantum-computing-progress-tec.json",
+      "id": "quantum-computing-progress-tec",
+      "name": "Quantum Computing Development Progress",
+      "baseline_sha256": "ccb19e074e303b2b398a3304a154b542de8506fd8f8b7a9e4d0d39ac3a173012",
+      "current_sha256": "ccb19e074e303b2b398a3304a154b542de8506fd8f8b7a9e4d0d39ac3a173012",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "unresolved_original_source_required",
+      "cause_and_repair": "Unconstrained investment/algorithm feedback drives true qubitcount beyondfloat64 even in stable logarithmic coordinates; negativeerror is also a coarseEuler defect.",
+      "source_evidence": [
+        {
+          "url": "https://www.nature.com/articles/s41586-019-1666-5",
+          "version": "See read evidence",
+          "pages": null,
+          "read": "Arute etal2019 Nature574:505\u2013510. Prior primary experimental source scope carriedforward; current publisher requestredirected to inaccessible login. No new claim of fulltext access."
+        }
+      ],
+      "independent_evidence": {
+        "prior_v18_evidence": {
+          "kind": "Distinct adaptive implicit solver diagnostic of unchanged local equations; same expression evaluator, not source-equivalence validation",
+          "radau_diagnostic": {
+            "status": "failed",
+            "error": "Unresolved or invalid equations at time 4.39552: Root causes: Quantum Utility: Error evaluating equation 'Physical_Qubits * (1 - Error_Rate)^(Physical_Qubits / 10)': (34, 'Numerical result out of range'); Blocked dependents: Algorithm Development (waiting for Quantum Utility); Commercialization (waiting for Quantum Utility)",
+            "seconds": 0.553
+          }
+        },
+        "scope": "Historical reference evidence retained transparently; current unchanged definition default/half/quarter rerun in grid_evidence."
+      },
+      "remaining_limitations": [
+        "Original capital/resource-constrained progress law and units/calibration; experimental53qubit paper does not define this20year feedback model."
+      ],
+      "current_error": "Unresolved or invalid equations at time 5.75: Root causes: Quantum Utility: Error evaluating equation 'Physical_Qubits * (1 - Error_Rate)^(Physical_Qubits / 10)': (34, 'Numerical result out of range'); Blocked dependents: Algorithm Development (waiting for Quantum Utility); Commercialization (waiting for Quantum Utility)"
+    },
+    {
+      "file": "models/transportation/urban-rail-transit-ridership-tra.json",
+      "id": "urban-rail-transit-ridership-tra",
+      "name": "Urban Rail Transit Ridership Dynamics",
+      "baseline_sha256": "0f1471a9dfc1556fe885484545768065fb24dedbed3d33be1c1d1def30e9d97b",
+      "current_sha256": "0f1471a9dfc1556fe885484545768065fb24dedbed3d33be1c1d1def30e9d97b",
+      "changed": false,
+      "numerical_status": "failed",
+      "source_receipt": "operations/corpus-repairs-v19-c.json",
+      "repair_classification": "unresolved_original_source_required",
+      "cause_and_repair": "Dollar revenue is directly integrated into0\u2013100 quality; quality passes100 and reverses attrition, driving signed rider runaway.",
+      "source_evidence": [
+        {
+          "url": "https://doi.org/10.1016/j.tra.2008.06.007",
+          "version": "See read evidence",
+          "pages": null,
+          "read": "Taylor etal2009 pp60\u201377 empirical metropolitan ridership regression. Publisher DOI access unavailable thispass; prior source-reconciliation scope carriedforward, no fulltext access asserted."
+        }
+      ],
+      "independent_evidence": {
+        "prior_v18_evidence": {
+          "kind": "Distinct adaptive implicit solver diagnostic of unchanged local equations; same expression evaluator, not source-equivalence validation",
+          "radau_diagnostic": {
+            "status": "failed",
+            "error": "Radau integration failed: Required step size is less than spacing between numbers.",
+            "seconds": 1.297
+          }
+        },
+        "scope": "Historical reference evidence retained transparently; current unchanged definition default/half/quarter rerun in grid_evidence."
+      },
+      "remaining_limitations": [
+        "Original dollar-to-quality conversion and bounded serviceresponse/maintenance units, plus source dynamical ridership equations."
+      ],
+      "current_error": "Unresolved or invalid equations at time 3.75: Root causes: Rider_Adoption: result is not finite; Rider_Attrition: result is not finite"
+    }
+  ],
+  "additional_solver_repairs": {
+    "receipt": "operations/corpus-hardening-repairs-v19-b.json",
+    "models": [
+      "grid-frequency-stability-ene",
+      "traffic-flow-dynamics-soc",
+      "milgram-small-world-soc",
+      "greenshields-traffic-flow-model-tra",
+      "world2-forrester-original-cla"
+    ],
+    "reason": "Uncertified state events and lookup forcing are rejected by Radau. Equations retained; explicit grids independently checked."
+  }
+}

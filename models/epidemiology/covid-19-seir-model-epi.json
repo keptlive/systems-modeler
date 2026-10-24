@@ -1,7 +1,7 @@
 {
   "id": "covid-19-seir-model-epi",
   "name": "COVID-19 SEIR Model",
-  "description": "An SEIR compartmental model for COVID-19 transmission dynamics. Includes exposed (latent) period, hospitalization, ICU, and death compartments based on early pandemic parameters. Reference: CDC COVID-19 Data and Resources. Source: https://www.cdc.gov/coronavirus/",
+  "description": "Illustrative COVID-19 SEIR Model.\n\nSource reconciliation 2026-10-20: Illustrative COVID-19 compartment extension. Hethcote (2000) is a general mathematical review predating COVID-19, not evidence for these hospital/ICU compartments, severity fractions, intervention settings or initial population. No parameter calibration or unit mapping to a COVID dataset has been established. Equations, initial values, flow topology and layout are unchanged. Scientific/source fidelity remains unverified.",
   "stocks": [
     {
       "id": "stock-susceptible",
@@ -88,7 +88,7 @@
     {
       "id": "flow-infection",
       "name": "Infection",
-      "equation": "Beta * Susceptible * Total_Infectious / Total_Population * (1 - Intervention_Effect)",
+      "equation": "\"Beta (Transmission Rate)\" * Susceptible * Total_Infectious / Total_Population * (1 - Intervention_Effect)",
       "from_stock": "stock-susceptible",
       "to_stock": "stock-exposed",
       "position": {
@@ -229,7 +229,7 @@
     {
       "id": "var-beta-transmission-rate",
       "name": "Beta (Transmission Rate)",
-      "equation": "R0 / Infectious_Period_Average",
+      "equation": "\"R0 (Basic Reproduction Number)\" / Infectious_Period_Average",
       "position": {
         "x": 400,
         "y": 80
@@ -364,7 +364,7 @@
     {
       "id": "var-effective-reproduction-number",
       "name": "Effective Reproduction Number",
-      "equation": "R0 * (Susceptible / Total_Population) * (1 - Intervention_Effect)",
+      "equation": "\"R0 (Basic Reproduction Number)\" * (Susceptible / Total_Population) * (1 - Intervention_Effect)",
       "position": {
         "x": 400,
         "y": 320
@@ -379,6 +379,6 @@
   },
   "created_at": "2026-01-11T20:04:50.790377Z",
   "updated_at": "2026-01-11T20:04:50.790377Z",
-  "source": "https://doi.org/10.1016/S0025-5564(02)00108-6",
+  "source": "https://doi.org/10.1137/S0036144500371907",
   "reference": "Hethcote HW. The mathematics of infectious diseases. SIAM Review. 2000;42(4):599-653."
 }

@@ -1,7 +1,7 @@
 {
   "id": "cholera-sirw-model-epi",
   "name": "Cholera SIRW Model",
-  "description": "SIR model with waterborne transmission pathway (W compartment). Models Vibrio cholerae dynamics in water sources and human population. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "description": "Illustrative Cholera SIRW Model.\n\nSource reconciliation 2026-10-20: Corrected the unrelated chondrogenesis DOI to the publisher book record. This correction establishes bibliographic identity only. This generated definition is illustrative; no specific book chapter/equation, parameter table, initial values, unit system or calibration has been traced to it. The water reservoir formulation uses S, I, R, W and N aliases that are not the stock names; no chapter/equation mapping supports the waterborne saturation law or its numeric constants. Equations, initial values, flow topology and layout are unchanged. Scientific/source fidelity remains unverified.\n\nIdentifier reconciliation 2026-10-20: S/I/R/W explicitly map to existing Susceptible/Infected/Recovered/Water_Bacteria stocks. N is the human stock sum, so the infection denominator uses the defined human compartments and no invented parameter. These mechanical/structural identities do not verify that the illustrative rates and water-transmission extension reproduce an original source.",
   "stocks": [
     {
       "id": "stock-susceptible",
@@ -48,7 +48,7 @@
     {
       "id": "flow-infection",
       "name": "infection",
-      "equation": "beta_direct * S * I / N + beta_water * S * W / (K + W)",
+      "equation": "beta_direct * \"Susceptible\" * \"Infected\" / (\"Susceptible\" + \"Infected\" + \"Recovered\") + beta_water * \"Susceptible\" * \"Water_Bacteria\" / (K + \"Water_Bacteria\")",
       "from_stock": "stock-susceptible",
       "to_stock": "stock-infected",
       "position": {
@@ -59,7 +59,7 @@
     {
       "id": "flow-recovery",
       "name": "recovery",
-      "equation": "gamma * I",
+      "equation": "gamma * \"Infected\"",
       "from_stock": "stock-infected",
       "to_stock": "stock-recovered",
       "position": {
@@ -70,7 +70,7 @@
     {
       "id": "flow-waning-immunity",
       "name": "waning_immunity",
-      "equation": "omega * R",
+      "equation": "omega * \"Recovered\"",
       "from_stock": "stock-recovered",
       "to_stock": "stock-susceptible",
       "position": {
@@ -81,7 +81,7 @@
     {
       "id": "flow-shedding",
       "name": "shedding",
-      "equation": "xi * I",
+      "equation": "xi * \"Infected\"",
       "from_stock": null,
       "to_stock": "stock-water-bacteria",
       "position": {
@@ -92,7 +92,7 @@
     {
       "id": "flow-bacterial-decay",
       "name": "bacterial_decay",
-      "equation": "delta * W",
+      "equation": "delta * \"Water_Bacteria\"",
       "from_stock": "stock-water-bacteria",
       "to_stock": null,
       "position": {
@@ -210,6 +210,6 @@
   },
   "created_at": "2026-01-11T20:04:50.789362Z",
   "updated_at": "2026-01-11T20:04:50.789362Z",
-  "source": "https://doi.org/10.1016/j.jtbi.2017.11.024",
-  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008."
+  "source": "https://doi.org/10.2307/j.ctvcm4gk0",
+  "reference": "Keeling MJ, Rohani P. Modeling Infectious Diseases in Humans and Animals. Princeton University Press, 2008. DOI: 10.2307/j.ctvcm4gk0. General conceptual reference only; exact model derivation not established."
 }

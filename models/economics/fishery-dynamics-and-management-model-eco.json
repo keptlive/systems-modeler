@@ -1,7 +1,7 @@
 {
   "id": "fishery-dynamics-and-management-model-eco",
   "name": "Fishery Dynamics and Management Model",
-  "description": "Models fish population dynamics under harvesting pressure, including stock-recruitment relationships, fishing effort, and management interventions like quotas and marine protected areas. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "description": "Models fish population dynamics under harvesting pressure, including stock-recruitment relationships, fishing effort, and management interventions like quotas and marine protected areas. Reference: UN World Population Prospects. Source: https://population.un.org/\n\nIdentifier reconciliation 2026-10-20: undeclared shorthand is explicitly mapped to existing declared quantities. This preserves the authored scalar mathematics, IDs, inputs, topology and layout. It does not recover an original executable source or establish parameter calibration/scientific fidelity; existing conceptual references remain unverified for these equations.",
   "stocks": [
     {
       "id": "stock-fish-stock",
@@ -60,7 +60,7 @@
     {
       "id": "flow-harvest",
       "name": "Harvest",
-      "equation": "MIN(Potential_Catch, Quota)",
+      "equation": "MIN(Potential_Catch, \"Annual Quota\")",
       "from_stock": "stock-fish-stock",
       "to_stock": "stock-cumulative-harvest",
       "position": {
@@ -82,7 +82,7 @@
     {
       "id": "flow-fleet-investment",
       "name": "Fleet Investment",
-      "equation": "MAX(0, (Desired_Fleet - Fishing_Capital) / Investment_Delay)",
+      "equation": "MAX(0, (\"Desired Fleet Size\" - \"Fishing Capital (Boats)\") / Investment_Delay)",
       "from_stock": null,
       "to_stock": "stock-fishing-capital-boats",
       "position": {
@@ -93,7 +93,7 @@
     {
       "id": "flow-fleet-depreciation",
       "name": "Fleet Depreciation",
-      "equation": "Fishing_Capital / Boat_Lifetime + Exit_Rate",
+      "equation": "\"Fishing Capital (Boats)\" / Boat_Lifetime + Exit_Rate",
       "from_stock": "stock-fishing-capital-boats",
       "to_stock": null,
       "position": {
@@ -160,7 +160,7 @@
     {
       "id": "var-fishing-effort",
       "name": "Fishing Effort",
-      "equation": "Fishing_Capital * Days_Fishing * Effort_Multiplier",
+      "equation": "\"Fishing Capital (Boats)\" * \"Days Fishing per Year\" * Effort_Multiplier",
       "position": {
         "x": 250,
         "y": 160
@@ -196,7 +196,7 @@
     {
       "id": "var-potential-catch",
       "name": "Potential Catch",
-      "equation": "Catchability * Fishing_Effort * Fish_Stock",
+      "equation": "\"Catchability Coefficient\" * Fishing_Effort * Fish_Stock",
       "position": {
         "x": 100,
         "y": 240
@@ -205,7 +205,7 @@
     {
       "id": "var-annual-quota",
       "name": "Annual Quota",
-      "equation": "IF Quota_Policy_Active THEN Total_Allowable_Catch ELSE 1e9",
+      "equation": "IF Quota_Policy_Active THEN \"Total Allowable Catch (TAC)\" ELSE 1e9",
       "position": {
         "x": 250,
         "y": 240
@@ -223,7 +223,7 @@
     {
       "id": "var-total-allowable-catch-tac",
       "name": "Total Allowable Catch (TAC)",
-      "equation": "MSY * Harvest_Control_Rule",
+      "equation": "\"Maximum Sustainable Yield\" * Harvest_Control_Rule",
       "position": {
         "x": 550,
         "y": 240
@@ -232,7 +232,7 @@
     {
       "id": "var-harvest-control-rule",
       "name": "Harvest Control Rule",
-      "equation": "IF Fish_Stock > Btrigger THEN 1 ELSE Fish_Stock / Btrigger",
+      "equation": "IF Fish_Stock > \"B-trigger (Reference Biomass)\" THEN 1 ELSE Fish_Stock / \"B-trigger (Reference Biomass)\"",
       "position": {
         "x": 700,
         "y": 240
@@ -241,7 +241,7 @@
     {
       "id": "var-b-trigger-reference-biomass",
       "name": "B-trigger (Reference Biomass)",
-      "equation": "BMSY * 0.5",
+      "equation": "\"Biomass at MSY\" * 0.5",
       "position": {
         "x": 100,
         "y": 320
@@ -268,7 +268,7 @@
     {
       "id": "var-stock-status-bbmsy",
       "name": "Stock Status (B/BMSY)",
-      "equation": "Fish_Stock / BMSY",
+      "equation": "Fish_Stock / \"Biomass at MSY\"",
       "position": {
         "x": 550,
         "y": 320
@@ -295,7 +295,7 @@
     {
       "id": "var-overfishing-indicator",
       "name": "Overfishing Indicator",
-      "equation": "IF Fishing_Mortality > FMSY THEN 1 ELSE 0",
+      "equation": "IF \"Fishing Mortality Rate\" > \"Fishing Mortality at MSY\" THEN 1 ELSE 0",
       "position": {
         "x": 250,
         "y": 400
@@ -349,7 +349,7 @@
     {
       "id": "var-total-fleet-cost",
       "name": "Total Fleet Cost",
-      "equation": "Fishing_Capital * Cost_Per_Boat",
+      "equation": "\"Fishing Capital (Boats)\" * Cost_Per_Boat",
       "position": {
         "x": 400,
         "y": 480
@@ -358,7 +358,7 @@
     {
       "id": "var-fleet-profit",
       "name": "Fleet Profit",
-      "equation": "Revenue - Total_Cost",
+      "equation": "\"Fleet Revenue\" - \"Total Fleet Cost\"",
       "position": {
         "x": 550,
         "y": 480
@@ -367,7 +367,7 @@
     {
       "id": "var-profit-per-boat",
       "name": "Profit per Boat",
-      "equation": "Profit / Fishing_Capital",
+      "equation": "\"Fleet Profit\" / \"Fishing Capital (Boats)\"",
       "position": {
         "x": 700,
         "y": 480
@@ -376,7 +376,7 @@
     {
       "id": "var-desired-fleet-size",
       "name": "Desired Fleet Size",
-      "equation": "IF Profit_Per_Boat > 0 THEN Fishing_Capital * (1 + 0.1 * Profit_Per_Boat / 100000) ELSE Fishing_Capital * 0.9",
+      "equation": "IF Profit_Per_Boat > 0 THEN \"Fishing Capital (Boats)\" * (1 + 0.1 * Profit_Per_Boat / 100000) ELSE \"Fishing Capital (Boats)\" * 0.9",
       "position": {
         "x": 100,
         "y": 560
@@ -403,7 +403,7 @@
     {
       "id": "var-exit-rate",
       "name": "Exit Rate",
-      "equation": "IF Profit_Per_Boat < -50000 THEN Fishing_Capital * 0.1 ELSE 0",
+      "equation": "IF Profit_Per_Boat < -50000 THEN \"Fishing Capital (Boats)\" * 0.1 ELSE 0",
       "position": {
         "x": 550,
         "y": 560

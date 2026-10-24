@@ -1,7 +1,7 @@
 {
   "id": "mental-health-treatment-system-dynamics-hea",
   "name": "Mental Health Treatment System Dynamics",
-  "description": "A system dynamics model of mental health in a population, capturing the flow through different states of mental health, access to treatment, healthcare system capacity, and the effects of social determinants. Models depression, anxiety, and severe mental illness. Reference: UN World Population Prospects. Source: https://population.un.org/",
+  "description": "Illustrative Mental Health Treatment System Dynamics. Source reconciliation 2026-10-20: The previous DOI is Muntaner's political-health commentary, not a mental-health treatment model source. Disorder groups, treatment/dropout aliases, workforce indices and stigma scales have no source mapping. The displayed DALY expression weights current populations without explicit time integration; it does not by itself establish disability-adjusted life-years. No empirical incidence, treatment success or mortality calibration is established. Scientific calibration and applicability remain unverified.",
   "stocks": [
     {
       "id": "stock-mentally-healthy-population",
@@ -118,7 +118,7 @@
     {
       "id": "flow-onset-of-mild-disorder",
       "name": "Onset of Mild Disorder",
-      "equation": "Healthy * Incidence_Rate_Mild * Risk_Factor_Effect",
+      "equation": "\"Mentally Healthy Population\" * Incidence_Rate_Mild * Risk_Factor_Effect",
       "from_stock": "stock-mentally-healthy-population",
       "to_stock": "stock-mild-disorder-untreated",
       "position": {
@@ -129,7 +129,7 @@
     {
       "id": "flow-mild-disorder-seeking-treatment",
       "name": "Mild Disorder Seeking Treatment",
-      "equation": "Mild_Untreated * Treatment_Seeking_Rate_Mild * Treatment_Access",
+      "equation": "\"Mild Disorder Untreated\" * Treatment_Seeking_Rate_Mild * Treatment_Access",
       "from_stock": "stock-mild-disorder-untreated",
       "to_stock": "stock-mild-disorder-in-treatment",
       "position": {
@@ -140,7 +140,7 @@
     {
       "id": "flow-spontaneous-recovery-mild",
       "name": "Spontaneous Recovery Mild",
-      "equation": "Mild_Untreated * Spontaneous_Recovery_Rate",
+      "equation": "\"Mild Disorder Untreated\" * Spontaneous_Recovery_Rate",
       "from_stock": "stock-mild-disorder-untreated",
       "to_stock": null,
       "position": {
@@ -151,7 +151,7 @@
     {
       "id": "flow-recovery-from-mild-disorder",
       "name": "Recovery from Mild Disorder",
-      "equation": "Mild_Treated * Treatment_Success_Rate_Mild",
+      "equation": "\"Mild Disorder in Treatment\" * Treatment_Success_Rate_Mild",
       "from_stock": "stock-mild-disorder-in-treatment",
       "to_stock": "stock-mentally-healthy-population",
       "position": {
@@ -162,7 +162,7 @@
     {
       "id": "flow-progression-mild-to-moderate",
       "name": "Progression Mild to Moderate",
-      "equation": "Mild_Untreated * Progression_Rate_Mild",
+      "equation": "\"Mild Disorder Untreated\" * Progression_Rate_Mild",
       "from_stock": "stock-mild-disorder-untreated",
       "to_stock": "stock-moderate-disorder-untreated",
       "position": {
@@ -173,7 +173,7 @@
     {
       "id": "flow-progression-while-treated",
       "name": "Progression While Treated",
-      "equation": "Mild_Treated * Progression_Rate_Mild * 0.3",
+      "equation": "\"Mild Disorder in Treatment\" * Progression_Rate_Mild * 0.3",
       "from_stock": "stock-mild-disorder-in-treatment",
       "to_stock": "stock-moderate-disorder-in-treatment",
       "position": {
@@ -184,7 +184,7 @@
     {
       "id": "flow-treatment-dropout-mild",
       "name": "Treatment Dropout Mild",
-      "equation": "Mild_Treated * Dropout_Rate",
+      "equation": "\"Mild Disorder in Treatment\" * \"Treatment Dropout Rate\"",
       "from_stock": "stock-mild-disorder-in-treatment",
       "to_stock": "stock-moderate-disorder-untreated",
       "position": {
@@ -195,7 +195,7 @@
     {
       "id": "flow-relapse-to-mild-disorder",
       "name": "Relapse to Mild Disorder",
-      "equation": "Healthy * Relapse_Rate * Previous_Episode_Fraction",
+      "equation": "\"Mentally Healthy Population\" * Relapse_Rate * Previous_Episode_Fraction",
       "from_stock": null,
       "to_stock": "stock-mild-disorder-untreated",
       "position": {
@@ -206,7 +206,7 @@
     {
       "id": "flow-moderate-seeking-treatment",
       "name": "Moderate Seeking Treatment",
-      "equation": "Moderate_Untreated * Treatment_Seeking_Rate_Moderate * Treatment_Access",
+      "equation": "\"Moderate Disorder Untreated\" * Treatment_Seeking_Rate_Moderate * Treatment_Access",
       "from_stock": "stock-moderate-disorder-untreated",
       "to_stock": "stock-moderate-disorder-in-treatment",
       "position": {
@@ -217,7 +217,7 @@
     {
       "id": "flow-recovery-from-moderate",
       "name": "Recovery from Moderate",
-      "equation": "Moderate_Treated * Treatment_Success_Rate_Moderate",
+      "equation": "\"Moderate Disorder in Treatment\" * Treatment_Success_Rate_Moderate",
       "from_stock": "stock-moderate-disorder-in-treatment",
       "to_stock": null,
       "position": {
@@ -228,7 +228,7 @@
     {
       "id": "flow-progression-to-severe",
       "name": "Progression to Severe",
-      "equation": "Moderate_Untreated * Progression_Rate_Moderate",
+      "equation": "\"Moderate Disorder Untreated\" * Progression_Rate_Moderate",
       "from_stock": "stock-moderate-disorder-untreated",
       "to_stock": "stock-severe-disorder-untreated",
       "position": {
@@ -239,7 +239,7 @@
     {
       "id": "flow-treatment-dropout-moderate",
       "name": "Treatment Dropout Moderate",
-      "equation": "Moderate_Treated * Dropout_Rate * 1.5",
+      "equation": "\"Moderate Disorder in Treatment\" * \"Treatment Dropout Rate\" * 1.5",
       "from_stock": "stock-moderate-disorder-in-treatment",
       "to_stock": "stock-severe-disorder-untreated",
       "position": {
@@ -250,7 +250,7 @@
     {
       "id": "flow-relapse-to-moderate",
       "name": "Relapse to Moderate",
-      "equation": "Mild_Treated * Relapse_Rate * 0.3",
+      "equation": "\"Mild Disorder in Treatment\" * Relapse_Rate * 0.3",
       "from_stock": null,
       "to_stock": "stock-moderate-disorder-untreated",
       "position": {
@@ -261,7 +261,7 @@
     {
       "id": "flow-severe-seeking-treatment",
       "name": "Severe Seeking Treatment",
-      "equation": "Severe_Untreated * Treatment_Seeking_Rate_Severe * Treatment_Access",
+      "equation": "\"Severe Disorder Untreated\" * Treatment_Seeking_Rate_Severe * Treatment_Access",
       "from_stock": "stock-severe-disorder-untreated",
       "to_stock": "stock-severe-disorder-in-treatment",
       "position": {
@@ -272,7 +272,7 @@
     {
       "id": "flow-recovery-from-severe",
       "name": "Recovery from Severe",
-      "equation": "Severe_Treated * Treatment_Success_Rate_Severe",
+      "equation": "\"Severe Disorder in Treatment\" * Treatment_Success_Rate_Severe",
       "from_stock": "stock-severe-disorder-in-treatment",
       "to_stock": null,
       "position": {
@@ -283,7 +283,7 @@
     {
       "id": "flow-severe-relapse",
       "name": "Severe Relapse",
-      "equation": "Severe_Treated * Severe_Relapse_Rate",
+      "equation": "\"Severe Disorder in Treatment\" * Severe_Relapse_Rate",
       "from_stock": "stock-severe-disorder-in-treatment",
       "to_stock": "stock-in-mental-health-crisis",
       "position": {
@@ -294,7 +294,7 @@
     {
       "id": "flow-crisis-events",
       "name": "Crisis Events",
-      "equation": "Severe_Untreated * Crisis_Rate",
+      "equation": "\"Severe Disorder Untreated\" * Crisis_Rate",
       "from_stock": "stock-severe-disorder-untreated",
       "to_stock": "stock-in-mental-health-crisis",
       "position": {
@@ -305,7 +305,7 @@
     {
       "id": "flow-post-crisis-treatment-entry",
       "name": "Post-Crisis Treatment Entry",
-      "equation": "In_Crisis * Crisis_Treatment_Rate",
+      "equation": "\"In Mental Health Crisis\" * Crisis_Treatment_Rate",
       "from_stock": "stock-in-mental-health-crisis",
       "to_stock": "stock-severe-disorder-in-treatment",
       "position": {
@@ -316,7 +316,7 @@
     {
       "id": "flow-crisis-mortality",
       "name": "Crisis Mortality",
-      "equation": "In_Crisis * Crisis_Mortality_Rate",
+      "equation": "\"In Mental Health Crisis\" * Crisis_Mortality_Rate",
       "from_stock": "stock-in-mental-health-crisis",
       "to_stock": null,
       "position": {
@@ -338,7 +338,7 @@
     {
       "id": "flow-deaths-healthy",
       "name": "Deaths Healthy",
-      "equation": "Healthy * Base_Death_Rate",
+      "equation": "\"Mentally Healthy Population\" * Base_Death_Rate",
       "from_stock": "stock-mentally-healthy-population",
       "to_stock": null,
       "position": {
@@ -349,7 +349,7 @@
     {
       "id": "flow-deaths-mild-disorder",
       "name": "Deaths Mild Disorder",
-      "equation": "(Mild_Untreated + Mild_Treated) * Base_Death_Rate * 1.1",
+      "equation": "(\"Mild Disorder Untreated\" + \"Mild Disorder in Treatment\") * Base_Death_Rate * 1.1",
       "from_stock": "stock-mild-disorder-untreated",
       "to_stock": null,
       "position": {
@@ -360,7 +360,7 @@
     {
       "id": "flow-capacity-expansion",
       "name": "Capacity Expansion",
-      "equation": "Investment_Rate * Budget_Allocation",
+      "equation": "Investment_Rate * \"Mental Health Budget Allocation\"",
       "from_stock": null,
       "to_stock": "stock-treatment-system-capacity",
       "position": {
@@ -371,7 +371,7 @@
     {
       "id": "flow-capacity-attrition",
       "name": "Capacity Attrition",
-      "equation": "Treatment_Capacity * 0.03",
+      "equation": "\"Treatment System Capacity\" * 0.03",
       "from_stock": "stock-treatment-system-capacity",
       "to_stock": null,
       "position": {
@@ -382,7 +382,7 @@
     {
       "id": "flow-workforce-hiring",
       "name": "Workforce Hiring",
-      "equation": "Workforce_Gap * Hiring_Rate * Budget_Allocation",
+      "equation": "Workforce_Gap * Hiring_Rate * \"Mental Health Budget Allocation\"",
       "from_stock": null,
       "to_stock": "stock-mental-health-workforce",
       "position": {
@@ -393,7 +393,7 @@
     {
       "id": "flow-workforce-leaving",
       "name": "Workforce Leaving",
-      "equation": "Workforce * Turnover_Rate * Burnout_Effect",
+      "equation": "\"Mental Health Workforce\" * Turnover_Rate * Burnout_Effect",
       "from_stock": "stock-mental-health-workforce",
       "to_stock": null,
       "position": {
@@ -404,7 +404,7 @@
     {
       "id": "flow-stigma-reduction",
       "name": "Stigma Reduction",
-      "equation": "Social_Stigma * Stigma_Reduction_Rate * Awareness_Campaign_Effect",
+      "equation": "\"Social Stigma Level\" * Stigma_Reduction_Rate * Awareness_Campaign_Effect",
       "from_stock": "stock-social-stigma-level",
       "to_stock": null,
       "position": {
@@ -417,7 +417,7 @@
     {
       "id": "var-total-population",
       "name": "Total Population",
-      "equation": "Healthy + Mild_Untreated + Mild_Treated + Moderate_Untreated + Moderate_Treated + Severe_Untreated + Severe_Treated + In_Crisis",
+      "equation": "\"Mentally Healthy Population\" + \"Mild Disorder Untreated\" + \"Mild Disorder in Treatment\" + \"Moderate Disorder Untreated\" + \"Moderate Disorder in Treatment\" + \"Severe Disorder Untreated\" + \"Severe Disorder in Treatment\" + \"In Mental Health Crisis\"",
       "position": {
         "x": 100,
         "y": 80
@@ -435,7 +435,7 @@
     {
       "id": "var-any-disorder-prevalence",
       "name": "Any Disorder Prevalence",
-      "equation": "(Total_Population - Healthy) / Total_Population",
+      "equation": "(Total_Population - \"Mentally Healthy Population\") / Total_Population",
       "position": {
         "x": 400,
         "y": 80
@@ -444,7 +444,7 @@
     {
       "id": "var-treatment-gap",
       "name": "Treatment Gap",
-      "equation": "(Mild_Untreated + Moderate_Untreated + Severe_Untreated) / (Total_Population - Healthy)",
+      "equation": "(\"Mild Disorder Untreated\" + \"Moderate Disorder Untreated\" + \"Severe Disorder Untreated\") / (Total_Population - \"Mentally Healthy Population\")",
       "position": {
         "x": 550,
         "y": 80
@@ -489,7 +489,7 @@
     {
       "id": "var-treatment-seeking-rate-mild",
       "name": "Treatment Seeking Rate Mild",
-      "equation": "0.1 * (1 - Social_Stigma / 100)",
+      "equation": "0.1 * (1 - \"Social Stigma Level\" / 100)",
       "position": {
         "x": 550,
         "y": 160
@@ -498,7 +498,7 @@
     {
       "id": "var-treatment-seeking-rate-moderate",
       "name": "Treatment Seeking Rate Moderate",
-      "equation": "0.2 * (1 - Social_Stigma / 100)",
+      "equation": "0.2 * (1 - \"Social Stigma Level\" / 100)",
       "position": {
         "x": 700,
         "y": 160
@@ -507,7 +507,7 @@
     {
       "id": "var-treatment-seeking-rate-severe",
       "name": "Treatment Seeking Rate Severe",
-      "equation": "0.3 * (1 - Social_Stigma / 100)",
+      "equation": "0.3 * (1 - \"Social Stigma Level\" / 100)",
       "position": {
         "x": 100,
         "y": 240
@@ -516,7 +516,7 @@
     {
       "id": "var-treatment-access",
       "name": "Treatment Access",
-      "equation": "MIN(1, Treatment_Capacity / 100 * Workforce / 100 * Insurance_Coverage)",
+      "equation": "MIN(1, \"Treatment System Capacity\" / 100 * \"Mental Health Workforce\" / 100 * Insurance_Coverage)",
       "position": {
         "x": 250,
         "y": 240
@@ -570,7 +570,7 @@
     {
       "id": "var-treatment-quality",
       "name": "Treatment Quality",
-      "equation": "MIN(1.5, Workforce / 100 * Evidence_Based_Practice_Adoption)",
+      "equation": "MIN(1.5, \"Mental Health Workforce\" / 100 * Evidence_Based_Practice_Adoption)",
       "position": {
         "x": 400,
         "y": 320
@@ -705,7 +705,7 @@
     {
       "id": "var-workforce-gap",
       "name": "Workforce Gap",
-      "equation": "MAX(0, Needed_Workforce - Workforce)",
+      "equation": "MAX(0, Needed_Workforce - \"Mental Health Workforce\")",
       "position": {
         "x": 400,
         "y": 560
@@ -714,7 +714,7 @@
     {
       "id": "var-needed-workforce",
       "name": "Needed Workforce",
-      "equation": "100 * (1 + (Prevalence_Any_Disorder - 0.15) * 2)",
+      "equation": "100 * (1 + (\"Any Disorder Prevalence\" - 0.15) * 2)",
       "position": {
         "x": 550,
         "y": 560
@@ -768,7 +768,7 @@
     {
       "id": "var-disability-burden-dalys",
       "name": "Disability Burden (DALYs)",
-      "equation": "Mild_Untreated * 0.1 + Mild_Treated * 0.05 + Moderate_Untreated * 0.25 + Moderate_Treated * 0.15 + Severe_Untreated * 0.5 + Severe_Treated * 0.3 + In_Crisis * 0.8",
+      "equation": "\"Mild Disorder Untreated\" * 0.1 + \"Mild Disorder in Treatment\" * 0.05 + \"Moderate Disorder Untreated\" * 0.25 + \"Moderate Disorder in Treatment\" * 0.15 + \"Severe Disorder Untreated\" * 0.5 + \"Severe Disorder in Treatment\" * 0.3 + \"In Mental Health Crisis\" * 0.8",
       "position": {
         "x": 700,
         "y": 640
@@ -777,7 +777,7 @@
     {
       "id": "var-annual-economic-cost",
       "name": "Annual Economic Cost",
-      "equation": "(Mild_Untreated + Mild_Treated) * 2000 + (Moderate_Untreated + Moderate_Treated) * 8000 + (Severe_Untreated + Severe_Treated) * 25000 + In_Crisis * 50000",
+      "equation": "(\"Mild Disorder Untreated\" + \"Mild Disorder in Treatment\") * 2000 + (\"Moderate Disorder Untreated\" + \"Moderate Disorder in Treatment\") * 8000 + (\"Severe Disorder Untreated\" + \"Severe Disorder in Treatment\") * 25000 + \"In Mental Health Crisis\" * 50000",
       "position": {
         "x": 100,
         "y": 720
@@ -818,6 +818,6 @@
   },
   "created_at": "2026-01-11T20:04:50.816440Z",
   "updated_at": "2026-01-11T20:04:50.816440Z",
-  "source": "https://doi.org/10.1016/j.socscimed.2013.03.004",
-  "reference": "Healthcare System Dynamics Models"
+  "source": "",
+  "reference": "Unverified illustrative healthcare stock-flow construction; no identified source for these equations, units or numerical parameters."
 }

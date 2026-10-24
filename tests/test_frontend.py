@@ -6,6 +6,7 @@ import sys
 import re
 import json
 import subprocess
+import shutil
 from pathlib import Path
 
 # Add parent directory to path
@@ -13,42 +14,24 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 def check_js_syntax(file_path: Path) -> tuple:
-    """Check JavaScript file for basic syntax errors."""
+    """Parse JavaScript with Node; delimiter counts are not syntax validation."""
+    executable = shutil.which("node") or shutil.which("nodejs") or shutil.which("node.exe")
+    if not executable:
+        return False, "Node.js is required for JavaScript syntax checks"
     try:
-        with open(file_path, 'r') as f:
-            content = f.read()
-
-        # Check for balanced braces, brackets, and parentheses
-        counts = {
-            '{': content.count('{'),
-            '}': content.count('}'),
-            '[': content.count('['),
-            ']': content.count(']'),
-            '(': content.count('('),
-            ')': content.count(')'),
-        }
-
-        issues = []
-        if counts['{'] != counts['}']:
-            issues.append(f"Unbalanced braces: {counts['{']} {{ vs {counts['}']} }}")
-        if counts['['] != counts[']']:
-            issues.append(f"Unbalanced brackets: {counts['[']} [ vs {counts[']']} ]")
-        if counts['('] != counts[')']:
-            issues.append(f"Unbalanced parens: {counts['(']} ( vs {counts[')']} )")
-
-        if issues:
-            return False, "; ".join(issues)
-
-        return True, f"{len(content)} bytes, syntax OK"
-
-    except Exception as e:
-        return False, str(e)
+        # stdin also works when WSL finds a Windows Node executable.
+        result = subprocess.run([executable, "--check"],
+                                input=file_path.read_text(encoding="utf-8"),
+                                capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.TimeoutExpired) as error:
+        return False, str(error)
+    return result.returncode == 0, (result.stderr.strip() or "JavaScript parsed successfully")
 
 
 def check_js_globals(file_path: Path, required_globals: list) -> tuple:
     """Check that required global objects/functions exist."""
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
 
         missing = []
@@ -77,7 +60,7 @@ def check_js_globals(file_path: Path, required_globals: list) -> tuple:
 def check_css_syntax(file_path: Path) -> tuple:
     """Check CSS file for basic syntax errors."""
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
 
         # Check balanced braces
@@ -96,7 +79,7 @@ def check_css_syntax(file_path: Path) -> tuple:
 def check_html_structure(file_path: Path, required_elements: list) -> tuple:
     """Check HTML file for required elements."""
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
 
         missing = []
@@ -113,7 +96,7 @@ def check_html_structure(file_path: Path, required_elements: list) -> tuple:
         return False, str(e)
 
 
-def test_app_js() -> tuple:
+def _check_app_js() -> tuple:
     """Test static/js/app.js"""
     path = Path(__file__).parent.parent / "static/js/app.js"
     if not path.exists():
@@ -127,7 +110,7 @@ def test_app_js() -> tuple:
     return success, msg
 
 
-def test_canvas_js() -> tuple:
+def _check_canvas_js() -> tuple:
     """Test static/js/canvas.js"""
     path = Path(__file__).parent.parent / "static/js/canvas.js"
     if not path.exists():
@@ -141,7 +124,7 @@ def test_canvas_js() -> tuple:
     return success, msg
 
 
-def test_charts_js() -> tuple:
+def _check_charts_js() -> tuple:
     """Test static/js/charts.js"""
     path = Path(__file__).parent.parent / "static/js/charts.js"
     if not path.exists():
@@ -155,7 +138,7 @@ def test_charts_js() -> tuple:
     return success, msg
 
 
-def test_analytics_js() -> tuple:
+def _check_analytics_js() -> tuple:
     """Test static/js/analytics.js"""
     path = Path(__file__).parent.parent / "static/js/analytics.js"
     if not path.exists():
@@ -169,7 +152,7 @@ def test_analytics_js() -> tuple:
     return success, msg
 
 
-def test_ai_agent_js() -> tuple:
+def _check_ai_agent_js() -> tuple:
     """Test static/js/ai-agent.js"""
     path = Path(__file__).parent.parent / "static/js/ai-agent.js"
     if not path.exists():
@@ -183,7 +166,7 @@ def test_ai_agent_js() -> tuple:
     return success, msg
 
 
-def test_simulation_js() -> tuple:
+def _check_simulation_js() -> tuple:
     """Test static/js/simulation.js"""
     path = Path(__file__).parent.parent / "static/js/simulation.js"
     if not path.exists():
@@ -197,7 +180,7 @@ def test_simulation_js() -> tuple:
     return success, msg
 
 
-def test_llm_interface_js() -> tuple:
+def _check_llm_interface_js() -> tuple:
     """Test static/js/llm-interface.js"""
     path = Path(__file__).parent.parent / "static/js/llm-interface.js"
     if not path.exists():
@@ -211,7 +194,7 @@ def test_llm_interface_js() -> tuple:
     return success, msg
 
 
-def test_style_css() -> tuple:
+def _check_style_css() -> tuple:
     """Test static/css/style.css"""
     path = Path(__file__).parent.parent / "static/css/style.css"
     if not path.exists():
@@ -220,7 +203,7 @@ def test_style_css() -> tuple:
     return check_css_syntax(path)
 
 
-def test_analytics_css() -> tuple:
+def _check_analytics_css() -> tuple:
     """Test static/css/analytics.css"""
     path = Path(__file__).parent.parent / "static/css/analytics.css"
     if not path.exists():
@@ -229,7 +212,7 @@ def test_analytics_css() -> tuple:
     return check_css_syntax(path)
 
 
-def test_index_html() -> tuple:
+def _check_index_html() -> tuple:
     """Test static/index.html for required elements."""
     path = Path(__file__).parent.parent / "static/index.html"
     if not path.exists():
@@ -250,19 +233,68 @@ def test_index_html() -> tuple:
     return check_html_structure(path, required)
 
 
+def test_app_js():
+    success, message = _check_app_js()
+    assert success, message
+
+def test_canvas_js():
+    success, message = _check_canvas_js()
+    assert success, message
+
+def test_charts_js():
+    success, message = _check_charts_js()
+    assert success, message
+
+def test_analytics_js():
+    success, message = _check_analytics_js()
+    assert success, message
+
+def test_ai_agent_js():
+    success, message = _check_ai_agent_js()
+    assert success, message
+
+def test_simulation_js():
+    success, message = _check_simulation_js()
+    assert success, message
+
+def test_llm_interface_js():
+    success, message = _check_llm_interface_js()
+    assert success, message
+
+def test_style_css():
+    success, message = _check_style_css()
+    assert success, message
+
+def test_analytics_css():
+    success, message = _check_analytics_css()
+    assert success, message
+
+def test_index_html():
+    success, message = _check_index_html()
+    assert success, message
+
+
+def test_js_parser_rejects_balanced_invalid_syntax(tmp_path):
+    script = tmp_path / "invalid.js"
+    script.write_text("const broken = ;", encoding="utf-8")
+    success, message = check_js_syntax(script)
+    assert not success
+    assert "SyntaxError" in message
+
+
 def run_all_frontend_tests() -> dict:
     """Run all frontend tests and return results."""
     tests = [
-        ("app.js", test_app_js),
-        ("canvas.js", test_canvas_js),
-        ("charts.js", test_charts_js),
-        ("analytics.js", test_analytics_js),
-        ("ai-agent.js", test_ai_agent_js),
-        ("simulation.js", test_simulation_js),
-        ("llm-interface.js", test_llm_interface_js),
-        ("style.css", test_style_css),
-        ("analytics.css", test_analytics_css),
-        ("index.html", test_index_html),
+        ("app.js", _check_app_js),
+        ("canvas.js", _check_canvas_js),
+        ("charts.js", _check_charts_js),
+        ("analytics.js", _check_analytics_js),
+        ("ai-agent.js", _check_ai_agent_js),
+        ("simulation.js", _check_simulation_js),
+        ("llm-interface.js", _check_llm_interface_js),
+        ("style.css", _check_style_css),
+        ("analytics.css", _check_analytics_css),
+        ("index.html", _check_index_html),
     ]
 
     results = []

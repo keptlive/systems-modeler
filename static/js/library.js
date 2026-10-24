@@ -12,6 +12,7 @@ const Library = {
     isOpen: false,
     expandedModel: null,
     isLoading: false,
+    loadError: null,
 
     /**
      * Initialize library
@@ -26,10 +27,12 @@ const Library = {
      */
     async loadModels() {
         this.isLoading = true;
+        this.loadError = null;
         this.showLoading();
         
         try {
-            const response = await fetch("/api/models");
+            const response = await fetch("/api/models/catalog", {signal: AbortSignal.timeout(20000)});
+            if (!response.ok) throw new Error(`Library request failed (${response.status})`);
             const data = await response.json();
             this.models = Array.isArray(data) ? data : (data.models || []);
             
@@ -46,10 +49,11 @@ const Library = {
             console.error("Failed to load models:", error);
             this.models = [];
             this.filteredModels = [];
+            this.loadError = error.message;
         } finally {
             this.isLoading = false;
             this.hideLoading();
-            this.updateList();
+            this.applyFilters();
         }
     },
 
@@ -99,20 +103,23 @@ const Library = {
         const modal = document.createElement("div");
         modal.id = "library-modal";
         modal.className = "library-modal";
+        modal.setAttribute("role", "dialog");
+        modal.setAttribute("aria-modal", "true");
+        modal.setAttribute("aria-labelledby", "library-title");
         modal.innerHTML = `
             <div class="library-content">
                 <div class="library-header">
-                    <h2>📚 Model Library</h2>
+                    <h2 id="library-title">Model Library</h2>
                     <span class="library-count" id="library-count">Loading...</span>
                     <button class="library-close" title="Close">&times;</button>
                 </div>
                 
                 <div class="library-controls">
-                    <input type="text" id="library-search" placeholder="Search models..." class="library-search">
-                    <select id="library-category" class="library-category">
+                    <input type="text" id="library-search" placeholder="Search models..." aria-label="Search model library" class="library-search">
+                    <select id="library-category" class="library-category" aria-label="Model category">
                         <option value="all">All Categories</option>
                     </select>
-                    <select id="library-sort" class="library-sort">
+                    <select id="library-sort" class="library-sort" aria-label="Sort models">
                         <option value="name">A-Z</option>
                         <option value="category">Category</option>
                     </select>
@@ -140,6 +147,7 @@ const Library = {
      * Render the model list
      */
     renderModelList() {
+        if (this.loadError) return '<div class="library-error">Could not load the model library. <button id="library-retry" class="btn">Retry</button></div>';
         if (this.isLoading) {
             return `
                 <div class="library-loading">
@@ -155,9 +163,9 @@ const Library = {
 
         return this.filteredModels.map(model => {
             const isExpanded = this.expandedModel === model.id;
-            const stockCount = (model.stocks || []).length;
-            const flowCount = (model.flows || []).length;
-            const varCount = (model.variables || []).length;
+            const stockCount = model.stock_count ?? (model.stocks || []).length;
+            const flowCount = model.flow_count ?? (model.flows || []).length;
+            const varCount = model.variable_count ?? (model.variables || []).length;
             
             return `
                 <div class="library-item ${isExpanded ? "expanded" : ""}" data-id="${model.id}">
@@ -165,11 +173,12 @@ const Library = {
                         <div class="library-item-info" data-id="${model.id}">
                             <div class="library-item-name">
                                 <span class="expand-icon">${isExpanded ? "▼" : "▶"}</span>
-                                ${this.escapeHtml(model.name)}
+                    ${this.escapeHtml(model.name)}
                             </div>
                             <div class="library-item-meta">
                                 <span class="library-item-category">${this.formatCategory(model.category || "other")}</span>
                                 <span class="library-item-stats">${stockCount}S ${flowCount}F ${varCount}V</span>
+                                <span class="model-check ${model.numerical_check === 'failed' ? 'needs-review' : ''}">${model.numerical_check === 'passed' ? 'Default run completed' : model.numerical_check === 'failed' ? 'Needs investigation' : 'Not yet checked'}</span>
                             </div>
                         </div>
                         <button class="library-item-import" data-id="${model.id}" title="Import">
@@ -269,10 +278,21 @@ const Library = {
     /**
      * Toggle model expansion
      */
-    toggleExpand(modelId) {
+    async toggleExpand(modelId) {
         if (this.expandedModel === modelId) {
             this.expandedModel = null;
         } else {
+            const model = this.models.find(m => m.id === modelId);
+            if (model && !model.stocks) {
+                try {
+                    const response = await fetch(`/api/models/${encodeURIComponent(modelId)}`, {signal: AbortSignal.timeout(20000)});
+                    if (!response.ok) throw new Error('Could not load model details');
+                    Object.assign(model, await response.json());
+                } catch (error) {
+                    this.showNotification(error.message, true);
+                    return;
+                }
+            }
             this.expandedModel = modelId;
         }
         this.updateList();
@@ -365,7 +385,17 @@ const Library = {
 
         // Escape key
         document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && this.isOpen) this.close();
+            if (!this.isOpen || document.querySelector('dialog[open]')) return;
+            if (e.key === "Escape") { e.preventDefault(); this.close(); }
+            if (e.key === "Tab") {
+                const modal = document.getElementById("library-modal");
+                const fields = [...modal.querySelectorAll('button,input,select,textarea,a[href],[tabindex]')]
+                    .filter(field => !field.disabled && field.tabIndex >= 0 && field.getClientRects().length);
+                const first = fields[0], last = fields[fields.length - 1];
+                if (!modal.contains(document.activeElement) || (e.shiftKey && document.activeElement === first)) {
+                    e.preventDefault(); (e.shiftKey ? last : first)?.focus();
+                } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
+            }
         });
 
         this.bindItemEvents();
@@ -375,6 +405,7 @@ const Library = {
      * Bind events on list items
      */
     bindItemEvents() {
+        document.getElementById('library-retry')?.addEventListener('click', () => this.loadModels());
         // Import buttons (in header)
         document.querySelectorAll(".library-item-import").forEach(btn => {
             btn.addEventListener("click", (e) => {
@@ -426,7 +457,7 @@ const Library = {
             
             // Load into App
             if (typeof App !== "undefined" && App.loadModel) {
-                App.loadModel(model);
+                await App.loadModel(model);
                 this.close();
                 this.showNotification(`✓ Imported: ${model.name}`);
             }
@@ -463,14 +494,14 @@ const Library = {
     async open() {
         const modal = document.getElementById("library-modal");
         if (modal) {
+            if (!this.isOpen) this.opener = document.activeElement;
             modal.classList.add("open");
             this.isOpen = true;
+            document.getElementById("library-search")?.focus();
             
             // Load models when opening (with loading screen)
             await this.loadModels();
-            this.applyFilters();
-            
-            document.getElementById("library-search")?.focus();
+            if (this.isOpen) this.applyFilters();
         }
     },
 
@@ -480,8 +511,10 @@ const Library = {
     close() {
         const modal = document.getElementById("library-modal");
         if (modal) {
+            const wasOpen = this.isOpen;
             modal.classList.remove("open");
             this.isOpen = false;
+            if (wasOpen && !document.querySelector('dialog[open]')) this.opener?.focus();
             this.expandedModel = null;
         }
     },

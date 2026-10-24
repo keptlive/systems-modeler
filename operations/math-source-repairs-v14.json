@@ -1,0 +1,275 @@
+{
+  "baseline": "422af21",
+  "scope": "Four explicitly reconstructed educational models; not empirical validation",
+  "models": [
+    {
+      "file": "models/epidemiology/kermack-mckendrick-epidemic-epi.json",
+      "before_sha256": "a47ca548689db6caea2aa56ee9b63d1d0eac5bae59925809adbe3a30ba1ecbb4",
+      "after_sha256": "b70196b5e5b71769592f53f08ba3169cf6b814649a6982f63eb539461a019b68",
+      "changes": [
+        {
+          "kind": "variables",
+          "id": "var-effective-r",
+          "name": "Effective Reproduction Number",
+          "field": "equation",
+          "before": "R0 * (Susceptible / Total_Population)",
+          "after": "\"Basic Reproduction Number R0\" * (Susceptible / Total_Population)"
+        },
+        {
+          "kind": "variables",
+          "id": "var-herd-immunity-threshold",
+          "name": "Herd Immunity Threshold",
+          "field": "equation",
+          "before": "1 - 1/R0",
+          "after": "1 - 1/\"Basic Reproduction Number R0\""
+        },
+        {
+          "field": "description",
+          "before": "The original 1927 SIR epidemic model by Kermack and McKendrick, foundational for mathematical epidemiology. Introduced the concept of epidemic threshold (R0) and herd immunity. The basis for all modern compartmental disease models. Reference: Kermack, W. O., & McKendrick, A. G. (1927). A contribution to the mathematical theory of epidemics. Proceedings of the Royal Society A, 115(772), 700-721. DOI: https://doi.org/10.1098/rspa.1927.0118",
+          "after": "Educational constant-rate SIR example corresponding to the special case in Kermack and McKendrick (1927), equation 29. The parameters are illustrative; this does not reproduce their observed epidemic data. Reproduction-number diagnostics are derived for this homogeneous closed population.\n\nReview 2026-10-20: repaired two diagnostic references to the existing reproduction-number variable. The dynamics implement the constant-rate SIR special case (Kermack-McKendrick 1927, equation 29), with illustrative parameters. This is not a reproduction of their observed epidemic data or a calibrated forecast. The default integrator is explicitly RK4 at the existing time grid, checked against an independent high-accuracy solution over the complete trajectory. Numerical accuracy does not establish empirical validity."
+        },
+        {
+          "field": "time_settings",
+          "before": {
+            "start": 0,
+            "end": 160,
+            "dt": 0.1
+          },
+          "after": {
+            "start": 0,
+            "end": 160,
+            "dt": 0.1,
+            "integration_method": "rk4"
+          }
+        }
+      ],
+      "review_note": "Review 2026-10-20: repaired two diagnostic references to the existing reproduction-number variable. The dynamics implement the constant-rate SIR special case (Kermack-McKendrick 1927, equation 29), with illustrative parameters. This is not a reproduction of their observed epidemic data or a calibrated forecast.",
+      "numerical_scope": "Independent mathematical consistency for explicit illustrative assumptions, not calibration"
+    },
+    {
+      "file": "models/epidemiology/anderson-may-herd-immunity-epi.json",
+      "before_sha256": "7ed2abe550dfc3daa3575eff043ebaf67f2c7e24453e0755fe172fc71bea349b",
+      "after_sha256": "38770d434c216c5b31c21eadecf62d7a3de5cf19a6ddafbb8126f96769fbd6e2",
+      "changes": [
+        {
+          "kind": "variables",
+          "id": "var-herd-immunity",
+          "name": "Herd Immunity Threshold",
+          "field": "equation",
+          "before": "1 - 1/R0",
+          "after": "1 - 1/\"Basic R0\""
+        },
+        {
+          "kind": "variables",
+          "id": "var-effective-r",
+          "name": "Effective R",
+          "field": "equation",
+          "before": "R0 * Susceptible / Total_Population",
+          "after": "\"Basic R0\" * Susceptible / Total_Population"
+        },
+        {
+          "field": "description",
+          "before": "Roy Anderson and Robert May's foundational work on herd immunity thresholds and vaccination programs. Shows how the critical vaccination coverage needed for disease elimination depends on R0, forming the basis for vaccination policy. Reference: Anderson, R. M., & May, R. M. (1991). Infectious Diseases of Humans. Oxford University Press.",
+          "after": "Illustrative homogeneous SIR vaccination model with births, using herd-immunity concepts discussed by Anderson and May (1985). This is not their age-structured model, fitted data or a vaccination-policy forecast. Births without mortality, vaccination efficacy and the fixed rates are explicit educational assumptions.\n\nReview 2026-10-20: repaired two diagnostic references to the existing Basic R0 variable. This homogeneous illustrative vaccination model is not the age-structured model or fitted data in Anderson-May (1985). Births without mortality and the illustrative efficacy/rates remain explicit assumptions; numerical and population-balance checks do not establish calibration. The default integrator is explicitly RK4 at the existing time grid, checked against an independent high-accuracy solution over the complete trajectory. Numerical accuracy does not establish empirical validity."
+        },
+        {
+          "field": "time_settings",
+          "before": {
+            "start": 0,
+            "end": 365,
+            "dt": 1
+          },
+          "after": {
+            "start": 0,
+            "end": 365,
+            "dt": 1,
+            "integration_method": "rk4"
+          }
+        }
+      ],
+      "review_note": "Review 2026-10-20: repaired two diagnostic references to the existing Basic R0 variable. This homogeneous illustrative vaccination model is not the age-structured model or fitted data in Anderson-May (1985). Births without mortality and the illustrative efficacy/rates remain explicit assumptions; numerical and population-balance checks do not establish calibration.",
+      "numerical_scope": "Independent mathematical consistency for explicit illustrative assumptions, not calibration"
+    },
+    {
+      "file": "models/epidemiology/seir-epidemic-model-epi.json",
+      "before_sha256": "ed9c59b5796e8efb3864f3d1c47bfbdf03d6c27899b668f0413869a7a4567cf8",
+      "after_sha256": "2b59c2b722451f7b37d8f8c030c033db8fdf15ca4c286f26749b8ece4006c6b1",
+      "changes": [
+        {
+          "kind": "variables",
+          "id": "var-effective-reproduction-number",
+          "name": "Effective Reproduction Number",
+          "field": "equation",
+          "before": "R0 * Susceptible / Total_Population",
+          "after": "\"Basic Reproduction Number (R0)\" * Susceptible / Total_Population"
+        },
+        {
+          "kind": "stocks",
+          "id": "stock-susceptible",
+          "name": "Susceptible",
+          "field": "equation",
+          "before": "",
+          "after": "Total_Population - Initial_Exposed"
+        },
+        {
+          "kind": "stocks",
+          "id": "stock-exposed",
+          "name": "Exposed",
+          "field": "equation",
+          "before": "",
+          "after": "Initial_Exposed"
+        },
+        {
+          "field": "source",
+          "before": "https://doi.org/10.1016/S0025-5564(02)00108-6",
+          "after": "https://doi.org/10.1137/S0036144500371907"
+        },
+        {
+          "field": "description",
+          "before": "Susceptible-Exposed-Infectious-Recovered compartmental model with latent period. Extends SIR by adding an Exposed compartment for the incubation period when individuals are infected but not yet infectious. Reference: WHO Disease Outbreak Information. Source: https://www.who.int/",
+          "after": "Illustrative closed Susceptible-Exposed-Infectious-Recovered compartmental model with a latent period. Hethcote (2000) provides conceptual background. Initial exposed individuals come from the existing Initial Exposed parameter and the remainder start susceptible. The coefficients are not WHO data or a verified parameter set from the cited review.\n\nReview 2026-10-20: reconstructed the closed SEIR initial state using the already supplied Total Population and Initial Exposed parameters; infectious and recovered remain zero. Corrected the diagnostic R0 reference and the DOI to match the named Hethcote review. The values are illustrative, not WHO data, calibration or a reproduction of a paper-specific parameter set. The default integrator is explicitly RK4 at the existing time grid, checked against an independent high-accuracy solution over the complete trajectory. Numerical accuracy does not establish empirical validity."
+        },
+        {
+          "field": "time_settings",
+          "before": {
+            "start": 0,
+            "end": 200,
+            "dt": 0.0625
+          },
+          "after": {
+            "start": 0,
+            "end": 200,
+            "dt": 0.0625,
+            "integration_method": "rk4"
+          }
+        }
+      ],
+      "review_note": "Review 2026-10-20: reconstructed the closed SEIR initial state using the already supplied Total Population and Initial Exposed parameters; infectious and recovered remain zero. Corrected the diagnostic R0 reference and the DOI to match the named Hethcote review. The values are illustrative, not WHO data, calibration or a reproduction of a paper-specific parameter set.",
+      "numerical_scope": "Independent mathematical consistency for explicit illustrative assumptions, not calibration"
+    },
+    {
+      "file": "models/economics/solow-swan-growth-model-eco.json",
+      "before_sha256": "d37c96686d33c15f37f9d01d123e784eb32e12f4732af84bdc96c5b07732690a",
+      "after_sha256": "3084e9aab98730cba6fe10243131dde81b58a2f74c02f9c02a70b85b96d0ba88",
+      "changes": [
+        {
+          "kind": "flows",
+          "id": "flow-depreciation",
+          "name": "Depreciation",
+          "field": "equation",
+          "before": "Depreciation_Rate * Capital",
+          "after": "Depreciation_Rate * \"Capital Stock\""
+        },
+        {
+          "kind": "flows",
+          "id": "flow-labor-force-growth",
+          "name": "Labor Force Growth",
+          "field": "equation",
+          "before": "Labor_Growth_Rate * Labor",
+          "after": "Labor_Growth_Rate * \"Labor Force\""
+        },
+        {
+          "kind": "variables",
+          "id": "var-output",
+          "name": "Output",
+          "field": "equation",
+          "before": "TFP * Capital^Capital_Share * Labor^(1-Capital_Share)",
+          "after": "\"Total Factor Productivity\" * \"Capital Stock\"^\"Capital Share (alpha)\" * \"Labor Force\"^(1-\"Capital Share (alpha)\")"
+        },
+        {
+          "kind": "variables",
+          "id": "var-output-per-worker",
+          "name": "Output per Worker",
+          "field": "equation",
+          "before": "Output / Labor",
+          "after": "Output / \"Labor Force\""
+        },
+        {
+          "kind": "variables",
+          "id": "var-capital-per-worker",
+          "name": "Capital per Worker",
+          "field": "equation",
+          "before": "Capital / Labor",
+          "after": "\"Capital Stock\" / \"Labor Force\""
+        },
+        {
+          "kind": "variables",
+          "id": "var-steady-state-capital-per-worker",
+          "name": "Steady State Capital per Worker",
+          "field": "equation",
+          "before": "(Savings_Rate * TFP / (Depreciation_Rate + Labor_Growth_Rate))^(1/(1-Capital_Share))",
+          "after": "(Savings_Rate * \"Total Factor Productivity\" / (Depreciation_Rate + Labor_Growth_Rate))^(1/(1-\"Capital Share (alpha)\"))"
+        },
+        {
+          "kind": "variables",
+          "id": "var-marginal-product-of-capital",
+          "name": "Marginal Product of Capital",
+          "field": "equation",
+          "before": "Capital_Share * Output / Capital",
+          "after": "\"Capital Share (alpha)\" * Output / \"Capital Stock\""
+        },
+        {
+          "kind": "stocks",
+          "id": "stock-capital-stock",
+          "name": "Capital Stock",
+          "field": "equation",
+          "before": "",
+          "after": "Initial_Capital"
+        },
+        {
+          "kind": "stocks",
+          "id": "stock-labor-force",
+          "name": "Labor Force",
+          "field": "equation",
+          "before": "",
+          "after": "Initial_Labor"
+        },
+        {
+          "field": "description",
+          "before": "Foundational neoclassical model of long-term economic growth. Capital accumulation drives growth in output per worker, but diminishing returns to capital mean the economy converges to a steady state. Long-run growth requires technological progress. Reference: Solow, R. M. (1956). A contribution to the theory of economic growth. Quarterly Journal of Economics, 70(1), 65-94. DOI: https://doi.org/10.2307/1884513",
+          "after": "Foundational neoclassical model of long-term economic growth. Capital accumulation drives growth in output per worker, but diminishing returns to capital mean the economy converges to a steady state. Long-run growth requires technological progress. Reference: Solow, R. M. (1956). A contribution to the theory of economic growth. Quarterly Journal of Economics, 70(1), 65-94. DOI: https://doi.org/10.2307/1884513\n\nReview 2026-10-20: repaired references to the existing capital/labor/productivity/share variables and restored initialization from the existing Initial Capital and Initial Labor parameters. This is an illustrative Cobb-Douglas Solow model with explicit depreciation, not an empirical calibration or an exact parameterization from Solow (1956). A closed-form capital-per-worker solution checks the complete numerical trajectory."
+        }
+      ],
+      "review_note": "Review 2026-10-20: repaired references to the existing capital/labor/productivity/share variables and restored initialization from the existing Initial Capital and Initial Labor parameters. This is an illustrative Cobb-Douglas Solow model with explicit depreciation, not an empirical calibration or an exact parameterization from Solow (1956). A closed-form capital-per-worker solution checks the complete numerical trajectory.",
+      "numerical_scope": "Independent mathematical consistency for explicit illustrative assumptions, not calibration"
+    }
+  ],
+  "sources": [
+    {
+      "name": "kermack1927",
+      "url": "https://pdodds.w3.uvm.edu/files/papers/others/1927/kermack1927a.pdf",
+      "sha256": "51608463b8e483b453c4f17ce745237fa8779476cff47bc061c07fa0bb5c9c00",
+      "bytes": 1782095
+    },
+    {
+      "name": "anderson1985",
+      "url": "https://indico.ictp.it/event/a02113/contribution/42/material/0/0.pdf",
+      "sha256": "ab0ec49afacfb1817aa587c07bb57e7bef5d33d47984e29e4f793af6d5e5a5c1",
+      "bytes": 806870
+    },
+    {
+      "name": "solow1956",
+      "url": "https://www.depfe.unam.mx/doctorado/teorias-crecimiento-desarrollo/solow_1956.pdf",
+      "sha256": "5384fe4dccd16af0d2fe74f971f893e13b4445ec821e2c5e768486f16eb2fc57",
+      "bytes": 589109
+    },
+    {
+      "name": "driessche2002",
+      "url": "https://watmough.ext.unb.ca/papers/mgroup.pdf",
+      "sha256": "50a48e5b1de2a16cb0f1afefad6635060a4b92b085b3d86a369fb5825627dfb0",
+      "bytes": 162644
+    },
+    {
+      "name": "hethcote2000",
+      "url": "https://www.maths.usyd.edu.au/u/marym/populations/hethcote.pdf",
+      "sha256": "23ef51ffeda15f009a4eee81534c3c6021d5e9e67cec6aab8e438e669e85eab6",
+      "bytes": 1575431
+    }
+  ],
+  "default_solver_review": {
+    "anderson_previous_euler_max_population_fraction_error": 0.1562274350152759,
+    "anderson_rk4_max_population_fraction_error": 9.960497943884783e-05,
+    "scope": "Full default trajectory versus independent DOP853; equations, coefficients and time grids preserved; all three compartment examples explicitly use RK4."
+  },
+  "baseline_scope": "Historical operator-side provenance identifier only; not a revision available in public Git history. Per-file byte hashes and portable canonical-content receipts supply verification without that Git object."
+}

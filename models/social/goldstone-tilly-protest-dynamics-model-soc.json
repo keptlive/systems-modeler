@@ -1,7 +1,7 @@
 {
   "id": "goldstone-tilly-protest-dynamics-model-soc",
   "name": "Goldstone-Tilly Protest Dynamics Model",
-  "description": "A model of regime-protester interaction based on rational choice theory. The model captures how regimes choose between concessions and repression in response to protest, and how protesters calculate expected gains from collective action. Demonstrates the feedback loops between regime policy and protest dynamics. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/",
+  "description": "A model of regime-protester interaction based on rational choice theory. The model captures how regimes choose between concessions and repression in response to protest, and how protesters calculate expected gains from collective action. Demonstrates the feedback loops between regime policy and protest dynamics. Reference: NSIDC Arctic Sea Ice News. Source: https://nsidc.org/arcticseaicenews/\n\nIdentifier reconciliation 2026-10-20: undeclared shorthand is explicitly mapped to existing declared quantities. This preserves the authored scalar mathematics, IDs, inputs, topology and layout. It does not recover an original executable source or establish parameter calibration/scientific fidelity; existing conceptual references remain unverified for these equations.",
   "stocks": [
     {
       "id": "stock-concessions",
@@ -81,7 +81,7 @@
     {
       "id": "flow-adjusting-repression-expectation",
       "name": "Adjusting Repression Expectation",
-      "equation": "IF_THEN_ELSE(Protest > 0, Repressive_Threat_Tr * Repression_Fractional_Adjustment - Expectation_of_Repression_Needed, 0)",
+      "equation": "IF_THEN_ELSE(Protest > 0, \"Repressive Threat (Tr)\" * Repression_Fractional_Adjustment - Expectation_of_Repression_Needed, 0)",
       "from_stock": null,
       "to_stock": "stock-expectation-of-repression-needed",
       "position": {
@@ -121,7 +121,7 @@
     {
       "id": "var-gains-from-success-v",
       "name": "Gains from Success (V)",
-      "equation": "New_Advantages_A + Current_Threat_Tc",
+      "equation": "\"New Advantages (A)\" + \"Current Threat (Tc)\"",
       "position": {
         "x": 550,
         "y": 80
@@ -157,7 +157,7 @@
     {
       "id": "var-probability-of-success-o",
       "name": "Probability of Success (O)",
-      "equation": "State_Weakness_k1 + Popular_Support_k2 + Strength_of_Nonstate_Allies_k3",
+      "equation": "\"State Weakness (k1)\" + \"Popular Support (k2)\" + \"Strength of Nonstate Allies (k3)\"",
       "position": {
         "x": 400,
         "y": 160
@@ -166,7 +166,7 @@
     {
       "id": "var-cost-of-protest-c",
       "name": "Cost of Protest (C)",
-      "equation": "Repressive_Threat_Tr",
+      "equation": "\"Repressive Threat (Tr)\"",
       "position": {
         "x": 550,
         "y": 160
@@ -175,7 +175,7 @@
     {
       "id": "var-expected-net-gain-from-protest-g",
       "name": "Expected Net Gain from Protest (G)",
-      "equation": "(Gains_from_Success_V * Probability_of_Success_O) - Cost_of_Protest_C",
+      "equation": "(\"Gains from Success (V)\" * \"Probability of Success (O)\") - \"Cost of Protest (C)\"",
       "position": {
         "x": 700,
         "y": 160
@@ -184,7 +184,7 @@
     {
       "id": "var-protest",
       "name": "Protest",
-      "equation": "IF_THEN_ELSE(Expected_Net_Gain_from_Protest_G > 0, 1, 0)",
+      "equation": "IF_THEN_ELSE(\"Expected Net Gain from Protest (G)\" > 0, 1, 0)",
       "position": {
         "x": 100,
         "y": 240
@@ -256,7 +256,7 @@
     {
       "id": "var-total-cost",
       "name": "Total Cost",
-      "equation": "Concessions * Concession_Unit_Cost + Repressive_Threat_Tr * Repression_Unit_Cost",
+      "equation": "Concessions * Concession_Unit_Cost + \"Repressive Threat (Tr)\" * Repression_Unit_Cost",
       "position": {
         "x": 550,
         "y": 320

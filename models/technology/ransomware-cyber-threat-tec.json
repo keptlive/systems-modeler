@@ -2,33 +2,189 @@
   "id": "ransomware-cyber-threat-tec",
   "name": "Ransomware Cyber Threat Ecosystem Model",
   "description": "Models the dynamics of ransomware attacks including attack frequency, ransom payments, defensive investments, and the ransomware-as-a-service ecosystem. Based on cybersecurity incident data and threat intelligence.",
-  "source": "https://doi.org/10.1016/j.cose.2022.102693",
-  "reference": "CISA Ransomware Guide. 2021. Sophos State of Ransomware Report. 2023. Chainalysis Crypto Crime Report.",
+  "source": "https://www.cisa.gov/stopransomware/ransomware-guide",
+  "reference": "CISA, MS-ISAC, NSA and FBI. #StopRansomware Guide. September 2023; updates the CISA/MS-ISAC September 2020 guide. Prevention and response guidance only, not a source of the local attack, revenue or capability equations.",
   "stocks": [
-    {"id": "stock-vulnerable-orgs", "name": "Vulnerable Organizations", "initial_value": 500000, "equation": "", "position": {"x": 100, "y": 150}},
-    {"id": "stock-protected-orgs", "name": "Protected Organizations", "initial_value": 100000, "equation": "", "position": {"x": 100, "y": 300}},
-    {"id": "stock-compromised", "name": "Compromised Organizations", "initial_value": 1000, "equation": "", "position": {"x": 300, "y": 150}},
-    {"id": "stock-ransomware-revenue", "name": "Ransomware Revenue", "initial_value": 500000000, "equation": "", "position": {"x": 500, "y": 150}},
-    {"id": "stock-attacker-capability", "name": "Attacker Capability", "initial_value": 100, "equation": "", "position": {"x": 500, "y": 300}}
+    {
+      "id": "stock-vulnerable-orgs",
+      "name": "Vulnerable Organizations",
+      "initial_value": 500000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-protected-orgs",
+      "name": "Protected Organizations",
+      "initial_value": 100000,
+      "equation": "",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "stock-compromised",
+      "name": "Compromised Organizations",
+      "initial_value": 1000,
+      "equation": "",
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-ransomware-revenue",
+      "name": "Ransomware Revenue",
+      "initial_value": 500000000,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 150
+      }
+    },
+    {
+      "id": "stock-attacker-capability",
+      "name": "Attacker Capability",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 500,
+        "y": 300
+      }
+    }
   ],
   "flows": [
-    {"id": "flow-attacks", "name": "Successful Attacks", "equation": "Vulnerable_Organizations * Attack_Rate * Attacker_Capability / 100", "from_stock": "stock-vulnerable-orgs", "to_stock": "stock-compromised", "position": {"x": 200, "y": 150}},
-    {"id": "flow-recovery", "name": "Recovery", "equation": "Compromised_Organizations / Recovery_Time", "from_stock": "stock-compromised", "to_stock": "stock-vulnerable-orgs", "position": {"x": 200, "y": 200}},
-    {"id": "flow-hardening", "name": "Security Hardening", "equation": "Vulnerable_Organizations * Hardening_Rate * Defense_Investment_Effect", "from_stock": "stock-vulnerable-orgs", "to_stock": "stock-protected-orgs", "position": {"x": 100, "y": 225}},
-    {"id": "flow-ransom-payments", "name": "Ransom Payments", "equation": "Compromised_Organizations * Payment_Rate * Average_Ransom", "from_stock": null, "to_stock": "stock-ransomware-revenue", "position": {"x": 400, "y": 150}},
-    {"id": "flow-capability-growth", "name": "Capability Growth", "equation": "Ransomware_Revenue * Reinvestment_Rate / 10000000", "from_stock": null, "to_stock": "stock-attacker-capability", "position": {"x": 500, "y": 225}}
+    {
+      "id": "flow-attacks",
+      "name": "Successful Attacks",
+      "equation": "Vulnerable_Organizations * Attack_Rate * Attacker_Capability / 100",
+      "from_stock": "stock-vulnerable-orgs",
+      "to_stock": "stock-compromised",
+      "position": {
+        "x": 200,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-recovery",
+      "name": "Recovery",
+      "equation": "Compromised_Organizations / Recovery_Time",
+      "from_stock": "stock-compromised",
+      "to_stock": "stock-vulnerable-orgs",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "flow-hardening",
+      "name": "Security Hardening",
+      "equation": "Vulnerable_Organizations * Hardening_Rate * Defense_Investment_Effect",
+      "from_stock": "stock-vulnerable-orgs",
+      "to_stock": "stock-protected-orgs",
+      "position": {
+        "x": 100,
+        "y": 225
+      }
+    },
+    {
+      "id": "flow-ransom-payments",
+      "name": "Ransom Payments",
+      "equation": "Compromised_Organizations * Payment_Rate * Average_Ransom",
+      "from_stock": null,
+      "to_stock": "stock-ransomware-revenue",
+      "position": {
+        "x": 400,
+        "y": 150
+      }
+    },
+    {
+      "id": "flow-capability-growth",
+      "name": "Capability Growth",
+      "equation": "Ransomware_Revenue * Reinvestment_Rate / 10000000",
+      "from_stock": null,
+      "to_stock": "stock-attacker-capability",
+      "position": {
+        "x": 500,
+        "y": 225
+      }
+    }
   ],
   "variables": [
-    {"id": "var-attack-rate", "name": "Attack_Rate", "equation": "0.001", "position": {"x": 200, "y": 100}},
-    {"id": "var-recovery-time", "name": "Recovery_Time", "equation": "4", "position": {"x": 250, "y": 200}},
-    {"id": "var-hardening", "name": "Hardening_Rate", "equation": "0.002", "position": {"x": 50, "y": 225}},
-    {"id": "var-defense-effect", "name": "Defense_Investment_Effect", "equation": "1", "position": {"x": 175, "y": 300}},
-    {"id": "var-payment-rate", "name": "Payment_Rate", "equation": "0.4", "position": {"x": 350, "y": 100}},
-    {"id": "var-avg-ransom", "name": "Average_Ransom", "equation": "250000", "position": {"x": 450, "y": 100}},
-    {"id": "var-reinvestment", "name": "Reinvestment_Rate", "equation": "0.3", "position": {"x": 600, "y": 225}}
+    {
+      "id": "var-attack-rate",
+      "name": "Attack_Rate",
+      "equation": "0.001",
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-recovery-time",
+      "name": "Recovery_Time",
+      "equation": "4",
+      "position": {
+        "x": 250,
+        "y": 200
+      }
+    },
+    {
+      "id": "var-hardening",
+      "name": "Hardening_Rate",
+      "equation": "0.002",
+      "position": {
+        "x": 50,
+        "y": 225
+      }
+    },
+    {
+      "id": "var-defense-effect",
+      "name": "Defense_Investment_Effect",
+      "equation": "1",
+      "position": {
+        "x": 175,
+        "y": 300
+      }
+    },
+    {
+      "id": "var-payment-rate",
+      "name": "Payment_Rate",
+      "equation": "0.4",
+      "position": {
+        "x": 350,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-avg-ransom",
+      "name": "Average_Ransom",
+      "equation": "250000",
+      "position": {
+        "x": 450,
+        "y": 100
+      }
+    },
+    {
+      "id": "var-reinvestment",
+      "name": "Reinvestment_Rate",
+      "equation": "0.3",
+      "position": {
+        "x": 600,
+        "y": 225
+      }
+    }
   ],
   "connectors": [],
-  "time_settings": {"start": 0, "end": 120, "dt": 1},
+  "time_settings": {
+    "start": 0,
+    "end": 120,
+    "dt": 1,
+    "integration_method": "radau"
+  },
   "created_at": "2026-01-15T21:00:00.000000+00:00",
   "updated_at": "2026-01-15T21:00:00.000000+00:00"
 }

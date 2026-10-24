@@ -18,18 +18,19 @@
         // Show loading indicator
         const modeIndicator = document.getElementById('mode-indicator');
         if (modeIndicator) {
-            modeIndicator.textContent = 'Importing XMILE file...';
+            modeIndicator.textContent = 'Importing model file...';
             modeIndicator.classList.add('visible');
         }
         
         try {
-            const formData = new FormData();
-            formData.append('file', file);
-            
-            const response = await fetch('/api/models/import/xmile', {
-                method: 'POST',
-                body: formData
-            });
+            let response;
+            if (file.name.toLowerCase().endsWith('.json')) {
+                response = await fetch('/api/models', {method:'POST',headers:{'Content-Type':'application/json'},body:await file.text()});
+            } else {
+                const formData = new FormData();
+                formData.append('file', file);
+                response = await fetch('/api/models/import/xmile', {method:'POST',body:formData});
+            }
             
             if (!response.ok) {
                 const error = await response.json();
@@ -39,21 +40,20 @@
             const model = await response.json();
 
             // Load the imported model into the app
-            if (window.App && App.loadModelData) {
+            if (typeof App !== 'undefined' && App.loadModelData) {
                 App.loadModelData(model);
-            } else if (window.App && App.model) {
+            } else if (typeof App !== 'undefined' && App.model) {
                 // Fallback: set model directly
                 App.model = model;
                 document.getElementById('model-name').value = model.name;
-                if (window.Canvas) {
+                if (typeof Canvas !== 'undefined') {
                     Canvas.render();
                 }
             }
             
             // Update model list
-            if (App.loadModelList) {
-                App.loadModelList();
-            }
+            UserModels.save(model);
+            UserModels.populateDropdown();
             
             if (modeIndicator) {
                 modeIndicator.textContent = 'Model imported successfully!';
