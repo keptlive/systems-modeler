@@ -1,0 +1,158 @@
+{
+  "id": "shannon-communication-channel-tec",
+  "name": "Capped-service message processing with illustrative losses",
+  "description": "Illustrative continuous-stock message-processing compartment with capped service and two cumulative outcome counters. Queue Q receives 50 messages per arbitrary time unit; service is min(Q,60), implicitly using a one-time-unit first-order processing scale below the cap, not an instantaneous-work-conserving queue. Outcomes use a fixed illustrative fraction 0.5*exp(-(10/2)/2); the Signal_Power, Noise_Power and SNR labels are legacy knobs for that chosen fraction, not calibrated physical channel measurements. This is not an M/M/1 queue, Shannon capacity calculation, bit-error model, coding theorem or stochastic packet simulation. Fractional messages are fluid quantities. The default Euler step is 0.5; mathematical balances are tested, not empirical performance. Formerly Shannon Communication Channel Model; the Shannon1948 citation did not establish these service/loss equations. Original equation provenance is unverified. Existing IDs, equations, inputs, diagram and outputs are retained for compatibility.",
+  "stocks": [
+    {
+      "id": "s1",
+      "name": "Message_Queue",
+      "initial_value": 100,
+      "equation": "",
+      "position": {
+        "x": 150,
+        "y": 200
+      }
+    },
+    {
+      "id": "s2",
+      "name": "Successfully_Transmitted",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 350,
+        "y": 200
+      }
+    },
+    {
+      "id": "s3",
+      "name": "Error_Messages",
+      "initial_value": 0,
+      "equation": "",
+      "position": {
+        "x": 550,
+        "y": 200
+      }
+    }
+  ],
+  "flows": [
+    {
+      "id": "f1",
+      "name": "Message_Arrival",
+      "equation": "Arrival_Rate",
+      "from_stock": null,
+      "to_stock": "Message_Queue",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "f2",
+      "name": "Transmission_Attempt",
+      "equation": "MIN(Message_Queue, Channel_Capacity)",
+      "from_stock": "Message_Queue",
+      "to_stock": null,
+      "position": {
+        "x": 250,
+        "y": 300
+      }
+    },
+    {
+      "id": "f3",
+      "name": "Successful_Transmission",
+      "equation": "Transmission_Attempt * (1 - Error_Probability)",
+      "from_stock": null,
+      "to_stock": "Successfully_Transmitted",
+      "position": {
+        "x": 400,
+        "y": 300
+      }
+    },
+    {
+      "id": "f4",
+      "name": "Error_Transmission",
+      "equation": "Transmission_Attempt * Error_Probability",
+      "from_stock": null,
+      "to_stock": "Error_Messages",
+      "position": {
+        "x": 550,
+        "y": 300
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v1",
+      "name": "Arrival_Rate",
+      "equation": "50",
+      "position": {
+        "x": 100,
+        "y": 50
+      }
+    },
+    {
+      "id": "v2",
+      "name": "Channel_Capacity",
+      "equation": "60",
+      "position": {
+        "x": 250,
+        "y": 50
+      }
+    },
+    {
+      "id": "v3",
+      "name": "Signal_Power",
+      "equation": "10",
+      "position": {
+        "x": 400,
+        "y": 50
+      }
+    },
+    {
+      "id": "v4",
+      "name": "Noise_Power",
+      "equation": "2",
+      "position": {
+        "x": 550,
+        "y": 50
+      }
+    },
+    {
+      "id": "v5",
+      "name": "SNR",
+      "equation": "Signal_Power / Noise_Power",
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "v6",
+      "name": "Error_Probability",
+      "equation": "0.5 * EXP(-SNR / 2)",
+      "position": {
+        "x": 250,
+        "y": 100
+      }
+    },
+    {
+      "id": "v7",
+      "name": "Effective_Rate",
+      "equation": "Channel_Capacity * (1 - Error_Probability)",
+      "position": {
+        "x": 400,
+        "y": 100
+      }
+    }
+  ],
+  "connectors": [],
+  "time_settings": {
+    "start": 0,
+    "end": 100,
+    "dt": 0.5
+  },
+  "source": "",
+  "reference": "Authored illustrative processing-compartment scenario; no original executable source, calibrated service law or physical error-probability law has been established.",
+  "created_at": "2026-01-15T19:52:37.285857+00:00",
+  "updated_at": "2026-01-15T19:52:37.285857+00:00"
+}
