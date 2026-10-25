@@ -77,3 +77,8 @@ PYTHONPATH=. python scripts/audit_library.py --full --tracked-only --output oper
 ```
 
 Run the application before the MCP client check. Node.js is needed for JavaScript checks. API tests use disposable storage. Every active library model must pass; retired invalid inputs have separate causal-failure regression tests. [Literal punctuation, EN SPACE and internal-dollar identifiers](docs/IDENTIFIER-IMPORT-FIX.md) now have passing identity/import/export regressions while unique legacy aliases remain compatible. Offline pytest collection is restricted to tests/; root-level provider scripts are manual probes. Browser acceptance and alternate-engine/device limitations are recorded separately. Never synchronize model directories, databases, credentials or configuration over production. Reviewed per-file repairs and retirements require exact hashes and backups; preserve all other model data.
+
+## License
+
+The code is released under the [MIT License](LICENSE). Third-party model sources bundled under
+`operations/*/sources/` keep their own license files.
