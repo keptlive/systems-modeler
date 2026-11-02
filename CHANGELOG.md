@@ -1,3 +1,7 @@
+# Changelog
+
+Newest first. Detailed release evidence is listed in the [documentation index](docs/README.md#releases).
+
 ## 1.10.0 — Mobile workspace and personal OpenRouter
 
 - Compact phone navigation with preserved document actions, separate Run controls, responsive result sheets and tablet/landscape reflow.
@@ -5,7 +9,7 @@
 - Optional personal OpenRouter key with explicit browser persistence choice, free router only, actual connection test and safe request-scoped credential handling. Existing agent/MCP and server provider paths remain.
 - Full regressions and corpus rerun; 28 pre-existing public model failures remain explicit. See docs/MOBILE-1.10.md and docs/OPENROUTER.md.
 
-# Version 1.9
+## 1.9.0
 
 - Fix silent flow cancellation, RK4 intermediate overflow, delayed-history phase shifts, hidden non-finite intermediates, initializer constant shadowing and uncharged dependency retries.
 - Preserve partial REST settings and structured MCP failures; export exact failed-run inputs and engine fingerprints.
@@ -19,7 +23,7 @@
 - Independently review source tables, all native urban balances and engine boundaries. Fix recurrence rounding and targeted-edit contract preservation found by review.
 - Start large chart selections with stocks; retain all series, report outputs, existing navigation and numerical controls.
 
-# Version 1.8
+## 1.8.0
 
 - Diagnose all86 previous public failures;39 now complete,47 remain explicitly explained, no new failures.
 - Review43 model revisions, including source-backed World2/FullBeer restorations and actual Morris–Lecar/Oregonator dynamics.
@@ -27,8 +31,6 @@
 - Reject adaptive time-driven lookup pulses after independent review reproduced silent misses.
 - Preserve prior revision assertions through exact SHA-bound historical snapshots; new tests check current repairs separately.
 - Retain all existing editor, analytics, saved-model, MCP and library paths; promotional footer links remain removed.
-
-# Changelog
 
 ## 1.7.0 — 2026-10-20
 

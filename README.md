@@ -1,14 +1,24 @@
 # Stock & Flow
 
-Agent-driven stock-and-flow pages, explicit Euler/RK4/Radau simulation, a browsable example library and a Model Context Protocol server.
+> **Experimental.** Stock & Flow is an experimental research project, not a production modeling tool.
+> For real system dynamics work, use **[Simlin](https://simlin.com)** ([source](https://github.com/bpowers/simlin)).
+> Simlin's engine is written in Rust, and Simlin is faster, more complete and much better than this project.
+>
+> This repository is still worth visiting for its **[library of 1,000 example models](#model-library)**.
 
-[Simulator](https://stockandflow.live) · [Library](https://stockandflow.org) · [Usage and MCP guide](https://stockandflow.live/guide)
+A browser-based stock-and-flow modeler with Euler, RK4 and Radau simulation, AI-assisted model drafting, an example model library and a Model Context Protocol (MCP) server.
 
-The editor retains AI generation/modification, saved models, JSON/XMILE import and export, diagrams, scenario comparison, four chart types, statistics and mobile panels. Numerical tools work without an AI provider. AI drafts need input and source review before use.
+[Simulator](https://stockandflow.live) · [Model library](https://stockandflow.org) · [Usage and MCP guide](https://stockandflow.live/guide) · [Documentation](docs/README.md) · [Changelog](CHANGELOG.md)
 
-Native engine improvements add bounded [arrays and reusable modules](docs/STRUCTURED-MODELS.md), [dimensional checks](docs/DIMENSIONAL-ANALYSIS.md), conservative [MDL import](docs/MDL-IMPORT.md), and [local feedback analysis](docs/FEEDBACK-ANALYSIS.md). Use **Source** to edit structured JSON without flattening the saved project. Inspect displays units evidence and can analyze a completed run. The [measured comparison](docs/ENGINE-COMPARISON.md) records a 32–35% improvement over our earlier scalar execution, while Simlin remains faster on those workloads. No Simlin runtime dependency was introduced.
+## Model library
 
-The three previously recorded identifier/import failures are now repaired, with exact names preserved through import, simulation, rename and export. See the [identifier repair and compatibility evidence](docs/IDENTIFIER-IMPORT-FIX.md).
+The library has 1,000 examples, 997 dynamic models and three labeled static calculators, in 26 subject areas from economics and climate to epidemiology, physics and ecology.
+
+- Each model is one JSON file in [`models/<subject>/`](models/), with its stocks, flows, variables, time settings, units and source reference.
+- Browse them at [stockandflow.org](https://stockandflow.org), or fetch them through the API: `GET /api/models/catalog` for the index, `GET /api/models/{id}` for one model.
+- To use a model in another tool such as Simlin, export it as XMILE. Export covers a scalar subset and refuses conversions that would lose information.
+
+A model that runs to completion is not a validated model. Check its source before relying on it. How the library was built and checked: [curation decisions](docs/LIBRARY-CURATION.md), [reconstructions](docs/MODEL-RECONSTRUCTIONS-2026-10.md) and the [failure register](docs/FAILURE-REGISTER-1.9.md).
 
 ## Run locally
 
@@ -19,51 +29,28 @@ pip install -r requirements.txt
 uvicorn app.main:app --host 127.0.0.1 --port 3250
 ```
 
-Optional provider configuration is described in `.env.example` and `app/llm/`. Keep keys outside Git. The numerical engine never sends equations to a provider. `requirements-lock.txt` records the tested development environment; production compatibility was separately checked against its existing FastAPI/Pydantic versions.
+AI drafting is optional. Provider settings are described in `.env.example` and `app/llm/`; keep keys out of Git. The numerical engine never sends equations to a provider, and every numerical tool works without one. `requirements-lock.txt` records the tested development environment.
 
-## Validate models
+## What it does
 
-Use **Settings → Check inputs** or `POST /api/validate` with `{"model_id":"..."}` or `{"model":{...}}`. Inspection covers names, references, syntax, initial values, flow endpoints, tables, settings and a short numerical run. Units and provenance are retained. Scientific validity is not established by these checks or by finite simulation output.
+- **Editor:** diagrams, saved models, JSON and XMILE import and export, conservative Vensim MDL import, scenario comparison, four chart types, statistics and mobile panels.
+- **Engine:** Euler and RK4, opt-in Radau for stiff systems, [arrays and reusable modules](docs/STRUCTURED-MODELS.md), [dimensional checks](docs/DIMENSIONAL-ANALYSIS.md), [feedback analysis](docs/FEEDBACK-ANALYSIS.md) and [local parameter sensitivity](docs/LOCAL-SENSITIVITY.md).
+- **Checks:** **Settings → Check inputs** or `POST /api/validate` inspects names, references, syntax, initial values, flow endpoints, tables, settings and a short run. These checks do not establish scientific validity.
+- **Limits:** 500 explicit elements, 100,000 intervals and one million retained values per run. Unsupported constructs, such as XMILE queues, conveyors and nested models, are rejected rather than silently dropped.
 
-The curated public library contains **1000 examples: 997 dynamic models and three explicitly labeled static calculators**. Curation retired 155 failing, incomplete, degenerate or redundant definitions from the served library while preserving their exact bytes as test evidence. Five flowless examples were reconstructed from attributable equations and checked independently. Every active example must complete its full default run; numerical completion is not empirical validation. See [curation decisions](docs/LIBRARY-CURATION.md), [reconstructions](docs/MODEL-RECONSTRUCTIONS-2026-10.md), and the historical [failure register](docs/FAILURE-REGISTER-1.9.md). Additional user models are preserved during release.
+Simlin remains faster on every workload measured in the [engine comparison](docs/ENGINE-COMPARISON.md). [Pinned Simlin observations](docs/COMPATIBILITY-REFERENCE-2026-10.md) record where the two engines agree and where they differ. This project has no Simlin runtime dependency and does not claim full Simlin or Vensim parity.
 
 ## API and MCP
 
-- `GET /api/models/catalog` is the small searchable index; `GET /api/models/{id}` fetches definitions. Legacy `GET /api/models` remains available.
-- Model CRUD and XMILE import/export remain available under `/api/models`.
-- `POST /api/models/import/mdl` retains the original MDL source and import caveats. `/api/compile` previews structured expansion, `/api/units` checks dimensions, and `/api/feedback` analyzes explicitly supplied results without rerunning or saving. [Equivalent read-only MCP tools](docs/NATIVE-ENGINE-MCP.md) are available.
-- `POST /api/simulate`, `/api/validate`, `/api/analyze/statistics`, `/api/analyze` and `/api/llm/{generate,modify}` serve the workbench.
-- Connect an HTTP-capable MCP client to **https://stockandflow.live/mcp/**. Legacy SSE remains **https://stockandflow.live/mcp/sse**. `/mcp/info` reports transports.
-- Local stdio: `.venv/bin/python -m app.mcp_server` from the repository directory.
+- **REST:** model catalog and CRUD under `/api/models`, MDL import at `/api/models/import/mdl`, and `/api/simulate`, `/api/validate`, `/api/compile`, `/api/units`, `/api/feedback`, `/api/analyze` and `/api/analyze/statistics`.
+- **Hosted MCP:** connect an HTTP-capable client to `https://stockandflow.live/mcp/`. Legacy SSE is at `/mcp/sse`, and `/mcp/info` lists transports.
+- **Local MCP (stdio):** `.venv/bin/python -m app.mcp_server` from the repository directory.
+- **Tools:** `list_models`, `get_model`, `validate_model`, `simulate_model`, `compare_scenarios`, `analyze_model`, `export_model_xmile`, `generate_model_from_description` and `modify_existing_model`, plus [native engine tools](docs/NATIVE-ENGINE-MCP.md).
+- **Agent workspaces:** over HTTP or SSE, an agent can open a private page, edit and run a model, and show the result. See [the page protocol](docs/AGENT-WORKSPACES.md).
 
-Bring your own agent: `open_workspace` returns a private visible page, `inspect_workspace` confirms its state, `edit_workspace_elements` preserves unmentioned inputs, `update_workspace_model` replaces an explicitly intended full draft, `run_workspace` publishes the exact run, `set_workspace_view` shows the desired view, and `close_workspace` revokes the session. HTTP/SSE page tools require no server-side AI account. Expected revisions and browser acknowledgements prevent blind overwrites and false success claims. See [the page protocol and modeling lessons](docs/AGENT-WORKSPACES.md).
+Numerical tools never save models. AI tools return unsaved drafts.
 
-The nine existing MCP tools remain: `list_models`, `get_model`, `validate_model`, `simulate_model`, `compare_scenarios`, `analyze_model`, `export_model_xmile`, `generate_model_from_description`, `modify_existing_model`. Resources `systems://guide` and `systems://models/{id}` plus the `investigate_system` prompt guide evidence-based use. Numerical tools do not save models; optional AI tools return unsaved drafts. Local stdio supports these numerical/library tools; private page sessions require HTTP/SSE.
-
-The engine rejects unresolved equations, ambiguous names, nonfinite inputs and unsupported semantics. Limits are 500 explicit elements, 100,000 intervals, 100,001 retained samples, one million retained scalar values and one million work units including hidden stages and method cost. Smoothing and fixed-duration material delays support Euler/RK4; random functions and fixed-history delays remain Euler-only. XMILE support is a scalar subset; arrays, nested models, queues, conveyors and explicit nonnegative constraints are rejected rather than silently lost.
-
-Version 1.4 reconciled 63 public definitions through source restoration, mathematical checks and citation/limitation corrections. Version 1.5 adds 218 advanced tests across all 44 advertised function names, repairs pulse and extreme lookup behavior, and improves the existing workbench with command search, run context and desktop/mobile chart selection. No model definitions changed in 1.5. Known citation mismatches remain visible in inspection and MCP validation. See [the release evidence](docs/RELEASE-1.5.md).
-
-Version 1.6 refines diagram elements and the studio interface, makes element renames preserve dependent equations, restores three source-backed lookup definitions, and fixes mobile fullscreen and input-focus behavior. The regression run passes 595 tests plus 18 subtests, with three documented identifier-compatibility expected failures. See [1.6 evidence and limitations](docs/RELEASE-1.6.md).
-
-Version 1.7 reconciles all 134 prior public failures, refines Analytics and exports, and supports bounded fine time grids. The clean public regression suite passes 673 tests plus 18 preservation subtests, with three documented expected failures. See [1.7 evidence](docs/RELEASE-1.7.md).
-
-Version 1.8 adds opt-in bounded Radau for stiff continuous systems, exact bounded binomial sampling, and readable root/blocked failure diagnostics. Independent review found and fixed missed time-driven lookup pulses; unsupported inputs fail explicitly. Radau output-grid comparisons are distinguished from tolerance convergence. See [engine contracts](docs/ENGINE-CAPABILITIES-1.8.md) and [independent review](docs/INDEPENDENT-REVIEW-1.8.md).
-
-Version 1.9 also hardens flow accumulation, RK4 arithmetic, delayed history, scalar domains, initializer resolution and solver work accounting. Partial request settings preserve saved values, and failed runs export exact replay evidence. Radau rejects uncertified state events and lookup forcing; five saved defaults now use independently checked explicit grids. XMILE export translates verified standard functions and refuses lossy conversions. See the hardening evidence for [integration](docs/ENGINE-HARDENING-1.9-A.md), [equations](docs/ENGINE-HARDENING-1.9-B.md), [API/MCP](docs/ENGINE-HARDENING-1.9-C.md), [failure reproduction](docs/ENGINE-HARDENING-1.9-ROOT.md) and [solver repairs](docs/CORPUS-HARDENING-REPAIRS-1.9-B.md).
-
-Version 1.9 adds explicit report-only categorical outputs and fixed-period recurrence contracts. Labels never enter numerical dynamics. Weekly/discrete models reject fractional periods or solver overrides that would change their meaning. JSON preserves both features; XMILE export explicitly rejects unsupported contracts. Large charts initially select stocks while retaining every series. See [engine contracts](docs/ENGINE-REPORTS-AND-DISCRETE-1.9.md).
-
-## Development and operations
-
-Scalar compatibility includes run-bound STARTTIME/STOPTIME values and calls,
-inverse-trigonometric XMILE spellings, safe division and integer operations, and
-[additional source-preserving MDL functions](docs/MDL-FUNCTION-COMPATIBILITY.md).
-[Pinned Simlin observations](docs/COMPATIBILITY-REFERENCE-2026-10.md) distinguish
-verified agreement from source-dialect differences and unsupported constructs;
-these additions do not establish full Simlin/Vensim parity.
-
-[Architecture](docs/ARCHITECTURE.md) · [Analytics](docs/ANALYTICS.md) · [Testing](docs/TESTING.md) · [UI direction](docs/UI-DIRECTION.md) · [UI QA](docs/UI-QA.md)
+## Development
 
 ```bash
 pip install -r requirements-dev.txt
@@ -76,9 +63,12 @@ PYTHONPATH=. python scripts/check_mcp.py --stdio
 PYTHONPATH=. python scripts/audit_library.py --full --tracked-only --output operations/library-full.json
 ```
 
-Run the application before the MCP client check. Node.js is needed for JavaScript checks. API tests use disposable storage. Every active library model must pass; retired invalid inputs have separate causal-failure regression tests. [Literal punctuation, EN SPACE and internal-dollar identifiers](docs/IDENTIFIER-IMPORT-FIX.md) now have passing identity/import/export regressions while unique legacy aliases remain compatible. Offline pytest collection is restricted to tests/; root-level provider scripts are manual probes. Browser acceptance and alternate-engine/device limitations are recorded separately. Never synchronize model directories, databases, credentials or configuration over production. Reviewed per-file repairs and retirements require exact hashes and backups; preserve all other model data.
+Start the application before the MCP client check. The JavaScript checks need Node.js. Offline pytest collection is limited to `tests/`. The `test_*.py` files at the top level are manual provider probes, not part of the suite.
+
+Every active library model must pass its full default run. Model repairs and retirements need exact file hashes and backups. Never sync model directories, databases, credentials or configuration over production.
+
+[Architecture](docs/ARCHITECTURE.md) · [Testing](docs/TESTING.md) · [Operations](docs/OPERATIONS.md) · [All documentation](docs/README.md)
 
 ## License
 
-The code is released under the [MIT License](LICENSE). Third-party model sources bundled under
-`operations/*/sources/` keep their own license files.
+The code is released under the [MIT License](LICENSE). Third-party model sources bundled under `operations/*/sources/` keep their own license files.

@@ -74,7 +74,7 @@ Admission raises LocalSensitivityError with code invalid_request, invalid_select
 
 `tests/test_local_sensitivity.py` includes independent exponential continuous/discrete references for Euler/RK4, parameter-dependent initial conditions, exact endpoint handling, canonical Unicode/constant shadowing, zero parameters/output, actual sample geometry, transformed units, extreme finite stencil arithmetic, smooth stationary-point warnings, exact reservation boundaries, actual engine charge/attempt probes, failed baseline/perturbations, unsupported syntax/models/selectors, input immutability, real spawned process deadline/cancellation and concurrent-worker/slot-recovery checks.
 
-The source research and primary references remain in [SENSITIVITY-RESEARCH.md](SENSITIVITY-RESEARCH.md). Numerical formulas are original elementary implementations; no new third-party runtime dependency is introduced.
+The source research notes are not included in this repository. Numerical formulas are original elementary implementations; no new third-party runtime dependency is introduced.
 
 Before exposure, independently review the proof and worker lifecycle, add shared quota policy for the actual transport/process topology, and test actual HTTP/MCP callers with preservation checks for existing tuner, variance analysis, scenarios and chart controls. This core implementation does not authorize or implement that exposure.
 
