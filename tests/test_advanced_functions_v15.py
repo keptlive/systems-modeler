@@ -17,6 +17,7 @@ from app.core.simulator import simulate
 
 # Explicit matrix: fail when a newly advertised function lacks a reviewed row.
 MATH_CASES = {
+    'rem':('REM(-7,4)', -3),
     "sin":("SIN(PI/6)", .5), "cos":("COS(PI/3)", .5),
     "tan":("TAN(PI/4)", 1), "asin":("ASIN(.5)", math.pi/6),
     "acos":("ACOS(.5)", math.pi/3), "atan":("ATAN(1)", math.pi/4),
@@ -40,6 +41,7 @@ MATH_CASES = {
     "modulo":("MODULO(-7,4)", -3),
 }
 CONTEXT_ROWS = {
+    'RAMP_VENSIM', # Independent piecewise and RK4 oracles: test_followup_runtime.py
     "STEP","PULSE","RAMP","LOOKUP","WITH_LOOKUP","RANDOM","NORMAL",
     "RANDOM_BINOMIAL", # v1.8 distribution/replay/budget oracles: test_binomial_v18.py
     "RANDOM_UNIFORM","RANDOM_NORMAL","DELAY1","DELAY3","DELAY_N",

@@ -96,7 +96,14 @@ def test_radau_json_roundtrip_and_explicit_xmile_boundary():
     model=manufactured(rtol=1e-7,atol=1e-10)
     copy=Model.model_validate_json(model.model_dump_json())
     assert copy.time_settings==model.time_settings
-    with pytest.raises(ValueError,match="use JSON"):generate_xmile(model)
+    from app.core.xmile_parser import parse_xmile
+    before=model.model_dump(mode='json'); original=simulate(model)
+    restored=parse_xmile(generate_xmile(model)); result=simulate(restored)
+    assert restored.time_settings.model_dump()==model.time_settings.model_dump()
+    assert result.time==original.time and result.values==original.values
+    assert result.report_values==original.report_values
+    assert [v.equation for v in restored.flows]==[v.equation for v in model.flows]
+    assert model.model_dump(mode='json')==before
 
 
 def test_mcp_explicit_method_and_tolerance_overrides():

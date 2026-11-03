@@ -20,6 +20,8 @@ The library has 1,000 examples, 997 dynamic models and three labeled static calc
 
 A model that runs to completion is not a validated model. Check its source before relying on it. How the library was built and checked: [curation decisions](docs/LIBRARY-CURATION.md), [reconstructions](docs/MODEL-RECONSTRUCTIONS-2026-10.md) and the [failure register](docs/FAILURE-REGISTER-1.9.md).
 
+Scalar expression repairs preserve arithmetic in MDL imports, nested graphical functions and seeded random identities through XMILE round trips. Vensim-specific operations retain their own semantics. See [expression support and round-trip validation](docs/EXPRESSION-ROUNDTRIP.md).
+
 ## Run locally
 
 ```bash

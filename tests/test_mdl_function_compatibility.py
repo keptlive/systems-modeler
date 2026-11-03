@@ -72,7 +72,7 @@ def test_new_mappings_reject_wrong_source_arity(equation):
         parse_mdl(mdl(equation))
 
 @pytest.mark.parametrize('equation',[
- 'PULSE(.5,.25)','RAMP(1,1,0)',
+ 'PULSE(.5,.25)',
  'RANDOM UNIFORM(0,1,42)','RANDOM NORMAL(-10,10,0,1,42)',
  'SMOOTH N(1,2,0,3)','DELAY1(1,1)','DELAY1I(1,1,0)',
  'DELAY FIXED(1,.13,0)',

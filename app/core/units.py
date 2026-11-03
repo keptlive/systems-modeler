@@ -242,8 +242,8 @@ def analyze_units(model, time_units=None):
                       'SAFEDIV':(2,3),'ZIDZ':(2,2),'XIDZ':(3,3),
                       'ATAN2':(2,2),'EXP':(1,1),'LOG':(1,2),'LN':(1,2),'LOG10':(1,1),'SQRT':(1,1),
                       'ABS':(1,1),'FLOOR':(1,1),'CEIL':(1,1),'ROUND':(1,2),'SIGN':(1,1),
-                      'POW':(2,3),'MOD':(2,2),'MODULO':(2,2),'IF':(3,3),'IF_THEN_ELSE':(3,3),
-                      'STEP':(2,2),'PULSE':(2,3),'RAMP':(2,3),
+                      'POW':(2,3),'MOD':(2,2),'MODULO':(2,2),'REM':(2,2),'IF':(3,3),'IF_THEN_ELSE':(3,3),
+                      'STEP':(2,2),'PULSE':(2,3),'RAMP':(2,3),'RAMP_VENSIM':(3,3),
                       'RANDOM':(2,3),'RANDOM_UNIFORM':(2,3),'RANDOM_NORMAL':(2,3),'NORMAL':(2,3),
                       'RANDOM_BINOMIAL':(2,3),'MIN':(2,1000),'MAX':(2,1000)}
             if upper in STATEFUL_FUNCTIONS:
@@ -258,7 +258,7 @@ def analyze_units(model, time_units=None):
                     note('unknown','unsupported_function','Three-argument POW units are not established')
                     return None
                 return visit(ast.BinOp(left=node.args[0], op=ast.Pow(), right=node.args[1]))
-            if upper in {'MOD', 'MODULO'}:
+            if upper in {'MOD', 'MODULO', 'REM'}:
                 return match(args[0],args[1],'MOD arguments')
             if upper == 'QUANTUM':
                 return match(args[0], args[1], 'QUANTUM arguments')
@@ -303,7 +303,7 @@ def analyze_units(model, time_units=None):
                 if len(args) > initial_index:
                     match(args[0], args[initial_index], f'{upper} initial value')
                 return args[0]
-            if upper in {'STEP','PULSE','RAMP'} and len(args) >= 2:
+            if upper in {'STEP','PULSE','RAMP','RAMP_VENSIM'} and len(args) >= 2:
                 for value in args[1:]:
                     match(value, clock, f'{upper} timing')
                 return _combine(args[0], clock, -1 if upper == 'PULSE' else 1) if upper != 'STEP' else args[0]

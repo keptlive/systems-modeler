@@ -91,9 +91,12 @@ def test_simple_alias_keeps_implicit_seed_stream_at_unchanged_column(alias):
     assert simulate(parse_xmile(generate_xmile(m))).values==simulate(m).values
 
 
-def test_translation_that_moves_an_implicit_seeded_call_is_rejected():
+def test_translation_keeps_native_vocabulary_when_implicit_stream_would_move():
     m=model('LOG(8,2)+RANDOM(0,1)',random_seed=137)
-    with pytest.raises(ValueError,match='implicit random stream identities'):generate_xmile(m)
+    restored=parse_xmile(generate_xmile(m))
+    assert restored.variables[0].equation==m.variables[0].equation
+    assert simulate(restored).values==simulate(m).values
+    assert all(3<=value<=4 for value in simulate(restored).values['Output'])
     m.variables[0].equation='LOG(8,2)+RANDOM(0,1,17)'
     assert simulate(parse_xmile(generate_xmile(m))).values==simulate(m).values
 
@@ -128,32 +131,40 @@ def test_new_core_name_cannot_silently_shadow_an_existing_graphical_function():
 
 
 @pytest.mark.parametrize('name',['LN','RANDOM','SMTH1','PREVIOUS'])
-def test_unused_table_with_reserved_core_name_is_rejected(name):
+def test_unused_table_with_reserved_core_name_survives_native_profile(name):
     m=model('1');m.tables=[LookupTable(name=name,points=[(0,0),(10,1)])]
-    with pytest.raises(ValueError,match='reserved XMILE'):generate_xmile(m)
+    xml=generate_xmile(m);restored=parse_xmile(xml)
+    assert ET.fromstring(xml).get('{https://stockandflow.live/ns/model}compatibility')=='native-scalar-v1'
+    assert [t.name for t in restored.tables]==[name]
+    assert simulate(restored).values==simulate(m).values
 
 
 @pytest.mark.parametrize('kind,name',[
     ('stocks','pi'),('flows','MIN'),('variables',' Smth1 '),('tables',' LN '),
 ])
-def test_core_namespace_conflicts_rejected_across_all_definitions(kind,name):
+def test_core_namespace_declarations_survive_native_profile(kind,name):
     definition={'name':name,'points':[(0,0),(1,1)]} if kind=='tables' else {'name':name}
     m=Model(**{kind:[definition]},time_settings={'end':1})
-    with pytest.raises(ValueError,match='reserved XMILE'):generate_xmile(m)
+    xml=generate_xmile(m);restored=parse_xmile(xml)
+    assert [e.name for e in getattr(restored,kind)]==[name]
+    assert simulate(restored).values==simulate(m).values
 
 
-def test_lookup_conversion_cannot_move_an_implicit_seeded_random_call():
+def test_lookup_preserves_implicit_seeded_random_input_without_moving_it():
     m=model("LOOKUP('Curve',RANDOM(0,1))",random_seed=137)
     m.tables=[LookupTable(name='Curve',points=[(0,0),(1,10)])]
-    with pytest.raises(ValueError,match='implicit random stream identities'):generate_xmile(m)
+    restored=parse_xmile(generate_xmile(m))
+    assert restored.variables[0].equation==m.variables[0].equation
+    assert simulate(restored).values==simulate(m).values
+    assert all(0<=value<=10 for value in simulate(restored).values['Output'])
     m.variables[0].equation="LOOKUP('Curve',RANDOM(0,1,17))"
     assert simulate(parse_xmile(generate_xmile(m))).values==simulate(m).values
 
 
 @pytest.mark.parametrize('expression',[
-    'RAMP(2,1,3)','RANDOM_BINOMIAL(4,.5)','ROUND(2.5)','SIGN(-1)',
-    'ATAN2(1,2)','FLOOR(1.5)','CEIL(1.5)','MOD(5,2)','2 // 1',
-    'LOG()','LOG(8,2,3)','SMOOTH_N(1,2)','PULSE(1)','MIN(1,2,3)',
+    'RANDOM_BINOMIAL(4)','ROUND(2.5,1)','POW(2,3,5)',
+    'ATAN2(1)','FLOOR(1.5,2)','CEIL(1.5,2)','MOD(5)','2 // 1',
+    'LOG()','LOG(8,2,3)','SMOOTH_N(1,2)','PULSE(1)','MIN(1)',
     'LOOKUP("Curve",TIME)+1',
 ])
 def test_unsupported_helpers_or_signatures_fail_explicitly(expression):
@@ -225,12 +236,14 @@ def test_table_e_and_unshadowed_constant_e_keep_distinct_meanings():
     ('0x10+RANDOM(0,1)',False), ('True+RANDOM(0,1)',True),
     ('0b11+RANDOM(0,1)',True),
 ])
-def test_new_syntax_translations_preserve_or_reject_seed_identity(expression,rejected):
+def test_new_syntax_translations_preserve_seed_identity_via_native_fallback(expression,rejected):
     m=model(expression,random_seed=137)
+    restored=parse_xmile(generate_xmile(m))
     if rejected:
-        with pytest.raises(ValueError,match='implicit random stream identities'):generate_xmile(m)
-    else:
-        assert simulate(parse_xmile(generate_xmile(m))).values==simulate(m).values
+        assert restored.variables[0].equation==expression
+    assert simulate(restored).values==simulate(m).values
+    if expression.startswith('1 if'):
+        assert simulate(restored).values['Output']==[1]*9
     m.variables[0].equation=expression.replace('RANDOM(0,1)','RANDOM(0,1,17)')
     assert simulate(parse_xmile(generate_xmile(m))).values==simulate(m).values
 
@@ -249,3 +262,17 @@ def test_boolean_literal_conversion_does_not_repair_invalid_function_seeds(expre
     m=model(expression)
     with pytest.raises(EquationError):simulate(m)
     with pytest.raises(ValueError,match='Boolean random seeds'):generate_xmile(m)
+
+@pytest.mark.parametrize('expression,expected',[
+    ('ROUND(2.5)',2),('SIGN(-1)',-1),('ATAN2(1,2)',math.atan2(1,2)),
+    ('FLOOR(1.5)',1),('CEIL(1.5)',2),
+])
+def test_newly_admitted_scalar_extensions_keep_independent_numeric_values(expression,expected):
+    m=model(expression);result=simulate(parse_xmile(generate_xmile(m)))
+    assert result.values['Output']==pytest.approx([expected]*9)
+    assert result.values==simulate(m).values
+
+
+def test_three_argument_native_ramp_export_keeps_native_contract():
+    m=model('RAMP(2,1,3)');result=simulate(parse_xmile(generate_xmile(m)))
+    assert result.values['Output']==[0 if t<1 else 2*(t-1) for t in result.time]

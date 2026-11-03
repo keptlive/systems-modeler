@@ -89,10 +89,13 @@ def parse_mdl(text):
         if assignment is None:
             fail("Only scalar assignment records are supported; standalone lookup/dimension declarations are unsupported", record=number)
         lhs, rhs = head[:assignment].strip(), head[assignment+1:].strip()
-        if lhs.startswith('"') and lhs.endswith('"'):
+        quoted_lhs=lhs.startswith('"') and lhs.endswith('"')
+        if quoted_lhs:
             try: name=json.loads(lhs)
             except ValueError: fail("Invalid quoted identifier", "invalid_syntax", number)
         else:
+            if any(c in lhs for c in "+-*/^<>,"):
+                fail("Operator-containing MDL names require double quotes", "invalid_syntax", number)
             name=re.sub(r"\s+", " ", lhs).strip()
         if not name or any(c in name for c in "[]:~|=()\\") or name.startswith("*"):
             fail("Arrays, macros and non-scalar declarations are unsupported", record=number)
@@ -154,13 +157,18 @@ def parse_mdl(text):
     candidates.update({"time":"TIME","time_step":"DT","initial_time":"STARTTIME","final_time":"STOPTIME"})
     patterns=[]
     for key,name in candidates.items():
+        # Quoted declarations remain literal identifiers, but must not consume
+        # operators in an unquoted expression such as A-B. Keep this dialect's
+        # lexical rule separate from JSON/XMILE declared-name resolution.
+        if any(c in key or c in name for c in "+-*/^<>,"):
+            continue
         pattern=r"[ _\n\u00a0]+".join(re.escape(part) for part in key.split("_"))
         patterns.append((re.compile(pattern,re.I),key,name))
     patterns.sort(key=lambda x:len(x[1]),reverse=True)
     funcs={"IF THEN ELSE":"IF_THEN_ELSE",
         "SIN":"sin","COS":"cos","TAN":"tan","ARCSIN":"asin","ARCCOS":"acos","ARCTAN":"atan",
         "EXP":"exp","LN":"ln","SQRT":"sqrt","ABS":"abs","MIN":"min","MAX":"max","STEP":"STEP",
-        "LOG":"log","POWER":"pow","INTEGER":"TRUNC","MODULO":"MODULO","ZIDZ":"ZIDZ","XIDZ":"XIDZ","SMOOTH":"SMOOTH","SMOOTHI":"SMOOTH",
+        "LOG":"log","POWER":"pow","INTEGER":"TRUNC","MODULO":"MODULO","RAMP":"RAMP_VENSIM","ZIDZ":"ZIDZ","XIDZ":"XIDZ","SMOOTH":"SMOOTH","SMOOTHI":"SMOOTH",
         "SMOOTH3":"SMOOTH3","SMOOTH3I":"SMOOTH3"}
     # Vensim function contracts, not spelling-based aliases. LOG has an explicit
     # base; information smooths share the engine's continuous hidden-stock law.
@@ -174,9 +182,11 @@ def parse_mdl(text):
     # is intentional here in favor of the documented Vensim source semantics.
     # MODULO uses its distinct C-remainder primitive, never Python mod.
     # https://vensim.com/documentation/fn_modulo.html
+    # MDL RAMP uses its distinct Vensim operator; native RAMP stays unchanged.
+    # https://vensim.com/documentation/fn_ramp.html
     # Deliberately no PULSE (width/height), RANDOM (seed /
     # truncation), SMOOTH N (discrete/order reduction), or material DELAY aliases.
-    strict_arities={"LOG":2,"POWER":2,"INTEGER":1,"MODULO":2,"ZIDZ":2,"XIDZ":3,"SMOOTH":2,"SMOOTHI":3,"SMOOTH3":2,"SMOOTH3I":3}
+    strict_arities={"LOG":2,"POWER":2,"INTEGER":1,"MODULO":2,"RAMP":3,"ZIDZ":2,"XIDZ":3,"SMOOTH":2,"SMOOTHI":3,"SMOOTH3":2,"SMOOTH3I":3}
     function_patterns=[(re.compile(r"[ _\s]+".join(k.split()),re.I),v) for k,v in sorted(funcs.items(),key=lambda x:-len(x[0]))]
     translation_work = 0
     def charge_translation(record):
